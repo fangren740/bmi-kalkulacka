@@ -62,9 +62,9 @@ border-radius:8px
 
 <h1>Generátor názvu firmy</h1>
 
-<p>Zadej klíčové slovo nebo obor podnikání.</p>
+<p>Zadej obor nebo klíčové slovo.</p>
 
-<input id="keyword" placeholder="např. marketing, stavebnictví, IT">
+<input id="keyword" placeholder="např. stavby, marketing, IT">
 
 <br>
 
@@ -77,47 +77,78 @@ border-radius:8px
 <script>
 
 const prefixes = [
-"Pro",
+"Profi",
+"Top",
 "Smart",
+"Elite",
+"Moderní",
 "Next",
-"Ultra",
-"Hyper",
-"Prime",
-"Vision",
-"Future"
+"Prime"
 ]
 
 const suffixes = [
-"Solutions",
-"Group",
+"Stavby",
+"Projekt",
 "Studio",
-"Lab",
-"Works",
-"Experts",
-"Systems",
-"Agency"
+"Group",
+"Servis",
+"Solutions",
+"Design"
 ]
+
+const brandSuffix = [
+"Pro",
+"Tech",
+"Lab",
+"Profi",
+"Expert",
+"Plus",
+"Works"
+]
+
+function capitalize(word){
+return word.charAt(0).toUpperCase() + word.slice(1)
+}
 
 function generate(){
 
-const keyword=document.getElementById("keyword").value
+const keyword=document.getElementById("keyword").value.trim()
 
 const results=document.getElementById("results")
 
 results.innerHTML=""
 
-for(let i=0;i<8;i++){
+if(keyword.length===0){
+results.innerHTML="<div class='result'>Zadej klíčové slovo</div>"
+return
+}
+
+for(let i=0;i<10;i++){
+
+let name
+
+const type=Math.floor(Math.random()*3)
 
 const prefix=prefixes[Math.floor(Math.random()*prefixes.length)]
-
 const suffix=suffixes[Math.floor(Math.random()*suffixes.length)]
+const brand=brandSuffix[Math.floor(Math.random()*brandSuffix.length)]
 
-const name=prefix+" "+keyword+" "+suffix
+const word=capitalize(keyword)
+
+if(type===0){
+name=prefix+" "+word
+}
+
+if(type===1){
+name=word+" "+suffix
+}
+
+if(type===2){
+name=word+brand
+}
 
 const div=document.createElement("div")
-
 div.className="result"
-
 div.innerText=name
 
 results.appendChild(div)
@@ -130,4 +161,3 @@ results.appendChild(div)
 
 </body>
 </html>
-
