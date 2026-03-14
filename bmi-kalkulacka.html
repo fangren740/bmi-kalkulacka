@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>BMI kalkulačka | Výpočet BMI online zdarma</title>
+
+<meta name="description" content="Jednoduchá BMI kalkulačka online. Zadej svou výšku a váhu a zjisti svou BMI kategorii během pár sekund.">
+
+<style>
+
+body{
+font-family:Inter,system-ui,sans-serif;
+background:#020617;
+color:white;
+margin:0;
+padding:40px
+}
+
+.container{
+max-width:900px;
+margin:auto
+}
+
+h1{
+font-size:46px;
+margin-bottom:10px
+}
+
+.sub{
+color:#94a3b8;
+margin-bottom:30px
+}
+
+.card{
+background:#0f172a;
+border:1px solid rgba(255,255,255,.08);
+padding:25px;
+border-radius:20px
+}
+
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:20px
+}
+
+label{
+display:block;
+margin-bottom:6px;
+color:#94a3b8
+}
+
+input{
+width:100%;
+padding:12px;
+border-radius:12px;
+border:1px solid rgba(255,255,255,.1);
+background:#020617;
+color:white
+}
+
+button{
+margin-top:20px;
+padding:14px;
+width:100%;
+background:#22c55e;
+border:none;
+border-radius:12px;
+color:white;
+font-size:16px;
+font-weight:bold;
+cursor:pointer
+}
+
+.result{
+margin-top:25px;
+font-size:28px
+}
+
+.category{
+margin-top:10px;
+font-size:20px;
+color:#38bdf8
+}
+
+a{
+color:#38bdf8;
+text-decoration:none
+}
+
+.nav{
+margin-bottom:25px
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="nav">
+<a href="./index.html">← zpět na hlavní stránku</a>
+</div>
+
+<h1>BMI kalkulačka</h1>
+
+<p class="sub">
+Zadej svou výšku a váhu a spočítej si BMI během pár sekund.
+</p>
+
+<div class="card">
+
+<div class="grid">
+
+<div>
+<label>Výška (cm)</label>
+<input id="height" type="number" placeholder="např. 180">
+</div>
+
+<div>
+<label>Váha (kg)</label>
+<input id="weight" type="number" placeholder="např. 80">
+</div>
+
+</div>
+
+<button onclick="calculateBMI()">Spočítat BMI</button>
+
+<div class="result" id="bmiResult">—</div>
+
+<div class="category" id="bmiCategory"></div>
+
+</div>
+
+</div>
+
+<script>
+
+function calculateBMI(){
+
+const height=document.getElementById("height").value
+const weight=document.getElementById("weight").value
+
+if(!height || !weight){
+alert("Zadej výšku i váhu")
+return
+}
+
+const h=height/100
+
+const bmi=(weight/(h*h)).toFixed(1)
+
+document.getElementById("bmiResult").innerText="BMI: "+bmi
+
+let category=""
+
+if(bmi<18.5){
+category="Podváha"
+}
+else if(bmi<25){
+category="Normální váha"
+}
+else if(bmi<30){
+category="Nadváha"
+}
+else{
+category="Obezita"
+}
+
+document.getElementById("bmiCategory").innerText=category
+
+}
+
+</script>
+
+</body>
+</html>
