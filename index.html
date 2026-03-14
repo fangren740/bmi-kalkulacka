@@ -3,405 +3,242 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BMI Kalkulačka zdarma | Výpočet BMI online</title>
-  <meta name="description" content="Jednoduchá BMI kalkulačka zdarma. Spočítej si BMI online, zjisti svou kategorii a doporučené rozmezí hmotnosti." />
-  <meta name="keywords" content="BMI kalkulačka, výpočet BMI, BMI online, body mass index" />
+  <title>Online nástroje zdarma | Kalkulačky a utility</title>
+  <meta name="description" content="Jednoduché online nástroje zdarma. Finanční kalkulačky, užitečné utility a přehled praktických webových nástrojů." />
   <meta name="robots" content="index,follow" />
   <style>
-    :root {
-      --bg: #0f172a;
-      --card: #111827;
-      --muted: #94a3b8;
-      --text: #e5e7eb;
-      --accent: #22c55e;
-      --accent-2: #38bdf8;
-      --border: rgba(255,255,255,0.08);
-      --input: #0b1220;
+    :root{
+      --bg:#020617;
+      --panel:#0f172a;
+      --card:#111827;
+      --text:#e5e7eb;
+      --muted:#94a3b8;
+      --accent:#22c55e;
+      --accent2:#38bdf8;
+      --border:rgba(255,255,255,.08);
     }
 
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: linear-gradient(180deg, #020617 0%, #0f172a 100%);
-      color: var(--text);
-      min-height: 100vh;
+    *{box-sizing:border-box}
+
+    body{
+      margin:0;
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:linear-gradient(180deg,var(--bg) 0%, #0f172a 100%);
+      color:var(--text);
+      min-height:100vh;
     }
 
-    .wrap {
-      max-width: 980px;
-      margin: 0 auto;
-      padding: 32px 18px 64px;
+    .wrap{
+      max-width:1100px;
+      margin:0 auto;
+      padding:32px 18px 64px;
     }
 
-    .hero {
-      text-align: center;
-      padding: 28px 0 18px;
+    .hero{
+      text-align:center;
+      padding:34px 0 18px;
     }
 
-    .badge {
-      display: inline-block;
-      padding: 8px 14px;
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      color: var(--accent-2);
-      background: rgba(56,189,248,0.08);
-      font-size: 14px;
-      margin-bottom: 14px;
+    .badge{
+      display:inline-block;
+      padding:8px 14px;
+      border:1px solid var(--border);
+      border-radius:999px;
+      color:var(--accent2);
+      background:rgba(56,189,248,.08);
+      font-size:14px;
+      margin-bottom:14px;
     }
 
-    h1 {
-      margin: 0 0 12px;
-      font-size: clamp(32px, 5vw, 52px);
-      line-height: 1.05;
+    h1{
+      margin:0 0 12px;
+      font-size:clamp(34px,5vw,56px);
+      line-height:1.05;
     }
 
-    .sub {
-      color: var(--muted);
-      font-size: 18px;
-      max-width: 680px;
-      margin: 0 auto;
-      line-height: 1.6;
+    .sub{
+      color:var(--muted);
+      max-width:760px;
+      margin:0 auto;
+      font-size:18px;
+      line-height:1.6;
     }
 
-    .grid {
-      display: grid;
-      grid-template-columns: 1.15fr 0.85fr;
-      gap: 22px;
-      margin-top: 28px;
+    .section{
+      margin-top:34px;
     }
 
-    .card {
-      background: rgba(17,24,39,0.9);
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      padding: 22px;
-      box-shadow: 0 12px 40px rgba(0,0,0,0.25);
-      backdrop-filter: blur(12px);
+    .section h2{
+      margin:0 0 16px;
+      font-size:28px;
     }
 
-    .card h2, .card h3 {
-      margin-top: 0;
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+      gap:18px;
     }
 
-    .row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
+    .card{
+      display:block;
+      text-decoration:none;
+      color:inherit;
+      background:rgba(17,24,39,.92);
+      border:1px solid var(--border);
+      border-radius:24px;
+      padding:22px;
+      box-shadow:0 12px 40px rgba(0,0,0,.25);
+      transition:transform .15s ease, border-color .15s ease, box-shadow .15s ease;
     }
 
-    label {
-      display: block;
-      font-size: 14px;
-      color: var(--muted);
-      margin-bottom: 8px;
+    .card:hover{
+      transform:translateY(-3px);
+      border-color:rgba(56,189,248,.35);
+      box-shadow:0 18px 45px rgba(0,0,0,.3);
     }
 
-    input, select, button {
-      width: 100%;
-      border-radius: 14px;
-      border: 1px solid var(--border);
-      background: var(--input);
-      color: var(--text);
-      padding: 14px 15px;
-      font-size: 16px;
-      outline: none;
+    .card-top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:10px;
     }
 
-    input:focus, select:focus {
-      border-color: rgba(56,189,248,0.6);
-      box-shadow: 0 0 0 3px rgba(56,189,248,0.12);
+    .tag{
+      display:inline-block;
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:12px;
+      color:#cbd5e1;
+      background:rgba(255,255,255,.06);
+      border:1px solid var(--border);
     }
 
-    .full { margin-top: 14px; }
-
-    button {
-      background: linear-gradient(135deg, var(--accent) 0%, #16a34a 100%);
-      border: none;
-      color: white;
-      font-weight: 700;
-      cursor: pointer;
-      transition: transform 0.15s ease, opacity 0.15s ease;
-      margin-top: 16px;
+    .icon{
+      width:42px;
+      height:42px;
+      border-radius:14px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:rgba(34,197,94,.12);
+      color:#86efac;
+      font-size:20px;
+      font-weight:700;
     }
 
-    button:hover {
-      transform: translateY(-1px);
-      opacity: 0.96;
+    .card h3{
+      margin:0 0 10px;
+      font-size:24px;
     }
 
-    .result-box {
-      min-height: 290px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
+    .card p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.7;
     }
 
-    .result-value {
-      font-size: 58px;
-      font-weight: 800;
-      line-height: 1;
-      margin: 8px 0 10px;
+    .content{
+      margin-top:34px;
+      display:grid;
+      gap:18px;
     }
 
-    .result-label {
-      display: inline-block;
-      width: fit-content;
-      padding: 10px 14px;
-      border-radius: 999px;
-      font-weight: 700;
-      margin-bottom: 14px;
+    .info{
+      background:rgba(17,24,39,.92);
+      border:1px solid var(--border);
+      border-radius:24px;
+      padding:22px;
     }
 
-    .muted {
-      color: var(--muted);
-      line-height: 1.7;
+    .info h3{
+      margin-top:0;
+      margin-bottom:12px;
     }
 
-    .meter {
-      height: 14px;
-      border-radius: 999px;
-      background: linear-gradient(90deg,
-        #3b82f6 0%,
-        #22c55e 26%,
-        #eab308 58%,
-        #f97316 78%,
-        #ef4444 100%);
-      position: relative;
-      margin: 24px 0 12px;
-      overflow: hidden;
+    .info p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.8;
     }
 
-    .pointer {
-      position: absolute;
-      top: -5px;
-      width: 24px;
-      height: 24px;
-      border-radius: 999px;
-      background: white;
-      border: 3px solid #0f172a;
-      transform: translateX(-50%);
-      left: 0%;
-      transition: left 0.25s ease;
+    .footer{
+      text-align:center;
+      color:var(--muted);
+      margin-top:28px;
+      font-size:14px;
     }
 
-    .legend {
-      display: flex;
-      justify-content: space-between;
-      gap: 8px;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .info {
-      margin-top: 22px;
-      display: grid;
-      gap: 14px;
-    }
-
-    .info-item {
-      padding: 16px;
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      background: rgba(255,255,255,0.02);
-    }
-
-    .footer {
-      text-align: center;
-      color: var(--muted);
-      margin-top: 24px;
-      font-size: 14px;
-    }
-
-    @media (max-width: 860px) {
-      .grid { grid-template-columns: 1fr; }
-    }
-
-    @media (max-width: 580px) {
-      .row { grid-template-columns: 1fr; }
-      .card { padding: 18px; border-radius: 20px; }
-      .result-value { font-size: 46px; }
-      .sub { font-size: 16px; }
+    @media (max-width:640px){
+      .sub{font-size:16px}
+      .card,.info{border-radius:20px;padding:18px}
     }
   </style>
 </head>
 <body>
   <main class="wrap">
     <section class="hero">
-      <div class="badge">BMI kalkulačka zdarma</div>
-      <h1>Výpočet BMI online během pár sekund</h1>
-      <p class="sub">Zadej svou výšku, váhu a během okamžiku zjistíš své BMI, váhovou kategorii i orientační doporučení.</p>
-    </section>
-
-    <section class="grid">
-      <div class="card">
-        <h2>Spočítej si BMI</h2>
-        <div class="row">
-          <div>
-            <label for="height">Výška (cm)</label>
-            <input id="height" type="number" min="80" max="250" placeholder="Např. 180" />
-          </div>
-          <div>
-            <label for="weight">Váha (kg)</label>
-            <input id="weight" type="number" min="20" max="400" step="0.1" placeholder="Např. 82" />
-          </div>
-        </div>
-
-        <div class="row full">
-          <div>
-            <label for="age">Věk</label>
-            <input id="age" type="number" min="1" max="120" placeholder="Např. 30" />
-          </div>
-          <div>
-            <label for="gender">Pohlaví</label>
-            <select id="gender">
-              <option value="unspecified">Nechci uvádět</option>
-              <option value="male">Muž</option>
-              <option value="female">Žena</option>
-            </select>
-          </div>
-        </div>
-
-        <button id="calculateBtn">Spočítat BMI</button>
-
-        <div class="info">
-          <div class="info-item">
-            <strong>Jak funguje BMI?</strong>
-            <div class="muted">BMI se počítá jako hmotnost v kilogramech dělená druhou mocninou výšky v metrech.</div>
-          </div>
-          <div class="info-item">
-            <strong>Na co si dát pozor?</strong>
-            <div class="muted">BMI je orientační ukazatel. Nezohledňuje podíl svalů, tělesnou stavbu ani zdravotní stav.</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="card result-box">
-        <div class="muted">Tvůj výsledek</div>
-        <div class="result-value" id="bmiValue">--</div>
-        <div class="result-label" id="bmiLabel" style="background: rgba(148,163,184,0.14); color: #cbd5e1;">Čekám na zadání údajů</div>
-        <div class="muted" id="bmiText">Vyplň výšku a váhu a klikni na tlačítko. Výsledek se zobrazí tady.</div>
-
-        <div class="meter" aria-hidden="true">
-          <div class="pointer" id="pointer"></div>
-        </div>
-        <div class="legend">
-          <span>Podváha</span>
-          <span>Norma</span>
-          <span>Nadváha</span>
-          <span>Obezita</span>
-        </div>
-      </div>
-    </section>
-
-    <section class="card" style="margin-top: 22px;">
-      <h3>Kategorie BMI</h3>
-      <p class="muted">
-        Pod 18.5 = podváha<br>
-        18.5–24.9 = normální váha<br>
-        25.0–29.9 = nadváha<br>
-        30.0 a více = obezita
+      <div class="badge">Praktické online nástroje zdarma</div>
+      <h1>Kalkulačky a utility na jednom místě</h1>
+      <p class="sub">
+        Jednoduché a přehledné webové nástroje pro finance, zdraví a běžné výpočty.
+        Postupně sem budeme přidávat další užitečné kalkulačky.
       </p>
     </section>
 
+    <section class="section">
+      <h2>Dostupné nástroje</h2>
+      <div class="grid">
+        <a class="card" href="./compound-interest.html">
+          <div class="card-top">
+            <span class="tag">Finance</span>
+            <div class="icon">%</div>
+          </div>
+          <h3>Kalkulačka složeného úroku</h3>
+          <p>
+            Spočítá budoucí hodnotu investice podle počáteční částky,
+            měsíčního vkladu, úroku a délky investování.
+          </p>
+        </a>
+
+        <a class="card" href="./index.html">
+          <div class="card-top">
+            <span class="tag">Zdraví</span>
+            <div class="icon">BMI</div>
+          </div>
+          <h3>BMI kalkulačka</h3>
+          <p>
+            Jednoduchý výpočet BMI online. Zadej výšku a váhu a zjisti svou
+            orientační váhovou kategorii.
+          </p>
+        </a>
+      </div>
+    </section>
+
+    <section class="content">
+      <div class="info">
+        <h3>Co na webu najdeš</h3>
+        <p>
+          Cílem tohoto webu je nabídnout rychlé, srozumitelné a zdarma dostupné
+          nástroje, které pomohou s každodenními výpočty. Zaměřujeme se hlavně
+          na finanční kalkulačky a další praktické utility.
+        </p>
+      </div>
+
+      <div class="info">
+        <h3>Co bude přibývat dál</h3>
+        <p>
+          Postupně doplníme další nástroje, například hypoteční kalkulačku,
+          kalkulačku půjčky, DPH kalkulačku, kalkulačku inflace a další užitečné
+          finanční výpočty.
+        </p>
+      </div>
+    </section>
+
     <div class="footer">
-      Tato kalkulačka má informační charakter a nenahrazuje lékařské doporučení.
+      Online nástroje zdarma – jednoduché výpočty bez instalace.
     </div>
   </main>
-
-  <script>
-    const heightInput = document.getElementById('height');
-    const weightInput = document.getElementById('weight');
-    const ageInput = document.getElementById('age');
-    const genderInput = document.getElementById('gender');
-    const calculateBtn = document.getElementById('calculateBtn');
-    const bmiValue = document.getElementById('bmiValue');
-    const bmiLabel = document.getElementById('bmiLabel');
-    const bmiText = document.getElementById('bmiText');
-    const pointer = document.getElementById('pointer');
-
-    function clamp(value, min, max) {
-      return Math.min(Math.max(value, min), max);
-    }
-
-    function getCategory(bmi) {
-      if (bmi < 18.5) {
-        return {
-          label: 'Podváha',
-          color: '#60a5fa',
-          bg: 'rgba(96,165,250,0.14)',
-          text: 'Tvoje BMI spadá do kategorie podváhy. Může být vhodné zaměřit se na kvalitní jídelníček a případně situaci konzultovat s odborníkem.'
-        };
-      }
-      if (bmi < 25) {
-        return {
-          label: 'Normální váha',
-          color: '#4ade80',
-          bg: 'rgba(74,222,128,0.14)',
-          text: 'Tvoje BMI spadá do normálního rozmezí. To je obvykle považováno za zdravou váhovou kategorii.'
-        };
-      }
-      if (bmi < 30) {
-        return {
-          label: 'Nadváha',
-          color: '#facc15',
-          bg: 'rgba(250,204,21,0.14)',
-          text: 'Tvoje BMI spadá do kategorie nadváhy. Může pomoci sledovat pohyb, jídelníček a celkový životní styl.'
-        };
-      }
-      return {
-        label: 'Obezita',
-        color: '#f87171',
-        bg: 'rgba(248,113,113,0.14)',
-        text: 'Tvoje BMI spadá do kategorie obezity. Zvážil bych konzultaci s lékařem nebo nutričním specialistou.'
-      };
-    }
-
-    function calculateBMI() {
-      const heightCm = parseFloat(heightInput.value);
-      const weightKg = parseFloat(weightInput.value);
-      const age = parseFloat(ageInput.value);
-      const gender = genderInput.value;
-
-      if (!heightCm || !weightKg || heightCm <= 0 || weightKg <= 0) {
-        bmiValue.textContent = '--';
-        bmiLabel.textContent = 'Vyplň správné údaje';
-        bmiLabel.style.color = '#fca5a5';
-        bmiLabel.style.background = 'rgba(248,113,113,0.14)';
-        bmiText.textContent = 'Zadej prosím platnou výšku a váhu.';
-        pointer.style.left = '0%';
-        return;
-      }
-
-      const heightM = heightCm / 100;
-      const bmi = weightKg / (heightM * heightM);
-      const rounded = bmi.toFixed(1);
-      const category = getCategory(bmi);
-
-      bmiValue.textContent = rounded;
-      bmiLabel.textContent = category.label;
-      bmiLabel.style.color = category.color;
-      bmiLabel.style.background = category.bg;
-
-      let note = category.text;
-      if (!isNaN(age) && age < 18) {
-        note += ' U dětí a dospívajících se ale BMI hodnotí jinak než u dospělých.';
-      }
-      if (gender !== 'unspecified') {
-        note += ' Výsledek je stále pouze orientační bez ohledu na pohlaví.';
-      }
-      bmiText.textContent = note;
-
-      const normalized = clamp((bmi / 40) * 100, 2, 98);
-      pointer.style.left = normalized + '%';
-    }
-
-    calculateBtn.addEventListener('click', calculateBMI);
-    [heightInput, weightInput, ageInput].forEach((input) => {
-      input.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') calculateBMI();
-      });
-    });
-  </script>
 </body>
 </html>
