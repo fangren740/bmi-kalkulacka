@@ -1,529 +1,135 @@
-<!doctype html>
-<html lang="cs">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Kalkulačka složeného úroku | Výpočet investice online</title>
-  <meta name="description" content="Spočítej si složený úrok online. Zadej počáteční investici, měsíční vklad, úrok a délku investování. Zjisti konečnou hodnotu investice i celkový zisk." />
-  <meta name="robots" content="index,follow" />
-  <style>
-    :root{
-      --bg:#020617;
-      --panel:#0f172a;
-      --card:#111827;
-      --text:#e5e7eb;
-      --muted:#94a3b8;
-      --accent:#22c55e;
-      --accent2:#38bdf8;
-      --border:rgba(255,255,255,.08);
-      --input:#0b1220;
+<script>
+  const initialInput = document.getElementById('initial');
+  const monthlyInput = document.getElementById('monthly');
+  const rateInput = document.getElementById('rate');
+  const yearsInput = document.getElementById('years');
+  const compoundInput = document.getElementById('compound');
+  const currencyInput = document.getElementById('currency');
+  const calcBtn = document.getElementById('calcBtn');
+
+  const futureValueEl = document.getElementById('futureValue');
+  const investedValueEl = document.getElementById('investedValue');
+  const profitValueEl = document.getElementById('profitValue');
+  const summaryTextEl = document.getElementById('summaryText');
+  const principalBarEl = document.getElementById('principalBar');
+  const growthBarEl = document.getElementById('growthBar');
+  const yearTableEl = document.getElementById('yearTable');
+
+  function parseLocalNumber(value) {
+    if (typeof value !== 'string') return Number(value);
+    return Number(value.replace(',', '.').trim());
+  }
+
+  function formatCurrency(value, currency) {
+    const locale = currency === 'CZK' ? 'cs-CZ' : 'en-US';
+    return new Intl.NumberFormat(locale, {
+      style: 'currency',
+      currency,
+      maximumFractionDigits: 0
+    }).format(value);
+  }
+
+  function showError(message) {
+    futureValueEl.textContent = 'Chybný vstup';
+    investedValueEl.textContent = '-';
+    profitValueEl.textContent = '-';
+    summaryTextEl.textContent = message;
+    principalBarEl.style.width = '50%';
+    growthBarEl.style.width = '50%';
+    yearTableEl.innerHTML = '<tr><td colspan="4" class="muted">Nelze spočítat výsledek.</td></tr>';
+  }
+
+  function calculateCompoundInterest() {
+    const initial = parseLocalNumber(initialInput.value);
+    const monthly = parseLocalNumber(monthlyInput.value);
+    const annualRate = parseLocalNumber(rateInput.value);
+    const years = parseLocalNumber(yearsInput.value);
+    const compoundsPerYear = Number(compoundInput.value);
+    const currency = currencyInput.value;
+
+    if (
+      Number.isNaN(initial) ||
+      Number.isNaN(monthly) ||
+      Number.isNaN(annualRate) ||
+      Number.isNaN(years) ||
+      Number.isNaN(compoundsPerYear)
+    ) {
+      showError('Zadej prosím všechna čísla správně. Můžeš použít čárku i tečku.');
+      return;
     }
 
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-      background:linear-gradient(180deg,var(--bg) 0%, #0f172a 100%);
-      color:var(--text);
-      min-height:100vh;
+    if (initial < 0 || monthly < 0 || annualRate < 0 || years <= 0 || compoundsPerYear <= 0) {
+      showError('Hodnoty musí být nezáporné a doba investování musí být větší než 0.');
+      return;
     }
 
-    .wrap{
-      max-width:1100px;
-      margin:0 auto;
-      padding:32px 18px 64px;
-    }
+    const totalMonths = Math.round(years * 12);
+    let balance = initial;
+    const yearlyRows = [];
 
-    .hero{
-      text-align:center;
-      padding:24px 0 16px;
-    }
+    for (let month = 1; month <= totalMonths; month++) {
+      balance += monthly;
 
-    .badge{
-      display:inline-block;
-      padding:8px 14px;
-      border:1px solid var(--border);
-      border-radius:999px;
-      color:var(--accent2);
-      background:rgba(56,189,248,.08);
-      font-size:14px;
-      margin-bottom:14px;
-    }
-
-    h1{
-      margin:0 0 10px;
-      font-size:clamp(34px,5vw,54px);
-      line-height:1.05;
-    }
-
-    .sub{
-      color:var(--muted);
-      max-width:760px;
-      margin:0 auto;
-      font-size:18px;
-      line-height:1.6;
-    }
-
-    .grid{
-      display:grid;
-      grid-template-columns:1.05fr .95fr;
-      gap:22px;
-      margin-top:30px;
-    }
-
-    .card{
-      background:rgba(17,24,39,.92);
-      border:1px solid var(--border);
-      border-radius:24px;
-      padding:22px;
-      box-shadow:0 12px 40px rgba(0,0,0,.25);
-      backdrop-filter:blur(12px);
-    }
-
-    .card h2,.card h3{
-      margin-top:0;
-    }
-
-    .row{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:14px;
-    }
-
-    label{
-      display:block;
-      font-size:14px;
-      color:var(--muted);
-      margin-bottom:8px;
-    }
-
-    input, select, button{
-      width:100%;
-      border-radius:14px;
-      border:1px solid var(--border);
-      background:var(--input);
-      color:var(--text);
-      padding:14px 15px;
-      font-size:16px;
-      outline:none;
-    }
-
-    input:focus, select:focus{
-      border-color:rgba(56,189,248,.6);
-      box-shadow:0 0 0 3px rgba(56,189,248,.12);
-    }
-
-    .full{ margin-top:14px; }
-
-    button{
-      background:linear-gradient(135deg,var(--accent) 0%, #16a34a 100%);
-      border:none;
-      color:white;
-      font-weight:700;
-      cursor:pointer;
-      transition:transform .15s ease, opacity .15s ease;
-      margin-top:16px;
-    }
-
-    button:hover{
-      transform:translateY(-1px);
-      opacity:.96;
-    }
-
-    .results{
-      display:grid;
-      gap:14px;
-    }
-
-    .result-main{
-      padding:18px;
-      border-radius:20px;
-      background:rgba(34,197,94,.08);
-      border:1px solid rgba(34,197,94,.2);
-    }
-
-    .result-main .big{
-      font-size:42px;
-      font-weight:800;
-      margin-top:8px;
-    }
-
-    .mini-grid{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:14px;
-      margin-top:14px;
-    }
-
-    .stat{
-      padding:16px;
-      border-radius:18px;
-      border:1px solid var(--border);
-      background:rgba(255,255,255,.02);
-    }
-
-    .stat-label{
-      color:var(--muted);
-      font-size:14px;
-      margin-bottom:8px;
-    }
-
-    .stat-value{
-      font-size:26px;
-      font-weight:800;
-    }
-
-    .chart{
-      margin-top:18px;
-      padding:16px;
-      border-radius:18px;
-      border:1px solid var(--border);
-      background:rgba(255,255,255,.02);
-    }
-
-    .bar-wrap{
-      display:flex;
-      height:18px;
-      border-radius:999px;
-      overflow:hidden;
-      background:#1f2937;
-      margin-top:10px;
-    }
-
-    .bar-principal{
-      background:#38bdf8;
-      min-width:2px;
-    }
-
-    .bar-growth{
-      background:#22c55e;
-      min-width:2px;
-    }
-
-    .legend{
-      display:flex;
-      gap:16px;
-      flex-wrap:wrap;
-      margin-top:10px;
-      color:var(--muted);
-      font-size:14px;
-    }
-
-    .dot{
-      width:12px;
-      height:12px;
-      border-radius:50%;
-      display:inline-block;
-      margin-right:6px;
-      vertical-align:middle;
-    }
-
-    .table{
-      margin-top:22px;
-      width:100%;
-      border-collapse:collapse;
-      overflow:hidden;
-      border-radius:16px;
-    }
-
-    .table th,.table td{
-      padding:12px 10px;
-      text-align:left;
-      border-bottom:1px solid var(--border);
-      font-size:14px;
-    }
-
-    .table th{
-      color:#cbd5e1;
-      background:rgba(255,255,255,.03);
-    }
-
-    .muted{
-      color:var(--muted);
-      line-height:1.7;
-    }
-
-    .info-list{
-      display:grid;
-      gap:14px;
-      margin-top:22px;
-    }
-
-    .info-item{
-      padding:16px;
-      border-radius:18px;
-      border:1px solid var(--border);
-      background:rgba(255,255,255,.02);
-    }
-
-    .footer{
-      text-align:center;
-      color:var(--muted);
-      margin-top:24px;
-      font-size:14px;
-    }
-
-    @media (max-width:900px){
-      .grid{grid-template-columns:1fr}
-    }
-
-    @media (max-width:640px){
-      .row,.mini-grid{grid-template-columns:1fr}
-      .card{padding:18px;border-radius:20px}
-      .result-main .big{font-size:34px}
-      .sub{font-size:16px}
-      .table th,.table td{font-size:13px}
-    }
-  </style>
-</head>
-<body>
-  <main class="wrap">
-    <section class="hero">
-      <div class="badge">Investiční kalkulačka zdarma</div>
-      <h1>Kalkulačka složeného úroku</h1>
-      <p class="sub">Spočítej si budoucí hodnotu investice podle počáteční částky, pravidelných měsíčních vkladů, úrokové sazby a délky investování.</p>
-    </section>
-
-    <section class="grid">
-      <div class="card">
-        <h2>Zadej údaje</h2>
-
-        <div class="row">
-          <div>
-            <label for="initial">Počáteční investice (Kč)</label>
-            <input id="initial" type="number" min="0" step="100" value="10000" />
-          </div>
-          <div>
-            <label for="monthly">Měsíční vklad (Kč)</label>
-            <input id="monthly" type="number" min="0" step="100" value="2000" />
-          </div>
-        </div>
-
-        <div class="row full">
-          <div>
-            <label for="rate">Roční úrok (%)</label>
-            <input id="rate" type="number" min="0" max="100" step="0.1" value="8" />
-          </div>
-          <div>
-            <label for="years">Doba investování (roky)</label>
-            <input id="years" type="number" min="1" max="100" step="1" value="20" />
-          </div>
-        </div>
-
-        <div class="row full">
-          <div>
-            <label for="compound">Připisování úroku</label>
-            <select id="compound">
-              <option value="12" selected>Měsíčně</option>
-              <option value="4">Čtvrtletně</option>
-              <option value="1">Ročně</option>
-            </select>
-          </div>
-          <div>
-            <label for="currency">Měna zobrazení</label>
-            <select id="currency">
-              <option value="CZK" selected>Kč</option>
-              <option value="EUR">€</option>
-              <option value="USD">$</option>
-            </select>
-          </div>
-        </div>
-
-        <button id="calcBtn">Spočítat investici</button>
-
-        <div class="info-list">
-          <div class="info-item">
-            <strong>Co je složený úrok?</strong>
-            <div class="muted">Složený úrok znamená, že se úročí nejen původní vklad, ale i dříve připsané úroky. Právě proto může investice v delším horizontu výrazně růst.</div>
-          </div>
-          <div class="info-item">
-            <strong>Jak kalkulačku používat?</strong>
-            <div class="muted">Zadej počáteční investici, pravidelný měsíční vklad, očekávané roční zhodnocení a dobu investování. Kalkulačka spočítá konečný stav i čistý zisk.</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <h2>Výsledek</h2>
-
-        <div class="results">
-          <div class="result-main">
-            <div class="stat-label">Budoucí hodnota investice</div>
-            <div class="big" id="futureValue">0 Kč</div>
-            <div class="muted" id="summaryText">Vyplň údaje a klikni na tlačítko.</div>
-          </div>
-
-          <div class="mini-grid">
-            <div class="stat">
-              <div class="stat-label">Celkem vloženo</div>
-              <div class="stat-value" id="investedValue">0 Kč</div>
-            </div>
-            <div class="stat">
-              <div class="stat-label">Zisk z úroků</div>
-              <div class="stat-value" id="profitValue">0 Kč</div>
-            </div>
-          </div>
-
-          <div class="chart">
-            <strong>Poměr vkladů a zisku</strong>
-            <div class="bar-wrap">
-              <div class="bar-principal" id="principalBar" style="width:50%"></div>
-              <div class="bar-growth" id="growthBar" style="width:50%"></div>
-            </div>
-            <div class="legend">
-              <span><span class="dot" style="background:#38bdf8"></span>Vložené peníze</span>
-              <span><span class="dot" style="background:#22c55e"></span>Vydělané úroky</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="card" style="margin-top:22px;">
-      <h3>Roční přehled růstu</h3>
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Rok</th>
-            <th>Celkem vloženo</th>
-            <th>Hodnota investice</th>
-            <th>Zisk</th>
-          </tr>
-        </thead>
-        <tbody id="yearTable">
-          <tr>
-            <td colspan="4" class="muted">Po výpočtu se zde zobrazí přehled po jednotlivých letech.</td>
-          </tr>
-        </tbody>
-      </table>
-    </section>
-
-    <div class="footer">
-      Výpočet je orientační a nezohledňuje daně, inflaci, poplatky ani kolísání výnosů.
-    </div>
-  </main>
-
-  <script>
-    const initialInput = document.getElementById('initial');
-    const monthlyInput = document.getElementById('monthly');
-    const rateInput = document.getElementById('rate');
-    const yearsInput = document.getElementById('years');
-    const compoundInput = document.getElementById('compound');
-    const currencyInput = document.getElementById('currency');
-    const calcBtn = document.getElementById('calcBtn');
-
-    const futureValueEl = document.getElementById('futureValue');
-    const investedValueEl = document.getElementById('investedValue');
-    const profitValueEl = document.getElementById('profitValue');
-    const summaryTextEl = document.getElementById('summaryText');
-    const principalBarEl = document.getElementById('principalBar');
-    const growthBarEl = document.getElementById('growthBar');
-    const yearTableEl = document.getElementById('yearTable');
-
-    function formatCurrency(value, currency) {
-      const locale = currency === 'CZK' ? 'cs-CZ' : 'en-US';
-      return new Intl.NumberFormat(locale, {
-        style: 'currency',
-        currency,
-        maximumFractionDigits: 0
-      }).format(value);
-    }
-
-    function calculateCompoundInterest() {
-      const initial = Number(initialInput.value);
-      const monthly = Number(monthlyInput.value);
-      const annualRate = Number(rateInput.value);
-      const years = Number(yearsInput.value);
-      const compoundsPerYear = Number(compoundInput.value);
-      const currency = currencyInput.value;
-
-      if (
-        initial < 0 ||
-        monthly < 0 ||
-        annualRate < 0 ||
-        years <= 0 ||
-        compoundsPerYear <= 0 ||
-        Number.isNaN(initial) ||
-        Number.isNaN(monthly) ||
-        Number.isNaN(annualRate) ||
-        Number.isNaN(years)
-      ) {
-        futureValueEl.textContent = 'Chybný vstup';
-        investedValueEl.textContent = '-';
-        profitValueEl.textContent = '-';
-        summaryTextEl.textContent = 'Zkontroluj prosím všechny hodnoty.';
-        yearTableEl.innerHTML = '<tr><td colspan="4" class="muted">Nelze spočítat výsledek.</td></tr>';
-        return;
-      }
-
-      const monthlyRate = annualRate / 100 / 12;
-      const totalMonths = years * 12;
-
-      let balance = initial;
-      const yearlyRows = [];
-
-      for (let month = 1; month <= totalMonths; month++) {
-        balance += monthly;
-
-        if (compoundsPerYear === 12) {
-          balance *= (1 + monthlyRate);
-        } else if (compoundsPerYear === 4) {
-          if (month % 3 === 0) {
-            balance *= (1 + (annualRate / 100 / 4));
-          }
-        } else if (compoundsPerYear === 1) {
-          if (month % 12 === 0) {
-            balance *= (1 + (annualRate / 100));
-          }
+      if (compoundsPerYear === 12) {
+        const monthlyRate = annualRate / 100 / 12;
+        balance *= (1 + monthlyRate);
+      } else if (compoundsPerYear === 4) {
+        if (month % 3 === 0) {
+          balance *= (1 + (annualRate / 100 / 4));
         }
-
+      } else if (compoundsPerYear === 1) {
         if (month % 12 === 0) {
-          const year = month / 12;
-          const investedSoFar = initial + (monthly * month);
-          const profitSoFar = balance - investedSoFar;
-          yearlyRows.push({
-            year,
-            investedSoFar,
-            balance,
-            profitSoFar
-          });
+          balance *= (1 + (annualRate / 100));
         }
       }
 
-      const invested = initial + (monthly * totalMonths);
-      const profit = balance - invested;
-      const principalPercent = balance > 0 ? (invested / balance) * 100 : 0;
-      const growthPercent = balance > 0 ? (profit / balance) * 100 : 0;
+      if (month % 12 === 0) {
+        const year = month / 12;
+        const investedSoFar = initial + (monthly * month);
+        const profitSoFar = balance - investedSoFar;
 
-      futureValueEl.textContent = formatCurrency(balance, currency);
-      investedValueEl.textContent = formatCurrency(invested, currency);
-      profitValueEl.textContent = formatCurrency(profit, currency);
-
-      summaryTextEl.textContent =
-        `Za ${years} let vložíš celkem ${formatCurrency(invested, currency)} a při ročním zhodnocení ${annualRate} % může mít investice hodnotu ${formatCurrency(balance, currency)}.`;
-
-      principalBarEl.style.width = `${Math.max(principalPercent, 2)}%`;
-      growthBarEl.style.width = `${Math.max(growthPercent, 2)}%`;
-
-      yearTableEl.innerHTML = yearlyRows.map(row => `
-        <tr>
-          <td>${row.year}</td>
-          <td>${formatCurrency(row.investedSoFar, currency)}</td>
-          <td>${formatCurrency(row.balance, currency)}</td>
-          <td>${formatCurrency(row.profitSoFar, currency)}</td>
-        </tr>
-      `).join('');
+        yearlyRows.push({
+          year,
+          investedSoFar,
+          balance,
+          profitSoFar
+        });
+      }
     }
 
-    calcBtn.addEventListener('click', calculateCompoundInterest);
+    const invested = initial + (monthly * totalMonths);
+    const profit = balance - invested;
 
-    [initialInput, monthlyInput, rateInput, yearsInput].forEach(input => {
-      input.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') calculateCompoundInterest();
-      });
+    const principalPercent = balance > 0 ? (invested / balance) * 100 : 50;
+    const growthPercent = balance > 0 ? (profit / balance) * 100 : 50;
+
+    futureValueEl.textContent = formatCurrency(balance, currency);
+    investedValueEl.textContent = formatCurrency(invested, currency);
+    profitValueEl.textContent = formatCurrency(profit, currency);
+
+    summaryTextEl.textContent =
+      `Za ${years} let vložíš celkem ${formatCurrency(invested, currency)} a při ročním zhodnocení ${annualRate} % může mít investice hodnotu ${formatCurrency(balance, currency)}.`;
+
+    principalBarEl.style.width = `${Math.max(principalPercent, 2)}%`;
+    growthBarEl.style.width = `${Math.max(growthPercent, 2)}%`;
+
+    yearTableEl.innerHTML = yearlyRows.map(row => `
+      <tr>
+        <td>${row.year}</td>
+        <td>${formatCurrency(row.investedSoFar, currency)}</td>
+        <td>${formatCurrency(row.balance, currency)}</td>
+        <td>${formatCurrency(row.profitSoFar, currency)}</td>
+      </tr>
+    `).join('');
+  }
+
+  calcBtn.addEventListener('click', calculateCompoundInterest);
+
+  [initialInput, monthlyInput, rateInput, yearsInput].forEach(input => {
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') calculateCompoundInterest();
     });
+  });
 
-    calculateCompoundInterest();
-  </script>
-</body>
-</html>
+  calculateCompoundInterest();
+</script>
