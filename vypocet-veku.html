@@ -1,1 +1,415 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<title>Výpočet věku online | Kolik mi je let | RychléVýpočty.cz</title>
+<meta name="description" content="Výpočet věku online zdarma. Zadejte datum narození a zjistěte svůj věk v letech, měsících, dnech i celkový počet dní života.">
+<meta name="robots" content="index,follow">
+
+<style>
+:root{
+  --bg:#020617;
+  --panel:#0f172a;
+  --card:#111827;
+  --text:#e5e7eb;
+  --muted:#94a3b8;
+  --accent:#22c55e;
+  --accent2:#38bdf8;
+  --border:rgba(255,255,255,.08);
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:linear-gradient(180deg,var(--bg) 0%, #0f172a 100%);
+  color:var(--text);
+  min-height:100vh;
+}
+
+a{
+  color:var(--accent2);
+  text-decoration:none;
+}
+
+.wrap{
+  max-width:1050px;
+  margin:0 auto;
+  padding:28px 18px 64px;
+}
+
+.topbar{
+  margin-bottom:18px;
+}
+
+.back-link{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  text-decoration:none;
+  color:var(--accent2);
+  font-size:14px;
+  border:1px solid var(--border);
+  background:rgba(56,189,248,.08);
+  padding:10px 14px;
+  border-radius:999px;
+}
+
+.hero{
+  text-align:center;
+  padding:24px 0 12px;
+}
+
+.badge{
+  display:inline-block;
+  padding:8px 14px;
+  border:1px solid var(--border);
+  border-radius:999px;
+  color:var(--accent2);
+  background:rgba(56,189,248,.08);
+  font-size:14px;
+  margin-bottom:14px;
+}
+
+h1{
+  margin:0 0 12px;
+  font-size:clamp(34px,5vw,54px);
+  line-height:1.05;
+}
+
+.sub{
+  color:var(--muted);
+  max-width:760px;
+  margin:0 auto;
+  font-size:18px;
+  line-height:1.6;
+}
+
+.layout{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:22px;
+  margin-top:32px;
+}
+
+.panel{
+  background:rgba(17,24,39,.92);
+  border:1px solid var(--border);
+  border-radius:24px;
+  padding:24px;
+  box-shadow:0 12px 40px rgba(0,0,0,.25);
+}
+
+.panel h2{
+  margin:0 0 18px;
+  font-size:28px;
+}
+
+.field{
+  margin-bottom:16px;
+}
+
+label{
+  display:block;
+  margin-bottom:8px;
+  color:#cbd5e1;
+  font-size:14px;
+  font-weight:600;
+}
+
+input{
+  width:100%;
+  padding:14px 16px;
+  border-radius:16px;
+  border:1px solid var(--border);
+  background:#020617;
+  color:var(--text);
+  font-size:16px;
+  outline:none;
+}
+
+input:focus{
+  border-color:rgba(56,189,248,.5);
+}
+
+button{
+  margin-top:8px;
+  padding:16px;
+  width:100%;
+  background:linear-gradient(90deg,var(--accent) 0%, #16a34a 100%);
+  border:none;
+  border-radius:16px;
+  color:#052e16;
+  font-size:16px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.note{
+  margin-top:14px;
+  font-size:14px;
+  color:var(--muted);
+  line-height:1.6;
+}
+
+.result-main-label{
+  color:var(--muted);
+  font-size:14px;
+  margin-bottom:8px;
+}
+
+.result-main-value{
+  font-size:40px;
+  font-weight:800;
+  line-height:1.1;
+  margin-bottom:18px;
+}
+
+.stats{
+  display:grid;
+  gap:14px;
+}
+
+.stat{
+  background:rgba(255,255,255,.04);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:16px;
+}
+
+.stat-label{
+  color:var(--muted);
+  font-size:14px;
+  margin-bottom:6px;
+}
+
+.stat-value{
+  font-size:24px;
+  font-weight:700;
+}
+
+.summary{
+  color:var(--muted);
+  line-height:1.7;
+  margin-top:16px;
+}
+
+.section{
+  margin-top:28px;
+}
+
+.section h2{
+  margin:0 0 16px;
+  font-size:28px;
+}
+
+.content-box{
+  background:rgba(17,24,39,.92);
+  border:1px solid var(--border);
+  border-radius:24px;
+  padding:24px;
+  line-height:1.8;
+  color:var(--muted);
+  box-shadow:0 12px 40px rgba(0,0,0,.25);
+}
+
+.content-box h2{
+  color:var(--text);
+  margin-top:0;
+}
+
+.footer{
+  text-align:center;
+  color:var(--muted);
+  margin-top:36px;
+  font-size:14px;
+}
+
+@media (max-width:900px){
+  .layout{
+    grid-template-columns:1fr;
+  }
+}
+
+@media (max-width:640px){
+  .wrap{
+    padding:20px 14px 56px;
+  }
+
+  .sub{
+    font-size:16px;
+  }
+
+  .panel,
+  .content-box{
+    border-radius:20px;
+  }
+
+  .result-main-value{
+    font-size:34px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<main class="wrap">
+
+  <div class="topbar">
+    <a class="back-link" href="./index.html">← Zpět na přehled kalkulaček</a>
+  </div>
+
+  <section class="hero">
+    <div class="badge">Datum a čas</div>
+    <h1>Výpočet věku</h1>
+    <p class="sub">
+      Zadejte datum narození a zjistěte svůj věk v letech, měsících a dnech.
+      Kalkulačka zároveň spočítá i celkový počet dní od narození.
+    </p>
+  </section>
+
+  <section class="layout">
+
+    <div class="panel">
+      <h2>Zadejte datum narození</h2>
+
+      <div class="field">
+        <label for="birthDate">Datum narození</label>
+        <input id="birthDate" type="date">
+      </div>
+
+      <button id="calcBtn" type="button">Spočítat věk</button>
+
+      <div class="note">
+        Výpočet vychází z dnešního data podle zařízení, na kterém stránku právě otevíráte.
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Výsledek</h2>
+
+      <div class="result-main-label">Aktuální věk</div>
+      <div class="result-main-value" id="mainAge">—</div>
+
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-label">Měsíce života</div>
+          <div class="stat-value" id="monthsValue">—</div>
+        </div>
+
+        <div class="stat">
+          <div class="stat-label">Dny života</div>
+          <div class="stat-value" id="daysValue">—</div>
+        </div>
+      </div>
+
+      <div class="summary" id="summaryText">
+        Zadejte datum narození a kalkulačka spočítá váš věk.
+      </div>
+    </div>
+
+  </section>
+
+  <section class="section">
+    <div class="content-box">
+      <h2>Jak funguje výpočet věku</h2>
+      <p>
+        Kalkulačka porovnává zadané datum narození s aktuálním datem a vypočítá,
+        kolik let, měsíců a dní uplynulo. Výsledek je užitečný pro běžnou orientaci,
+        formuláře, smlouvy nebo osobní přehled.
+      </p>
+      <p>
+        Kromě věku v letech se zobrazuje také orientační počet měsíců a celkový počet dní života.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="content-box">
+      <h2>K čemu se kalkulačka hodí</h2>
+      <p>
+        Výpočet věku se hodí například při vyplňování dokumentů, ověřování věku,
+        výpočtu jubilea nebo jen pro rychlé zjištění přesného věku bez ručního počítání.
+      </p>
+      <p>
+        Pokud budeš chtít, můžeme později udělat i navazující nástroj
+        <strong>kolik dní do data</strong>, který do této kategorie zapadne perfektně.
+      </p>
+    </div>
+  </section>
+
+  <div class="footer">
+    © RychléVýpočty.cz – výpočet věku online zdarma
+  </div>
+
+</main>
+
+<script>
+const birthDateInput = document.getElementById('birthDate');
+const calcBtn = document.getElementById('calcBtn');
+
+const mainAge = document.getElementById('mainAge');
+const monthsValue = document.getElementById('monthsValue');
+const daysValue = document.getElementById('daysValue');
+const summaryText = document.getElementById('summaryText');
+
+function calculateAge(){
+  const value = birthDateInput.value;
+
+  if (!value) {
+    mainAge.textContent = '—';
+    monthsValue.textContent = '—';
+    daysValue.textContent = '—';
+    summaryText.textContent = 'Zadejte prosím datum narození.';
+    return;
+  }
+
+  const birthDate = new Date(value);
+  const today = new Date();
+
+  if (birthDate > today) {
+    mainAge.textContent = '—';
+    monthsValue.textContent = '—';
+    daysValue.textContent = '—';
+    summaryText.textContent = 'Datum narození nemůže být v budoucnosti.';
+    return;
+  }
+
+  let years = today.getFullYear() - birthDate.getFullYear();
+  let months = today.getMonth() - birthDate.getMonth();
+  let days = today.getDate() - birthDate.getDate();
+
+  if (days < 0) {
+    months--;
+    const prevMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+    days += prevMonth.getDate();
+  }
+
+  if (months < 0) {
+    years--;
+    months += 12;
+  }
+
+  const diffMs = today - birthDate;
+  const totalDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  const totalMonths = years * 12 + months;
+
+  mainAge.textContent = `${years} let, ${months} měsíců a ${days} dní`;
+  monthsValue.textContent = totalMonths.toLocaleString('cs-CZ');
+  daysValue.textContent = totalDays.toLocaleString('cs-CZ');
+  summaryText.textContent = `Pokud jste se narodili ${birthDate.toLocaleDateString('cs-CZ')}, váš aktuální věk je ${years} let, ${months} měsíců a ${days} dní.`;
+}
+
+calcBtn.addEventListener('click', calculateAge);
+
+birthDateInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') calculateAge();
+});
+</script>
+
+</body>
+</html>
