@@ -1,1 +1,248 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<title>Kalkulačka procent online | RychléVýpočty.cz</title>
+
+<meta name="description" content="Jednoduchá kalkulačka procent online. Spočítejte kolik je X % z Y, o kolik procent se změnila hodnota nebo kolik procent je A z B.">
+
+<meta name="robots" content="index,follow">
+
+<style>
+
+:root{
+--bg:#020617;
+--panel:#0f172a;
+--card:#111827;
+--text:#e5e7eb;
+--muted:#94a3b8;
+--accent:#22c55e;
+--accent2:#38bdf8;
+--border:rgba(255,255,255,.08);
+}
+
+*{box-sizing:border-box}
+
+body{
+margin:0;
+font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+background:linear-gradient(180deg,var(--bg) 0%, #0f172a 100%);
+color:var(--text);
+min-height:100vh;
+}
+
+.wrap{
+max-width:900px;
+margin:0 auto;
+padding:30px 18px 60px;
+}
+
+.back{
+display:inline-block;
+margin-bottom:20px;
+text-decoration:none;
+color:var(--accent2);
+font-size:14px;
+}
+
+.hero{
+text-align:center;
+margin-bottom:30px;
+}
+
+h1{
+margin:0 0 10px;
+font-size:clamp(32px,5vw,48px);
+}
+
+.sub{
+color:var(--muted);
+max-width:600px;
+margin:0 auto;
+line-height:1.6;
+}
+
+.panel{
+background:rgba(17,24,39,.92);
+border:1px solid var(--border);
+border-radius:22px;
+padding:26px;
+margin-bottom:24px;
+}
+
+.panel h2{
+margin-top:0;
+}
+
+.field{
+margin-bottom:16px;
+}
+
+label{
+display:block;
+margin-bottom:6px;
+font-size:14px;
+color:var(--muted);
+}
+
+input{
+width:100%;
+padding:12px 14px;
+border-radius:12px;
+border:1px solid var(--border);
+background:#020617;
+color:var(--text);
+font-size:16px;
+}
+
+button{
+width:100%;
+margin-top:10px;
+padding:14px;
+border:none;
+border-radius:14px;
+background:var(--accent);
+color:#022c22;
+font-size:16px;
+font-weight:600;
+cursor:pointer;
+}
+
+.result{
+margin-top:18px;
+font-size:20px;
+font-weight:600;
+color:#86efac;
+}
+
+.footer{
+margin-top:40px;
+color:var(--muted);
+text-align:center;
+font-size:14px;
+}
+
+</style>
+</head>
+
+<body>
+
+<main class="wrap">
+
+<a class="back" href="./index.html">← zpět na přehled kalkulaček</a>
+
+<section class="hero">
+
+<h1>Kalkulačka procent</h1>
+
+<p class="sub">
+Jednoduchý výpočet procent online. Spočítejte kolik je procent z čísla,
+o kolik procent se změnila hodnota nebo kolik procent tvoří jedno číslo z druhého.
+</p>
+
+</section>
+
+<section class="panel">
+
+<h2>Kolik je X % z Y</h2>
+
+<div class="field">
+<label>Procenta</label>
+<input id="percent1" type="number" value="10">
+</div>
+
+<div class="field">
+<label>Z čísla</label>
+<input id="number1" type="number" value="200">
+</div>
+
+<button onclick="calcPercent()">Spočítat</button>
+
+<div class="result" id="result1"></div>
+
+</section>
+
+<section class="panel">
+
+<h2>O kolik procent se změnila hodnota</h2>
+
+<div class="field">
+<label>Původní hodnota</label>
+<input id="oldValue" type="number" value="100">
+</div>
+
+<div class="field">
+<label>Nová hodnota</label>
+<input id="newValue" type="number" value="120">
+</div>
+
+<button onclick="calcChange()">Spočítat</button>
+
+<div class="result" id="result2"></div>
+
+</section>
+
+<section class="panel">
+
+<h2>Kolik procent je A z B</h2>
+
+<div class="field">
+<label>Číslo A</label>
+<input id="valueA" type="number" value="50">
+</div>
+
+<div class="field">
+<label>Číslo B</label>
+<input id="valueB" type="number" value="200">
+</div>
+
+<button onclick="calcShare()">Spočítat</button>
+
+<div class="result" id="result3"></div>
+
+</section>
+
+<div class="footer">
+© RychléVýpočty.cz – kalkulačka procent online
+</div>
+
+</main>
+
+<script>
+
+function calcPercent(){
+let p=document.getElementById("percent1").value;
+let n=document.getElementById("number1").value;
+
+let result=(p/100)*n;
+
+document.getElementById("result1").innerText=
+p+" % z "+n+" je "+result;
+}
+
+function calcChange(){
+let oldV=document.getElementById("oldValue").value;
+let newV=document.getElementById("newValue").value;
+
+let change=((newV-oldV)/oldV)*100;
+
+document.getElementById("result2").innerText=
+"Změna je "+change.toFixed(2)+" %";
+}
+
+function calcShare(){
+let a=document.getElementById("valueA").value;
+let b=document.getElementById("valueB").value;
+
+let result=(a/b)*100;
+
+document.getElementById("result3").innerText=
+a+" je "+result.toFixed(2)+" % z "+b;
+}
+
+</script>
+
+</body>
+</html>
