@@ -1,1 +1,290 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<title>Kolik dní do data | Výpočet dní online | RychléVýpočty.cz</title>
+
+<meta name="description" content="Zjistěte kolik dní zbývá do zvoleného data. Jednoduchá kalkulačka pro výpočet počtu dní mezi dneškem a zadaným datem.">
+
+<meta name="robots" content="index,follow">
+
+<style>
+
+:root{
+--bg:#020617;
+--panel:#0f172a;
+--card:#111827;
+--text:#e5e7eb;
+--muted:#94a3b8;
+--accent:#22c55e;
+--accent2:#38bdf8;
+--border:rgba(255,255,255,.08);
+}
+
+*{box-sizing:border-box}
+
+body{
+margin:0;
+font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+background:linear-gradient(180deg,var(--bg) 0%, #0f172a 100%);
+color:var(--text);
+min-height:100vh;
+}
+
+a{
+color:var(--accent2);
+text-decoration:none
+}
+
+.wrap{
+max-width:1000px;
+margin:auto;
+padding:28px 18px 60px;
+}
+
+.back{
+margin-bottom:18px;
+display:inline-block;
+font-size:14px;
+}
+
+.hero{
+text-align:center;
+margin-bottom:30px
+}
+
+h1{
+margin:0 0 12px;
+font-size:clamp(34px,5vw,54px);
+}
+
+.sub{
+color:var(--muted);
+max-width:720px;
+margin:auto;
+line-height:1.6
+}
+
+.layout{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:22px;
+margin-top:30px
+}
+
+.panel{
+background:rgba(17,24,39,.92);
+border:1px solid var(--border);
+border-radius:24px;
+padding:24px
+}
+
+label{
+display:block;
+margin-bottom:8px;
+color:#cbd5e1;
+font-size:14px;
+font-weight:600
+}
+
+input{
+width:100%;
+padding:14px;
+border-radius:14px;
+border:1px solid var(--border);
+background:#020617;
+color:white;
+font-size:16px
+}
+
+button{
+margin-top:16px;
+padding:16px;
+width:100%;
+border:none;
+border-radius:16px;
+background:linear-gradient(90deg,var(--accent) 0%, #16a34a 100%);
+font-size:16px;
+font-weight:700;
+cursor:pointer;
+color:#052e16
+}
+
+.result-main{
+font-size:40px;
+font-weight:800;
+margin-bottom:16px
+}
+
+.stat{
+background:rgba(255,255,255,.04);
+border:1px solid var(--border);
+border-radius:16px;
+padding:16px;
+margin-bottom:12px
+}
+
+.stat-label{
+font-size:14px;
+color:var(--muted);
+margin-bottom:4px
+}
+
+.stat-value{
+font-size:22px;
+font-weight:700
+}
+
+.summary{
+margin-top:12px;
+color:var(--muted);
+line-height:1.7
+}
+
+.section{
+margin-top:28px
+}
+
+.content-box{
+background:rgba(17,24,39,.92);
+border:1px solid var(--border);
+border-radius:24px;
+padding:24px;
+line-height:1.8;
+color:var(--muted)
+}
+
+.footer{
+text-align:center;
+margin-top:36px;
+color:var(--muted);
+font-size:14px
+}
+
+@media(max-width:900px){
+.layout{
+grid-template-columns:1fr
+}
+}
+
+</style>
+</head>
+
+<body>
+
+<main class="wrap">
+
+<a class="back" href="./index.html">← zpět na přehled kalkulaček</a>
+
+<section class="hero">
+
+<h1>Kolik dní do data</h1>
+
+<p class="sub">
+Zadejte libovolné datum a zjistěte kolik dní zbývá do daného dne.
+Kalkulačka automaticky počítá rozdíl mezi dnešním datem a zadaným datem.
+</p>
+
+</section>
+
+<section class="layout">
+
+<div class="panel">
+
+<h2>Zadejte datum</h2>
+
+<label for="targetDate">Datum</label>
+<input id="targetDate" type="date">
+
+<button onclick="calculateDays()">Spočítat</button>
+
+</div>
+
+<div class="panel">
+
+<h2>Výsledek</h2>
+
+<div class="result-main" id="daysResult">—</div>
+
+<div class="stat">
+<div class="stat-label">Týdny</div>
+<div class="stat-value" id="weeksResult">—</div>
+</div>
+
+<div class="stat">
+<div class="stat-label">Měsíce (orientačně)</div>
+<div class="stat-value" id="monthsResult">—</div>
+</div>
+
+<div class="summary" id="summaryText">
+Zadejte datum a kalkulačka spočítá rozdíl v dnech.
+</div>
+
+</div>
+
+</section>
+
+<section class="section">
+
+<div class="content-box">
+
+<h2>Jak funguje výpočet</h2>
+
+<p>
+Kalkulačka porovnává dnešní datum se zadaným datem a vypočítá rozdíl
+v kalendářních dnech. Výsledek je možné zobrazit také v týdnech
+nebo orientačně v měsících.
+</p>
+
+<p>
+Tento nástroj se hodí například při plánování dovolené,
+počítání dnů do události nebo sledování termínů.
+</p>
+
+</div>
+
+</section>
+
+<div class="footer">
+© RychléVýpočty.cz – výpočet dní do data
+</div>
+
+</main>
+
+<script>
+
+function calculateDays(){
+
+const input=document.getElementById("targetDate").value
+
+if(!input){
+alert("Zadejte datum")
+return
+}
+
+const today=new Date()
+const target=new Date(input)
+
+const diff=target-today
+
+const days=Math.ceil(diff/(1000*60*60*24))
+
+document.getElementById("daysResult").innerText=days+" dní"
+
+document.getElementById("weeksResult").innerText=
+Math.floor(days/7)+" týdnů"
+
+document.getElementById("monthsResult").innerText=
+Math.floor(days/30)+" měsíců"
+
+document.getElementById("summaryText").innerText=
+"Do data "+target.toLocaleDateString("cs-CZ")+" zbývá přibližně "+days+" dní."
+
+}
+
+</script>
+
+</body>
+</html>
