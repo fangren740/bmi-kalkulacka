@@ -1,1 +1,1179 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kalkulačka pracovních dnů online | RychléVýpočty.cz</title>
+  <meta name="description" content="Spočítejte počet pracovních dnů mezi dvěma daty. Kalkulačka umí započítat i víkendy, státní svátky v ČR a počet pracovních hodin.">
+  <meta name="keywords" content="kalkulačka pracovních dnů, pracovní dny, počet pracovních dnů, pracovní dny mezi daty, pracovní hodiny kalkulačka">
+  <meta name="author" content="RychléVýpočty.cz">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://rychlevypocty.cz/pracovni-dny-kalkulacka.html">
 
+  <meta property="og:title" content="Kalkulačka pracovních dnů online | RychléVýpočty.cz">
+  <meta property="og:description" content="Výpočet počtu pracovních dnů mezi dvěma daty včetně možnosti odečtení víkendů a státních svátků v ČR.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rychlevypocty.cz/pracovni-dny-kalkulacka.html">
+  <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Kalkulačka pracovních dnů online | RychléVýpočty.cz">
+  <meta name="twitter:description" content="Spočítejte počet pracovních dnů, víkendů, svátků a pracovních hodin mezi dvěma daty.">
+
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #5f6b85;
+      --primary: #2152ff;
+      --primary-dark: #183dbf;
+      --border: #dbe3f0;
+      --success: #138a4b;
+      --warning: #b66a00;
+      --shadow: 0 12px 32px rgba(20, 32, 70, 0.08);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #f7f9fd 0%, #eef3fb 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      padding: 18px 0;
+      border-bottom: 1px solid rgba(219, 227, 240, 0.8);
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+
+    .brand span {
+      color: var(--primary);
+    }
+
+    .topnav {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      font-size: 0.97rem;
+    }
+
+    .hero {
+      padding: 42px 0 20px;
+    }
+
+    .breadcrumbs {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .hero-copy h1 {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      margin: 0 0 16px;
+    }
+
+    .hero-copy p {
+      margin: 0 0 16px;
+      font-size: 1.06rem;
+      color: var(--muted);
+      max-width: 720px;
+    }
+
+    .hero-points {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .hero-pill {
+      background: rgba(33, 82, 255, 0.08);
+      color: var(--primary-dark);
+      border: 1px solid rgba(33, 82, 255, 0.12);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .hero-box {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-box h2 {
+      margin: 0 0 10px;
+      font-size: 1.2rem;
+    }
+
+    .hero-box p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.02fr 0.98fr;
+      gap: 28px;
+      align-items: start;
+      padding: 22px 0 32px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .card-header {
+      padding: 24px 24px 10px;
+    }
+
+    .card-header h2,
+    .card-header h3 {
+      margin: 0 0 8px;
+      font-size: 1.3rem;
+      letter-spacing: -0.02em;
+    }
+
+    .card-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .card-body {
+      padding: 20px 24px 24px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field label {
+      font-weight: 700;
+      font-size: 0.96rem;
+    }
+
+    .field small {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: -2px;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      padding: 14px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      font-size: 1rem;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      outline: none;
+      border-color: rgba(33, 82, 255, 0.45);
+      box-shadow: 0 0 0 4px rgba(33, 82, 255, 0.10);
+    }
+
+    .checkbox-grid {
+      display: grid;
+      gap: 12px;
+      margin-top: 6px;
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: #fbfdff;
+    }
+
+    .checkbox-row input {
+      margin-top: 3px;
+      transform: scale(1.1);
+    }
+
+    .checkbox-row label {
+      font-weight: 600;
+      font-size: 0.96rem;
+      cursor: pointer;
+    }
+
+    .checkbox-row span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.88rem;
+      font-weight: 400;
+      margin-top: 2px;
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.06s ease, background 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background: #eef3ff;
+      color: var(--primary-dark);
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .result-box {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+
+    .result-label {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .result-value {
+      font-size: clamp(1.2rem, 2.4vw, 2rem);
+      line-height: 1.15;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .highlight {
+      background: linear-gradient(180deg, #eef7ff 0%, #f9fcff 100%);
+      border-color: rgba(33, 82, 255, 0.18);
+    }
+
+    .info-list {
+      display: grid;
+      gap: 12px;
+      margin: 18px 0 0;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid #edf2fa;
+    }
+
+    .info-row:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .info-row span:first-child {
+      color: var(--muted);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+
+    .badge.success {
+      background: rgba(19, 138, 75, 0.10);
+      color: var(--success);
+    }
+
+    .badge.warning {
+      background: rgba(182, 106, 0, 0.11);
+      color: var(--warning);
+    }
+
+    .note {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1px solid #e7edf7;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 18px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 680px;
+      background: #fff;
+    }
+
+    th, td {
+      padding: 14px 14px;
+      text-align: left;
+      border-bottom: 1px solid #edf2fa;
+      font-size: 0.96rem;
+    }
+
+    th {
+      background: #f8fbff;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .content-section {
+      padding: 8px 0;
+    }
+
+    .content-section h2 {
+      font-size: 1.7rem;
+      letter-spacing: -0.03em;
+      margin: 0 0 14px;
+    }
+
+    .content-section h3 {
+      font-size: 1.15rem;
+      margin: 28px 0 10px;
+    }
+
+    .content-section p {
+      color: var(--muted);
+      margin: 0 0 14px;
+    }
+
+    .content-section ul {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    .content-section li {
+      margin-bottom: 8px;
+    }
+
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .related-card {
+      display: block;
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      color: var(--text);
+      box-shadow: var(--shadow);
+    }
+
+    .related-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .related-card span {
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    footer {
+      margin-top: 40px;
+      border-top: 1px solid rgba(219, 227, 240, 0.9);
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .footer-inner {
+      padding: 24px 0 40px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .layout,
+      .related-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .container {
+        width: min(100% - 24px, 1160px);
+      }
+
+      .form-grid,
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 28px;
+      }
+
+      .card-header,
+      .card-body,
+      .hero-box {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebApplication",
+    "name":"Kalkulačka pracovních dnů",
+    "url":"https://rychlevypocty.cz/pracovni-dny-kalkulacka.html",
+    "applicationCategory":"BusinessApplication",
+    "operatingSystem":"Any",
+    "description":"Online kalkulačka pro výpočet pracovních dnů mezi dvěma daty včetně víkendů, svátků a pracovních hodin.",
+    "offers":{
+      "@type":"Offer",
+      "price":"0",
+      "priceCurrency":"CZK"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"Jak se počítají pracovní dny mezi dvěma daty?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Počet pracovních dnů se počítá jako počet kalendářních dnů v zadaném období po odečtení víkendů a případně také státních svátků. Záleží na tom, zda se do výpočtu započítává počáteční a koncové datum."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Započítává kalkulačka státní svátky v ČR?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Ano, kalkulačka umí zohlednit státní svátky v České republice, pokud tuto možnost při výpočtu ponecháte zapnutou."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Lze spočítat i pracovní hodiny?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Ano. Pokud zadáte počet hodin za jeden pracovní den, kalkulačka dopočítá i celkový počet pracovních hodin za celé období."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="/">Rychlé<span>Výpočty</span>.cz</a>
+      <nav class="topnav" aria-label="Hlavní navigace">
+        <a href="/">Domů</a>
+        <a href="/kolik-dni-do-data.html">Kolik dní do data</a>
+        <a href="/vypocet-veku.html">Výpočet věku</a>
+        <a href="/hypotecni-kalkulacka.html">Hypotéka</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumbs">
+          <a href="/">RychléVýpočty.cz</a> / Kalkulačka pracovních dnů
+        </div>
+
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <h1>Kalkulačka pracovních dnů</h1>
+            <p>Spočítejte počet pracovních dnů mezi dvěma daty. Kalkulačka umí zohlednit víkendy, státní svátky v České republice i celkový počet pracovních hodin podle délky směny.</p>
+            <p>Je vhodná pro plánování dovolené, výpočet termínů, evidenci práce, HR agendu i běžné praktické použití.</p>
+
+            <div class="hero-points">
+              <div class="hero-pill">Pracovní dny mezi daty</div>
+              <div class="hero-pill">Víkendy a svátky</div>
+              <div class="hero-pill">Počet pracovních hodin</div>
+              <div class="hero-pill">Přehled po dnech</div>
+            </div>
+          </div>
+
+          <div class="hero-box">
+            <h2>Co kalkulačka umí</h2>
+            <p>Vypočítá celkový počet dnů v období, počet víkendových dnů, počet svátků, čistý počet pracovních dnů a orientačně i počet pracovních hodin. Výsledek získáte okamžitě po zadání dat.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container layout">
+      <div class="card">
+        <div class="card-header">
+          <h2>Zadání období</h2>
+          <p>Vyberte počáteční a koncové datum a nastavte pravidla výpočtu.</p>
+        </div>
+        <div class="card-body">
+          <form id="workdaysForm">
+            <div class="form-grid">
+              <div class="field">
+                <label for="startDate">Počáteční datum</label>
+                <input type="date" id="startDate">
+                <small>Den, od kterého chcete počítat.</small>
+              </div>
+
+              <div class="field">
+                <label for="endDate">Koncové datum</label>
+                <input type="date" id="endDate">
+                <small>Den, ke kterému chcete období uzavřít.</small>
+              </div>
+
+              <div class="field">
+                <label for="hoursPerDay">Pracovních hodin za den</label>
+                <input type="number" id="hoursPerDay" min="1" max="24" step="0.5" value="8" inputmode="decimal">
+                <small>Např. 8 hodin při běžné pracovní době.</small>
+              </div>
+
+              <div class="field">
+                <label for="countMode">Způsob započítání období</label>
+                <select id="countMode">
+                  <option value="inclusive" selected>Včetně počátečního i koncového dne</option>
+                  <option value="exclusiveStart">Bez počátečního dne</option>
+                  <option value="exclusiveEnd">Bez koncového dne</option>
+                  <option value="exclusiveBoth">Bez počátečního i koncového dne</option>
+                </select>
+                <small>Ovlivňuje celkový počet dnů v intervalu.</small>
+              </div>
+
+              <div class="field full">
+                <label>Nastavení výpočtu</label>
+                <div class="checkbox-grid">
+                  <div class="checkbox-row">
+                    <input type="checkbox" id="excludeWeekends" checked>
+                    <label for="excludeWeekends">
+                      Odečíst víkendy
+                      <span>Sobota a neděle se nebudou počítat jako pracovní dny.</span>
+                    </label>
+                  </div>
+
+                  <div class="checkbox-row">
+                    <input type="checkbox" id="excludeHolidays" checked>
+                    <label for="excludeHolidays">
+                      Odečíst státní svátky v ČR
+                      <span>Do výpočtu budou zahrnuty pevné i pohyblivé svátky v České republice.</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="actions full">
+                <button type="submit" class="btn-primary">Spočítat pracovní dny</button>
+                <button type="button" class="btn-secondary" id="resetBtn">Obnovit výchozí hodnoty</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>Výsledek výpočtu</h2>
+          <p>Přehled období, pracovních dnů, víkendů, svátků a hodin.</p>
+        </div>
+        <div class="card-body">
+          <div class="results-grid">
+            <div class="result-box highlight">
+              <div class="result-label">Pracovních dnů</div>
+              <div class="result-value" id="workingDays">0</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Pracovních hodin</div>
+              <div class="result-value" id="workingHours">0 h</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Kalendářních dnů</div>
+              <div class="result-value" id="calendarDays">0</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Víkendy + svátky</div>
+              <div class="result-value" id="nonWorkingDays">0</div>
+            </div>
+          </div>
+
+          <div id="periodBadge" class="badge success">Krátké období</div>
+
+          <div class="info-list">
+            <div class="info-row">
+              <span>Počet víkendových dnů</span>
+              <strong id="weekendDays">0</strong>
+            </div>
+            <div class="info-row">
+              <span>Počet svátků v pracovních dnech</span>
+              <strong id="holidayDays">0</strong>
+            </div>
+            <div class="info-row">
+              <span>Období od–do</span>
+              <strong id="periodLabel">—</strong>
+            </div>
+            <div class="info-row">
+              <span>Nastavení započítání</span>
+              <strong id="modeLabel">—</strong>
+            </div>
+            <div class="info-row">
+              <span>Délka pracovního dne</span>
+              <strong id="dayLengthLabel">0 h</strong>
+            </div>
+          </div>
+
+          <div class="note">
+            Výpočet je orientační a vychází ze standardních pracovních dnů pondělí až pátek. Nezohledňuje individuální směnné kalendáře, firemní volna ani specifické pracovní režimy.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="card">
+        <div class="card-header">
+          <h3>Přehled podle dnů</h3>
+          <p>Ukázka prvních a posledních dnů z vybraného období s rozlišením pracovních dnů, víkendů a svátků.</p>
+        </div>
+        <div class="card-body">
+          <div class="table-wrap">
+            <table aria-label="Přehled dnů v období">
+              <thead>
+                <tr>
+                  <th>Datum</th>
+                  <th>Den v týdnu</th>
+                  <th>Typ dne</th>
+                  <th>Poznámka</th>
+                </tr>
+              </thead>
+              <tbody id="scheduleBody">
+                <tr>
+                  <td colspan="4">Po zadání údajů se zobrazí orientační přehled vybraného období.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container content-section">
+      <h2>Jak kalkulačka pracovních dnů funguje</h2>
+      <p>Kalkulačka prochází jednotlivé dny v zadaném období a podle nastavení určuje, zda jde o pracovní den, víkend nebo státní svátek. Poté spočítá celkový počet pracovních dnů a případně je převede i na pracovní hodiny.</p>
+
+      <h3>Kdy se hodí použít výpočet pracovních dnů</h3>
+      <ul>
+        <li>při plánování dovolené nebo pracovní nepřítomnosti,</li>
+        <li>při výpočtu termínu dodání nebo splnění úkolu,</li>
+        <li>pro HR, mzdovou a administrativní agendu,</li>
+        <li>při evidenci práce a orientačním výpočtu odpracovaných hodin.</li>
+      </ul>
+
+      <h3>Jak se do výsledku promítají svátky</h3>
+      <p>Pokud zapnete odečtení státních svátků, kalkulačka vyřadí z pracovních dnů všechny svátky v České republice, které připadají na pracovní den. Pokud svátek připadne na sobotu nebo neděli, samostatně se už znovu neodečítá.</p>
+
+      <h3>Na co si dát pozor</h3>
+      <p>Výsledek odpovídá běžnému modelu pondělí až pátek. Pokud pracujete ve směnném provozu, na zkrácené úvazky nebo máte firemní kalendář s vlastními volnými dny, skutečný počet pracovních dnů se může lišit.</p>
+    </section>
+
+    <section class="container content-section">
+      <h2>Související kalkulačky</h2>
+      <div class="related-grid">
+        <a class="related-card" href="/kolik-dni-do-data.html">
+          <strong>Kolik dní do data</strong>
+          <span>Výpočet počtu dnů do konkrétního data.</span>
+        </a>
+
+        <a class="related-card" href="/vypocet-veku.html">
+          <strong>Výpočet věku</strong>
+          <span>Rychlý výpočet věku podle data narození.</span>
+        </a>
+
+        <a class="related-card" href="/cista-mzda-kalkulacka.html">
+          <strong>Čistá mzda kalkulačka</strong>
+          <span>Praktický výpočet čisté mzdy a odvodů.</span>
+        </a>
+
+        <a class="related-card" href="/procenta-kalkulacka.html">
+          <strong>Procenta kalkulačka</strong>
+          <span>Rychlé procentní výpočty pro běžné použití.</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      © 2026 RychléVýpočty.cz — online kalkulačky a praktické výpočty pro každodenní použití.
+    </div>
+  </footer>
+
+  <script>
+    const form = document.getElementById('workdaysForm');
+    const resetBtn = document.getElementById('resetBtn');
+
+    const outputs = {
+      workingDays: document.getElementById('workingDays'),
+      workingHours: document.getElementById('workingHours'),
+      calendarDays: document.getElementById('calendarDays'),
+      nonWorkingDays: document.getElementById('nonWorkingDays'),
+      weekendDays: document.getElementById('weekendDays'),
+      holidayDays: document.getElementById('holidayDays'),
+      periodLabel: document.getElementById('periodLabel'),
+      modeLabel: document.getElementById('modeLabel'),
+      dayLengthLabel: document.getElementById('dayLengthLabel'),
+      periodBadge: document.getElementById('periodBadge'),
+      scheduleBody: document.getElementById('scheduleBody')
+    };
+
+    function formatDateCZ(date) {
+      return new Intl.DateTimeFormat('cs-CZ', {
+        day: 'numeric',
+        month: 'numeric',
+        year: 'numeric'
+      }).format(date);
+    }
+
+    function formatHours(value) {
+      return new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 1
+      }).format(value) + ' h';
+    }
+
+    function getCzechHolidayMap(year) {
+      const holidays = {};
+      const fixed = [
+        { key: '01-01', name: 'Den obnovy samostatného českého státu / Nový rok' },
+        { key: '05-01', name: 'Svátek práce' },
+        { key: '05-08', name: 'Den vítězství' },
+        { key: '07-05', name: 'Den slovanských věrozvěstů Cyrila a Metoděje' },
+        { key: '07-06', name: 'Den upálení mistra Jana Husa' },
+        { key: '09-28', name: 'Den české státnosti' },
+        { key: '10-28', name: 'Den vzniku samostatného československého státu' },
+        { key: '11-17', name: 'Den boje za svobodu a demokracii' },
+        { key: '12-24', name: 'Štědrý den' },
+        { key: '12-25', name: '1. svátek vánoční' },
+        { key: '12-26', name: '2. svátek vánoční' }
+      ];
+
+      fixed.forEach(item => {
+        holidays[`${year}-${item.key}`] = item.name;
+      });
+
+      const easter = getEasterSunday(year);
+      const goodFriday = new Date(easter);
+      goodFriday.setDate(easter.getDate() - 2);
+
+      const easterMonday = new Date(easter);
+      easterMonday.setDate(easter.getDate() + 1);
+
+      holidays[dateKey(goodFriday)] = 'Velký pátek';
+      holidays[dateKey(easterMonday)] = 'Velikonoční pondělí';
+
+      return holidays;
+    }
+
+    function getEasterSunday(year) {
+      const a = year % 19;
+      const b = Math.floor(year / 100);
+      const c = year % 100;
+      const d = Math.floor(b / 4);
+      const e = b % 4;
+      const f = Math.floor((b + 8) / 25);
+      const g = Math.floor((b - f + 1) / 3);
+      const h = (19 * a + b - d - g + 15) % 30;
+      const i = Math.floor(c / 4);
+      const k = c % 4;
+      const l = (32 + 2 * e + 2 * i - h - k) % 7;
+      const m = Math.floor((a + 11 * h + 22 * l) / 451);
+      const month = Math.floor((h + l - 7 * m + 114) / 31);
+      const day = ((h + l - 7 * m + 114) % 31) + 1;
+      return new Date(year, month - 1, day);
+    }
+
+    function dateKey(date) {
+      const y = date.getFullYear();
+      const m = String(date.getMonth() + 1).padStart(2, '0');
+      const d = String(date.getDate()).padStart(2, '0');
+      return `${y}-${m}-${d}`;
+    }
+
+    function normalizeDate(dateString) {
+      const [year, month, day] = dateString.split('-').map(Number);
+      return new Date(year, month - 1, day);
+    }
+
+    function addDays(date, days) {
+      const d = new Date(date);
+      d.setDate(d.getDate() + days);
+      return d;
+    }
+
+    function getModeLabel(mode) {
+      switch (mode) {
+        case 'inclusive':
+          return 'Včetně počátečního i koncového dne';
+        case 'exclusiveStart':
+          return 'Bez počátečního dne';
+        case 'exclusiveEnd':
+          return 'Bez koncového dne';
+        case 'exclusiveBoth':
+          return 'Bez počátečního i koncového dne';
+        default:
+          return '—';
+      }
+    }
+
+    function getDayName(dayIndex) {
+      return ['Neděle', 'Pondělí', 'Úterý', 'Středa', 'Čtvrtek', 'Pátek', 'Sobota'][dayIndex];
+    }
+
+    function getValues() {
+      return {
+        startDate: document.getElementById('startDate').value,
+        endDate: document.getElementById('endDate').value,
+        hoursPerDay: Number(document.getElementById('hoursPerDay').value),
+        countMode: document.getElementById('countMode').value,
+        excludeWeekends: document.getElementById('excludeWeekends').checked,
+        excludeHolidays: document.getElementById('excludeHolidays').checked
+      };
+    }
+
+    function validate(values) {
+      if (!values.startDate) return 'Vyberte počáteční datum.';
+      if (!values.endDate) return 'Vyberte koncové datum.';
+      if (values.hoursPerDay <= 0) return 'Zadejte platný počet hodin za pracovní den.';
+      if (normalizeDate(values.startDate) > normalizeDate(values.endDate)) return 'Počáteční datum musí být dříve než koncové datum.';
+      return '';
+    }
+
+    function buildDateRange(values) {
+      let start = normalizeDate(values.startDate);
+      let end = normalizeDate(values.endDate);
+
+      if (values.countMode === 'exclusiveStart' || values.countMode === 'exclusiveBoth') {
+        start = addDays(start, 1);
+      }
+      if (values.countMode === 'exclusiveEnd' || values.countMode === 'exclusiveBoth') {
+        end = addDays(end, -1);
+      }
+
+      if (start > end) return [];
+      const days = [];
+      let cursor = new Date(start);
+
+      while (cursor <= end) {
+        days.push(new Date(cursor));
+        cursor = addDays(cursor, 1);
+      }
+
+      return days;
+    }
+
+    function calculateWorkdays(values) {
+      const range = buildDateRange(values);
+      const holidayMaps = {};
+      const resultDays = [];
+
+      range.forEach(date => {
+        const year = date.getFullYear();
+        if (!holidayMaps[year]) {
+          holidayMaps[year] = getCzechHolidayMap(year);
+        }
+
+        const key = dateKey(date);
+        const dayOfWeek = date.getDay();
+        const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+        const holidayName = holidayMaps[year][key] || null;
+        const isHoliday = Boolean(holidayName);
+
+        let isWorkingDay = true;
+        let type = 'Pracovní den';
+        let note = '—';
+
+        if (values.excludeWeekends && isWeekend) {
+          isWorkingDay = false;
+          type = 'Víkend';
+          note = 'Sobota nebo neděle';
+        }
+
+        if (values.excludeHolidays && isHoliday && !(values.excludeWeekends && isWeekend)) {
+          isWorkingDay = false;
+          type = 'Svátek';
+          note = holidayName;
+        }
+
+        if (values.excludeHolidays && values.excludeWeekends && isWeekend && isHoliday) {
+          type = 'Víkend';
+          note = holidayName;
+        }
+
+        resultDays.push({
+          date,
+          isWeekend,
+          isHoliday,
+          holidayName,
+          isWorkingDay,
+          type,
+          note
+        });
+      });
+
+      const calendarDays = resultDays.length;
+      const weekendDays = resultDays.filter(day => day.isWeekend).length;
+      const holidayDays = resultDays.filter(day => day.isHoliday && !day.isWeekend).length;
+      const workingDays = resultDays.filter(day => day.isWorkingDay).length;
+      const nonWorkingDays = calendarDays - workingDays;
+      const workingHours = workingDays * values.hoursPerDay;
+
+      return {
+        calendarDays,
+        weekendDays,
+        holidayDays,
+        workingDays,
+        nonWorkingDays,
+        workingHours,
+        resultDays
+      };
+    }
+
+    function buildPreviewRows(days) {
+      if (!days.length) return [];
+      if (days.length <= 8) return days;
+
+      return [
+        ...days.slice(0, 4),
+        { separator: true },
+        ...days.slice(-4)
+      ];
+    }
+
+    function renderPreview(days) {
+      const preview = buildPreviewRows(days);
+
+      if (!preview.length) {
+        outputs.scheduleBody.innerHTML = '<tr><td colspan="4">Po zvoleném nastavení do období nespadá žádný den.</td></tr>';
+        return;
+      }
+
+      outputs.scheduleBody.innerHTML = preview.map(item => {
+        if (item.separator) {
+          return '<tr><td colspan="4">…</td></tr>';
+        }
+
+        return `
+          <tr>
+            <td>${formatDateCZ(item.date)}</td>
+            <td>${getDayName(item.date.getDay())}</td>
+            <td>${item.type}</td>
+            <td>${item.note}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function render(values, result) {
+      outputs.workingDays.textContent = result.workingDays;
+      outputs.workingHours.textContent = formatHours(result.workingHours);
+      outputs.calendarDays.textContent = result.calendarDays;
+      outputs.nonWorkingDays.textContent = result.nonWorkingDays;
+      outputs.weekendDays.textContent = result.weekendDays;
+      outputs.holidayDays.textContent = result.holidayDays;
+      outputs.periodLabel.textContent = `${formatDateCZ(normalizeDate(values.startDate))} – ${formatDateCZ(normalizeDate(values.endDate))}`;
+      outputs.modeLabel.textContent = getModeLabel(values.countMode);
+      outputs.dayLengthLabel.textContent = formatHours(values.hoursPerDay);
+
+      if (result.workingDays <= 5) {
+        outputs.periodBadge.className = 'badge success';
+        outputs.periodBadge.textContent = 'Krátké období';
+      } else if (result.workingDays <= 22) {
+        outputs.periodBadge.className = 'badge success';
+        outputs.periodBadge.textContent = 'Střední pracovní období';
+      } else {
+        outputs.periodBadge.className = 'badge warning';
+        outputs.periodBadge.textContent = 'Delší pracovní období';
+      }
+
+      renderPreview(result.resultDays);
+    }
+
+    function runCalculation() {
+      const values = getValues();
+      const error = validate(values);
+
+      if (error) {
+        alert(error);
+        return;
+      }
+
+      const result = calculateWorkdays(values);
+      render(values, result);
+    }
+
+    function setDefaultDates() {
+      const today = new Date();
+      const start = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+      const end = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 30);
+
+      document.getElementById('startDate').value = dateKey(start);
+      document.getElementById('endDate').value = dateKey(end);
+    }
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      runCalculation();
+    });
+
+    ['startDate', 'endDate', 'hoursPerDay', 'countMode', 'excludeWeekends', 'excludeHolidays'].forEach(id => {
+      document.getElementById(id).addEventListener('input', runCalculation);
+      document.getElementById(id).addEventListener('change', runCalculation);
+    });
+
+    resetBtn.addEventListener('click', function() {
+      setDefaultDates();
+      document.getElementById('hoursPerDay').value = 8;
+      document.getElementById('countMode').value = 'inclusive';
+      document.getElementById('excludeWeekends').checked = true;
+      document.getElementById('excludeHolidays').checked = true;
+      runCalculation();
+    });
+
+    setDefaultDates();
+    runCalculation();
+  </script>
+</body>
+</html>
