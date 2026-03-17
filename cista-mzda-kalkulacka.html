@@ -1,1 +1,539 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<title>Kalkulačka čisté mzdy | Výpočet čisté mzdy online | RychléVýpočty.cz</title>
+<meta name="description" content="Kalkulačka čisté mzdy online zdarma. Zadejte hrubou mzdu a zjistěte orientační čistou mzdu, sociální pojištění, zdravotní pojištění a zálohu na daň.">
+<meta name="robots" content="index,follow">
+
+<style>
+:root{
+  --bg:#020617;
+  --panel:#0f172a;
+  --card:#111827;
+  --text:#e5e7eb;
+  --muted:#94a3b8;
+  --accent:#22c55e;
+  --accent2:#38bdf8;
+  --border:rgba(255,255,255,.08);
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:linear-gradient(180deg,var(--bg) 0%, #0f172a 100%);
+  color:var(--text);
+  min-height:100vh;
+}
+
+a{
+  color:var(--accent2);
+  text-decoration:none;
+}
+
+.wrap{
+  max-width:1080px;
+  margin:0 auto;
+  padding:28px 18px 64px;
+}
+
+.topbar{
+  margin-bottom:18px;
+}
+
+.back-link{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  text-decoration:none;
+  color:var(--accent2);
+  font-size:14px;
+  border:1px solid var(--border);
+  background:rgba(56,189,248,.08);
+  padding:10px 14px;
+  border-radius:999px;
+}
+
+.hero{
+  text-align:center;
+  padding:24px 0 12px;
+}
+
+.badge{
+  display:inline-block;
+  padding:8px 14px;
+  border:1px solid var(--border);
+  border-radius:999px;
+  color:var(--accent2);
+  background:rgba(56,189,248,.08);
+  font-size:14px;
+  margin-bottom:14px;
+}
+
+h1{
+  margin:0 0 12px;
+  font-size:clamp(34px,5vw,54px);
+  line-height:1.05;
+}
+
+.sub{
+  color:var(--muted);
+  max-width:780px;
+  margin:0 auto;
+  font-size:18px;
+  line-height:1.6;
+}
+
+.layout{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:22px;
+  margin-top:32px;
+}
+
+.panel{
+  background:rgba(17,24,39,.92);
+  border:1px solid var(--border);
+  border-radius:24px;
+  padding:24px;
+  box-shadow:0 12px 40px rgba(0,0,0,.25);
+}
+
+.panel h2{
+  margin:0 0 18px;
+  font-size:28px;
+}
+
+.field{
+  margin-bottom:16px;
+}
+
+label{
+  display:block;
+  margin-bottom:8px;
+  color:#cbd5e1;
+  font-size:14px;
+  font-weight:600;
+}
+
+input,
+select{
+  width:100%;
+  padding:14px 16px;
+  border-radius:16px;
+  border:1px solid var(--border);
+  background:#020617;
+  color:var(--text);
+  font-size:16px;
+  outline:none;
+}
+
+input:focus,
+select:focus{
+  border-color:rgba(56,189,248,.5);
+}
+
+button{
+  margin-top:8px;
+  padding:16px;
+  width:100%;
+  background:linear-gradient(90deg,var(--accent) 0%, #16a34a 100%);
+  border:none;
+  border-radius:16px;
+  color:#052e16;
+  font-size:16px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.note{
+  margin-top:14px;
+  font-size:14px;
+  color:var(--muted);
+  line-height:1.6;
+}
+
+.result-main-label{
+  color:var(--muted);
+  font-size:14px;
+  margin-bottom:8px;
+}
+
+.result-main-value{
+  font-size:40px;
+  font-weight:800;
+  line-height:1.1;
+  margin-bottom:18px;
+}
+
+.stats{
+  display:grid;
+  gap:14px;
+}
+
+.stat{
+  background:rgba(255,255,255,.04);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:16px;
+}
+
+.stat-label{
+  color:var(--muted);
+  font-size:14px;
+  margin-bottom:6px;
+}
+
+.stat-value{
+  font-size:24px;
+  font-weight:700;
+}
+
+.summary{
+  color:var(--muted);
+  line-height:1.7;
+  margin-top:16px;
+}
+
+.section{
+  margin-top:28px;
+}
+
+.section h2{
+  margin:0 0 16px;
+  font-size:28px;
+}
+
+.content-box{
+  background:rgba(17,24,39,.92);
+  border:1px solid var(--border);
+  border-radius:24px;
+  padding:24px;
+  line-height:1.8;
+  color:var(--muted);
+  box-shadow:0 12px 40px rgba(0,0,0,.25);
+}
+
+.content-box h2{
+  color:var(--text);
+  margin-top:0;
+}
+
+.table-wrap{
+  overflow:auto;
+  background:rgba(17,24,39,.92);
+  border:1px solid var(--border);
+  border-radius:24px;
+  box-shadow:0 12px 40px rgba(0,0,0,.25);
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  min-width:620px;
+}
+
+th, td{
+  text-align:left;
+  padding:14px 16px;
+  border-bottom:1px solid var(--border);
+}
+
+th{
+  color:#cbd5e1;
+  font-size:14px;
+  background:rgba(255,255,255,.03);
+}
+
+td{
+  color:var(--text);
+}
+
+tr:last-child td{
+  border-bottom:none;
+}
+
+.footer{
+  text-align:center;
+  color:var(--muted);
+  margin-top:36px;
+  font-size:14px;
+}
+
+@media (max-width:900px){
+  .layout{
+    grid-template-columns:1fr;
+  }
+}
+
+@media (max-width:640px){
+  .wrap{
+    padding:20px 14px 56px;
+  }
+
+  .sub{
+    font-size:16px;
+  }
+
+  .panel,
+  .content-box,
+  .table-wrap{
+    border-radius:20px;
+  }
+
+  .result-main-value{
+    font-size:34px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<main class="wrap">
+
+  <div class="topbar">
+    <a class="back-link" href="./index.html">← Zpět na přehled kalkulaček</a>
+  </div>
+
+  <section class="hero">
+    <div class="badge">Finance</div>
+    <h1>Kalkulačka čisté mzdy</h1>
+    <p class="sub">
+      Zadejte hrubou měsíční mzdu a zjistěte orientační čistou mzdu,
+      odvody na sociální a zdravotní pojištění i zálohu na daň.
+    </p>
+  </section>
+
+  <section class="layout">
+
+    <div class="panel">
+      <h2>Zadejte hodnoty</h2>
+
+      <div class="field">
+        <label for="grossSalary">Hrubá měsíční mzda (Kč)</label>
+        <input id="grossSalary" type="number" min="0" step="1" value="40000" placeholder="např. 40000">
+      </div>
+
+      <div class="field">
+        <label for="taxDiscount">Sleva na poplatníka</label>
+        <select id="taxDiscount">
+          <option value="yes" selected>Ano</option>
+          <option value="no">Ne</option>
+        </select>
+      </div>
+
+      <button id="calcBtn" type="button">Spočítat čistou mzdu</button>
+
+      <div class="note">
+        Tato verze kalkulačky slouží pro orientační výpočet čisté měsíční mzdy zaměstnance.
+        Nezahrnuje všechny možné slevy, bonusy, exekuce, benefity ani speciální situace.
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Výsledek</h2>
+
+      <div class="result-main-label">Orientační čistá mzda</div>
+      <div class="result-main-value" id="netSalaryValue">—</div>
+
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-label">Sociální pojištění</div>
+          <div class="stat-value" id="socialValue">—</div>
+        </div>
+
+        <div class="stat">
+          <div class="stat-label">Zdravotní pojištění</div>
+          <div class="stat-value" id="healthValue">—</div>
+        </div>
+
+        <div class="stat">
+          <div class="stat-label">Záloha na daň</div>
+          <div class="stat-value" id="taxValue">—</div>
+        </div>
+      </div>
+
+      <div class="summary" id="summaryText">
+        Zadejte hrubou mzdu a kalkulačka spočítá orientační čistou mzdu.
+      </div>
+    </div>
+
+  </section>
+
+  <section class="section">
+    <h2>Rozpis výpočtu</h2>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Položka</th>
+            <th>Částka</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Hrubá mzda</td>
+            <td id="tableGross">—</td>
+          </tr>
+          <tr>
+            <td>Sociální pojištění zaměstnance</td>
+            <td id="tableSocial">—</td>
+          </tr>
+          <tr>
+            <td>Zdravotní pojištění zaměstnance</td>
+            <td id="tableHealth">—</td>
+          </tr>
+          <tr>
+            <td>Záloha na daň po slevě</td>
+            <td id="tableTax">—</td>
+          </tr>
+          <tr>
+            <td><strong>Čistá mzda</strong></td>
+            <td id="tableNet"><strong>—</strong></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="content-box">
+      <h2>Jak funguje výpočet čisté mzdy</h2>
+      <p>
+        Kalkulačka vychází z hrubé mzdy zaměstnance a orientačně počítá odvody na sociální pojištění,
+        zdravotní pojištění a daň z příjmu. Výsledkem je přibližná čistá mzda,
+        kterou zaměstnanec obdrží po odečtení těchto položek.
+      </p>
+      <p>
+        Výpočet je zjednodušený a hodí se pro rychlou orientaci.
+        U skutečné výplaty mohou hrát roli další slevy, daňové zvýhodnění na děti,
+        bonusy, nepravidelné odměny nebo jiné individuální okolnosti.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="content-box">
+      <h2>Co kalkulačka zahrnuje</h2>
+      <p>
+        Tato verze počítá s běžným zaměstnancem a umožňuje zohlednit základní slevu na poplatníka.
+        Je vhodná jako první rychlý odhad čisté mzdy z hrubé měsíční mzdy.
+      </p>
+      <p>
+        Později můžeme doplnit pokročilejší verzi, například o děti, invaliditu,
+        studentskou slevu, daňový bonus nebo vedlejší pracovní poměry.
+      </p>
+    </div>
+  </section>
+
+  <div class="footer">
+    © RychléVýpočty.cz – kalkulačka čisté mzdy online
+  </div>
+
+</main>
+
+<script>
+const grossSalaryInput = document.getElementById('grossSalary');
+const taxDiscountInput = document.getElementById('taxDiscount');
+const calcBtn = document.getElementById('calcBtn');
+
+const netSalaryValue = document.getElementById('netSalaryValue');
+const socialValue = document.getElementById('socialValue');
+const healthValue = document.getElementById('healthValue');
+const taxValue = document.getElementById('taxValue');
+const summaryText = document.getElementById('summaryText');
+
+const tableGross = document.getElementById('tableGross');
+const tableSocial = document.getElementById('tableSocial');
+const tableHealth = document.getElementById('tableHealth');
+const tableTax = document.getElementById('tableTax');
+const tableNet = document.getElementById('tableNet');
+
+function formatCurrency(value){
+  return new Intl.NumberFormat('cs-CZ', {
+    style:'currency',
+    currency:'CZK',
+    minimumFractionDigits:0,
+    maximumFractionDigits:0
+  }).format(value);
+}
+
+function roundToWhole(value){
+  return Math.round(value);
+}
+
+function calculateNetSalary(){
+  const gross = parseFloat(grossSalaryInput.value);
+  const hasTaxDiscount = taxDiscountInput.value === 'yes';
+
+  if (Number.isNaN(gross)) {
+    netSalaryValue.textContent = '—';
+    socialValue.textContent = '—';
+    healthValue.textContent = '—';
+    taxValue.textContent = '—';
+    summaryText.textContent = 'Zadejte prosím platnou hrubou mzdu.';
+    tableGross.textContent = '—';
+    tableSocial.textContent = '—';
+    tableHealth.textContent = '—';
+    tableTax.textContent = '—';
+    tableNet.textContent = '—';
+    return;
+  }
+
+  if (gross < 0) {
+    netSalaryValue.textContent = '—';
+    socialValue.textContent = '—';
+    healthValue.textContent = '—';
+    taxValue.textContent = '—';
+    summaryText.textContent = 'Hrubá mzda musí být nula nebo vyšší.';
+    tableGross.textContent = '—';
+    tableSocial.textContent = '—';
+    tableHealth.textContent = '—';
+    tableTax.textContent = '—';
+    tableNet.textContent = '—';
+    return;
+  }
+
+  const socialInsurance = roundToWhole(gross * 0.071);
+  const healthInsurance = roundToWhole(gross * 0.045);
+
+  const taxBeforeDiscount = roundToWhole(gross * 0.15);
+  const taxpayerDiscount = hasTaxDiscount ? 2570 : 0;
+  const incomeTax = Math.max(0, taxBeforeDiscount - taxpayerDiscount);
+
+  const netSalary = roundToWhole(gross - socialInsurance - healthInsurance - incomeTax);
+
+  netSalaryValue.textContent = formatCurrency(netSalary);
+  socialValue.textContent = formatCurrency(socialInsurance);
+  healthValue.textContent = formatCurrency(healthInsurance);
+  taxValue.textContent = formatCurrency(incomeTax);
+
+  summaryText.textContent = `Při hrubé mzdě ${formatCurrency(gross)} vychází orientační čistá mzda na ${formatCurrency(netSalary)}. Sociální pojištění činí ${formatCurrency(socialInsurance)}, zdravotní pojištění ${formatCurrency(healthInsurance)} a záloha na daň ${formatCurrency(incomeTax)}.`;
+
+  tableGross.textContent = formatCurrency(gross);
+  tableSocial.textContent = formatCurrency(socialInsurance);
+  tableHealth.textContent = formatCurrency(healthInsurance);
+  tableTax.textContent = formatCurrency(incomeTax);
+  tableNet.textContent = formatCurrency(netSalary);
+}
+
+calcBtn.addEventListener('click', calculateNetSalary);
+
+[grossSalaryInput, taxDiscountInput].forEach(el => {
+  el.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') calculateNetSalary();
+  });
+  el.addEventListener('change', calculateNetSalary);
+});
+
+calculateNetSalary();
+</script>
+
+</body>
+</html>
