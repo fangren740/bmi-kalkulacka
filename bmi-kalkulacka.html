@@ -1,526 +1,880 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="cs">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BMI kalkulačka online zdarma | RychléVýpočty.cz</title>
+  <meta name="description" content="Spočítejte si BMI online zdarma. Výpočet BMI podle výšky a hmotnosti včetně orientační váhové kategorie, ideální hmotnosti a rozdílu do normy.">
+  <meta name="keywords" content="BMI kalkulačka, výpočet BMI, body mass index, ideální váha, bmi online, kalkulačka váhy">
+  <meta name="author" content="RychléVýpočty.cz">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://rychlevypocty.cz/bmi-kalkulacka.html">
 
-<title>BMI kalkulačka online | Výpočet BMI zdarma | RychléVýpočty.cz</title>
-<meta name="description" content="BMI kalkulačka online zdarma. Zadejte výšku a váhu, spočítejte si BMI a zjistěte svou orientační váhovou kategorii včetně přehledného vysvětlení.">
-<meta name="robots" content="index,follow">
+  <meta property="og:title" content="BMI kalkulačka online zdarma | RychléVýpočty.cz">
+  <meta property="og:description" content="Výpočet BMI podle výšky a hmotnosti včetně orientační váhové kategorie a přehledného výsledku.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rychlevypocty.cz/bmi-kalkulacka.html">
+  <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg">
 
-<style>
-:root{
-  --bg:#020617;
-  --panel:#0f172a;
-  --card:#111827;
-  --text:#e5e7eb;
-  --muted:#94a3b8;
-  --accent:#22c55e;
-  --accent2:#38bdf8;
-  --border:rgba(255,255,255,.08);
-  --under:#f59e0b;
-  --normal:#22c55e;
-  --over:#f97316;
-  --obese:#ef4444;
-}
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="BMI kalkulačka online zdarma | RychléVýpočty.cz">
+  <meta name="twitter:description" content="Spočítejte si BMI přehledně a zdarma.">
 
-*{box-sizing:border-box}
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #5f6b85;
+      --primary: #2152ff;
+      --primary-dark: #183dbf;
+      --border: #dbe3f0;
+      --success: #138a4b;
+      --warning: #b66a00;
+      --danger: #c63d2f;
+      --shadow: 0 12px 32px rgba(20, 32, 70, 0.08);
+      --radius: 18px;
+    }
 
-body{
-  margin:0;
-  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  background:linear-gradient(180deg,var(--bg) 0%, #0f172a 100%);
-  color:var(--text);
-  min-height:100vh;
-}
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
 
-a{
-  color:var(--accent2);
-  text-decoration:none;
-}
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #f7f9fd 0%, #eef3fb 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
 
-.wrap{
-  max-width:1050px;
-  margin:0 auto;
-  padding:28px 18px 64px;
-}
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
 
-.topbar{
-  margin-bottom:18px;
-}
+    a:hover { text-decoration: underline; }
 
-.back-link{
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  text-decoration:none;
-  color:var(--accent2);
-  font-size:14px;
-  border:1px solid var(--border);
-  background:rgba(56,189,248,.08);
-  padding:10px 14px;
-  border-radius:999px;
-}
+    .container {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+    }
 
-.hero{
-  text-align:center;
-  padding:24px 0 12px;
-}
+    .topbar {
+      padding: 18px 0;
+      border-bottom: 1px solid rgba(219, 227, 240, 0.8);
+      background: rgba(255, 255, 255, 0.84);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
 
-.badge{
-  display:inline-block;
-  padding:8px 14px;
-  border:1px solid var(--border);
-  border-radius:999px;
-  color:var(--accent2);
-  background:rgba(56,189,248,.08);
-  font-size:14px;
-  margin-bottom:14px;
-}
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
 
-h1{
-  margin:0 0 12px;
-  font-size:clamp(34px,5vw,54px);
-  line-height:1.05;
-}
+    .brand {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
 
-.sub{
-  color:var(--muted);
-  max-width:760px;
-  margin:0 auto;
-  font-size:18px;
-  line-height:1.6;
-}
+    .brand span { color: var(--primary); }
 
-.layout{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:22px;
-  margin-top:32px;
-}
+    .topnav {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      font-size: 0.97rem;
+    }
 
-.panel{
-  background:rgba(17,24,39,.92);
-  border:1px solid var(--border);
-  border-radius:24px;
-  padding:24px;
-  box-shadow:0 12px 40px rgba(0,0,0,.25);
-}
+    .hero {
+      padding: 42px 0 20px;
+    }
 
-.panel h2{
-  margin:0 0 18px;
-  font-size:28px;
-}
+    .breadcrumbs {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
 
-.grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:18px;
-}
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.12fr 0.88fr;
+      gap: 28px;
+      align-items: start;
+    }
 
-label{
-  display:block;
-  margin-bottom:8px;
-  color:#cbd5e1;
-  font-size:14px;
-  font-weight:600;
-}
+    .hero-copy h1 {
+      font-size: clamp(2rem, 4vw, 3.15rem);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      margin: 0 0 16px;
+    }
 
-input{
-  width:100%;
-  padding:14px 16px;
-  border-radius:16px;
-  border:1px solid var(--border);
-  background:#020617;
-  color:var(--text);
-  font-size:16px;
-  outline:none;
-}
+    .hero-copy p {
+      margin: 0 0 16px;
+      font-size: 1.06rem;
+      color: var(--muted);
+      max-width: 760px;
+    }
 
-input:focus{
-  border-color:rgba(56,189,248,.5);
-}
+    .hero-points {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
 
-button{
-  margin-top:20px;
-  padding:16px;
-  width:100%;
-  background:linear-gradient(90deg,var(--accent) 0%, #16a34a 100%);
-  border:none;
-  border-radius:16px;
-  color:#052e16;
-  font-size:16px;
-  font-weight:800;
-  cursor:pointer;
-}
+    .hero-pill {
+      background: rgba(33, 82, 255, 0.08);
+      color: var(--primary-dark);
+      border: 1px solid rgba(33, 82, 255, 0.12);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
 
-.result-card{
-  background:rgba(255,255,255,.04);
-  border:1px solid var(--border);
-  border-radius:20px;
-  padding:20px;
-}
+    .hero-box {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
 
-.result-label{
-  color:var(--muted);
-  font-size:14px;
-  margin-bottom:8px;
-}
+    .hero-box h2 {
+      margin: 0 0 10px;
+      font-size: 1.2rem;
+    }
 
-.result-value{
-  font-size:44px;
-  font-weight:800;
-  line-height:1;
-  margin-bottom:14px;
-}
+    .hero-box p {
+      margin: 0;
+      color: var(--muted);
+    }
 
-.category{
-  display:inline-block;
-  padding:8px 14px;
-  border-radius:999px;
-  font-size:14px;
-  font-weight:700;
-  border:1px solid var(--border);
-  margin-bottom:14px;
-}
+    .layout {
+      display: grid;
+      grid-template-columns: 1.02fr 0.98fr;
+      gap: 28px;
+      align-items: start;
+      padding: 22px 0 32px;
+    }
 
-.summary{
-  color:var(--muted);
-  line-height:1.7;
-  margin-top:10px;
-}
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
 
-.note{
-  margin-top:14px;
-  font-size:14px;
-  color:var(--muted);
-  line-height:1.6;
-}
+    .card-header {
+      padding: 24px 24px 10px;
+    }
 
-.section{
-  margin-top:28px;
-}
+    .card-header h2,
+    .card-header h3 {
+      margin: 0 0 8px;
+      font-size: 1.3rem;
+      letter-spacing: -0.02em;
+    }
 
-.section h2{
-  margin:0 0 16px;
-  font-size:28px;
-}
+    .card-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
 
-.table-wrap{
-  overflow:auto;
-  background:rgba(17,24,39,.92);
-  border:1px solid var(--border);
-  border-radius:24px;
-  box-shadow:0 12px 40px rgba(0,0,0,.25);
-}
+    .card-body {
+      padding: 20px 24px 24px;
+    }
 
-table{
-  width:100%;
-  border-collapse:collapse;
-  min-width:620px;
-}
+    .field-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
 
-th, td{
-  text-align:left;
-  padding:14px 16px;
-  border-bottom:1px solid var(--border);
-}
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
 
-th{
-  color:#cbd5e1;
-  font-size:14px;
-  background:rgba(255,255,255,.03);
-}
+    .field label {
+      font-weight: 700;
+      font-size: 0.96rem;
+    }
 
-td{
-  color:var(--text);
-}
+    .field small {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: -2px;
+    }
 
-tr:last-child td{
-  border-bottom:none;
-}
+    .field input,
+    .field select {
+      width: 100%;
+      padding: 14px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      font-size: 1rem;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      font-family: inherit;
+    }
 
-.content-box{
-  background:rgba(17,24,39,.92);
-  border:1px solid var(--border);
-  border-radius:24px;
-  padding:24px;
-  line-height:1.8;
-  color:var(--muted);
-  box-shadow:0 12px 40px rgba(0,0,0,.25);
-}
+    .field input:focus,
+    .field select:focus {
+      outline: none;
+      border-color: rgba(33, 82, 255, 0.45);
+      box-shadow: 0 0 0 4px rgba(33, 82, 255, 0.10);
+    }
 
-.content-box h2{
-  color:var(--text);
-  margin-top:0;
-}
+    .full { grid-column: 1 / -1; }
 
-.footer{
-  text-align:center;
-  color:var(--muted);
-  margin-top:36px;
-  font-size:14px;
-}
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
 
-.is-under{
-  background:rgba(245,158,11,.12);
-  color:#fbbf24;
-}
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.06s ease, background 0.15s ease;
+    }
 
-.is-normal{
-  background:rgba(34,197,94,.12);
-  color:#86efac;
-}
+    button:hover { transform: translateY(-1px); }
 
-.is-over{
-  background:rgba(249,115,22,.12);
-  color:#fdba74;
-}
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
 
-.is-obese{
-  background:rgba(239,68,68,.12);
-  color:#fca5a5;
-}
+    .btn-primary:hover { background: var(--primary-dark); }
 
-@media (max-width:900px){
-  .layout{
-    grid-template-columns:1fr;
+    .btn-secondary {
+      background: #eef3ff;
+      color: var(--primary-dark);
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .result-box {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+
+    .result-box.highlight {
+      background: linear-gradient(180deg, #eef7ff 0%, #f9fcff 100%);
+      border-color: rgba(33, 82, 255, 0.18);
+    }
+
+    .result-label {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .result-value {
+      font-size: clamp(1.2rem, 2.4vw, 2rem);
+      line-height: 1.15;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      word-break: break-word;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+
+    .badge.success {
+      background: rgba(19, 138, 75, 0.10);
+      color: var(--success);
+    }
+
+    .badge.warning {
+      background: rgba(182, 106, 0, 0.11);
+      color: var(--warning);
+    }
+
+    .badge.danger {
+      background: rgba(198, 61, 47, 0.10);
+      color: var(--danger);
+    }
+
+    .info-list {
+      display: grid;
+      gap: 12px;
+      margin: 18px 0 0;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid #edf2fa;
+    }
+
+    .info-row:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .info-row span:first-child { color: var(--muted); }
+
+    .note {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1px solid #e7edf7;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .bmi-scale {
+      display: grid;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .bmi-band {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 12px;
+      align-items: center;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: #fbfdff;
+    }
+
+    .bmi-band strong {
+      font-size: 0.95rem;
+    }
+
+    .bmi-band span {
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    .content-section {
+      padding: 8px 0;
+    }
+
+    .content-section h2 {
+      font-size: 1.7rem;
+      letter-spacing: -0.03em;
+      margin: 0 0 14px;
+    }
+
+    .content-section h3 {
+      font-size: 1.15rem;
+      margin: 28px 0 10px;
+    }
+
+    .content-section p {
+      color: var(--muted);
+      margin: 0 0 14px;
+    }
+
+    .content-section ul {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    .content-section li {
+      margin-bottom: 8px;
+    }
+
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .related-card {
+      display: block;
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      color: var(--text);
+      box-shadow: var(--shadow);
+    }
+
+    .related-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .related-card span {
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    footer {
+      margin-top: 40px;
+      border-top: 1px solid rgba(219, 227, 240, 0.9);
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .footer-inner {
+      padding: 24px 0 40px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .layout,
+      .related-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .container {
+        width: min(100% - 24px, 1160px);
+      }
+
+      .field-grid,
+      .results-grid,
+      .bmi-band {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 28px;
+      }
+
+      .card-header,
+      .card-body,
+      .hero-box {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebApplication",
+    "name":"BMI kalkulačka",
+    "url":"https://rychlevypocty.cz/bmi-kalkulacka.html",
+    "applicationCategory":"HealthApplication",
+    "operatingSystem":"Any",
+    "description":"Online BMI kalkulačka pro výpočet body mass index podle výšky a hmotnosti.",
+    "offers":{
+      "@type":"Offer",
+      "price":"0",
+      "priceCurrency":"CZK"
+    }
   }
-}
+  </script>
 
-@media (max-width:640px){
-  .wrap{
-    padding:20px 14px 56px;
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"Jak se počítá BMI?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"BMI se vypočítá jako hmotnost v kilogramech dělená druhou mocninou výšky v metrech. Vzorec je BMI = kg / m²."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Co znamená výsledek BMI?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"BMI je orientační ukazatel, který pomáhá zařadit tělesnou hmotnost do kategorií jako podváha, normální hmotnost, nadváha nebo obezita."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Je BMI přesný zdravotní ukazatel?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"BMI je orientační nástroj. Nezohledňuje například podíl svalů, věk, rozložení tuku ani individuální zdravotní stav."
+        }
+      }
+    ]
   }
-
-  .sub{
-    font-size:16px;
-  }
-
-  .grid{
-    grid-template-columns:1fr;
-  }
-
-  .panel,
-  .table-wrap,
-  .content-box{
-    border-radius:20px;
-  }
-
-  .result-value{
-    font-size:36px;
-  }
-}
-</style>
+  </script>
 </head>
-
 <body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="/">Rychlé<span>Výpočty</span>.cz</a>
+      <nav class="topnav" aria-label="Hlavní navigace">
+        <a href="/">Domů</a>
+        <a href="/kalkulacka-prumeru.html">Průměr</a>
+        <a href="/procenta-kalkulacka.html">Procenta</a>
+        <a href="/spotreba-paliva-kalkulacka.html">Spotřeba paliva</a>
+      </nav>
+    </div>
+  </header>
 
-<main class="wrap">
-
-  <div class="topbar">
-    <a class="back-link" href="./index.html">← Zpět na přehled kalkulaček</a>
-  </div>
-
-  <section class="hero">
-    <div class="badge">Zdraví</div>
-    <h1>BMI kalkulačka</h1>
-    <p class="sub">
-      Spočítejte si BMI online během pár sekund. Zadejte svou výšku a váhu a zjistěte
-      orientační BMI hodnotu i váhovou kategorii podle běžně používaného rozdělení.
-    </p>
-  </section>
-
-  <section class="layout">
-
-    <div class="panel">
-      <h2>Zadejte hodnoty</h2>
-
-      <div class="grid">
-        <div>
-          <label for="height">Výška (cm)</label>
-          <input id="height" type="number" min="50" max="250" step="0.1" placeholder="např. 180" value="180">
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumbs">
+          <a href="/">RychléVýpočty.cz</a> / BMI kalkulačka
         </div>
 
-        <div>
-          <label for="weight">Váha (kg)</label>
-          <input id="weight" type="number" min="10" max="400" step="0.1" placeholder="např. 80" value="80">
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <h1>BMI kalkulačka</h1>
+            <p>Spočítejte si BMI online podle výšky a hmotnosti. Kalkulačka zobrazí hodnotu body mass index, orientační váhovou kategorii a doplňkové informace pro lepší interpretaci výsledku.</p>
+            <p>BMI je rychlý orientační ukazatel, který se běžně používá pro základní posouzení tělesné hmotnosti vzhledem k výšce.</p>
+
+            <div class="hero-points">
+              <div class="hero-pill">Výpočet BMI</div>
+              <div class="hero-pill">Váhová kategorie</div>
+              <div class="hero-pill">Rozmezí normy</div>
+              <div class="hero-pill">Orientační ideální váha</div>
+            </div>
+          </div>
+
+          <div class="hero-box">
+            <h2>Co kalkulačka umí</h2>
+            <p>Vypočítá BMI ze zadané výšky a hmotnosti, zařadí výsledek do orientační kategorie a ukáže také rozmezí hmotnosti odpovídající normálnímu BMI.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container layout">
+      <div class="card">
+        <div class="card-header">
+          <h2>Zadání hodnot</h2>
+          <p>Zadejte výšku a hmotnost. Výsledek se přepočítá okamžitě.</p>
+        </div>
+        <div class="card-body">
+          <div class="field-grid">
+            <div class="field">
+              <label for="height">Výška (cm)</label>
+              <input type="number" id="height" min="50" max="250" step="0.1" value="180" inputmode="decimal">
+              <small>Zadejte tělesnou výšku v centimetrech.</small>
+            </div>
+
+            <div class="field">
+              <label for="weight">Hmotnost (kg)</label>
+              <input type="number" id="weight" min="10" max="400" step="0.1" value="80" inputmode="decimal">
+              <small>Zadejte aktuální tělesnou hmotnost v kilogramech.</small>
+            </div>
+
+            <div class="field full">
+              <label for="displayPrecision">Zaokrouhlení výsledku</label>
+              <select id="displayPrecision">
+                <option value="1" selected>1 desetinné místo</option>
+                <option value="0">0 desetinných míst</option>
+                <option value="2">2 desetinná místa</option>
+              </select>
+              <small>Ovlivňuje zobrazení BMI a doplňkových hodnot.</small>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button class="btn-primary" type="button" id="calculateBtn">Spočítat BMI</button>
+            <button class="btn-secondary" type="button" id="resetBtn">Obnovit výchozí hodnoty</button>
+          </div>
+
+          <div class="bmi-scale">
+            <div class="bmi-band">
+              <strong>Podváha</strong>
+              <span>BMI pod 18,5</span>
+            </div>
+            <div class="bmi-band">
+              <strong>Normální hmotnost</strong>
+              <span>BMI 18,5 až 24,9</span>
+            </div>
+            <div class="bmi-band">
+              <strong>Nadváha</strong>
+              <span>BMI 25 až 29,9</span>
+            </div>
+            <div class="bmi-band">
+              <strong>Obezita</strong>
+              <span>BMI 30 a více</span>
+            </div>
+          </div>
         </div>
       </div>
 
-      <button id="calcBtn" type="button">Spočítat BMI</button>
+      <div class="card">
+        <div class="card-header">
+          <h2>Výsledek výpočtu</h2>
+          <p>Hlavní výsledek BMI a orientační interpretace podle běžných kategorií.</p>
+        </div>
+        <div class="card-body">
+          <div class="results-grid">
+            <div class="result-box highlight">
+              <div class="result-label">BMI</div>
+              <div class="result-value" id="bmiResult">0</div>
+            </div>
 
-      <div class="note">
-        BMI je orientační ukazatel poměru výšky a váhy. Nezohledňuje například množství svalové hmoty,
-        věk ani individuální zdravotní stav.
-      </div>
-    </div>
+            <div class="result-box">
+              <div class="result-label">Kategorie</div>
+              <div class="result-value" id="categoryResult">—</div>
+            </div>
 
-    <div class="panel">
-      <h2>Výsledek</h2>
+            <div class="result-box">
+              <div class="result-label">Rozdíl do normy</div>
+              <div class="result-value" id="differenceResult">0 kg</div>
+            </div>
 
-      <div class="result-card">
-        <div class="result-label">Vaše BMI</div>
-        <div class="result-value" id="bmiResult">—</div>
-        <div class="category is-normal" id="bmiCategory">Zadejte hodnoty</div>
+            <div class="result-box">
+              <div class="result-label">Normální rozmezí váhy</div>
+              <div class="result-value" id="rangeResult">—</div>
+            </div>
+          </div>
 
-        <div class="summary" id="bmiSummary">
-          Po zadání výšky a váhy se zde zobrazí orientační výsledek BMI a krátké vysvětlení.
+          <div id="resultBadge" class="badge success">Výpočet připraven</div>
+
+          <div class="info-list">
+            <div class="info-row">
+              <span>Zadaná výška</span>
+              <strong id="heightResult">0 cm</strong>
+            </div>
+            <div class="info-row">
+              <span>Zadaná hmotnost</span>
+              <strong id="weightResult">0 kg</strong>
+            </div>
+            <div class="info-row">
+              <span>Dolní hranice normy</span>
+              <strong id="normalMinResult">0 kg</strong>
+            </div>
+            <div class="info-row">
+              <span>Horní hranice normy</span>
+              <strong id="normalMaxResult">0 kg</strong>
+            </div>
+            <div class="info-row">
+              <span>Vzorec</span>
+              <strong id="formulaResult">kg / m²</strong>
+            </div>
+          </div>
+
+          <div class="note" id="resultNote">
+            BMI je orientační ukazatel. Nezohledňuje například podíl svalové hmoty, věk, pohlaví ani individuální zdravotní stav.
+          </div>
         </div>
       </div>
+    </section>
+
+    <section class="container content-section">
+      <h2>Jak BMI kalkulačka funguje</h2>
+      <p>BMI neboli body mass index se počítá jako hmotnost v kilogramech dělená druhou mocninou výšky v metrech. Tento jednoduchý ukazatel se používá pro orientační posouzení tělesné hmotnosti vzhledem k výšce.</p>
+
+      <h3>Co výsledek BMI znamená</h3>
+      <ul>
+        <li><strong>pod 18,5</strong> se obvykle řadí jako podváha,</li>
+        <li><strong>18,5 až 24,9</strong> odpovídá normální hmotnosti,</li>
+        <li><strong>25 až 29,9</strong> se označuje jako nadváha,</li>
+        <li><strong>30 a více</strong> spadá do kategorie obezity.</li>
+      </ul>
+
+      <h3>K čemu je BMI dobré</h3>
+      <p>BMI je užitečné jako rychlé orientační měřítko. Hodí se pro základní přehled, sledování trendu nebo první informaci o tom, zda je hmotnost vzhledem k výšce v běžném rozmezí.</p>
+
+      <h3>Na co si dát pozor</h3>
+      <p>BMI není dokonalý zdravotní ukazatel. U sportovců, lidí s vyšším podílem svalové hmoty nebo u některých individuálních zdravotních stavů může vycházet méně přesně. Proto je potřeba výsledek chápat jako orientační, ne jako definitivní diagnózu.</p>
+    </section>
+
+    <section class="container content-section">
+      <h2>Související kalkulačky</h2>
+      <div class="related-grid">
+        <a class="related-card" href="/kalkulacka-prumeru.html">
+          <strong>Kalkulačka průměru</strong>
+          <span>Výpočet aritmetického i váženého průměru.</span>
+        </a>
+
+        <a class="related-card" href="/procenta-kalkulacka.html">
+          <strong>Kalkulačka procent</strong>
+          <span>Rychlé procentní výpočty pro běžné použití.</span>
+        </a>
+
+        <a class="related-card" href="/vypocet-veku.html">
+          <strong>Výpočet věku</strong>
+          <span>Přesný výpočet věku podle data narození.</span>
+        </a>
+
+        <a class="related-card" href="/spotreba-paliva-kalkulacka.html">
+          <strong>Kalkulačka spotřeby paliva</strong>
+          <span>Výpočet ceny jízdy a nákladů na kilometr.</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      © 2026 RychléVýpočty.cz — online kalkulačky a praktické výpočty pro každodenní použití.
     </div>
+  </footer>
 
-  </section>
+  <script>
+    const heightInput = document.getElementById('height');
+    const weightInput = document.getElementById('weight');
+    const precisionInput = document.getElementById('displayPrecision');
 
-  <section class="section">
-    <h2>Orientační BMI tabulka</h2>
+    const outputs = {
+      bmiResult: document.getElementById('bmiResult'),
+      categoryResult: document.getElementById('categoryResult'),
+      differenceResult: document.getElementById('differenceResult'),
+      rangeResult: document.getElementById('rangeResult'),
+      resultBadge: document.getElementById('resultBadge'),
+      heightResult: document.getElementById('heightResult'),
+      weightResult: document.getElementById('weightResult'),
+      normalMinResult: document.getElementById('normalMinResult'),
+      normalMaxResult: document.getElementById('normalMaxResult'),
+      resultNote: document.getElementById('resultNote')
+    };
 
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Rozmezí BMI</th>
-            <th>Kategorie</th>
-            <th>Význam</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Méně než 18,5</td>
-            <td>Podváha</td>
-            <td>Hodnota je pod běžným doporučeným rozmezím.</td>
-          </tr>
-          <tr>
-            <td>18,5 až 24,9</td>
-            <td>Normální váha</td>
-            <td>Hodnota spadá do běžného rozmezí.</td>
-          </tr>
-          <tr>
-            <td>25 až 29,9</td>
-            <td>Nadváha</td>
-            <td>Hodnota je nad běžným doporučeným rozmezím.</td>
-          </tr>
-          <tr>
-            <td>30 a více</td>
-            <td>Obezita</td>
-            <td>Výsledek ukazuje na vyšší míru nadváhy.</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
+    function formatNumber(value, digits = 1) {
+      return new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: digits
+      }).format(value);
+    }
 
-  <section class="section">
-    <div class="content-box">
-      <h2>Co je BMI</h2>
-      <p>
-        BMI znamená body mass index. Jde o jednoduchý výpočet, který porovnává tělesnou hmotnost
-        s výškou. Výsledkem je číslo, podle kterého lze orientačně zařadit člověka do váhové kategorie.
-      </p>
-      <p>
-        BMI se často používá jako rychlý ukazatel, ale nejde o kompletní zdravotní hodnocení.
-        U sportovců nebo lidí s vyšším podílem svalů může být výsledek zavádějící.
-      </p>
-    </div>
-  </section>
+    function formatKg(value, digits = 1) {
+      return `${formatNumber(value, digits)} kg`;
+    }
 
-  <section class="section">
-    <div class="content-box">
-      <h2>Jak se BMI počítá</h2>
-      <p>
-        Výpočet je jednoduchý: tělesná hmotnost v kilogramech se vydělí druhou mocninou výšky v metrech.
-      </p>
-      <p>
-        Vzorec:
-        <strong>BMI = váha (kg) / výška² (m)</strong>
-      </p>
-      <p>
-        Příklad: pokud člověk váží 80 kg a měří 180 cm, BMI vychází přibližně 24,7.
-      </p>
-    </div>
-  </section>
+    function getCategory(bmi) {
+      if (bmi < 18.5) {
+        return {
+          label: 'Podváha',
+          badge: 'warning',
+          note: 'BMI vychází v pásmu podváhy. Výsledek je orientační a je vhodné ho vnímat v širším zdravotním kontextu.'
+        };
+      }
+      if (bmi < 25) {
+        return {
+          label: 'Normální hmotnost',
+          badge: 'success',
+          note: 'BMI vychází v pásmu normální hmotnosti. Jde o orientační výsledek podle běžně používaných kategorií.'
+        };
+      }
+      if (bmi < 30) {
+        return {
+          label: 'Nadváha',
+          badge: 'warning',
+          note: 'BMI vychází v pásmu nadváhy. Výsledek je orientační a nezohledňuje složení těla.'
+        };
+      }
+      return {
+        label: 'Obezita',
+        badge: 'danger',
+        note: 'BMI vychází v pásmu obezity. Výsledek je orientační a při dlouhodobém řešení je vhodné zohlednit celkový zdravotní stav.'
+      };
+    }
 
-  <div class="footer">
-    © RychléVýpočty.cz – BMI kalkulačka online zdarma
-  </div>
+    function calculateBMI() {
+      const heightCm = Number(heightInput.value);
+      const weightKg = Number(weightInput.value);
+      const digits = Number(precisionInput.value);
 
-</main>
+      if (!heightCm || !weightKg || heightCm <= 0 || weightKg <= 0) {
+        outputs.bmiResult.textContent = '0';
+        outputs.categoryResult.textContent = '—';
+        outputs.differenceResult.textContent = '0 kg';
+        outputs.rangeResult.textContent = '—';
+        outputs.heightResult.textContent = '0 cm';
+        outputs.weightResult.textContent = '0 kg';
+        outputs.normalMinResult.textContent = '0 kg';
+        outputs.normalMaxResult.textContent = '0 kg';
+        outputs.resultBadge.className = 'badge warning';
+        outputs.resultBadge.textContent = 'Chybí vstupní data';
+        outputs.resultNote.textContent = 'Zadejte platnou výšku a hmotnost.';
+        return;
+      }
 
-<script>
-const heightInput = document.getElementById('height');
-const weightInput = document.getElementById('weight');
-const calcBtn = document.getElementById('calcBtn');
+      const heightM = heightCm / 100;
+      const bmi = weightKg / (heightM * heightM);
+      const normalMin = 18.5 * heightM * heightM;
+      const normalMax = 24.9 * heightM * heightM;
 
-const bmiResultEl = document.getElementById('bmiResult');
-const bmiCategoryEl = document.getElementById('bmiCategory');
-const bmiSummaryEl = document.getElementById('bmiSummary');
+      const category = getCategory(bmi);
 
-function setCategoryStyle(className){
-  bmiCategoryEl.className = 'category ' + className;
-}
+      let differenceText = '0 kg';
+      if (bmi < 18.5) {
+        differenceText = `+${formatKg(normalMin - weightKg, digits)}`;
+      } else if (bmi > 24.9) {
+        differenceText = `-${formatKg(weightKg - normalMax, digits)}`;
+      }
 
-function calculateBMI(){
-  const height = parseFloat(heightInput.value);
-  const weight = parseFloat(weightInput.value);
+      outputs.bmiResult.textContent = formatNumber(bmi, digits);
+      outputs.categoryResult.textContent = category.label;
+      outputs.differenceResult.textContent = differenceText;
+      outputs.rangeResult.textContent = `${formatKg(normalMin, digits)} – ${formatKg(normalMax, digits)}`;
+      outputs.heightResult.textContent = `${formatNumber(heightCm, 1)} cm`;
+      outputs.weightResult.textContent = formatKg(weightKg, digits);
+      outputs.normalMinResult.textContent = formatKg(normalMin, digits);
+      outputs.normalMaxResult.textContent = formatKg(normalMax, digits);
+      outputs.resultBadge.className = `badge ${category.badge}`;
+      outputs.resultBadge.textContent = category.label;
+      outputs.resultNote.textContent = category.note;
+    }
 
-  if (Number.isNaN(height) || Number.isNaN(weight)) {
-    bmiResultEl.textContent = '—';
-    bmiCategoryEl.textContent = 'Chybí hodnoty';
-    bmiSummaryEl.textContent = 'Zadejte prosím výšku i váhu.';
-    setCategoryStyle('is-obese');
-    return;
-  }
+    document.getElementById('calculateBtn').addEventListener('click', calculateBMI);
 
-  if (height <= 0 || weight <= 0) {
-    bmiResultEl.textContent = '—';
-    bmiCategoryEl.textContent = 'Neplatný vstup';
-    bmiSummaryEl.textContent = 'Výška i váha musí být větší než nula.';
-    setCategoryStyle('is-obese');
-    return;
-  }
+    document.getElementById('resetBtn').addEventListener('click', function() {
+      heightInput.value = 180;
+      weightInput.value = 80;
+      precisionInput.value = 1;
+      calculateBMI();
+    });
 
-  const heightMeters = height / 100;
-  const bmi = weight / (heightMeters * heightMeters);
-  const bmiRounded = bmi.toFixed(1);
+    [heightInput, weightInput, precisionInput].forEach(el => {
+      el.addEventListener('input', calculateBMI);
+      el.addEventListener('change', calculateBMI);
+    });
 
-  let category = '';
-  let summary = '';
-  let styleClass = '';
-
-  if (bmi < 18.5) {
-    category = 'Podváha';
-    summary = `Při výšce ${height} cm a váze ${weight} kg vychází BMI ${bmiRounded}, což orientačně spadá do kategorie podváha.`;
-    styleClass = 'is-under';
-  } else if (bmi < 25) {
-    category = 'Normální váha';
-    summary = `Při výšce ${height} cm a váze ${weight} kg vychází BMI ${bmiRounded}, což orientačně spadá do kategorie normální váha.`;
-    styleClass = 'is-normal';
-  } else if (bmi < 30) {
-    category = 'Nadváha';
-    summary = `Při výšce ${height} cm a váze ${weight} kg vychází BMI ${bmiRounded}, což orientačně spadá do kategorie nadváha.`;
-    styleClass = 'is-over';
-  } else {
-    category = 'Obezita';
-    summary = `Při výšce ${height} cm a váze ${weight} kg vychází BMI ${bmiRounded}, což orientačně spadá do kategorie obezita.`;
-    styleClass = 'is-obese';
-  }
-
-  bmiResultEl.textContent = bmiRounded;
-  bmiCategoryEl.textContent = category;
-  bmiSummaryEl.textContent = summary;
-  setCategoryStyle(styleClass);
-}
-
-calcBtn.addEventListener('click', calculateBMI);
-
-[heightInput, weightInput].forEach(input => {
-  input.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') calculateBMI();
-  });
-});
-
-calculateBMI();
-</script>
-
+    calculateBMI();
+  </script>
 </body>
 </html>
