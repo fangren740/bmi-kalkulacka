@@ -1,1 +1,990 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <title>Kalkulačka spotřeby elektřiny online zdarma | RychléVýpočty.cz</title>
+  <meta name="description" content="Spočítejte si spotřebu elektřiny online. Přehledná kalkulačka spotřeby elektřiny pro odhad kWh, ceny za den, měsíc i rok podle příkonu spotřebiče a doby používání.">
+  <meta name="keywords" content="kalkulačka spotřeby elektřiny, spotřeba elektřiny, výpočet spotřeby elektřiny, cena elektřiny, kolik stojí spotřebič, kalkulačka kWh">
+  <meta name="author" content="RychléVýpočty.cz">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://rychlevypocty.cz/spotreba-elektriny-kalkulacka.html">
+
+  <meta property="og:title" content="Kalkulačka spotřeby elektřiny online zdarma | RychléVýpočty.cz">
+  <meta property="og:description" content="Rychlý výpočet spotřeby elektřiny a ceny provozu spotřebiče podle příkonu, času používání a ceny za kWh.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rychlevypocty.cz/spotreba-elektriny-kalkulacka.html">
+  <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Kalkulačka spotřeby elektřiny online zdarma | RychléVýpočty.cz">
+  <meta name="twitter:description" content="Spočítejte si kWh a cenu elektřiny za den, měsíc i rok během pár sekund.">
+
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #5f6b85;
+      --primary: #2152ff;
+      --primary-dark: #183dbf;
+      --border: #dbe3f0;
+      --success: #138a4b;
+      --warning: #b66a00;
+      --shadow: 0 12px 32px rgba(20, 32, 70, 0.08);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #f7f9fd 0%, #eef3fb 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      padding: 18px 0;
+      border-bottom: 1px solid rgba(219, 227, 240, 0.8);
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+
+    .brand span {
+      color: var(--primary);
+    }
+
+    .topnav {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      font-size: 0.97rem;
+    }
+
+    .hero {
+      padding: 42px 0 20px;
+    }
+
+    .breadcrumbs {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .hero-copy h1 {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      margin: 0 0 16px;
+    }
+
+    .hero-copy p {
+      margin: 0 0 16px;
+      font-size: 1.06rem;
+      color: var(--muted);
+      max-width: 720px;
+    }
+
+    .hero-points {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .hero-pill {
+      background: rgba(33, 82, 255, 0.08);
+      color: var(--primary-dark);
+      border: 1px solid rgba(33, 82, 255, 0.12);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .hero-box {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-box h2 {
+      margin: 0 0 10px;
+      font-size: 1.2rem;
+    }
+
+    .hero-box p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.04fr 0.96fr;
+      gap: 28px;
+      align-items: start;
+      padding: 22px 0 32px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .card-header {
+      padding: 24px 24px 10px;
+    }
+
+    .card-header h2,
+    .card-header h3 {
+      margin: 0 0 8px;
+      font-size: 1.3rem;
+      letter-spacing: -0.02em;
+    }
+
+    .card-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .card-body {
+      padding: 20px 24px 24px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field label {
+      font-weight: 700;
+      font-size: 0.96rem;
+    }
+
+    .field small {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: -2px;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      padding: 14px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      font-size: 1rem;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      outline: none;
+      border-color: rgba(33, 82, 255, 0.45);
+      box-shadow: 0 0 0 4px rgba(33, 82, 255, 0.10);
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.06s ease, background 0.15s ease, opacity 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background: #eef3ff;
+      color: var(--primary-dark);
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .result-box {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+
+    .result-label {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .result-value {
+      font-size: clamp(1.15rem, 2.1vw, 1.85rem);
+      line-height: 1.15;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .highlight {
+      background: linear-gradient(180deg, #eef7ff 0%, #f9fcff 100%);
+      border-color: rgba(33, 82, 255, 0.18);
+    }
+
+    .info-list {
+      display: grid;
+      gap: 12px;
+      margin: 18px 0 0;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid #edf2fa;
+    }
+
+    .info-row:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .info-row span:first-child {
+      color: var(--muted);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+
+    .badge.success {
+      background: rgba(19, 138, 75, 0.10);
+      color: var(--success);
+    }
+
+    .badge.warning {
+      background: rgba(182, 106, 0, 0.11);
+      color: var(--warning);
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 18px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 640px;
+      background: #fff;
+    }
+
+    th, td {
+      padding: 14px 14px;
+      text-align: left;
+      border-bottom: 1px solid #edf2fa;
+      font-size: 0.96rem;
+    }
+
+    th {
+      background: #f8fbff;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .note {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1px solid #e7edf7;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .content-section {
+      padding: 8px 0 8px;
+    }
+
+    .content-section h2 {
+      font-size: 1.7rem;
+      letter-spacing: -0.03em;
+      margin: 0 0 14px;
+    }
+
+    .content-section h3 {
+      font-size: 1.15rem;
+      margin: 28px 0 10px;
+    }
+
+    .content-section p {
+      color: var(--muted);
+      margin: 0 0 14px;
+    }
+
+    .content-section ul {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    .content-section li {
+      margin-bottom: 8px;
+    }
+
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .related-card {
+      display: block;
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      color: var(--text);
+      box-shadow: var(--shadow);
+    }
+
+    .related-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .related-card span {
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    footer {
+      margin-top: 40px;
+      border-top: 1px solid rgba(219, 227, 240, 0.9);
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .footer-inner {
+      padding: 24px 0 40px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .layout,
+      .related-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .container {
+        width: min(100% - 24px, 1160px);
+      }
+
+      .form-grid,
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 28px;
+      }
+
+      .card-header,
+      .card-body,
+      .hero-box {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .info-row {
+        flex-direction: column;
+        gap: 6px;
+      }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebApplication",
+    "name":"Kalkulačka spotřeby elektřiny",
+    "url":"https://rychlevypocty.cz/spotreba-elektriny-kalkulacka.html",
+    "applicationCategory":"UtilitiesApplication",
+    "operatingSystem":"Any",
+    "description":"Online kalkulačka pro výpočet spotřeby elektřiny a ceny provozu spotřebiče podle příkonu, času používání a ceny za kWh.",
+    "offers":{
+      "@type":"Offer",
+      "price":"0",
+      "priceCurrency":"CZK"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"Jak se počítá spotřeba elektřiny spotřebiče?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Spotřeba elektřiny se orientačně počítá z příkonu spotřebiče ve wattech, doby používání a ceny za kWh. Příkon se převede na kilowatty a vynásobí počtem hodin provozu."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Co znamená příkon ve wattech?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Příkon ve wattech udává, kolik elektrické energie spotřebič odebírá při provozu. Čím vyšší příkon a delší doba používání, tím vyšší bude spotřeba elektřiny."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Je výpočet v kalkulačce přesný?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Výsledek je orientační. Skutečná spotřeba se může lišit podle režimu provozu spotřebiče, účinnosti, cyklů zapnutí a vypnutí nebo konkrétní sazby dodavatele."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="/">Rychlé<span>Výpočty</span>.cz</a>
+      <nav class="topnav" aria-label="Hlavní navigace">
+        <a href="/">Domů</a>
+        <a href="/spotreba-paliva-kalkulacka.html">Spotřeba paliva</a>
+        <a href="/dph-kalkulacka.html">DPH kalkulačka</a>
+        <a href="/prevodnik-men.html">Převodník měn</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumbs">
+          <a href="/">RychléVýpočty.cz</a> / Kalkulačka spotřeby elektřiny
+        </div>
+
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <h1>Kalkulačka spotřeby elektřiny</h1>
+            <p>Spočítejte si orientační spotřebu elektřiny a cenu provozu spotřebiče podle příkonu, délky používání a ceny za kWh. Kalkulačka se hodí pro domácnosti, kanceláře i rychlé porovnání různých zařízení.</p>
+            <p>Zadejte příkon spotřebiče, počet hodin denně, počet dnů používání a cenu elektřiny. Výsledek získáte okamžitě pro den, měsíc i rok.</p>
+
+            <div class="hero-points">
+              <div class="hero-pill">Spotřeba v kWh</div>
+              <div class="hero-pill">Cena za den</div>
+              <div class="hero-pill">Cena za měsíc</div>
+              <div class="hero-pill">Cena za rok</div>
+            </div>
+          </div>
+
+          <div class="hero-box">
+            <h2>Co kalkulačka umí</h2>
+            <p>Rychle přepočítá příkon spotřebiče na spotřebu elektřiny a odhadne náklady na provoz. Hodí se pro ledničku, televizi, počítač, klimatizaci, topení i další běžné spotřebiče.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container layout">
+      <div class="card">
+        <div class="card-header">
+          <h2>Zadání pro výpočet</h2>
+          <p>Vyplňte příkon spotřebiče, dobu používání a cenu elektřiny. Kalkulačka výsledek automaticky přepočítá.</p>
+        </div>
+        <div class="card-body">
+          <form id="electricityForm">
+            <div class="form-grid">
+              <div class="field">
+                <label for="devicePower">Příkon spotřebiče (W)</label>
+                <input type="number" id="devicePower" min="1" step="1" value="1500" inputmode="decimal">
+                <small>Například 1500 W pro rychlovarnou konvici nebo topidlo.</small>
+              </div>
+
+              <div class="field">
+                <label for="hoursPerDay">Použití za den (hodiny)</label>
+                <input type="number" id="hoursPerDay" min="0.1" step="0.1" value="2" inputmode="decimal">
+                <small>Kolik hodin denně je spotřebič v provozu.</small>
+              </div>
+
+              <div class="field">
+                <label for="daysUsed">Počet dnů</label>
+                <input type="number" id="daysUsed" min="1" step="1" value="30" inputmode="numeric">
+                <small>Počet dnů, po které chcete spotřebu počítat.</small>
+              </div>
+
+              <div class="field">
+                <label for="pricePerKwh">Cena elektřiny za kWh (Kč)</label>
+                <input type="number" id="pricePerKwh" min="0" step="0.01" value="6.50" inputmode="decimal">
+                <small>Orientační celková cena včetně distribuce a dalších složek.</small>
+              </div>
+
+              <div class="field">
+                <label for="usageMode">Typ přehledu</label>
+                <select id="usageMode">
+                  <option value="daily">Běžné denní používání</option>
+                  <option value="monthly" selected>Měsíční používání</option>
+                  <option value="yearly">Dlouhodobý odhad</option>
+                </select>
+                <small>Slouží pro rychlou orientaci v souhrnu.</small>
+              </div>
+
+              <div class="field">
+                <label for="standbyPower">Příkon v pohotovostním režimu (W)</label>
+                <input type="number" id="standbyPower" min="0" step="0.1" value="0" inputmode="decimal">
+                <small>Volitelné. Pokud spotřebič odebírá energii i ve standby režimu.</small>
+              </div>
+
+              <div class="actions full">
+                <button type="submit" class="btn-primary">Spočítat spotřebu</button>
+                <button type="button" class="btn-secondary" id="resetBtn">Obnovit výchozí hodnoty</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>Výsledek výpočtu</h2>
+          <p>Přehled spotřeby elektřiny a orientační ceny provozu spotřebiče.</p>
+        </div>
+        <div class="card-body">
+          <div class="results-grid">
+            <div class="result-box highlight">
+              <div class="result-label">Spotřeba za den</div>
+              <div class="result-value" id="dailyConsumption">0 kWh</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Cena za den</div>
+              <div class="result-value" id="dailyCost">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Spotřeba za zadané období</div>
+              <div class="result-value" id="periodConsumption">0 kWh</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Cena za zadané období</div>
+              <div class="result-value" id="periodCost">0 Kč</div>
+            </div>
+          </div>
+
+          <div id="statusBadge" class="badge success">Spotřeba je v běžném rozsahu</div>
+
+          <div class="info-list">
+            <div class="info-row">
+              <span>Odhad měsíční spotřeby</span>
+              <strong id="monthlyConsumption">0 kWh</strong>
+            </div>
+            <div class="info-row">
+              <span>Odhad měsíční ceny</span>
+              <strong id="monthlyCost">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Odhad roční spotřeby</span>
+              <strong id="yearlyConsumption">0 kWh</strong>
+            </div>
+            <div class="info-row">
+              <span>Odhad roční ceny</span>
+              <strong id="yearlyCost">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Celkový příkon v provozu</span>
+              <strong id="summaryPower">0 W</strong>
+            </div>
+          </div>
+
+          <div class="note">
+            Výpočet je orientační. Skutečná spotřeba elektřiny se může lišit podle účinnosti spotřebiče, způsobu používání, cyklů provozu, tarifní sazby a dalších nákladových složek.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="card">
+        <div class="card-header">
+          <h3>Přehled nákladů</h3>
+          <p>Souhrn hlavních hodnot pro denní, měsíční a roční provoz spotřebiče.</p>
+        </div>
+        <div class="card-body">
+          <div class="table-wrap">
+            <table aria-label="Přehled spotřeby elektřiny">
+              <thead>
+                <tr>
+                  <th>Období</th>
+                  <th>Spotřeba</th>
+                  <th>Odhad ceny</th>
+                  <th>Poznámka</th>
+                </tr>
+              </thead>
+              <tbody id="summaryTableBody">
+                <tr>
+                  <td>Den</td>
+                  <td>0 kWh</td>
+                  <td>0 Kč</td>
+                  <td>Běžný jeden den provozu</td>
+                </tr>
+                <tr>
+                  <td>Měsíc</td>
+                  <td>0 kWh</td>
+                  <td>0 Kč</td>
+                  <td>Orientační přepočet na 30 dnů</td>
+                </tr>
+                <tr>
+                  <td>Rok</td>
+                  <td>0 kWh</td>
+                  <td>0 Kč</td>
+                  <td>Orientační přepočet na 365 dnů</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container content-section">
+      <h2>Jak kalkulačka spotřeby elektřiny funguje</h2>
+      <p>Kalkulačka počítá spotřebu elektřiny z příkonu spotřebiče ve wattech a délky používání v hodinách. Příkon se převede na kilowatty a následně vynásobí dobou provozu. Výsledkem je spotřeba v kWh, ze které se podle zadané ceny za kWh dopočítá orientační cena provozu.</p>
+
+      <h3>K čemu se kalkulačka hodí</h3>
+      <ul>
+        <li>pro rychlý odhad nákladů na provoz domácích spotřebičů,</li>
+        <li>pro porovnání různých zařízení podle příkonu,</li>
+        <li>pro plánování provozních nákladů v domácnosti nebo kanceláři,</li>
+        <li>pro orientaci v tom, které spotřebiče mají největší dopad na účet za elektřinu.</li>
+      </ul>
+
+      <h3>Co znamená kWh</h3>
+      <p>Kilowatthodina je jednotka spotřeby elektrické energie. Pokud má spotřebič příkon 1000 W, tedy 1 kW, a běží jednu hodinu, spotřebuje přibližně 1 kWh elektřiny.</p>
+
+      <h3>Pohotovostní režim</h3>
+      <p>Některé spotřebiče odebírají energii i tehdy, když nejsou aktivně používány. Právě proto lze do kalkulačky doplnit i příkon ve standby režimu, aby byl odhad realističtější.</p>
+
+      <h3>Na co si dát pozor</h3>
+      <p>Reálná cena elektřiny není tvořena jen samotnou silovou elektřinou. Výsledný účet ovlivňuje i distribuční sazba, stálé platby a další poplatky. Tahle kalkulačka proto slouží hlavně pro rychlou orientaci a porovnání.</p>
+    </section>
+
+    <section class="container content-section">
+      <h2>Související kalkulačky</h2>
+      <div class="related-grid">
+        <a class="related-card" href="/spotreba-paliva-kalkulacka.html">
+          <strong>Kalkulačka spotřeby paliva</strong>
+          <span>Výpočet spotřeby na 100 km, ceny jízdy a nákladů na kilometr.</span>
+        </a>
+
+        <a class="related-card" href="/kalkulacka-prumeru.html">
+          <strong>Kalkulačka průměru</strong>
+          <span>Výpočet aritmetického i váženého průměru pro různá data.</span>
+        </a>
+
+        <a class="related-card" href="/procenta-kalkulacka.html">
+          <strong>Kalkulačka procent</strong>
+          <span>Rychlé výpočty procent, navýšení a procentních změn.</span>
+        </a>
+
+        <a class="related-card" href="/inflace-kalkulacka.html">
+          <strong>Inflační kalkulačka</strong>
+          <span>Spočítejte dopad inflace na hodnotu peněz a kupní sílu částky.</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      © 2026 RychléVýpočty.cz — online kalkulačky a praktické výpočty pro každodenní použití.
+    </div>
+  </footer>
+
+  <script>
+    const form = document.getElementById('electricityForm');
+    const resetBtn = document.getElementById('resetBtn');
+
+    const outputs = {
+      dailyConsumption: document.getElementById('dailyConsumption'),
+      dailyCost: document.getElementById('dailyCost'),
+      periodConsumption: document.getElementById('periodConsumption'),
+      periodCost: document.getElementById('periodCost'),
+      monthlyConsumption: document.getElementById('monthlyConsumption'),
+      monthlyCost: document.getElementById('monthlyCost'),
+      yearlyConsumption: document.getElementById('yearlyConsumption'),
+      yearlyCost: document.getElementById('yearlyCost'),
+      summaryPower: document.getElementById('summaryPower'),
+      statusBadge: document.getElementById('statusBadge'),
+      summaryTableBody: document.getElementById('summaryTableBody')
+    };
+
+    function formatCurrency(value) {
+      return new Intl.NumberFormat('cs-CZ', {
+        style: 'currency',
+        currency: 'CZK',
+        maximumFractionDigits: 0
+      }).format(value);
+    }
+
+    function formatKwh(value) {
+      return new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2
+      }).format(value) + ' kWh';
+    }
+
+    function formatWatts(value) {
+      return new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 1
+      }).format(value) + ' W';
+    }
+
+    function getValues() {
+      return {
+        devicePower: Number(document.getElementById('devicePower').value),
+        hoursPerDay: Number(document.getElementById('hoursPerDay').value),
+        daysUsed: Number(document.getElementById('daysUsed').value),
+        pricePerKwh: Number(document.getElementById('pricePerKwh').value),
+        usageMode: document.getElementById('usageMode').value,
+        standbyPower: Number(document.getElementById('standbyPower').value)
+      };
+    }
+
+    function validate(values) {
+      if (!values.devicePower || values.devicePower <= 0) return 'Zadejte platný příkon spotřebiče.';
+      if (!values.hoursPerDay || values.hoursPerDay <= 0) return 'Zadejte platný počet hodin používání za den.';
+      if (!values.daysUsed || values.daysUsed <= 0) return 'Zadejte platný počet dnů.';
+      if (Number.isNaN(values.pricePerKwh) || values.pricePerKwh < 0) return 'Zadejte platnou cenu za kWh.';
+      if (Number.isNaN(values.standbyPower) || values.standbyPower < 0) return 'Zadejte platný příkon ve standby režimu.';
+      return '';
+    }
+
+    function calculateElectricity(values) {
+      const activeKwhPerDay = (values.devicePower / 1000) * values.hoursPerDay;
+      const standbyHoursPerDay = Math.max(0, 24 - values.hoursPerDay);
+      const standbyKwhPerDay = (values.standbyPower / 1000) * standbyHoursPerDay;
+      const dailyKwh = activeKwhPerDay + standbyKwhPerDay;
+
+      const dailyCost = dailyKwh * values.pricePerKwh;
+      const periodKwh = dailyKwh * values.daysUsed;
+      const periodCost = periodKwh * values.pricePerKwh;
+      const monthlyKwh = dailyKwh * 30;
+      const monthlyCost = monthlyKwh * values.pricePerKwh;
+      const yearlyKwh = dailyKwh * 365;
+      const yearlyCost = yearlyKwh * values.pricePerKwh;
+
+      return {
+        dailyKwh,
+        dailyCost,
+        periodKwh,
+        periodCost,
+        monthlyKwh,
+        monthlyCost,
+        yearlyKwh,
+        yearlyCost
+      };
+    }
+
+    function renderTable(result) {
+      outputs.summaryTableBody.innerHTML = `
+        <tr>
+          <td>Den</td>
+          <td>${formatKwh(result.dailyKwh)}</td>
+          <td>${formatCurrency(result.dailyCost)}</td>
+          <td>Běžný jeden den provozu</td>
+        </tr>
+        <tr>
+          <td>Měsíc</td>
+          <td>${formatKwh(result.monthlyKwh)}</td>
+          <td>${formatCurrency(result.monthlyCost)}</td>
+          <td>Orientační přepočet na 30 dnů</td>
+        </tr>
+        <tr>
+          <td>Rok</td>
+          <td>${formatKwh(result.yearlyKwh)}</td>
+          <td>${formatCurrency(result.yearlyCost)}</td>
+          <td>Orientační přepočet na 365 dnů</td>
+        </tr>
+      `;
+    }
+
+    function render(values, result) {
+      outputs.dailyConsumption.textContent = formatKwh(result.dailyKwh);
+      outputs.dailyCost.textContent = formatCurrency(result.dailyCost);
+      outputs.periodConsumption.textContent = formatKwh(result.periodKwh);
+      outputs.periodCost.textContent = formatCurrency(result.periodCost);
+      outputs.monthlyConsumption.textContent = formatKwh(result.monthlyKwh);
+      outputs.monthlyCost.textContent = formatCurrency(result.monthlyCost);
+      outputs.yearlyConsumption.textContent = formatKwh(result.yearlyKwh);
+      outputs.yearlyCost.textContent = formatCurrency(result.yearlyCost);
+      outputs.summaryPower.textContent = formatWatts(values.devicePower);
+
+      if (result.yearlyCost > 10000) {
+        outputs.statusBadge.className = 'badge warning';
+        outputs.statusBadge.textContent = 'Roční náklady už jsou poměrně vysoké';
+      } else {
+        outputs.statusBadge.className = 'badge success';
+        outputs.statusBadge.textContent = 'Spotřeba je v běžném rozsahu';
+      }
+
+      renderTable(result);
+    }
+
+    function runCalculation() {
+      const values = getValues();
+      const error = validate(values);
+
+      if (error) {
+        alert(error);
+        return;
+      }
+
+      const result = calculateElectricity(values);
+      render(values, result);
+    }
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      runCalculation();
+    });
+
+    ['devicePower', 'hoursPerDay', 'daysUsed', 'pricePerKwh', 'usageMode', 'standbyPower'].forEach(id => {
+      document.getElementById(id).addEventListener('input', runCalculation);
+      document.getElementById(id).addEventListener('change', runCalculation);
+    });
+
+    resetBtn.addEventListener('click', function() {
+      document.getElementById('devicePower').value = 1500;
+      document.getElementById('hoursPerDay').value = 2;
+      document.getElementById('daysUsed').value = 30;
+      document.getElementById('pricePerKwh').value = 6.50;
+      document.getElementById('usageMode').value = 'monthly';
+      document.getElementById('standbyPower').value = 0;
+      runCalculation();
+    });
+
+    runCalculation();
+  </script>
+</body>
+</html>
