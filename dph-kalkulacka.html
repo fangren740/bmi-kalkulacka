@@ -1,603 +1,225 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="cs">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DPH kalkulačka online | Výpočet DPH 21 %, 15 %, 10 % | RychléVýpočty.cz</title>
+  <meta name="description" content="Spočítejte cenu s DPH i bez DPH. Kalkulačka DPH pro sazby 21 %, 15 % a 10 %. Výpočet DPH přehledně a zdarma online.">
+  <meta name="keywords" content="DPH kalkulačka, výpočet DPH, DPH 21, DPH 15, DPH 10, cena bez DPH, cena s DPH">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://rychlevypocty.cz/dph-kalkulacka.html">
 
-<title>DPH kalkulačka online | Výpočet DPH zdarma | RychléVýpočty.cz</title>
-<meta name="description" content="DPH kalkulačka online zdarma. Spočítejte cenu s DPH, bez DPH i samotnou částku DPH. Jednoduchý výpočet pro sazby 21 %, 15 % a 12 %.">
-<meta name="robots" content="index,follow">
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #5f6b85;
+      --primary: #2152ff;
+      --primary-dark: #183dbf;
+      --border: #dbe3f0;
+      --success: #138a4b;
+      --shadow: 0 12px 32px rgba(20, 32, 70, 0.08);
+    }
 
-<style>
-:root{
-  --bg:#020617;
-  --panel:#0f172a;
-  --card:#111827;
-  --text:#e5e7eb;
-  --muted:#94a3b8;
-  --accent:#22c55e;
-  --accent2:#38bdf8;
-  --border:rgba(255,255,255,.08);
-}
+    * { box-sizing: border-box; }
 
-*{box-sizing:border-box}
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, sans-serif;
+      background: linear-gradient(180deg, #f7f9fd 0%, #eef3fb 100%);
+      color: var(--text);
+    }
 
-body{
-  margin:0;
-  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  background:linear-gradient(180deg,var(--bg) 0%, #0f172a 100%);
-  color:var(--text);
-  min-height:100vh;
-}
+    .container {
+      width: min(1100px, calc(100% - 32px));
+      margin: 0 auto;
+    }
 
-a{
-  color:var(--accent2);
-  text-decoration:none;
-}
+    .topbar {
+      padding: 18px 0;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255,255,255,.9);
+    }
 
-.wrap{
-  max-width:1050px;
-  margin:0 auto;
-  padding:28px 18px 64px;
-}
+    .brand {
+      font-weight: 800;
+      font-size: 18px;
+    }
 
-.topbar{
-  margin-bottom:18px;
-}
+    .brand span { color: var(--primary); }
 
-.back-link{
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  text-decoration:none;
-  color:var(--accent2);
-  font-size:14px;
-  border:1px solid var(--border);
-  background:rgba(56,189,248,.08);
-  padding:10px 14px;
-  border-radius:999px;
-}
+    .hero {
+      padding: 40px 0 10px;
+    }
 
-.hero{
-  text-align:center;
-  padding:24px 0 12px;
-}
+    h1 {
+      font-size: 40px;
+      margin-bottom: 10px;
+    }
 
-.badge{
-  display:inline-block;
-  padding:8px 14px;
-  border:1px solid var(--border);
-  border-radius:999px;
-  color:var(--accent2);
-  background:rgba(56,189,248,.08);
-  font-size:14px;
-  margin-bottom:14px;
-}
+    .sub {
+      color: var(--muted);
+      max-width: 700px;
+    }
 
-h1{
-  margin:0 0 12px;
-  font-size:clamp(34px,5vw,54px);
-  line-height:1.05;
-}
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      padding: 20px 0 40px;
+    }
 
-.sub{
-  color:var(--muted);
-  max-width:760px;
-  margin:0 auto;
-  font-size:18px;
-  line-height:1.6;
-}
+    .card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
 
-.layout{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:22px;
-  margin-top:32px;
-}
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
 
-.panel{
-  background:rgba(17,24,39,.92);
-  border:1px solid var(--border);
-  border-radius:24px;
-  padding:24px;
-  box-shadow:0 12px 40px rgba(0,0,0,.25);
-}
+    input, select {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      margin-bottom: 16px;
+      font-size: 16px;
+    }
 
-.panel h2{
-  margin:0 0 18px;
-  font-size:28px;
-}
+    button {
+      padding: 14px;
+      border-radius: 12px;
+      border: none;
+      background: var(--primary);
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+      width: 100%;
+    }
 
-.field{
-  margin-bottom:16px;
-}
+    .result-box {
+      margin-top: 16px;
+      padding: 16px;
+      border-radius: 12px;
+      background: #f8fbff;
+      border: 1px solid var(--border);
+    }
 
-label{
-  display:block;
-  margin-bottom:8px;
-  color:#cbd5e1;
-  font-size:14px;
-  font-weight:600;
-}
+    .big {
+      font-size: 28px;
+      font-weight: 800;
+    }
 
-input,
-select{
-  width:100%;
-  padding:14px 16px;
-  border-radius:16px;
-  border:1px solid var(--border);
-  background:#020617;
-  color:var(--text);
-  font-size:16px;
-  outline:none;
-}
+    .muted {
+      color: var(--muted);
+    }
 
-input:focus,
-select:focus{
-  border-color:rgba(56,189,248,.5);
-}
-
-button{
-  margin-top:8px;
-  padding:16px;
-  width:100%;
-  background:linear-gradient(90deg,var(--accent) 0%, #16a34a 100%);
-  border:none;
-  border-radius:16px;
-  color:#052e16;
-  font-size:16px;
-  font-weight:800;
-  cursor:pointer;
-}
-
-.mode-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-  margin-bottom:16px;
-}
-
-.mode-btn{
-  border:1px solid var(--border);
-  background:#0b1220;
-  color:var(--text);
-  border-radius:16px;
-  padding:14px;
-  font-size:15px;
-  font-weight:700;
-  cursor:pointer;
-}
-
-.mode-btn.active{
-  border-color:rgba(56,189,248,.45);
-  background:rgba(56,189,248,.12);
-  color:#bae6fd;
-}
-
-.result-card{
-  background:rgba(255,255,255,.04);
-  border:1px solid var(--border);
-  border-radius:20px;
-  padding:20px;
-}
-
-.result-main-label{
-  color:var(--muted);
-  font-size:14px;
-  margin-bottom:8px;
-}
-
-.result-main-value{
-  font-size:40px;
-  font-weight:800;
-  line-height:1.1;
-  margin-bottom:18px;
-}
-
-.stats{
-  display:grid;
-  gap:14px;
-}
-
-.stat{
-  background:rgba(255,255,255,.04);
-  border:1px solid var(--border);
-  border-radius:18px;
-  padding:16px;
-}
-
-.stat-label{
-  color:var(--muted);
-  font-size:14px;
-  margin-bottom:6px;
-}
-
-.stat-value{
-  font-size:24px;
-  font-weight:700;
-}
-
-.summary{
-  color:var(--muted);
-  line-height:1.7;
-  margin-top:16px;
-}
-
-.section{
-  margin-top:28px;
-}
-
-.section h2{
-  margin:0 0 16px;
-  font-size:28px;
-}
-
-.content-box{
-  background:rgba(17,24,39,.92);
-  border:1px solid var(--border);
-  border-radius:24px;
-  padding:24px;
-  line-height:1.8;
-  color:var(--muted);
-  box-shadow:0 12px 40px rgba(0,0,0,.25);
-}
-
-.content-box h2{
-  color:var(--text);
-  margin-top:0;
-}
-
-.table-wrap{
-  overflow:auto;
-  background:rgba(17,24,39,.92);
-  border:1px solid var(--border);
-  border-radius:24px;
-  box-shadow:0 12px 40px rgba(0,0,0,.25);
-}
-
-table{
-  width:100%;
-  border-collapse:collapse;
-  min-width:620px;
-}
-
-th, td{
-  text-align:left;
-  padding:14px 16px;
-  border-bottom:1px solid var(--border);
-}
-
-th{
-  color:#cbd5e1;
-  font-size:14px;
-  background:rgba(255,255,255,.03);
-}
-
-td{
-  color:var(--text);
-}
-
-tr:last-child td{
-  border-bottom:none;
-}
-
-.note{
-  margin-top:14px;
-  font-size:14px;
-  color:var(--muted);
-  line-height:1.6;
-}
-
-.footer{
-  text-align:center;
-  color:var(--muted);
-  margin-top:36px;
-  font-size:14px;
-}
-
-@media (max-width:900px){
-  .layout{
-    grid-template-columns:1fr;
-  }
-}
-
-@media (max-width:640px){
-  .wrap{
-    padding:20px 14px 56px;
-  }
-
-  .sub{
-    font-size:16px;
-  }
-
-  .mode-grid{
-    grid-template-columns:1fr;
-  }
-
-  .panel,
-  .content-box,
-  .table-wrap{
-    border-radius:20px;
-  }
-
-  .result-main-value{
-    font-size:34px;
-  }
-}
-</style>
+    @media(max-width:900px){
+      .layout{
+        grid-template-columns:1fr;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-<main class="wrap">
+<div class="topbar">
+  <div class="container">
+    <div class="brand">Rychlé<span>Výpočty</span>.cz</div>
+  </div>
+</div>
 
-  <div class="topbar">
-    <a class="back-link" href="./index.html">← Zpět na přehled kalkulaček</a>
+<div class="container hero">
+  <h1>DPH kalkulačka</h1>
+  <p class="sub">
+    Spočítejte cenu s DPH i bez DPH během pár sekund. Kalkulačka podporuje základní sazby 21 %, 15 % a 10 %.
+  </p>
+</div>
+
+<div class="container layout">
+
+  <div class="card">
+    <h2>Výpočet DPH</h2>
+
+    <label>Částka</label>
+    <input type="number" id="amount" value="1000">
+
+    <label>Typ výpočtu</label>
+    <select id="mode">
+      <option value="with">Cena s DPH</option>
+      <option value="without">Cena bez DPH</option>
+    </select>
+
+    <label>Sazba DPH</label>
+    <select id="rate">
+      <option value="21">21 %</option>
+      <option value="15">15 %</option>
+      <option value="10">10 %</option>
+    </select>
+
+    <button onclick="calcDPH()">Spočítat</button>
   </div>
 
-  <section class="hero">
-    <div class="badge">Finance</div>
-    <h1>DPH kalkulačka</h1>
-    <p class="sub">
-      Spočítejte si cenu s DPH, bez DPH i samotnou částku DPH.
-      Kalkulačka podporuje běžné sazby 21 %, 15 % a 12 % a funguje okamžitě online.
-    </p>
-  </section>
+  <div class="card">
+    <h2>Výsledek</h2>
 
-  <section class="layout">
-
-    <div class="panel">
-      <h2>Zadejte hodnoty</h2>
-
-      <div class="mode-grid">
-        <button class="mode-btn active" id="modeNetBtn" type="button">Z ceny bez DPH</button>
-        <button class="mode-btn" id="modeGrossBtn" type="button">Z ceny s DPH</button>
-      </div>
-
-      <div class="field">
-        <label for="amountInput" id="amountLabel">Cena bez DPH</label>
-        <input id="amountInput" type="number" min="0" step="0.01" value="1000" placeholder="např. 1000">
-      </div>
-
-      <div class="field">
-        <label for="vatRate">Sazba DPH</label>
-        <select id="vatRate">
-          <option value="21" selected>21 %</option>
-          <option value="15">15 %</option>
-          <option value="12">12 %</option>
-        </select>
-      </div>
-
-      <button id="calcBtn" type="button">Spočítat DPH</button>
-
-      <div class="note">
-        Výpočet je orientační a vychází z pevně zadané sazby DPH.
-        Hodí se pro rychlou kontrolu ceny s daní i bez daně.
-      </div>
+    <div class="result-box">
+      <div class="muted">Cena bez DPH</div>
+      <div class="big" id="withoutDPH">0 Kč</div>
     </div>
 
-    <div class="panel">
-      <h2>Výsledek</h2>
-
-      <div class="result-card">
-        <div class="result-main-label" id="mainResultLabel">Cena s DPH</div>
-        <div class="result-main-value" id="mainResultValue">—</div>
-
-        <div class="stats">
-          <div class="stat">
-            <div class="stat-label">Cena bez DPH</div>
-            <div class="stat-value" id="netValue">—</div>
-          </div>
-
-          <div class="stat">
-            <div class="stat-label">Částka DPH</div>
-            <div class="stat-value" id="vatValue">—</div>
-          </div>
-
-          <div class="stat">
-            <div class="stat-label">Cena s DPH</div>
-            <div class="stat-value" id="grossValue">—</div>
-          </div>
-        </div>
-
-        <div class="summary" id="summaryText">
-          Zadejte částku a zvolte sazbu DPH.
-        </div>
-      </div>
+    <div class="result-box">
+      <div class="muted">DPH</div>
+      <div class="big" id="dph">0 Kč</div>
     </div>
 
-  </section>
-
-  <section class="section">
-    <h2>Přehled výpočtu DPH</h2>
-
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Vstup</th>
-            <th>Sazba DPH</th>
-            <th>Cena bez DPH</th>
-            <th>DPH</th>
-            <th>Cena s DPH</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td id="tableInput">—</td>
-            <td id="tableRate">—</td>
-            <td id="tableNet">—</td>
-            <td id="tableVat">—</td>
-            <td id="tableGross">—</td>
-          </tr>
-        </tbody>
-      </table>
+    <div class="result-box">
+      <div class="muted">Cena s DPH</div>
+      <div class="big" id="withDPH">0 Kč</div>
     </div>
-  </section>
 
-  <section class="section">
-    <div class="content-box">
-      <h2>Jak funguje DPH kalkulačka</h2>
-      <p>
-        DPH kalkulačka slouží k rychlému výpočtu daně z přidané hodnoty.
-        Můžete zadat cenu bez DPH a spočítat konečnou cenu s daní,
-        nebo naopak zadat cenu s DPH a zjistit základ daně i samotnou částku DPH.
-      </p>
-      <p>
-        Výsledek se hodí například při vystavování faktur, kontrole cen,
-        porovnávání nabídek nebo rychlém přepočtu částek v podnikání i běžné praxi.
-      </p>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="content-box">
-      <h2>Vzorec pro výpočet DPH</h2>
-      <p>
-        Pokud počítáte z ceny bez DPH, použije se vzorec:
-        <strong>cena s DPH = cena bez DPH × (1 + sazba DPH)</strong>
-      </p>
-      <p>
-        Pokud počítáte z ceny s DPH, použije se vzorec:
-        <strong>cena bez DPH = cena s DPH / (1 + sazba DPH)</strong>
-      </p>
-      <p>
-        Samotná částka DPH je rozdíl mezi cenou s DPH a cenou bez DPH.
-      </p>
-    </div>
-  </section>
-
-  <div class="footer">
-    © RychléVýpočty.cz – DPH kalkulačka online zdarma
   </div>
 
-</main>
+</div>
 
 <script>
-const amountInput = document.getElementById('amountInput');
-const vatRateInput = document.getElementById('vatRate');
-const calcBtn = document.getElementById('calcBtn');
 
-const modeNetBtn = document.getElementById('modeNetBtn');
-const modeGrossBtn = document.getElementById('modeGrossBtn');
-const amountLabel = document.getElementById('amountLabel');
-
-const mainResultLabel = document.getElementById('mainResultLabel');
-const mainResultValue = document.getElementById('mainResultValue');
-const netValue = document.getElementById('netValue');
-const vatValue = document.getElementById('vatValue');
-const grossValue = document.getElementById('grossValue');
-const summaryText = document.getElementById('summaryText');
-
-const tableInput = document.getElementById('tableInput');
-const tableRate = document.getElementById('tableRate');
-const tableNet = document.getElementById('tableNet');
-const tableVat = document.getElementById('tableVat');
-const tableGross = document.getElementById('tableGross');
-
-let currentMode = 'net';
-
-function formatCurrency(value){
-  return new Intl.NumberFormat('cs-CZ', {
-    style:'currency',
-    currency:'CZK',
-    minimumFractionDigits:2,
-    maximumFractionDigits:2
-  }).format(value);
+function format(num){
+  return new Intl.NumberFormat('cs-CZ').format(num) + " Kč";
 }
 
-function setMode(mode){
-  currentMode = mode;
+function calcDPH(){
+  let amount = parseFloat(document.getElementById("amount").value);
+  let rate = parseFloat(document.getElementById("rate").value);
+  let mode = document.getElementById("mode").value;
 
-  if(mode === 'net'){
-    modeNetBtn.classList.add('active');
-    modeGrossBtn.classList.remove('active');
-    amountLabel.textContent = 'Cena bez DPH';
-    mainResultLabel.textContent = 'Cena s DPH';
-    amountInput.value = '1000';
+  let without, withVat, vat;
+
+  if(mode === "with"){
+    withVat = amount;
+    without = amount / (1 + rate/100);
+    vat = withVat - without;
   } else {
-    modeGrossBtn.classList.add('active');
-    modeNetBtn.classList.remove('active');
-    amountLabel.textContent = 'Cena s DPH';
-    mainResultLabel.textContent = 'Cena bez DPH';
-    amountInput.value = '1210';
+    without = amount;
+    vat = amount * (rate/100);
+    withVat = without + vat;
   }
 
-  calculateVAT();
+  document.getElementById("withoutDPH").innerText = format(without);
+  document.getElementById("dph").innerText = format(vat);
+  document.getElementById("withDPH").innerText = format(withVat);
 }
 
-function showError(message){
-  mainResultValue.textContent = '—';
-  netValue.textContent = '—';
-  vatValue.textContent = '—';
-  grossValue.textContent = '—';
-  summaryText.textContent = message;
-  tableInput.textContent = '—';
-  tableRate.textContent = '—';
-  tableNet.textContent = '—';
-  tableVat.textContent = '—';
-  tableGross.textContent = '—';
-}
+calcDPH();
 
-function calculateVAT(){
-  const amount = parseFloat(amountInput.value);
-  const rate = parseFloat(vatRateInput.value);
-
-  if (Number.isNaN(amount) || Number.isNaN(rate)) {
-    showError('Zadejte prosím platnou částku a sazbu DPH.');
-    return;
-  }
-
-  if (amount < 0) {
-    showError('Částka musí být nula nebo vyšší.');
-    return;
-  }
-
-  const multiplier = 1 + (rate / 100);
-  let net = 0;
-  let vat = 0;
-  let gross = 0;
-
-  if (currentMode === 'net') {
-    net = amount;
-    gross = amount * multiplier;
-    vat = gross - net;
-
-    mainResultValue.textContent = formatCurrency(gross);
-    summaryText.textContent = `Při částce ${formatCurrency(net)} bez DPH a sazbě ${rate} % vychází cena s DPH na ${formatCurrency(gross)}. Samotná DPH činí ${formatCurrency(vat)}.`;
-    tableInput.textContent = `${formatCurrency(amount)} bez DPH`;
-  } else {
-    gross = amount;
-    net = gross / multiplier;
-    vat = gross - net;
-
-    mainResultValue.textContent = formatCurrency(net);
-    summaryText.textContent = `Při částce ${formatCurrency(gross)} s DPH a sazbě ${rate} % vychází cena bez DPH na ${formatCurrency(net)}. Samotná DPH činí ${formatCurrency(vat)}.`;
-    tableInput.textContent = `${formatCurrency(amount)} s DPH`;
-  }
-
-  netValue.textContent = formatCurrency(net);
-  vatValue.textContent = formatCurrency(vat);
-  grossValue.textContent = formatCurrency(gross);
-
-  tableRate.textContent = `${rate} %`;
-  tableNet.textContent = formatCurrency(net);
-  tableVat.textContent = formatCurrency(vat);
-  tableGross.textContent = formatCurrency(gross);
-}
-
-modeNetBtn.addEventListener('click', () => setMode('net'));
-modeGrossBtn.addEventListener('click', () => setMode('gross'));
-calcBtn.addEventListener('click', calculateVAT);
-
-[amountInput, vatRateInput].forEach(el => {
-  el.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') calculateVAT();
-  });
-  el.addEventListener('change', calculateVAT);
-});
-
-calculateVAT();
 </script>
 
 </body>
