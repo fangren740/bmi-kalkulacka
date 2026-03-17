@@ -1,248 +1,1041 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="cs">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kalkulačka procent online zdarma | RychléVýpočty.cz</title>
+  <meta name="description" content="Spočítejte procenta z částky, procentní změnu, podíl jednoho čísla z druhého i navýšení nebo slevu. Přehledná kalkulačka procent online zdarma.">
+  <meta name="keywords" content="kalkulačka procent, procenta kalkulačka, procentní změna, kolik je procent z čísla, procentní navýšení, procentní sleva">
+  <meta name="author" content="RychléVýpočty.cz">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://rychlevypocty.cz/procenta-kalkulacka.html">
 
-<title>Kalkulačka procent online | RychléVýpočty.cz</title>
+  <meta property="og:title" content="Kalkulačka procent online zdarma | RychléVýpočty.cz">
+  <meta property="og:description" content="Výpočet procent z částky, procentní změny, podílu jednoho čísla z druhého i navýšení nebo slevy.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rychlevypocty.cz/procenta-kalkulacka.html">
+  <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg">
 
-<meta name="description" content="Jednoduchá kalkulačka procent online. Spočítejte kolik je X % z Y, o kolik procent se změnila hodnota nebo kolik procent je A z B.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Kalkulačka procent online zdarma | RychléVýpočty.cz">
+  <meta name="twitter:description" content="Rychlé procentní výpočty přehledně a zdarma.">
 
-<meta name="robots" content="index,follow">
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #5f6b85;
+      --primary: #2152ff;
+      --primary-dark: #183dbf;
+      --border: #dbe3f0;
+      --success: #138a4b;
+      --warning: #b66a00;
+      --shadow: 0 12px 32px rgba(20, 32, 70, 0.08);
+      --radius: 18px;
+    }
 
-<style>
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
 
-:root{
---bg:#020617;
---panel:#0f172a;
---card:#111827;
---text:#e5e7eb;
---muted:#94a3b8;
---accent:#22c55e;
---accent2:#38bdf8;
---border:rgba(255,255,255,.08);
-}
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #f7f9fd 0%, #eef3fb 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
 
-*{box-sizing:border-box}
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
 
-body{
-margin:0;
-font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-background:linear-gradient(180deg,var(--bg) 0%, #0f172a 100%);
-color:var(--text);
-min-height:100vh;
-}
+    a:hover { text-decoration: underline; }
 
-.wrap{
-max-width:900px;
-margin:0 auto;
-padding:30px 18px 60px;
-}
+    .container {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+    }
 
-.back{
-display:inline-block;
-margin-bottom:20px;
-text-decoration:none;
-color:var(--accent2);
-font-size:14px;
-}
+    .topbar {
+      padding: 18px 0;
+      border-bottom: 1px solid rgba(219, 227, 240, 0.8);
+      background: rgba(255, 255, 255, 0.84);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
 
-.hero{
-text-align:center;
-margin-bottom:30px;
-}
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
 
-h1{
-margin:0 0 10px;
-font-size:clamp(32px,5vw,48px);
-}
+    .brand {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
 
-.sub{
-color:var(--muted);
-max-width:600px;
-margin:0 auto;
-line-height:1.6;
-}
+    .brand span { color: var(--primary); }
 
-.panel{
-background:rgba(17,24,39,.92);
-border:1px solid var(--border);
-border-radius:22px;
-padding:26px;
-margin-bottom:24px;
-}
+    .topnav {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      font-size: 0.97rem;
+    }
 
-.panel h2{
-margin-top:0;
-}
+    .hero {
+      padding: 42px 0 20px;
+    }
 
-.field{
-margin-bottom:16px;
-}
+    .breadcrumbs {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
 
-label{
-display:block;
-margin-bottom:6px;
-font-size:14px;
-color:var(--muted);
-}
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.12fr 0.88fr;
+      gap: 28px;
+      align-items: start;
+    }
 
-input{
-width:100%;
-padding:12px 14px;
-border-radius:12px;
-border:1px solid var(--border);
-background:#020617;
-color:var(--text);
-font-size:16px;
-}
+    .hero-copy h1 {
+      font-size: clamp(2rem, 4vw, 3.15rem);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      margin: 0 0 16px;
+    }
 
-button{
-width:100%;
-margin-top:10px;
-padding:14px;
-border:none;
-border-radius:14px;
-background:var(--accent);
-color:#022c22;
-font-size:16px;
-font-weight:600;
-cursor:pointer;
-}
+    .hero-copy p {
+      margin: 0 0 16px;
+      font-size: 1.06rem;
+      color: var(--muted);
+      max-width: 760px;
+    }
 
-.result{
-margin-top:18px;
-font-size:20px;
-font-weight:600;
-color:#86efac;
-}
+    .hero-points {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
 
-.footer{
-margin-top:40px;
-color:var(--muted);
-text-align:center;
-font-size:14px;
-}
+    .hero-pill {
+      background: rgba(33, 82, 255, 0.08);
+      color: var(--primary-dark);
+      border: 1px solid rgba(33, 82, 255, 0.12);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
 
-</style>
+    .hero-box {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-box h2 {
+      margin: 0 0 10px;
+      font-size: 1.2rem;
+    }
+
+    .hero-box p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.02fr 0.98fr;
+      gap: 28px;
+      align-items: start;
+      padding: 22px 0 32px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .card-header {
+      padding: 24px 24px 10px;
+    }
+
+    .card-header h2,
+    .card-header h3 {
+      margin: 0 0 8px;
+      font-size: 1.3rem;
+      letter-spacing: -0.02em;
+    }
+
+    .card-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .card-body {
+      padding: 20px 24px 24px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .tab-button {
+      border: 1px solid var(--border);
+      background: #f7faff;
+      color: var(--text);
+      padding: 11px 14px;
+      border-radius: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+
+    .tab-button.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+    }
+
+    .tab-panel {
+      display: none;
+    }
+
+    .tab-panel.active {
+      display: block;
+    }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .field label {
+      font-weight: 700;
+      font-size: 0.96rem;
+    }
+
+    .field small {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: -2px;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      padding: 14px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      font-size: 1rem;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      font-family: inherit;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      outline: none;
+      border-color: rgba(33, 82, 255, 0.45);
+      box-shadow: 0 0 0 4px rgba(33, 82, 255, 0.10);
+    }
+
+    .full { grid-column: 1 / -1; }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.06s ease, background 0.15s ease;
+    }
+
+    button:hover { transform: translateY(-1px); }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover { background: var(--primary-dark); }
+
+    .btn-secondary {
+      background: #eef3ff;
+      color: var(--primary-dark);
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .result-box {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+
+    .result-box.highlight {
+      background: linear-gradient(180deg, #eef7ff 0%, #f9fcff 100%);
+      border-color: rgba(33, 82, 255, 0.18);
+    }
+
+    .result-label {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .result-value {
+      font-size: clamp(1.2rem, 2.4vw, 2rem);
+      line-height: 1.15;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      word-break: break-word;
+    }
+
+    .info-list {
+      display: grid;
+      gap: 12px;
+      margin: 18px 0 0;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid #edf2fa;
+    }
+
+    .info-row:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .info-row span:first-child { color: var(--muted); }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+
+    .badge.success {
+      background: rgba(19, 138, 75, 0.10);
+      color: var(--success);
+    }
+
+    .badge.warning {
+      background: rgba(182, 106, 0, 0.11);
+      color: var(--warning);
+    }
+
+    .note {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1px solid #e7edf7;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .content-section {
+      padding: 8px 0;
+    }
+
+    .content-section h2 {
+      font-size: 1.7rem;
+      letter-spacing: -0.03em;
+      margin: 0 0 14px;
+    }
+
+    .content-section h3 {
+      font-size: 1.15rem;
+      margin: 28px 0 10px;
+    }
+
+    .content-section p {
+      color: var(--muted);
+      margin: 0 0 14px;
+    }
+
+    .content-section ul {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    .content-section li {
+      margin-bottom: 8px;
+    }
+
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .related-card {
+      display: block;
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      color: var(--text);
+      box-shadow: var(--shadow);
+    }
+
+    .related-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .related-card span {
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    footer {
+      margin-top: 40px;
+      border-top: 1px solid rgba(219, 227, 240, 0.9);
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .footer-inner {
+      padding: 24px 0 40px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .layout,
+      .related-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .container {
+        width: min(100% - 24px, 1160px);
+      }
+
+      .field-grid,
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 28px;
+      }
+
+      .card-header,
+      .card-body,
+      .hero-box {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebApplication",
+    "name":"Kalkulačka procent",
+    "url":"https://rychlevypocty.cz/procenta-kalkulacka.html",
+    "applicationCategory":"UtilitiesApplication",
+    "operatingSystem":"Any",
+    "description":"Online kalkulačka procent pro výpočet procent z částky, procentní změny, podílu a navýšení nebo slevy.",
+    "offers":{
+      "@type":"Offer",
+      "price":"0",
+      "priceCurrency":"CZK"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"Jak spočítat kolik je X % z Y?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Stačí vydělit procentní hodnotu stem a výsledek vynásobit základní částkou. Například 10 % z 200 je 20."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Jak se počítá procentní změna?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Procentní změna se počítá jako rozdíl nové a původní hodnoty dělený původní hodnotou, vynásobený stem."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Jak spočítat slevu nebo navýšení o procenta?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Při slevě odečtete procentní část od původní ceny. Při navýšení naopak procentní část k původní ceně přičtete."
+        }
+      }
+    ]
+  }
+  </script>
 </head>
-
 <body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="/">Rychlé<span>Výpočty</span>.cz</a>
+      <nav class="topnav" aria-label="Hlavní navigace">
+        <a href="/">Domů</a>
+        <a href="/kalkulacka-prumeru.html">Průměr</a>
+        <a href="/dph-kalkulacka.html">DPH</a>
+        <a href="/inflace-kalkulacka.html">Inflace</a>
+      </nav>
+    </div>
+  </header>
 
-<main class="wrap">
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumbs">
+          <a href="/">RychléVýpočty.cz</a> / Kalkulačka procent
+        </div>
 
-<a class="back" href="./index.html">← zpět na přehled kalkulaček</a>
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <h1>Kalkulačka procent</h1>
+            <p>Spočítejte procenta z částky, procentní změnu, podíl jednoho čísla z druhého i navýšení nebo slevu. Kalkulačka je vhodná pro finance, školu, podnikání i běžné každodenní výpočty.</p>
+            <p>Všechny výpočty jsou rozdělené do přehledných režimů, takže se rychle dostanete k výsledku bez zbytečného přemýšlení nad vzorcem.</p>
 
-<section class="hero">
+            <div class="hero-points">
+              <div class="hero-pill">X % z Y</div>
+              <div class="hero-pill">Procentní změna</div>
+              <div class="hero-pill">Kolik % je A z B</div>
+              <div class="hero-pill">Sleva a navýšení</div>
+            </div>
+          </div>
 
-<h1>Kalkulačka procent</h1>
+          <div class="hero-box">
+            <h2>Co kalkulačka umí</h2>
+            <p>Na jednom místě zvládne čtyři nejčastější procentní výpočty. Hodí se pro slevy, marže, zdražení, zlevnění, školní výpočty i rychlé orientační porovnání čísel.</p>
+          </div>
+        </div>
+      </div>
+    </section>
 
-<p class="sub">
-Jednoduchý výpočet procent online. Spočítejte kolik je procent z čísla,
-o kolik procent se změnila hodnota nebo kolik procent tvoří jedno číslo z druhého.
-</p>
+    <section class="container layout">
+      <div class="card">
+        <div class="card-header">
+          <h2>Zadání výpočtu</h2>
+          <p>Vyberte typ procentního výpočtu a zadejte potřebné hodnoty.</p>
+        </div>
+        <div class="card-body">
+          <div class="tabs" role="tablist" aria-label="Typ procentního výpočtu">
+            <button class="tab-button active" type="button" data-tab="percent-of">Kolik je X % z Y</button>
+            <button class="tab-button" type="button" data-tab="change">Procentní změna</button>
+            <button class="tab-button" type="button" data-tab="share">Kolik % je A z B</button>
+            <button class="tab-button" type="button" data-tab="price">Sleva / navýšení</button>
+          </div>
 
-</section>
+          <div class="tab-panel active" id="panel-percent-of">
+            <div class="field-grid">
+              <div class="field">
+                <label for="percentValue">Procenta (%)</label>
+                <input type="number" id="percentValue" step="0.01" value="10" inputmode="decimal">
+                <small>Např. 10 znamená 10 %.</small>
+              </div>
+              <div class="field">
+                <label for="baseValue">Základní hodnota</label>
+                <input type="number" id="baseValue" step="0.01" value="200" inputmode="decimal">
+                <small>Číslo, ze kterého se procenta počítají.</small>
+              </div>
+            </div>
+            <div class="actions">
+              <button class="btn-primary" type="button" id="calcPercentOfBtn">Spočítat</button>
+              <button class="btn-secondary" type="button" id="resetPercentOfBtn">Obnovit</button>
+            </div>
+          </div>
 
-<section class="panel">
+          <div class="tab-panel" id="panel-change">
+            <div class="field-grid">
+              <div class="field">
+                <label for="oldValue">Původní hodnota</label>
+                <input type="number" id="oldValue" step="0.01" value="100" inputmode="decimal">
+                <small>Výchozí hodnota před změnou.</small>
+              </div>
+              <div class="field">
+                <label for="newValue">Nová hodnota</label>
+                <input type="number" id="newValue" step="0.01" value="120" inputmode="decimal">
+                <small>Nová hodnota po změně.</small>
+              </div>
+            </div>
+            <div class="actions">
+              <button class="btn-primary" type="button" id="calcChangeBtn">Spočítat</button>
+              <button class="btn-secondary" type="button" id="resetChangeBtn">Obnovit</button>
+            </div>
+          </div>
 
-<h2>Kolik je X % z Y</h2>
+          <div class="tab-panel" id="panel-share">
+            <div class="field-grid">
+              <div class="field">
+                <label for="valueA">Číslo A</label>
+                <input type="number" id="valueA" step="0.01" value="50" inputmode="decimal">
+                <small>Část, kterou porovnáváte.</small>
+              </div>
+              <div class="field">
+                <label for="valueB">Číslo B</label>
+                <input type="number" id="valueB" step="0.01" value="200" inputmode="decimal">
+                <small>Celková nebo srovnávací hodnota.</small>
+              </div>
+            </div>
+            <div class="actions">
+              <button class="btn-primary" type="button" id="calcShareBtn">Spočítat</button>
+              <button class="btn-secondary" type="button" id="resetShareBtn">Obnovit</button>
+            </div>
+          </div>
 
-<div class="field">
-<label>Procenta</label>
-<input id="percent1" type="number" value="10">
-</div>
+          <div class="tab-panel" id="panel-price">
+            <div class="field-grid">
+              <div class="field">
+                <label for="priceOriginal">Původní cena</label>
+                <input type="number" id="priceOriginal" step="0.01" value="2500" inputmode="decimal">
+                <small>Původní cena před změnou.</small>
+              </div>
+              <div class="field">
+                <label for="pricePercent">Procenta (%)</label>
+                <input type="number" id="pricePercent" step="0.01" value="15" inputmode="decimal">
+                <small>Velikost slevy nebo navýšení.</small>
+              </div>
+              <div class="field full">
+                <label for="priceMode">Typ změny</label>
+                <select id="priceMode">
+                  <option value="discount" selected>Sleva</option>
+                  <option value="increase">Navýšení</option>
+                </select>
+                <small>Zvolte, zda se cena snižuje nebo zvyšuje.</small>
+              </div>
+            </div>
+            <div class="actions">
+              <button class="btn-primary" type="button" id="calcPriceBtn">Spočítat</button>
+              <button class="btn-secondary" type="button" id="resetPriceBtn">Obnovit</button>
+            </div>
+          </div>
+        </div>
+      </div>
 
-<div class="field">
-<label>Z čísla</label>
-<input id="number1" type="number" value="200">
-</div>
+      <div class="card">
+        <div class="card-header">
+          <h2>Výsledek výpočtu</h2>
+          <p>Hlavní výsledek i pomocné informace podle zvoleného typu výpočtu.</p>
+        </div>
+        <div class="card-body">
+          <div class="results-grid">
+            <div class="result-box highlight">
+              <div class="result-label">Hlavní výsledek</div>
+              <div class="result-value" id="mainResult">0</div>
+            </div>
 
-<button onclick="calcPercent()">Spočítat</button>
+            <div class="result-box">
+              <div class="result-label">Pomocný výsledek</div>
+              <div class="result-value" id="secondaryResult">0</div>
+            </div>
 
-<div class="result" id="result1"></div>
+            <div class="result-box">
+              <div class="result-label">Rozdíl</div>
+              <div class="result-value" id="differenceResult">0</div>
+            </div>
 
-</section>
+            <div class="result-box">
+              <div class="result-label">Typ výpočtu</div>
+              <div class="result-value" id="typeResult">Procenta</div>
+            </div>
+          </div>
 
-<section class="panel">
+          <div id="resultBadge" class="badge success">Výpočet připraven</div>
 
-<h2>O kolik procent se změnila hodnota</h2>
+          <div class="info-list">
+            <div class="info-row">
+              <span>Vstup 1</span>
+              <strong id="input1Result">—</strong>
+            </div>
+            <div class="info-row">
+              <span>Vstup 2</span>
+              <strong id="input2Result">—</strong>
+            </div>
+            <div class="info-row">
+              <span>Vzorec / interpretace</span>
+              <strong id="formulaResult">—</strong>
+            </div>
+            <div class="info-row">
+              <span>Směr výpočtu</span>
+              <strong id="contextResult">—</strong>
+            </div>
+            <div class="info-row">
+              <span>Přesnost zobrazení</span>
+              <strong id="precisionResult">2 desetinná místa</strong>
+            </div>
+          </div>
 
-<div class="field">
-<label>Původní hodnota</label>
-<input id="oldValue" type="number" value="100">
-</div>
+          <div class="note" id="resultNote">
+            Vyberte typ výpočtu a zadejte vstupní hodnoty. Kalkulačka zvládá čtyři nejčastější procentní scénáře.
+          </div>
+        </div>
+      </div>
+    </section>
 
-<div class="field">
-<label>Nová hodnota</label>
-<input id="newValue" type="number" value="120">
-</div>
+    <section class="container content-section">
+      <h2>Jak kalkulačka procent funguje</h2>
+      <p>Procenta vyjadřují část celku ve stovkách. Právě proto se ve výpočtech pracuje s dělením stem, násobením základní hodnotou nebo porovnáním dvou čísel vůči sobě. Kalkulačka tento princip převádí do čtyř nejběžnějších situací.</p>
 
-<button onclick="calcChange()">Spočítat</button>
+      <h3>Kdy se jednotlivé režimy hodí</h3>
+      <ul>
+        <li><strong>Kolik je X % z Y</strong> při výpočtu slevy, daně, provize nebo části částky.</li>
+        <li><strong>Procentní změna</strong> při porovnání růstu, poklesu, zdražení nebo zlevnění.</li>
+        <li><strong>Kolik % je A z B</strong> při výpočtu podílu, úspěšnosti nebo marže.</li>
+        <li><strong>Sleva / navýšení</strong> při přepočtu původní ceny na novou cenu.</li>
+      </ul>
 
-<div class="result" id="result2"></div>
+      <h3>Na co si dát pozor</h3>
+      <p>U procentní změny je důležité, že se vždy vztahuje k původní hodnotě. Stejný absolutní rozdíl proto může znamenat jinou procentní změnu podle toho, od jakého základu počítáte.</p>
 
-</section>
+      <h3>Proč mít procenta na samostatné stránce</h3>
+      <p>Procentní výpočty patří mezi nejčastější každodenní operace. Proto má smysl mít je přehledně rozdělené a ne jen jako jeden jednoduchý formulář bez kontextu. Tím stránka funguje lépe pro uživatele i pro SEO.</p>
+    </section>
 
-<section class="panel">
+    <section class="container content-section">
+      <h2>Související kalkulačky</h2>
+      <div class="related-grid">
+        <a class="related-card" href="/kalkulacka-prumeru.html">
+          <strong>Kalkulačka průměru</strong>
+          <span>Výpočet aritmetického i váženého průměru.</span>
+        </a>
 
-<h2>Kolik procent je A z B</h2>
+        <a class="related-card" href="/dph-kalkulacka.html">
+          <strong>DPH kalkulačka</strong>
+          <span>Výpočet ceny s DPH, bez DPH i výše daně.</span>
+        </a>
 
-<div class="field">
-<label>Číslo A</label>
-<input id="valueA" type="number" value="50">
-</div>
+        <a class="related-card" href="/inflace-kalkulacka.html">
+          <strong>Inflační kalkulačka</strong>
+          <span>Výpočet dopadu inflace na hodnotu peněz.</span>
+        </a>
 
-<div class="field">
-<label>Číslo B</label>
-<input id="valueB" type="number" value="200">
-</div>
+        <a class="related-card" href="/kalkulacka-pujcky.html">
+          <strong>Kalkulačka půjčky</strong>
+          <span>Výpočet splátky půjčky a přeplacení.</span>
+        </a>
+      </div>
+    </section>
+  </main>
 
-<button onclick="calcShare()">Spočítat</button>
+  <footer>
+    <div class="container footer-inner">
+      © 2026 RychléVýpočty.cz — online kalkulačky a praktické výpočty pro každodenní použití.
+    </div>
+  </footer>
 
-<div class="result" id="result3"></div>
+  <script>
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabPanels = document.querySelectorAll('.tab-panel');
 
-</section>
+    const outputs = {
+      mainResult: document.getElementById('mainResult'),
+      secondaryResult: document.getElementById('secondaryResult'),
+      differenceResult: document.getElementById('differenceResult'),
+      typeResult: document.getElementById('typeResult'),
+      resultBadge: document.getElementById('resultBadge'),
+      input1Result: document.getElementById('input1Result'),
+      input2Result: document.getElementById('input2Result'),
+      formulaResult: document.getElementById('formulaResult'),
+      contextResult: document.getElementById('contextResult'),
+      precisionResult: document.getElementById('precisionResult'),
+      resultNote: document.getElementById('resultNote')
+    };
 
-<div class="footer">
-© RychléVýpočty.cz – kalkulačka procent online
-</div>
+    let activeTab = 'percent-of';
 
-</main>
+    function formatNumber(value, digits = 2) {
+      return new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: digits
+      }).format(value);
+    }
 
-<script>
+    function setActiveTab(tabName) {
+      activeTab = tabName;
 
-function calcPercent(){
-let p=document.getElementById("percent1").value;
-let n=document.getElementById("number1").value;
+      tabButtons.forEach(button => {
+        button.classList.toggle('active', button.dataset.tab === tabName);
+      });
 
-let result=(p/100)*n;
+      tabPanels.forEach(panel => {
+        panel.classList.toggle('active', panel.id === `panel-${tabName}`);
+      });
 
-document.getElementById("result1").innerText=
-p+" % z "+n+" je "+result;
-}
+      runCalculation();
+    }
 
-function calcChange(){
-let oldV=document.getElementById("oldValue").value;
-let newV=document.getElementById("newValue").value;
+    function setBadge(type, text) {
+      outputs.resultBadge.className = `badge ${type}`;
+      outputs.resultBadge.textContent = text;
+    }
 
-let change=((newV-oldV)/oldV)*100;
+    function renderResult(data) {
+      outputs.mainResult.textContent = data.main;
+      outputs.secondaryResult.textContent = data.secondary;
+      outputs.differenceResult.textContent = data.difference;
+      outputs.typeResult.textContent = data.type;
+      outputs.input1Result.textContent = data.input1;
+      outputs.input2Result.textContent = data.input2;
+      outputs.formulaResult.textContent = data.formula;
+      outputs.contextResult.textContent = data.context;
+      outputs.precisionResult.textContent = '2 desetinná místa';
+      outputs.resultNote.textContent = data.note;
+      setBadge(data.badgeType, data.badgeText);
+    }
 
-document.getElementById("result2").innerText=
-"Změna je "+change.toFixed(2)+" %";
-}
+    function calculatePercentOf() {
+      const percent = Number(document.getElementById('percentValue').value);
+      const base = Number(document.getElementById('baseValue').value);
 
-function calcShare(){
-let a=document.getElementById("valueA").value;
-let b=document.getElementById("valueB").value;
+      const result = (percent / 100) * base;
 
-let result=(a/b)*100;
+      renderResult({
+        main: formatNumber(result),
+        secondary: `${formatNumber(percent)} %`,
+        difference: formatNumber(base - result),
+        type: 'Kolik je X % z Y',
+        input1: `${formatNumber(percent)} %`,
+        input2: formatNumber(base),
+        formula: '(X / 100) × Y',
+        context: 'Výpočet části ze základu',
+        note: `${formatNumber(percent)} % z hodnoty ${formatNumber(base)} je ${formatNumber(result)}.`,
+        badgeType: 'success',
+        badgeText: 'Výpočet hotov'
+      });
+    }
 
-document.getElementById("result3").innerText=
-a+" je "+result.toFixed(2)+" % z "+b;
-}
+    function calculateChange() {
+      const oldValue = Number(document.getElementById('oldValue').value);
+      const newValue = Number(document.getElementById('newValue').value);
 
-</script>
+      if (oldValue === 0) {
+        renderResult({
+          main: 'Nelze vypočítat',
+          secondary: formatNumber(newValue - oldValue),
+          difference: formatNumber(newValue - oldValue),
+          type: 'Procentní změna',
+          input1: formatNumber(oldValue),
+          input2: formatNumber(newValue),
+          formula: '((nová - původní) / původní) × 100',
+          context: 'Původní hodnota je 0',
+          note: 'Procentní změnu nelze spočítat, pokud je původní hodnota 0.',
+          badgeType: 'warning',
+          badgeText: 'Nelze dělit nulou'
+        });
+        return;
+      }
 
+      const diff = newValue - oldValue;
+      const change = (diff / oldValue) * 100;
+      const direction = change >= 0 ? 'Nárůst' : 'Pokles';
+
+      renderResult({
+        main: `${formatNumber(change)} %`,
+        secondary: formatNumber(newValue),
+        difference: formatNumber(diff),
+        type: 'Procentní změna',
+        input1: formatNumber(oldValue),
+        input2: formatNumber(newValue),
+        formula: '((nová - původní) / původní) × 100',
+        context: direction,
+        note: `${direction} z ${formatNumber(oldValue)} na ${formatNumber(newValue)} odpovídá změně ${formatNumber(change)} %.`,
+        badgeType: 'success',
+        badgeText: direction
+      });
+    }
+
+    function calculateShare() {
+      const a = Number(document.getElementById('valueA').value);
+      const b = Number(document.getElementById('valueB').value);
+
+      if (b === 0) {
+        renderResult({
+          main: 'Nelze vypočítat',
+          secondary: formatNumber(a),
+          difference: '0',
+          type: 'Kolik % je A z B',
+          input1: formatNumber(a),
+          input2: formatNumber(b),
+          formula: '(A / B) × 100',
+          context: 'Dělení nulou',
+          note: 'Nelze určit procentní podíl, pokud je číslo B rovno 0.',
+          badgeType: 'warning',
+          badgeText: 'Nelze dělit nulou'
+        });
+        return;
+      }
+
+      const result = (a / b) * 100;
+
+      renderResult({
+        main: `${formatNumber(result)} %`,
+        secondary: formatNumber(a),
+        difference: formatNumber(b - a),
+        type: 'Kolik % je A z B',
+        input1: formatNumber(a),
+        input2: formatNumber(b),
+        formula: '(A / B) × 100',
+        context: 'Výpočet podílu',
+        note: `${formatNumber(a)} je ${formatNumber(result)} % z hodnoty ${formatNumber(b)}.`,
+        badgeType: 'success',
+        badgeText: 'Podíl vypočten'
+      });
+    }
+
+    function calculatePrice() {
+      const original = Number(document.getElementById('priceOriginal').value);
+      const percent = Number(document.getElementById('pricePercent').value);
+      const mode = document.getElementById('priceMode').value;
+
+      const changeAmount = (percent / 100) * original;
+      const finalPrice = mode === 'discount' ? original - changeAmount : original + changeAmount;
+
+      renderResult({
+        main: formatNumber(finalPrice),
+        secondary: formatNumber(changeAmount),
+        difference: formatNumber(original - finalPrice),
+        type: mode === 'discount' ? 'Sleva' : 'Navýšení',
+        input1: formatNumber(original),
+        input2: `${formatNumber(percent)} %`,
+        formula: mode === 'discount' ? 'původní - (procenta ze základu)' : 'původní + (procenta ze základu)',
+        context: mode === 'discount' ? 'Nová cena po slevě' : 'Nová cena po navýšení',
+        note: mode === 'discount'
+          ? `Při slevě ${formatNumber(percent)} % z ceny ${formatNumber(original)} vychází nová cena ${formatNumber(finalPrice)}.`
+          : `Při navýšení ${formatNumber(percent)} % z ceny ${formatNumber(original)} vychází nová cena ${formatNumber(finalPrice)}.`,
+        badgeType: 'success',
+        badgeText: mode === 'discount' ? 'Sleva vypočtena' : 'Navýšení vypočteno'
+      });
+    }
+
+    function runCalculation() {
+      if (activeTab === 'percent-of') calculatePercentOf();
+      if (activeTab === 'change') calculateChange();
+      if (activeTab === 'share') calculateShare();
+      if (activeTab === 'price') calculatePrice();
+    }
+
+    tabButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        setActiveTab(button.dataset.tab);
+      });
+    });
+
+    document.getElementById('calcPercentOfBtn').addEventListener('click', calculatePercentOf);
+    document.getElementById('calcChangeBtn').addEventListener('click', calculateChange);
+    document.getElementById('calcShareBtn').addEventListener('click', calculateShare);
+    document.getElementById('calcPriceBtn').addEventListener('click', calculatePrice);
+
+    document.getElementById('resetPercentOfBtn').addEventListener('click', function() {
+      document.getElementById('percentValue').value = 10;
+      document.getElementById('baseValue').value = 200;
+      calculatePercentOf();
+    });
+
+    document.getElementById('resetChangeBtn').addEventListener('click', function() {
+      document.getElementById('oldValue').value = 100;
+      document.getElementById('newValue').value = 120;
+      calculateChange();
+    });
+
+    document.getElementById('resetShareBtn').addEventListener('click', function() {
+      document.getElementById('valueA').value = 50;
+      document.getElementById('valueB').value = 200;
+      calculateShare();
+    });
+
+    document.getElementById('resetPriceBtn').addEventListener('click', function() {
+      document.getElementById('priceOriginal').value = 2500;
+      document.getElementById('pricePercent').value = 15;
+      document.getElementById('priceMode').value = 'discount';
+      calculatePrice();
+    });
+
+    [
+      'percentValue','baseValue',
+      'oldValue','newValue',
+      'valueA','valueB',
+      'priceOriginal','pricePercent','priceMode'
+    ].forEach(id => {
+      const el = document.getElementById(id);
+      el.addEventListener('input', runCalculation);
+      el.addEventListener('change', runCalculation);
+    });
+
+    runCalculation();
+  </script>
 </body>
 </html>
