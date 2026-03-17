@@ -1,1 +1,992 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <title>Kalkulačka marže a přirážky online zdarma | RychléVýpočty.cz</title>
+  <meta name="description" content="Spočítejte si obchodní marži, přirážku, prodejní cenu i zisk online. Přehledná kalkulačka marže a přirážky zdarma pro podnikání, e-shopy i cenotvorbu.">
+  <meta name="keywords" content="kalkulačka marže, kalkulačka přirážky, obchodní marže, přirážka, prodejní cena, cenotvorba, zisk kalkulačka">
+  <meta name="author" content="RychléVýpočty.cz">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://rychlevypocty.cz/kalkulacka-marze-a-prirazky.html">
+
+  <meta property="og:title" content="Kalkulačka marže a přirážky online zdarma | RychléVýpočty.cz">
+  <meta property="og:description" content="Rychlý výpočet marže, přirážky, zisku a prodejní ceny pro podnikání i e-shopy.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rychlevypocty.cz/kalkulacka-marze-a-prirazky.html">
+  <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Kalkulačka marže a přirážky online zdarma | RychléVýpočty.cz">
+  <meta name="twitter:description" content="Spočítejte si marži, přirážku a prodejní cenu během pár sekund.">
+
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #5f6b85;
+      --primary: #2152ff;
+      --primary-dark: #183dbf;
+      --border: #dbe3f0;
+      --success: #138a4b;
+      --warning: #b66a00;
+      --shadow: 0 12px 32px rgba(20, 32, 70, 0.08);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #f7f9fd 0%, #eef3fb 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      padding: 18px 0;
+      border-bottom: 1px solid rgba(219, 227, 240, 0.8);
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+
+    .brand span {
+      color: var(--primary);
+    }
+
+    .topnav {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      font-size: 0.97rem;
+    }
+
+    .hero {
+      padding: 42px 0 20px;
+    }
+
+    .breadcrumbs {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .hero-copy h1 {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      margin: 0 0 16px;
+    }
+
+    .hero-copy p {
+      margin: 0 0 16px;
+      font-size: 1.06rem;
+      color: var(--muted);
+      max-width: 720px;
+    }
+
+    .hero-points {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .hero-pill {
+      background: rgba(33, 82, 255, 0.08);
+      color: var(--primary-dark);
+      border: 1px solid rgba(33, 82, 255, 0.12);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .hero-box {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-box h2 {
+      margin: 0 0 10px;
+      font-size: 1.2rem;
+    }
+
+    .hero-box p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.04fr 0.96fr;
+      gap: 28px;
+      align-items: start;
+      padding: 22px 0 32px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .card-header {
+      padding: 24px 24px 10px;
+    }
+
+    .card-header h2,
+    .card-header h3 {
+      margin: 0 0 8px;
+      font-size: 1.3rem;
+      letter-spacing: -0.02em;
+    }
+
+    .card-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .card-body {
+      padding: 20px 24px 24px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field label {
+      font-weight: 700;
+      font-size: 0.96rem;
+    }
+
+    .field small {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: -2px;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      padding: 14px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      font-size: 1rem;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      outline: none;
+      border-color: rgba(33, 82, 255, 0.45);
+      box-shadow: 0 0 0 4px rgba(33, 82, 255, 0.10);
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.06s ease, background 0.15s ease, opacity 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background: #eef3ff;
+      color: var(--primary-dark);
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .result-box {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+
+    .result-label {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .result-value {
+      font-size: clamp(1.2rem, 2.2vw, 1.9rem);
+      line-height: 1.15;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .highlight {
+      background: linear-gradient(180deg, #eef7ff 0%, #f9fcff 100%);
+      border-color: rgba(33, 82, 255, 0.18);
+    }
+
+    .info-list {
+      display: grid;
+      gap: 12px;
+      margin: 18px 0 0;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid #edf2fa;
+    }
+
+    .info-row:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .info-row span:first-child {
+      color: var(--muted);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+
+    .badge.success {
+      background: rgba(19, 138, 75, 0.10);
+      color: var(--success);
+    }
+
+    .badge.warning {
+      background: rgba(182, 106, 0, 0.11);
+      color: var(--warning);
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 18px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 640px;
+      background: #fff;
+    }
+
+    th, td {
+      padding: 14px 14px;
+      text-align: left;
+      border-bottom: 1px solid #edf2fa;
+      font-size: 0.96rem;
+    }
+
+    th {
+      background: #f8fbff;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .note {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1px solid #e7edf7;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .content-section {
+      padding: 8px 0 8px;
+    }
+
+    .content-section h2 {
+      font-size: 1.7rem;
+      letter-spacing: -0.03em;
+      margin: 0 0 14px;
+    }
+
+    .content-section h3 {
+      font-size: 1.15rem;
+      margin: 28px 0 10px;
+    }
+
+    .content-section p {
+      color: var(--muted);
+      margin: 0 0 14px;
+    }
+
+    .content-section ul {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    .content-section li {
+      margin-bottom: 8px;
+    }
+
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .related-card {
+      display: block;
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      color: var(--text);
+      box-shadow: var(--shadow);
+    }
+
+    .related-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .related-card span {
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    footer {
+      margin-top: 40px;
+      border-top: 1px solid rgba(219, 227, 240, 0.9);
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .footer-inner {
+      padding: 24px 0 40px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .layout,
+      .related-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .container {
+        width: min(100% - 24px, 1160px);
+      }
+
+      .form-grid,
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 28px;
+      }
+
+      .card-header,
+      .card-body,
+      .hero-box {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .info-row {
+        flex-direction: column;
+        gap: 6px;
+      }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebApplication",
+    "name":"Kalkulačka marže a přirážky",
+    "url":"https://rychlevypocty.cz/kalkulacka-marze-a-prirazky.html",
+    "applicationCategory":"BusinessApplication",
+    "operatingSystem":"Any",
+    "description":"Online kalkulačka pro výpočet obchodní marže, přirážky, zisku a prodejní ceny.",
+    "offers":{
+      "@type":"Offer",
+      "price":"0",
+      "priceCurrency":"CZK"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"Jaký je rozdíl mezi marží a přirážkou?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Marže se počítá z prodejní ceny, zatímco přirážka se počítá z nákupní ceny. Jde o dvě různé procentní hodnoty, které se často zaměňují, ale dávají odlišný výsledek."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Co kalkulačka umí spočítat?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Kalkulačka umí spočítat prodejní cenu z nákupní ceny a požadované marže nebo přirážky, zároveň zobrazí zisk v korunách i přepočet mezi marží a přirážkou."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Pro koho je kalkulačka vhodná?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Hodí se pro podnikatele, e-shopy, obchodníky, freelancery i každého, kdo potřebuje rychle nastavit cenu produktu nebo služby a orientovat se v obchodní marži."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="/">Rychlé<span>Výpočty</span>.cz</a>
+      <nav class="topnav" aria-label="Hlavní navigace">
+        <a href="/">Domů</a>
+        <a href="/dph-kalkulacka.html">DPH kalkulačka</a>
+        <a href="/procenta-kalkulacka.html">Procenta</a>
+        <a href="/prevodnik-jednotek.html">Převodník jednotek</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumbs">
+          <a href="/">RychléVýpočty.cz</a> / Kalkulačka marže a přirážky
+        </div>
+
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <h1>Kalkulačka marže a přirážky</h1>
+            <p>Spočítejte si obchodní marži, přirážku, prodejní cenu i zisk v korunách. Kalkulačka se hodí pro e-shopy, podnikatele, freelancery i každého, kdo potřebuje rychle nastavit cenu produktu nebo služby.</p>
+            <p>Zadejte nákupní cenu a vyberte, zda chcete počítat podle marže nebo přirážky. Výsledek získáte okamžitě a přehledně.</p>
+
+            <div class="hero-points">
+              <div class="hero-pill">Marže</div>
+              <div class="hero-pill">Přirážka</div>
+              <div class="hero-pill">Prodejní cena</div>
+              <div class="hero-pill">Zisk v Kč</div>
+            </div>
+          </div>
+
+          <div class="hero-box">
+            <h2>Co kalkulačka umí</h2>
+            <p>Vypočítá výslednou prodejní cenu, zisk v korunách, procentní marži i přirážku. Umožní tak rychle porovnat různé cenové strategie a zjistit, jak se liší marže a přirážka v praxi.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container layout">
+      <div class="card">
+        <div class="card-header">
+          <h2>Zadání cenotvorby</h2>
+          <p>Zadejte nákupní cenu a určete, jestli chcete počítat podle marže nebo přirážky.</p>
+        </div>
+        <div class="card-body">
+          <form id="pricingForm">
+            <div class="form-grid">
+              <div class="field">
+                <label for="purchasePrice">Nákupní cena</label>
+                <input type="number" id="purchasePrice" min="0.01" step="0.01" value="1000" inputmode="decimal">
+                <small>Pořizovací nebo nákladová cena bez DPH.</small>
+              </div>
+
+              <div class="field">
+                <label for="calcMode">Typ výpočtu</label>
+                <select id="calcMode">
+                  <option value="markup" selected>Přirážka z nákupní ceny</option>
+                  <option value="margin">Marže z prodejní ceny</option>
+                </select>
+                <small>Zvolte, jestli zadáváte přirážku nebo marži.</small>
+              </div>
+
+              <div class="field">
+                <label for="percentValue">Procento (%)</label>
+                <input type="number" id="percentValue" min="0" step="0.01" value="30" inputmode="decimal">
+                <small>Hodnota přirážky nebo marže v procentech.</small>
+              </div>
+
+              <div class="field">
+                <label for="quantity">Počet kusů</label>
+                <input type="number" id="quantity" min="1" step="1" value="1" inputmode="numeric">
+                <small>Volitelné pro výpočet celkového zisku.</small>
+              </div>
+
+              <div class="field">
+                <label for="vatRate">DPH pro orientační cenu s DPH</label>
+                <select id="vatRate">
+                  <option value="0">Bez DPH</option>
+                  <option value="12">12 %</option>
+                  <option value="15">15 %</option>
+                  <option value="21" selected>21 %</option>
+                </select>
+                <small>Pouze doplňkový orientační přepočet.</small>
+              </div>
+
+              <div class="field">
+                <label for="discountRate">Sleva z prodejní ceny (%)</label>
+                <input type="number" id="discountRate" min="0" max="100" step="0.01" value="0" inputmode="decimal">
+                <small>Například akční sleva nebo promo cena.</small>
+              </div>
+
+              <div class="actions full">
+                <button type="submit" class="btn-primary">Spočítat marži a přirážku</button>
+                <button type="button" class="btn-secondary" id="resetBtn">Obnovit výchozí hodnoty</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>Výsledek výpočtu</h2>
+          <p>Přehled prodejní ceny, zisku i přepočtu mezi marží a přirážkou.</p>
+        </div>
+        <div class="card-body">
+          <div class="results-grid">
+            <div class="result-box highlight">
+              <div class="result-label">Prodejní cena bez DPH</div>
+              <div class="result-value" id="salePrice">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Zisk na kus</div>
+              <div class="result-value" id="profitPerUnit">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Marže</div>
+              <div class="result-value" id="marginOutput">0 %</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Přirážka</div>
+              <div class="result-value" id="markupOutput">0 %</div>
+            </div>
+          </div>
+
+          <div id="statusBadge" class="badge success">Zisková cena je nastavená kladně</div>
+
+          <div class="info-list">
+            <div class="info-row">
+              <span>Cena s DPH</span>
+              <strong id="salePriceVat">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Akční cena po slevě</span>
+              <strong id="discountedPrice">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Zisk po slevě na kus</span>
+              <strong id="profitAfterDiscount">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Celkový zisk za všechny kusy</span>
+              <strong id="totalProfit">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Počet kusů</span>
+              <strong id="quantityOutput">0</strong>
+            </div>
+          </div>
+
+          <div class="note">
+            Kalkulačka slouží pro rychlou orientaci v cenotvorbě. Nezohledňuje další náklady jako dopravu, marketing, reklamace, skladování, provize nebo provozní režii. Pro přesnější pricing je vhodné tyto položky přičíst do nákupní ceny nebo pracovat s rozšířeným modelem nákladů.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="card">
+        <div class="card-header">
+          <h3>Přehled cenotvorby</h3>
+          <p>Souhrn hlavních údajů pro nastavení prodejní ceny a obchodní ziskovosti.</p>
+        </div>
+        <div class="card-body">
+          <div class="table-wrap">
+            <table aria-label="Přehled marže a přirážky">
+              <thead>
+                <tr>
+                  <th>Položka</th>
+                  <th>Hodnota</th>
+                  <th>Význam</th>
+                </tr>
+              </thead>
+              <tbody id="summaryTableBody">
+                <tr>
+                  <td>Nákupní cena</td>
+                  <td>0 Kč</td>
+                  <td>Výchozí cena bez DPH</td>
+                </tr>
+                <tr>
+                  <td>Prodejní cena</td>
+                  <td>0 Kč</td>
+                  <td>Výsledná cena bez DPH</td>
+                </tr>
+                <tr>
+                  <td>Zisk</td>
+                  <td>0 Kč</td>
+                  <td>Rozdíl mezi prodejní a nákupní cenou</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container content-section">
+      <h2>Jak kalkulačka marže a přirážky funguje</h2>
+      <p>Kalkulačka pracuje se dvěma běžnými způsoby cenotvorby. Buď zadáte přirážku, která se počítá z nákupní ceny, nebo zadáte marži, která se počítá z prodejní ceny. Přestože se tyto pojmy často zaměňují, dávají odlišný výsledek a je důležité je rozlišovat.</p>
+
+      <h3>Marže vs. přirážka</h3>
+      <ul>
+        <li><strong>Přirážka</strong> říká, o kolik procent navýšíte nákupní cenu.</li>
+        <li><strong>Marže</strong> říká, jaký podíl z prodejní ceny tvoří zisk.</li>
+        <li>Stejná procentní hodnota marže a přirážky nevede ke stejné prodejní ceně.</li>
+      </ul>
+
+      <h3>Kdy se kalkulačka hodí</h3>
+      <p>Je vhodná pro nastavení cen v e-shopu, velkoobchodu, maloobchodu, službách i freelancingu. Pomůže rychle spočítat, jaká prodejní cena odpovídá požadované ziskovosti a jak se změní zisk po aplikaci slevy.</p>
+
+      <h3>Na co si dát pozor</h3>
+      <p>Samotná marže nebo přirážka často nestačí. U reálné cenotvorby je důležité započítat i provozní náklady, obalový materiál, vrácení zboží, dopravu, marketing a další položky. Tahle stránka je proto ideální hlavně pro rychlý základní pricing výpočet.</p>
+
+      <h3>Proč je užitečný i přepočet s DPH</h3>
+      <p>V praxi často potřebujete vidět nejen cenu bez DPH, ale i orientační finální cenu pro zákazníka. Proto kalkulačka doplňuje i přehled ceny s DPH a volitelnou akční cenu po slevě.</p>
+    </section>
+
+    <section class="container content-section">
+      <h2>Související kalkulačky</h2>
+      <div class="related-grid">
+        <a class="related-card" href="/dph-kalkulacka.html">
+          <strong>DPH kalkulačka</strong>
+          <span>Rychlý výpočet ceny s DPH, bez DPH a samotné částky DPH.</span>
+        </a>
+
+        <a class="related-card" href="/procenta-kalkulacka.html">
+          <strong>Kalkulačka procent</strong>
+          <span>Výpočet procent z částky, procentní změny i podílu jednoho čísla z druhého.</span>
+        </a>
+
+        <a class="related-card" href="/kalkulacka-pujcky.html">
+          <strong>Kalkulačka půjčky</strong>
+          <span>Spočítejte měsíční splátku půjčky a celkovou částku k úhradě.</span>
+        </a>
+
+        <a class="related-card" href="/inflace-kalkulacka.html">
+          <strong>Inflační kalkulačka</strong>
+          <span>Spočítejte dopad inflace na hodnotu peněz a kupní sílu částky.</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      © 2026 RychléVýpočty.cz — online kalkulačky a praktické výpočty pro každodenní použití.
+    </div>
+  </footer>
+
+  <script>
+    const form = document.getElementById('pricingForm');
+    const resetBtn = document.getElementById('resetBtn');
+
+    const outputs = {
+      salePrice: document.getElementById('salePrice'),
+      profitPerUnit: document.getElementById('profitPerUnit'),
+      marginOutput: document.getElementById('marginOutput'),
+      markupOutput: document.getElementById('markupOutput'),
+      salePriceVat: document.getElementById('salePriceVat'),
+      discountedPrice: document.getElementById('discountedPrice'),
+      profitAfterDiscount: document.getElementById('profitAfterDiscount'),
+      totalProfit: document.getElementById('totalProfit'),
+      quantityOutput: document.getElementById('quantityOutput'),
+      statusBadge: document.getElementById('statusBadge'),
+      summaryTableBody: document.getElementById('summaryTableBody')
+    };
+
+    function formatCurrency(value) {
+      return new Intl.NumberFormat('cs-CZ', {
+        style: 'currency',
+        currency: 'CZK',
+        maximumFractionDigits: 2
+      }).format(value);
+    }
+
+    function formatPercent(value) {
+      return new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2
+      }).format(value) + ' %';
+    }
+
+    function getValues() {
+      return {
+        purchasePrice: Number(document.getElementById('purchasePrice').value),
+        calcMode: document.getElementById('calcMode').value,
+        percentValue: Number(document.getElementById('percentValue').value),
+        quantity: Number(document.getElementById('quantity').value),
+        vatRate: Number(document.getElementById('vatRate').value),
+        discountRate: Number(document.getElementById('discountRate').value)
+      };
+    }
+
+    function validate(values) {
+      if (!values.purchasePrice || values.purchasePrice <= 0) return 'Zadejte platnou nákupní cenu.';
+      if (Number.isNaN(values.percentValue) || values.percentValue < 0) return 'Zadejte platné procento.';
+      if (values.calcMode === 'margin' && values.percentValue >= 100) return 'Marže musí být nižší než 100 %.';
+      if (!values.quantity || values.quantity <= 0) return 'Zadejte platný počet kusů.';
+      if (Number.isNaN(values.discountRate) || values.discountRate < 0 || values.discountRate > 100) return 'Zadejte slevu v rozsahu 0 až 100 %.';
+      return '';
+    }
+
+    function calculatePricing(values) {
+      let salePrice = 0;
+
+      if (values.calcMode === 'markup') {
+        salePrice = values.purchasePrice * (1 + values.percentValue / 100);
+      } else {
+        salePrice = values.purchasePrice / (1 - values.percentValue / 100);
+      }
+
+      const profitPerUnit = salePrice - values.purchasePrice;
+      const margin = salePrice > 0 ? (profitPerUnit / salePrice) * 100 : 0;
+      const markup = values.purchasePrice > 0 ? (profitPerUnit / values.purchasePrice) * 100 : 0;
+      const salePriceVat = salePrice * (1 + values.vatRate / 100);
+      const discountedPrice = salePrice * (1 - values.discountRate / 100);
+      const profitAfterDiscount = discountedPrice - values.purchasePrice;
+      const totalProfit = profitPerUnit * values.quantity;
+
+      return {
+        salePrice,
+        profitPerUnit,
+        margin,
+        markup,
+        salePriceVat,
+        discountedPrice,
+        profitAfterDiscount,
+        totalProfit
+      };
+    }
+
+    function renderTable(values, result) {
+      document.getElementById('summaryTableBody').innerHTML = `
+        <tr>
+          <td>Nákupní cena</td>
+          <td>${formatCurrency(values.purchasePrice)}</td>
+          <td>Výchozí cena bez DPH</td>
+        </tr>
+        <tr>
+          <td>Prodejní cena</td>
+          <td>${formatCurrency(result.salePrice)}</td>
+          <td>Výsledná cena bez DPH</td>
+        </tr>
+        <tr>
+          <td>Zisk na kus</td>
+          <td>${formatCurrency(result.profitPerUnit)}</td>
+          <td>Rozdíl mezi prodejní a nákupní cenou</td>
+        </tr>
+        <tr>
+          <td>Marže</td>
+          <td>${formatPercent(result.margin)}</td>
+          <td>Podíl zisku z prodejní ceny</td>
+        </tr>
+        <tr>
+          <td>Přirážka</td>
+          <td>${formatPercent(result.markup)}</td>
+          <td>Navýšení vůči nákupní ceně</td>
+        </tr>
+      `;
+    }
+
+    function render(values, result) {
+      outputs.salePrice.textContent = formatCurrency(result.salePrice);
+      outputs.profitPerUnit.textContent = formatCurrency(result.profitPerUnit);
+      outputs.marginOutput.textContent = formatPercent(result.margin);
+      outputs.markupOutput.textContent = formatPercent(result.markup);
+      outputs.salePriceVat.textContent = formatCurrency(result.salePriceVat);
+      outputs.discountedPrice.textContent = formatCurrency(result.discountedPrice);
+      outputs.profitAfterDiscount.textContent = formatCurrency(result.profitAfterDiscount);
+      outputs.totalProfit.textContent = formatCurrency(result.totalProfit);
+      outputs.quantityOutput.textContent = values.quantity.toString();
+
+      if (result.profitAfterDiscount < 0) {
+        outputs.statusBadge.className = 'badge warning';
+        outputs.statusBadge.textContent = 'Po slevě vychází ztráta';
+      } else {
+        outputs.statusBadge.className = 'badge success';
+        outputs.statusBadge.textContent = 'Zisková cena je nastavená kladně';
+      }
+
+      renderTable(values, result);
+    }
+
+    function runCalculation() {
+      const values = getValues();
+      const error = validate(values);
+
+      if (error) {
+        alert(error);
+        return;
+      }
+
+      const result = calculatePricing(values);
+      render(values, result);
+    }
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      runCalculation();
+    });
+
+    ['purchasePrice', 'calcMode', 'percentValue', 'quantity', 'vatRate', 'discountRate'].forEach(id => {
+      document.getElementById(id).addEventListener('input', runCalculation);
+      document.getElementById(id).addEventListener('change', runCalculation);
+    });
+
+    resetBtn.addEventListener('click', function() {
+      document.getElementById('purchasePrice').value = 1000;
+      document.getElementById('calcMode').value = 'markup';
+      document.getElementById('percentValue').value = 30;
+      document.getElementById('quantity').value = 1;
+      document.getElementById('vatRate').value = 21;
+      document.getElementById('discountRate').value = 0;
+      runCalculation();
+    });
+
+    runCalculation();
+  </script>
+</body>
+</html>
