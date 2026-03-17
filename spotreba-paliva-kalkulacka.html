@@ -1,1 +1,1160 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kalkulačka spotřeby paliva online zdarma | RychléVýpočty.cz</title>
+  <meta name="description" content="Spočítejte spotřebu paliva na 100 km, cenu jízdy, náklady na kilometr i celkové náklady cesty. Přehledná kalkulačka spotřeby paliva online zdarma.">
+  <meta name="keywords" content="spotřeba paliva kalkulačka, kalkulačka spotřeby, cena jízdy, náklady na cestu, spotřeba auta, benzín nafta výpočet">
+  <meta name="author" content="RychléVýpočty.cz">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://rychlevypocty.cz/spotreba-paliva-kalkulacka.html">
 
+  <meta property="og:title" content="Kalkulačka spotřeby paliva online zdarma | RychléVýpočty.cz">
+  <meta property="og:description" content="Výpočet spotřeby paliva, ceny jízdy, nákladů na kilometr i celkových nákladů cesty.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rychlevypocty.cz/spotreba-paliva-kalkulacka.html">
+  <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Kalkulačka spotřeby paliva online zdarma | RychléVýpočty.cz">
+  <meta name="twitter:description" content="Spočítejte si reálnou spotřebu auta i cenu cesty během chvíle.">
+
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #5f6b85;
+      --primary: #2152ff;
+      --primary-dark: #183dbf;
+      --border: #dbe3f0;
+      --success: #138a4b;
+      --warning: #b66a00;
+      --danger: #c63d2f;
+      --shadow: 0 12px 32px rgba(20, 32, 70, 0.08);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #f7f9fd 0%, #eef3fb 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      padding: 18px 0;
+      border-bottom: 1px solid rgba(219, 227, 240, 0.8);
+      background: rgba(255, 255, 255, 0.84);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+
+    .brand span {
+      color: var(--primary);
+    }
+
+    .topnav {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      font-size: 0.97rem;
+    }
+
+    .hero {
+      padding: 42px 0 20px;
+    }
+
+    .breadcrumbs {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .hero-copy h1 {
+      font-size: clamp(2rem, 4vw, 3.15rem);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      margin: 0 0 16px;
+    }
+
+    .hero-copy p {
+      margin: 0 0 16px;
+      font-size: 1.06rem;
+      color: var(--muted);
+      max-width: 760px;
+    }
+
+    .hero-points {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .hero-pill {
+      background: rgba(33, 82, 255, 0.08);
+      color: var(--primary-dark);
+      border: 1px solid rgba(33, 82, 255, 0.12);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .hero-box {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-box h2 {
+      margin: 0 0 10px;
+      font-size: 1.2rem;
+    }
+
+    .hero-box p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.03fr 0.97fr;
+      gap: 28px;
+      align-items: start;
+      padding: 22px 0 32px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .card-header {
+      padding: 24px 24px 10px;
+    }
+
+    .card-header h2,
+    .card-header h3 {
+      margin: 0 0 8px;
+      font-size: 1.3rem;
+      letter-spacing: -0.02em;
+    }
+
+    .card-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .card-body {
+      padding: 20px 24px 24px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .tab-button {
+      border: 1px solid var(--border);
+      background: #f7faff;
+      color: var(--text);
+      padding: 11px 14px;
+      border-radius: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+
+    .tab-button.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+    }
+
+    .tab-panel {
+      display: none;
+    }
+
+    .tab-panel.active {
+      display: block;
+    }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .field label {
+      font-weight: 700;
+      font-size: 0.96rem;
+    }
+
+    .field small {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: -2px;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      padding: 14px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      font-size: 1rem;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      font-family: inherit;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      outline: none;
+      border-color: rgba(33, 82, 255, 0.45);
+      box-shadow: 0 0 0 4px rgba(33, 82, 255, 0.10);
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.06s ease, background 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background: #eef3ff;
+      color: var(--primary-dark);
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .result-box {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+
+    .result-box.highlight {
+      background: linear-gradient(180deg, #eef7ff 0%, #f9fcff 100%);
+      border-color: rgba(33, 82, 255, 0.18);
+    }
+
+    .result-label {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .result-value {
+      font-size: clamp(1.2rem, 2.4vw, 2rem);
+      line-height: 1.15;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .info-list {
+      display: grid;
+      gap: 12px;
+      margin: 18px 0 0;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid #edf2fa;
+    }
+
+    .info-row:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .info-row span:first-child {
+      color: var(--muted);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+
+    .badge.success {
+      background: rgba(19, 138, 75, 0.10);
+      color: var(--success);
+    }
+
+    .badge.warning {
+      background: rgba(182, 106, 0, 0.11);
+      color: var(--warning);
+    }
+
+    .badge.danger {
+      background: rgba(198, 61, 47, 0.10);
+      color: var(--danger);
+    }
+
+    .note {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1px solid #e7edf7;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 18px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: #fff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 660px;
+    }
+
+    th, td {
+      padding: 14px;
+      text-align: left;
+      border-bottom: 1px solid #edf2fa;
+      font-size: 0.96rem;
+    }
+
+    th {
+      background: #f8fbff;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .content-section {
+      padding: 8px 0;
+    }
+
+    .content-section h2 {
+      font-size: 1.7rem;
+      letter-spacing: -0.03em;
+      margin: 0 0 14px;
+    }
+
+    .content-section h3 {
+      font-size: 1.15rem;
+      margin: 28px 0 10px;
+    }
+
+    .content-section p {
+      color: var(--muted);
+      margin: 0 0 14px;
+    }
+
+    .content-section ul {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    .content-section li {
+      margin-bottom: 8px;
+    }
+
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .related-card {
+      display: block;
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      color: var(--text);
+      box-shadow: var(--shadow);
+    }
+
+    .related-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .related-card span {
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    footer {
+      margin-top: 40px;
+      border-top: 1px solid rgba(219, 227, 240, 0.9);
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .footer-inner {
+      padding: 24px 0 40px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .layout,
+      .related-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .container {
+        width: min(100% - 24px, 1160px);
+      }
+
+      .field-grid,
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 28px;
+      }
+
+      .card-header,
+      .card-body,
+      .hero-box {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebApplication",
+    "name":"Kalkulačka spotřeby paliva",
+    "url":"https://rychlevypocty.cz/spotreba-paliva-kalkulacka.html",
+    "applicationCategory":"UtilitiesApplication",
+    "operatingSystem":"Any",
+    "description":"Online kalkulačka pro výpočet spotřeby paliva, ceny jízdy a nákladů na kilometr.",
+    "offers":{
+      "@type":"Offer",
+      "price":"0",
+      "priceCurrency":"CZK"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"Jak se počítá spotřeba paliva na 100 km?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Spotřeba paliva na 100 km se vypočítá jako množství spotřebovaného paliva dělené ujetou vzdáleností a následně vynásobené 100. Pokud auto spotřebuje 35 litrů na 500 km, spotřeba je 7 litrů na 100 km."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Jak spočítat cenu jízdy autem?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Cena jízdy se spočítá podle spotřeby paliva, ceny za litr a délky trasy. Nejprve zjistíte, kolik litrů auto na trase spotřebuje, a tuto hodnotu pak vynásobíte cenou paliva za litr."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Umí kalkulačka spočítat i náklady na kilometr?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Ano. Kalkulačka zobrazí i orientační náklady na 1 kilometr podle zadané spotřeby a ceny paliva."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="/">Rychlé<span>Výpočty</span>.cz</a>
+      <nav class="topnav" aria-label="Hlavní navigace">
+        <a href="/">Domů</a>
+        <a href="/kalkulacka-prumeru.html">Průměr</a>
+        <a href="/procenta-kalkulacka.html">Procenta</a>
+        <a href="/pracovni-dny-kalkulacka.html">Pracovní dny</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumbs">
+          <a href="/">RychléVýpočty.cz</a> / Kalkulačka spotřeby paliva
+        </div>
+
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <h1>Kalkulačka spotřeby paliva</h1>
+            <p>Spočítejte si skutečnou spotřebu paliva na 100 km, cenu jízdy, náklady na kilometr i celkové náklady plánované trasy. Kalkulačka je vhodná pro běžné řidiče, plánování cest i rychlé porovnání více variant.</p>
+            <p>Můžete počítat buď z reálně natankovaného paliva a ujeté vzdálenosti, nebo z již známé průměrné spotřeby vozidla.</p>
+
+            <div class="hero-points">
+              <div class="hero-pill">Spotřeba na 100 km</div>
+              <div class="hero-pill">Cena jízdy</div>
+              <div class="hero-pill">Náklady na kilometr</div>
+              <div class="hero-pill">Odhad trasy tam i zpět</div>
+            </div>
+          </div>
+
+          <div class="hero-box">
+            <h2>Co kalkulačka umí</h2>
+            <p>Počítá reálnou spotřebu z tankování i odhad ceny cesty podle průměrné spotřeby. Výsledky doplňuje o náklady na 1 km, orientační množství potřebného paliva a přehled hlavních parametrů jízdy.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container layout">
+      <div class="card">
+        <div class="card-header">
+          <h2>Zadání výpočtu</h2>
+          <p>Vyberte typ výpočtu a vyplňte potřebné údaje. Výsledek se přepočítá okamžitě.</p>
+        </div>
+        <div class="card-body">
+          <div class="tabs" role="tablist" aria-label="Typ výpočtu spotřeby paliva">
+            <button class="tab-button active" type="button" data-tab="real">Skutečná spotřeba</button>
+            <button class="tab-button" type="button" data-tab="trip">Cena cesty</button>
+          </div>
+
+          <div class="tab-panel active" id="panel-real">
+            <div class="field-grid">
+              <div class="field">
+                <label for="distanceReal">Ujetá vzdálenost (km)</label>
+                <input type="number" id="distanceReal" min="1" step="0.1" value="520" inputmode="decimal">
+                <small>Celková vzdálenost, kterou jste ujeli.</small>
+              </div>
+
+              <div class="field">
+                <label for="fuelUsed">Spotřebované palivo (l)</label>
+                <input type="number" id="fuelUsed" min="0.1" step="0.1" value="34.8" inputmode="decimal">
+                <small>Množství natankovaného nebo spotřebovaného paliva.</small>
+              </div>
+
+              <div class="field">
+                <label for="fuelPriceReal">Cena paliva za litr (Kč)</label>
+                <input type="number" id="fuelPriceReal" min="0" step="0.01" value="38.9" inputmode="decimal">
+                <small>Aktuální nebo průměrná cena paliva.</small>
+              </div>
+
+              <div class="field">
+                <label for="fuelTypeReal">Typ paliva</label>
+                <select id="fuelTypeReal">
+                  <option value="Benzín" selected>Benzín</option>
+                  <option value="Nafta">Nafta</option>
+                  <option value="LPG">LPG</option>
+                  <option value="CNG">CNG</option>
+                  <option value="Elektřina">Elektřina</option>
+                </select>
+                <small>Slouží pro lepší přehled ve výsledku.</small>
+              </div>
+            </div>
+
+            <div class="actions">
+              <button class="btn-primary" type="button" id="calcRealBtn">Spočítat spotřebu</button>
+              <button class="btn-secondary" type="button" id="resetRealBtn">Obnovit výchozí hodnoty</button>
+            </div>
+          </div>
+
+          <div class="tab-panel" id="panel-trip">
+            <div class="field-grid">
+              <div class="field">
+                <label for="tripDistance">Délka trasy (km)</label>
+                <input type="number" id="tripDistance" min="1" step="0.1" value="250" inputmode="decimal">
+                <small>Jednosměrná délka plánované trasy.</small>
+              </div>
+
+              <div class="field">
+                <label for="tripConsumption">Průměrná spotřeba (l / 100 km)</label>
+                <input type="number" id="tripConsumption" min="0.1" step="0.1" value="6.7" inputmode="decimal">
+                <small>Průměrná spotřeba vozidla podle palubního počítače nebo zkušenosti.</small>
+              </div>
+
+              <div class="field">
+                <label for="fuelPriceTrip">Cena paliva za litr (Kč)</label>
+                <input type="number" id="fuelPriceTrip" min="0" step="0.01" value="38.9" inputmode="decimal">
+                <small>Cena paliva, ze které se počítají náklady.</small>
+              </div>
+
+              <div class="field">
+                <label for="tripMode">Typ trasy</label>
+                <select id="tripMode">
+                  <option value="oneway" selected>Jedna cesta</option>
+                  <option value="return">Tam i zpět</option>
+                </select>
+                <small>Ovlivňuje celkovou vzdálenost i cenu.</small>
+              </div>
+
+              <div class="field full">
+                <label for="extraCosts">Další náklady na cestu (Kč)</label>
+                <input type="number" id="extraCosts" min="0" step="1" value="0" inputmode="decimal">
+                <small>Např. dálniční poplatky, parkování nebo jiné přímé výdaje.</small>
+              </div>
+            </div>
+
+            <div class="actions">
+              <button class="btn-primary" type="button" id="calcTripBtn">Spočítat cenu cesty</button>
+              <button class="btn-secondary" type="button" id="resetTripBtn">Obnovit výchozí hodnoty</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>Výsledek výpočtu</h2>
+          <p>Přehled spotřeby, ceny jízdy a souvisejících nákladů.</p>
+        </div>
+        <div class="card-body">
+          <div class="results-grid">
+            <div class="result-box highlight">
+              <div class="result-label">Hlavní výsledek</div>
+              <div class="result-value" id="mainResult">0</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Cena paliva / náklady</div>
+              <div class="result-value" id="costResult">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Náklad na 1 km</div>
+              <div class="result-value" id="costPerKmResult">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Potřebné palivo</div>
+              <div class="result-value" id="fuelNeededResult">0 l</div>
+            </div>
+          </div>
+
+          <div id="consumptionBadge" class="badge success">Výpočet připraven</div>
+
+          <div class="info-list">
+            <div class="info-row">
+              <span>Typ výpočtu</span>
+              <strong id="calcTypeResult">—</strong>
+            </div>
+            <div class="info-row">
+              <span>Celková vzdálenost</span>
+              <strong id="distanceResult">0 km</strong>
+            </div>
+            <div class="info-row">
+              <span>Typ paliva / režim</span>
+              <strong id="contextResult">—</strong>
+            </div>
+            <div class="info-row">
+              <span>Cena za litr</span>
+              <strong id="pricePerLiterResult">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Dodatečné náklady</span>
+              <strong id="extraCostsResult">0 Kč</strong>
+            </div>
+          </div>
+
+          <div class="note" id="resultNote">
+            Vyberte typ výpočtu a zadejte vstupní údaje. Kalkulačka umí spočítat reálnou spotřebu i cenu plánované cesty.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="card">
+        <div class="card-header">
+          <h3>Orientační přehled</h3>
+          <p>Rychlé srovnání výsledků podle vybraného scénáře.</p>
+        </div>
+        <div class="card-body">
+          <div class="table-wrap">
+            <table aria-label="Přehled výsledků spotřeby paliva">
+              <thead>
+                <tr>
+                  <th>Položka</th>
+                  <th>Výsledek</th>
+                  <th>Jednotka</th>
+                  <th>Poznámka</th>
+                </tr>
+              </thead>
+              <tbody id="summaryTableBody">
+                <tr>
+                  <td>Spotřeba / cena cesty</td>
+                  <td>—</td>
+                  <td>—</td>
+                  <td>Po výpočtu se zobrazí podrobný přehled.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container content-section">
+      <h2>Jak kalkulačka spotřeby paliva funguje</h2>
+      <p>Kalkulačka nabízí dva praktické režimy. V prvním spočítá skutečnou spotřebu na 100 km podle ujeté vzdálenosti a spotřebovaného paliva. Ve druhém odhadne cenu cesty podle průměrné spotřeby, délky trasy a ceny paliva.</p>
+
+      <h3>Kdy použít výpočet skutečné spotřeby</h3>
+      <ul>
+        <li>když chcete zjistit reálnou spotřebu svého auta,</li>
+        <li>když porovnáváte více tras nebo stylů jízdy,</li>
+        <li>když sledujete provozní náklady vozidla,</li>
+        <li>když chcete ověřit údaje z palubního počítače.</li>
+      </ul>
+
+      <h3>Kdy použít výpočet ceny cesty</h3>
+      <p>Výpočet ceny cesty je vhodný při plánování dovolené, služební cesty nebo běžného dojíždění. Pomůže rychle odhadnout, kolik paliva budete potřebovat a kolik vás cesta přibližně bude stát.</p>
+
+      <h3>Na co si dát pozor</h3>
+      <p>Skutečná spotřeba může být ovlivněna stylem jízdy, profilem trasy, počasím, zatížením auta, používáním klimatizace nebo technickým stavem vozidla. Výsledek je proto vždy orientační, ale pro praktické plánování velmi užitečný.</p>
+    </section>
+
+    <section class="container content-section">
+      <h2>Související kalkulačky</h2>
+      <div class="related-grid">
+        <a class="related-card" href="/kalkulacka-prumeru.html">
+          <strong>Kalkulačka průměru</strong>
+          <span>Výpočet aritmetického i váženého průměru.</span>
+        </a>
+
+        <a class="related-card" href="/procenta-kalkulacka.html">
+          <strong>Procenta kalkulačka</strong>
+          <span>Rychlé procentní výpočty pro běžné použití.</span>
+        </a>
+
+        <a class="related-card" href="/kolik-dni-do-data.html">
+          <strong>Kolik dní do data</strong>
+          <span>Výpočet počtu dnů do konkrétního data.</span>
+        </a>
+
+        <a class="related-card" href="/pracovni-dny-kalkulacka.html">
+          <strong>Pracovní dny kalkulačka</strong>
+          <span>Výpočet pracovních dnů mezi dvěma daty.</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      © 2026 RychléVýpočty.cz — online kalkulačky a praktické výpočty pro každodenní použití.
+    </div>
+  </footer>
+
+  <script>
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabPanels = document.querySelectorAll('.tab-panel');
+
+    const outputs = {
+      mainResult: document.getElementById('mainResult'),
+      costResult: document.getElementById('costResult'),
+      costPerKmResult: document.getElementById('costPerKmResult'),
+      fuelNeededResult: document.getElementById('fuelNeededResult'),
+      calcTypeResult: document.getElementById('calcTypeResult'),
+      distanceResult: document.getElementById('distanceResult'),
+      contextResult: document.getElementById('contextResult'),
+      pricePerLiterResult: document.getElementById('pricePerLiterResult'),
+      extraCostsResult: document.getElementById('extraCostsResult'),
+      consumptionBadge: document.getElementById('consumptionBadge'),
+      resultNote: document.getElementById('resultNote'),
+      summaryTableBody: document.getElementById('summaryTableBody')
+    };
+
+    let activeTab = 'real';
+
+    function formatNumber(value, digits = 2) {
+      return new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: digits
+      }).format(value);
+    }
+
+    function formatCurrency(value) {
+      return new Intl.NumberFormat('cs-CZ', {
+        style: 'currency',
+        currency: 'CZK',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2
+      }).format(value);
+    }
+
+    function formatKm(value) {
+      return formatNumber(value, 1) + ' km';
+    }
+
+    function formatLiters(value) {
+      return formatNumber(value, 2) + ' l';
+    }
+
+    function setActiveTab(tabName) {
+      activeTab = tabName;
+
+      tabButtons.forEach(button => {
+        button.classList.toggle('active', button.dataset.tab === tabName);
+      });
+
+      tabPanels.forEach(panel => {
+        panel.classList.toggle('active', panel.id === `panel-${tabName}`);
+      });
+
+      if (tabName === 'real') {
+        calculateRealConsumption();
+      } else {
+        calculateTripCost();
+      }
+    }
+
+    function setResultBadge(type, text) {
+      outputs.consumptionBadge.className = `badge ${type}`;
+      outputs.consumptionBadge.textContent = text;
+    }
+
+    function renderTable(rows) {
+      outputs.summaryTableBody.innerHTML = rows.map(row => `
+        <tr>
+          <td>${row.label}</td>
+          <td>${row.value}</td>
+          <td>${row.unit}</td>
+          <td>${row.note}</td>
+        </tr>
+      `).join('');
+    }
+
+    function renderEmpty(message) {
+      outputs.mainResult.textContent = '0';
+      outputs.costResult.textContent = '0 Kč';
+      outputs.costPerKmResult.textContent = '0 Kč';
+      outputs.fuelNeededResult.textContent = '0 l';
+      outputs.calcTypeResult.textContent = activeTab === 'real' ? 'Skutečná spotřeba' : 'Cena cesty';
+      outputs.distanceResult.textContent = '0 km';
+      outputs.contextResult.textContent = '—';
+      outputs.pricePerLiterResult.textContent = '0 Kč';
+      outputs.extraCostsResult.textContent = '0 Kč';
+      outputs.resultNote.textContent = message;
+      setResultBadge('warning', 'Chybí vstupní data');
+
+      renderTable([
+        {
+          label: 'Výsledek',
+          value: '—',
+          unit: '—',
+          note: message
+        }
+      ]);
+    }
+
+    function getRealValues() {
+      return {
+        distance: Number(document.getElementById('distanceReal').value),
+        fuelUsed: Number(document.getElementById('fuelUsed').value),
+        fuelPrice: Number(document.getElementById('fuelPriceReal').value),
+        fuelType: document.getElementById('fuelTypeReal').value
+      };
+    }
+
+    function getTripValues() {
+      return {
+        distance: Number(document.getElementById('tripDistance').value),
+        consumption: Number(document.getElementById('tripConsumption').value),
+        fuelPrice: Number(document.getElementById('fuelPriceTrip').value),
+        tripMode: document.getElementById('tripMode').value,
+        extraCosts: Number(document.getElementById('extraCosts').value)
+      };
+    }
+
+    function calculateRealConsumption() {
+      const values = getRealValues();
+
+      if (!values.distance || values.distance <= 0 || !values.fuelUsed || values.fuelUsed <= 0) {
+        renderEmpty('Zadejte platnou vzdálenost a množství spotřebovaného paliva.');
+        return;
+      }
+
+      const consumption = (values.fuelUsed / values.distance) * 100;
+      const totalFuelCost = values.fuelUsed * values.fuelPrice;
+      const costPerKm = totalFuelCost / values.distance;
+
+      outputs.mainResult.textContent = formatNumber(consumption, 2) + ' l / 100 km';
+      outputs.costResult.textContent = formatCurrency(totalFuelCost);
+      outputs.costPerKmResult.textContent = formatCurrency(costPerKm);
+      outputs.fuelNeededResult.textContent = formatLiters(values.fuelUsed);
+      outputs.calcTypeResult.textContent = 'Skutečná spotřeba';
+      outputs.distanceResult.textContent = formatKm(values.distance);
+      outputs.contextResult.textContent = values.fuelType;
+      outputs.pricePerLiterResult.textContent = formatCurrency(values.fuelPrice);
+      outputs.extraCostsResult.textContent = formatCurrency(0);
+      outputs.resultNote.textContent = 'Skutečná spotřeba byla spočítána z ujeté vzdálenosti a spotřebovaného paliva. Výsledek dobře slouží pro porovnání tras i stylu jízdy.';
+
+      if (consumption <= 5.5) {
+        setResultBadge('success', 'Nízká spotřeba');
+      } else if (consumption <= 8) {
+        setResultBadge('warning', 'Střední spotřeba');
+      } else {
+        setResultBadge('danger', 'Vyšší spotřeba');
+      }
+
+      renderTable([
+        {
+          label: 'Skutečná spotřeba',
+          value: formatNumber(consumption, 2),
+          unit: 'l / 100 km',
+          note: 'Výpočet z reálného tankování'
+        },
+        {
+          label: 'Spotřebované palivo',
+          value: formatNumber(values.fuelUsed, 2),
+          unit: 'l',
+          note: 'Zadané množství paliva'
+        },
+        {
+          label: 'Celková cena paliva',
+          value: formatCurrency(totalFuelCost),
+          unit: 'Kč',
+          note: 'Cena za spotřebované palivo'
+        },
+        {
+          label: 'Náklad na 1 km',
+          value: formatCurrency(costPerKm),
+          unit: 'Kč / km',
+          note: 'Pouze palivový náklad'
+        }
+      ]);
+    }
+
+    function calculateTripCost() {
+      const values = getTripValues();
+
+      if (!values.distance || values.distance <= 0 || !values.consumption || values.consumption <= 0) {
+        renderEmpty('Zadejte platnou délku trasy a průměrnou spotřebu.');
+        return;
+      }
+
+      const multiplier = values.tripMode === 'return' ? 2 : 1;
+      const totalDistance = values.distance * multiplier;
+      const fuelNeeded = (totalDistance * values.consumption) / 100;
+      const fuelCost = fuelNeeded * values.fuelPrice;
+      const totalCost = fuelCost + values.extraCosts;
+      const costPerKm = totalCost / totalDistance;
+
+      outputs.mainResult.textContent = formatCurrency(totalCost);
+      outputs.costResult.textContent = formatCurrency(fuelCost);
+      outputs.costPerKmResult.textContent = formatCurrency(costPerKm);
+      outputs.fuelNeededResult.textContent = formatLiters(fuelNeeded);
+      outputs.calcTypeResult.textContent = 'Cena cesty';
+      outputs.distanceResult.textContent = formatKm(totalDistance);
+      outputs.contextResult.textContent = values.tripMode === 'return' ? 'Tam i zpět' : 'Jedna cesta';
+      outputs.pricePerLiterResult.textContent = formatCurrency(values.fuelPrice);
+      outputs.extraCostsResult.textContent = formatCurrency(values.extraCosts);
+      outputs.resultNote.textContent = 'Cena cesty byla spočítána z průměrné spotřeby, délky trasy a ceny paliva. Do celkového výsledku jsou započítané i další přímé náklady, pokud byly zadány.';
+
+      if (costPerKm <= 2.5) {
+        setResultBadge('success', 'Nižší náklad na kilometr');
+      } else if (costPerKm <= 4.5) {
+        setResultBadge('warning', 'Střední náklad na kilometr');
+      } else {
+        setResultBadge('danger', 'Vyšší náklad na kilometr');
+      }
+
+      renderTable([
+        {
+          label: 'Celková cena cesty',
+          value: formatCurrency(totalCost),
+          unit: 'Kč',
+          note: 'Včetně dalších zadaných nákladů'
+        },
+        {
+          label: 'Palivový náklad',
+          value: formatCurrency(fuelCost),
+          unit: 'Kč',
+          note: 'Pouze palivo'
+        },
+        {
+          label: 'Potřebné palivo',
+          value: formatNumber(fuelNeeded, 2),
+          unit: 'l',
+          note: 'Odhad podle průměrné spotřeby'
+        },
+        {
+          label: 'Náklad na 1 km',
+          value: formatCurrency(costPerKm),
+          unit: 'Kč / km',
+          note: 'Celkový náklad na kilometr'
+        }
+      ]);
+    }
+
+    document.getElementById('calcRealBtn').addEventListener('click', calculateRealConsumption);
+    document.getElementById('calcTripBtn').addEventListener('click', calculateTripCost);
+
+    document.getElementById('resetRealBtn').addEventListener('click', function() {
+      document.getElementById('distanceReal').value = 520;
+      document.getElementById('fuelUsed').value = 34.8;
+      document.getElementById('fuelPriceReal').value = 38.9;
+      document.getElementById('fuelTypeReal').value = 'Benzín';
+      calculateRealConsumption();
+    });
+
+    document.getElementById('resetTripBtn').addEventListener('click', function() {
+      document.getElementById('tripDistance').value = 250;
+      document.getElementById('tripConsumption').value = 6.7;
+      document.getElementById('fuelPriceTrip').value = 38.9;
+      document.getElementById('tripMode').value = 'oneway';
+      document.getElementById('extraCosts').value = 0;
+      calculateTripCost();
+    });
+
+    ['distanceReal', 'fuelUsed', 'fuelPriceReal', 'fuelTypeReal'].forEach(id => {
+      document.getElementById(id).addEventListener('input', calculateRealConsumption);
+      document.getElementById(id).addEventListener('change', calculateRealConsumption);
+    });
+
+    ['tripDistance', 'tripConsumption', 'fuelPriceTrip', 'tripMode', 'extraCosts'].forEach(id => {
+      document.getElementById(id).addEventListener('input', calculateTripCost);
+      document.getElementById(id).addEventListener('change', calculateTripCost);
+    });
+
+    tabButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        setActiveTab(button.dataset.tab);
+      });
+    });
+
+    calculateRealConsumption();
+  </script>
+</body>
+</html>
