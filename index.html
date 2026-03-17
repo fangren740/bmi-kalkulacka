@@ -1,601 +1,961 @@
 <!doctype html>
 <html lang="cs">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Rychlé výpočty online | Kalkulačky a praktické nástroje | RychléVýpočty.cz</title>
-<meta name="description" content="Online kalkulačky zdarma pro finance, zdraví, procenta, DPH, čistou mzdu, hypotéku, půjčku, pracovní dny, spotřebu paliva, průměr, věk a datumové výpočty. Praktické nástroje online přehledně a zdarma." />
-<meta name="robots" content="index,follow" />
+  <title>Rychlé výpočty online | Kalkulačky a praktické nástroje | RychléVýpočty.cz</title>
+  <meta name="description" content="RychléVýpočty.cz nabízí přehledné online kalkulačky zdarma pro finance, mzdy, hypotéky, půjčky, procenta, průměry, datumy, pracovní dny, spotřebu paliva, inflaci, převod měn a další praktické výpočty.">
+  <meta name="robots" content="index,follow">
+  <link rel="canonical" href="https://rychlevypocty.cz/">
 
-<link rel="icon" type="image/png" href="/favicon.png">
-<link rel="shortcut icon" href="/favicon.png">
+  <meta property="og:title" content="Rychlé výpočty online | Kalkulačky a praktické nástroje | RychléVýpočty.cz">
+  <meta property="og:description" content="Přehledné online kalkulačky zdarma pro finance, mzdy, procenta, hypotéky, datumové výpočty, spotřebu paliva a další praktické nástroje.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rychlevypocty.cz/">
+  <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg">
 
-<style>
-:root{
-  --bg:#020617;
-  --panel:#0f172a;
-  --card:#111827;
-  --text:#e5e7eb;
-  --muted:#94a3b8;
-  --accent:#22c55e;
-  --accent2:#38bdf8;
-  --border:rgba(255,255,255,.08);
-}
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Rychlé výpočty online | RychléVýpočty.cz">
+  <meta name="twitter:description" content="Online kalkulačky zdarma pro finance, matematiku, datumy, mzdy, inflaci, spotřebu paliva a další praktické výpočty.">
 
-*{box-sizing:border-box}
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <link rel="shortcut icon" href="/favicon.png">
 
-body{
-  margin:0;
-  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  background:linear-gradient(180deg,var(--bg) 0%, #0f172a 100%);
-  color:var(--text);
-  min-height:100vh;
-}
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --bg-soft: #eef3fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #5f6b85;
+      --primary: #2152ff;
+      --primary-dark: #183dbf;
+      --border: #dbe3f0;
+      --border-strong: #c9d5ea;
+      --success: #138a4b;
+      --shadow: 0 12px 32px rgba(20, 32, 70, 0.08);
+      --shadow-soft: 0 10px 24px rgba(20, 32, 70, 0.06);
+      --radius: 18px;
+      --radius-large: 24px;
+    }
 
-a{
-  color:inherit;
-}
+    * {
+      box-sizing: border-box;
+    }
 
-.wrap{
-  max-width:1180px;
-  margin:0 auto;
-  padding:32px 18px 64px;
-}
+    html {
+      scroll-behavior: smooth;
+    }
 
-.hero{
-  text-align:center;
-  padding:34px 0 18px;
-}
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      color: var(--text);
+      background: linear-gradient(180deg, #f7f9fd 0%, #eef3fb 100%);
+      line-height: 1.65;
+    }
 
-.badge{
-  display:inline-block;
-  padding:8px 14px;
-  border:1px solid var(--border);
-  border-radius:999px;
-  color:var(--accent2);
-  background:rgba(56,189,248,.08);
-  font-size:14px;
-  margin-bottom:14px;
-}
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
 
-h1{
-  margin:0 0 14px;
-  font-size:clamp(34px,5vw,58px);
-  line-height:1.05;
-}
+    a:hover {
+      text-decoration: underline;
+    }
 
-.sub{
-  color:var(--muted);
-  max-width:920px;
-  margin:0 auto;
-  font-size:18px;
-  line-height:1.7;
-}
+    img {
+      max-width: 100%;
+      display: block;
+    }
 
-.section{
-  margin-top:44px;
-}
+    .container {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+    }
 
-.section h2{
-  margin:0 0 16px;
-  font-size:30px;
-}
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      background: rgba(255, 255, 255, 0.84);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(219, 227, 240, 0.9);
+    }
 
-.section-intro{
-  color:var(--muted);
-  margin:0 0 18px;
-  line-height:1.7;
-  max-width:920px;
-}
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 18px 0;
+    }
 
-.grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-  gap:18px;
-}
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+    }
 
-.card{
-  display:block;
-  text-decoration:none;
-  color:inherit;
-  background:rgba(17,24,39,.92);
-  border:1px solid var(--border);
-  border-radius:24px;
-  padding:22px;
-  box-shadow:0 12px 40px rgba(0,0,0,.25);
-  transition:transform .15s ease, border-color .15s ease, box-shadow .15s ease;
-}
+    .brand span {
+      color: var(--primary);
+    }
 
-.card:hover{
-  transform:translateY(-3px);
-  border-color:rgba(56,189,248,.35);
-  box-shadow:0 18px 45px rgba(0,0,0,.3);
-}
+    .topnav {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      align-items: center;
+      font-size: 0.97rem;
+    }
 
-.card-top{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  margin-bottom:10px;
-}
+    .topnav a {
+      color: var(--muted);
+      font-weight: 600;
+    }
 
-.tag{
-  display:inline-block;
-  padding:6px 10px;
-  border-radius:999px;
-  font-size:12px;
-  color:#cbd5e1;
-  background:rgba(255,255,255,.06);
-  border:1px solid var(--border);
-}
+    .topnav a:hover {
+      color: var(--primary);
+      text-decoration: none;
+    }
 
-.icon{
-  min-width:42px;
-  height:42px;
-  padding:0 10px;
-  border-radius:14px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:rgba(34,197,94,.12);
-  color:#86efac;
-  font-size:14px;
-  font-weight:700;
-}
+    .hero {
+      padding: 46px 0 24px;
+    }
 
-.card h3{
-  margin:0 0 10px;
-  font-size:22px;
-}
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.08fr 0.92fr;
+      gap: 28px;
+      align-items: stretch;
+    }
 
-.card p{
-  margin:0;
-  color:var(--muted);
-  line-height:1.7;
-}
+    .hero-main {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      border: 1px solid var(--border);
+      border-radius: 30px;
+      padding: 34px;
+      box-shadow: var(--shadow);
+    }
 
-.category-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
-  gap:18px;
-}
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 14px;
+      border-radius: 999px;
+      background: rgba(33, 82, 255, 0.08);
+      color: var(--primary-dark);
+      border: 1px solid rgba(33, 82, 255, 0.12);
+      font-size: 0.92rem;
+      font-weight: 700;
+      margin-bottom: 18px;
+    }
 
-.category-card{
-  background:rgba(17,24,39,.92);
-  border:1px solid var(--border);
-  border-radius:24px;
-  padding:22px;
-  box-shadow:0 12px 40px rgba(0,0,0,.25);
-}
+    h1 {
+      margin: 0 0 16px;
+      font-size: clamp(2.3rem, 5vw, 4.2rem);
+      line-height: 1.03;
+      letter-spacing: -0.04em;
+    }
 
-.category-card h3{
-  margin:0 0 12px;
-  font-size:24px;
-}
+    .hero-main p {
+      margin: 0 0 14px;
+      color: var(--muted);
+      font-size: 1.05rem;
+      max-width: 760px;
+    }
 
-.category-card p{
-  margin:0 0 14px;
-  color:var(--muted);
-  line-height:1.7;
-}
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 22px;
+    }
 
-.link-list{
-  display:grid;
-  gap:10px;
-}
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 18px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 0.98rem;
+      text-decoration: none;
+      transition: transform 0.08s ease, background 0.15s ease, border-color 0.15s ease;
+      border: 1px solid transparent;
+    }
 
-.link-list a{
-  display:block;
-  text-decoration:none;
-  color:#cbd5e1;
-  background:rgba(255,255,255,.03);
-  border:1px solid var(--border);
-  border-radius:14px;
-  padding:12px 14px;
-  transition:background .15s ease, border-color .15s ease;
-}
+    .btn:hover {
+      transform: translateY(-1px);
+      text-decoration: none;
+    }
 
-.link-list a:hover{
-  background:rgba(56,189,248,.08);
-  border-color:rgba(56,189,248,.3);
-}
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
 
-.textblock{
-  background:rgba(17,24,39,.92);
-  border:1px solid var(--border);
-  border-radius:24px;
-  padding:24px;
-  line-height:1.8;
-  color:var(--muted);
-  box-shadow:0 12px 40px rgba(0,0,0,.25);
-}
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
 
-.textblock h2,
-.textblock h3{
-  color:var(--text);
-  margin-top:0;
-}
+    .btn-secondary {
+      background: #eef3ff;
+      color: var(--primary-dark);
+      border-color: rgba(33, 82, 255, 0.10);
+    }
 
-.two-col{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:18px;
-}
+    .hero-side {
+      display: grid;
+      gap: 18px;
+    }
 
-.faq{
-  background:rgba(17,24,39,.92);
-  border:1px solid var(--border);
-  border-radius:24px;
-  padding:22px;
-  box-shadow:0 12px 40px rgba(0,0,0,.25);
-}
+    .hero-panel {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow-soft);
+    }
 
-.faq h3{
-  margin-top:0;
-  margin-bottom:10px;
-}
+    .hero-panel h2,
+    .hero-panel h3 {
+      margin: 0 0 10px;
+      font-size: 1.18rem;
+      letter-spacing: -0.02em;
+    }
 
-.faq p{
-  color:var(--muted);
-  line-height:1.7;
-  margin-top:0;
-}
+    .hero-panel p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
 
-.footer{
-  text-align:center;
-  color:var(--muted);
-  margin-top:42px;
-  font-size:14px;
-}
+    .hero-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 18px;
+    }
 
-@media (max-width:800px){
-  .two-col{
-    grid-template-columns:1fr;
+    .stat-box {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 16px;
+    }
+
+    .stat-box strong {
+      display: block;
+      font-size: 1.55rem;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      margin-bottom: 6px;
+    }
+
+    .stat-box span {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .section {
+      padding: 18px 0;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 20px;
+      margin-bottom: 18px;
+    }
+
+    .section-head h2 {
+      margin: 0 0 8px;
+      font-size: 1.9rem;
+      letter-spacing: -0.03em;
+    }
+
+    .section-head p {
+      margin: 0;
+      color: var(--muted);
+      max-width: 780px;
+    }
+
+    .section-link {
+      white-space: nowrap;
+      font-weight: 700;
+    }
+
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .tool-card {
+      display: block;
+      background: linear-gradient(180deg, #ffffff 0%, #f9fbff 100%);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 22px;
+      box-shadow: var(--shadow-soft);
+      transition: transform 0.12s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+      color: var(--text);
+      text-decoration: none;
+      min-height: 100%;
+    }
+
+    .tool-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(33, 82, 255, 0.24);
+      box-shadow: 0 18px 40px rgba(20, 32, 70, 0.10);
+      text-decoration: none;
+    }
+
+    .tool-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .tool-tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 7px 11px;
+      border-radius: 999px;
+      background: #f3f7ff;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    .tool-icon {
+      min-width: 44px;
+      height: 44px;
+      padding: 0 10px;
+      border-radius: 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(33, 82, 255, 0.08);
+      color: var(--primary-dark);
+      font-weight: 800;
+      font-size: 0.84rem;
+      letter-spacing: -0.02em;
+    }
+
+    .tool-card h3 {
+      margin: 0 0 10px;
+      font-size: 1.28rem;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      color: var(--text);
+    }
+
+    .tool-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.97rem;
+    }
+
+    .categories-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+    }
+
+    .category-card {
+      background: linear-gradient(180deg, #ffffff 0%, #f9fbff 100%);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .category-card h3 {
+      margin: 0 0 10px;
+      font-size: 1.35rem;
+      letter-spacing: -0.02em;
+    }
+
+    .category-card p {
+      margin: 0 0 16px;
+      color: var(--muted);
+    }
+
+    .category-links {
+      display: grid;
+      gap: 10px;
+    }
+
+    .category-links a {
+      display: block;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: #fbfdff;
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 0.15s ease, border-color 0.15s ease;
+    }
+
+    .category-links a:hover {
+      background: #f3f7ff;
+      border-color: rgba(33, 82, 255, 0.18);
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 18px;
+    }
+
+    .content-card {
+      background: linear-gradient(180deg, #ffffff 0%, #f9fbff 100%);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 26px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .content-card h2,
+    .content-card h3 {
+      margin: 0 0 12px;
+      letter-spacing: -0.03em;
+    }
+
+    .content-card p {
+      margin: 0 0 14px;
+      color: var(--muted);
+    }
+
+    .content-card p:last-child {
+      margin-bottom: 0;
+    }
+
+    .faq-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .faq-card {
+      background: linear-gradient(180deg, #ffffff 0%, #f9fbff 100%);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .faq-card h3 {
+      margin: 0 0 10px;
+      font-size: 1.18rem;
+      letter-spacing: -0.02em;
+    }
+
+    .faq-card p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .footer {
+      margin-top: 34px;
+      border-top: 1px solid rgba(219, 227, 240, 0.9);
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .footer-inner {
+      padding: 26px 0 40px;
+      color: var(--muted);
+      font-size: 0.95rem;
+      text-align: center;
+    }
+
+    @media (max-width: 1080px) {
+      .tools-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .feature-grid,
+      .categories-grid,
+      .faq-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .section-head {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .container {
+        width: min(100% - 24px, 1180px);
+      }
+
+      .topbar-inner {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .tools-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-main,
+      .hero-panel,
+      .category-card,
+      .content-card,
+      .faq-card {
+        padding: 20px;
+        border-radius: 20px;
+      }
+
+      .hero-stats {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebSite",
+    "name":"RychléVýpočty.cz",
+    "url":"https://rychlevypocty.cz/"
   }
-}
+  </script>
 
-@media (max-width:640px){
-  .sub{
-    font-size:16px;
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"ItemList",
+    "name":"Online kalkulačky na RychléVýpočty.cz",
+    "itemListElement":[
+      {"@type":"ListItem","position":1,"url":"https://rychlevypocty.cz/hypotecni-kalkulacka.html","name":"Hypoteční kalkulačka"},
+      {"@type":"ListItem","position":2,"url":"https://rychlevypocty.cz/kalkulacka-pujcky.html","name":"Kalkulačka půjčky"},
+      {"@type":"ListItem","position":3,"url":"https://rychlevypocty.cz/cista-mzda-kalkulacka.html","name":"Kalkulačka čisté mzdy"},
+      {"@type":"ListItem","position":4,"url":"https://rychlevypocty.cz/dph-kalkulacka.html","name":"DPH kalkulačka"},
+      {"@type":"ListItem","position":5,"url":"https://rychlevypocty.cz/kalkulacka-slozeneho-uroku.html","name":"Kalkulačka složeného úroku"},
+      {"@type":"ListItem","position":6,"url":"https://rychlevypocty.cz/procenta-kalkulacka.html","name":"Kalkulačka procent"},
+      {"@type":"ListItem","position":7,"url":"https://rychlevypocty.cz/kalkulacka-prumeru.html","name":"Kalkulačka průměru"},
+      {"@type":"ListItem","position":8,"url":"https://rychlevypocty.cz/pracovni-dny-kalkulacka.html","name":"Kalkulačka pracovních dnů"},
+      {"@type":"ListItem","position":9,"url":"https://rychlevypocty.cz/kolik-dni-do-data.html","name":"Kolik dní do data"},
+      {"@type":"ListItem","position":10,"url":"https://rychlevypocty.cz/vypocet-veku.html","name":"Výpočet věku"},
+      {"@type":"ListItem","position":11,"url":"https://rychlevypocty.cz/spotreba-paliva-kalkulacka.html","name":"Kalkulačka spotřeby paliva"},
+      {"@type":"ListItem","position":12,"url":"https://rychlevypocty.cz/prevodnik-men.html","name":"Převodník měn"},
+      {"@type":"ListItem","position":13,"url":"https://rychlevypocty.cz/inflace-kalkulacka.html","name":"Inflační kalkulačka"},
+      {"@type":"ListItem","position":14,"url":"https://rychlevypocty.cz/bmi-kalkulacka.html","name":"BMI kalkulačka"}
+    ]
   }
-
-  .card,
-  .faq,
-  .textblock,
-  .category-card{
-    border-radius:20px;
-    padding:18px;
-  }
-}
-</style>
+  </script>
 </head>
-
 <body>
 
-<main class="wrap">
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="/">Rychlé<span>Výpočty</span>.cz</a>
 
-  <section class="hero">
-    <div class="badge">Online kalkulačky zdarma</div>
-
-    <h1>Rychlé výpočty online</h1>
-
-    <p class="sub">
-      RychléVýpočty.cz nabízí přehledné online kalkulačky pro finance, zdraví, mzdy, procenta,
-      hypotéky, půjčky, spotřebu paliva, pracovní dny, věk i datumové výpočty.
-      Vše funguje zdarma, přímo v prohlížeči a bez registrace.
-    </p>
-  </section>
-
-  <section class="section">
-    <h2>Hlavní kalkulačky</h2>
-    <p class="section-intro">
-      Výběr nejdůležitějších nástrojů pro běžné finanční, matematické, časové i praktické každodenní výpočty.
-    </p>
-
-    <div class="grid">
-
-      <a class="card" href="./hypotecni-kalkulacka.html">
-        <div class="card-top">
-          <span class="tag">Finance</span>
-          <div class="icon">HYP</div>
-        </div>
-        <h3>Hypoteční kalkulačka</h3>
-        <p>
-          Výpočet měsíční splátky hypotéky, celkově zaplacené částky, úroků i orientačního LTV.
-        </p>
-      </a>
-
-      <a class="card" href="./kalkulacka-pujcky.html">
-        <div class="card-top">
-          <span class="tag">Finance</span>
-          <div class="icon">ÚVĚR</div>
-        </div>
-        <h3>Kalkulačka půjčky</h3>
-        <p>
-          Spočítejte si měsíční splátku půjčky, přeplacení i celkovou částku k úhradě.
-        </p>
-      </a>
-
-      <a class="card" href="./cista-mzda-kalkulacka.html">
-        <div class="card-top">
-          <span class="tag">Finance</span>
-          <div class="icon">MZDA</div>
-        </div>
-        <h3>Kalkulačka čisté mzdy</h3>
-        <p>
-          Orientační výpočet čisté mzdy, odvodů zaměstnance, daně i celkového nákladu zaměstnavatele.
-        </p>
-      </a>
-
-      <a class="card" href="./dph-kalkulacka.html">
-        <div class="card-top">
-          <span class="tag">Finance</span>
-          <div class="icon">DPH</div>
-        </div>
-        <h3>DPH kalkulačka</h3>
-        <p>
-          Rychlý výpočet ceny s DPH, bez DPH i samotné částky DPH pro běžné sazby.
-        </p>
-      </a>
-
-      <a class="card" href="./kalkulacka-slozeneho-uroku.html">
-        <div class="card-top">
-          <span class="tag">Finance</span>
-          <div class="icon">%</div>
-        </div>
-        <h3>Kalkulačka složeného úroku</h3>
-        <p>
-          Výpočet budoucí hodnoty investice podle počáteční částky, pravidelného vkladu a zhodnocení.
-        </p>
-      </a>
-
-      <a class="card" href="./procenta-kalkulacka.html">
-        <div class="card-top">
-          <span class="tag">Matematika</span>
-          <div class="icon">%</div>
-        </div>
-        <h3>Kalkulačka procent</h3>
-        <p>
-          Výpočet procent z částky, procentní změny i podílu jednoho čísla z druhého.
-        </p>
-      </a>
-
-      <a class="card" href="./kalkulacka-prumeru.html">
-        <div class="card-top">
-          <span class="tag">Matematika</span>
-          <div class="icon">AVG</div>
-        </div>
-        <h3>Kalkulačka průměru</h3>
-        <p>
-          Výpočet aritmetického i váženého průměru včetně součtu, minima, maxima a počtu hodnot.
-        </p>
-      </a>
-
-      <a class="card" href="./pracovni-dny-kalkulacka.html">
-        <div class="card-top">
-          <span class="tag">Datum a čas</span>
-          <div class="icon">PRÁCE</div>
-        </div>
-        <h3>Kalkulačka pracovních dnů</h3>
-        <p>
-          Spočítejte počet pracovních dnů mezi dvěma daty včetně víkendů, svátků a pracovních hodin.
-        </p>
-      </a>
-
-      <a class="card" href="./kolik-dni-do-data.html">
-        <div class="card-top">
-          <span class="tag">Datum a čas</span>
-          <div class="icon">DNY</div>
-        </div>
-        <h3>Kolik dní do data</h3>
-        <p>
-          Zjistěte počet dní do vybraného data pro termíny, události, svátky i plánování.
-        </p>
-      </a>
-
-      <a class="card" href="./vypocet-veku.html">
-        <div class="card-top">
-          <span class="tag">Datum a čas</span>
-          <div class="icon">VĚK</div>
-        </div>
-        <h3>Výpočet věku</h3>
-        <p>
-          Přesný věk v letech, měsících a dnech podle zadaného data narození.
-        </p>
-      </a>
-
-      <a class="card" href="./spotreba-paliva-kalkulacka.html">
-        <div class="card-top">
-          <span class="tag">Auto a provoz</span>
-          <div class="icon">PAL</div>
-        </div>
-        <h3>Kalkulačka spotřeby paliva</h3>
-        <p>
-          Výpočet spotřeby paliva na 100 km, ceny jízdy, nákladů na kilometr i ceny celé trasy.
-        </p>
-      </a>
-
-      <a class="card" href="./bmi-kalkulacka.html">
-        <div class="card-top">
-          <span class="tag">Zdraví</span>
-          <div class="icon">BMI</div>
-        </div>
-        <h3>BMI kalkulačka</h3>
-        <p>
-          Výpočet BMI online včetně orientační váhové kategorie a přehledného výsledku.
-        </p>
-      </a>
-
+      <nav class="topnav" aria-label="Hlavní navigace">
+        <a href="#hlavni-kalkulacky">Kalkulačky</a>
+        <a href="#kategorie">Kategorie</a>
+        <a href="#doporucene">Doporučené</a>
+        <a href="#o-webu">O webu</a>
+      </nav>
     </div>
-  </section>
+  </header>
 
-  <section class="section">
-    <h2>Kategorie nástrojů</h2>
-    <p class="section-intro">
-      Kalkulačky jsou rozdělené do hlavních tematických oblastí, aby byl web přehledný a rychle použitelný.
-    </p>
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-main">
+          <div class="hero-badge">Online kalkulačky zdarma</div>
 
-    <div class="category-grid">
+          <h1>Rychlé výpočty online pro finance, matematiku i každodenní praxi</h1>
 
-      <div class="category-card">
-        <h3>Finance</h3>
-        <p>
-          Kalkulačky pro hypotéky, půjčky, investice, DPH, mzdu a další běžné finanční výpočty.
-        </p>
-        <div class="link-list">
-          <a href="./hypotecni-kalkulacka.html">Hypoteční kalkulačka</a>
-          <a href="./kalkulacka-pujcky.html">Kalkulačka půjčky</a>
-          <a href="./kalkulacka-slozeneho-uroku.html">Kalkulačka složeného úroku</a>
-          <a href="./dph-kalkulacka.html">DPH kalkulačka</a>
-          <a href="./cista-mzda-kalkulacka.html">Kalkulačka čisté mzdy</a>
+          <p>
+            RychléVýpočty.cz jsou přehledný český portál s online kalkulačkami a praktickými nástroji,
+            které pomáhají s běžnými finančními, matematickými, časovými i provozními výpočty.
+          </p>
+
+          <p>
+            Na jednom místě najdete kalkulačky pro hypotéky, půjčky, mzdy, DPH, inflaci, převod měn,
+            procenta, průměry, datumové výpočty, pracovní dny i spotřebu paliva.
+          </p>
+
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#hlavni-kalkulacky">Procházet kalkulačky</a>
+            <a class="btn btn-secondary" href="/hypotecni-kalkulacka.html">Otevřít hypoteční kalkulačku</a>
+          </div>
+        </div>
+
+        <div class="hero-side">
+          <div class="hero-panel">
+            <h2>Co na webu najdete</h2>
+            <p>
+              Praktické výpočty bez registrace, bez zbytečné složitosti a s důrazem na srozumitelný výsledek.
+              Každý nástroj je navržený tak, aby byl rychle použitelný a zároveň důvěryhodný.
+            </p>
+
+            <div class="hero-stats">
+              <div class="stat-box">
+                <strong>14</strong>
+                <span>aktuálně dostupných nástrojů</span>
+              </div>
+              <div class="stat-box">
+                <strong>4</strong>
+                <span>hlavní tematické oblasti</span>
+              </div>
+              <div class="stat-box">
+                <strong>0 Kč</strong>
+                <span>všechny kalkulačky zdarma</span>
+              </div>
+              <div class="stat-box">
+                <strong>24/7</strong>
+                <span>okamžitě v prohlížeči</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero-panel">
+            <h3>Směr projektu</h3>
+            <p>
+              Web je budovaný jako větší portál užitečných kalkulaček a výpočtů. Prioritou je kvalita,
+              přehlednost, systematický růst a praktická hodnota jednotlivých nástrojů.
+            </p>
+          </div>
         </div>
       </div>
+    </section>
 
-      <div class="category-card">
-        <h3>Matematika a běžné výpočty</h3>
-        <p>
-          Rychlé početní nástroje pro každodenní práci, školu i běžnou praxi.
-        </p>
-        <div class="link-list">
-          <a href="./procenta-kalkulacka.html">Kalkulačka procent</a>
-          <a href="./kalkulacka-prumeru.html">Kalkulačka průměru</a>
+    <section class="section" id="hlavni-kalkulacky">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h2>Hlavní kalkulačky</h2>
+            <p>
+              Výběr nejdůležitějších nástrojů pro finance, matematiku, datumové výpočty,
+              osobní plánování i běžné praktické použití.
+            </p>
+          </div>
+        </div>
+
+        <div class="tools-grid">
+          <a class="tool-card" href="/hypotecni-kalkulacka.html">
+            <div class="tool-top">
+              <span class="tool-tag">Finance</span>
+              <span class="tool-icon">HYP</span>
+            </div>
+            <h3>Hypoteční kalkulačka</h3>
+            <p>Výpočet měsíční splátky hypotéky, úroků, LTV a celkové ceny úvěru.</p>
+          </a>
+
+          <a class="tool-card" href="/kalkulacka-pujcky.html">
+            <div class="tool-top">
+              <span class="tool-tag">Finance</span>
+              <span class="tool-icon">ÚVĚR</span>
+            </div>
+            <h3>Kalkulačka půjčky</h3>
+            <p>Spočítejte měsíční splátku půjčky, přeplacení a celkovou částku k úhradě.</p>
+          </a>
+
+          <a class="tool-card" href="/cista-mzda-kalkulacka.html">
+            <div class="tool-top">
+              <span class="tool-tag">Finance</span>
+              <span class="tool-icon">MZDA</span>
+            </div>
+            <h3>Kalkulačka čisté mzdy</h3>
+            <p>Orientační výpočet čisté mzdy, daně, odvodů zaměstnance i nákladů zaměstnavatele.</p>
+          </a>
+
+          <a class="tool-card" href="/dph-kalkulacka.html">
+            <div class="tool-top">
+              <span class="tool-tag">Finance</span>
+              <span class="tool-icon">DPH</span>
+            </div>
+            <h3>DPH kalkulačka</h3>
+            <p>Rychlý výpočet ceny s DPH, bez DPH i samotné hodnoty DPH pro běžné sazby.</p>
+          </a>
+
+          <a class="tool-card" href="/kalkulacka-slozeneho-uroku.html">
+            <div class="tool-top">
+              <span class="tool-tag">Finance</span>
+              <span class="tool-icon">ÚROK</span>
+            </div>
+            <h3>Kalkulačka složeného úroku</h3>
+            <p>Výpočet budoucí hodnoty investice podle počáteční částky, vkladů a zhodnocení.</p>
+          </a>
+
+          <a class="tool-card" href="/inflace-kalkulacka.html">
+            <div class="tool-top">
+              <span class="tool-tag">Finance</span>
+              <span class="tool-icon">INF</span>
+            </div>
+            <h3>Inflační kalkulačka</h3>
+            <p>Spočítejte dopad inflace na hodnotu peněz, budoucí cenu a kupní sílu částky.</p>
+          </a>
+
+          <a class="tool-card" href="/prevodnik-men.html">
+            <div class="tool-top">
+              <span class="tool-tag">Finance</span>
+              <span class="tool-icon">FX</span>
+            </div>
+            <h3>Převodník měn</h3>
+            <p>Přepočet mezi měnami podle vlastního kurzu včetně směnárenského poplatku.</p>
+          </a>
+
+          <a class="tool-card" href="/procenta-kalkulacka.html">
+            <div class="tool-top">
+              <span class="tool-tag">Matematika</span>
+              <span class="tool-icon">%</span>
+            </div>
+            <h3>Kalkulačka procent</h3>
+            <p>Výpočet procent z částky, procentní změny i podílu jednoho čísla z druhého.</p>
+          </a>
+
+          <a class="tool-card" href="/kalkulacka-prumeru.html">
+            <div class="tool-top">
+              <span class="tool-tag">Matematika</span>
+              <span class="tool-icon">AVG</span>
+            </div>
+            <h3>Kalkulačka průměru</h3>
+            <p>Výpočet aritmetického i váženého průměru včetně součtu a dalších doplňkových údajů.</p>
+          </a>
+
+          <a class="tool-card" href="/pracovni-dny-kalkulacka.html">
+            <div class="tool-top">
+              <span class="tool-tag">Datum a čas</span>
+              <span class="tool-icon">PRÁCE</span>
+            </div>
+            <h3>Kalkulačka pracovních dnů</h3>
+            <p>Počet pracovních dnů mezi dvěma daty včetně víkendů, svátků a pracovních hodin.</p>
+          </a>
+
+          <a class="tool-card" href="/kolik-dni-do-data.html">
+            <div class="tool-top">
+              <span class="tool-tag">Datum a čas</span>
+              <span class="tool-icon">DNY</span>
+            </div>
+            <h3>Kolik dní do data</h3>
+            <p>Jednoduchý odpočet dnů do vybraného data pro plánování termínů a událostí.</p>
+          </a>
+
+          <a class="tool-card" href="/vypocet-veku.html">
+            <div class="tool-top">
+              <span class="tool-tag">Datum a čas</span>
+              <span class="tool-icon">VĚK</span>
+            </div>
+            <h3>Výpočet věku</h3>
+            <p>Přesný výpočet věku v letech, měsících a dnech podle data narození.</p>
+          </a>
+
+          <a class="tool-card" href="/spotreba-paliva-kalkulacka.html">
+            <div class="tool-top">
+              <span class="tool-tag">Auto a provoz</span>
+              <span class="tool-icon">PAL</span>
+            </div>
+            <h3>Kalkulačka spotřeby paliva</h3>
+            <p>Výpočet spotřeby na 100 km, ceny jízdy, nákladů na kilometr i ceny celé trasy.</p>
+          </a>
+
+          <a class="tool-card" href="/bmi-kalkulacka.html">
+            <div class="tool-top">
+              <span class="tool-tag">Zdraví</span>
+              <span class="tool-icon">BMI</span>
+            </div>
+            <h3>BMI kalkulačka</h3>
+            <p>Výpočet BMI online včetně orientační váhové kategorie a přehledného výsledku.</p>
+          </a>
         </div>
       </div>
+    </section>
 
-      <div class="category-card">
-        <h3>Datum a čas</h3>
-        <p>
-          Výpočty věku, rozdílu mezi daty a plánování podle kalendáře.
-        </p>
-        <div class="link-list">
-          <a href="./vypocet-veku.html">Výpočet věku</a>
-          <a href="./kolik-dni-do-data.html">Kolik dní do data</a>
-          <a href="./pracovni-dny-kalkulacka.html">Kalkulačka pracovních dnů</a>
+    <section class="section" id="kategorie">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h2>Kategorie nástrojů</h2>
+            <p>
+              Přehled hlavních oblastí, podle kterých se bude portál dlouhodobě rozšiřovat.
+            </p>
+          </div>
+        </div>
+
+        <div class="categories-grid">
+          <div class="category-card">
+            <h3>Finance</h3>
+            <p>Kalkulačky pro hypotéky, půjčky, investice, mzdy, DPH, inflaci a převody mezi měnami.</p>
+            <div class="category-links">
+              <a href="/hypotecni-kalkulacka.html">Hypoteční kalkulačka</a>
+              <a href="/kalkulacka-pujcky.html">Kalkulačka půjčky</a>
+              <a href="/cista-mzda-kalkulacka.html">Kalkulačka čisté mzdy</a>
+              <a href="/dph-kalkulacka.html">DPH kalkulačka</a>
+              <a href="/kalkulacka-slozeneho-uroku.html">Kalkulačka složeného úroku</a>
+              <a href="/inflace-kalkulacka.html">Inflační kalkulačka</a>
+              <a href="/prevodnik-men.html">Převodník měn</a>
+            </div>
+          </div>
+
+          <div class="category-card">
+            <h3>Matematika a běžné výpočty</h3>
+            <p>Rychlé početní nástroje pro školu, práci i každodenní situace.</p>
+            <div class="category-links">
+              <a href="/procenta-kalkulacka.html">Kalkulačka procent</a>
+              <a href="/kalkulacka-prumeru.html">Kalkulačka průměru</a>
+            </div>
+          </div>
+
+          <div class="category-card">
+            <h3>Datum a čas</h3>
+            <p>Výpočty spojené s věkem, daty, termíny a pracovním kalendářem.</p>
+            <div class="category-links">
+              <a href="/vypocet-veku.html">Výpočet věku</a>
+              <a href="/kolik-dni-do-data.html">Kolik dní do data</a>
+              <a href="/pracovni-dny-kalkulacka.html">Kalkulačka pracovních dnů</a>
+            </div>
+          </div>
+
+          <div class="category-card">
+            <h3>Auto a životní styl</h3>
+            <p>Praktické nástroje pro běžný provoz a osobní použití.</p>
+            <div class="category-links">
+              <a href="/spotreba-paliva-kalkulacka.html">Kalkulačka spotřeby paliva</a>
+              <a href="/bmi-kalkulacka.html">BMI kalkulačka</a>
+            </div>
+          </div>
         </div>
       </div>
+    </section>
 
-      <div class="category-card">
-        <h3>Auto a provoz</h3>
-        <p>
-          Praktické nástroje pro řidiče a běžné provozní náklady.
-        </p>
-        <div class="link-list">
-          <a href="./spotreba-paliva-kalkulacka.html">Kalkulačka spotřeby paliva</a>
+    <section class="section" id="doporucene">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h2>Doporučené nástroje</h2>
+            <p>
+              Výběr kalkulaček, které patří mezi nejpraktičtější a nejuniverzálnější pro každodenní použití.
+            </p>
+          </div>
+        </div>
+
+        <div class="tools-grid">
+          <a class="tool-card" href="/hypotecni-kalkulacka.html">
+            <div class="tool-top">
+              <span class="tool-tag">Finance</span>
+              <span class="tool-icon">HYP</span>
+            </div>
+            <h3>Hypoteční kalkulačka</h3>
+            <p>Přehledný výpočet splátky hypotéky, celkových úroků a hlavních parametrů úvěru.</p>
+          </a>
+
+          <a class="tool-card" href="/pracovni-dny-kalkulacka.html">
+            <div class="tool-top">
+              <span class="tool-tag">Datum a čas</span>
+              <span class="tool-icon">PRÁCE</span>
+            </div>
+            <h3>Kalkulačka pracovních dnů</h3>
+            <p>Silný praktický nástroj pro plánování termínů, dovolené i administrativní výpočty.</p>
+          </a>
+
+          <a class="tool-card" href="/spotreba-paliva-kalkulacka.html">
+            <div class="tool-top">
+              <span class="tool-tag">Auto a provoz</span>
+              <span class="tool-icon">PAL</span>
+            </div>
+            <h3>Kalkulačka spotřeby paliva</h3>
+            <p>Rychlý odhad reálné spotřeby, ceny jízdy i nákladů na kilometr.</p>
+          </a>
         </div>
       </div>
+    </section>
 
-      <div class="category-card">
-        <h3>Zdraví</h3>
-        <p>
-          Praktické nástroje pro základní zdravotní a váhové výpočty.
-        </p>
-        <div class="link-list">
-          <a href="./bmi-kalkulacka.html">BMI kalkulačka</a>
+    <section class="section" id="o-webu">
+      <div class="container feature-grid">
+        <div class="content-card">
+          <h2>Online kalkulačky s důrazem na přehlednost a praktickou hodnotu</h2>
+          <p>
+            RychléVýpočty.cz jsou budované jako větší portál užitečných online kalkulaček a výpočtů.
+            Cílem není mít jen několik jednoduchých nástrojů, ale postupně vytvořit kvalitní a důvěryhodné místo,
+            kam se uživatel vrací pro rychlé a srozumitelné výsledky.
+          </p>
+          <p>
+            Každá stránka je navržená tak, aby poskytla okamžitý výsledek, jasně vysvětlila princip výpočtu
+            a zároveň působila profesionálně. Web se postupně rozšiřuje o další kalkulačky, tematické clustery
+            a silnější interní propojení mezi nástroji.
+          </p>
+        </div>
+
+        <div class="content-card">
+          <h3>Co je pro web důležité</h3>
+          <p>
+            Prioritou je jednoduché použití, důvěryhodnost, čistý design a systematické budování většího portálu.
+          </p>
+          <p>
+            Nástroje jsou zaměřené hlavně na finance, matematiku, datumové výpočty, běžný provoz a další oblasti,
+            které mají skutečnou praktickou hodnotu.
+          </p>
         </div>
       </div>
+    </section>
 
+    <section class="section">
+      <div class="container faq-grid">
+        <div class="faq-card">
+          <h3>Jak online kalkulačky fungují?</h3>
+          <p>
+            Kalkulačky používají předem definované vzorce nebo logické postupy a výpočet provedou okamžitě
+            po zadání vstupních hodnot. Výsledky jsou zobrazené přehledně a bez zbytečných kroků navíc.
+          </p>
+        </div>
+
+        <div class="faq-card">
+          <h3>Jsou nástroje zdarma?</h3>
+          <p>
+            Ano. Všechny kalkulačky na RychléVýpočty.cz jsou dostupné zdarma a fungují přímo v prohlížeči,
+            bez registrace a bez instalace.
+          </p>
+        </div>
+
+        <div class="faq-card">
+          <h3>Jsou výsledky přesné?</h3>
+          <p>
+            Výsledky vycházejí ze standardních vzorců a běžných pravidel pro daný typ výpočtu. U některých nástrojů
+            může jít o orientační hodnotu podle zadaných údajů, což je vždy na stránce jasně uvedené.
+          </p>
+        </div>
+
+        <div class="faq-card">
+          <h3>Jaké oblasti web pokrývá?</h3>
+          <p>
+            Web se zaměřuje hlavně na finance, mzdy, procenta, průměry, datumové výpočty, pracovní dny,
+            inflaci, spotřebu paliva, převod měn a další běžné praktické kalkulačky.
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      © RychléVýpočty.cz – online kalkulačky a praktické nástroje zdarma
     </div>
-  </section>
-
-  <section class="section">
-    <h2>Doporučené nástroje</h2>
-    <p class="section-intro">
-      Výběr nástrojů, které patří mezi nejpraktičtější pro každodenní použití.
-    </p>
-
-    <div class="grid">
-      <a class="card" href="./hypotecni-kalkulacka.html">
-        <div class="card-top">
-          <span class="tag">Finance</span>
-          <div class="icon">HYP</div>
-        </div>
-        <h3>Hypoteční kalkulačka</h3>
-        <p>
-          Přehledný výpočet splátky hypotéky, úroků a celkové ceny úvěru.
-        </p>
-      </a>
-
-      <a class="card" href="./pracovni-dny-kalkulacka.html">
-        <div class="card-top">
-          <span class="tag">Datum a čas</span>
-          <div class="icon">PRÁCE</div>
-        </div>
-        <h3>Kalkulačka pracovních dnů</h3>
-        <p>
-          Praktický výpočet pracovních dnů mezi dvěma daty včetně svátků.
-        </p>
-      </a>
-
-      <a class="card" href="./spotreba-paliva-kalkulacka.html">
-        <div class="card-top">
-          <span class="tag">Auto a provoz</span>
-          <div class="icon">PAL</div>
-        </div>
-        <h3>Kalkulačka spotřeby paliva</h3>
-        <p>
-          Rychlý výpočet reálné spotřeby auta a orientační ceny cesty.
-        </p>
-      </a>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="textblock">
-      <h2>Online kalkulačky pro finance, zdraví i běžné výpočty</h2>
-
-      <p>
-        RychléVýpočty.cz jsou český web zaměřený na užitečné online kalkulačky a praktické nástroje.
-        Důraz je na přehlednost, rychlé použití a srozumitelné výsledky bez zbytečné složitosti.
-      </p>
-
-      <p>
-        Na webu najdete finanční kalkulačky, matematické výpočty, nástroje pro datum a čas,
-        výpočty spojené s autem i základní zdravotní kalkulačky. Každá stránka je navržená tak,
-        aby poskytla rychlý výsledek a zároveň nabídla stručné vysvětlení výpočtu.
-      </p>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="two-col">
-
-      <div class="faq">
-        <h3>Jak fungují online kalkulačky?</h3>
-        <p>
-          Kalkulačky používají předem definované matematické vzorce nebo logické výpočty,
-          které se provedou okamžitě po zadání vstupních hodnot.
-        </p>
-
-        <h3>Jsou nástroje zdarma?</h3>
-        <p>
-          Ano. Všechny kalkulačky na RychléVýpočty.cz fungují zdarma a bez registrace.
-        </p>
-      </div>
-
-      <div class="faq">
-        <h3>Jsou výsledky přesné?</h3>
-        <p>
-          Výsledky vycházejí ze standardních vzorců a běžných pravidel pro daný typ výpočtu.
-          U některých kalkulaček může jít o orientační výsledek podle zadaných údajů.
-        </p>
-
-        <h3>Pro jaké oblasti jsou kalkulačky určené?</h3>
-        <p>
-          Web se zaměřuje na finance, zdraví, procenta, mzdy, DPH, hypotéky, půjčky, věk,
-          datumy, pracovní dny a další běžné praktické výpočty.
-        </p>
-      </div>
-
-    </div>
-  </section>
-
-  <div class="footer">
-    © RychléVýpočty.cz – online kalkulačky a praktické nástroje zdarma
-  </div>
-
-</main>
+  </footer>
 
 </body>
 </html>
