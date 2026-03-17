@@ -1,1 +1,1111 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kalkulačka průměru online zdarma | RychléVýpočty.cz</title>
+  <meta name="description" content="Spočítejte aritmetický průměr, vážený průměr, součet, počet hodnot, minimum i maximum. Přehledná kalkulačka průměru online zdarma.">
+  <meta name="keywords" content="kalkulačka průměru, průměr kalkulačka, aritmetický průměr, vážený průměr, výpočet průměru, známky průměr">
+  <meta name="author" content="RychléVýpočty.cz">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://rychlevypocty.cz/kalkulacka-prumeru.html">
 
+  <meta property="og:title" content="Kalkulačka průměru online zdarma | RychléVýpočty.cz">
+  <meta property="og:description" content="Výpočet aritmetického i váženého průměru. Zadejte čísla, známky nebo hodnoty s váhami a spočítejte výsledek během chvíle.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rychlevypocty.cz/kalkulacka-prumeru.html">
+  <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Kalkulačka průměru online zdarma | RychléVýpočty.cz">
+  <meta name="twitter:description" content="Spočítejte aritmetický i vážený průměr rychle a přehledně.">
+
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #5f6b85;
+      --primary: #2152ff;
+      --primary-dark: #183dbf;
+      --border: #dbe3f0;
+      --success: #138a4b;
+      --warning: #b66a00;
+      --danger: #c63d2f;
+      --shadow: 0 12px 32px rgba(20, 32, 70, 0.08);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #f7f9fd 0%, #eef3fb 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      padding: 18px 0;
+      border-bottom: 1px solid rgba(219, 227, 240, 0.8);
+      background: rgba(255, 255, 255, 0.84);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+
+    .brand span {
+      color: var(--primary);
+    }
+
+    .topnav {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      font-size: 0.97rem;
+    }
+
+    .hero {
+      padding: 42px 0 20px;
+    }
+
+    .breadcrumbs {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.12fr 0.88fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .hero-copy h1 {
+      font-size: clamp(2rem, 4vw, 3.15rem);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      margin: 0 0 16px;
+    }
+
+    .hero-copy p {
+      margin: 0 0 16px;
+      font-size: 1.06rem;
+      color: var(--muted);
+      max-width: 720px;
+    }
+
+    .hero-points {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .hero-pill {
+      background: rgba(33, 82, 255, 0.08);
+      color: var(--primary-dark);
+      border: 1px solid rgba(33, 82, 255, 0.12);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .hero-box {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-box h2 {
+      margin: 0 0 10px;
+      font-size: 1.2rem;
+    }
+
+    .hero-box p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.04fr 0.96fr;
+      gap: 28px;
+      align-items: start;
+      padding: 22px 0 32px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .card-header {
+      padding: 24px 24px 10px;
+    }
+
+    .card-header h2,
+    .card-header h3 {
+      margin: 0 0 8px;
+      font-size: 1.3rem;
+      letter-spacing: -0.02em;
+    }
+
+    .card-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .card-body {
+      padding: 20px 24px 24px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .tab-button {
+      border: 1px solid var(--border);
+      background: #f7faff;
+      color: var(--text);
+      padding: 11px 14px;
+      border-radius: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+
+    .tab-button.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+    }
+
+    .tab-panel {
+      display: none;
+    }
+
+    .tab-panel.active {
+      display: block;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .field label {
+      font-weight: 700;
+      font-size: 0.96rem;
+    }
+
+    .field small {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: -2px;
+    }
+
+    .field textarea,
+    .field input,
+    .field select {
+      width: 100%;
+      padding: 14px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      font-size: 1rem;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      font-family: inherit;
+    }
+
+    .field textarea {
+      min-height: 144px;
+      resize: vertical;
+    }
+
+    .field textarea:focus,
+    .field input:focus,
+    .field select:focus {
+      outline: none;
+      border-color: rgba(33, 82, 255, 0.45);
+      box-shadow: 0 0 0 4px rgba(33, 82, 255, 0.10);
+    }
+
+    .inline-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .weights-table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: #fff;
+    }
+
+    .weights-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 420px;
+    }
+
+    .weights-table th,
+    .weights-table td {
+      padding: 12px;
+      border-bottom: 1px solid #edf2fa;
+      text-align: left;
+    }
+
+    .weights-table th {
+      background: #f8fbff;
+      font-weight: 800;
+    }
+
+    .weights-table tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .weights-table input {
+      margin: 0;
+      padding: 10px 12px;
+    }
+
+    .table-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.06s ease, background 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background: #eef3ff;
+      color: var(--primary-dark);
+    }
+
+    .btn-danger {
+      background: #fff0ee;
+      color: var(--danger);
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .result-box {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+
+    .result-box.highlight {
+      background: linear-gradient(180deg, #eef7ff 0%, #f9fcff 100%);
+      border-color: rgba(33, 82, 255, 0.18);
+    }
+
+    .result-label {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .result-value {
+      font-size: clamp(1.2rem, 2.4vw, 2rem);
+      line-height: 1.15;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .info-list {
+      display: grid;
+      gap: 12px;
+      margin: 18px 0 0;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid #edf2fa;
+    }
+
+    .info-row:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .info-row span:first-child {
+      color: var(--muted);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+
+    .badge.success {
+      background: rgba(19, 138, 75, 0.10);
+      color: var(--success);
+    }
+
+    .badge.warning {
+      background: rgba(182, 106, 0, 0.11);
+      color: var(--warning);
+    }
+
+    .note {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1px solid #e7edf7;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .content-section {
+      padding: 8px 0;
+    }
+
+    .content-section h2 {
+      font-size: 1.7rem;
+      letter-spacing: -0.03em;
+      margin: 0 0 14px;
+    }
+
+    .content-section h3 {
+      font-size: 1.15rem;
+      margin: 28px 0 10px;
+    }
+
+    .content-section p {
+      color: var(--muted);
+      margin: 0 0 14px;
+    }
+
+    .content-section ul {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    .content-section li {
+      margin-bottom: 8px;
+    }
+
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .related-card {
+      display: block;
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      color: var(--text);
+      box-shadow: var(--shadow);
+    }
+
+    .related-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .related-card span {
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    footer {
+      margin-top: 40px;
+      border-top: 1px solid rgba(219, 227, 240, 0.9);
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .footer-inner {
+      padding: 24px 0 40px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .layout,
+      .related-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .container {
+        width: min(100% - 24px, 1160px);
+      }
+
+      .inline-grid,
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 28px;
+      }
+
+      .card-header,
+      .card-body,
+      .hero-box {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebApplication",
+    "name":"Kalkulačka průměru",
+    "url":"https://rychlevypocty.cz/kalkulacka-prumeru.html",
+    "applicationCategory":"EducationalApplication",
+    "operatingSystem":"Any",
+    "description":"Online kalkulačka pro výpočet aritmetického a váženého průměru.",
+    "offers":{
+      "@type":"Offer",
+      "price":"0",
+      "priceCurrency":"CZK"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"Jak se počítá aritmetický průměr?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Aritmetický průměr se vypočítá jako součet všech hodnot dělený jejich počtem. Pokud například sečtete hodnoty 5, 10 a 15, dostanete 30. Po vydělení třemi vyjde průměr 10."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Kdy použít vážený průměr?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Vážený průměr se používá tehdy, když některé hodnoty mají větší význam než jiné. Typicky jde o známky s různou vahou, ceny při různých objemech nebo výsledky z více částí hodnocení."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Jak zadat čísla do kalkulačky průměru?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Hodnoty můžete zadat oddělené čárkou, mezerou, středníkem nebo každou na nový řádek. Kalkulačka si s běžnými formáty vstupu poradí automaticky."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="/">Rychlé<span>Výpočty</span>.cz</a>
+      <nav class="topnav" aria-label="Hlavní navigace">
+        <a href="/">Domů</a>
+        <a href="/procenta-kalkulacka.html">Procenta</a>
+        <a href="/pracovni-dny-kalkulacka.html">Pracovní dny</a>
+        <a href="/vypocet-veku.html">Výpočet věku</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumbs">
+          <a href="/">RychléVýpočty.cz</a> / Kalkulačka průměru
+        </div>
+
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <h1>Kalkulačka průměru</h1>
+            <p>Spočítejte si aritmetický průměr i vážený průměr rychle a přehledně. Kalkulačka je vhodná pro známky, ceny, výsledky testů, statistická data i běžné každodenní výpočty.</p>
+            <p>Stačí zadat seznam čísel nebo hodnoty s vahami. Výsledek získáte okamžitě včetně doplňkových údajů jako součet, minimum, maximum nebo počet položek.</p>
+
+            <div class="hero-points">
+              <div class="hero-pill">Aritmetický průměr</div>
+              <div class="hero-pill">Vážený průměr</div>
+              <div class="hero-pill">Součet, minimum, maximum</div>
+              <div class="hero-pill">Známky i čísla</div>
+            </div>
+          </div>
+
+          <div class="hero-box">
+            <h2>Co kalkulačka umí</h2>
+            <p>Počítá běžný aritmetický průměr ze seznamu čísel i vážený průměr z hodnot s různou důležitostí. Výsledek doplňuje o další užitečné statistiky, které zvyšují praktickou hodnotu nástroje.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container layout">
+      <div class="card">
+        <div class="card-header">
+          <h2>Zadání hodnot</h2>
+          <p>Vyberte typ výpočtu a zadejte hodnoty, ze kterých chcete spočítat průměr.</p>
+        </div>
+        <div class="card-body">
+          <div class="tabs" role="tablist" aria-label="Typ výpočtu průměru">
+            <button class="tab-button active" type="button" data-tab="arithmetic">Aritmetický průměr</button>
+            <button class="tab-button" type="button" data-tab="weighted">Vážený průměr</button>
+          </div>
+
+          <div class="tab-panel active" id="panel-arithmetic">
+            <div class="field">
+              <label for="numberList">Seznam hodnot</label>
+              <textarea id="numberList" placeholder="Např. 10, 15, 20, 25">10, 15, 20, 25</textarea>
+              <small>Hodnoty můžete oddělit čárkou, mezerou, středníkem nebo novým řádkem.</small>
+            </div>
+
+            <div class="inline-grid">
+              <div class="field">
+                <label for="decimalPlaces">Počet desetinných míst</label>
+                <select id="decimalPlaces">
+                  <option value="0">0</option>
+                  <option value="1">1</option>
+                  <option value="2" selected>2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                </select>
+                <small>Ovlivňuje zaokrouhlení výsledků.</small>
+              </div>
+
+              <div class="field">
+                <label for="sortPreview">Zobrazení náhledu hodnot</label>
+                <select id="sortPreview">
+                  <option value="original" selected>Původní pořadí</option>
+                  <option value="asc">Seřadit vzestupně</option>
+                  <option value="desc">Seřadit sestupně</option>
+                </select>
+                <small>Ovlivňuje pomocný přehled zadaných hodnot.</small>
+              </div>
+            </div>
+
+            <div class="table-actions">
+              <button class="btn-primary" type="button" id="calcArithmeticBtn">Spočítat průměr</button>
+              <button class="btn-secondary" type="button" id="fillExampleBtn">Ukázková data</button>
+              <button class="btn-danger" type="button" id="clearArithmeticBtn">Vymazat</button>
+            </div>
+          </div>
+
+          <div class="tab-panel" id="panel-weighted">
+            <div class="weights-table-wrap">
+              <table class="weights-table" aria-label="Tabulka hodnot a vah">
+                <thead>
+                  <tr>
+                    <th>Hodnota</th>
+                    <th>Váha</th>
+                  </tr>
+                </thead>
+                <tbody id="weightedTableBody">
+                  <tr>
+                    <td><input type="number" step="any" value="1"></td>
+                    <td><input type="number" step="any" value="1"></td>
+                  </tr>
+                  <tr>
+                    <td><input type="number" step="any" value="2"></td>
+                    <td><input type="number" step="any" value="2"></td>
+                  </tr>
+                  <tr>
+                    <td><input type="number" step="any" value="3"></td>
+                    <td><input type="number" step="any" value="3"></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="table-actions">
+              <button class="btn-secondary" type="button" id="addRowBtn">Přidat řádek</button>
+              <button class="btn-secondary" type="button" id="fillWeightedExampleBtn">Ukázková data</button>
+              <button class="btn-danger" type="button" id="resetWeightedBtn">Vymazat tabulku</button>
+              <button class="btn-primary" type="button" id="calcWeightedBtn">Spočítat vážený průměr</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>Výsledek výpočtu</h2>
+          <p>Přehled hlavního výsledku i doplňkových údajů podle zadaných hodnot.</p>
+        </div>
+        <div class="card-body">
+          <div class="results-grid">
+            <div class="result-box highlight">
+              <div class="result-label">Výsledný průměr</div>
+              <div class="result-value" id="averageResult">0</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Typ výpočtu</div>
+              <div class="result-value" id="averageType">Aritmetický</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Počet hodnot</div>
+              <div class="result-value" id="countResult">0</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Součet hodnot</div>
+              <div class="result-value" id="sumResult">0</div>
+            </div>
+          </div>
+
+          <div id="resultBadge" class="badge success">Výpočet připraven</div>
+
+          <div class="info-list">
+            <div class="info-row">
+              <span>Minimum</span>
+              <strong id="minResult">0</strong>
+            </div>
+            <div class="info-row">
+              <span>Maximum</span>
+              <strong id="maxResult">0</strong>
+            </div>
+            <div class="info-row">
+              <span>Rozsah hodnot</span>
+              <strong id="rangeResult">0</strong>
+            </div>
+            <div class="info-row">
+              <span>Součet vah</span>
+              <strong id="weightsSumResult">—</strong>
+            </div>
+            <div class="info-row">
+              <span>Náhled vstupu</span>
+              <strong id="inputPreview">—</strong>
+            </div>
+          </div>
+
+          <div class="note" id="resultNote">
+            Zadejte hodnoty a spusťte výpočet. Kalkulačka podporuje běžný i vážený průměr.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container content-section">
+      <h2>Jak kalkulačka průměru funguje</h2>
+      <p>Aritmetický průměr se počítá jako součet všech zadaných hodnot dělený jejich počtem. Vážený průměr pracuje podobně, ale jednotlivé hodnoty mají různou váhu, takže některé ovlivní výsledek více než jiné.</p>
+
+      <h3>Kdy použít aritmetický průměr</h3>
+      <ul>
+        <li>když mají všechny hodnoty stejnou důležitost,</li>
+        <li>při běžném průměru známek bez vah,</li>
+        <li>u jednoduchých statistických přehledů,</li>
+        <li>při orientačním porovnání více čísel.</li>
+      </ul>
+
+      <h3>Kdy použít vážený průměr</h3>
+      <p>Vážený průměr je vhodný tehdy, když mají některé hodnoty větší význam. Typicky jde o známky s různou vahou, různé testy, ceny při různých objemech nebo dílčí výsledky, které nemají stejný dopad na finální výsledek.</p>
+
+      <h3>Na co si dát pozor</h3>
+      <p>Při váženém průměru je důležité zadat správné váhy. Pokud budou všechny váhy stejné, výsledek bude odpovídat běžnému aritmetickému průměru. Pokud je některá váha nulová, daná hodnota výsledek neovlivní.</p>
+    </section>
+
+    <section class="container content-section">
+      <h2>Související kalkulačky</h2>
+      <div class="related-grid">
+        <a class="related-card" href="/procenta-kalkulacka.html">
+          <strong>Procenta kalkulačka</strong>
+          <span>Výpočet procent, podílů a procentních změn.</span>
+        </a>
+
+        <a class="related-card" href="/pracovni-dny-kalkulacka.html">
+          <strong>Pracovní dny kalkulačka</strong>
+          <span>Výpočet pracovních dnů mezi dvěma daty.</span>
+        </a>
+
+        <a class="related-card" href="/kalkulacka-slozeneho-uroku.html">
+          <strong>Kalkulačka složeného úroku</strong>
+          <span>Výpočet růstu úspor a investic v čase.</span>
+        </a>
+
+        <a class="related-card" href="/vypocet-veku.html">
+          <strong>Výpočet věku</strong>
+          <span>Rychlý výpočet věku podle data narození.</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      © 2026 RychléVýpočty.cz — online kalkulačky a praktické výpočty pro každodenní použití.
+    </div>
+  </footer>
+
+  <script>
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabPanels = document.querySelectorAll('.tab-panel');
+
+    const numberList = document.getElementById('numberList');
+    const decimalPlaces = document.getElementById('decimalPlaces');
+    const sortPreview = document.getElementById('sortPreview');
+    const weightedTableBody = document.getElementById('weightedTableBody');
+
+    const outputs = {
+      averageResult: document.getElementById('averageResult'),
+      averageType: document.getElementById('averageType'),
+      countResult: document.getElementById('countResult'),
+      sumResult: document.getElementById('sumResult'),
+      minResult: document.getElementById('minResult'),
+      maxResult: document.getElementById('maxResult'),
+      rangeResult: document.getElementById('rangeResult'),
+      weightsSumResult: document.getElementById('weightsSumResult'),
+      inputPreview: document.getElementById('inputPreview'),
+      resultBadge: document.getElementById('resultBadge'),
+      resultNote: document.getElementById('resultNote')
+    };
+
+    let activeTab = 'arithmetic';
+
+    function setActiveTab(tabName) {
+      activeTab = tabName;
+
+      tabButtons.forEach(button => {
+        button.classList.toggle('active', button.dataset.tab === tabName);
+      });
+
+      tabPanels.forEach(panel => {
+        panel.classList.toggle('active', panel.id === `panel-${tabName}`);
+      });
+
+      if (tabName === 'arithmetic') {
+        calculateArithmetic();
+      } else {
+        calculateWeighted();
+      }
+    }
+
+    function parseNumberList(input) {
+      return input
+        .replace(/\n/g, ' ')
+        .replace(/;/g, ' ')
+        .replace(/,/g, ' ')
+        .split(/\s+/)
+        .map(value => value.trim().replace(',', '.'))
+        .filter(Boolean)
+        .map(Number)
+        .filter(value => !Number.isNaN(value));
+    }
+
+    function formatNumber(value, digits = 2) {
+      return new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: digits
+      }).format(value);
+    }
+
+    function getSelectedDigits() {
+      return Number(decimalPlaces.value);
+    }
+
+    function formatValue(value) {
+      return formatNumber(value, getSelectedDigits());
+    }
+
+    function updateCommonResults(data) {
+      outputs.averageResult.textContent = data.averageText;
+      outputs.averageType.textContent = data.type;
+      outputs.countResult.textContent = data.count;
+      outputs.sumResult.textContent = data.sumText;
+      outputs.minResult.textContent = data.minText;
+      outputs.maxResult.textContent = data.maxText;
+      outputs.rangeResult.textContent = data.rangeText;
+      outputs.weightsSumResult.textContent = data.weightsSumText;
+      outputs.inputPreview.textContent = data.preview;
+      outputs.resultBadge.className = data.badgeClass;
+      outputs.resultBadge.textContent = data.badgeText;
+      outputs.resultNote.textContent = data.note;
+    }
+
+    function renderEmptyState(message) {
+      updateCommonResults({
+        averageText: '0',
+        type: activeTab === 'arithmetic' ? 'Aritmetický' : 'Vážený',
+        count: '0',
+        sumText: '0',
+        minText: '0',
+        maxText: '0',
+        rangeText: '0',
+        weightsSumText: activeTab === 'weighted' ? '0' : '—',
+        preview: '—',
+        badgeClass: 'badge warning',
+        badgeText: 'Chybí vstupní data',
+        note: message
+      });
+    }
+
+    function calculateArithmetic() {
+      const values = parseNumberList(numberList.value);
+
+      if (!values.length) {
+        renderEmptyState('Zadejte alespoň jednu číselnou hodnotu pro výpočet aritmetického průměru.');
+        return;
+      }
+
+      const sum = values.reduce((acc, value) => acc + value, 0);
+      const average = sum / values.length;
+      const min = Math.min(...values);
+      const max = Math.max(...values);
+      const range = max - min;
+
+      let previewValues = [...values];
+      if (sortPreview.value === 'asc') {
+        previewValues.sort((a, b) => a - b);
+      } else if (sortPreview.value === 'desc') {
+        previewValues.sort((a, b) => b - a);
+      }
+
+      const preview = previewValues.slice(0, 8).map(value => formatValue(value)).join(', ') + (previewValues.length > 8 ? '…' : '');
+
+      updateCommonResults({
+        averageText: formatValue(average),
+        type: 'Aritmetický',
+        count: String(values.length),
+        sumText: formatValue(sum),
+        minText: formatValue(min),
+        maxText: formatValue(max),
+        rangeText: formatValue(range),
+        weightsSumText: '—',
+        preview: preview || '—',
+        badgeClass: 'badge success',
+        badgeText: values.length >= 5 ? 'Výpočet hotov' : 'Rychlý výpočet',
+        note: 'Aritmetický průměr byl spočítán jako součet všech hodnot dělený jejich počtem.'
+      });
+    }
+
+    function addWeightedRow(value = '', weight = '') {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td><input type="number" step="any" value="${value}"></td>
+        <td><input type="number" step="any" value="${weight}"></td>
+      `;
+      weightedTableBody.appendChild(row);
+
+      row.querySelectorAll('input').forEach(input => {
+        input.addEventListener('input', calculateWeighted);
+      });
+    }
+
+    function getWeightedRows() {
+      return Array.from(weightedTableBody.querySelectorAll('tr')).map(row => {
+        const inputs = row.querySelectorAll('input');
+        return {
+          value: Number(inputs[0].value),
+          weight: Number(inputs[1].value)
+        };
+      }).filter(item => !Number.isNaN(item.value) && !Number.isNaN(item.weight) && item.weight >= 0);
+    }
+
+    function calculateWeighted() {
+      const rows = getWeightedRows();
+      const validRows = rows.filter(item => item.weight > 0);
+
+      if (!validRows.length) {
+        renderEmptyState('Zadejte alespoň jednu hodnotu s vahou větší než 0 pro výpočet váženého průměru.');
+        return;
+      }
+
+      const weightedSum = validRows.reduce((acc, item) => acc + (item.value * item.weight), 0);
+      const weightsSum = validRows.reduce((acc, item) => acc + item.weight, 0);
+
+      if (weightsSum === 0) {
+        renderEmptyState('Součet vah nesmí být 0.');
+        return;
+      }
+
+      const average = weightedSum / weightsSum;
+      const values = validRows.map(item => item.value);
+      const sum = values.reduce((acc, value) => acc + value, 0);
+      const min = Math.min(...values);
+      const max = Math.max(...values);
+      const range = max - min;
+
+      const preview = validRows
+        .slice(0, 6)
+        .map(item => `${formatValue(item.value)} × ${formatValue(item.weight)}`)
+        .join(', ') + (validRows.length > 6 ? '…' : '');
+
+      updateCommonResults({
+        averageText: formatValue(average),
+        type: 'Vážený',
+        count: String(validRows.length),
+        sumText: formatValue(sum),
+        minText: formatValue(min),
+        maxText: formatValue(max),
+        rangeText: formatValue(range),
+        weightsSumText: formatValue(weightsSum),
+        preview: preview || '—',
+        badgeClass: 'badge success',
+        badgeText: validRows.length >= 4 ? 'Vážený výpočet hotov' : 'Výpočet hotov',
+        note: 'Vážený průměr byl spočítán jako součet součinů hodnot a vah dělený součtem všech vah.'
+      });
+    }
+
+    document.getElementById('calcArithmeticBtn').addEventListener('click', calculateArithmetic);
+    document.getElementById('calcWeightedBtn').addEventListener('click', calculateWeighted);
+
+    document.getElementById('fillExampleBtn').addEventListener('click', function() {
+      numberList.value = '12, 18, 15, 21, 9, 14';
+      calculateArithmetic();
+    });
+
+    document.getElementById('clearArithmeticBtn').addEventListener('click', function() {
+      numberList.value = '';
+      calculateArithmetic();
+    });
+
+    document.getElementById('addRowBtn').addEventListener('click', function() {
+      addWeightedRow('', '');
+    });
+
+    document.getElementById('fillWeightedExampleBtn').addEventListener('click', function() {
+      weightedTableBody.innerHTML = '';
+      addWeightedRow(1, 1);
+      addWeightedRow(2, 2);
+      addWeightedRow(1, 3);
+      addWeightedRow(3, 2);
+      calculateWeighted();
+    });
+
+    document.getElementById('resetWeightedBtn').addEventListener('click', function() {
+      weightedTableBody.innerHTML = '';
+      addWeightedRow('', '');
+      addWeightedRow('', '');
+      addWeightedRow('', '');
+      calculateWeighted();
+    });
+
+    numberList.addEventListener('input', calculateArithmetic);
+    decimalPlaces.addEventListener('change', function() {
+      if (activeTab === 'arithmetic') {
+        calculateArithmetic();
+      } else {
+        calculateWeighted();
+      }
+    });
+    sortPreview.addEventListener('change', calculateArithmetic);
+
+    tabButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        setActiveTab(button.dataset.tab);
+      });
+    });
+
+    Array.from(weightedTableBody.querySelectorAll('input')).forEach(input => {
+      input.addEventListener('input', calculateWeighted);
+    });
+
+    calculateArithmetic();
+  </script>
+</body>
+</html>
