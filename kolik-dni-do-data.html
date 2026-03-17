@@ -1,290 +1,1005 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="cs">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kolik dní do data online zdarma | RychléVýpočty.cz</title>
+  <meta name="description" content="Spočítejte, kolik dní zbývá do vybraného data. Přehledná kalkulačka ukáže počet dní, týdnů, měsíců i základní časový přehled do termínu nebo události.">
+  <meta name="keywords" content="kolik dní do data, kalkulačka dnů, dny do data, odpočet do data, počet dní do termínu, dny mezi daty">
+  <meta name="author" content="RychléVýpočty.cz">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://rychlevypocty.cz/kolik-dni-do-data.html">
 
-<title>Kolik dní do data | Výpočet dní online | RychléVýpočty.cz</title>
+  <meta property="og:title" content="Kolik dní do data online zdarma | RychléVýpočty.cz">
+  <meta property="og:description" content="Zjistěte, kolik dní zbývá do vybraného data. Přehledný odpočet do termínu, události nebo konkrétního dne.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rychlevypocty.cz/kolik-dni-do-data.html">
+  <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg">
 
-<meta name="description" content="Zjistěte kolik dní zbývá do zvoleného data. Jednoduchá kalkulačka pro výpočet počtu dní mezi dneškem a zadaným datem.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Kolik dní do data online zdarma | RychléVýpočty.cz">
+  <meta name="twitter:description" content="Spočítejte odpočet dnů do zvoleného data přehledně a zdarma.">
 
-<meta name="robots" content="index,follow">
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #5f6b85;
+      --primary: #2152ff;
+      --primary-dark: #183dbf;
+      --border: #dbe3f0;
+      --success: #138a4b;
+      --warning: #b66a00;
+      --danger: #c63d2f;
+      --shadow: 0 12px 32px rgba(20, 32, 70, 0.08);
+      --radius: 18px;
+    }
 
-<style>
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
 
-:root{
---bg:#020617;
---panel:#0f172a;
---card:#111827;
---text:#e5e7eb;
---muted:#94a3b8;
---accent:#22c55e;
---accent2:#38bdf8;
---border:rgba(255,255,255,.08);
-}
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #f7f9fd 0%, #eef3fb 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
 
-*{box-sizing:border-box}
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
 
-body{
-margin:0;
-font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-background:linear-gradient(180deg,var(--bg) 0%, #0f172a 100%);
-color:var(--text);
-min-height:100vh;
-}
+    a:hover { text-decoration: underline; }
 
-a{
-color:var(--accent2);
-text-decoration:none
-}
+    .container {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+    }
 
-.wrap{
-max-width:1000px;
-margin:auto;
-padding:28px 18px 60px;
-}
+    .topbar {
+      padding: 18px 0;
+      border-bottom: 1px solid rgba(219, 227, 240, 0.8);
+      background: rgba(255, 255, 255, 0.84);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
 
-.back{
-margin-bottom:18px;
-display:inline-block;
-font-size:14px;
-}
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
 
-.hero{
-text-align:center;
-margin-bottom:30px
-}
+    .brand {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
 
-h1{
-margin:0 0 12px;
-font-size:clamp(34px,5vw,54px);
-}
+    .brand span { color: var(--primary); }
 
-.sub{
-color:var(--muted);
-max-width:720px;
-margin:auto;
-line-height:1.6
-}
+    .topnav {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      font-size: 0.97rem;
+    }
 
-.layout{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:22px;
-margin-top:30px
-}
+    .hero {
+      padding: 42px 0 20px;
+    }
 
-.panel{
-background:rgba(17,24,39,.92);
-border:1px solid var(--border);
-border-radius:24px;
-padding:24px
-}
+    .breadcrumbs {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
 
-label{
-display:block;
-margin-bottom:8px;
-color:#cbd5e1;
-font-size:14px;
-font-weight:600
-}
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.12fr 0.88fr;
+      gap: 28px;
+      align-items: start;
+    }
 
-input{
-width:100%;
-padding:14px;
-border-radius:14px;
-border:1px solid var(--border);
-background:#020617;
-color:white;
-font-size:16px
-}
+    .hero-copy h1 {
+      font-size: clamp(2rem, 4vw, 3.15rem);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      margin: 0 0 16px;
+    }
 
-button{
-margin-top:16px;
-padding:16px;
-width:100%;
-border:none;
-border-radius:16px;
-background:linear-gradient(90deg,var(--accent) 0%, #16a34a 100%);
-font-size:16px;
-font-weight:700;
-cursor:pointer;
-color:#052e16
-}
+    .hero-copy p {
+      margin: 0 0 16px;
+      font-size: 1.06rem;
+      color: var(--muted);
+      max-width: 760px;
+    }
 
-.result-main{
-font-size:40px;
-font-weight:800;
-margin-bottom:16px
-}
+    .hero-points {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
 
-.stat{
-background:rgba(255,255,255,.04);
-border:1px solid var(--border);
-border-radius:16px;
-padding:16px;
-margin-bottom:12px
-}
+    .hero-pill {
+      background: rgba(33, 82, 255, 0.08);
+      color: var(--primary-dark);
+      border: 1px solid rgba(33, 82, 255, 0.12);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
 
-.stat-label{
-font-size:14px;
-color:var(--muted);
-margin-bottom:4px
-}
+    .hero-box {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
 
-.stat-value{
-font-size:22px;
-font-weight:700
-}
+    .hero-box h2 {
+      margin: 0 0 10px;
+      font-size: 1.2rem;
+    }
 
-.summary{
-margin-top:12px;
-color:var(--muted);
-line-height:1.7
-}
+    .hero-box p {
+      margin: 0 0 10px;
+      color: var(--muted);
+    }
 
-.section{
-margin-top:28px
-}
+    .hero-box p:last-child {
+      margin-bottom: 0;
+    }
 
-.content-box{
-background:rgba(17,24,39,.92);
-border:1px solid var(--border);
-border-radius:24px;
-padding:24px;
-line-height:1.8;
-color:var(--muted)
-}
+    .layout {
+      display: grid;
+      grid-template-columns: 1.02fr 0.98fr;
+      gap: 28px;
+      align-items: start;
+      padding: 22px 0 32px;
+    }
 
-.footer{
-text-align:center;
-margin-top:36px;
-color:var(--muted);
-font-size:14px
-}
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
 
-@media(max-width:900px){
-.layout{
-grid-template-columns:1fr
-}
-}
+    .card-header {
+      padding: 24px 24px 10px;
+    }
 
-</style>
+    .card-header h2,
+    .card-header h3 {
+      margin: 0 0 8px;
+      font-size: 1.3rem;
+      letter-spacing: -0.02em;
+    }
+
+    .card-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .card-body {
+      padding: 20px 24px 24px;
+    }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .field label {
+      font-weight: 700;
+      font-size: 0.96rem;
+    }
+
+    .field small {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: -2px;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      padding: 14px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      font-size: 1rem;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      font-family: inherit;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      outline: none;
+      border-color: rgba(33, 82, 255, 0.45);
+      box-shadow: 0 0 0 4px rgba(33, 82, 255, 0.10);
+    }
+
+    .full { grid-column: 1 / -1; }
+
+    .quick-links {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-top: 6px;
+    }
+
+    .quick-btn {
+      border: 1px solid var(--border);
+      background: #fbfdff;
+      color: var(--text);
+      padding: 12px 14px;
+      border-radius: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .quick-btn:hover {
+      background: #f3f7ff;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.06s ease, background 0.15s ease;
+    }
+
+    button:hover { transform: translateY(-1px); }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover { background: var(--primary-dark); }
+
+    .btn-secondary {
+      background: #eef3ff;
+      color: var(--primary-dark);
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .result-box {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+
+    .result-box.highlight {
+      background: linear-gradient(180deg, #eef7ff 0%, #f9fcff 100%);
+      border-color: rgba(33, 82, 255, 0.18);
+    }
+
+    .result-label {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .result-value {
+      font-size: clamp(1.2rem, 2.4vw, 2rem);
+      line-height: 1.15;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      word-break: break-word;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+
+    .badge.success {
+      background: rgba(19, 138, 75, 0.10);
+      color: var(--success);
+    }
+
+    .badge.warning {
+      background: rgba(182, 106, 0, 0.11);
+      color: var(--warning);
+    }
+
+    .badge.danger {
+      background: rgba(198, 61, 47, 0.10);
+      color: var(--danger);
+    }
+
+    .info-list {
+      display: grid;
+      gap: 12px;
+      margin: 18px 0 0;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid #edf2fa;
+    }
+
+    .info-row:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .info-row span:first-child { color: var(--muted); }
+
+    .note {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1px solid #e7edf7;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 18px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: #fff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 720px;
+    }
+
+    th, td {
+      padding: 14px;
+      text-align: left;
+      border-bottom: 1px solid #edf2fa;
+      font-size: 0.96rem;
+    }
+
+    th {
+      background: #f8fbff;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    tr:last-child td { border-bottom: 0; }
+
+    .content-section {
+      padding: 8px 0;
+    }
+
+    .content-section h2 {
+      font-size: 1.7rem;
+      letter-spacing: -0.03em;
+      margin: 0 0 14px;
+    }
+
+    .content-section h3 {
+      font-size: 1.15rem;
+      margin: 28px 0 10px;
+    }
+
+    .content-section p {
+      color: var(--muted);
+      margin: 0 0 14px;
+    }
+
+    .content-section ul {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    .content-section li { margin-bottom: 8px; }
+
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .related-card {
+      display: block;
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      color: var(--text);
+      box-shadow: var(--shadow);
+    }
+
+    .related-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .related-card span {
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    footer {
+      margin-top: 40px;
+      border-top: 1px solid rgba(219, 227, 240, 0.9);
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .footer-inner {
+      padding: 24px 0 40px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .layout,
+      .related-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .container {
+        width: min(100% - 24px, 1160px);
+      }
+
+      .field-grid,
+      .results-grid,
+      .quick-links {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 28px;
+      }
+
+      .card-header,
+      .card-body,
+      .hero-box {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebApplication",
+    "name":"Kolik dní do data",
+    "url":"https://rychlevypocty.cz/kolik-dni-do-data.html",
+    "applicationCategory":"UtilitiesApplication",
+    "operatingSystem":"Any",
+    "description":"Online kalkulačka pro výpočet počtu dní do vybraného data.",
+    "offers":{
+      "@type":"Offer",
+      "price":"0",
+      "priceCurrency":"CZK"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"Jak zjistit, kolik dní zbývá do data?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Stačí porovnat dnešní datum nebo jiné referenční datum s cílovým datem. Kalkulačka vypočítá rozdíl v kalendářních dnech a může přidat i přehled v týdnech nebo měsících."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Lze počítat i od jiného data než od dneška?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Ano. Kalkulačka umožňuje zadat vlastní výchozí datum, takže můžete počítat nejen od dneška, ale i mezi libovolnými dvěma daty."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Hodí se kalkulačka i pro minulá data?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Ano. Pokud je cílové datum v minulosti, kalkulačka ukáže, kolik dní od daného data už uplynulo."
+        }
+      }
+    ]
+  }
+  </script>
 </head>
-
 <body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="/">Rychlé<span>Výpočty</span>.cz</a>
+      <nav class="topnav" aria-label="Hlavní navigace">
+        <a href="/">Domů</a>
+        <a href="/vypocet-veku.html">Výpočet věku</a>
+        <a href="/pracovni-dny-kalkulacka.html">Pracovní dny</a>
+        <a href="/kalkulacka-prumeru.html">Průměr</a>
+      </nav>
+    </div>
+  </header>
 
-<main class="wrap">
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumbs">
+          <a href="/">RychléVýpočty.cz</a> / Kolik dní do data
+        </div>
 
-<a class="back" href="./index.html">← zpět na přehled kalkulaček</a>
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <h1>Kolik dní do data</h1>
+            <p>Spočítejte, kolik dní zbývá do vybraného data nebo kolik dní od zvoleného dne už uplynulo. Kalkulačka se hodí pro termíny, události, narozeniny, dovolenou i běžné plánování.</p>
+            <p>Výsledek ukáže nejen počet dní, ale i orientační přepočet na týdny, měsíce a základní přehled mezi zadanými daty.</p>
 
-<section class="hero">
+            <div class="hero-points">
+              <div class="hero-pill">Počet dní do data</div>
+              <div class="hero-pill">Minulé i budoucí datum</div>
+              <div class="hero-pill">Týdny a měsíce</div>
+              <div class="hero-pill">Rychlé předvolby</div>
+            </div>
+          </div>
 
-<h1>Kolik dní do data</h1>
+          <div class="hero-box">
+            <h2>Co kalkulačka umí</h2>
+            <p>Porovná výchozí a cílové datum, vypočítá počet dnů mezi nimi a doplní orientační rozklad do týdnů a měsíců. Hodí se pro rychlé odpočty i zpětné dohledání, kolik dní od nějaké události uplynulo.</p>
+            <p>Výchozí datum je automaticky nastavené na dnešek, ale můžete si zadat i vlastní počáteční den.</p>
+          </div>
+        </div>
+      </div>
+    </section>
 
-<p class="sub">
-Zadejte libovolné datum a zjistěte kolik dní zbývá do daného dne.
-Kalkulačka automaticky počítá rozdíl mezi dnešním datem a zadaným datem.
-</p>
+    <section class="container layout">
+      <div class="card">
+        <div class="card-header">
+          <h2>Zadání dat</h2>
+          <p>Vyberte cílové datum a případně upravte výchozí datum, od kterého chcete počítat.</p>
+        </div>
+        <div class="card-body">
+          <div class="field-grid">
+            <div class="field">
+              <label for="startDate">Počáteční datum</label>
+              <input type="date" id="startDate">
+              <small>Výchozí datum, od kterého se rozdíl počítá.</small>
+            </div>
 
-</section>
+            <div class="field">
+              <label for="targetDate">Cílové datum</label>
+              <input type="date" id="targetDate">
+              <small>Datum události, termínu nebo jiného dne.</small>
+            </div>
 
-<section class="layout">
+            <div class="field full">
+              <label for="calculationMode">Způsob výpočtu</label>
+              <select id="calculationMode">
+                <option value="exact" selected>Přesný rozdíl mezi daty</option>
+                <option value="inclusive">Včetně počátečního i cílového dne</option>
+              </select>
+              <small>Určuje, zda se mají krajní dny do rozdílu započítat.</small>
+            </div>
+          </div>
 
-<div class="panel">
+          <div class="quick-links">
+            <button type="button" class="quick-btn" data-offset="7">Za 7 dní</button>
+            <button type="button" class="quick-btn" data-offset="30">Za 30 dní</button>
+            <button type="button" class="quick-btn" data-offset="100">Za 100 dní</button>
+            <button type="button" class="quick-btn" data-offset="365">Za 1 rok</button>
+          </div>
 
-<h2>Zadejte datum</h2>
+          <div class="actions">
+            <button class="btn-primary" type="button" id="calculateBtn">Spočítat rozdíl</button>
+            <button class="btn-secondary" type="button" id="resetBtn">Obnovit výchozí hodnoty</button>
+          </div>
+        </div>
+      </div>
 
-<label for="targetDate">Datum</label>
-<input id="targetDate" type="date">
+      <div class="card">
+        <div class="card-header">
+          <h2>Výsledek výpočtu</h2>
+          <p>Přehled počtu dní, týdnů a základní interpretace rozdílu mezi daty.</p>
+        </div>
+        <div class="card-body">
+          <div class="results-grid">
+            <div class="result-box highlight">
+              <div class="result-label">Počet dní</div>
+              <div class="result-value" id="daysResult">0</div>
+            </div>
 
-<button onclick="calculateDays()">Spočítat</button>
+            <div class="result-box">
+              <div class="result-label">Stav</div>
+              <div class="result-value" id="statusResult">—</div>
+            </div>
 
-</div>
+            <div class="result-box">
+              <div class="result-label">Týdny a dny</div>
+              <div class="result-value" id="weeksResult">0</div>
+            </div>
 
-<div class="panel">
+            <div class="result-box">
+              <div class="result-label">Orientační měsíce</div>
+              <div class="result-value" id="monthsResult">0</div>
+            </div>
+          </div>
 
-<h2>Výsledek</h2>
+          <div id="resultBadge" class="badge success">Výpočet připraven</div>
 
-<div class="result-main" id="daysResult">—</div>
+          <div class="info-list">
+            <div class="info-row">
+              <span>Počáteční datum</span>
+              <strong id="startDateResult">—</strong>
+            </div>
+            <div class="info-row">
+              <span>Cílové datum</span>
+              <strong id="targetDateResult">—</strong>
+            </div>
+            <div class="info-row">
+              <span>Směr rozdílu</span>
+              <strong id="directionResult">—</strong>
+            </div>
+            <div class="info-row">
+              <span>Rozdíl v měsících</span>
+              <strong id="calendarMonthsResult">0</strong>
+            </div>
+            <div class="info-row">
+              <span>Rozdíl v letech</span>
+              <strong id="yearsResult">0</strong>
+            </div>
+          </div>
 
-<div class="stat">
-<div class="stat-label">Týdny</div>
-<div class="stat-value" id="weeksResult">—</div>
-</div>
+          <div class="note" id="resultNote">
+            Zadejte počáteční a cílové datum a kalkulačka spočítá přesný rozdíl.
+          </div>
+        </div>
+      </div>
+    </section>
 
-<div class="stat">
-<div class="stat-label">Měsíce (orientačně)</div>
-<div class="stat-value" id="monthsResult">—</div>
-</div>
+    <section class="container">
+      <div class="card">
+        <div class="card-header">
+          <h3>Přehled rozdílu mezi daty</h3>
+          <p>Jednoduchý souhrn hlavních jednotek a interpretace zadaného časového rozdílu.</p>
+        </div>
+        <div class="card-body">
+          <div class="table-wrap">
+            <table aria-label="Přehled rozdílu mezi daty">
+              <thead>
+                <tr>
+                  <th>Položka</th>
+                  <th>Hodnota</th>
+                  <th>Poznámka</th>
+                </tr>
+              </thead>
+              <tbody id="summaryTableBody">
+                <tr>
+                  <td>Rozdíl mezi daty</td>
+                  <td>—</td>
+                  <td>Po výpočtu se zobrazí detailní přehled.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
 
-<div class="summary" id="summaryText">
-Zadejte datum a kalkulačka spočítá rozdíl v dnech.
-</div>
+    <section class="container content-section">
+      <h2>Jak kalkulačka dnů do data funguje</h2>
+      <p>Kalkulačka porovná počáteční datum s cílovým datem a vypočítá přesný rozdíl v kalendářních dnech. Výsledek může být kladný, pokud cílové datum teprve přijde, nebo záporný, pokud už daný den uplynul.</p>
 
-</div>
+      <h3>Kdy se hodí použít odpočet do data</h3>
+      <ul>
+        <li>při plánování dovolené, události nebo termínu,</li>
+        <li>při odpočtu do narozenin, svátku nebo výročí,</li>
+        <li>při kontrole, kolik dní zbývá do splatnosti nebo uzávěrky,</li>
+        <li>při zpětném zjišťování, kolik času uplynulo od určitého dne.</li>
+      </ul>
 
-</section>
+      <h3>Co výsledek ukazuje</h3>
+      <p>Kromě počtu dní kalkulačka zobrazí i orientační přepočet na týdny, měsíce a roky. Díky tomu dostanete rychlou i srozumitelnou představu o délce celého období.</p>
 
-<section class="section">
+      <h3>Na co si dát pozor</h3>
+      <p>Rozdíl může být počítán buď přesně mezi daty, nebo včetně obou krajních dní. Tato drobná změna může u některých scénářů ovlivnit výsledek o jeden den.</p>
+    </section>
 
-<div class="content-box">
+    <section class="container content-section">
+      <h2>Související kalkulačky</h2>
+      <div class="related-grid">
+        <a class="related-card" href="/vypocet-veku.html">
+          <strong>Výpočet věku</strong>
+          <span>Přesný věk v letech, měsících a dnech podle data narození.</span>
+        </a>
 
-<h2>Jak funguje výpočet</h2>
+        <a class="related-card" href="/pracovni-dny-kalkulacka.html">
+          <strong>Kalkulačka pracovních dnů</strong>
+          <span>Počet pracovních dnů mezi dvěma daty včetně svátků.</span>
+        </a>
 
-<p>
-Kalkulačka porovnává dnešní datum se zadaným datem a vypočítá rozdíl
-v kalendářních dnech. Výsledek je možné zobrazit také v týdnech
-nebo orientačně v měsících.
-</p>
+        <a class="related-card" href="/kalkulacka-prumeru.html">
+          <strong>Kalkulačka průměru</strong>
+          <span>Výpočet aritmetického i váženého průměru.</span>
+        </a>
 
-<p>
-Tento nástroj se hodí například při plánování dovolené,
-počítání dnů do události nebo sledování termínů.
-</p>
+        <a class="related-card" href="/bmi-kalkulacka.html">
+          <strong>BMI kalkulačka</strong>
+          <span>Výpočet BMI podle výšky a hmotnosti.</span>
+        </a>
+      </div>
+    </section>
+  </main>
 
-</div>
+  <footer>
+    <div class="container footer-inner">
+      © 2026 RychléVýpočty.cz — online kalkulačky a praktické výpočty pro každodenní použití.
+    </div>
+  </footer>
 
-</section>
+  <script>
+    const startDateInput = document.getElementById('startDate');
+    const targetDateInput = document.getElementById('targetDate');
+    const calculationModeInput = document.getElementById('calculationMode');
 
-<div class="footer">
-© RychléVýpočty.cz – výpočet dní do data
-</div>
+    const outputs = {
+      daysResult: document.getElementById('daysResult'),
+      statusResult: document.getElementById('statusResult'),
+      weeksResult: document.getElementById('weeksResult'),
+      monthsResult: document.getElementById('monthsResult'),
+      resultBadge: document.getElementById('resultBadge'),
+      startDateResult: document.getElementById('startDateResult'),
+      targetDateResult: document.getElementById('targetDateResult'),
+      directionResult: document.getElementById('directionResult'),
+      calendarMonthsResult: document.getElementById('calendarMonthsResult'),
+      yearsResult: document.getElementById('yearsResult'),
+      resultNote: document.getElementById('resultNote'),
+      summaryTableBody: document.getElementById('summaryTableBody')
+    };
 
-</main>
+    function parseDate(value) {
+      const [year, month, day] = value.split('-').map(Number);
+      return new Date(year, month - 1, day);
+    }
 
-<script>
+    function dateToValue(date) {
+      const y = date.getFullYear();
+      const m = String(date.getMonth() + 1).padStart(2, '0');
+      const d = String(date.getDate()).padStart(2, '0');
+      return `${y}-${m}-${d}`;
+    }
 
-function calculateDays(){
+    function formatDateCZ(date) {
+      return new Intl.DateTimeFormat('cs-CZ', {
+        day: 'numeric',
+        month: 'numeric',
+        year: 'numeric'
+      }).format(date);
+    }
 
-const input=document.getElementById("targetDate").value
+    function formatInteger(value) {
+      return new Intl.NumberFormat('cs-CZ').format(value);
+    }
 
-if(!input){
-alert("Zadejte datum")
-return
-}
+    function daysBetween(start, end) {
+      const msPerDay = 24 * 60 * 60 * 1000;
+      const utcStart = Date.UTC(start.getFullYear(), start.getMonth(), start.getDate());
+      const utcEnd = Date.UTC(end.getFullYear(), end.getMonth(), end.getDate());
+      return Math.floor((utcEnd - utcStart) / msPerDay);
+    }
 
-const today=new Date()
-const target=new Date(input)
+    function diffCalendar(start, end) {
+      let years = end.getFullYear() - start.getFullYear();
+      let months = end.getMonth() - start.getMonth();
+      let days = end.getDate() - start.getDate();
 
-const diff=target-today
+      if (days < 0) {
+        months--;
+      }
 
-const days=Math.ceil(diff/(1000*60*60*24))
+      if (months < 0) {
+        years--;
+        months += 12;
+      }
 
-document.getElementById("daysResult").innerText=days+" dní"
+      return {
+        years: Math.abs(years),
+        months: Math.abs(years * 12 + months)
+      };
+    }
 
-document.getElementById("weeksResult").innerText=
-Math.floor(days/7)+" týdnů"
+    function calculateDifference() {
+      const startValue = startDateInput.value;
+      const targetValue = targetDateInput.value;
+      const mode = calculationModeInput.value;
 
-document.getElementById("monthsResult").innerText=
-Math.floor(days/30)+" měsíců"
+      if (!startValue || !targetValue) {
+        outputs.daysResult.textContent = '0';
+        outputs.statusResult.textContent = '—';
+        outputs.weeksResult.textContent = '0';
+        outputs.monthsResult.textContent = '0';
+        outputs.startDateResult.textContent = '—';
+        outputs.targetDateResult.textContent = '—';
+        outputs.directionResult.textContent = '—';
+        outputs.calendarMonthsResult.textContent = '0';
+        outputs.yearsResult.textContent = '0';
+        outputs.resultBadge.className = 'badge warning';
+        outputs.resultBadge.textContent = 'Chybí vstupní data';
+        outputs.resultNote.textContent = 'Vyberte počáteční i cílové datum.';
+        outputs.summaryTableBody.innerHTML = '<tr><td colspan="3">Vyberte počáteční i cílové datum.</td></tr>';
+        return;
+      }
 
-document.getElementById("summaryText").innerText=
-"Do data "+target.toLocaleDateString("cs-CZ")+" zbývá přibližně "+days+" dní."
+      const startDate = parseDate(startValue);
+      const targetDate = parseDate(targetValue);
 
-}
+      let diffDays = daysBetween(startDate, targetDate);
+      if (mode === 'inclusive') {
+        diffDays = diffDays >= 0 ? diffDays + 1 : diffDays - 1;
+      }
 
-</script>
+      const absDays = Math.abs(diffDays);
+      const weeks = Math.floor(absDays / 7);
+      const remainingDays = absDays % 7;
+      const approxMonths = absDays / 30.44;
+      const calendarDiff = diffCalendar(startDate, targetDate);
 
+      let status = 'Stejný den';
+      let direction = 'Bez rozdílu';
+      let badgeClass = 'badge success';
+      let badgeText = 'Stejný den';
+      let note = 'Počáteční a cílové datum jsou totožné.';
+
+      if (diffDays > 0) {
+        status = 'Do cílového data zbývá';
+        direction = 'Budoucí datum';
+        badgeClass = 'badge success';
+        badgeText = 'Budoucí termín';
+        note = `Do data ${formatDateCZ(targetDate)} zbývá ${formatInteger(absDays)} dní.`;
+      } else if (diffDays < 0) {
+        status = 'Od cílového data uplynulo';
+        direction = 'Minulé datum';
+        badgeClass = 'badge warning';
+        badgeText = 'Minulé datum';
+        note = `Od data ${formatDateCZ(targetDate)} uplynulo ${formatInteger(absDays)} dní.`;
+      }
+
+      outputs.daysResult.textContent = formatInteger(absDays);
+      outputs.statusResult.textContent = status;
+      outputs.weeksResult.textContent = `${formatInteger(weeks)} týdnů, ${formatInteger(remainingDays)} dní`;
+      outputs.monthsResult.textContent = new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 1
+      }).format(approxMonths);
+      outputs.startDateResult.textContent = formatDateCZ(startDate);
+      outputs.targetDateResult.textContent = formatDateCZ(targetDate);
+      outputs.directionResult.textContent = direction;
+      outputs.calendarMonthsResult.textContent = formatInteger(calendarDiff.months);
+      outputs.yearsResult.textContent = formatInteger(calendarDiff.years);
+      outputs.resultBadge.className = badgeClass;
+      outputs.resultBadge.textContent = badgeText;
+      outputs.resultNote.textContent = note;
+
+      outputs.summaryTableBody.innerHTML = `
+        <tr>
+          <td>Rozdíl v dnech</td>
+          <td>${formatInteger(absDays)}</td>
+          <td>${status}</td>
+        </tr>
+        <tr>
+          <td>Rozdíl v týdnech</td>
+          <td>${formatInteger(weeks)}</td>
+          <td>Zbytek ${formatInteger(remainingDays)} dní</td>
+        </tr>
+        <tr>
+          <td>Orientační měsíce</td>
+          <td>${new Intl.NumberFormat('cs-CZ', { minimumFractionDigits: 0, maximumFractionDigits: 1 }).format(approxMonths)}</td>
+          <td>Přibližný přepočet z počtu dní</td>
+        </tr>
+        <tr>
+          <td>Kalendářní měsíce</td>
+          <td>${formatInteger(calendarDiff.months)}</td>
+          <td>Hrubý kalendářní rozdíl</td>
+        </tr>
+      `;
+    }
+
+    function setDefaults() {
+      const today = new Date();
+      const future = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 30);
+
+      startDateInput.value = dateToValue(today);
+      targetDateInput.value = dateToValue(future);
+      calculationModeInput.value = 'exact';
+    }
+
+    document.getElementById('calculateBtn').addEventListener('click', calculateDifference);
+
+    document.getElementById('resetBtn').addEventListener('click', function() {
+      setDefaults();
+      calculateDifference();
+    });
+
+    document.querySelectorAll('.quick-btn').forEach(button => {
+      button.addEventListener('click', function() {
+        const offset = Number(button.dataset.offset);
+        const startDate = parseDate(startDateInput.value || dateToValue(new Date()));
+        const targetDate = new Date(startDate);
+        targetDate.setDate(targetDate.getDate() + offset);
+        targetDateInput.value = dateToValue(targetDate);
+        calculateDifference();
+      });
+    });
+
+    [startDateInput, targetDateInput, calculationModeInput].forEach(el => {
+      el.addEventListener('input', calculateDifference);
+      el.addEventListener('change', calculateDifference);
+    });
+
+    setDefaults();
+    calculateDifference();
+  </script>
 </body>
 </html>
