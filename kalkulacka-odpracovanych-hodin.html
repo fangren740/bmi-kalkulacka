@@ -1,1 +1,971 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <title>Kalkulačka odpracovaných hodin online zdarma | RychléVýpočty.cz</title>
+  <meta name="description" content="Spočítejte si odpracované hodiny online. Přehledná kalkulačka odpracovaných hodin pro směny, pauzy, počet pracovních dnů i orientační měsíční fond hodin.">
+  <meta name="keywords" content="kalkulačka odpracovaných hodin, odpracované hodiny, fond pracovní doby, výpočet odpracovaných hodin, pracovní doba kalkulačka">
+  <meta name="author" content="RychléVýpočty.cz">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://rychlevypocty.cz/kalkulacka-odpracovanych-hodin.html">
+
+  <meta property="og:title" content="Kalkulačka odpracovaných hodin online zdarma | RychléVýpočty.cz">
+  <meta property="og:description" content="Rychlý výpočet odpracovaných hodin podle začátku směny, konce směny, pauzy a počtu pracovních dnů.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rychlevypocty.cz/kalkulacka-odpracovanych-hodin.html">
+  <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Kalkulačka odpracovaných hodin online zdarma | RychléVýpočty.cz">
+  <meta name="twitter:description" content="Spočítejte si čistý počet odpracovaných hodin za směnu, týden nebo měsíc.">
+
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #5f6b85;
+      --primary: #2152ff;
+      --primary-dark: #183dbf;
+      --border: #dbe3f0;
+      --success: #138a4b;
+      --warning: #b66a00;
+      --shadow: 0 12px 32px rgba(20, 32, 70, 0.08);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #f7f9fd 0%, #eef3fb 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      padding: 18px 0;
+      border-bottom: 1px solid rgba(219, 227, 240, 0.8);
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+
+    .brand span {
+      color: var(--primary);
+    }
+
+    .topnav {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      font-size: 0.97rem;
+    }
+
+    .hero {
+      padding: 42px 0 20px;
+    }
+
+    .breadcrumbs {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .hero-copy h1 {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      margin: 0 0 16px;
+    }
+
+    .hero-copy p {
+      margin: 0 0 16px;
+      font-size: 1.06rem;
+      color: var(--muted);
+      max-width: 720px;
+    }
+
+    .hero-points {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .hero-pill {
+      background: rgba(33, 82, 255, 0.08);
+      color: var(--primary-dark);
+      border: 1px solid rgba(33, 82, 255, 0.12);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .hero-box {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-box h2 {
+      margin: 0 0 10px;
+      font-size: 1.2rem;
+    }
+
+    .hero-box p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.04fr 0.96fr;
+      gap: 28px;
+      align-items: start;
+      padding: 22px 0 32px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .card-header {
+      padding: 24px 24px 10px;
+    }
+
+    .card-header h2,
+    .card-header h3 {
+      margin: 0 0 8px;
+      font-size: 1.3rem;
+      letter-spacing: -0.02em;
+    }
+
+    .card-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .card-body {
+      padding: 20px 24px 24px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field label {
+      font-weight: 700;
+      font-size: 0.96rem;
+    }
+
+    .field small {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: -2px;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      padding: 14px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      font-size: 1rem;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      outline: none;
+      border-color: rgba(33, 82, 255, 0.45);
+      box-shadow: 0 0 0 4px rgba(33, 82, 255, 0.10);
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.06s ease, background 0.15s ease, opacity 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background: #eef3ff;
+      color: var(--primary-dark);
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .result-box {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+
+    .result-label {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .result-value {
+      font-size: clamp(1.2rem, 2.2vw, 1.9rem);
+      line-height: 1.15;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .highlight {
+      background: linear-gradient(180deg, #eef7ff 0%, #f9fcff 100%);
+      border-color: rgba(33, 82, 255, 0.18);
+    }
+
+    .info-list {
+      display: grid;
+      gap: 12px;
+      margin: 18px 0 0;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid #edf2fa;
+    }
+
+    .info-row:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .info-row span:first-child {
+      color: var(--muted);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+
+    .badge.success {
+      background: rgba(19, 138, 75, 0.10);
+      color: var(--success);
+    }
+
+    .badge.warning {
+      background: rgba(182, 106, 0, 0.11);
+      color: var(--warning);
+    }
+
+    .note {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1px solid #e7edf7;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 18px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 620px;
+      background: #fff;
+    }
+
+    th, td {
+      padding: 14px 14px;
+      text-align: left;
+      border-bottom: 1px solid #edf2fa;
+      font-size: 0.96rem;
+    }
+
+    th {
+      background: #f8fbff;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .content-section {
+      padding: 8px 0 8px;
+    }
+
+    .content-section h2 {
+      font-size: 1.7rem;
+      letter-spacing: -0.03em;
+      margin: 0 0 14px;
+    }
+
+    .content-section h3 {
+      font-size: 1.15rem;
+      margin: 28px 0 10px;
+    }
+
+    .content-section p {
+      color: var(--muted);
+      margin: 0 0 14px;
+    }
+
+    .content-section ul {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    .content-section li {
+      margin-bottom: 8px;
+    }
+
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .related-card {
+      display: block;
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      color: var(--text);
+      box-shadow: var(--shadow);
+    }
+
+    .related-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .related-card span {
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    footer {
+      margin-top: 40px;
+      border-top: 1px solid rgba(219, 227, 240, 0.9);
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .footer-inner {
+      padding: 24px 0 40px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .layout,
+      .related-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .container {
+        width: min(100% - 24px, 1160px);
+      }
+
+      .form-grid,
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 28px;
+      }
+
+      .card-header,
+      .card-body,
+      .hero-box {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .info-row {
+        flex-direction: column;
+        gap: 6px;
+      }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebApplication",
+    "name":"Kalkulačka odpracovaných hodin",
+    "url":"https://rychlevypocty.cz/kalkulacka-odpracovanych-hodin.html",
+    "applicationCategory":"BusinessApplication",
+    "operatingSystem":"Any",
+    "description":"Online kalkulačka pro výpočet odpracovaných hodin podle směny, pauzy a počtu pracovních dnů.",
+    "offers":{
+      "@type":"Offer",
+      "price":"0",
+      "priceCurrency":"CZK"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"Jak se počítají odpracované hodiny za směnu?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Odpracované hodiny za směnu se spočítají jako rozdíl mezi začátkem a koncem směny po odečtení neplacené pauzy. Pokud směna přechází přes půlnoc, je potřeba počítat i s přesahem do dalšího dne."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Umí kalkulačka spočítat i týdenní nebo měsíční fond hodin?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Ano. Pokud zadáte počet pracovních dnů, kalkulačka vypočítá nejen čistý počet hodin za jednu směnu, ale i celkový součet za zadané období."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Započítává se do výsledku pauza?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Neplacená pauza se z výsledku odečítá. Díky tomu dostanete čistý počet skutečně odpracovaných hodin."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="/">Rychlé<span>Výpočty</span>.cz</a>
+      <nav class="topnav" aria-label="Hlavní navigace">
+        <a href="/">Domů</a>
+        <a href="/cista-mzda-kalkulacka.html">Čistá mzda</a>
+        <a href="/pracovni-dny-kalkulacka.html">Pracovní dny</a>
+        <a href="/kalkulacka-dovolene.html">Dovolená</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumbs">
+          <a href="/">RychléVýpočty.cz</a> / Kalkulačka odpracovaných hodin
+        </div>
+
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <h1>Kalkulačka odpracovaných hodin</h1>
+            <p>Spočítejte si čistý počet odpracovaných hodin podle začátku směny, konce směny a délky pauzy. Kalkulačka se hodí pro zaměstnance, brigádníky, směnný provoz i rychlou kontrolu fondu pracovní doby.</p>
+            <p>Zadejte čas začátku a konce směny, neplacenou pauzu a počet pracovních dnů. Výsledek získáte okamžitě pro jednu směnu i celé období.</p>
+
+            <div class="hero-points">
+              <div class="hero-pill">Čisté hodiny za směnu</div>
+              <div class="hero-pill">Týdenní a měsíční součet</div>
+              <div class="hero-pill">Přesah přes půlnoc</div>
+              <div class="hero-pill">Odečtení pauzy</div>
+            </div>
+          </div>
+
+          <div class="hero-box">
+            <h2>Co kalkulačka umí</h2>
+            <p>Vypočítá délku jedné směny po odečtení pauzy, přepočítá celkové hodiny za zadaný počet pracovních dnů a ukáže přehled i v hodinách a minutách. Funguje i pro noční směny přes půlnoc.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container layout">
+      <div class="card">
+        <div class="card-header">
+          <h2>Zadání směny</h2>
+          <p>Vyplňte začátek a konec směny, délku neplacené pauzy a počet pracovních dnů v období.</p>
+        </div>
+        <div class="card-body">
+          <form id="hoursForm">
+            <div class="form-grid">
+              <div class="field">
+                <label for="startTime">Začátek směny</label>
+                <input type="time" id="startTime" value="08:00">
+                <small>Například začátek pracovní doby.</small>
+              </div>
+
+              <div class="field">
+                <label for="endTime">Konec směny</label>
+                <input type="time" id="endTime" value="16:30">
+                <small>Směna může končit i po půlnoci.</small>
+              </div>
+
+              <div class="field">
+                <label for="breakMinutes">Neplacená pauza (minuty)</label>
+                <input type="number" id="breakMinutes" min="0" max="600" step="1" value="30" inputmode="numeric">
+                <small>Pauza se automaticky odečte z čistého času.</small>
+              </div>
+
+              <div class="field">
+                <label for="workDays">Počet pracovních dnů</label>
+                <input type="number" id="workDays" min="1" max="31" step="1" value="20" inputmode="numeric">
+                <small>Počet směn nebo pracovních dnů v období.</small>
+              </div>
+
+              <div class="field full">
+                <label for="periodType">Typ období</label>
+                <select id="periodType">
+                  <option value="month" selected>Měsíční součet</option>
+                  <option value="week">Týdenní součet</option>
+                  <option value="custom">Vlastní období</option>
+                </select>
+                <small>Slouží jen pro popis výsledku a přehled v souhrnu.</small>
+              </div>
+
+              <div class="actions full">
+                <button type="submit" class="btn-primary">Spočítat hodiny</button>
+                <button type="button" class="btn-secondary" id="resetBtn">Obnovit výchozí hodnoty</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>Výsledek výpočtu</h2>
+          <p>Přehled čistého času za jednu směnu i celkového součtu za zadané období.</p>
+        </div>
+        <div class="card-body">
+          <div class="results-grid">
+            <div class="result-box highlight">
+              <div class="result-label">Čistý čas za směnu</div>
+              <div class="result-value" id="netShift">0 h</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Hrubá délka směny</div>
+              <div class="result-value" id="grossShift">0 h</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Celkem za období</div>
+              <div class="result-value" id="periodTotal">0 h</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Celkem v minutách</div>
+              <div class="result-value" id="periodMinutes">0 min</div>
+            </div>
+          </div>
+
+          <div id="statusBadge" class="badge success">Výpočet proběhl v běžném rozsahu směny</div>
+
+          <div class="info-list">
+            <div class="info-row">
+              <span>Pauza za směnu</span>
+              <strong id="summaryBreak">0 min</strong>
+            </div>
+            <div class="info-row">
+              <span>Počet pracovních dnů</span>
+              <strong id="summaryDays">0</strong>
+            </div>
+            <div class="info-row">
+              <span>Typ období</span>
+              <strong id="summaryPeriod">–</strong>
+            </div>
+            <div class="info-row">
+              <span>Průměr za den</span>
+              <strong id="averagePerDay">0 h</strong>
+            </div>
+            <div class="info-row">
+              <span>Začátek a konec směny</span>
+              <strong id="summaryShift">–</strong>
+            </div>
+          </div>
+
+          <div class="note">
+            Kalkulačka slouží pro rychlý orientační výpočet odpracovaných hodin. Neřeší automaticky příplatky, přesčasy, svátky, noční směny ani specifická pravidla zaměstnavatele.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="card">
+        <div class="card-header">
+          <h3>Přehled výpočtu</h3>
+          <p>Souhrn hlavních hodnot pro jednu směnu a celé zadané období.</p>
+        </div>
+        <div class="card-body">
+          <div class="table-wrap">
+            <table aria-label="Přehled odpracovaných hodin">
+              <thead>
+                <tr>
+                  <th>Položka</th>
+                  <th>Hodnota</th>
+                  <th>Poznámka</th>
+                </tr>
+              </thead>
+              <tbody id="summaryTableBody">
+                <tr>
+                  <td>Délka směny</td>
+                  <td>0 h</td>
+                  <td>Hrubý čas mezi začátkem a koncem směny</td>
+                </tr>
+                <tr>
+                  <td>Čistý čas</td>
+                  <td>0 h</td>
+                  <td>Směna po odečtení pauzy</td>
+                </tr>
+                <tr>
+                  <td>Celkem za období</td>
+                  <td>0 h</td>
+                  <td>Součet za všechny pracovní dny</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container content-section">
+      <h2>Jak kalkulačka odpracovaných hodin funguje</h2>
+      <p>Kalkulačka nejdřív spočítá hrubou délku směny jako rozdíl mezi začátkem a koncem pracovní doby. Potom odečte zadanou neplacenou pauzu a výsledkem je čistý počet skutečně odpracovaných hodin za jednu směnu.</p>
+
+      <h3>K čemu se kalkulačka hodí</h3>
+      <ul>
+        <li>pro rychlou kontrolu odpracovaných hodin za den, týden nebo měsíc,</li>
+        <li>pro směnný provoz a brigády,</li>
+        <li>pro přehled o fondu pracovní doby,</li>
+        <li>jako pomocný výpočet pro navazující kalkulaci hodinové mzdy.</li>
+      </ul>
+
+      <h3>Směna přes půlnoc</h3>
+      <p>Pokud směna začíná večer a končí až další den ráno, kalkulačka s tím počítá automaticky. Díky tomu ji lze použít i pro noční směny nebo vícesměnný provoz.</p>
+
+      <h3>Co výsledek nezahrnuje</h3>
+      <p>Výpočet nezohledňuje příplatky za noc, víkendy nebo svátky, přesčasové limity ani konkrétní pravidla pracovní smlouvy. Jde o rychlou a přehlednou utility kalkulačku, ne o plnohodnotný docházkový systém.</p>
+
+      <h3>Na co navázat dál</h3>
+      <p>Pokud chcete odpracované hodiny převést na výdělek, dává smysl navázat kalkulačkou hodinové mzdy nebo kalkulačkou čisté mzdy. Právě proto tahle stránka dobře zapadá do pracovního a mzdového clusteru portálu.</p>
+    </section>
+
+    <section class="container content-section">
+      <h2>Související kalkulačky</h2>
+      <div class="related-grid">
+        <a class="related-card" href="/kalkulacka-dovolene.html">
+          <strong>Kalkulačka dovolené</strong>
+          <span>Orientační výpočet nároku na dovolenou, poměrné části a zbývajících hodin.</span>
+        </a>
+
+        <a class="related-card" href="/cista-mzda-kalkulacka.html">
+          <strong>Kalkulačka čisté mzdy</strong>
+          <span>Orientační výpočet čisté mzdy, odvodů a nákladů zaměstnavatele.</span>
+        </a>
+
+        <a class="related-card" href="/pracovni-dny-kalkulacka.html">
+          <strong>Kalkulačka pracovních dnů</strong>
+          <span>Spočítejte počet pracovních dnů mezi dvěma daty.</span>
+        </a>
+
+        <a class="related-card" href="/procenta-kalkulacka.html">
+          <strong>Kalkulačka procent</strong>
+          <span>Rychlé výpočty procent, navýšení, slevy i procentní změny.</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      © 2026 RychléVýpočty.cz — online kalkulačky a praktické výpočty pro každodenní použití.
+    </div>
+  </footer>
+
+  <script>
+    const form = document.getElementById('hoursForm');
+    const resetBtn = document.getElementById('resetBtn');
+
+    const outputs = {
+      netShift: document.getElementById('netShift'),
+      grossShift: document.getElementById('grossShift'),
+      periodTotal: document.getElementById('periodTotal'),
+      periodMinutes: document.getElementById('periodMinutes'),
+      summaryBreak: document.getElementById('summaryBreak'),
+      summaryDays: document.getElementById('summaryDays'),
+      summaryPeriod: document.getElementById('summaryPeriod'),
+      averagePerDay: document.getElementById('averagePerDay'),
+      summaryShift: document.getElementById('summaryShift'),
+      statusBadge: document.getElementById('statusBadge'),
+      summaryTableBody: document.getElementById('summaryTableBody')
+    };
+
+    function timeToMinutes(value) {
+      const [hours, minutes] = value.split(':').map(Number);
+      return (hours * 60) + minutes;
+    }
+
+    function formatHoursMinutes(totalMinutes) {
+      const safeMinutes = Math.round(totalMinutes);
+      const hours = Math.floor(safeMinutes / 60);
+      const minutes = safeMinutes % 60;
+      if (minutes === 0) {
+        return hours + ' h';
+      }
+      return hours + ' h ' + minutes + ' min';
+    }
+
+    function formatOnlyMinutes(totalMinutes) {
+      return new Intl.NumberFormat('cs-CZ').format(Math.round(totalMinutes)) + ' min';
+    }
+
+    function getPeriodLabel(value) {
+      if (value === 'month') return 'Měsíční součet';
+      if (value === 'week') return 'Týdenní součet';
+      return 'Vlastní období';
+    }
+
+    function getValues() {
+      return {
+        startTime: document.getElementById('startTime').value,
+        endTime: document.getElementById('endTime').value,
+        breakMinutes: Number(document.getElementById('breakMinutes').value),
+        workDays: Number(document.getElementById('workDays').value),
+        periodType: document.getElementById('periodType').value
+      };
+    }
+
+    function validate(values) {
+      if (!values.startTime || !values.endTime) return 'Zadejte začátek i konec směny.';
+      if (Number.isNaN(values.breakMinutes) || values.breakMinutes < 0) return 'Zadejte platnou délku pauzy.';
+      if (!values.workDays || values.workDays <= 0) return 'Zadejte platný počet pracovních dnů.';
+      return '';
+    }
+
+    function calculateHours(values) {
+      const startMinutes = timeToMinutes(values.startTime);
+      const endMinutes = timeToMinutes(values.endTime);
+
+      let grossMinutes = endMinutes - startMinutes;
+      if (grossMinutes < 0) {
+        grossMinutes += 24 * 60;
+      }
+
+      const netMinutes = Math.max(0, grossMinutes - values.breakMinutes);
+      const periodTotalMinutes = netMinutes * values.workDays;
+      const averagePerDayMinutes = values.workDays > 0 ? (periodTotalMinutes / values.workDays) : 0;
+
+      return {
+        grossMinutes,
+        netMinutes,
+        periodTotalMinutes,
+        averagePerDayMinutes
+      };
+    }
+
+    function renderTable(result) {
+      outputs.summaryTableBody.innerHTML = `
+        <tr>
+          <td>Délka směny</td>
+          <td>${formatHoursMinutes(result.grossMinutes)}</td>
+          <td>Hrubý čas mezi začátkem a koncem směny</td>
+        </tr>
+        <tr>
+          <td>Čistý čas</td>
+          <td>${formatHoursMinutes(result.netMinutes)}</td>
+          <td>Směna po odečtení pauzy</td>
+        </tr>
+        <tr>
+          <td>Celkem za období</td>
+          <td>${formatHoursMinutes(result.periodTotalMinutes)}</td>
+          <td>Součet za všechny pracovní dny</td>
+        </tr>
+      `;
+    }
+
+    function render(values, result) {
+      outputs.grossShift.textContent = formatHoursMinutes(result.grossMinutes);
+      outputs.netShift.textContent = formatHoursMinutes(result.netMinutes);
+      outputs.periodTotal.textContent = formatHoursMinutes(result.periodTotalMinutes);
+      outputs.periodMinutes.textContent = formatOnlyMinutes(result.periodTotalMinutes);
+      outputs.summaryBreak.textContent = formatOnlyMinutes(values.breakMinutes);
+      outputs.summaryDays.textContent = values.workDays.toString();
+      outputs.summaryPeriod.textContent = getPeriodLabel(values.periodType);
+      outputs.averagePerDay.textContent = formatHoursMinutes(result.averagePerDayMinutes);
+      outputs.summaryShift.textContent = values.startTime + ' – ' + values.endTime;
+
+      if (result.netMinutes > 12 * 60) {
+        outputs.statusBadge.className = 'badge warning';
+        outputs.statusBadge.textContent = 'Směna je neobvykle dlouhá';
+      } else {
+        outputs.statusBadge.className = 'badge success';
+        outputs.statusBadge.textContent = 'Výpočet proběhl v běžném rozsahu směny';
+      }
+
+      renderTable(result);
+    }
+
+    function runCalculation() {
+      const values = getValues();
+      const error = validate(values);
+
+      if (error) {
+        alert(error);
+        return;
+      }
+
+      const result = calculateHours(values);
+      render(values, result);
+    }
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      runCalculation();
+    });
+
+    ['startTime', 'endTime', 'breakMinutes', 'workDays', 'periodType'].forEach(id => {
+      document.getElementById(id).addEventListener('input', runCalculation);
+      document.getElementById(id).addEventListener('change', runCalculation);
+    });
+
+    resetBtn.addEventListener('click', function() {
+      document.getElementById('startTime').value = '08:00';
+      document.getElementById('endTime').value = '16:30';
+      document.getElementById('breakMinutes').value = 30;
+      document.getElementById('workDays').value = 20;
+      document.getElementById('periodType').value = 'month';
+      runCalculation();
+    });
+
+    runCalculation();
+  </script>
+</body>
+</html>
