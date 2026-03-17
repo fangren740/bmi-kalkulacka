@@ -1,1 +1,1056 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <title>Převodník jednotek online zdarma | Délka, hmotnost, objem, plocha, teplota | RychléVýpočty.cz</title>
+  <meta name="description" content="Převádějte jednotky online zdarma. Přehledný převodník jednotek pro délku, hmotnost, objem, plochu a teplotu s okamžitým výsledkem.">
+  <meta name="keywords" content="převodník jednotek, převody jednotek, délka, hmotnost, objem, plocha, teplota, online převod jednotek">
+  <meta name="author" content="RychléVýpočty.cz">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://rychlevypocty.cz/prevodnik-jednotek.html">
+
+  <meta property="og:title" content="Převodník jednotek online zdarma | RychléVýpočty.cz">
+  <meta property="og:description" content="Rychlý převod jednotek délky, hmotnosti, objemu, plochy a teploty online zdarma.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rychlevypocty.cz/prevodnik-jednotek.html">
+  <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Převodník jednotek online zdarma | RychléVýpočty.cz">
+  <meta name="twitter:description" content="Převádějte metry, kilogramy, litry, metry čtvereční i teplotu během pár sekund.">
+
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #5f6b85;
+      --primary: #2152ff;
+      --primary-dark: #183dbf;
+      --border: #dbe3f0;
+      --success: #138a4b;
+      --warning: #b66a00;
+      --shadow: 0 12px 32px rgba(20, 32, 70, 0.08);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #f7f9fd 0%, #eef3fb 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      padding: 18px 0;
+      border-bottom: 1px solid rgba(219, 227, 240, 0.8);
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+
+    .brand span {
+      color: var(--primary);
+    }
+
+    .topnav {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      font-size: 0.97rem;
+    }
+
+    .hero {
+      padding: 42px 0 20px;
+    }
+
+    .breadcrumbs {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .hero-copy h1 {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      margin: 0 0 16px;
+    }
+
+    .hero-copy p {
+      margin: 0 0 16px;
+      font-size: 1.06rem;
+      color: var(--muted);
+      max-width: 720px;
+    }
+
+    .hero-points {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .hero-pill {
+      background: rgba(33, 82, 255, 0.08);
+      color: var(--primary-dark);
+      border: 1px solid rgba(33, 82, 255, 0.12);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .hero-box {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-box h2 {
+      margin: 0 0 10px;
+      font-size: 1.2rem;
+    }
+
+    .hero-box p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.04fr 0.96fr;
+      gap: 28px;
+      align-items: start;
+      padding: 22px 0 32px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .card-header {
+      padding: 24px 24px 10px;
+    }
+
+    .card-header h2,
+    .card-header h3 {
+      margin: 0 0 8px;
+      font-size: 1.3rem;
+      letter-spacing: -0.02em;
+    }
+
+    .card-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .card-body {
+      padding: 20px 24px 24px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field label {
+      font-weight: 700;
+      font-size: 0.96rem;
+    }
+
+    .field small {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: -2px;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      padding: 14px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      font-size: 1rem;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      outline: none;
+      border-color: rgba(33, 82, 255, 0.45);
+      box-shadow: 0 0 0 4px rgba(33, 82, 255, 0.10);
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.06s ease, background 0.15s ease, opacity 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background: #eef3ff;
+      color: var(--primary-dark);
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .result-box {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+
+    .result-label {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .result-value {
+      font-size: clamp(1.25rem, 2.4vw, 2rem);
+      line-height: 1.15;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      word-break: break-word;
+    }
+
+    .highlight {
+      background: linear-gradient(180deg, #eef7ff 0%, #f9fcff 100%);
+      border-color: rgba(33, 82, 255, 0.18);
+    }
+
+    .quick-values {
+      display: grid;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .quick-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid #edf2fa;
+    }
+
+    .quick-row:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .quick-row span:first-child {
+      color: var(--muted);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+
+    .badge.success {
+      background: rgba(19, 138, 75, 0.10);
+      color: var(--success);
+    }
+
+    .note {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1px solid #e7edf7;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 18px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 620px;
+      background: #fff;
+    }
+
+    th, td {
+      padding: 14px 14px;
+      text-align: left;
+      border-bottom: 1px solid #edf2fa;
+      font-size: 0.96rem;
+    }
+
+    th {
+      background: #f8fbff;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .content-section {
+      padding: 8px 0 8px;
+    }
+
+    .content-section h2 {
+      font-size: 1.7rem;
+      letter-spacing: -0.03em;
+      margin: 0 0 14px;
+    }
+
+    .content-section h3 {
+      font-size: 1.15rem;
+      margin: 28px 0 10px;
+    }
+
+    .content-section p {
+      color: var(--muted);
+      margin: 0 0 14px;
+    }
+
+    .content-section ul {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    .content-section li {
+      margin-bottom: 8px;
+    }
+
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .related-card {
+      display: block;
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      color: var(--text);
+      box-shadow: var(--shadow);
+    }
+
+    .related-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .related-card span {
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    footer {
+      margin-top: 40px;
+      border-top: 1px solid rgba(219, 227, 240, 0.9);
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .footer-inner {
+      padding: 24px 0 40px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .layout,
+      .related-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .container {
+        width: min(100% - 24px, 1160px);
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 28px;
+      }
+
+      .card-header,
+      .card-body,
+      .hero-box {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .quick-row {
+        flex-direction: column;
+        gap: 6px;
+      }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebApplication",
+    "name":"Převodník jednotek",
+    "url":"https://rychlevypocty.cz/prevodnik-jednotek.html",
+    "applicationCategory":"UtilitiesApplication",
+    "operatingSystem":"Any",
+    "description":"Online převodník jednotek pro délku, hmotnost, objem, plochu a teplotu.",
+    "offers":{
+      "@type":"Offer",
+      "price":"0",
+      "priceCurrency":"CZK"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"Jak převodník jednotek funguje?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Převodník jednotek převede zadanou hodnotu z jedné jednotky do druhé pomocí předem definovaných převodních koeficientů nebo vzorců. Výsledek získáte okamžitě po zadání hodnoty a výběru jednotek."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Jaké jednotky lze převádět?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Převodník podporuje běžné jednotky délky, hmotnosti, objemu, plochy a teploty. Lze tak převádět například metry, kilometry, kilogramy, litry, metry čtvereční nebo stupně Celsia."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Je výsledek přesný?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Ano, u standardních jednotek je převod založený na přesných převodních poměrech. U teploty se používají příslušné převodní vzorce mezi stupni Celsia, Fahrenheita a Kelvina."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="/">Rychlé<span>Výpočty</span>.cz</a>
+      <nav class="topnav" aria-label="Hlavní navigace">
+        <a href="/">Domů</a>
+        <a href="/prevodnik-men.html">Převodník měn</a>
+        <a href="/procenta-kalkulacka.html">Procenta</a>
+        <a href="/kalkulacka-prumeru.html">Průměr</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumbs">
+          <a href="/">RychléVýpočty.cz</a> / Převodník jednotek
+        </div>
+
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <h1>Převodník jednotek</h1>
+            <p>Převádějte běžné jednotky délky, hmotnosti, objemu, plochy a teploty online zdarma. Převodník se hodí pro školu, práci, stavebnictví, domácnost i každodenní praktické použití.</p>
+            <p>Zadejte hodnotu, vyberte kategorii a zvolte jednotky, mezi kterými chcete převádět. Výsledek získáte okamžitě a přehledně.</p>
+
+            <div class="hero-points">
+              <div class="hero-pill">Délka</div>
+              <div class="hero-pill">Hmotnost</div>
+              <div class="hero-pill">Objem</div>
+              <div class="hero-pill">Plocha</div>
+              <div class="hero-pill">Teplota</div>
+            </div>
+          </div>
+
+          <div class="hero-box">
+            <h2>Co převodník umí</h2>
+            <p>Rychle převede základní technické i běžné jednotky. Výsledek zobrazí okamžitě a navíc ukáže i další související převody v rámci stejné kategorie.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container layout">
+      <div class="card">
+        <div class="card-header">
+          <h2>Zadání převodu</h2>
+          <p>Vyberte kategorii, zadejte hodnotu a určete výchozí i cílovou jednotku. Převodník výsledek automaticky přepočítá.</p>
+        </div>
+        <div class="card-body">
+          <form id="converterForm">
+            <div class="form-grid">
+              <div class="field">
+                <label for="category">Kategorie</label>
+                <select id="category">
+                  <option value="length" selected>Délka</option>
+                  <option value="weight">Hmotnost</option>
+                  <option value="volume">Objem</option>
+                  <option value="area">Plocha</option>
+                  <option value="temperature">Teplota</option>
+                </select>
+                <small>Vyberte typ jednotek, které chcete převádět.</small>
+              </div>
+
+              <div class="field">
+                <label for="inputValue">Hodnota</label>
+                <input type="number" id="inputValue" min="0" step="any" value="1000" inputmode="decimal">
+                <small>Zadejte číslo, které chcete převést.</small>
+              </div>
+
+              <div class="field">
+                <label for="fromUnit">Z jednotky</label>
+                <select id="fromUnit"></select>
+                <small>Výchozí jednotka převodu.</small>
+              </div>
+
+              <div class="field">
+                <label for="toUnit">Na jednotku</label>
+                <select id="toUnit"></select>
+                <small>Cílová jednotka převodu.</small>
+              </div>
+
+              <div class="actions full">
+                <button type="submit" class="btn-primary">Převést jednotky</button>
+                <button type="button" class="btn-secondary" id="swapBtn">Prohodit jednotky</button>
+                <button type="button" class="btn-secondary" id="resetBtn">Obnovit výchozí hodnoty</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>Výsledek převodu</h2>
+          <p>Přehled hlavního převodu a rychlých dalších hodnot v rámci stejné kategorie.</p>
+        </div>
+        <div class="card-body">
+          <div class="results-grid">
+            <div class="result-box highlight">
+              <div class="result-label">Výsledek převodu</div>
+              <div class="result-value" id="mainResult">0</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Zadaná hodnota</div>
+              <div class="result-value" id="inputSummary">0</div>
+            </div>
+          </div>
+
+          <div id="statusBadge" class="badge success">Převod proběhl úspěšně</div>
+
+          <div class="quick-values" id="quickValues"></div>
+
+          <div class="note">
+            Převodník používá standardní převodní poměry a vzorce. U teploty se nejedná o násobný převod, ale o výpočet podle konkrétní stupnice.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="card">
+        <div class="card-header">
+          <h3>Přehled převodu</h3>
+          <p>Souhrn hlavní hodnoty a několika dalších převodů v rámci stejné kategorie.</p>
+        </div>
+        <div class="card-body">
+          <div class="table-wrap">
+            <table aria-label="Přehled převodu jednotek">
+              <thead>
+                <tr>
+                  <th>Jednotka</th>
+                  <th>Hodnota</th>
+                  <th>Poznámka</th>
+                </tr>
+              </thead>
+              <tbody id="summaryTableBody">
+                <tr>
+                  <td>Výchozí jednotka</td>
+                  <td>0</td>
+                  <td>Zadaná hodnota</td>
+                </tr>
+                <tr>
+                  <td>Cílová jednotka</td>
+                  <td>0</td>
+                  <td>Hlavní výsledek převodu</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container content-section">
+      <h2>Jak převodník jednotek funguje</h2>
+      <p>Převodník nejprve převede zadanou hodnotu na základní jednotku dané kategorie a z ní ji následně dopočítá do požadované cílové jednotky. U délky, hmotnosti, objemu a plochy jde o klasické převodní koeficienty. U teploty se používají samostatné převodní vzorce.</p>
+
+      <h3>K čemu se převodník hodí</h3>
+      <ul>
+        <li>pro převody metrů, centimetrů, kilometrů nebo milimetrů,</li>
+        <li>pro převody kilogramů, gramů, tun nebo liber,</li>
+        <li>pro převody litrů, mililitrů a metrů krychlových,</li>
+        <li>pro převody metrů čtverečních, arů a hektarů,</li>
+        <li>pro převody teplot mezi °C, °F a K.</li>
+      </ul>
+
+      <h3>Proč mít jeden univerzální převodník</h3>
+      <p>Místo několika samostatných stránek pro každý typ jednotky je praktické mít jeden přehledný nástroj s kategoriemi. Uživatel se rychle zorientuje a snadno přepne mezi různými typy převodů podle potřeby.</p>
+
+      <h3>Na co si dát pozor</h3>
+      <p>U technických výpočtů je vždy dobré zkontrolovat, zda pracujete se správnou jednotkou i správnou kategorií. Nejčastější chybou bývá záměna metrických a imperiálních jednotek nebo omyl mezi objemem a plochou.</p>
+    </section>
+
+    <section class="container content-section">
+      <h2>Související kalkulačky</h2>
+      <div class="related-grid">
+        <a class="related-card" href="/prevodnik-men.html">
+          <strong>Převodník měn</strong>
+          <span>Přepočet mezi měnami podle vlastního kurzu a směnárenského poplatku.</span>
+        </a>
+
+        <a class="related-card" href="/kalkulacka-prumeru.html">
+          <strong>Kalkulačka průměru</strong>
+          <span>Výpočet aritmetického i váženého průměru pro různé hodnoty.</span>
+        </a>
+
+        <a class="related-card" href="/procenta-kalkulacka.html">
+          <strong>Kalkulačka procent</strong>
+          <span>Rychlý výpočet procent, procentní změny a podílu z částky.</span>
+        </a>
+
+        <a class="related-card" href="/spotreba-elektriny-kalkulacka.html">
+          <strong>Kalkulačka spotřeby elektřiny</strong>
+          <span>Výpočet spotřeby kWh a ceny provozu podle příkonu spotřebiče.</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      © 2026 RychléVýpočty.cz — online kalkulačky a praktické výpočty pro každodenní použití.
+    </div>
+  </footer>
+
+  <script>
+    const unitData = {
+      length: {
+        label: 'Délka',
+        units: {
+          mm: { label: 'Milimetr (mm)', factor: 0.001 },
+          cm: { label: 'Centimetr (cm)', factor: 0.01 },
+          m: { label: 'Metr (m)', factor: 1 },
+          km: { label: 'Kilometr (km)', factor: 1000 },
+          in: { label: 'Palec (in)', factor: 0.0254 },
+          ft: { label: 'Stopa (ft)', factor: 0.3048 }
+        },
+        defaultFrom: 'm',
+        defaultTo: 'cm',
+        quickUnits: ['mm', 'cm', 'm', 'km']
+      },
+      weight: {
+        label: 'Hmotnost',
+        units: {
+          g: { label: 'Gram (g)', factor: 0.001 },
+          kg: { label: 'Kilogram (kg)', factor: 1 },
+          t: { label: 'Tuna (t)', factor: 1000 },
+          lb: { label: 'Libra (lb)', factor: 0.45359237 },
+          oz: { label: 'Unce (oz)', factor: 0.028349523125 }
+        },
+        defaultFrom: 'kg',
+        defaultTo: 'g',
+        quickUnits: ['g', 'kg', 't', 'lb']
+      },
+      volume: {
+        label: 'Objem',
+        units: {
+          ml: { label: 'Mililitr (ml)', factor: 0.001 },
+          l: { label: 'Litr (l)', factor: 1 },
+          m3: { label: 'Metr krychlový (m³)', factor: 1000 },
+          cl: { label: 'Centilitr (cl)', factor: 0.01 },
+          gal: { label: 'Galon (US)', factor: 3.785411784 }
+        },
+        defaultFrom: 'l',
+        defaultTo: 'ml',
+        quickUnits: ['ml', 'l', 'cl', 'm3']
+      },
+      area: {
+        label: 'Plocha',
+        units: {
+          cm2: { label: 'Centimetr čtvereční (cm²)', factor: 0.0001 },
+          m2: { label: 'Metr čtvereční (m²)', factor: 1 },
+          a: { label: 'Ar (a)', factor: 100 },
+          ha: { label: 'Hektar (ha)', factor: 10000 },
+          km2: { label: 'Kilometr čtvereční (km²)', factor: 1000000 }
+        },
+        defaultFrom: 'm2',
+        defaultTo: 'ha',
+        quickUnits: ['cm2', 'm2', 'a', 'ha']
+      },
+      temperature: {
+        label: 'Teplota',
+        units: {
+          c: { label: 'Stupeň Celsia (°C)' },
+          f: { label: 'Stupeň Fahrenheita (°F)' },
+          k: { label: 'Kelvin (K)' }
+        },
+        defaultFrom: 'c',
+        defaultTo: 'f',
+        quickUnits: ['c', 'f', 'k']
+      }
+    };
+
+    const form = document.getElementById('converterForm');
+    const categoryEl = document.getElementById('category');
+    const inputValueEl = document.getElementById('inputValue');
+    const fromUnitEl = document.getElementById('fromUnit');
+    const toUnitEl = document.getElementById('toUnit');
+    const swapBtn = document.getElementById('swapBtn');
+    const resetBtn = document.getElementById('resetBtn');
+
+    const outputs = {
+      mainResult: document.getElementById('mainResult'),
+      inputSummary: document.getElementById('inputSummary'),
+      quickValues: document.getElementById('quickValues'),
+      statusBadge: document.getElementById('statusBadge'),
+      summaryTableBody: document.getElementById('summaryTableBody')
+    };
+
+    function formatNumber(value) {
+      return new Intl.NumberFormat('cs-CZ', {
+        maximumFractionDigits: 8
+      }).format(value);
+    }
+
+    function shortUnitLabel(category, unitKey) {
+      const map = {
+        mm: 'mm',
+        cm: 'cm',
+        m: 'm',
+        km: 'km',
+        in: 'in',
+        ft: 'ft',
+        g: 'g',
+        kg: 'kg',
+        t: 't',
+        lb: 'lb',
+        oz: 'oz',
+        ml: 'ml',
+        l: 'l',
+        m3: 'm³',
+        cl: 'cl',
+        gal: 'gal',
+        cm2: 'cm²',
+        m2: 'm²',
+        a: 'a',
+        ha: 'ha',
+        km2: 'km²',
+        c: '°C',
+        f: '°F',
+        k: 'K'
+      };
+      return map[unitKey] || unitKey;
+    }
+
+    function formatValueWithUnit(category, value, unitKey) {
+      return `${formatNumber(value)} ${shortUnitLabel(category, unitKey)}`;
+    }
+
+    function convertTemperature(value, from, to) {
+      let celsius = value;
+
+      if (from === 'f') {
+        celsius = (value - 32) * 5 / 9;
+      } else if (from === 'k') {
+        celsius = value - 273.15;
+      }
+
+      if (to === 'c') return celsius;
+      if (to === 'f') return (celsius * 9 / 5) + 32;
+      return celsius + 273.15;
+    }
+
+    function convertValue(category, value, from, to) {
+      if (category === 'temperature') {
+        return convertTemperature(value, from, to);
+      }
+
+      const fromFactor = unitData[category].units[from].factor;
+      const toFactor = unitData[category].units[to].factor;
+      return (value * fromFactor) / toFactor;
+    }
+
+    function buildUnitOptions(category) {
+      const data = unitData[category];
+      fromUnitEl.innerHTML = '';
+      toUnitEl.innerHTML = '';
+
+      Object.entries(data.units).forEach(([key, unit]) => {
+        const optionFrom = document.createElement('option');
+        optionFrom.value = key;
+        optionFrom.textContent = unit.label;
+        fromUnitEl.appendChild(optionFrom);
+
+        const optionTo = document.createElement('option');
+        optionTo.value = key;
+        optionTo.textContent = unit.label;
+        toUnitEl.appendChild(optionTo);
+      });
+
+      fromUnitEl.value = data.defaultFrom;
+      toUnitEl.value = data.defaultTo;
+    }
+
+    function updateUnitsForCategory() {
+      const category = categoryEl.value;
+      buildUnitOptions(category);
+      runConversion();
+    }
+
+    function getValues() {
+      return {
+        category: categoryEl.value,
+        inputValue: Number(inputValueEl.value),
+        fromUnit: fromUnitEl.value,
+        toUnit: toUnitEl.value
+      };
+    }
+
+    function validate(values) {
+      if (Number.isNaN(values.inputValue)) return 'Zadejte platnou hodnotu.';
+      if (!values.fromUnit || !values.toUnit) return 'Vyberte výchozí i cílovou jednotku.';
+      return '';
+    }
+
+    function renderQuickValues(category, baseValue) {
+      const quickUnits = unitData[category].quickUnits;
+      outputs.quickValues.innerHTML = quickUnits.map(unitKey => {
+        const converted = category === 'temperature'
+          ? convertValue(category, baseValue, unitData[category].defaultFrom, unitKey)
+          : convertValue(category, baseValue, unitData[category].defaultFrom, unitKey);
+
+        return `
+          <div class="quick-row">
+            <span>${unitData[category].units[unitKey].label}</span>
+            <strong>${formatValueWithUnit(category, converted, unitKey)}</strong>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderSummaryTable(values, mainResult, baseValue) {
+      const category = values.category;
+      const quickUnits = unitData[category].quickUnits.slice(0, 4);
+
+      let rows = `
+        <tr>
+          <td>${unitData[category].units[values.fromUnit].label}</td>
+          <td>${formatValueWithUnit(category, values.inputValue, values.fromUnit)}</td>
+          <td>Zadaná hodnota</td>
+        </tr>
+        <tr>
+          <td>${unitData[category].units[values.toUnit].label}</td>
+          <td>${formatValueWithUnit(category, mainResult, values.toUnit)}</td>
+          <td>Hlavní výsledek převodu</td>
+        </tr>
+      `;
+
+      quickUnits.forEach(unitKey => {
+        const val = convertValue(category, baseValue, unitData[category].defaultFrom, unitKey);
+        rows += `
+          <tr>
+            <td>${unitData[category].units[unitKey].label}</td>
+            <td>${formatValueWithUnit(category, val, unitKey)}</td>
+            <td>Doplňkový převod v rámci kategorie</td>
+          </tr>
+        `;
+      });
+
+      outputs.summaryTableBody.innerHTML = rows;
+    }
+
+    function runConversion() {
+      const values = getValues();
+      const error = validate(values);
+
+      if (error) {
+        alert(error);
+        return;
+      }
+
+      const result = convertValue(values.category, values.inputValue, values.fromUnit, values.toUnit);
+      const baseValue = convertValue(values.category, values.inputValue, values.fromUnit, unitData[values.category].defaultFrom);
+
+      outputs.mainResult.textContent = formatValueWithUnit(values.category, result, values.toUnit);
+      outputs.inputSummary.textContent = formatValueWithUnit(values.category, values.inputValue, values.fromUnit);
+      outputs.statusBadge.className = 'badge success';
+      outputs.statusBadge.textContent = 'Převod proběhl úspěšně';
+
+      renderQuickValues(values.category, baseValue);
+      renderSummaryTable(values, result, baseValue);
+    }
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      runConversion();
+    });
+
+    categoryEl.addEventListener('change', updateUnitsForCategory);
+
+    [inputValueEl, fromUnitEl, toUnitEl].forEach(el => {
+      el.addEventListener('input', runConversion);
+      el.addEventListener('change', runConversion);
+    });
+
+    swapBtn.addEventListener('click', function() {
+      const currentFrom = fromUnitEl.value;
+      fromUnitEl.value = toUnitEl.value;
+      toUnitEl.value = currentFrom;
+      runConversion();
+    });
+
+    resetBtn.addEventListener('click', function() {
+      categoryEl.value = 'length';
+      inputValueEl.value = 1000;
+      buildUnitOptions('length');
+      runConversion();
+    });
+
+    buildUnitOptions('length');
+    runConversion();
+  </script>
+</body>
+</html>
