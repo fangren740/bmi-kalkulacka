@@ -1,1 +1,972 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <title>Kalkulačka hodinové mzdy online zdarma | RychléVýpočty.cz</title>
+  <meta name="description" content="Spočítejte si hodinovou mzdu online. Přehledná kalkulačka hodinové mzdy pro přepočet z měsíční mzdy, odpracovaných hodin i orientačního měsíčního výdělku.">
+  <meta name="keywords" content="kalkulačka hodinové mzdy, hodinová mzda, výpočet hodinové mzdy, mzda za hodinu, přepočet mzdy na hodiny">
+  <meta name="author" content="RychléVýpočty.cz">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://rychlevypocty.cz/kalkulacka-hodinove-mzdy.html">
+
+  <meta property="og:title" content="Kalkulačka hodinové mzdy online zdarma | RychléVýpočty.cz">
+  <meta property="og:description" content="Rychlý přepočet hodinové mzdy z měsíčního příjmu a odpracovaných hodin.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rychlevypocty.cz/kalkulacka-hodinove-mzdy.html">
+  <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Kalkulačka hodinové mzdy online zdarma | RychléVýpočty.cz">
+  <meta name="twitter:description" content="Spočítejte si mzdu za hodinu, denní výdělek i orientační měsíční příjem.">
+
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #5f6b85;
+      --primary: #2152ff;
+      --primary-dark: #183dbf;
+      --border: #dbe3f0;
+      --success: #138a4b;
+      --warning: #b66a00;
+      --shadow: 0 12px 32px rgba(20, 32, 70, 0.08);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #f7f9fd 0%, #eef3fb 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      padding: 18px 0;
+      border-bottom: 1px solid rgba(219, 227, 240, 0.8);
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+
+    .brand span {
+      color: var(--primary);
+    }
+
+    .topnav {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      font-size: 0.97rem;
+    }
+
+    .hero {
+      padding: 42px 0 20px;
+    }
+
+    .breadcrumbs {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .hero-copy h1 {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      margin: 0 0 16px;
+    }
+
+    .hero-copy p {
+      margin: 0 0 16px;
+      font-size: 1.06rem;
+      color: var(--muted);
+      max-width: 720px;
+    }
+
+    .hero-points {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .hero-pill {
+      background: rgba(33, 82, 255, 0.08);
+      color: var(--primary-dark);
+      border: 1px solid rgba(33, 82, 255, 0.12);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .hero-box {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-box h2 {
+      margin: 0 0 10px;
+      font-size: 1.2rem;
+    }
+
+    .hero-box p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.04fr 0.96fr;
+      gap: 28px;
+      align-items: start;
+      padding: 22px 0 32px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .card-header {
+      padding: 24px 24px 10px;
+    }
+
+    .card-header h2,
+    .card-header h3 {
+      margin: 0 0 8px;
+      font-size: 1.3rem;
+      letter-spacing: -0.02em;
+    }
+
+    .card-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .card-body {
+      padding: 20px 24px 24px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field label {
+      font-weight: 700;
+      font-size: 0.96rem;
+    }
+
+    .field small {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: -2px;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      padding: 14px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      font-size: 1rem;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      outline: none;
+      border-color: rgba(33, 82, 255, 0.45);
+      box-shadow: 0 0 0 4px rgba(33, 82, 255, 0.10);
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.06s ease, background 0.15s ease, opacity 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background: #eef3ff;
+      color: var(--primary-dark);
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .result-box {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+
+    .result-label {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .result-value {
+      font-size: clamp(1.2rem, 2.2vw, 1.9rem);
+      line-height: 1.15;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .highlight {
+      background: linear-gradient(180deg, #eef7ff 0%, #f9fcff 100%);
+      border-color: rgba(33, 82, 255, 0.18);
+    }
+
+    .info-list {
+      display: grid;
+      gap: 12px;
+      margin: 18px 0 0;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid #edf2fa;
+    }
+
+    .info-row:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .info-row span:first-child {
+      color: var(--muted);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+
+    .badge.success {
+      background: rgba(19, 138, 75, 0.10);
+      color: var(--success);
+    }
+
+    .badge.warning {
+      background: rgba(182, 106, 0, 0.11);
+      color: var(--warning);
+    }
+
+    .note {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1px solid #e7edf7;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 18px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 620px;
+      background: #fff;
+    }
+
+    th, td {
+      padding: 14px 14px;
+      text-align: left;
+      border-bottom: 1px solid #edf2fa;
+      font-size: 0.96rem;
+    }
+
+    th {
+      background: #f8fbff;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .content-section {
+      padding: 8px 0 8px;
+    }
+
+    .content-section h2 {
+      font-size: 1.7rem;
+      letter-spacing: -0.03em;
+      margin: 0 0 14px;
+    }
+
+    .content-section h3 {
+      font-size: 1.15rem;
+      margin: 28px 0 10px;
+    }
+
+    .content-section p {
+      color: var(--muted);
+      margin: 0 0 14px;
+    }
+
+    .content-section ul {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    .content-section li {
+      margin-bottom: 8px;
+    }
+
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .related-card {
+      display: block;
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      color: var(--text);
+      box-shadow: var(--shadow);
+    }
+
+    .related-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .related-card span {
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    footer {
+      margin-top: 40px;
+      border-top: 1px solid rgba(219, 227, 240, 0.9);
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .footer-inner {
+      padding: 24px 0 40px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .layout,
+      .related-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .container {
+        width: min(100% - 24px, 1160px);
+      }
+
+      .form-grid,
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 28px;
+      }
+
+      .card-header,
+      .card-body,
+      .hero-box {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .info-row {
+        flex-direction: column;
+        gap: 6px;
+      }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebApplication",
+    "name":"Kalkulačka hodinové mzdy",
+    "url":"https://rychlevypocty.cz/kalkulacka-hodinove-mzdy.html",
+    "applicationCategory":"BusinessApplication",
+    "operatingSystem":"Any",
+    "description":"Online kalkulačka pro výpočet hodinové mzdy z měsíčního příjmu a odpracovaných hodin.",
+    "offers":{
+      "@type":"Offer",
+      "price":"0",
+      "priceCurrency":"CZK"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"Jak se počítá hodinová mzda z měsíčního platu?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Hodinová mzda se orientačně spočítá tak, že měsíční příjem vydělíte počtem odpracovaných hodin za měsíc. Výsledek ukazuje průměrnou odměnu za jednu odpracovanou hodinu."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Mohu kalkulačku použít i pro brigádu nebo DPP?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Ano. Kalkulačka funguje i pro brigády, zkrácené úvazky nebo nepravidelnou práci, pokud znáte svůj příjem a počet skutečně odpracovaných hodin."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Je výsledek čistá nebo hrubá hodinová mzda?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Záleží na tom, jaký typ příjmu zadáte. Pokud zadáte hrubou mzdu, vyjde hrubá hodinová mzda. Pokud zadáte čistý příjem, dostanete orientační čistou hodinovou mzdu."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="/">Rychlé<span>Výpočty</span>.cz</a>
+      <nav class="topnav" aria-label="Hlavní navigace">
+        <a href="/">Domů</a>
+        <a href="/cista-mzda-kalkulacka.html">Čistá mzda</a>
+        <a href="/kalkulacka-odpracovanych-hodin.html">Odpracované hodiny</a>
+        <a href="/kalkulacka-dovolene.html">Dovolená</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumbs">
+          <a href="/">RychléVýpočty.cz</a> / Kalkulačka hodinové mzdy
+        </div>
+
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <h1>Kalkulačka hodinové mzdy</h1>
+            <p>Spočítejte si orientační hodinovou mzdu podle měsíčního příjmu a počtu odpracovaných hodin. Kalkulačka se hodí pro zaměstnance, brigádníky, freelancery i rychlé porovnání různých pracovních nabídek.</p>
+            <p>Zadejte typ příjmu, měsíční částku, počet odpracovaných hodin a délku pracovního dne. Výsledek získáte okamžitě včetně denního a orientačního týdenního výdělku.</p>
+
+            <div class="hero-points">
+              <div class="hero-pill">Mzda za hodinu</div>
+              <div class="hero-pill">Denní výdělek</div>
+              <div class="hero-pill">Týdenní přepočet</div>
+              <div class="hero-pill">Hrubý i čistý vstup</div>
+            </div>
+          </div>
+
+          <div class="hero-box">
+            <h2>Co kalkulačka umí</h2>
+            <p>Přepočítá měsíční příjem na hodinovou sazbu, ukáže orientační výdělek za pracovní den, týden i měsíc a pomůže rychle porovnat různé varianty úvazku nebo nabídky práce.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container layout">
+      <div class="card">
+        <div class="card-header">
+          <h2>Zadání pro výpočet</h2>
+          <p>Vyplňte příjem, počet odpracovaných hodin a délku běžného pracovního dne. Kalkulačka výsledek automaticky přepočítá.</p>
+        </div>
+        <div class="card-body">
+          <form id="wageForm">
+            <div class="form-grid">
+              <div class="field">
+                <label for="incomeType">Typ zadaného příjmu</label>
+                <select id="incomeType">
+                  <option value="gross" selected>Hrubý příjem</option>
+                  <option value="net">Čistý příjem</option>
+                </select>
+                <small>Zvolte, zda zadáváte hrubou nebo čistou částku.</small>
+              </div>
+
+              <div class="field">
+                <label for="monthlyIncome">Měsíční příjem</label>
+                <input type="number" id="monthlyIncome" min="0" step="1" value="40000" inputmode="decimal">
+                <small>Například měsíční mzda nebo odměna v Kč.</small>
+              </div>
+
+              <div class="field">
+                <label for="workedHours">Odpracované hodiny za měsíc</label>
+                <input type="number" id="workedHours" min="1" step="0.5" value="168" inputmode="decimal">
+                <small>Skutečný nebo plánovaný počet hodin za měsíc.</small>
+              </div>
+
+              <div class="field">
+                <label for="hoursPerDay">Běžný pracovní den (hodiny)</label>
+                <input type="number" id="hoursPerDay" min="1" max="16" step="0.5" value="8" inputmode="decimal">
+                <small>Slouží pro orientační přepočet denního výdělku.</small>
+              </div>
+
+              <div class="field">
+                <label for="workDaysWeek">Pracovní dny za týden</label>
+                <select id="workDaysWeek">
+                  <option value="3">3 dny</option>
+                  <option value="4">4 dny</option>
+                  <option value="5" selected>5 dní</option>
+                  <option value="6">6 dní</option>
+                </select>
+                <small>Pro výpočet orientačního týdenního výdělku.</small>
+              </div>
+
+              <div class="field">
+                <label for="compareRate">Srovnávací hodinová sazba</label>
+                <input type="number" id="compareRate" min="0" step="1" value="250" inputmode="decimal">
+                <small>Volitelná referenční sazba pro rychlé porovnání.</small>
+              </div>
+
+              <div class="actions full">
+                <button type="submit" class="btn-primary">Spočítat hodinovou mzdu</button>
+                <button type="button" class="btn-secondary" id="resetBtn">Obnovit výchozí hodnoty</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>Výsledek výpočtu</h2>
+          <p>Přehled hodinové mzdy a orientačního výdělku za den i týden.</p>
+        </div>
+        <div class="card-body">
+          <div class="results-grid">
+            <div class="result-box highlight">
+              <div class="result-label">Hodinová mzda</div>
+              <div class="result-value" id="hourlyWage">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Denní výdělek</div>
+              <div class="result-value" id="dailyWage">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Týdenní výdělek</div>
+              <div class="result-value" id="weeklyWage">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Měsíční potvrzení</div>
+              <div class="result-value" id="monthlyCheck">0 Kč</div>
+            </div>
+          </div>
+
+          <div id="statusBadge" class="badge success">Hodinová sazba je nad srovnávací hodnotou</div>
+
+          <div class="info-list">
+            <div class="info-row">
+              <span>Typ příjmu</span>
+              <strong id="summaryType">–</strong>
+            </div>
+            <div class="info-row">
+              <span>Odpracované hodiny</span>
+              <strong id="summaryHours">0 h</strong>
+            </div>
+            <div class="info-row">
+              <span>Pracovní den</span>
+              <strong id="summaryDayHours">0 h</strong>
+            </div>
+            <div class="info-row">
+              <span>Pracovní dny v týdnu</span>
+              <strong id="summaryWeekDays">0</strong>
+            </div>
+            <div class="info-row">
+              <span>Rozdíl proti srovnávací sazbě</span>
+              <strong id="rateDifference">0 Kč</strong>
+            </div>
+          </div>
+
+          <div class="note">
+            Výsledek je orientační přepočet. Kalkulačka nezohledňuje odvody, bonusy, příplatky, přesčasy, svátky ani rozdíly mezi různými typy smluv. Slouží hlavně pro rychlé porovnání a praktickou orientaci.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="card">
+        <div class="card-header">
+          <h3>Přehled výpočtu</h3>
+          <p>Souhrn hlavních údajů pro snadné porovnání hodinové, denní a týdenní mzdy.</p>
+        </div>
+        <div class="card-body">
+          <div class="table-wrap">
+            <table aria-label="Přehled hodinové mzdy">
+              <thead>
+                <tr>
+                  <th>Položka</th>
+                  <th>Hodnota</th>
+                  <th>Popis</th>
+                </tr>
+              </thead>
+              <tbody id="summaryTableBody">
+                <tr>
+                  <td>Hodinová mzda</td>
+                  <td>0 Kč</td>
+                  <td>Přepočet měsíčního příjmu na 1 hodinu práce</td>
+                </tr>
+                <tr>
+                  <td>Denní výdělek</td>
+                  <td>0 Kč</td>
+                  <td>Orientační výdělek za jeden pracovní den</td>
+                </tr>
+                <tr>
+                  <td>Týdenní výdělek</td>
+                  <td>0 Kč</td>
+                  <td>Orientační výdělek za pracovní týden</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container content-section">
+      <h2>Jak kalkulačka hodinové mzdy funguje</h2>
+      <p>Kalkulačka vychází z jednoduchého principu: měsíční příjem vydělí počtem odpracovaných hodin za měsíc. Tím získáte orientační hodinovou mzdu, kterou lze dál použít pro přepočet na denní nebo týdenní výdělek.</p>
+
+      <h3>K čemu se hodí</h3>
+      <ul>
+        <li>pro porovnání pracovních nabídek s různou měsíční mzdou,</li>
+        <li>pro brigády, zkrácené úvazky a nepravidelnou práci,</li>
+        <li>pro rychlou kontrolu reálné odměny za hodinu,</li>
+        <li>jako doplněk ke kalkulačce odpracovaných hodin a čisté mzdy.</li>
+      </ul>
+
+      <h3>Hrubý vs. čistý příjem</h3>
+      <p>Pokud zadáte hrubou mzdu, výsledkem bude orientační hrubá hodinová mzda. Pokud zadáte čistý příjem, dostanete orientační čistou hodinovou mzdu. Důležité je držet se stejné logiky při porovnávání různých variant.</p>
+
+      <h3>Proč sledovat hodinovou sazbu</h3>
+      <p>Samotná měsíční mzda někdy zkresluje realitu, zejména pokud se liší počet odpracovaných hodin nebo délka směn. Přepočet na hodinu dává mnohem přesnější představu o tom, kolik za svou práci skutečně dostáváte.</p>
+
+      <h3>Na co si dát pozor</h3>
+      <p>Výsledek nezohledňuje benefity, bonusy, odměny, příplatky za noční směny nebo přesčasy. Proto je vhodný hlavně jako rychlá utility kalkulačka pro základní orientaci a srovnání.</p>
+    </section>
+
+    <section class="container content-section">
+      <h2>Související kalkulačky</h2>
+      <div class="related-grid">
+        <a class="related-card" href="/kalkulacka-odpracovanych-hodin.html">
+          <strong>Kalkulačka odpracovaných hodin</strong>
+          <span>Výpočet čistých hodin za směnu, týden nebo měsíc.</span>
+        </a>
+
+        <a class="related-card" href="/cista-mzda-kalkulacka.html">
+          <strong>Kalkulačka čisté mzdy</strong>
+          <span>Orientační výpočet čisté mzdy, odvodů a nákladů zaměstnavatele.</span>
+        </a>
+
+        <a class="related-card" href="/kalkulacka-dovolene.html">
+          <strong>Kalkulačka dovolené</strong>
+          <span>Orientační výpočet nároku na dovolenou a zbývajících hodin.</span>
+        </a>
+
+        <a class="related-card" href="/pracovni-dny-kalkulacka.html">
+          <strong>Kalkulačka pracovních dnů</strong>
+          <span>Spočítejte počet pracovních dnů mezi dvěma daty.</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      © 2026 RychléVýpočty.cz — online kalkulačky a praktické výpočty pro každodenní použití.
+    </div>
+  </footer>
+
+  <script>
+    const form = document.getElementById('wageForm');
+    const resetBtn = document.getElementById('resetBtn');
+
+    const outputs = {
+      hourlyWage: document.getElementById('hourlyWage'),
+      dailyWage: document.getElementById('dailyWage'),
+      weeklyWage: document.getElementById('weeklyWage'),
+      monthlyCheck: document.getElementById('monthlyCheck'),
+      summaryType: document.getElementById('summaryType'),
+      summaryHours: document.getElementById('summaryHours'),
+      summaryDayHours: document.getElementById('summaryDayHours'),
+      summaryWeekDays: document.getElementById('summaryWeekDays'),
+      rateDifference: document.getElementById('rateDifference'),
+      statusBadge: document.getElementById('statusBadge'),
+      summaryTableBody: document.getElementById('summaryTableBody')
+    };
+
+    function formatCurrency(value) {
+      return new Intl.NumberFormat('cs-CZ', {
+        style: 'currency',
+        currency: 'CZK',
+        maximumFractionDigits: 0
+      }).format(value);
+    }
+
+    function formatHours(value) {
+      return new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 1
+      }).format(value) + ' h';
+    }
+
+    function getValues() {
+      return {
+        incomeType: document.getElementById('incomeType').value,
+        monthlyIncome: Number(document.getElementById('monthlyIncome').value),
+        workedHours: Number(document.getElementById('workedHours').value),
+        hoursPerDay: Number(document.getElementById('hoursPerDay').value),
+        workDaysWeek: Number(document.getElementById('workDaysWeek').value),
+        compareRate: Number(document.getElementById('compareRate').value)
+      };
+    }
+
+    function validate(values) {
+      if (!values.monthlyIncome || values.monthlyIncome <= 0) return 'Zadejte platný měsíční příjem.';
+      if (!values.workedHours || values.workedHours <= 0) return 'Zadejte platný počet odpracovaných hodin.';
+      if (!values.hoursPerDay || values.hoursPerDay <= 0) return 'Zadejte platnou délku pracovního dne.';
+      if (!values.workDaysWeek || values.workDaysWeek <= 0) return 'Zvolte platný počet pracovních dnů v týdnu.';
+      if (Number.isNaN(values.compareRate) || values.compareRate < 0) return 'Zadejte platnou srovnávací sazbu.';
+      return '';
+    }
+
+    function calculateWage(values) {
+      const hourlyWage = values.monthlyIncome / values.workedHours;
+      const dailyWage = hourlyWage * values.hoursPerDay;
+      const weeklyWage = dailyWage * values.workDaysWeek;
+      const monthlyCheck = hourlyWage * values.workedHours;
+      const difference = hourlyWage - values.compareRate;
+
+      return {
+        hourlyWage,
+        dailyWage,
+        weeklyWage,
+        monthlyCheck,
+        difference
+      };
+    }
+
+    function renderTable(result) {
+      outputs.summaryTableBody.innerHTML = `
+        <tr>
+          <td>Hodinová mzda</td>
+          <td>${formatCurrency(result.hourlyWage)}</td>
+          <td>Přepočet měsíčního příjmu na 1 hodinu práce</td>
+        </tr>
+        <tr>
+          <td>Denní výdělek</td>
+          <td>${formatCurrency(result.dailyWage)}</td>
+          <td>Orientační výdělek za jeden pracovní den</td>
+        </tr>
+        <tr>
+          <td>Týdenní výdělek</td>
+          <td>${formatCurrency(result.weeklyWage)}</td>
+          <td>Orientační výdělek za pracovní týden</td>
+        </tr>
+      `;
+    }
+
+    function render(values, result) {
+      outputs.hourlyWage.textContent = formatCurrency(result.hourlyWage);
+      outputs.dailyWage.textContent = formatCurrency(result.dailyWage);
+      outputs.weeklyWage.textContent = formatCurrency(result.weeklyWage);
+      outputs.monthlyCheck.textContent = formatCurrency(result.monthlyCheck);
+      outputs.summaryType.textContent = values.incomeType === 'gross' ? 'Hrubý příjem' : 'Čistý příjem';
+      outputs.summaryHours.textContent = formatHours(values.workedHours);
+      outputs.summaryDayHours.textContent = formatHours(values.hoursPerDay);
+      outputs.summaryWeekDays.textContent = values.workDaysWeek.toString();
+
+      const sign = result.difference >= 0 ? '+' : '−';
+      outputs.rateDifference.textContent = sign + ' ' + formatCurrency(Math.abs(result.difference));
+
+      if (result.difference >= 0) {
+        outputs.statusBadge.className = 'badge success';
+        outputs.statusBadge.textContent = 'Hodinová sazba je nad srovnávací hodnotou';
+      } else {
+        outputs.statusBadge.className = 'badge warning';
+        outputs.statusBadge.textContent = 'Hodinová sazba je pod srovnávací hodnotou';
+      }
+
+      renderTable(result);
+    }
+
+    function runCalculation() {
+      const values = getValues();
+      const error = validate(values);
+
+      if (error) {
+        alert(error);
+        return;
+      }
+
+      const result = calculateWage(values);
+      render(values, result);
+    }
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      runCalculation();
+    });
+
+    ['incomeType', 'monthlyIncome', 'workedHours', 'hoursPerDay', 'workDaysWeek', 'compareRate'].forEach(id => {
+      document.getElementById(id).addEventListener('input', runCalculation);
+      document.getElementById(id).addEventListener('change', runCalculation);
+    });
+
+    resetBtn.addEventListener('click', function() {
+      document.getElementById('incomeType').value = 'gross';
+      document.getElementById('monthlyIncome').value = 40000;
+      document.getElementById('workedHours').value = 168;
+      document.getElementById('hoursPerDay').value = 8;
+      document.getElementById('workDaysWeek').value = 5;
+      document.getElementById('compareRate').value = 250;
+      runCalculation();
+    });
+
+    runCalculation();
+  </script>
+</body>
+</html>
