@@ -1,1 +1,1018 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Převodník měn online zdarma | RychléVýpočty.cz</title>
+  <meta name="description" content="Převodník měn online zdarma. Spočítejte převod mezi CZK, EUR, USD, GBP, PLN a dalšími měnami podle vlastního kurzu. Přehledný převodník měn bez registrace.">
+  <meta name="keywords" content="převodník měn, kalkulačka měn, převod měn, kurzovní kalkulačka, CZK EUR USD převod, měnová kalkulačka">
+  <meta name="author" content="RychléVýpočty.cz">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://rychlevypocty.cz/prevodnik-men.html">
 
+  <meta property="og:title" content="Převodník měn online zdarma | RychléVýpočty.cz">
+  <meta property="og:description" content="Rychlý převod měn podle vlastního kurzu. Podpora CZK, EUR, USD, GBP, PLN a dalších měn.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rychlevypocty.cz/prevodnik-men.html">
+  <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Převodník měn online zdarma | RychléVýpočty.cz">
+  <meta name="twitter:description" content="Spočítejte převod mezi měnami podle vlastního kurzu rychle a přehledně.">
+
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #5f6b85;
+      --primary: #2152ff;
+      --primary-dark: #183dbf;
+      --border: #dbe3f0;
+      --success: #138a4b;
+      --warning: #b66a00;
+      --danger: #c63d2f;
+      --shadow: 0 12px 32px rgba(20, 32, 70, 0.08);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #f7f9fd 0%, #eef3fb 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      padding: 18px 0;
+      border-bottom: 1px solid rgba(219, 227, 240, 0.8);
+      background: rgba(255, 255, 255, 0.84);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+
+    .brand span {
+      color: var(--primary);
+    }
+
+    .topnav {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      font-size: 0.97rem;
+    }
+
+    .hero {
+      padding: 42px 0 20px;
+    }
+
+    .breadcrumbs {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.12fr 0.88fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .hero-copy h1 {
+      font-size: clamp(2rem, 4vw, 3.15rem);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      margin: 0 0 16px;
+    }
+
+    .hero-copy p {
+      margin: 0 0 16px;
+      font-size: 1.06rem;
+      color: var(--muted);
+      max-width: 760px;
+    }
+
+    .hero-points {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .hero-pill {
+      background: rgba(33, 82, 255, 0.08);
+      color: var(--primary-dark);
+      border: 1px solid rgba(33, 82, 255, 0.12);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .hero-box {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-box h2 {
+      margin: 0 0 10px;
+      font-size: 1.2rem;
+    }
+
+    .hero-box p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.02fr 0.98fr;
+      gap: 28px;
+      align-items: start;
+      padding: 22px 0 32px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .card-header {
+      padding: 24px 24px 10px;
+    }
+
+    .card-header h2,
+    .card-header h3 {
+      margin: 0 0 8px;
+      font-size: 1.3rem;
+      letter-spacing: -0.02em;
+    }
+
+    .card-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .card-body {
+      padding: 20px 24px 24px;
+    }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .field label {
+      font-weight: 700;
+      font-size: 0.96rem;
+    }
+
+    .field small {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: -2px;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      padding: 14px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      font-size: 1rem;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      font-family: inherit;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      outline: none;
+      border-color: rgba(33, 82, 255, 0.45);
+      box-shadow: 0 0 0 4px rgba(33, 82, 255, 0.10);
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    .swap-row {
+      display: flex;
+      justify-content: center;
+      margin: -2px 0 10px;
+    }
+
+    .swap-btn {
+      border: 1px solid var(--border);
+      background: #eef3ff;
+      color: var(--primary-dark);
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.06s ease, background 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background: #eef3ff;
+      color: var(--primary-dark);
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .result-box {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+
+    .result-box.highlight {
+      background: linear-gradient(180deg, #eef7ff 0%, #f9fcff 100%);
+      border-color: rgba(33, 82, 255, 0.18);
+    }
+
+    .result-label {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .result-value {
+      font-size: clamp(1.2rem, 2.4vw, 2rem);
+      line-height: 1.15;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      word-break: break-word;
+    }
+
+    .info-list {
+      display: grid;
+      gap: 12px;
+      margin: 18px 0 0;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid #edf2fa;
+    }
+
+    .info-row:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .info-row span:first-child {
+      color: var(--muted);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+
+    .badge.success {
+      background: rgba(19, 138, 75, 0.10);
+      color: var(--success);
+    }
+
+    .badge.warning {
+      background: rgba(182, 106, 0, 0.11);
+      color: var(--warning);
+    }
+
+    .note {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1px solid #e7edf7;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 18px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: #fff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 660px;
+    }
+
+    th, td {
+      padding: 14px;
+      text-align: left;
+      border-bottom: 1px solid #edf2fa;
+      font-size: 0.96rem;
+    }
+
+    th {
+      background: #f8fbff;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .content-section {
+      padding: 8px 0;
+    }
+
+    .content-section h2 {
+      font-size: 1.7rem;
+      letter-spacing: -0.03em;
+      margin: 0 0 14px;
+    }
+
+    .content-section h3 {
+      font-size: 1.15rem;
+      margin: 28px 0 10px;
+    }
+
+    .content-section p {
+      color: var(--muted);
+      margin: 0 0 14px;
+    }
+
+    .content-section ul {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    .content-section li {
+      margin-bottom: 8px;
+    }
+
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .related-card {
+      display: block;
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      color: var(--text);
+      box-shadow: var(--shadow);
+    }
+
+    .related-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .related-card span {
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    footer {
+      margin-top: 40px;
+      border-top: 1px solid rgba(219, 227, 240, 0.9);
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .footer-inner {
+      padding: 24px 0 40px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .layout,
+      .related-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .container {
+        width: min(100% - 24px, 1160px);
+      }
+
+      .field-grid,
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 28px;
+      }
+
+      .card-header,
+      .card-body,
+      .hero-box {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebApplication",
+    "name":"Převodník měn",
+    "url":"https://rychlevypocty.cz/prevodnik-men.html",
+    "applicationCategory":"FinanceApplication",
+    "operatingSystem":"Any",
+    "description":"Online převodník měn pro převod částek mezi měnami podle vlastního kurzu.",
+    "offers":{
+      "@type":"Offer",
+      "price":"0",
+      "priceCurrency":"CZK"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"Jak funguje převodník měn?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Převodník měn přepočítá částku z jedné měny do druhé podle zadaného směnného kurzu. Výsledná částka vznikne vynásobením nebo vydělením podle směru převodu."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Co znamená kurz při převodu měn?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Kurz vyjadřuje, kolik jednotek cílové měny odpovídá jedné jednotce výchozí měny, případně obráceně podle způsobu zápisu. V kalkulačce je vždy zobrazeno, jak je kurz použit."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Lze započítat i směnárenský poplatek?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Ano. Převodník umožňuje zadat poplatek v procentech, takže lze orientačně spočítat i méně výhodný skutečný převod."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="/">Rychlé<span>Výpočty</span>.cz</a>
+      <nav class="topnav" aria-label="Hlavní navigace">
+        <a href="/">Domů</a>
+        <a href="/spotreba-paliva-kalkulacka.html">Spotřeba paliva</a>
+        <a href="/hypotecni-kalkulacka.html">Hypotéka</a>
+        <a href="/kalkulacka-prumeru.html">Průměr</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumbs">
+          <a href="/">RychléVýpočty.cz</a> / Převodník měn
+        </div>
+
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <h1>Převodník měn</h1>
+            <p>Spočítejte si převod mezi nejběžnějšími světovými měnami podle vlastního kurzu. Převodník je vhodný pro orientační přepočet při cestování, nákupech v zahraničí, fakturaci i běžném porovnání cen.</p>
+            <p>Zvolte výchozí a cílovou měnu, zadejte částku a směnný kurz. Kalkulačka okamžitě zobrazí výsledný převod, opačný kurz i dopad případného poplatku.</p>
+
+            <div class="hero-points">
+              <div class="hero-pill">CZK, EUR, USD, GBP</div>
+              <div class="hero-pill">Ruční zadání kurzu</div>
+              <div class="hero-pill">Poplatek za směnu</div>
+              <div class="hero-pill">Opačný přepočet</div>
+            </div>
+          </div>
+
+          <div class="hero-box">
+            <h2>Co převodník umí</h2>
+            <p>Převádí částku mezi měnami podle ručně zadaného kurzu, zobrazuje výslednou částku, efektivní kurz po započtení poplatku a orientační přehled přepočtu i pro opačný směr.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container layout">
+      <div class="card">
+        <div class="card-header">
+          <h2>Zadání převodu</h2>
+          <p>Vyberte měny, zadejte částku a kurz. Výsledek se přepočítá okamžitě.</p>
+        </div>
+        <div class="card-body">
+          <div class="field-grid">
+            <div class="field">
+              <label for="fromCurrency">Z měny</label>
+              <select id="fromCurrency">
+                <option value="CZK">CZK – Česká koruna</option>
+                <option value="EUR" selected>EUR – Euro</option>
+                <option value="USD">USD – Americký dolar</option>
+                <option value="GBP">GBP – Britská libra</option>
+                <option value="PLN">PLN – Polský zlotý</option>
+                <option value="HUF">HUF – Maďarský forint</option>
+                <option value="CHF">CHF – Švýcarský frank</option>
+              </select>
+              <small>Výchozí měna, ze které převádíte.</small>
+            </div>
+
+            <div class="field">
+              <label for="toCurrency">Do měny</label>
+              <select id="toCurrency">
+                <option value="CZK" selected>CZK – Česká koruna</option>
+                <option value="EUR">EUR – Euro</option>
+                <option value="USD">USD – Americký dolar</option>
+                <option value="GBP">GBP – Britská libra</option>
+                <option value="PLN">PLN – Polský zlotý</option>
+                <option value="HUF">HUF – Maďarský forint</option>
+                <option value="CHF">CHF – Švýcarský frank</option>
+              </select>
+              <small>Cílová měna, do které převádíte.</small>
+            </div>
+
+            <div class="full swap-row">
+              <button type="button" class="swap-btn" id="swapBtn">Prohodit měny</button>
+            </div>
+
+            <div class="field">
+              <label for="amount">Částka</label>
+              <input type="number" id="amount" min="0" step="0.01" value="100" inputmode="decimal">
+              <small>Zadávaná částka ve výchozí měně.</small>
+            </div>
+
+            <div class="field">
+              <label for="rate">Kurz</label>
+              <input type="number" id="rate" min="0.000001" step="0.0001" value="25.25" inputmode="decimal">
+              <small>Kolik jednotek cílové měny odpovídá 1 jednotce výchozí měny.</small>
+            </div>
+
+            <div class="field">
+              <label for="fee">Poplatek za směnu (%)</label>
+              <input type="number" id="fee" min="0" step="0.01" value="0" inputmode="decimal">
+              <small>Volitelné znevýhodnění směny nebo poplatek.</small>
+            </div>
+
+            <div class="field">
+              <label for="rounding">Zaokrouhlení výsledku</label>
+              <select id="rounding">
+                <option value="2" selected>2 desetinná místa</option>
+                <option value="0">0 desetinných míst</option>
+                <option value="1">1 desetinné místo</option>
+                <option value="3">3 desetinná místa</option>
+                <option value="4">4 desetinná místa</option>
+              </select>
+              <small>Ovlivňuje zobrazení výsledných hodnot.</small>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button type="button" class="btn-primary" id="calculateBtn">Spočítat převod</button>
+            <button type="button" class="btn-secondary" id="resetBtn">Obnovit výchozí hodnoty</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>Výsledek převodu</h2>
+          <p>Přehled výsledné částky, efektivního kurzu a dopadu poplatku.</p>
+        </div>
+        <div class="card-body">
+          <div class="results-grid">
+            <div class="result-box highlight">
+              <div class="result-label">Výsledná částka</div>
+              <div class="result-value" id="convertedResult">0 CZK</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Efektivní kurz</div>
+              <div class="result-value" id="effectiveRateResult">0</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Poplatek v cílové měně</div>
+              <div class="result-value" id="feeAmountResult">0</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Opačný kurz</div>
+              <div class="result-value" id="inverseRateResult">0</div>
+            </div>
+          </div>
+
+          <div id="rateBadge" class="badge success">Převod připraven</div>
+
+          <div class="info-list">
+            <div class="info-row">
+              <span>Směr převodu</span>
+              <strong id="directionResult">—</strong>
+            </div>
+            <div class="info-row">
+              <span>Zadaná částka</span>
+              <strong id="amountResult">0</strong>
+            </div>
+            <div class="info-row">
+              <span>Kurz bez poplatku</span>
+              <strong id="baseRateResult">0</strong>
+            </div>
+            <div class="info-row">
+              <span>Výsledek bez poplatku</span>
+              <strong id="grossResult">0</strong>
+            </div>
+            <div class="info-row">
+              <span>Poplatek</span>
+              <strong id="feePercentResult">0 %</strong>
+            </div>
+          </div>
+
+          <div class="note" id="resultNote">
+            Zadejte měny, částku a kurz. Převodník funguje s vlastním ručně zadaným kurzem a je vhodný pro orientační přepočet.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="card">
+        <div class="card-header">
+          <h3>Přehled převodu</h3>
+          <p>Souhrn hlavních hodnot pro rychlou kontrolu výpočtu.</p>
+        </div>
+        <div class="card-body">
+          <div class="table-wrap">
+            <table aria-label="Přehled převodu měn">
+              <thead>
+                <tr>
+                  <th>Položka</th>
+                  <th>Hodnota</th>
+                  <th>Jednotka</th>
+                  <th>Poznámka</th>
+                </tr>
+              </thead>
+              <tbody id="summaryTableBody">
+                <tr>
+                  <td>Převod měny</td>
+                  <td>—</td>
+                  <td>—</td>
+                  <td>Po výpočtu se zobrazí detailní přehled.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container content-section">
+      <h2>Jak převodník měn funguje</h2>
+      <p>Převodník přepočítává částku mezi dvěma měnami podle zadaného kurzu. Pokud je například kurz 25,25 CZK za 1 EUR, pak se částka v eurech násobí tímto kurzem a výsledkem je hodnota v korunách.</p>
+
+      <h3>Kdy se hodí ruční zadání kurzu</h3>
+      <ul>
+        <li>když chcete pracovat s kurzem z banky nebo směnárny,</li>
+        <li>když porovnáváte různé nabídky směny,</li>
+        <li>když potřebujete orientační přepočet bez napojení na live kurz,</li>
+        <li>když počítáte cenu nákupu nebo faktury v cizí měně.</li>
+      </ul>
+
+      <h3>Poplatek a efektivní kurz</h3>
+      <p>V praxi bývá převod často méně výhodný kvůli poplatku nebo méně výhodnému směnnému kurzu. Proto kalkulačka umí odečíst procentní poplatek a ukázat i efektivní kurz po jeho započtení.</p>
+
+      <h3>Na co si dát pozor</h3>
+      <p>Tento převodník nepracuje s automaticky aktualizovanými kurzy. Výsledek je přesný jen podle kurzu, který zadáte. Pro rychlé plánování je to ale velmi praktické a dostačující řešení.</p>
+    </section>
+
+    <section class="container content-section">
+      <h2>Související kalkulačky</h2>
+      <div class="related-grid">
+        <a class="related-card" href="/hypotecni-kalkulacka.html">
+          <strong>Hypoteční kalkulačka</strong>
+          <span>Výpočet splátky hypotéky, úroků a celkové ceny úvěru.</span>
+        </a>
+
+        <a class="related-card" href="/kalkulacka-pujcky.html">
+          <strong>Kalkulačka půjčky</strong>
+          <span>Výpočet měsíční splátky půjčky a přeplacení.</span>
+        </a>
+
+        <a class="related-card" href="/procenta-kalkulacka.html">
+          <strong>Kalkulačka procent</strong>
+          <span>Rychlé procentní výpočty pro běžné použití.</span>
+        </a>
+
+        <a class="related-card" href="/spotreba-paliva-kalkulacka.html">
+          <strong>Kalkulačka spotřeby paliva</strong>
+          <span>Výpočet ceny jízdy a nákladů na kilometr.</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      © 2026 RychléVýpočty.cz — online kalkulačky a praktické výpočty pro každodenní použití.
+    </div>
+  </footer>
+
+  <script>
+    const fromCurrency = document.getElementById('fromCurrency');
+    const toCurrency = document.getElementById('toCurrency');
+    const amount = document.getElementById('amount');
+    const rate = document.getElementById('rate');
+    const fee = document.getElementById('fee');
+    const rounding = document.getElementById('rounding');
+
+    const outputs = {
+      convertedResult: document.getElementById('convertedResult'),
+      effectiveRateResult: document.getElementById('effectiveRateResult'),
+      feeAmountResult: document.getElementById('feeAmountResult'),
+      inverseRateResult: document.getElementById('inverseRateResult'),
+      directionResult: document.getElementById('directionResult'),
+      amountResult: document.getElementById('amountResult'),
+      baseRateResult: document.getElementById('baseRateResult'),
+      grossResult: document.getElementById('grossResult'),
+      feePercentResult: document.getElementById('feePercentResult'),
+      rateBadge: document.getElementById('rateBadge'),
+      resultNote: document.getElementById('resultNote'),
+      summaryTableBody: document.getElementById('summaryTableBody')
+    };
+
+    function formatNumber(value, digits = 2) {
+      return new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: digits
+      }).format(value);
+    }
+
+    function getDigits() {
+      return Number(rounding.value);
+    }
+
+    function formatMoneyLike(value, code) {
+      return `${formatNumber(value, getDigits())} ${code}`;
+    }
+
+    function renderTable(rows) {
+      outputs.summaryTableBody.innerHTML = rows.map(row => `
+        <tr>
+          <td>${row.label}</td>
+          <td>${row.value}</td>
+          <td>${row.unit}</td>
+          <td>${row.note}</td>
+        </tr>
+      `).join('');
+    }
+
+    function setBadge(type, text) {
+      outputs.rateBadge.className = `badge ${type}`;
+      outputs.rateBadge.textContent = text;
+    }
+
+    function calculateConversion() {
+      const amountValue = Number(amount.value);
+      const rateValue = Number(rate.value);
+      const feeValue = Number(fee.value);
+      const from = fromCurrency.value;
+      const to = toCurrency.value;
+
+      if (!amountValue || amountValue < 0 || !rateValue || rateValue <= 0) {
+        outputs.convertedResult.textContent = '0';
+        outputs.effectiveRateResult.textContent = '0';
+        outputs.feeAmountResult.textContent = '0';
+        outputs.inverseRateResult.textContent = '0';
+        outputs.directionResult.textContent = `${from} → ${to}`;
+        outputs.amountResult.textContent = '0';
+        outputs.baseRateResult.textContent = '0';
+        outputs.grossResult.textContent = '0';
+        outputs.feePercentResult.textContent = '0 %';
+        outputs.resultNote.textContent = 'Zadejte platnou částku a kurz větší než 0.';
+        setBadge('warning', 'Chybí vstupní data');
+
+        renderTable([
+          {
+            label: 'Převod',
+            value: '—',
+            unit: '—',
+            note: 'Zadejte platnou částku a kurz.'
+          }
+        ]);
+        return;
+      }
+
+      const gross = amountValue * rateValue;
+      const feeAmount = gross * (feeValue / 100);
+      const net = gross - feeAmount;
+      const effectiveRate = net / amountValue;
+      const inverseRate = 1 / rateValue;
+
+      outputs.convertedResult.textContent = formatMoneyLike(net, to);
+      outputs.effectiveRateResult.textContent = `${formatNumber(effectiveRate, 6)} ${to}/${from}`;
+      outputs.feeAmountResult.textContent = formatMoneyLike(feeAmount, to);
+      outputs.inverseRateResult.textContent = `${formatNumber(inverseRate, 6)} ${from}/${to}`;
+      outputs.directionResult.textContent = `${from} → ${to}`;
+      outputs.amountResult.textContent = formatMoneyLike(amountValue, from);
+      outputs.baseRateResult.textContent = `${formatNumber(rateValue, 6)} ${to}/${from}`;
+      outputs.grossResult.textContent = formatMoneyLike(gross, to);
+      outputs.feePercentResult.textContent = `${formatNumber(feeValue, 2)} %`;
+
+      if (feeValue === 0) {
+        outputs.resultNote.textContent = 'Převod byl spočítán bez poplatku. Výsledek odpovídá přímo zadanému kurzu.';
+        setBadge('success', 'Převod bez poplatku');
+      } else if (feeValue <= 2) {
+        outputs.resultNote.textContent = 'Převod byl spočítán včetně menšího poplatku. Zobrazený efektivní kurz už zohledňuje jeho dopad.';
+        setBadge('success', 'Mírný poplatek');
+      } else {
+        outputs.resultNote.textContent = 'Převod byl spočítán včetně vyššího poplatku. Efektivní kurz je proto méně výhodný než základní kurz.';
+        setBadge('warning', 'Vyšší poplatek');
+      }
+
+      renderTable([
+        {
+          label: 'Výchozí částka',
+          value: formatNumber(amountValue, getDigits()),
+          unit: from,
+          note: 'Zadaná částka před převodem'
+        },
+        {
+          label: 'Kurz',
+          value: formatNumber(rateValue, 6),
+          unit: `${to}/${from}`,
+          note: 'Zadaný směnný kurz'
+        },
+        {
+          label: 'Výsledek bez poplatku',
+          value: formatNumber(gross, getDigits()),
+          unit: to,
+          note: 'Čistý výpočet podle kurzu'
+        },
+        {
+          label: 'Výsledek po poplatku',
+          value: formatNumber(net, getDigits()),
+          unit: to,
+          note: 'Finální částka po odečtení poplatku'
+        }
+      ]);
+    }
+
+    function swapCurrencies() {
+      const currentFrom = fromCurrency.value;
+      const currentTo = toCurrency.value;
+      const currentRate = Number(rate.value);
+
+      fromCurrency.value = currentTo;
+      toCurrency.value = currentFrom;
+
+      if (currentRate > 0) {
+        rate.value = (1 / currentRate).toFixed(6);
+      }
+
+      calculateConversion();
+    }
+
+    document.getElementById('swapBtn').addEventListener('click', swapCurrencies);
+    document.getElementById('calculateBtn').addEventListener('click', calculateConversion);
+
+    document.getElementById('resetBtn').addEventListener('click', function() {
+      fromCurrency.value = 'EUR';
+      toCurrency.value = 'CZK';
+      amount.value = '100';
+      rate.value = '25.25';
+      fee.value = '0';
+      rounding.value = '2';
+      calculateConversion();
+    });
+
+    [fromCurrency, toCurrency, amount, rate, fee, rounding].forEach(element => {
+      element.addEventListener('input', calculateConversion);
+      element.addEventListener('change', calculateConversion);
+    });
+
+    calculateConversion();
+  </script>
+</body>
+</html>
