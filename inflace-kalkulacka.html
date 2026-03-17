@@ -1,1 +1,1172 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inflační kalkulačka online zdarma | RychléVýpočty.cz</title>
+  <meta name="description" content="Spočítejte dopad inflace na hodnotu peněz, budoucí cenu i potřebnou částku pro zachování kupní síly. Přehledná inflační kalkulačka online zdarma.">
+  <meta name="keywords" content="inflační kalkulačka, kalkulačka inflace, dopad inflace, kupní síla peněz, znehodnocení peněz, inflace výpočet">
+  <meta name="author" content="RychléVýpočty.cz">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://rychlevypocty.cz/inflace-kalkulacka.html">
 
+  <meta property="og:title" content="Inflační kalkulačka online zdarma | RychléVýpočty.cz">
+  <meta property="og:description" content="Výpočet dopadu inflace na hodnotu peněz, kupní sílu a budoucí cenu zboží nebo služeb.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rychlevypocty.cz/inflace-kalkulacka.html">
+  <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Inflační kalkulačka online zdarma | RychléVýpočty.cz">
+  <meta name="twitter:description" content="Spočítejte znehodnocení peněz a budoucí cenu při zadané inflaci.">
+
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #5f6b85;
+      --primary: #2152ff;
+      --primary-dark: #183dbf;
+      --border: #dbe3f0;
+      --success: #138a4b;
+      --warning: #b66a00;
+      --danger: #c63d2f;
+      --shadow: 0 12px 32px rgba(20, 32, 70, 0.08);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #f7f9fd 0%, #eef3fb 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      padding: 18px 0;
+      border-bottom: 1px solid rgba(219, 227, 240, 0.8);
+      background: rgba(255, 255, 255, 0.84);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+
+    .brand span {
+      color: var(--primary);
+    }
+
+    .topnav {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      font-size: 0.97rem;
+    }
+
+    .hero {
+      padding: 42px 0 20px;
+    }
+
+    .breadcrumbs {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.12fr 0.88fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .hero-copy h1 {
+      font-size: clamp(2rem, 4vw, 3.15rem);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      margin: 0 0 16px;
+    }
+
+    .hero-copy p {
+      margin: 0 0 16px;
+      font-size: 1.06rem;
+      color: var(--muted);
+      max-width: 760px;
+    }
+
+    .hero-points {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .hero-pill {
+      background: rgba(33, 82, 255, 0.08);
+      color: var(--primary-dark);
+      border: 1px solid rgba(33, 82, 255, 0.12);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .hero-box {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-box h2 {
+      margin: 0 0 10px;
+      font-size: 1.2rem;
+    }
+
+    .hero-box p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.02fr 0.98fr;
+      gap: 28px;
+      align-items: start;
+      padding: 22px 0 32px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .card-header {
+      padding: 24px 24px 10px;
+    }
+
+    .card-header h2,
+    .card-header h3 {
+      margin: 0 0 8px;
+      font-size: 1.3rem;
+      letter-spacing: -0.02em;
+    }
+
+    .card-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .card-body {
+      padding: 20px 24px 24px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .tab-button {
+      border: 1px solid var(--border);
+      background: #f7faff;
+      color: var(--text);
+      padding: 11px 14px;
+      border-radius: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+
+    .tab-button.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+    }
+
+    .tab-panel {
+      display: none;
+    }
+
+    .tab-panel.active {
+      display: block;
+    }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .field label {
+      font-weight: 700;
+      font-size: 0.96rem;
+    }
+
+    .field small {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: -2px;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      padding: 14px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      font-size: 1rem;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      font-family: inherit;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      outline: none;
+      border-color: rgba(33, 82, 255, 0.45);
+      box-shadow: 0 0 0 4px rgba(33, 82, 255, 0.10);
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.06s ease, background 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background: #eef3ff;
+      color: var(--primary-dark);
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .result-box {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+
+    .result-box.highlight {
+      background: linear-gradient(180deg, #eef7ff 0%, #f9fcff 100%);
+      border-color: rgba(33, 82, 255, 0.18);
+    }
+
+    .result-label {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .result-value {
+      font-size: clamp(1.2rem, 2.4vw, 2rem);
+      line-height: 1.15;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      word-break: break-word;
+    }
+
+    .info-list {
+      display: grid;
+      gap: 12px;
+      margin: 18px 0 0;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid #edf2fa;
+    }
+
+    .info-row:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .info-row span:first-child {
+      color: var(--muted);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+
+    .badge.success {
+      background: rgba(19, 138, 75, 0.10);
+      color: var(--success);
+    }
+
+    .badge.warning {
+      background: rgba(182, 106, 0, 0.11);
+      color: var(--warning);
+    }
+
+    .badge.danger {
+      background: rgba(198, 61, 47, 0.10);
+      color: var(--danger);
+    }
+
+    .note {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1px solid #e7edf7;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 18px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: #fff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 660px;
+    }
+
+    th, td {
+      padding: 14px;
+      text-align: left;
+      border-bottom: 1px solid #edf2fa;
+      font-size: 0.96rem;
+    }
+
+    th {
+      background: #f8fbff;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .content-section {
+      padding: 8px 0;
+    }
+
+    .content-section h2 {
+      font-size: 1.7rem;
+      letter-spacing: -0.03em;
+      margin: 0 0 14px;
+    }
+
+    .content-section h3 {
+      font-size: 1.15rem;
+      margin: 28px 0 10px;
+    }
+
+    .content-section p {
+      color: var(--muted);
+      margin: 0 0 14px;
+    }
+
+    .content-section ul {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    .content-section li {
+      margin-bottom: 8px;
+    }
+
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .related-card {
+      display: block;
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      color: var(--text);
+      box-shadow: var(--shadow);
+    }
+
+    .related-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .related-card span {
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    footer {
+      margin-top: 40px;
+      border-top: 1px solid rgba(219, 227, 240, 0.9);
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .footer-inner {
+      padding: 24px 0 40px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .layout,
+      .related-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .container {
+        width: min(100% - 24px, 1160px);
+      }
+
+      .field-grid,
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 28px;
+      }
+
+      .card-header,
+      .card-body,
+      .hero-box {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebApplication",
+    "name":"Inflační kalkulačka",
+    "url":"https://rychlevypocty.cz/inflace-kalkulacka.html",
+    "applicationCategory":"FinanceApplication",
+    "operatingSystem":"Any",
+    "description":"Online kalkulačka pro výpočet dopadu inflace na hodnotu peněz a budoucí cenu.",
+    "offers":{
+      "@type":"Offer",
+      "price":"0",
+      "priceCurrency":"CZK"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"Jak funguje inflační kalkulačka?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Inflační kalkulačka počítá, jak se při zadané roční inflaci mění kupní síla peněz v čase. Umožní zjistit budoucí cenu, reálnou hodnotu dnešní částky nebo částku potřebnou pro zachování stejné kupní síly."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Co znamená kupní síla peněz?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Kupní síla peněz vyjadřuje, kolik zboží a služeb si za určitou částku můžete koupit. Při růstu cen kvůli inflaci stejná částka časem koupí méně než dříve."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Je výsledek přesná předpověď budoucnosti?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Ne. Výpočet je orientační a vychází ze zadané průměrné inflace. Skutečný vývoj cen může být v jednotlivých letech odlišný."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="/">Rychlé<span>Výpočty</span>.cz</a>
+      <nav class="topnav" aria-label="Hlavní navigace">
+        <a href="/">Domů</a>
+        <a href="/prevodnik-men.html">Převodník měn</a>
+        <a href="/hypotecni-kalkulacka.html">Hypotéka</a>
+        <a href="/kalkulacka-slozeneho-uroku.html">Složený úrok</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumbs">
+          <a href="/">RychléVýpočty.cz</a> / Inflační kalkulačka
+        </div>
+
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <h1>Inflační kalkulačka</h1>
+            <p>Spočítejte si dopad inflace na hodnotu peněz, budoucí cenu zboží nebo služeb a částku potřebnou pro zachování stejné kupní síly. Kalkulačka je vhodná pro plánování úspor, investic i běžné porovnání hodnoty peněz v čase.</p>
+            <p>Můžete počítat několik scénářů: kolik bude stát dnešní částka v budoucnu, jakou reálnou hodnotu bude mít dnešní obnos za několik let nebo kolik budete v budoucnu potřebovat pro zachování stejné kupní síly.</p>
+
+            <div class="hero-points">
+              <div class="hero-pill">Budoucí cena</div>
+              <div class="hero-pill">Kupní síla peněz</div>
+              <div class="hero-pill">Roční inflace</div>
+              <div class="hero-pill">Přehled po letech</div>
+            </div>
+          </div>
+
+          <div class="hero-box">
+            <h2>Co kalkulačka umí</h2>
+            <p>Počítá tři praktické režimy práce s inflací, zobrazuje výslednou částku, procentní znehodnocení kupní síly a orientační přehled vývoje po jednotlivých letech.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container layout">
+      <div class="card">
+        <div class="card-header">
+          <h2>Zadání výpočtu</h2>
+          <p>Vyberte scénář, zadejte částku, inflaci a počet let. Výsledek se přepočítá okamžitě.</p>
+        </div>
+        <div class="card-body">
+          <div class="tabs" role="tablist" aria-label="Typ inflačního výpočtu">
+            <button class="tab-button active" type="button" data-tab="future-price">Budoucí cena dnešní částky</button>
+            <button class="tab-button" type="button" data-tab="future-value">Budoucí reálná hodnota</button>
+            <button class="tab-button" type="button" data-tab="required-amount">Potřebná budoucí částka</button>
+          </div>
+
+          <div class="tab-panel active" id="panel-future-price">
+            <div class="field-grid">
+              <div class="field">
+                <label for="currentPrice">Dnešní částka nebo cena (Kč)</label>
+                <input type="number" id="currentPrice" min="0" step="0.01" value="100000" inputmode="decimal">
+                <small>Například cena zboží, služby nebo kupní síla určité částky dnes.</small>
+              </div>
+
+              <div class="field">
+                <label for="inflationRatePrice">Průměrná roční inflace (%)</label>
+                <input type="number" id="inflationRatePrice" min="0" step="0.01" value="3" inputmode="decimal">
+                <small>Např. 3 znamená růst cen o 3 % ročně.</small>
+              </div>
+
+              <div class="field">
+                <label for="yearsPrice">Počet let</label>
+                <input type="number" id="yearsPrice" min="1" step="1" value="10" inputmode="numeric">
+                <small>Doba, za kterou chcete vývoj spočítat.</small>
+              </div>
+
+              <div class="field">
+                <label for="roundingPrice">Zaokrouhlení výsledku</label>
+                <select id="roundingPrice">
+                  <option value="0" selected>0 desetinných míst</option>
+                  <option value="1">1 desetinné místo</option>
+                  <option value="2">2 desetinná místa</option>
+                </select>
+                <small>Ovlivňuje zobrazení výsledků.</small>
+              </div>
+            </div>
+
+            <div class="actions">
+              <button class="btn-primary" type="button" id="calcPriceBtn">Spočítat budoucí cenu</button>
+              <button class="btn-secondary" type="button" id="resetPriceBtn">Obnovit výchozí hodnoty</button>
+            </div>
+          </div>
+
+          <div class="tab-panel" id="panel-future-value">
+            <div class="field-grid">
+              <div class="field">
+                <label for="currentAmount">Dnešní částka (Kč)</label>
+                <input type="number" id="currentAmount" min="0" step="0.01" value="100000" inputmode="decimal">
+                <small>Částka, jejíž budoucí reálnou hodnotu chcete zjistit.</small>
+              </div>
+
+              <div class="field">
+                <label for="inflationRateValue">Průměrná roční inflace (%)</label>
+                <input type="number" id="inflationRateValue" min="0" step="0.01" value="3" inputmode="decimal">
+                <small>Např. 3 znamená průměrnou inflaci 3 % ročně.</small>
+              </div>
+
+              <div class="field">
+                <label for="yearsValue">Počet let</label>
+                <input type="number" id="yearsValue" min="1" step="1" value="10" inputmode="numeric">
+                <small>Doba, za kterou chcete reálnou hodnotu spočítat.</small>
+              </div>
+
+              <div class="field">
+                <label for="roundingValue">Zaokrouhlení výsledku</label>
+                <select id="roundingValue">
+                  <option value="0" selected>0 desetinných míst</option>
+                  <option value="1">1 desetinné místo</option>
+                  <option value="2">2 desetinná místa</option>
+                </select>
+                <small>Ovlivňuje zobrazení výsledků.</small>
+              </div>
+            </div>
+
+            <div class="actions">
+              <button class="btn-primary" type="button" id="calcValueBtn">Spočítat reálnou hodnotu</button>
+              <button class="btn-secondary" type="button" id="resetValueBtn">Obnovit výchozí hodnoty</button>
+            </div>
+          </div>
+
+          <div class="tab-panel" id="panel-required-amount">
+            <div class="field-grid">
+              <div class="field">
+                <label for="targetPurchasingPower">Dnešní kupní síla (Kč)</label>
+                <input type="number" id="targetPurchasingPower" min="0" step="0.01" value="50000" inputmode="decimal">
+                <small>Kolik má mít budoucí částka dnešní kupní sílu.</small>
+              </div>
+
+              <div class="field">
+                <label for="inflationRateRequired">Průměrná roční inflace (%)</label>
+                <input type="number" id="inflationRateRequired" min="0" step="0.01" value="3" inputmode="decimal">
+                <small>Např. 3 znamená růst cen o 3 % ročně.</small>
+              </div>
+
+              <div class="field">
+                <label for="yearsRequired">Počet let</label>
+                <input type="number" id="yearsRequired" min="1" step="1" value="10" inputmode="numeric">
+                <small>Doba, za kterou chcete zachovat kupní sílu.</small>
+              </div>
+
+              <div class="field">
+                <label for="roundingRequired">Zaokrouhlení výsledku</label>
+                <select id="roundingRequired">
+                  <option value="0" selected>0 desetinných míst</option>
+                  <option value="1">1 desetinné místo</option>
+                  <option value="2">2 desetinná místa</option>
+                </select>
+                <small>Ovlivňuje zobrazení výsledků.</small>
+              </div>
+            </div>
+
+            <div class="actions">
+              <button class="btn-primary" type="button" id="calcRequiredBtn">Spočítat potřebnou částku</button>
+              <button class="btn-secondary" type="button" id="resetRequiredBtn">Obnovit výchozí hodnoty</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>Výsledek výpočtu</h2>
+          <p>Přehled výsledné částky, změny kupní síly a hlavních parametrů.</p>
+        </div>
+        <div class="card-body">
+          <div class="results-grid">
+            <div class="result-box highlight">
+              <div class="result-label">Hlavní výsledek</div>
+              <div class="result-value" id="mainResult">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Rozdíl oproti dnešku</div>
+              <div class="result-value" id="differenceResult">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Změna v %</div>
+              <div class="result-value" id="percentResult">0 %</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Inflační faktor</div>
+              <div class="result-value" id="factorResult">0×</div>
+            </div>
+          </div>
+
+          <div id="inflationBadge" class="badge success">Výpočet připraven</div>
+
+          <div class="info-list">
+            <div class="info-row">
+              <span>Typ výpočtu</span>
+              <strong id="typeResult">—</strong>
+            </div>
+            <div class="info-row">
+              <span>Výchozí částka</span>
+              <strong id="baseAmountResult">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Roční inflace</span>
+              <strong id="rateResult">0 %</strong>
+            </div>
+            <div class="info-row">
+              <span>Počet let</span>
+              <strong id="yearsResult">0</strong>
+            </div>
+            <div class="info-row">
+              <span>Reálná / budoucí hodnota</span>
+              <strong id="secondaryResult">0 Kč</strong>
+            </div>
+          </div>
+
+          <div class="note" id="resultNote">
+            Vyberte scénář a zadejte vstupní údaje. Kalkulačka počítá orientační dopad průměrné roční inflace.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="card">
+        <div class="card-header">
+          <h3>Vývoj po jednotlivých letech</h3>
+          <p>Orientační přehled, jak se při zadané inflaci mění hodnota nebo potřebná částka v čase.</p>
+        </div>
+        <div class="card-body">
+          <div class="table-wrap">
+            <table aria-label="Přehled inflace po letech">
+              <thead>
+                <tr>
+                  <th>Rok</th>
+                  <th>Inflační faktor</th>
+                  <th>Hodnota / potřebná částka</th>
+                  <th>Poznámka</th>
+                </tr>
+              </thead>
+              <tbody id="summaryTableBody">
+                <tr>
+                  <td colspan="4">Po výpočtu se zobrazí přehled vývoje po letech.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container content-section">
+      <h2>Jak inflační kalkulačka funguje</h2>
+      <p>Kalkulačka pracuje s průměrnou roční inflací a používá složené zhodnocení, respektive složený růst cen. To znamená, že inflace se každý rok přičítá k již zvýšené hodnotě. Stejně jako u složeného úroku roste efekt v čase stále výrazněji.</p>
+
+      <h3>Co můžete s kalkulačkou spočítat</h3>
+      <ul>
+        <li>kolik bude stát dnešní částka nebo cena v budoucnu,</li>
+        <li>jakou reálnou kupní sílu bude mít dnešní částka za několik let,</li>
+        <li>kolik budete v budoucnu potřebovat pro zachování dnešní kupní síly.</li>
+      </ul>
+
+      <h3>Proč je inflace důležitá</h3>
+      <p>Inflace snižuje kupní sílu peněz. Pokud ceny dlouhodobě rostou, stejná částka časem koupí méně než dnes. To je důležité při plánování rezervy, investic, důchodu i běžných dlouhodobých finančních cílů.</p>
+
+      <h3>Na co si dát pozor</h3>
+      <p>Výsledek je orientační, protože skutečná inflace se v jednotlivých letech mění. Kalkulačka ale dobře ukazuje princip a řádový dopad dlouhodobého růstu cen.</p>
+    </section>
+
+    <section class="container content-section">
+      <h2>Související kalkulačky</h2>
+      <div class="related-grid">
+        <a class="related-card" href="/kalkulacka-slozeneho-uroku.html">
+          <strong>Kalkulačka složeného úroku</strong>
+          <span>Výpočet růstu investic a úspor v čase.</span>
+        </a>
+
+        <a class="related-card" href="/hypotecni-kalkulacka.html">
+          <strong>Hypoteční kalkulačka</strong>
+          <span>Výpočet splátky hypotéky a celkové ceny úvěru.</span>
+        </a>
+
+        <a class="related-card" href="/prevodnik-men.html">
+          <strong>Převodník měn</strong>
+          <span>Rychlý přepočet mezi měnami podle vlastního kurzu.</span>
+        </a>
+
+        <a class="related-card" href="/kalkulacka-pujcky.html">
+          <strong>Kalkulačka půjčky</strong>
+          <span>Výpočet měsíční splátky půjčky a přeplacení.</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      © 2026 RychléVýpočty.cz — online kalkulačky a praktické výpočty pro každodenní použití.
+    </div>
+  </footer>
+
+  <script>
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabPanels = document.querySelectorAll('.tab-panel');
+
+    const outputs = {
+      mainResult: document.getElementById('mainResult'),
+      differenceResult: document.getElementById('differenceResult'),
+      percentResult: document.getElementById('percentResult'),
+      factorResult: document.getElementById('factorResult'),
+      inflationBadge: document.getElementById('inflationBadge'),
+      typeResult: document.getElementById('typeResult'),
+      baseAmountResult: document.getElementById('baseAmountResult'),
+      rateResult: document.getElementById('rateResult'),
+      yearsResult: document.getElementById('yearsResult'),
+      secondaryResult: document.getElementById('secondaryResult'),
+      resultNote: document.getElementById('resultNote'),
+      summaryTableBody: document.getElementById('summaryTableBody')
+    };
+
+    let activeTab = 'future-price';
+
+    function formatCurrency(value, digits = 0) {
+      return new Intl.NumberFormat('cs-CZ', {
+        style: 'currency',
+        currency: 'CZK',
+        minimumFractionDigits: digits,
+        maximumFractionDigits: digits
+      }).format(value);
+    }
+
+    function formatNumber(value, digits = 2) {
+      return new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: digits
+      }).format(value);
+    }
+
+    function setActiveTab(tabName) {
+      activeTab = tabName;
+
+      tabButtons.forEach(button => {
+        button.classList.toggle('active', button.dataset.tab === tabName);
+      });
+
+      tabPanels.forEach(panel => {
+        panel.classList.toggle('active', panel.id === `panel-${tabName}`);
+      });
+
+      runCalculation();
+    }
+
+    function setBadge(type, text) {
+      outputs.inflationBadge.className = `badge ${type}`;
+      outputs.inflationBadge.textContent = text;
+    }
+
+    function renderEmpty(message) {
+      outputs.mainResult.textContent = '0 Kč';
+      outputs.differenceResult.textContent = '0 Kč';
+      outputs.percentResult.textContent = '0 %';
+      outputs.factorResult.textContent = '0×';
+      outputs.typeResult.textContent = '—';
+      outputs.baseAmountResult.textContent = '0 Kč';
+      outputs.rateResult.textContent = '0 %';
+      outputs.yearsResult.textContent = '0';
+      outputs.secondaryResult.textContent = '0 Kč';
+      outputs.resultNote.textContent = message;
+      setBadge('warning', 'Chybí vstupní data');
+      outputs.summaryTableBody.innerHTML = '<tr><td colspan="4">Zadejte platnou částku, inflaci a počet let.</td></tr>';
+    }
+
+    function buildYearRows(base, rate, years, mode, digits) {
+      const rows = [];
+
+      for (let year = 1; year <= years; year++) {
+        const factor = Math.pow(1 + rate, year);
+        let value;
+        let note;
+
+        if (mode === 'future-price' || mode === 'required-amount') {
+          value = base * factor;
+          note = mode === 'future-price'
+            ? 'Odhad budoucí ceny při zadané inflaci'
+            : 'Částka potřebná pro zachování dnešní kupní síly';
+        } else {
+          value = base / factor;
+          note = 'Reálná kupní síla dnešní částky po zohlednění inflace';
+        }
+
+        rows.push(`
+          <tr>
+            <td>${year}</td>
+            <td>${formatNumber(factor, 4)}×</td>
+            <td>${formatCurrency(value, digits)}</td>
+            <td>${note}</td>
+          </tr>
+        `);
+      }
+
+      return rows.join('');
+    }
+
+    function calculate(baseAmount, inflationPercent, years, digits, mode) {
+      const rate = inflationPercent / 100;
+      const factor = Math.pow(1 + rate, years);
+
+      let mainValue = 0;
+      let difference = 0;
+      let percentChange = 0;
+      let typeLabel = '';
+      let secondaryLabel = '';
+      let note = '';
+
+      if (mode === 'future-price') {
+        mainValue = baseAmount * factor;
+        difference = mainValue - baseAmount;
+        percentChange = ((mainValue / baseAmount) - 1) * 100;
+        typeLabel = 'Budoucí cena dnešní částky';
+        secondaryLabel = formatCurrency(baseAmount / factor, digits);
+        note = 'Výpočet ukazuje, kolik bude při zadané průměrné inflaci stát dnešní částka nebo cena v budoucnu.';
+      }
+
+      if (mode === 'future-value') {
+        mainValue = baseAmount / factor;
+        difference = baseAmount - mainValue;
+        percentChange = ((mainValue / baseAmount) - 1) * 100;
+        typeLabel = 'Budoucí reálná hodnota';
+        secondaryLabel = formatCurrency(baseAmount * factor, digits);
+        note = 'Výpočet ukazuje, jakou reálnou kupní sílu bude mít dnešní částka po zohlednění inflace.';
+      }
+
+      if (mode === 'required-amount') {
+        mainValue = baseAmount * factor;
+        difference = mainValue - baseAmount;
+        percentChange = ((mainValue / baseAmount) - 1) * 100;
+        typeLabel = 'Potřebná budoucí částka';
+        secondaryLabel = formatCurrency(baseAmount, digits);
+        note = 'Výpočet ukazuje, kolik budete v budoucnu potřebovat, abyste zachovali dnešní kupní sílu.';
+      }
+
+      return {
+        factor,
+        mainValue,
+        difference,
+        percentChange,
+        typeLabel,
+        secondaryLabel,
+        note
+      };
+    }
+
+    function runCalculation() {
+      let baseAmount, inflationPercent, years, digits;
+
+      if (activeTab === 'future-price') {
+        baseAmount = Number(document.getElementById('currentPrice').value);
+        inflationPercent = Number(document.getElementById('inflationRatePrice').value);
+        years = Number(document.getElementById('yearsPrice').value);
+        digits = Number(document.getElementById('roundingPrice').value);
+      }
+
+      if (activeTab === 'future-value') {
+        baseAmount = Number(document.getElementById('currentAmount').value);
+        inflationPercent = Number(document.getElementById('inflationRateValue').value);
+        years = Number(document.getElementById('yearsValue').value);
+        digits = Number(document.getElementById('roundingValue').value);
+      }
+
+      if (activeTab === 'required-amount') {
+        baseAmount = Number(document.getElementById('targetPurchasingPower').value);
+        inflationPercent = Number(document.getElementById('inflationRateRequired').value);
+        years = Number(document.getElementById('yearsRequired').value);
+        digits = Number(document.getElementById('roundingRequired').value);
+      }
+
+      if (!baseAmount || baseAmount < 0 || inflationPercent < 0 || !years || years <= 0) {
+        renderEmpty('Zadejte platnou částku, nezápornou inflaci a počet let větší než 0.');
+        return;
+      }
+
+      const result = calculate(baseAmount, inflationPercent, years, digits, activeTab);
+
+      outputs.mainResult.textContent = formatCurrency(result.mainValue, digits);
+      outputs.differenceResult.textContent = formatCurrency(result.difference, digits);
+      outputs.percentResult.textContent = `${formatNumber(result.percentChange, 2)} %`;
+      outputs.factorResult.textContent = `${formatNumber(result.factor, 4)}×`;
+      outputs.typeResult.textContent = result.typeLabel;
+      outputs.baseAmountResult.textContent = formatCurrency(baseAmount, digits);
+      outputs.rateResult.textContent = `${formatNumber(inflationPercent, 2)} %`;
+      outputs.yearsResult.textContent = years;
+      outputs.secondaryResult.textContent = result.secondaryLabel;
+      outputs.resultNote.textContent = result.note;
+
+      if (inflationPercent <= 2) {
+        setBadge('success', 'Nižší inflace');
+      } else if (inflationPercent <= 5) {
+        setBadge('warning', 'Střední inflace');
+      } else {
+        setBadge('danger', 'Vyšší inflace');
+      }
+
+      outputs.summaryTableBody.innerHTML = buildYearRows(baseAmount, inflationPercent / 100, years, activeTab, digits);
+    }
+
+    tabButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        setActiveTab(button.dataset.tab);
+      });
+    });
+
+    [
+      'currentPrice',
+      'inflationRatePrice',
+      'yearsPrice',
+      'roundingPrice',
+      'currentAmount',
+      'inflationRateValue',
+      'yearsValue',
+      'roundingValue',
+      'targetPurchasingPower',
+      'inflationRateRequired',
+      'yearsRequired',
+      'roundingRequired'
+    ].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.addEventListener('input', runCalculation);
+        el.addEventListener('change', runCalculation);
+      }
+    });
+
+    document.getElementById('calcPriceBtn').addEventListener('click', runCalculation);
+    document.getElementById('calcValueBtn').addEventListener('click', runCalculation);
+    document.getElementById('calcRequiredBtn').addEventListener('click', runCalculation);
+
+    document.getElementById('resetPriceBtn').addEventListener('click', function() {
+      document.getElementById('currentPrice').value = 100000;
+      document.getElementById('inflationRatePrice').value = 3;
+      document.getElementById('yearsPrice').value = 10;
+      document.getElementById('roundingPrice').value = 0;
+      activeTab = 'future-price';
+      setActiveTab('future-price');
+    });
+
+    document.getElementById('resetValueBtn').addEventListener('click', function() {
+      document.getElementById('currentAmount').value = 100000;
+      document.getElementById('inflationRateValue').value = 3;
+      document.getElementById('yearsValue').value = 10;
+      document.getElementById('roundingValue').value = 0;
+      activeTab = 'future-value';
+      setActiveTab('future-value');
+    });
+
+    document.getElementById('resetRequiredBtn').addEventListener('click', function() {
+      document.getElementById('targetPurchasingPower').value = 50000;
+      document.getElementById('inflationRateRequired').value = 3;
+      document.getElementById('yearsRequired').value = 10;
+      document.getElementById('roundingRequired').value = 0;
+      activeTab = 'required-amount';
+      setActiveTab('required-amount');
+    });
+
+    runCalculation();
+  </script>
+</body>
+</html>
