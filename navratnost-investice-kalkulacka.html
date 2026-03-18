@@ -1,1 +1,998 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kalkulačka návratnosti investice online | RychléVýpočty.cz</title>
+  <meta name="description" content="Spočítejte návratnost investice online. Přehledná kalkulačka vypočítá ROI, dobu návratnosti, roční výnos i čistý zisk z investice nebo projektu.">
+  <meta name="keywords" content="kalkulačka návratnosti investice, ROI kalkulačka, doba návratnosti investice, návratnost projektu, investice výpočet">
+  <meta name="author" content="RychléVýpočty.cz">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://rychlevypocty.cz/navratnost-investice-kalkulacka.html">
 
+  <meta property="og:title" content="Kalkulačka návratnosti investice online | RychléVýpočty.cz">
+  <meta property="og:description" content="Rychlý výpočet ROI, čistého zisku a doby návratnosti investice.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rychlevypocty.cz/navratnost-investice-kalkulacka.html">
+  <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Kalkulačka návratnosti investice online | RychléVýpočty.cz">
+  <meta name="twitter:description" content="Spočítejte ROI, návratnost a čistý výsledek investice přehledně a zdarma.">
+
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #5f6b85;
+      --primary: #2152ff;
+      --primary-dark: #183dbf;
+      --border: #dbe3f0;
+      --success: #138a4b;
+      --warning: #b66a00;
+      --danger: #c63d2f;
+      --shadow: 0 12px 32px rgba(20, 32, 70, 0.08);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #f7f9fd 0%, #eef3fb 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    a:hover { text-decoration: underline; }
+
+    .container {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      padding: 18px 0;
+      border-bottom: 1px solid rgba(219, 227, 240, 0.8);
+      background: rgba(255, 255, 255, 0.84);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+      line-height: 1;
+    }
+
+    .brand span { color: var(--primary); }
+
+    .topnav {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      font-size: 0.97rem;
+    }
+
+    .hero {
+      padding: 42px 0 20px;
+    }
+
+    .breadcrumbs {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.12fr 0.88fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .hero-copy h1 {
+      font-size: clamp(2rem, 4vw, 3.15rem);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      margin: 0 0 16px;
+    }
+
+    .hero-copy p {
+      margin: 0 0 16px;
+      font-size: 1.06rem;
+      color: var(--muted);
+      max-width: 760px;
+    }
+
+    .hero-points {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .hero-pill {
+      background: rgba(33, 82, 255, 0.08);
+      color: var(--primary-dark);
+      border: 1px solid rgba(33, 82, 255, 0.12);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .hero-box {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-box h2 {
+      margin: 0 0 10px;
+      font-size: 1.2rem;
+    }
+
+    .hero-box p {
+      margin: 0 0 10px;
+      color: var(--muted);
+    }
+
+    .hero-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.02fr 0.98fr;
+      gap: 28px;
+      align-items: start;
+      padding: 22px 0 32px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .card-header {
+      padding: 24px 24px 10px;
+    }
+
+    .card-header h2,
+    .card-header h3 {
+      margin: 0 0 8px;
+      font-size: 1.3rem;
+      letter-spacing: -0.02em;
+    }
+
+    .card-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .card-body {
+      padding: 20px 24px 24px;
+    }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .field label {
+      font-weight: 700;
+      font-size: 0.96rem;
+    }
+
+    .field small {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: -2px;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      padding: 14px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      font-size: 1rem;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      font-family: inherit;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      outline: none;
+      border-color: rgba(33, 82, 255, 0.45);
+      box-shadow: 0 0 0 4px rgba(33, 82, 255, 0.10);
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.06s ease, background 0.15s ease;
+    }
+
+    button:hover { transform: translateY(-1px); }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover { background: var(--primary-dark); }
+
+    .btn-secondary {
+      background: #eef3ff;
+      color: var(--primary-dark);
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .result-box {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+
+    .result-box.highlight {
+      background: linear-gradient(180deg, #eef7ff 0%, #f9fcff 100%);
+      border-color: rgba(33, 82, 255, 0.18);
+    }
+
+    .result-label {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .result-value {
+      font-size: clamp(1.2rem, 2.4vw, 2rem);
+      line-height: 1.15;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      word-break: break-word;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+
+    .badge.success {
+      background: rgba(19, 138, 75, 0.10);
+      color: var(--success);
+    }
+
+    .badge.warning {
+      background: rgba(182, 106, 0, 0.11);
+      color: var(--warning);
+    }
+
+    .badge.danger {
+      background: rgba(198, 61, 47, 0.10);
+      color: var(--danger);
+    }
+
+    .info-list {
+      display: grid;
+      gap: 12px;
+      margin: 18px 0 0;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid #edf2fa;
+    }
+
+    .info-row:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .info-row span:first-child { color: var(--muted); }
+
+    .note {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1px solid #e7edf7;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 18px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: #fff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 660px;
+    }
+
+    th, td {
+      padding: 14px;
+      text-align: left;
+      border-bottom: 1px solid #edf2fa;
+      font-size: 0.96rem;
+    }
+
+    th {
+      background: #f8fbff;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    tr:last-child td { border-bottom: 0; }
+
+    .content-section {
+      padding: 8px 0;
+    }
+
+    .content-section h2 {
+      font-size: 1.7rem;
+      letter-spacing: -0.03em;
+      margin: 0 0 14px;
+    }
+
+    .content-section h3 {
+      font-size: 1.15rem;
+      margin: 28px 0 10px;
+    }
+
+    .content-section p {
+      color: var(--muted);
+      margin: 0 0 14px;
+    }
+
+    .content-section ul {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    .content-section li { margin-bottom: 8px; }
+
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .related-card {
+      display: block;
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      color: var(--text);
+      box-shadow: var(--shadow);
+    }
+
+    .related-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .related-card span {
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    footer {
+      margin-top: 40px;
+      border-top: 1px solid rgba(219, 227, 240, 0.9);
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .footer-inner {
+      padding: 24px 0 40px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .layout,
+      .related-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .container {
+        width: min(100% - 24px, 1160px);
+      }
+
+      .field-grid,
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 28px;
+      }
+
+      .card-header,
+      .card-body,
+      .hero-box {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebApplication",
+    "name":"Kalkulačka návratnosti investice",
+    "url":"https://rychlevypocty.cz/navratnost-investice-kalkulacka.html",
+    "applicationCategory":"FinanceApplication",
+    "operatingSystem":"Any",
+    "description":"Online kalkulačka pro výpočet ROI, čistého zisku a doby návratnosti investice.",
+    "offers":{
+      "@type":"Offer",
+      "price":"0",
+      "priceCurrency":"CZK"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"Co je ROI?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"ROI je ukazatel návratnosti investice. Vyjadřuje, jaký procentní výnos nebo ztrátu investice přinesla vzhledem k vloženým nákladům."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Jak se počítá doba návratnosti investice?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Doba návratnosti se obvykle počítá jako počáteční investice dělená čistým ročním přínosem. Výsledek ukáže, za kolik let se investice vrátí."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"K čemu je kalkulačka návratnosti investice dobrá?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Pomůže rychle porovnat různé projekty, marketingové kampaně, technologie, vybavení nebo jiné investice podle zisku, ROI a odhadované doby návratnosti."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="/">Rychlé<span>Výpočty</span>.cz</a>
+      <nav class="topnav" aria-label="Hlavní navigace">
+        <a href="/">Domů</a>
+        <a href="/bod-zvratu-kalkulacka.html">Bod zvratu</a>
+        <a href="/kalkulacka-provize.html">Provize</a>
+        <a href="/kalkulacka-slozeneho-uroku.html">Složený úrok</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumbs">
+          <a href="/">RychléVýpočty.cz</a> / Kalkulačka návratnosti investice
+        </div>
+
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <h1>Kalkulačka návratnosti investice</h1>
+            <p>Spočítejte si rychle návratnost investice, čistý zisk, ROI i orientační dobu návratnosti. Kalkulačka se hodí pro podnikání, marketing, vybavení, technologie i běžné finanční rozhodování.</p>
+            <p>Na jednom místě uvidíte, jestli investice dává smysl, jaký přináší roční výsledek a za jak dlouho se přibližně vrátí.</p>
+
+            <div class="hero-points">
+              <div class="hero-pill">ROI v %</div>
+              <div class="hero-pill">Čistý zisk</div>
+              <div class="hero-pill">Doba návratnosti</div>
+              <div class="hero-pill">Roční i celkový pohled</div>
+            </div>
+          </div>
+
+          <div class="hero-box">
+            <h2>Co kalkulačka umí</h2>
+            <p>Z počáteční investice, očekávaných výnosů, ročních nákladů a délky projektu vypočítá celkový čistý výsledek, návratnost investice v procentech a orientační dobu návratnosti.</p>
+            <p>Výsledek je vhodný pro rychlé srovnání variant a prvotní ekonomické posouzení projektu nebo nákupu.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container layout">
+      <div class="card">
+        <div class="card-header">
+          <h2>Zadání investice</h2>
+          <p>Vyplňte základní údaje o investici a očekávaném přínosu. Výsledek se přepočítá okamžitě.</p>
+        </div>
+        <div class="card-body">
+          <div class="field-grid">
+            <div class="field">
+              <label for="initialInvestment">Počáteční investice (Kč)</label>
+              <input type="number" id="initialInvestment" min="0" step="1" value="250000" inputmode="decimal">
+              <small>Jednorázová částka vložená na začátku projektu nebo nákupu.</small>
+            </div>
+
+            <div class="field">
+              <label for="annualRevenue">Roční přínos / výnos (Kč)</label>
+              <input type="number" id="annualRevenue" min="0" step="1" value="120000" inputmode="decimal">
+              <small>Očekávaný roční přínos, úspora nebo dodatečný výnos.</small>
+            </div>
+
+            <div class="field">
+              <label for="annualCosts">Roční provozní náklady (Kč)</label>
+              <input type="number" id="annualCosts" min="0" step="1" value="20000" inputmode="decimal">
+              <small>Pravidelné roční náklady spojené s investicí nebo projektem.</small>
+            </div>
+
+            <div class="field">
+              <label for="projectYears">Délka hodnocení (roky)</label>
+              <input type="number" id="projectYears" min="1" step="1" value="5" inputmode="numeric">
+              <small>Počet let, za které chcete investici vyhodnotit.</small>
+            </div>
+
+            <div class="field">
+              <label for="residualValue">Zůstatková hodnota na konci (Kč)</label>
+              <input type="number" id="residualValue" min="0" step="1" value="30000" inputmode="decimal">
+              <small>Například prodej zařízení, odprodej vybavení nebo jiná konečná hodnota.</small>
+            </div>
+
+            <div class="field">
+              <label for="investmentType">Typ investice</label>
+              <select id="investmentType">
+                <option value="general" selected>Obecná investice</option>
+                <option value="marketing">Marketing / kampaň</option>
+                <option value="equipment">Vybavení / technologie</option>
+                <option value="saving">Úsporné opatření</option>
+              </select>
+              <small>Jen pro lepší interpretaci výsledku.</small>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button class="btn-primary" type="button" id="calculateBtn">Spočítat návratnost</button>
+            <button class="btn-secondary" type="button" id="resetBtn">Obnovit výchozí hodnoty</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>Výsledek výpočtu</h2>
+          <p>Přehled čistého výsledku, ROI a odhadované doby návratnosti.</p>
+        </div>
+        <div class="card-body">
+          <div class="results-grid">
+            <div class="result-box highlight">
+              <div class="result-label">ROI</div>
+              <div class="result-value" id="roiResult">0 %</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Čistý zisk za období</div>
+              <div class="result-value" id="netProfitResult">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Doba návratnosti</div>
+              <div class="result-value" id="paybackResult">0 roku</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Roční čistý přínos</div>
+              <div class="result-value" id="annualNetResult">0 Kč</div>
+            </div>
+          </div>
+
+          <div id="resultBadge" class="badge success">Výpočet připraven</div>
+
+          <div class="info-list">
+            <div class="info-row">
+              <span>Počáteční investice</span>
+              <strong id="initialInvestmentResult">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Roční výnos / přínos</span>
+              <strong id="annualRevenueResult">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Roční náklady</span>
+              <strong id="annualCostsResult">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Délka hodnocení</span>
+              <strong id="projectYearsResult">0 let</strong>
+            </div>
+            <div class="info-row">
+              <span>Zůstatková hodnota</span>
+              <strong id="residualValueResult">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Celkový příjem za období</span>
+              <strong id="totalBenefitResult">0 Kč</strong>
+            </div>
+          </div>
+
+          <div class="note" id="resultNote">
+            Výsledek je orientační a slouží jako rychlá pomůcka pro posouzení ekonomického smyslu investice.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="card">
+        <div class="card-header">
+          <h3>Rozpis výpočtu</h3>
+          <p>Přehled hlavních položek, které vstupují do výpočtu návratnosti investice.</p>
+        </div>
+        <div class="card-body">
+          <div class="table-wrap">
+            <table aria-label="Rozpis návratnosti investice">
+              <thead>
+                <tr>
+                  <th>Položka</th>
+                  <th>Hodnota</th>
+                  <th>Poznámka</th>
+                </tr>
+              </thead>
+              <tbody id="summaryTableBody">
+                <tr>
+                  <td>ROI</td>
+                  <td>—</td>
+                  <td>Po výpočtu se zobrazí detailní přehled.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container content-section">
+      <h2>Jak kalkulačka návratnosti investice funguje</h2>
+      <p>Kalkulačka nejprve spočítá roční čistý přínos jako rozdíl mezi ročním výnosem a ročními náklady. Poté zohlední délku hodnocení a případnou zůstatkovou hodnotu na konci období. Z toho vypočítá celkový čistý zisk a ROI vůči počáteční investici.</p>
+
+      <h3>Co ve výsledku uvidíte</h3>
+      <ul>
+        <li>ROI v procentech,</li>
+        <li>celkový čistý zisk za celé období,</li>
+        <li>roční čistý přínos investice,</li>
+        <li>odhadovanou dobu návratnosti v letech.</li>
+      </ul>
+
+      <h3>Kdy se výpočet hodí</h3>
+      <p>Kalkulačka je užitečná pro vyhodnocení reklamní kampaně, nákupu technologií, úsporných opatření, strojů, vybavení nebo jiného projektu, u kterého chcete rychle zjistit ekonomický efekt a návratnost vložených peněz.</p>
+
+      <h3>Na co si dát pozor</h3>
+      <p>Výpočet je zjednodušený a nepočítá s inflací, časovou hodnotou peněz, rizikem ani diskontováním budoucích peněžních toků. Výsledek proto berte jako praktický orientační ukazatel, ne jako plnohodnotný investiční model.</p>
+    </section>
+
+    <section class="container content-section">
+      <h2>Související kalkulačky</h2>
+      <div class="related-grid">
+        <a class="related-card" href="/bod-zvratu-kalkulacka.html">
+          <strong>Bod zvratu kalkulačka</strong>
+          <span>Výpočet minimálního prodeje pro pokrytí nákladů.</span>
+        </a>
+
+        <a class="related-card" href="/kalkulacka-slozeneho-uroku.html">
+          <strong>Kalkulačka složeného úroku</strong>
+          <span>Výpočet budoucí hodnoty investice při zhodnocení.</span>
+        </a>
+
+        <a class="related-card" href="/kalkulacka-provize.html">
+          <strong>Kalkulačka provize</strong>
+          <span>Výpočet provize z obratu, částky nebo prodeje.</span>
+        </a>
+
+        <a class="related-card" href="/inflace-kalkulacka.html">
+          <strong>Inflační kalkulačka</strong>
+          <span>Výpočet dopadu inflace na hodnotu peněz.</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      © 2026 RychléVýpočty.cz — online kalkulačky a praktické výpočty pro každodenní použití.
+    </div>
+  </footer>
+
+  <script>
+    const initialInvestmentInput = document.getElementById('initialInvestment');
+    const annualRevenueInput = document.getElementById('annualRevenue');
+    const annualCostsInput = document.getElementById('annualCosts');
+    const projectYearsInput = document.getElementById('projectYears');
+    const residualValueInput = document.getElementById('residualValue');
+    const investmentTypeInput = document.getElementById('investmentType');
+
+    const outputs = {
+      roiResult: document.getElementById('roiResult'),
+      netProfitResult: document.getElementById('netProfitResult'),
+      paybackResult: document.getElementById('paybackResult'),
+      annualNetResult: document.getElementById('annualNetResult'),
+      resultBadge: document.getElementById('resultBadge'),
+      initialInvestmentResult: document.getElementById('initialInvestmentResult'),
+      annualRevenueResult: document.getElementById('annualRevenueResult'),
+      annualCostsResult: document.getElementById('annualCostsResult'),
+      projectYearsResult: document.getElementById('projectYearsResult'),
+      residualValueResult: document.getElementById('residualValueResult'),
+      totalBenefitResult: document.getElementById('totalBenefitResult'),
+      resultNote: document.getElementById('resultNote'),
+      summaryTableBody: document.getElementById('summaryTableBody')
+    };
+
+    function formatCurrency(value) {
+      return new Intl.NumberFormat('cs-CZ', {
+        style: 'currency',
+        currency: 'CZK',
+        maximumFractionDigits: 0
+      }).format(value);
+    }
+
+    function formatPercent(value) {
+      return new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2
+      }).format(value) + ' %';
+    }
+
+    function formatYears(value) {
+      if (!isFinite(value)) return '—';
+      return new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2
+      }).format(value) + ' roku';
+    }
+
+    function buildSummaryRows(rows) {
+      outputs.summaryTableBody.innerHTML = rows.map(row => `
+        <tr>
+          <td>${row.label}</td>
+          <td>${row.amount}</td>
+          <td>${row.note}</td>
+        </tr>
+      `).join('');
+    }
+
+    function getTypeLabel(type) {
+      if (type === 'marketing') return 'marketing nebo kampaň';
+      if (type === 'equipment') return 'vybavení nebo technologie';
+      if (type === 'saving') return 'úsporné opatření';
+      return 'obecná investice';
+    }
+
+    function calculateROI() {
+      const initialInvestment = Number(initialInvestmentInput.value);
+      const annualRevenue = Number(annualRevenueInput.value);
+      const annualCosts = Number(annualCostsInput.value);
+      const projectYears = Number(projectYearsInput.value);
+      const residualValue = Number(residualValueInput.value) || 0;
+      const investmentType = investmentTypeInput.value;
+
+      if (!initialInvestment || initialInvestment <= 0 || annualRevenue < 0 || annualCosts < 0 || !projectYears || projectYears <= 0) {
+        outputs.roiResult.textContent = '0 %';
+        outputs.netProfitResult.textContent = '0 Kč';
+        outputs.paybackResult.textContent = '0 roku';
+        outputs.annualNetResult.textContent = '0 Kč';
+        outputs.initialInvestmentResult.textContent = '0 Kč';
+        outputs.annualRevenueResult.textContent = '0 Kč';
+        outputs.annualCostsResult.textContent = '0 Kč';
+        outputs.projectYearsResult.textContent = '0 let';
+        outputs.residualValueResult.textContent = '0 Kč';
+        outputs.totalBenefitResult.textContent = '0 Kč';
+        outputs.resultBadge.className = 'badge warning';
+        outputs.resultBadge.textContent = 'Chybí vstupní data';
+        outputs.resultNote.textContent = 'Zadejte platnou počáteční investici, roční přínos a délku hodnocení.';
+        buildSummaryRows([
+          {
+            label: 'Výpočet',
+            amount: '—',
+            note: 'Zadejte platné vstupní hodnoty.'
+          }
+        ]);
+        return;
+      }
+
+      const annualNet = annualRevenue - annualCosts;
+      const totalBenefit = (annualNet * projectYears) + residualValue;
+      const netProfit = totalBenefit - initialInvestment;
+      const roi = (netProfit / initialInvestment) * 100;
+      const payback = annualNet > 0 ? initialInvestment / annualNet : Infinity;
+
+      outputs.roiResult.textContent = formatPercent(roi);
+      outputs.netProfitResult.textContent = formatCurrency(netProfit);
+      outputs.paybackResult.textContent = formatYears(payback);
+      outputs.annualNetResult.textContent = formatCurrency(annualNet);
+
+      outputs.initialInvestmentResult.textContent = formatCurrency(initialInvestment);
+      outputs.annualRevenueResult.textContent = formatCurrency(annualRevenue);
+      outputs.annualCostsResult.textContent = formatCurrency(annualCosts);
+      outputs.projectYearsResult.textContent = `${projectYears} let`;
+      outputs.residualValueResult.textContent = formatCurrency(residualValue);
+      outputs.totalBenefitResult.textContent = formatCurrency(totalBenefit);
+
+      if (annualNet <= 0) {
+        outputs.resultBadge.className = 'badge danger';
+        outputs.resultBadge.textContent = 'Investice se nevrací';
+        outputs.resultNote.textContent = `Tato ${getTypeLabel(investmentType)} má záporný nebo nulový roční čistý přínos. V tomto nastavení nedochází k návratnosti investice.`;
+      } else if (roi >= 50) {
+        outputs.resultBadge.className = 'badge success';
+        outputs.resultBadge.textContent = 'Vyšší návratnost';
+        outputs.resultNote.textContent = `Pro ${getTypeLabel(investmentType)} vychází ROI přibližně na ${formatPercent(roi)} a odhadovaná doba návratnosti na ${formatYears(payback)}.`;
+      } else {
+        outputs.resultBadge.className = 'badge warning';
+        outputs.resultBadge.textContent = 'Střední nebo nižší návratnost';
+        outputs.resultNote.textContent = `Pro ${getTypeLabel(investmentType)} vychází ROI přibližně na ${formatPercent(roi)} a doba návratnosti na ${formatYears(payback)}. Výsledek je vhodné posoudit i v kontextu rizika a alternativních variant.`;
+      }
+
+      buildSummaryRows([
+        {
+          label: 'Počáteční investice',
+          amount: formatCurrency(initialInvestment),
+          note: 'Jednorázový vstupní náklad'
+        },
+        {
+          label: 'Roční výnos / přínos',
+          amount: formatCurrency(annualRevenue),
+          note: 'Roční úspora nebo dodatečný příjem'
+        },
+        {
+          label: 'Roční provozní náklady',
+          amount: formatCurrency(annualCosts),
+          note: 'Pravidelné roční náklady'
+        },
+        {
+          label: 'Roční čistý přínos',
+          amount: formatCurrency(annualNet),
+          note: 'Roční výnos mínus roční náklady'
+        },
+        {
+          label: 'Délka hodnocení',
+          amount: `${projectYears} let`,
+          note: 'Zadané období pro celkové vyhodnocení'
+        },
+        {
+          label: 'Zůstatková hodnota',
+          amount: formatCurrency(residualValue),
+          note: 'Konečná hodnota na konci období'
+        },
+        {
+          label: 'Celkový přínos za období',
+          amount: formatCurrency(totalBenefit),
+          note: 'Součet ročních přínosů a zůstatkové hodnoty'
+        },
+        {
+          label: 'Čistý zisk',
+          amount: formatCurrency(netProfit),
+          note: 'Celkový přínos mínus počáteční investice'
+        },
+        {
+          label: 'ROI',
+          amount: formatPercent(roi),
+          note: 'Návratnost investice v procentech'
+        },
+        {
+          label: 'Doba návratnosti',
+          amount: formatYears(payback),
+          note: 'Odhad, za jak dlouho se investice vrátí'
+        }
+      ]);
+    }
+
+    document.getElementById('calculateBtn').addEventListener('click', calculateROI);
+
+    document.getElementById('resetBtn').addEventListener('click', function() {
+      initialInvestmentInput.value = 250000;
+      annualRevenueInput.value = 120000;
+      annualCostsInput.value = 20000;
+      projectYearsInput.value = 5;
+      residualValueInput.value = 30000;
+      investmentTypeInput.value = 'general';
+      calculateROI();
+    });
+
+    [initialInvestmentInput, annualRevenueInput, annualCostsInput, projectYearsInput, residualValueInput, investmentTypeInput].forEach(el => {
+      el.addEventListener('input', calculateROI);
+      el.addEventListener('change', calculateROI);
+    });
+
+    calculateROI();
+  </script>
+</body>
+</html>
