@@ -1,1 +1,990 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kalkulačka slevy online zdarma | Výpočet slevy v % i Kč | RychléVýpočty.cz</title>
+  <meta name="description" content="Spočítejte slevu z původní ceny, finální cenu po slevě, výši úspory v Kč i efektivní slevu při více slevách. Přehledná kalkulačka slevy zdarma online.">
+  <meta name="keywords" content="kalkulačka slevy, výpočet slevy, sleva procenta, cena po slevě, sleva v Kč, výpočet zlevnění">
+  <meta name="author" content="RychléVýpočty.cz">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://rychlevypocty.cz/kalkulacka-slevy.html">
 
+  <meta property="og:title" content="Kalkulačka slevy online zdarma | RychléVýpočty.cz">
+  <meta property="og:description" content="Výpočet slevy z původní ceny, výsledné ceny, úspory i efektivní slevy při více slevách.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rychlevypocty.cz/kalkulacka-slevy.html">
+  <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Kalkulačka slevy online zdarma | RychléVýpočty.cz">
+  <meta name="twitter:description" content="Rychlý výpočet ceny po slevě, částky slevy a úspory při nákupu.">
+
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #5f6b85;
+      --primary: #2152ff;
+      --primary-dark: #183dbf;
+      --border: #dbe3f0;
+      --success: #138a4b;
+      --warning: #b66a00;
+      --shadow: 0 12px 32px rgba(20, 32, 70, 0.08);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #f7f9fd 0%, #eef3fb 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      padding: 18px 0;
+      border-bottom: 1px solid rgba(219, 227, 240, 0.8);
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+
+    .brand span {
+      color: var(--primary);
+    }
+
+    .topnav {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      font-size: 0.97rem;
+    }
+
+    .hero {
+      padding: 42px 0 20px;
+    }
+
+    .breadcrumbs {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .hero-copy h1 {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      margin: 0 0 16px;
+    }
+
+    .hero-copy p {
+      margin: 0 0 16px;
+      font-size: 1.06rem;
+      color: var(--muted);
+      max-width: 720px;
+    }
+
+    .hero-points {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .hero-pill {
+      background: rgba(33, 82, 255, 0.08);
+      color: var(--primary-dark);
+      border: 1px solid rgba(33, 82, 255, 0.12);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .hero-box {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-box h2 {
+      margin: 0 0 10px;
+      font-size: 1.2rem;
+    }
+
+    .hero-box p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.04fr 0.96fr;
+      gap: 28px;
+      align-items: start;
+      padding: 22px 0 32px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .card-header {
+      padding: 24px 24px 10px;
+    }
+
+    .card-header h2,
+    .card-header h3 {
+      margin: 0 0 8px;
+      font-size: 1.3rem;
+      letter-spacing: -0.02em;
+    }
+
+    .card-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .card-body {
+      padding: 20px 24px 24px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field label {
+      font-weight: 700;
+      font-size: 0.96rem;
+    }
+
+    .field small {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: -2px;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      padding: 14px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      font-size: 1rem;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      outline: none;
+      border-color: rgba(33, 82, 255, 0.45);
+      box-shadow: 0 0 0 4px rgba(33, 82, 255, 0.10);
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.06s ease, background 0.15s ease, opacity 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background: #eef3ff;
+      color: var(--primary-dark);
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .result-box {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+
+    .result-label {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .result-value {
+      font-size: clamp(1.25rem, 2.4vw, 2rem);
+      line-height: 1.15;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .highlight {
+      background: linear-gradient(180deg, #eef7ff 0%, #f9fcff 100%);
+      border-color: rgba(33, 82, 255, 0.18);
+    }
+
+    .info-list {
+      display: grid;
+      gap: 12px;
+      margin: 18px 0 0;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid #edf2fa;
+    }
+
+    .info-row:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .info-row span:first-child {
+      color: var(--muted);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+
+    .badge.success {
+      background: rgba(19, 138, 75, 0.10);
+      color: var(--success);
+    }
+
+    .badge.warning {
+      background: rgba(182, 106, 0, 0.11);
+      color: var(--warning);
+    }
+
+    .note {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1px solid #e7edf7;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 18px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 640px;
+      background: #fff;
+    }
+
+    th, td {
+      padding: 14px 14px;
+      text-align: left;
+      border-bottom: 1px solid #edf2fa;
+      font-size: 0.96rem;
+    }
+
+    th {
+      background: #f8fbff;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .content-section {
+      padding: 8px 0 8px;
+    }
+
+    .content-section h2 {
+      font-size: 1.7rem;
+      letter-spacing: -0.03em;
+      margin: 0 0 14px;
+    }
+
+    .content-section h3 {
+      font-size: 1.15rem;
+      margin: 28px 0 10px;
+    }
+
+    .content-section p {
+      color: var(--muted);
+      margin: 0 0 14px;
+    }
+
+    .content-section ul {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    .content-section li {
+      margin-bottom: 8px;
+    }
+
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .related-card {
+      display: block;
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      color: var(--text);
+      box-shadow: var(--shadow);
+    }
+
+    .related-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .related-card span {
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    footer {
+      margin-top: 40px;
+      border-top: 1px solid rgba(219, 227, 240, 0.9);
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .footer-inner {
+      padding: 24px 0 40px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .layout,
+      .related-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .container {
+        width: min(100% - 24px, 1160px);
+      }
+
+      .form-grid,
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 28px;
+      }
+
+      .card-header,
+      .card-body,
+      .hero-box {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .info-row {
+        flex-direction: column;
+      }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebApplication",
+    "name":"Kalkulačka slevy",
+    "url":"https://rychlevypocty.cz/kalkulacka-slevy.html",
+    "applicationCategory":"FinanceApplication",
+    "operatingSystem":"Any",
+    "description":"Online kalkulačka slevy pro výpočet ceny po slevě, úspory v Kč a efektivní slevy při více slevách.",
+    "offers":{
+      "@type":"Offer",
+      "price":"0",
+      "priceCurrency":"CZK"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"Jak se počítá sleva z ceny?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Sleva se počítá jako procento z původní ceny. Například při ceně 2 000 Kč a slevě 25 % je výše slevy 500 Kč a výsledná cena po slevě 1 500 Kč."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Jak fungují dvě slevy za sebou?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Dvě slevy za sebou se nesčítají prostým součtem. Nejprve se uplatní první sleva na původní cenu a druhá sleva se pak počítá až ze snížené částky."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Je lepší procentní sleva nebo kupón v korunách?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Záleží na výši objednávky. U dražšího zboží bývá často výhodnější procentní sleva, u levnějšího nákupu může být výhodnější pevný kupón v korunách."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="/">Rychlé<span>Výpočty</span>.cz</a>
+      <nav class="topnav" aria-label="Hlavní navigace">
+        <a href="/">Domů</a>
+        <a href="/procenta-kalkulacka.html">Procenta</a>
+        <a href="/jednotkova-cena-kalkulacka.html">Jednotková cena</a>
+        <a href="/kalkulacka-marze-a-prirazky.html">Marže a přirážka</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumbs">
+          <a href="/">RychléVýpočty.cz</a> / Kalkulačka slevy
+        </div>
+
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <h1>Kalkulačka slevy</h1>
+            <p>Spočítejte si slevu z původní ceny, výslednou cenu po slevě, celkovou úsporu i efektivní slevu při více slevách za sebou. Kalkulačka je vhodná pro rychlé porovnání akčních nabídek, slevových kupónů i běžných nákupů.</p>
+            <p>Zadejte původní cenu, procentní slevu, případně druhou slevu, kupón v Kč a počet kusů. Výsledek získáte okamžitě.</p>
+
+            <div class="hero-points">
+              <div class="hero-pill">Cena po slevě</div>
+              <div class="hero-pill">Úspora v Kč</div>
+              <div class="hero-pill">Více slev za sebou</div>
+              <div class="hero-pill">Výpočet pro více kusů</div>
+            </div>
+          </div>
+
+          <div class="hero-box">
+            <h2>Co kalkulačka umí</h2>
+            <p>Počítá běžnou procentní slevu, druhou navazující slevu, pevný kupón v korunách a celkovou cenu při nákupu více kusů. Výsledek ukáže nejen finální částku, ale i reálnou úsporu a efektivní procento zlevnění.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container layout">
+      <div class="card">
+        <div class="card-header">
+          <h2>Zadání slevy</h2>
+          <p>Vyplňte původní cenu a parametry slevy. Kalkulačka výsledek automaticky přepočítá.</p>
+        </div>
+        <div class="card-body">
+          <form id="discountForm">
+            <div class="form-grid">
+              <div class="field">
+                <label for="originalPrice">Původní cena za kus</label>
+                <input type="number" id="originalPrice" min="0.01" step="0.01" value="2490" inputmode="decimal">
+                <small>Cena před slevou.</small>
+              </div>
+
+              <div class="field">
+                <label for="discountPercent">Sleva (%)</label>
+                <input type="number" id="discountPercent" min="0" max="100" step="0.01" value="20" inputmode="decimal">
+                <small>Hlavní procentní sleva.</small>
+              </div>
+
+              <div class="field">
+                <label for="secondDiscount">Druhá sleva (%)</label>
+                <input type="number" id="secondDiscount" min="0" max="100" step="0.01" value="0" inputmode="decimal">
+                <small>Volitelné další zlevnění po první slevě.</small>
+              </div>
+
+              <div class="field">
+                <label for="couponValue">Kupón / sleva v Kč za kus</label>
+                <input type="number" id="couponValue" min="0" step="0.01" value="0" inputmode="decimal">
+                <small>Pevná částka, která se odečte po procentních slevách.</small>
+              </div>
+
+              <div class="field">
+                <label for="quantity">Počet kusů</label>
+                <input type="number" id="quantity" min="1" step="1" value="1" inputmode="numeric">
+                <small>Pro výpočet celkové ceny objednávky.</small>
+              </div>
+
+              <div class="field">
+                <label for="vatMode">Zobrazení ceny</label>
+                <select id="vatMode">
+                  <option value="final" selected>Finální cena po všech slevách</option>
+                  <option value="step">Průběžné kroky slevy</option>
+                </select>
+                <small>Pomůže při rychlém srovnání scénářů.</small>
+              </div>
+
+              <div class="actions full">
+                <button type="submit" class="btn-primary">Spočítat slevu</button>
+                <button type="button" class="btn-secondary" id="resetBtn">Obnovit výchozí hodnoty</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>Výsledek výpočtu</h2>
+          <p>Přehled výsledné ceny, úspory a efektivního zlevnění.</p>
+        </div>
+        <div class="card-body">
+          <div class="results-grid">
+            <div class="result-box highlight">
+              <div class="result-label">Cena po slevě za kus</div>
+              <div class="result-value" id="finalPricePerPiece">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Celková cena objednávky</div>
+              <div class="result-value" id="finalTotalPrice">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Úspora za kus</div>
+              <div class="result-value" id="savedPerPiece">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Celková úspora</div>
+              <div class="result-value" id="savedTotal">0 Kč</div>
+            </div>
+          </div>
+
+          <div id="discountBadge" class="badge success">Efektivní sleva: 0 %</div>
+
+          <div class="info-list">
+            <div class="info-row">
+              <span>Původní cena za kus</span>
+              <strong id="summaryOriginal">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Cena po 1. slevě</span>
+              <strong id="summaryAfterFirst">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Cena po 2. slevě</span>
+              <strong id="summaryAfterSecond">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Cena po kupónu</span>
+              <strong id="summaryAfterCoupon">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Počet kusů</span>
+              <strong id="summaryQuantity">0</strong>
+            </div>
+          </div>
+
+          <div class="note">
+            Pokud je použitá druhá sleva, nepočítá se z původní ceny, ale až z ceny po první slevě. Proto se dvě slevy běžně nesčítají prostým součtem.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="card">
+        <div class="card-header">
+          <h3>Přehled kroků výpočtu</h3>
+          <p>Detailní rozpis jednotlivých fází zlevnění.</p>
+        </div>
+        <div class="card-body">
+          <div class="table-wrap">
+            <table aria-label="Přehled výpočtu slevy">
+              <thead>
+                <tr>
+                  <th>Krok</th>
+                  <th>Popis</th>
+                  <th>Částka za kus</th>
+                  <th>Rozdíl oproti původní ceně</th>
+                </tr>
+              </thead>
+              <tbody id="stepsBody">
+                <tr>
+                  <td colspan="4">Po zadání údajů se zobrazí rozpis výpočtu slevy.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container content-section">
+      <h2>Jak kalkulačka slevy funguje</h2>
+      <p>Kalkulačka slevy vychází z jednoduchého principu: od původní ceny odečte procentní slevu, případně navazující druhou slevu, a nakonec může odečíst i pevný kupón v korunách. Výsledkem je finální cena za kus, celková cena objednávky a přehled skutečné úspory.</p>
+
+      <h3>Proč se dvě slevy nesčítají prostě dohromady</h3>
+      <p>Pokud je produkt zlevněný například o 20 % a pak ještě o 10 %, neznamená to automaticky celkovou slevu 30 %. Druhá sleva se totiž počítá až z už zlevněné částky. Efektivní sleva je proto nižší než prostý součet obou procent.</p>
+
+      <h3>Co ve výsledku uvidíte</h3>
+      <ul>
+        <li>výslednou cenu po slevě za 1 kus,</li>
+        <li>celkovou cenu při zadaném počtu kusů,</li>
+        <li>úsporu za kus i za celý nákup,</li>
+        <li>efektivní procento zlevnění,</li>
+        <li>mezikroky po první a druhé slevě i po kupónu.</li>
+      </ul>
+
+      <h3>Kdy se kalkulačka hodí</h3>
+      <p>Typicky při nákupech v e-shopech, porovnávání akčních nabídek, kombinování kupónů, sezonních výprodejích nebo při rychlé kontrole, jestli je konkrétní sleva opravdu výhodná. Dobře se hodí i pro obchodníky a marketéry, kteří chtějí rychle odhadnout dopad slevové akce na finální cenu.</p>
+    </section>
+
+    <section class="container content-section">
+      <h2>Související kalkulačky</h2>
+      <div class="related-grid">
+        <a class="related-card" href="/procenta-kalkulacka.html">
+          <strong>Kalkulačka procent</strong>
+          <span>Rychlé výpočty procent, změn a podílů.</span>
+        </a>
+
+        <a class="related-card" href="/jednotkova-cena-kalkulacka.html">
+          <strong>Kalkulačka jednotkové ceny</strong>
+          <span>Porovnání cen různých balení a množství.</span>
+        </a>
+
+        <a class="related-card" href="/kalkulacka-marze-a-prirazky.html">
+          <strong>Kalkulačka marže a přirážky</strong>
+          <span>Výpočet zisku, prodejní ceny a cenotvorby.</span>
+        </a>
+
+        <a class="related-card" href="/dph-kalkulacka.html">
+          <strong>DPH kalkulačka</strong>
+          <span>Výpočet ceny s DPH, bez DPH i samotné DPH.</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      © 2026 RychléVýpočty.cz — online kalkulačky a praktické výpočty pro každodenní použití.
+    </div>
+  </footer>
+
+  <script>
+    const form = document.getElementById('discountForm');
+    const resetBtn = document.getElementById('resetBtn');
+
+    const outputs = {
+      finalPricePerPiece: document.getElementById('finalPricePerPiece'),
+      finalTotalPrice: document.getElementById('finalTotalPrice'),
+      savedPerPiece: document.getElementById('savedPerPiece'),
+      savedTotal: document.getElementById('savedTotal'),
+      summaryOriginal: document.getElementById('summaryOriginal'),
+      summaryAfterFirst: document.getElementById('summaryAfterFirst'),
+      summaryAfterSecond: document.getElementById('summaryAfterSecond'),
+      summaryAfterCoupon: document.getElementById('summaryAfterCoupon'),
+      summaryQuantity: document.getElementById('summaryQuantity'),
+      discountBadge: document.getElementById('discountBadge'),
+      stepsBody: document.getElementById('stepsBody')
+    };
+
+    function formatCurrency(value) {
+      return new Intl.NumberFormat('cs-CZ', {
+        style: 'currency',
+        currency: 'CZK',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2
+      }).format(value);
+    }
+
+    function formatPercent(value, digits = 2) {
+      return new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: digits
+      }).format(value) + ' %';
+    }
+
+    function getValues() {
+      return {
+        originalPrice: Number(document.getElementById('originalPrice').value),
+        discountPercent: Number(document.getElementById('discountPercent').value),
+        secondDiscount: Number(document.getElementById('secondDiscount').value),
+        couponValue: Number(document.getElementById('couponValue').value),
+        quantity: Number(document.getElementById('quantity').value),
+        vatMode: document.getElementById('vatMode').value
+      };
+    }
+
+    function validate(values) {
+      if (!values.originalPrice || values.originalPrice <= 0) return 'Zadejte platnou původní cenu.';
+      if (values.discountPercent < 0 || values.discountPercent > 100) return 'První sleva musí být v rozmezí 0 až 100 %.';
+      if (values.secondDiscount < 0 || values.secondDiscount > 100) return 'Druhá sleva musí být v rozmezí 0 až 100 %.';
+      if (values.couponValue < 0) return 'Kupón nemůže být záporný.';
+      if (!values.quantity || values.quantity < 1) return 'Zadejte platný počet kusů.';
+      return '';
+    }
+
+    function calculateDiscount(values) {
+      const original = values.originalPrice;
+      const afterFirst = original * (1 - values.discountPercent / 100);
+      const afterSecond = afterFirst * (1 - values.secondDiscount / 100);
+      const afterCoupon = Math.max(0, afterSecond - values.couponValue);
+      const finalPricePerPiece = Math.max(0, afterCoupon);
+
+      const savedPerPiece = original - finalPricePerPiece;
+      const originalTotal = original * values.quantity;
+      const finalTotalPrice = finalPricePerPiece * values.quantity;
+      const savedTotal = savedPerPiece * values.quantity;
+      const effectiveDiscount = original > 0 ? (savedPerPiece / original) * 100 : 0;
+
+      return {
+        original,
+        afterFirst,
+        afterSecond,
+        afterCoupon,
+        finalPricePerPiece,
+        savedPerPiece,
+        originalTotal,
+        finalTotalPrice,
+        savedTotal,
+        effectiveDiscount
+      };
+    }
+
+    function buildSteps(values, result) {
+      return [
+        {
+          step: '1',
+          label: 'Původní cena',
+          price: result.original,
+          diff: 0
+        },
+        {
+          step: '2',
+          label: 'Po 1. slevě (' + formatPercent(values.discountPercent) + ')',
+          price: result.afterFirst,
+          diff: result.original - result.afterFirst
+        },
+        {
+          step: '3',
+          label: 'Po 2. slevě (' + formatPercent(values.secondDiscount) + ')',
+          price: result.afterSecond,
+          diff: result.original - result.afterSecond
+        },
+        {
+          step: '4',
+          label: 'Po kupónu ' + formatCurrency(values.couponValue),
+          price: result.afterCoupon,
+          diff: result.original - result.afterCoupon
+        },
+        {
+          step: '5',
+          label: 'Finální cena za kus',
+          price: result.finalPricePerPiece,
+          diff: result.savedPerPiece
+        }
+      ];
+    }
+
+    function renderSteps(steps) {
+      outputs.stepsBody.innerHTML = steps.map(row => `
+        <tr>
+          <td>${row.step}</td>
+          <td>${row.label}</td>
+          <td>${formatCurrency(row.price)}</td>
+          <td>${formatCurrency(row.diff)}</td>
+        </tr>
+      `).join('');
+    }
+
+    function render(values, result) {
+      outputs.finalPricePerPiece.textContent = formatCurrency(result.finalPricePerPiece);
+      outputs.finalTotalPrice.textContent = formatCurrency(result.finalTotalPrice);
+      outputs.savedPerPiece.textContent = formatCurrency(result.savedPerPiece);
+      outputs.savedTotal.textContent = formatCurrency(result.savedTotal);
+
+      outputs.summaryOriginal.textContent = formatCurrency(result.original);
+      outputs.summaryAfterFirst.textContent = formatCurrency(result.afterFirst);
+      outputs.summaryAfterSecond.textContent = formatCurrency(result.afterSecond);
+      outputs.summaryAfterCoupon.textContent = formatCurrency(result.afterCoupon);
+      outputs.summaryQuantity.textContent = values.quantity.toString();
+
+      outputs.discountBadge.textContent = 'Efektivní sleva: ' + formatPercent(result.effectiveDiscount);
+
+      if (result.effectiveDiscount >= 30) {
+        outputs.discountBadge.className = 'badge success';
+      } else {
+        outputs.discountBadge.className = 'badge warning';
+      }
+
+      const steps = buildSteps(values, result);
+      renderSteps(steps);
+    }
+
+    function runCalculation() {
+      const values = getValues();
+      const error = validate(values);
+
+      if (error) {
+        alert(error);
+        return;
+      }
+
+      const result = calculateDiscount(values);
+      render(values, result);
+    }
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      runCalculation();
+    });
+
+    ['originalPrice', 'discountPercent', 'secondDiscount', 'couponValue', 'quantity', 'vatMode'].forEach(id => {
+      document.getElementById(id).addEventListener('input', runCalculation);
+      document.getElementById(id).addEventListener('change', runCalculation);
+    });
+
+    resetBtn.addEventListener('click', function() {
+      document.getElementById('originalPrice').value = 2490;
+      document.getElementById('discountPercent').value = 20;
+      document.getElementById('secondDiscount').value = 0;
+      document.getElementById('couponValue').value = 0;
+      document.getElementById('quantity').value = 1;
+      document.getElementById('vatMode').value = 'final';
+      runCalculation();
+    });
+
+    runCalculation();
+  </script>
+</body>
+</html>
