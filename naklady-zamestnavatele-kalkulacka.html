@@ -1,1 +1,68 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<title>Kalkulačka nákladů zaměstnavatele | Cena práce | RychléVýpočty.cz</title>
+<meta name="description" content="Spočítejte celkové náklady zaměstnavatele. Kalkulačka ceny práce včetně odvodů sociálního a zdravotního pojištění.">
+
+<link rel="canonical" href="https://rychlevypocty.cz/naklady-zamestnavatele-kalkulacka.html">
+
+<style>
+body {font-family: Arial; background:#f5f7fb; margin:0;}
+.container {max-width:900px;margin:auto;padding:20px;}
+.card {background:white;padding:20px;border-radius:12px;margin-top:20px;}
+input {width:100%;padding:10px;margin-top:5px;}
+button {margin-top:15px;padding:12px;width:100%;background:#2152ff;color:white;border:none;border-radius:8px;}
+.result {font-size:24px;font-weight:bold;margin-top:10px;}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<h1>Kalkulačka nákladů zaměstnavatele</h1>
+
+<div class="card">
+<label>Hrubá mzda (Kč)</label>
+<input type="number" id="gross" value="40000">
+
+<button onclick="calc()">Spočítat</button>
+</div>
+
+<div class="card">
+<div>Sociální (24.8%)</div>
+<div id="social" class="result">0 Kč</div>
+
+<div>Zdravotní (9%)</div>
+<div id="health" class="result">0 Kč</div>
+
+<div>Celkové náklady</div>
+<div id="total" class="result">0 Kč</div>
+</div>
+</div>
+
+<script>
+function format(n){
+return new Intl.NumberFormat('cs-CZ',{style:'currency',currency:'CZK'}).format(n);
+}
+
+function calc(){
+let gross = Number(document.getElementById('gross').value);
+
+let social = gross * 0.248;
+let health = gross * 0.09;
+
+let total = gross + social + health;
+
+document.getElementById('social').innerText = format(social);
+document.getElementById('health').innerText = format(health);
+document.getElementById('total').innerText = format(total);
+}
+
+calc();
+</script>
+
+</body>
+</html>
