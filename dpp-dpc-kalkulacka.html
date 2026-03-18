@@ -1,1 +1,1090 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DPP / DPČ kalkulačka online zdarma | Výpočet čisté odměny | RychléVýpočty.cz</title>
+  <meta name="description" content="Spočítejte si orientační čistou odměnu z DPP nebo DPČ. Kalkulačka rozlišuje limity pro odvody, podpis Prohlášení k dani i orientační srážkovou nebo zálohovou daň.">
+  <meta name="keywords" content="DPP kalkulačka, DPČ kalkulačka, dohoda o provedení práce, dohoda o pracovní činnosti, čistá odměna DPP, čistá odměna DPČ">
+  <meta name="author" content="RychléVýpočty.cz">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://rychlevypocty.cz/dpp-dpc-kalkulacka.html">
 
+  <meta property="og:title" content="DPP / DPČ kalkulačka online zdarma | RychléVýpočty.cz">
+  <meta property="og:description" content="Orientační výpočet čisté odměny z DPP a DPČ včetně odvodů a daně.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rychlevypocty.cz/dpp-dpc-kalkulacka.html">
+  <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="DPP / DPČ kalkulačka online zdarma | RychléVýpočty.cz">
+  <meta name="twitter:description" content="Přehledný výpočet čisté odměny z DPP nebo DPČ.">
+
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #5f6b85;
+      --primary: #2152ff;
+      --primary-dark: #183dbf;
+      --border: #dbe3f0;
+      --success: #138a4b;
+      --warning: #b66a00;
+      --danger: #c62828;
+      --shadow: 0 12px 32px rgba(20, 32, 70, 0.08);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #f7f9fd 0%, #eef3fb 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      padding: 18px 0;
+      border-bottom: 1px solid rgba(219, 227, 240, 0.8);
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+
+    .brand span {
+      color: var(--primary);
+    }
+
+    .topnav {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      font-size: 0.97rem;
+    }
+
+    .hero {
+      padding: 42px 0 20px;
+    }
+
+    .breadcrumbs {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .hero-copy h1 {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      margin: 0 0 16px;
+    }
+
+    .hero-copy p {
+      margin: 0 0 16px;
+      font-size: 1.06rem;
+      color: var(--muted);
+      max-width: 720px;
+    }
+
+    .hero-points {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .hero-pill {
+      background: rgba(33, 82, 255, 0.08);
+      color: var(--primary-dark);
+      border: 1px solid rgba(33, 82, 255, 0.12);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .hero-box {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-box h2 {
+      margin: 0 0 10px;
+      font-size: 1.2rem;
+    }
+
+    .hero-box p {
+      margin: 0 0 12px;
+      color: var(--muted);
+    }
+
+    .hero-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.04fr 0.96fr;
+      gap: 28px;
+      align-items: start;
+      padding: 22px 0 32px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .card-header {
+      padding: 24px 24px 10px;
+    }
+
+    .card-header h2,
+    .card-header h3 {
+      margin: 0 0 8px;
+      font-size: 1.3rem;
+      letter-spacing: -0.02em;
+    }
+
+    .card-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .card-body {
+      padding: 20px 24px 24px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field label {
+      font-weight: 700;
+      font-size: 0.96rem;
+    }
+
+    .field small {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: -2px;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      padding: 14px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      font-size: 1rem;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      outline: none;
+      border-color: rgba(33, 82, 255, 0.45);
+      box-shadow: 0 0 0 4px rgba(33, 82, 255, 0.10);
+    }
+
+    .checkbox-row {
+      display: grid;
+      gap: 12px;
+      margin-top: 4px;
+    }
+
+    .check {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      padding: 14px 16px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: #fbfdff;
+    }
+
+    .check input {
+      margin-top: 3px;
+      transform: scale(1.05);
+    }
+
+    .check span {
+      display: block;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .check small {
+      display: block;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.06s ease, background 0.15s ease, opacity 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background: #eef3ff;
+      color: var(--primary-dark);
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .result-box {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+
+    .result-label {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .result-value {
+      font-size: clamp(1.25rem, 2.4vw, 2rem);
+      line-height: 1.15;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .highlight {
+      background: linear-gradient(180deg, #eef7ff 0%, #f9fcff 100%);
+      border-color: rgba(33, 82, 255, 0.18);
+    }
+
+    .info-list {
+      display: grid;
+      gap: 12px;
+      margin: 18px 0 0;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid #edf2fa;
+    }
+
+    .info-row:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .info-row span:first-child {
+      color: var(--muted);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+
+    .badge.success {
+      background: rgba(19, 138, 75, 0.10);
+      color: var(--success);
+    }
+
+    .badge.warning {
+      background: rgba(182, 106, 0, 0.11);
+      color: var(--warning);
+    }
+
+    .badge.danger {
+      background: rgba(198, 40, 40, 0.10);
+      color: var(--danger);
+    }
+
+    .note {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1px solid #e7edf7;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 18px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 640px;
+      background: #fff;
+    }
+
+    th, td {
+      padding: 14px 14px;
+      text-align: left;
+      border-bottom: 1px solid #edf2fa;
+      font-size: 0.96rem;
+    }
+
+    th {
+      background: #f8fbff;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .content-section {
+      padding: 8px 0 8px;
+    }
+
+    .content-section h2 {
+      font-size: 1.7rem;
+      letter-spacing: -0.03em;
+      margin: 0 0 14px;
+    }
+
+    .content-section h3 {
+      font-size: 1.15rem;
+      margin: 28px 0 10px;
+    }
+
+    .content-section p {
+      color: var(--muted);
+      margin: 0 0 14px;
+    }
+
+    .content-section ul {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    .content-section li {
+      margin-bottom: 8px;
+    }
+
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .related-card {
+      display: block;
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      color: var(--text);
+      box-shadow: var(--shadow);
+    }
+
+    .related-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .related-card span {
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    footer {
+      margin-top: 40px;
+      border-top: 1px solid rgba(219, 227, 240, 0.9);
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .footer-inner {
+      padding: 24px 0 40px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .layout,
+      .related-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .container {
+        width: min(100% - 24px, 1160px);
+      }
+
+      .form-grid,
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 28px;
+      }
+
+      .card-header,
+      .card-body,
+      .hero-box {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .info-row {
+        flex-direction: column;
+      }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebApplication",
+    "name":"DPP / DPČ kalkulačka",
+    "url":"https://rychlevypocty.cz/dpp-dpc-kalkulacka.html",
+    "applicationCategory":"FinanceApplication",
+    "operatingSystem":"Any",
+    "description":"Online kalkulačka pro orientační výpočet čisté odměny z DPP a DPČ včetně odvodů a daně.",
+    "offers":{
+      "@type":"Offer",
+      "price":"0",
+      "priceCurrency":"CZK"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"Jaký je rozdíl mezi DPP a DPČ?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"DPP je dohoda o provedení práce, která se typicky používá pro kratší nebo jednorázovou práci. DPČ je dohoda o pracovní činnosti a bývá vhodná pro pravidelnější spolupráci v menším rozsahu. Odlišují se hlavně limity a pravidly pro odvody."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Kdy se u DPP platí odvody?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"U DPP se odvody na sociální a zdravotní pojištění typicky řeší od dosažení rozhodného příjmu v daném měsíci. Pokud odměna limit nepřekročí, kalkulačka obvykle ukáže variantu bez pojistného, pokud odměna limit dosáhne nebo překročí, zahrne i odvody zaměstnance."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Má podpis Prohlášení k dani vliv na čistou odměnu?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Ano. Pokud je podepsané Prohlášení k dani, může se uplatnit základní sleva na poplatníka, takže čistá odměna často vychází vyšší než bez podpisu."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="/">Rychlé<span>Výpočty</span>.cz</a>
+      <nav class="topnav" aria-label="Hlavní navigace">
+        <a href="/">Domů</a>
+        <a href="/cista-mzda-kalkulacka.html">Čistá mzda</a>
+        <a href="/kalkulacka-hodinove-mzdy.html">Hodinová mzda</a>
+        <a href="/kalkulacka-odpracovanych-hodin.html">Odpracované hodiny</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumbs">
+          <a href="/">RychléVýpočty.cz</a> / DPP / DPČ kalkulačka
+        </div>
+
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <h1>DPP / DPČ kalkulačka</h1>
+            <p>Spočítejte si orientační čistou odměnu z dohody o provedení práce (DPP) nebo dohody o pracovní činnosti (DPČ). Kalkulačka zohledňuje typ dohody, hrubou odměnu, podpis Prohlášení k dani a vznik odvodů podle rozhodného příjmu.</p>
+            <p>Výsledek ukáže hrubou odměnu, orientační sociální a zdravotní pojištění, daň i čistou částku k výplatě. Hodí se pro rychlou orientaci při brigádě, vedlejším přivýdělku i pravidelné práci na dohodu.</p>
+
+            <div class="hero-points">
+              <div class="hero-pill">DPP i DPČ</div>
+              <div class="hero-pill">Čistá odměna</div>
+              <div class="hero-pill">Odvody a daň</div>
+              <div class="hero-pill">Podpis Prohlášení</div>
+            </div>
+          </div>
+
+          <div class="hero-box">
+            <h2>Co kalkulačka umí</h2>
+            <p>Počítá orientační čistou odměnu z DPP a DPČ pro rok 2026. Rozliší, zda vzniká účast na pojištění, a podle toho dopočítá sociální a zdravotní pojištění zaměstnance.</p>
+            <p>Zohledňuje také, zda je u zaměstnavatele podepsané Prohlášení k dani. Díky tomu je vhodná pro rychlé porovnání různých variant výdělku na dohodu.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container layout">
+      <div class="card">
+        <div class="card-header">
+          <h2>Zadání dohody</h2>
+          <p>Vyplňte typ dohody a výši hrubé odměny. Kalkulačka výsledek automaticky přepočítá.</p>
+        </div>
+        <div class="card-body">
+          <form id="agreementForm">
+            <div class="form-grid">
+              <div class="field">
+                <label for="agreementType">Typ dohody</label>
+                <select id="agreementType">
+                  <option value="DPP" selected>DPP – dohoda o provedení práce</option>
+                  <option value="DPC">DPČ – dohoda o pracovní činnosti</option>
+                </select>
+                <small>Každý typ dohody má jiné rozhodné limity pro odvody.</small>
+              </div>
+
+              <div class="field">
+                <label for="grossIncome">Hrubá měsíční odměna</label>
+                <input type="number" id="grossIncome" min="1" step="1" value="10000" inputmode="decimal">
+                <small>Zadejte hrubou odměnu za měsíc u jednoho zaměstnavatele.</small>
+              </div>
+
+              <div class="field">
+                <label for="taxRate">Sazba daně</label>
+                <select id="taxRate">
+                  <option value="15" selected>15 %</option>
+                </select>
+                <small>Kalkulačka počítá se základní sazbou daně.</small>
+              </div>
+
+              <div class="field">
+                <label for="yearMode">Režim kalkulačky</label>
+                <select id="yearMode">
+                  <option value="2026" selected>Pravidla 2026</option>
+                </select>
+                <small>Aktuálně nastaveno na rok 2026.</small>
+              </div>
+
+              <div class="field full">
+                <label>Doplňující nastavení</label>
+                <div class="checkbox-row">
+                  <label class="check" for="signedDeclaration">
+                    <input type="checkbox" id="signedDeclaration" checked>
+                    <div>
+                      <span>Podepsané Prohlášení k dani</span>
+                      <small>Uplatní se základní sleva na poplatníka v měsíční výši 2 570 Kč.</small>
+                    </div>
+                  </label>
+
+                  <label class="check" for="applyTaxCredit">
+                    <input type="checkbox" id="applyTaxCredit" checked>
+                    <div>
+                      <span>Uplatnit základní slevu na poplatníka</span>
+                      <small>Pokud je Prohlášení podepsané, lze při orientačním výpočtu použít slevu na poplatníka.</small>
+                    </div>
+                  </label>
+                </div>
+              </div>
+
+              <div class="actions full">
+                <button type="submit" class="btn-primary">Spočítat odměnu</button>
+                <button type="button" class="btn-secondary" id="resetBtn">Obnovit výchozí hodnoty</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>Výsledek výpočtu</h2>
+          <p>Orientační přehled čisté odměny, odvodů a daně podle zadaných parametrů.</p>
+        </div>
+        <div class="card-body">
+          <div class="results-grid">
+            <div class="result-box highlight">
+              <div class="result-label">Čistá odměna</div>
+              <div class="result-value" id="netIncome">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Hrubá odměna</div>
+              <div class="result-value" id="grossIncomeOut">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Sociální pojištění</div>
+              <div class="result-value" id="socialInsurance">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Zdravotní pojištění</div>
+              <div class="result-value" id="healthInsurance">0 Kč</div>
+            </div>
+          </div>
+
+          <div id="statusBadge" class="badge success">Bez odvodů</div>
+
+          <div class="info-list">
+            <div class="info-row">
+              <span>Typ dohody</span>
+              <strong id="summaryType">–</strong>
+            </div>
+            <div class="info-row">
+              <span>Rozhodný limit pro pojistné</span>
+              <strong id="summaryLimit">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Daň před slevou</span>
+              <strong id="taxBeforeCredit">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Uplatněná sleva na poplatníka</span>
+              <strong id="taxCredit">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Daň po slevě</span>
+              <strong id="taxAfterCredit">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Typ zdanění</span>
+              <strong id="taxMode">–</strong>
+            </div>
+          </div>
+
+          <div class="note" id="resultNote">
+            Kalkulačka poskytuje orientační výsledek. V konkrétní situaci může hrát roli souběh více pracovních vztahů, další příjmy u téhož zaměstnavatele nebo individuální daňové okolnosti.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="card">
+        <div class="card-header">
+          <h3>Přehled výpočtu</h3>
+          <p>Detailní rozpis jednotlivých kroků kalkulace od hrubé do čisté odměny.</p>
+        </div>
+        <div class="card-body">
+          <div class="table-wrap">
+            <table aria-label="Přehled výpočtu DPP a DPČ">
+              <thead>
+                <tr>
+                  <th>Položka</th>
+                  <th>Popis</th>
+                  <th>Částka</th>
+                </tr>
+              </thead>
+              <tbody id="breakdownBody">
+                <tr>
+                  <td colspan="3">Po zadání údajů se zobrazí orientační rozpis výpočtu.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container content-section">
+      <h2>Jak kalkulačka DPP a DPČ funguje</h2>
+      <p>Tato kalkulačka převádí hrubou měsíční odměnu na orientační čistou částku. Základem je rozlišení mezi DPP a DPČ, protože každý typ dohody má jiný rozhodný limit, od kterého vzniká účast na sociálním a zdravotním pojištění.</p>
+
+      <h3>Co ve výsledku uvidíte</h3>
+      <ul>
+        <li>hrubou i orientační čistou odměnu,</li>
+        <li>sociální a zdravotní pojištění zaměstnance, pokud vzniká povinnost odvodu,</li>
+        <li>daň před slevou i po uplatnění základní slevy na poplatníka,</li>
+        <li>informaci, zda jde orientačně o srážkovou nebo zálohovou daň,</li>
+        <li>rozhodný limit pro vznik odvodů u zvoleného typu dohody.</li>
+      </ul>
+
+      <h3>Kdy se nástroj nejvíc hodí</h3>
+      <p>Nejčastěji při brigádách, krátkodobé výpomoci, pravidelném přivýdělku nebo při porovnání více nabídek práce na dohodu. Praktický je i tehdy, když si chcete rychle ověřit, jestli vyšší hrubá odměna už spadá do režimu s odvody a jak ovlivní čistou výplatu.</p>
+
+      <h3>Na co si dát pozor</h3>
+      <p>Výpočet je orientační. V praxi může výsledek ovlivnit souběh více pracovních vztahů u stejného zaměstnavatele, specifický daňový režim, další uplatněné slevy nebo individuální situace zaměstnance. Kalkulačka je určená hlavně pro rychlou orientaci a porovnání variant.</p>
+    </section>
+
+    <section class="container content-section">
+      <h2>Související kalkulačky</h2>
+      <div class="related-grid">
+        <a class="related-card" href="/cista-mzda-kalkulacka.html">
+          <strong>Kalkulačka čisté mzdy</strong>
+          <span>Výpočet čisté mzdy, odvodů a nákladů zaměstnavatele.</span>
+        </a>
+
+        <a class="related-card" href="/kalkulacka-hodinove-mzdy.html">
+          <strong>Kalkulačka hodinové mzdy</strong>
+          <span>Přepočet měsíčního příjmu na hodinovou sazbu.</span>
+        </a>
+
+        <a class="related-card" href="/kalkulacka-odpracovanych-hodin.html">
+          <strong>Kalkulačka odpracovaných hodin</strong>
+          <span>Výpočet čistého času za směny, týden nebo měsíc.</span>
+        </a>
+
+        <a class="related-card" href="/odstupne-kalkulacka.html">
+          <strong>Kalkulačka odstupného</strong>
+          <span>Orientační výpočet odstupného podle délky zaměstnání.</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      © 2026 RychléVýpočty.cz — online kalkulačky a praktické výpočty pro každodenní použití.
+    </div>
+  </footer>
+
+  <script>
+    const form = document.getElementById('agreementForm');
+    const resetBtn = document.getElementById('resetBtn');
+
+    const outputs = {
+      netIncome: document.getElementById('netIncome'),
+      grossIncomeOut: document.getElementById('grossIncomeOut'),
+      socialInsurance: document.getElementById('socialInsurance'),
+      healthInsurance: document.getElementById('healthInsurance'),
+      summaryType: document.getElementById('summaryType'),
+      summaryLimit: document.getElementById('summaryLimit'),
+      taxBeforeCredit: document.getElementById('taxBeforeCredit'),
+      taxCredit: document.getElementById('taxCredit'),
+      taxAfterCredit: document.getElementById('taxAfterCredit'),
+      taxMode: document.getElementById('taxMode'),
+      statusBadge: document.getElementById('statusBadge'),
+      resultNote: document.getElementById('resultNote'),
+      breakdownBody: document.getElementById('breakdownBody')
+    };
+
+    function formatCurrency(value) {
+      return new Intl.NumberFormat('cs-CZ', {
+        style: 'currency',
+        currency: 'CZK',
+        maximumFractionDigits: 0
+      }).format(value);
+    }
+
+    function getValues() {
+      return {
+        agreementType: document.getElementById('agreementType').value,
+        grossIncome: Number(document.getElementById('grossIncome').value),
+        taxRate: Number(document.getElementById('taxRate').value),
+        signedDeclaration: document.getElementById('signedDeclaration').checked,
+        applyTaxCredit: document.getElementById('applyTaxCredit').checked
+      };
+    }
+
+    function validate(values) {
+      if (!values.grossIncome || values.grossIncome <= 0) return 'Zadejte platnou hrubou měsíční odměnu.';
+      return '';
+    }
+
+    function getLimit(agreementType) {
+      return agreementType === 'DPP' ? 12000 : 4500;
+    }
+
+    function getTaxCredit(values) {
+      if (values.signedDeclaration && values.applyTaxCredit) {
+        return 2570;
+      }
+      return 0;
+    }
+
+    function calculateAgreement(values) {
+      const limit = getLimit(values.agreementType);
+      const insuranceApplies = values.grossIncome >= limit;
+
+      const socialRate = insuranceApplies ? 0.071 : 0;
+      const healthRate = insuranceApplies ? 0.045 : 0;
+
+      const socialInsurance = Math.round(values.grossIncome * socialRate);
+      const healthInsurance = Math.round(values.grossIncome * healthRate);
+
+      const taxBeforeCredit = Math.round(values.grossIncome * (values.taxRate / 100));
+      const taxCredit = Math.min(getTaxCredit(values), taxBeforeCredit);
+      let taxAfterCredit = Math.max(0, taxBeforeCredit - taxCredit);
+
+      let taxMode = 'Zálohová daň';
+
+      if (!values.signedDeclaration && values.grossIncome < limit) {
+        taxMode = 'Srážková daň';
+      }
+
+      const netIncome = values.grossIncome - socialInsurance - healthInsurance - taxAfterCredit;
+
+      return {
+        limit,
+        insuranceApplies,
+        socialInsurance,
+        healthInsurance,
+        taxBeforeCredit,
+        taxCredit,
+        taxAfterCredit,
+        taxMode,
+        netIncome
+      };
+    }
+
+    function buildBreakdown(values, result) {
+      return [
+        {
+          label: 'Hrubá odměna',
+          description: 'Zadaná hrubá měsíční odměna z dohody.',
+          amount: values.grossIncome
+        },
+        {
+          label: 'Sociální pojištění',
+          description: result.insuranceApplies ? 'Odvod sociálního pojištění zaměstnance.' : 'Pod rozhodným limitem se v této orientační variantě neodvádí.',
+          amount: -result.socialInsurance
+        },
+        {
+          label: 'Zdravotní pojištění',
+          description: result.insuranceApplies ? 'Odvod zdravotního pojištění zaměstnance.' : 'Pod rozhodným limitem se v této orientační variantě neodvádí.',
+          amount: -result.healthInsurance
+        },
+        {
+          label: 'Daň před slevou',
+          description: 'Orientační výpočet daně ze zadané hrubé odměny.',
+          amount: -result.taxBeforeCredit
+        },
+        {
+          label: 'Sleva na poplatníka',
+          description: values.signedDeclaration && values.applyTaxCredit ? 'Uplatněná základní sleva na poplatníka.' : 'Sleva na poplatníka se neuplatňuje.',
+          amount: result.taxCredit
+        },
+        {
+          label: 'Daň po slevě',
+          description: 'Skutečně odečtená orientační daň po slevě.',
+          amount: -result.taxAfterCredit
+        },
+        {
+          label: 'Čistá odměna',
+          description: 'Orientační částka k výplatě.',
+          amount: result.netIncome
+        }
+      ];
+    }
+
+    function renderBreakdown(rows) {
+      outputs.breakdownBody.innerHTML = rows.map(row => `
+        <tr>
+          <td>${row.label}</td>
+          <td>${row.description}</td>
+          <td>${row.amount >= 0 ? formatCurrency(row.amount) : '- ' + formatCurrency(Math.abs(row.amount))}</td>
+        </tr>
+      `).join('');
+    }
+
+    function render(values, result) {
+      outputs.netIncome.textContent = formatCurrency(result.netIncome);
+      outputs.grossIncomeOut.textContent = formatCurrency(values.grossIncome);
+      outputs.socialInsurance.textContent = formatCurrency(result.socialInsurance);
+      outputs.healthInsurance.textContent = formatCurrency(result.healthInsurance);
+
+      outputs.summaryType.textContent = values.agreementType;
+      outputs.summaryLimit.textContent = formatCurrency(result.limit);
+      outputs.taxBeforeCredit.textContent = formatCurrency(result.taxBeforeCredit);
+      outputs.taxCredit.textContent = formatCurrency(result.taxCredit);
+      outputs.taxAfterCredit.textContent = formatCurrency(result.taxAfterCredit);
+      outputs.taxMode.textContent = result.taxMode;
+
+      if (result.insuranceApplies) {
+        outputs.statusBadge.textContent = 'Vznikají odvody';
+        outputs.statusBadge.className = 'badge warning';
+      } else {
+        outputs.statusBadge.textContent = 'Bez odvodů';
+        outputs.statusBadge.className = 'badge success';
+      }
+
+      if (!values.signedDeclaration && !result.insuranceApplies) {
+        outputs.resultNote.textContent = 'Orientačně vychází zdanění srážkovou daní bez uplatnění základní slevy na poplatníka. Výsledek je vhodný pro rychlou orientaci u běžné DPP nebo DPČ bez podepsaného Prohlášení k dani.';
+      } else if (!values.signedDeclaration && result.insuranceApplies) {
+        outputs.resultNote.textContent = 'Protože není podepsané Prohlášení k dani a současně vznikají odvody, kalkulačka počítá orientační zálohovou daň bez uplatnění základní slevy na poplatníka.';
+      } else {
+        outputs.resultNote.textContent = 'Kalkulačka poskytuje orientační výsledek se zohledněním podpisu Prohlášení k dani a základní slevy na poplatníka. V konkrétní situaci může výsledek ovlivnit i souběh dalších příjmů nebo individuální daňové okolnosti.';
+      }
+
+      const breakdown = buildBreakdown(values, result);
+      renderBreakdown(breakdown);
+    }
+
+    function syncCreditAvailability() {
+      const signed = document.getElementById('signedDeclaration').checked;
+      const credit = document.getElementById('applyTaxCredit');
+
+      if (!signed) {
+        credit.checked = false;
+        credit.disabled = true;
+      } else {
+        credit.disabled = false;
+      }
+    }
+
+    function runCalculation() {
+      const values = getValues();
+      const error = validate(values);
+
+      if (error) {
+        alert(error);
+        return;
+      }
+
+      const result = calculateAgreement(values);
+      render(values, result);
+    }
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      runCalculation();
+    });
+
+    ['agreementType', 'grossIncome', 'taxRate', 'signedDeclaration', 'applyTaxCredit'].forEach(id => {
+      document.getElementById(id).addEventListener('input', function() {
+        if (id === 'signedDeclaration') syncCreditAvailability();
+        runCalculation();
+      });
+      document.getElementById(id).addEventListener('change', function() {
+        if (id === 'signedDeclaration') syncCreditAvailability();
+        runCalculation();
+      });
+    });
+
+    resetBtn.addEventListener('click', function() {
+      document.getElementById('agreementType').value = 'DPP';
+      document.getElementById('grossIncome').value = 10000;
+      document.getElementById('taxRate').value = 15;
+      document.getElementById('signedDeclaration').checked = true;
+      document.getElementById('applyTaxCredit').checked = true;
+      syncCreditAvailability();
+      runCalculation();
+    });
+
+    syncCreditAvailability();
+    runCalculation();
+  </script>
+</body>
+</html>
