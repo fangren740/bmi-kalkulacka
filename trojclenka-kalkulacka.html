@@ -1,1 +1,993 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <title>Trojčlenka kalkulačka online zdarma | Přímá a nepřímá úměra | RychléVýpočty.cz</title>
+  <meta name="description" content="Spočítejte trojčlenku online zdarma. Přehledná kalkulačka trojčlenky pro přímou i nepřímou úměru s okamžitým výsledkem a vysvětlením postupu.">
+  <meta name="keywords" content="trojčlenka kalkulačka, trojčlenka online, přímá úměra, nepřímá úměra, výpočet trojčlenkou, kalkulačka trojčlenky">
+  <meta name="author" content="RychléVýpočty.cz">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://rychlevypocty.cz/trojclenka-kalkulacka.html">
+
+  <meta property="og:title" content="Trojčlenka kalkulačka online zdarma | RychléVýpočty.cz">
+  <meta property="og:description" content="Rychlý výpočet trojčlenky pro přímou i nepřímou úměru s přehledným postupem.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rychlevypocty.cz/trojclenka-kalkulacka.html">
+  <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Trojčlenka kalkulačka online zdarma | RychléVýpočty.cz">
+  <meta name="twitter:description" content="Spočítejte trojčlenku během pár sekund včetně postupu výpočtu.">
+
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #5f6b85;
+      --primary: #2152ff;
+      --primary-dark: #183dbf;
+      --border: #dbe3f0;
+      --success: #138a4b;
+      --warning: #b66a00;
+      --shadow: 0 12px 32px rgba(20, 32, 70, 0.08);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #f7f9fd 0%, #eef3fb 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      padding: 18px 0;
+      border-bottom: 1px solid rgba(219, 227, 240, 0.8);
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+
+    .brand span {
+      color: var(--primary);
+    }
+
+    .topnav {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      font-size: 0.97rem;
+    }
+
+    .hero {
+      padding: 42px 0 20px;
+    }
+
+    .breadcrumbs {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .hero-copy h1 {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      margin: 0 0 16px;
+    }
+
+    .hero-copy p {
+      margin: 0 0 16px;
+      font-size: 1.06rem;
+      color: var(--muted);
+      max-width: 720px;
+    }
+
+    .hero-points {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .hero-pill {
+      background: rgba(33, 82, 255, 0.08);
+      color: var(--primary-dark);
+      border: 1px solid rgba(33, 82, 255, 0.12);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .hero-box {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-box h2 {
+      margin: 0 0 10px;
+      font-size: 1.2rem;
+    }
+
+    .hero-box p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.04fr 0.96fr;
+      gap: 28px;
+      align-items: start;
+      padding: 22px 0 32px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .card-header {
+      padding: 24px 24px 10px;
+    }
+
+    .card-header h2,
+    .card-header h3 {
+      margin: 0 0 8px;
+      font-size: 1.3rem;
+      letter-spacing: -0.02em;
+    }
+
+    .card-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .card-body {
+      padding: 20px 24px 24px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field label {
+      font-weight: 700;
+      font-size: 0.96rem;
+    }
+
+    .field small {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: -2px;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      padding: 14px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      font-size: 1rem;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      outline: none;
+      border-color: rgba(33, 82, 255, 0.45);
+      box-shadow: 0 0 0 4px rgba(33, 82, 255, 0.10);
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.06s ease, background 0.15s ease, opacity 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background: #eef3ff;
+      color: var(--primary-dark);
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .result-box {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+
+    .highlight {
+      background: linear-gradient(180deg, #eef7ff 0%, #f9fcff 100%);
+      border-color: rgba(33, 82, 255, 0.18);
+    }
+
+    .result-label {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .result-value {
+      font-size: clamp(1.15rem, 2.1vw, 1.9rem);
+      line-height: 1.15;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      word-break: break-word;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+
+    .badge.success {
+      background: rgba(19, 138, 75, 0.10);
+      color: var(--success);
+    }
+
+    .badge.warning {
+      background: rgba(182, 106, 0, 0.11);
+      color: var(--warning);
+    }
+
+    .info-list {
+      display: grid;
+      gap: 12px;
+      margin: 18px 0 0;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid #edf2fa;
+    }
+
+    .info-row:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .info-row span:first-child {
+      color: var(--muted);
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 18px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 640px;
+      background: #fff;
+    }
+
+    th, td {
+      padding: 14px 14px;
+      text-align: left;
+      border-bottom: 1px solid #edf2fa;
+      font-size: 0.96rem;
+    }
+
+    th {
+      background: #f8fbff;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .formula-box {
+      margin-top: 18px;
+      padding: 16px 18px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: #f9fbff;
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+
+    .formula-line {
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .note {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1px solid #e7edf7;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .content-section {
+      padding: 8px 0 8px;
+    }
+
+    .content-section h2 {
+      font-size: 1.7rem;
+      letter-spacing: -0.03em;
+      margin: 0 0 14px;
+    }
+
+    .content-section h3 {
+      font-size: 1.15rem;
+      margin: 28px 0 10px;
+    }
+
+    .content-section p {
+      color: var(--muted);
+      margin: 0 0 14px;
+    }
+
+    .content-section ul {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    .content-section li {
+      margin-bottom: 8px;
+    }
+
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .related-card {
+      display: block;
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      color: var(--text);
+      box-shadow: var(--shadow);
+    }
+
+    .related-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .related-card span {
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    footer {
+      margin-top: 40px;
+      border-top: 1px solid rgba(219, 227, 240, 0.9);
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .footer-inner {
+      padding: 24px 0 40px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .layout,
+      .related-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .container {
+        width: min(100% - 24px, 1160px);
+      }
+
+      .form-grid,
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 28px;
+      }
+
+      .card-header,
+      .card-body,
+      .hero-box {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .info-row {
+        flex-direction: column;
+        gap: 6px;
+      }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebApplication",
+    "name":"Trojčlenka kalkulačka",
+    "url":"https://rychlevypocty.cz/trojclenka-kalkulacka.html",
+    "applicationCategory":"EducationalApplication",
+    "operatingSystem":"Any",
+    "description":"Online kalkulačka trojčlenky pro přímou i nepřímou úměru s výpočtem a postupem.",
+    "offers":{
+      "@type":"Offer",
+      "price":"0",
+      "priceCurrency":"CZK"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"Co je trojčlenka?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Trojčlenka je jednoduchý matematický postup pro výpočet neznámé hodnoty ze známého poměru mezi dvěma veličinami. Používá se u přímé i nepřímé úměry."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Kdy použít přímou úměru?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Přímou úměru použijete tehdy, když se dvě veličiny mění stejným směrem. Například čím více kusů zboží koupíte, tím vyšší bude celková cena."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Kdy použít nepřímou úměru?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Nepřímou úměru použijete tehdy, když se dvě veličiny mění opačným směrem. Například čím více pracovníků na stejnou práci nasadíte, tím kratší může být potřebný čas."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="/">Rychlé<span>Výpočty</span>.cz</a>
+      <nav class="topnav" aria-label="Hlavní navigace">
+        <a href="/">Domů</a>
+        <a href="/procenta-kalkulacka.html">Procenta</a>
+        <a href="/kalkulacka-prumeru.html">Průměr</a>
+        <a href="/jednotkova-cena-kalkulacka.html">Jednotková cena</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumbs">
+          <a href="/">RychléVýpočty.cz</a> / Trojčlenka kalkulačka
+        </div>
+
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <h1>Trojčlenka kalkulačka</h1>
+            <p>Spočítejte trojčlenku online pro přímou i nepřímou úměru. Kalkulačka se hodí pro školu, práci, nákupy, plánování i běžné praktické situace, kdy potřebujete rychle dopočítat neznámou hodnotu z poměru.</p>
+            <p>Zadejte tři známé hodnoty, vyberte typ úměry a kalkulačka okamžitě spočítá výsledek i přehledný postup výpočtu.</p>
+
+            <div class="hero-points">
+              <div class="hero-pill">Přímá úměra</div>
+              <div class="hero-pill">Nepřímá úměra</div>
+              <div class="hero-pill">Okamžitý výsledek</div>
+              <div class="hero-pill">Postup výpočtu</div>
+            </div>
+          </div>
+
+          <div class="hero-box">
+            <h2>Co kalkulačka umí</h2>
+            <p>Vypočítá neznámou hodnotu pomocí trojčlenky, rozliší přímou a nepřímou úměru a navíc zobrazí jasný matematický postup, abyste viděli, jak k výsledku došla.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container layout">
+      <div class="card">
+        <div class="card-header">
+          <h2>Zadání trojčlenky</h2>
+          <p>Vyplňte tři známé hodnoty a zvolte, zda jde o přímou nebo nepřímou úměru.</p>
+        </div>
+        <div class="card-body">
+          <form id="proportionForm">
+            <div class="form-grid">
+              <div class="field full">
+                <label for="proportionType">Typ úměry</label>
+                <select id="proportionType">
+                  <option value="direct" selected>Přímá úměra</option>
+                  <option value="inverse">Nepřímá úměra</option>
+                </select>
+                <small>Zvolte vztah mezi veličinami podle situace, kterou počítáte.</small>
+              </div>
+
+              <div class="field">
+                <label for="aValue">První hodnota (a)</label>
+                <input type="number" id="aValue" min="0.0001" step="any" value="3" inputmode="decimal">
+                <small>Například 3 kusy, 3 hodiny nebo 3 metry.</small>
+              </div>
+
+              <div class="field">
+                <label for="bValue">Druhá hodnota (b)</label>
+                <input type="number" id="bValue" min="0.0001" step="any" value="120" inputmode="decimal">
+                <small>Například cena, čas nebo jiná odpovídající veličina.</small>
+              </div>
+
+              <div class="field">
+                <label for="cValue">Třetí hodnota (c)</label>
+                <input type="number" id="cValue" min="0.0001" step="any" value="5" inputmode="decimal">
+                <small>Nová známá hodnota, ze které chcete dopočítat výsledek.</small>
+              </div>
+
+              <div class="field">
+                <label for="resultLabel">Popis výsledku</label>
+                <input type="text" id="resultLabel" value="Výsledek x">
+                <small>Volitelné pojmenování výsledné hodnoty.</small>
+              </div>
+
+              <div class="actions full">
+                <button type="submit" class="btn-primary">Spočítat trojčlenku</button>
+                <button type="button" class="btn-secondary" id="resetBtn">Obnovit výchozí hodnoty</button>
+              </div>
+            </div>
+          </form>
+
+          <div class="formula-box">
+            <div class="formula-line" id="formulaTitle">Přímá úměra: a : b = c : x</div>
+            <div id="formulaExplanation">Výsledek se počítá podle vzorce: x = (b × c) ÷ a</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>Výsledek výpočtu</h2>
+          <p>Přehled vypočítané hodnoty a základního poměru mezi veličinami.</p>
+        </div>
+        <div class="card-body">
+          <div class="results-grid">
+            <div class="result-box highlight">
+              <div class="result-label">Vypočítaná hodnota</div>
+              <div class="result-value" id="resultValue">0</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Typ úměry</div>
+              <div class="result-value" id="resultType">Přímá</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Poměr / vztah</div>
+              <div class="result-value" id="ratioValue">0</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Zaokrouhlený výsledek</div>
+              <div class="result-value" id="roundedValue">0</div>
+            </div>
+          </div>
+
+          <div id="statusBadge" class="badge success">Výpočet proběhl úspěšně</div>
+
+          <div class="info-list">
+            <div class="info-row">
+              <span>Popis výsledku</span>
+              <strong id="resultLabelOutput">Výsledek x</strong>
+            </div>
+            <div class="info-row">
+              <span>Dosazené hodnoty</span>
+              <strong id="inputSummary">a=0, b=0, c=0</strong>
+            </div>
+            <div class="info-row">
+              <span>Výpočetní vzorec</span>
+              <strong id="formulaOutput">—</strong>
+            </div>
+            <div class="info-row">
+              <span>Přepočtený mezikrok</span>
+              <strong id="stepOutput">—</strong>
+            </div>
+            <div class="info-row">
+              <span>Matematický výsledek</span>
+              <strong id="exactOutput">0</strong>
+            </div>
+          </div>
+
+          <div class="note">
+            Kalkulačka trojčlenky je vhodná pro rychlý přepočet poměrů. Vždy je ale důležité správně určit, zda ve vašem příkladu jde o přímou nebo nepřímou úměru.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="card">
+        <div class="card-header">
+          <h3>Postup výpočtu</h3>
+          <p>Přehled kroků, podle kterých byla trojčlenka spočítaná.</p>
+        </div>
+        <div class="card-body">
+          <div class="table-wrap">
+            <table aria-label="Postup výpočtu trojčlenky">
+              <thead>
+                <tr>
+                  <th>Krok</th>
+                  <th>Popis</th>
+                  <th>Hodnota</th>
+                </tr>
+              </thead>
+              <tbody id="summaryTableBody">
+                <tr>
+                  <td>1</td>
+                  <td>Určení typu úměry</td>
+                  <td>Přímá</td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>Dosazení do vzorce</td>
+                  <td>—</td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td>Výsledek</td>
+                  <td>0</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container content-section">
+      <h2>Jak trojčlenka funguje</h2>
+      <p>Trojčlenka je jednoduchý matematický postup, který pomáhá dopočítat neznámou hodnotu z poměru dvou veličin. V praxi se používá tam, kde víte, že mezi hodnotami existuje přímá nebo nepřímá úměra a potřebujete dopočítat čtvrtý údaj.</p>
+
+      <h3>Přímá úměra</h3>
+      <p>Přímá úměra znamená, že když jedna veličina roste, roste i druhá. Typickým příkladem je cena a počet kusů. Pokud 3 kusy stojí 120 Kč, pak 5 kusů bude stát více, a trojčlenkou spočítáte přesnou částku.</p>
+
+      <h3>Nepřímá úměra</h3>
+      <p>Nepřímá úměra znamená, že když jedna veličina roste, druhá klesá. Typickým příkladem je počet pracovníků a čas potřebný k dokončení stejné práce. Čím více lidí pracuje, tím kratší dobu práce obvykle trvá.</p>
+
+      <h3>Kde se trojčlenka používá</h3>
+      <ul>
+        <li>při výpočtu ceny za více nebo méně kusů,</li>
+        <li>při přepočtu spotřeby, množství nebo dávkování,</li>
+        <li>při plánování času, výkonu a kapacity,</li>
+        <li>ve škole, v technické praxi i v běžném životě.</li>
+      </ul>
+
+      <h3>Na co si dát pozor</h3>
+      <p>Nejdůležitější je správně určit typ úměry. Pokud zvolíte opačný vztah, výsledek bude chybný. Právě proto kalkulačka zobrazuje i vzorec a postup, aby bylo jasné, jak se k výsledku došlo.</p>
+    </section>
+
+    <section class="container content-section">
+      <h2>Související kalkulačky</h2>
+      <div class="related-grid">
+        <a class="related-card" href="/procenta-kalkulacka.html">
+          <strong>Kalkulačka procent</strong>
+          <span>Výpočet procent z částky, procentní změny i podílu jednoho čísla z druhého.</span>
+        </a>
+
+        <a class="related-card" href="/kalkulacka-prumeru.html">
+          <strong>Kalkulačka průměru</strong>
+          <span>Výpočet aritmetického i váženého průměru pro různé hodnoty.</span>
+        </a>
+
+        <a class="related-card" href="/jednotkova-cena-kalkulacka.html">
+          <strong>Kalkulačka jednotkové ceny</strong>
+          <span>Porovnání ceny za kg, litr, m² nebo kus pro různé nabídky.</span>
+        </a>
+
+        <a class="related-card" href="/prevodnik-jednotek.html">
+          <strong>Převodník jednotek</strong>
+          <span>Převody délky, hmotnosti, objemu, plochy a teploty v jednom nástroji.</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      © 2026 RychléVýpočty.cz — online kalkulačky a praktické výpočty pro každodenní použití.
+    </div>
+  </footer>
+
+  <script>
+    const form = document.getElementById('proportionForm');
+    const resetBtn = document.getElementById('resetBtn');
+
+    const outputs = {
+      formulaTitle: document.getElementById('formulaTitle'),
+      formulaExplanation: document.getElementById('formulaExplanation'),
+      resultValue: document.getElementById('resultValue'),
+      resultType: document.getElementById('resultType'),
+      ratioValue: document.getElementById('ratioValue'),
+      roundedValue: document.getElementById('roundedValue'),
+      statusBadge: document.getElementById('statusBadge'),
+      resultLabelOutput: document.getElementById('resultLabelOutput'),
+      inputSummary: document.getElementById('inputSummary'),
+      formulaOutput: document.getElementById('formulaOutput'),
+      stepOutput: document.getElementById('stepOutput'),
+      exactOutput: document.getElementById('exactOutput'),
+      summaryTableBody: document.getElementById('summaryTableBody')
+    };
+
+    function formatNumber(value, digits = 6) {
+      return new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: digits
+      }).format(value);
+    }
+
+    function getValues() {
+      return {
+        proportionType: document.getElementById('proportionType').value,
+        aValue: Number(document.getElementById('aValue').value),
+        bValue: Number(document.getElementById('bValue').value),
+        cValue: Number(document.getElementById('cValue').value),
+        resultLabel: document.getElementById('resultLabel').value.trim() || 'Výsledek x'
+      };
+    }
+
+    function validate(values) {
+      if (!values.aValue || values.aValue <= 0) return 'Zadejte platnou první hodnotu.';
+      if (!values.bValue || values.bValue <= 0) return 'Zadejte platnou druhou hodnotu.';
+      if (!values.cValue || values.cValue <= 0) return 'Zadejte platnou třetí hodnotu.';
+      return '';
+    }
+
+    function calculate(values) {
+      let result = 0;
+      let formula = '';
+      let step = '';
+      let ratio = 0;
+
+      if (values.proportionType === 'direct') {
+        result = (values.bValue * values.cValue) / values.aValue;
+        formula = `x = (${formatNumber(values.bValue)} × ${formatNumber(values.cValue)}) ÷ ${formatNumber(values.aValue)}`;
+        step = `x = ${formatNumber(values.bValue * values.cValue)} ÷ ${formatNumber(values.aValue)}`;
+        ratio = values.bValue / values.aValue;
+      } else {
+        result = (values.aValue * values.bValue) / values.cValue;
+        formula = `x = (${formatNumber(values.aValue)} × ${formatNumber(values.bValue)}) ÷ ${formatNumber(values.cValue)}`;
+        step = `x = ${formatNumber(values.aValue * values.bValue)} ÷ ${formatNumber(values.cValue)}`;
+        ratio = values.aValue * values.bValue;
+      }
+
+      return {
+        result,
+        formula,
+        step,
+        ratio
+      };
+    }
+
+    function renderFormula(type) {
+      if (type === 'direct') {
+        outputs.formulaTitle.textContent = 'Přímá úměra: a : b = c : x';
+        outputs.formulaExplanation.textContent = 'Výsledek se počítá podle vzorce: x = (b × c) ÷ a';
+      } else {
+        outputs.formulaTitle.textContent = 'Nepřímá úměra: a × b = c × x';
+        outputs.formulaExplanation.textContent = 'Výsledek se počítá podle vzorce: x = (a × b) ÷ c';
+      }
+    }
+
+    function render(values, result) {
+      const rounded = Math.round(result.result * 100) / 100;
+
+      outputs.resultValue.textContent = formatNumber(result.result);
+      outputs.resultType.textContent = values.proportionType === 'direct' ? 'Přímá' : 'Nepřímá';
+      outputs.ratioValue.textContent = values.proportionType === 'direct'
+        ? formatNumber(result.ratio, 6)
+        : formatNumber(result.ratio, 6);
+      outputs.roundedValue.textContent = formatNumber(rounded, 2);
+      outputs.resultLabelOutput.textContent = values.resultLabel;
+      outputs.inputSummary.textContent = `a=${formatNumber(values.aValue)}, b=${formatNumber(values.bValue)}, c=${formatNumber(values.cValue)}`;
+      outputs.formulaOutput.textContent = result.formula;
+      outputs.stepOutput.textContent = result.step;
+      outputs.exactOutput.textContent = formatNumber(result.result, 8);
+
+      outputs.statusBadge.className = 'badge success';
+      outputs.statusBadge.textContent = 'Výpočet proběhl úspěšně';
+
+      outputs.summaryTableBody.innerHTML = `
+        <tr>
+          <td>1</td>
+          <td>Určení typu úměry</td>
+          <td>${values.proportionType === 'direct' ? 'Přímá úměra' : 'Nepřímá úměra'}</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>Dosazení do vzorce</td>
+          <td>${result.formula}</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>Mezikrok</td>
+          <td>${result.step}</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>${values.resultLabel}</td>
+          <td>${formatNumber(result.result, 8)}</td>
+        </tr>
+      `;
+    }
+
+    function runCalculation() {
+      const values = getValues();
+      const error = validate(values);
+
+      renderFormula(values.proportionType);
+
+      if (error) {
+        alert(error);
+        return;
+      }
+
+      const result = calculate(values);
+      render(values, result);
+    }
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      runCalculation();
+    });
+
+    ['proportionType', 'aValue', 'bValue', 'cValue', 'resultLabel'].forEach(id => {
+      document.getElementById(id).addEventListener('input', runCalculation);
+      document.getElementById(id).addEventListener('change', runCalculation);
+    });
+
+    resetBtn.addEventListener('click', function() {
+      document.getElementById('proportionType').value = 'direct';
+      document.getElementById('aValue').value = 3;
+      document.getElementById('bValue').value = 120;
+      document.getElementById('cValue').value = 5;
+      document.getElementById('resultLabel').value = 'Výsledek x';
+      runCalculation();
+    });
+
+    runCalculation();
+  </script>
+</body>
+</html>
