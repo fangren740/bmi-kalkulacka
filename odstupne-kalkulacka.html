@@ -1,1 +1,1005 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <title>Kalkulačka odstupného online zdarma | Orientační výpočet odstupného | RychléVýpočty.cz</title>
+  <meta name="description" content="Spočítejte si orientační výši odstupného online. Přehledná kalkulačka odstupného pro výpočet podle průměrného měsíčního výdělku a délky zaměstnání.">
+  <meta name="keywords" content="kalkulačka odstupného, výpočet odstupného, odstupné kalkulačka, pracovní poměr odstupné, průměrný výdělek odstupné">
+  <meta name="author" content="RychléVýpočty.cz">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://rychlevypocty.cz/odstupne-kalkulacka.html">
+
+  <meta property="og:title" content="Kalkulačka odstupného online zdarma | RychléVýpočty.cz">
+  <meta property="og:description" content="Orientační výpočet odstupného podle průměrného měsíčního výdělku a délky zaměstnání.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rychlevypocty.cz/odstupne-kalkulacka.html">
+  <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Kalkulačka odstupného online zdarma | RychléVýpočty.cz">
+  <meta name="twitter:description" content="Spočítejte si orientační výši odstupného během pár sekund.">
+
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #5f6b85;
+      --primary: #2152ff;
+      --primary-dark: #183dbf;
+      --border: #dbe3f0;
+      --success: #138a4b;
+      --warning: #b66a00;
+      --shadow: 0 12px 32px rgba(20, 32, 70, 0.08);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #f7f9fd 0%, #eef3fb 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      padding: 18px 0;
+      border-bottom: 1px solid rgba(219, 227, 240, 0.8);
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+
+    .brand span {
+      color: var(--primary);
+    }
+
+    .topnav {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      font-size: 0.97rem;
+    }
+
+    .hero {
+      padding: 42px 0 20px;
+    }
+
+    .breadcrumbs {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .hero-copy h1 {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      margin: 0 0 16px;
+    }
+
+    .hero-copy p {
+      margin: 0 0 16px;
+      font-size: 1.06rem;
+      color: var(--muted);
+      max-width: 720px;
+    }
+
+    .hero-points {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .hero-pill {
+      background: rgba(33, 82, 255, 0.08);
+      color: var(--primary-dark);
+      border: 1px solid rgba(33, 82, 255, 0.12);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .hero-box {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-box h2 {
+      margin: 0 0 10px;
+      font-size: 1.2rem;
+    }
+
+    .hero-box p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.04fr 0.96fr;
+      gap: 28px;
+      align-items: start;
+      padding: 22px 0 32px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .card-header {
+      padding: 24px 24px 10px;
+    }
+
+    .card-header h2,
+    .card-header h3 {
+      margin: 0 0 8px;
+      font-size: 1.3rem;
+      letter-spacing: -0.02em;
+    }
+
+    .card-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .card-body {
+      padding: 20px 24px 24px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field label {
+      font-weight: 700;
+      font-size: 0.96rem;
+    }
+
+    .field small {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: -2px;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      padding: 14px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      font-size: 1rem;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      outline: none;
+      border-color: rgba(33, 82, 255, 0.45);
+      box-shadow: 0 0 0 4px rgba(33, 82, 255, 0.10);
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.06s ease, background 0.15s ease, opacity 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background: #eef3ff;
+      color: var(--primary-dark);
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .result-box {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+
+    .highlight {
+      background: linear-gradient(180deg, #eef7ff 0%, #f9fcff 100%);
+      border-color: rgba(33, 82, 255, 0.18);
+    }
+
+    .result-label {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .result-value {
+      font-size: clamp(1.15rem, 2.2vw, 1.9rem);
+      line-height: 1.15;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      word-break: break-word;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+
+    .badge.success {
+      background: rgba(19, 138, 75, 0.10);
+      color: var(--success);
+    }
+
+    .badge.warning {
+      background: rgba(182, 106, 0, 0.11);
+      color: var(--warning);
+    }
+
+    .info-list {
+      display: grid;
+      gap: 12px;
+      margin: 18px 0 0;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid #edf2fa;
+    }
+
+    .info-row:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .info-row span:first-child {
+      color: var(--muted);
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 18px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 640px;
+      background: #fff;
+    }
+
+    th, td {
+      padding: 14px 14px;
+      text-align: left;
+      border-bottom: 1px solid #edf2fa;
+      font-size: 0.96rem;
+    }
+
+    th {
+      background: #f8fbff;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .content-section {
+      padding: 8px 0 8px;
+    }
+
+    .content-section h2 {
+      font-size: 1.7rem;
+      letter-spacing: -0.03em;
+      margin: 0 0 14px;
+    }
+
+    .content-section h3 {
+      font-size: 1.15rem;
+      margin: 28px 0 10px;
+    }
+
+    .content-section p {
+      color: var(--muted);
+      margin: 0 0 14px;
+    }
+
+    .content-section ul {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    .content-section li {
+      margin-bottom: 8px;
+    }
+
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .related-card {
+      display: block;
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      color: var(--text);
+      box-shadow: var(--shadow);
+    }
+
+    .related-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .related-card span {
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    .note {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1px solid #e7edf7;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    footer {
+      margin-top: 40px;
+      border-top: 1px solid rgba(219, 227, 240, 0.9);
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .footer-inner {
+      padding: 24px 0 40px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .layout,
+      .related-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .container {
+        width: min(100% - 24px, 1160px);
+      }
+
+      .form-grid,
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 28px;
+      }
+
+      .card-header,
+      .card-body,
+      .hero-box {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .info-row {
+        flex-direction: column;
+        gap: 6px;
+      }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebApplication",
+    "name":"Kalkulačka odstupného",
+    "url":"https://rychlevypocty.cz/odstupne-kalkulacka.html",
+    "applicationCategory":"BusinessApplication",
+    "operatingSystem":"Any",
+    "description":"Online kalkulačka pro orientační výpočet odstupného podle průměrného měsíčního výdělku a délky zaměstnání.",
+    "offers":{
+      "@type":"Offer",
+      "price":"0",
+      "priceCurrency":"CZK"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"Jak se počítá odstupné?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Odstupné se obvykle počítá jako násobek průměrného měsíčního výdělku. Výše násobku závisí zejména na délce pracovního poměru a důvodu skončení pracovního poměru."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Na čem závisí výše odstupného?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Výše odstupného závisí především na průměrném měsíčním výdělku, délce trvání pracovního poměru a konkrétním důvodu ukončení pracovního poměru. V některých případech může být sjednáno i vyšší odstupné."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Je výpočet v kalkulačce závazný?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Ne. Kalkulačka poskytuje orientační výpočet. Skutečný nárok na odstupné se může lišit podle konkrétní situace, pracovní smlouvy, kolektivní smlouvy nebo individuální dohody."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="/">Rychlé<span>Výpočty</span>.cz</a>
+      <nav class="topnav" aria-label="Hlavní navigace">
+        <a href="/">Domů</a>
+        <a href="/cista-mzda-kalkulacka.html">Čistá mzda</a>
+        <a href="/kalkulacka-hodinove-mzdy.html">Hodinová mzda</a>
+        <a href="/kalkulacka-dovolene.html">Dovolená</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumbs">
+          <a href="/">RychléVýpočty.cz</a> / Kalkulačka odstupného
+        </div>
+
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <h1>Kalkulačka odstupného</h1>
+            <p>Spočítejte si orientační výši odstupného podle průměrného měsíčního výdělku, délky pracovního poměru a důvodu ukončení zaměstnání. Kalkulačka se hodí pro rychlou orientaci při změně práce i při řešení pracovněprávní situace.</p>
+            <p>Zadejte svůj průměrný měsíční výdělek, délku zaměstnání a důvod skončení pracovního poměru. Výsledek získáte okamžitě včetně orientačního přehledu násobku odstupného.</p>
+
+            <div class="hero-points">
+              <div class="hero-pill">Průměrný výdělek</div>
+              <div class="hero-pill">Délka zaměstnání</div>
+              <div class="hero-pill">Orientační násobek</div>
+              <div class="hero-pill">Přehledný výsledek</div>
+            </div>
+          </div>
+
+          <div class="hero-box">
+            <h2>Co kalkulačka umí</h2>
+            <p>Vypočítá orientační odstupné jako násobek průměrného měsíčního výdělku, zobrazí použitý násobek a doplní přehled základních scénářů podle délky trvání pracovního poměru.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container layout">
+      <div class="card">
+        <div class="card-header">
+          <h2>Zadání pro výpočet</h2>
+          <p>Vyplňte základní údaje o zaměstnání a kalkulačka výsledek automaticky přepočítá.</p>
+        </div>
+        <div class="card-body">
+          <form id="severanceForm">
+            <div class="form-grid">
+              <div class="field">
+                <label for="averageSalary">Průměrný měsíční výdělek</label>
+                <input type="number" id="averageSalary" min="1" step="1" value="42000" inputmode="decimal">
+                <small>Orientační průměrný měsíční výdělek v Kč.</small>
+              </div>
+
+              <div class="field">
+                <label for="employmentLength">Délka zaměstnání</label>
+                <select id="employmentLength">
+                  <option value="under1">Méně než 1 rok</option>
+                  <option value="1to2" selected>Alespoň 1 rok a méně než 2 roky</option>
+                  <option value="2plus">Alespoň 2 roky</option>
+                </select>
+                <small>Vyberte délku trvání pracovního poměru.</small>
+              </div>
+
+              <div class="field">
+                <label for="terminationReason">Důvod skončení pracovního poměru</label>
+                <select id="terminationReason">
+                  <option value="organizational" selected>Organizační důvody</option>
+                  <option value="health">Zdravotní důvody</option>
+                  <option value="other">Jiný důvod / bez nároku</option>
+                </select>
+                <small>Slouží pro orientační určení násobku odstupného.</small>
+              </div>
+
+              <div class="field">
+                <label for="extraMonths">Dodatečné odstupné (měsíce)</label>
+                <input type="number" id="extraMonths" min="0" step="0.5" value="0" inputmode="decimal">
+                <small>Například vyšší odstupné podle dohody nebo smlouvy.</small>
+              </div>
+
+              <div class="field">
+                <label for="taxEstimate">Orientační srážka (%)</label>
+                <input type="number" id="taxEstimate" min="0" max="100" step="0.1" value="0" inputmode="decimal">
+                <small>Volitelné. Jen orientační odhad pro čistý pohled na částku.</small>
+              </div>
+
+              <div class="field">
+                <label for="noticeMonths">Výpovědní doba (měsíce)</label>
+                <select id="noticeMonths">
+                  <option value="0">Neuvažovat</option>
+                  <option value="2" selected>2 měsíce</option>
+                  <option value="3">3 měsíce</option>
+                </select>
+                <small>Doplňkový přehled časového dopadu spolu s odstupným.</small>
+              </div>
+
+              <div class="actions full">
+                <button type="submit" class="btn-primary">Spočítat odstupné</button>
+                <button type="button" class="btn-secondary" id="resetBtn">Obnovit výchozí hodnoty</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>Výsledek výpočtu</h2>
+          <p>Orientační přehled odstupného podle zadaných parametrů.</p>
+        </div>
+        <div class="card-body">
+          <div class="results-grid">
+            <div class="result-box highlight">
+              <div class="result-label">Odstupné celkem</div>
+              <div class="result-value" id="severanceTotal">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Použitý násobek</div>
+              <div class="result-value" id="multiplierOutput">0×</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Základní odstupné</div>
+              <div class="result-value" id="baseSeverance">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Orientačně po srážce</div>
+              <div class="result-value" id="netEstimate">0 Kč</div>
+            </div>
+          </div>
+
+          <div id="statusBadge" class="badge success">Orientační nárok na odstupné je kladný</div>
+
+          <div class="info-list">
+            <div class="info-row">
+              <span>Průměrný měsíční výdělek</span>
+              <strong id="summarySalary">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Důvod ukončení</span>
+              <strong id="summaryReason">—</strong>
+            </div>
+            <div class="info-row">
+              <span>Délka zaměstnání</span>
+              <strong id="summaryLength">—</strong>
+            </div>
+            <div class="info-row">
+              <span>Dodatečné odstupné</span>
+              <strong id="summaryExtra">0 měsíců</strong>
+            </div>
+            <div class="info-row">
+              <span>Orientační období krytí příjmu</span>
+              <strong id="coverageOutput">0 měsíců</strong>
+            </div>
+          </div>
+
+          <div class="note">
+            Výpočet je pouze orientační. Skutečná výše odstupného může záviset na konkrétním důvodu skončení pracovního poměru, interních pravidlech zaměstnavatele, kolektivní smlouvě nebo individuální dohodě.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="card">
+        <div class="card-header">
+          <h3>Přehled scénáře</h3>
+          <p>Souhrn hlavních hodnot pro rychlou orientaci v odstupném a navazujícím období.</p>
+        </div>
+        <div class="card-body">
+          <div class="table-wrap">
+            <table aria-label="Přehled odstupného">
+              <thead>
+                <tr>
+                  <th>Položka</th>
+                  <th>Hodnota</th>
+                  <th>Význam</th>
+                </tr>
+              </thead>
+              <tbody id="summaryTableBody">
+                <tr>
+                  <td>Průměrný výdělek</td>
+                  <td>0 Kč</td>
+                  <td>Výchozí měsíční základ</td>
+                </tr>
+                <tr>
+                  <td>Násobek odstupného</td>
+                  <td>0×</td>
+                  <td>Podle délky zaměstnání a důvodu</td>
+                </tr>
+                <tr>
+                  <td>Odstupné celkem</td>
+                  <td>0 Kč</td>
+                  <td>Orientační celková částka</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container content-section">
+      <h2>Jak kalkulačka odstupného funguje</h2>
+      <p>Kalkulačka vychází z jednoduchého principu, že odstupné se obvykle určuje jako násobek průměrného měsíčního výdělku. Použitý násobek se orientačně odvíjí od délky pracovního poměru a důvodu skončení zaměstnání.</p>
+
+      <h3>Co ve výsledku uvidíte</h3>
+      <ul>
+        <li>základní orientační odstupné podle průměrného výdělku,</li>
+        <li>použitý násobek odstupného,</li>
+        <li>celkovou částku včetně případného dodatečného odstupného,</li>
+        <li>orientační přehled, na kolik měsíců může odstupné odpovídat běžnému příjmu.</li>
+      </ul>
+
+      <h3>Kdy se kalkulačka hodí</h3>
+      <p>Je užitečná při plánování změny zaměstnání, při konzultaci skončení pracovního poměru i při rychlé orientaci v tom, jakou finanční rezervu může odstupné představovat. Dobře doplňuje kalkulačky čisté mzdy a pracovního času.</p>
+
+      <h3>Na co si dát pozor</h3>
+      <p>Výsledná částka v praxi nemusí odpovídat přesně této kalkulačce. Rozhodující může být konkrétní právní důvod ukončení pracovního poměru, smluvní ujednání, kolektivní smlouva nebo individuální dohoda se zaměstnavatelem.</p>
+
+      <h3>Proč je důležitý průměrný měsíční výdělek</h3>
+      <p>Právě z něj se orientačně odvozuje základ odstupného. Pokud tedy znáte svůj průměrný výdělek, můžete si velmi rychle spočítat alespoň rámcový finanční dopad celé situace.</p>
+    </section>
+
+    <section class="container content-section">
+      <h2>Související kalkulačky</h2>
+      <div class="related-grid">
+        <a class="related-card" href="/cista-mzda-kalkulacka.html">
+          <strong>Kalkulačka čisté mzdy</strong>
+          <span>Orientační výpočet čisté mzdy, odvodů a nákladů zaměstnavatele.</span>
+        </a>
+
+        <a class="related-card" href="/kalkulacka-hodinove-mzdy.html">
+          <strong>Kalkulačka hodinové mzdy</strong>
+          <span>Rychlý přepočet hodinové mzdy z měsíčního příjmu a odpracovaných hodin.</span>
+        </a>
+
+        <a class="related-card" href="/kalkulacka-dovolene.html">
+          <strong>Kalkulačka dovolené</strong>
+          <span>Orientační výpočet nároku na dovolenou, poměrné části a zbývajících hodin.</span>
+        </a>
+
+        <a class="related-card" href="/kalkulacka-odpracovanych-hodin.html">
+          <strong>Kalkulačka odpracovaných hodin</strong>
+          <span>Výpočet čistých hodin za směnu, týden nebo měsíc včetně pauzy.</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      © 2026 RychléVýpočty.cz — online kalkulačky a praktické výpočty pro každodenní použití.
+    </div>
+  </footer>
+
+  <script>
+    const form = document.getElementById('severanceForm');
+    const resetBtn = document.getElementById('resetBtn');
+
+    const outputs = {
+      severanceTotal: document.getElementById('severanceTotal'),
+      multiplierOutput: document.getElementById('multiplierOutput'),
+      baseSeverance: document.getElementById('baseSeverance'),
+      netEstimate: document.getElementById('netEstimate'),
+      statusBadge: document.getElementById('statusBadge'),
+      summarySalary: document.getElementById('summarySalary'),
+      summaryReason: document.getElementById('summaryReason'),
+      summaryLength: document.getElementById('summaryLength'),
+      summaryExtra: document.getElementById('summaryExtra'),
+      coverageOutput: document.getElementById('coverageOutput'),
+      summaryTableBody: document.getElementById('summaryTableBody')
+    };
+
+    function formatCurrency(value) {
+      return new Intl.NumberFormat('cs-CZ', {
+        style: 'currency',
+        currency: 'CZK',
+        maximumFractionDigits: 0
+      }).format(value);
+    }
+
+    function formatMonths(value) {
+      return new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 1
+      }).format(value) + (value === 1 ? ' měsíc' : ' měsíců');
+    }
+
+    function getLengthLabel(value) {
+      if (value === 'under1') return 'Méně než 1 rok';
+      if (value === '1to2') return 'Alespoň 1 rok a méně než 2 roky';
+      return 'Alespoň 2 roky';
+    }
+
+    function getReasonLabel(value) {
+      if (value === 'organizational') return 'Organizační důvody';
+      if (value === 'health') return 'Zdravotní důvody';
+      return 'Jiný důvod / bez orientačního nároku';
+    }
+
+    function getBaseMultiplier(length, reason) {
+      if (reason === 'other') return 0;
+      if (reason === 'health') return 12;
+      if (length === 'under1') return 1;
+      if (length === '1to2') return 2;
+      return 3;
+    }
+
+    function getValues() {
+      return {
+        averageSalary: Number(document.getElementById('averageSalary').value),
+        employmentLength: document.getElementById('employmentLength').value,
+        terminationReason: document.getElementById('terminationReason').value,
+        extraMonths: Number(document.getElementById('extraMonths').value),
+        taxEstimate: Number(document.getElementById('taxEstimate').value),
+        noticeMonths: Number(document.getElementById('noticeMonths').value)
+      };
+    }
+
+    function validate(values) {
+      if (!values.averageSalary || values.averageSalary <= 0) return 'Zadejte platný průměrný měsíční výdělek.';
+      if (Number.isNaN(values.extraMonths) || values.extraMonths < 0) return 'Zadejte platné dodatečné odstupné.';
+      if (Number.isNaN(values.taxEstimate) || values.taxEstimate < 0 || values.taxEstimate > 100) return 'Orientační srážka musí být mezi 0 a 100 %.';
+      return '';
+    }
+
+    function calculate(values) {
+      const baseMultiplier = getBaseMultiplier(values.employmentLength, values.terminationReason);
+      const totalMultiplier = baseMultiplier + values.extraMonths;
+      const baseSeverance = values.averageSalary * baseMultiplier;
+      const severanceTotal = values.averageSalary * totalMultiplier;
+      const netEstimate = severanceTotal * (1 - values.taxEstimate / 100);
+      const coverageMonths = totalMultiplier + values.noticeMonths;
+
+      return {
+        baseMultiplier,
+        totalMultiplier,
+        baseSeverance,
+        severanceTotal,
+        netEstimate,
+        coverageMonths
+      };
+    }
+
+    function renderTable(values, result) {
+      outputs.summaryTableBody.innerHTML = `
+        <tr>
+          <td>Průměrný výdělek</td>
+          <td>${formatCurrency(values.averageSalary)}</td>
+          <td>Výchozí měsíční základ</td>
+        </tr>
+        <tr>
+          <td>Násobek odstupného</td>
+          <td>${result.totalMultiplier}×</td>
+          <td>Včetně případného dodatečného odstupného</td>
+        </tr>
+        <tr>
+          <td>Základní odstupné</td>
+          <td>${formatCurrency(result.baseSeverance)}</td>
+          <td>Bez navýšení dohodou</td>
+        </tr>
+        <tr>
+          <td>Odstupné celkem</td>
+          <td>${formatCurrency(result.severanceTotal)}</td>
+          <td>Orientační celková částka</td>
+        </tr>
+        <tr>
+          <td>Období krytí příjmu</td>
+          <td>${formatMonths(result.coverageMonths)}</td>
+          <td>Odstupné + případně výpovědní doba</td>
+        </tr>
+      `;
+    }
+
+    function render(values, result) {
+      outputs.severanceTotal.textContent = formatCurrency(result.severanceTotal);
+      outputs.multiplierOutput.textContent = result.totalMultiplier + '×';
+      outputs.baseSeverance.textContent = formatCurrency(result.baseSeverance);
+      outputs.netEstimate.textContent = formatCurrency(result.netEstimate);
+      outputs.summarySalary.textContent = formatCurrency(values.averageSalary);
+      outputs.summaryReason.textContent = getReasonLabel(values.terminationReason);
+      outputs.summaryLength.textContent = getLengthLabel(values.employmentLength);
+      outputs.summaryExtra.textContent = formatMonths(values.extraMonths);
+      outputs.coverageOutput.textContent = formatMonths(result.coverageMonths);
+
+      if (result.severanceTotal > 0) {
+        outputs.statusBadge.className = 'badge success';
+        outputs.statusBadge.textContent = 'Orientační nárok na odstupné je kladný';
+      } else {
+        outputs.statusBadge.className = 'badge warning';
+        outputs.statusBadge.textContent = 'Podle zadaného scénáře nevychází orientační odstupné';
+      }
+
+      renderTable(values, result);
+    }
+
+    function runCalculation() {
+      const values = getValues();
+      const error = validate(values);
+
+      if (error) {
+        alert(error);
+        return;
+      }
+
+      const result = calculate(values);
+      render(values, result);
+    }
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      runCalculation();
+    });
+
+    ['averageSalary', 'employmentLength', 'terminationReason', 'extraMonths', 'taxEstimate', 'noticeMonths'].forEach(id => {
+      document.getElementById(id).addEventListener('input', runCalculation);
+      document.getElementById(id).addEventListener('change', runCalculation);
+    });
+
+    resetBtn.addEventListener('click', function() {
+      document.getElementById('averageSalary').value = 42000;
+      document.getElementById('employmentLength').value = '1to2';
+      document.getElementById('terminationReason').value = 'organizational';
+      document.getElementById('extraMonths').value = 0;
+      document.getElementById('taxEstimate').value = 0;
+      document.getElementById('noticeMonths').value = 2;
+      runCalculation();
+    });
+
+    runCalculation();
+  </script>
+</body>
+</html>
