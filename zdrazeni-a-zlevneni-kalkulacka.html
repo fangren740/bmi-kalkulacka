@@ -1,1 +1,216 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kalkulačka zdražení a zlevnění | Výpočet procentní změny ceny | RychléVýpočty.cz</title>
+  <meta name="description" content="Spočítejte procentní změnu ceny, zdražení nebo zlevnění mezi dvěma hodnotami. Přehledná kalkulačka procentní změny zdarma online.">
+  <meta name="keywords" content="zdražení kalkulačka, zlevnění kalkulačka, procentní změna, o kolik procent zdražilo, výpočet procentní změny">
+  <meta name="author" content="RychléVýpočty.cz">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://rychlevypocty.cz/zdrazeni-a-zlevneni-kalkulacka.html">
 
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #5f6b85;
+      --primary: #2152ff;
+      --primary-dark: #183dbf;
+      --border: #dbe3f0;
+      --success: #138a4b;
+      --danger: #c62828;
+      --shadow: 0 12px 32px rgba(20, 32, 70, 0.08);
+      --radius: 18px;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, Arial;
+      background: linear-gradient(180deg, #f7f9fd 0%, #eef3fb 100%);
+      color: var(--text);
+    }
+
+    .container {
+      width: min(1100px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      padding: 18px 0;
+      border-bottom: 1px solid #dbe3f0;
+      background: rgba(255,255,255,0.8);
+    }
+
+    .brand {
+      font-weight: 800;
+    }
+
+    .brand span {
+      color: var(--primary);
+    }
+
+    .hero {
+      padding: 40px 0 20px;
+    }
+
+    h1 {
+      font-size: 2.4rem;
+      margin-bottom: 10px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      padding: 20px 0;
+    }
+
+    .card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 24px;
+    }
+
+    .field {
+      margin-bottom: 16px;
+    }
+
+    .field label {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .field input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      font-size: 1rem;
+    }
+
+    button {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 14px;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    .result {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-top: 10px;
+    }
+
+    .positive {
+      color: var(--danger);
+    }
+
+    .negative {
+      color: var(--success);
+    }
+
+    .muted {
+      color: var(--muted);
+      margin-top: 10px;
+    }
+
+    @media (max-width: 900px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header class="topbar">
+  <div class="container">
+    <div class="brand">Rychlé<span>Výpočty</span>.cz</div>
+  </div>
+</header>
+
+<main class="container">
+
+  <section class="hero">
+    <h1>Kalkulačka zdražení a zlevnění</h1>
+    <p class="muted">
+      Spočítejte, o kolik procent se změnila cena. Vhodné pro zdražení i zlevnění.
+    </p>
+  </section>
+
+  <section class="layout">
+
+    <div class="card">
+      <div class="field">
+        <label>Původní cena</label>
+        <input type="number" id="oldPrice" value="1000">
+      </div>
+
+      <div class="field">
+        <label>Nová cena</label>
+        <input type="number" id="newPrice" value="1200">
+      </div>
+
+      <button onclick="calculate()">Spočítat změnu</button>
+    </div>
+
+    <div class="card">
+      <div class="muted">Procentní změna</div>
+      <div id="percentChange" class="result">0 %</div>
+
+      <div class="muted">Rozdíl v Kč</div>
+      <div id="difference" class="result">0 Kč</div>
+    </div>
+
+  </section>
+
+  <section>
+    <h2>Jak výpočet funguje</h2>
+    <p class="muted">
+      Procentní změna se počítá jako rozdíl mezi novou a původní cenou, vydělený původní cenou.
+    </p>
+  </section>
+
+</main>
+
+<script>
+function formatCurrency(val) {
+  return new Intl.NumberFormat('cs-CZ', {
+    style: 'currency',
+    currency: 'CZK',
+    maximumFractionDigits: 0
+  }).format(val);
+}
+
+function calculate() {
+  const oldPrice = Number(document.getElementById('oldPrice').value);
+  const newPrice = Number(document.getElementById('newPrice').value);
+
+  if (oldPrice <= 0) return;
+
+  const diff = newPrice - oldPrice;
+  const percent = (diff / oldPrice) * 100;
+
+  const percentEl = document.getElementById('percentChange');
+  percentEl.textContent = percent.toFixed(2) + " %";
+
+  percentEl.className = "result " + (percent > 0 ? "positive" : "negative");
+
+  document.getElementById('difference').textContent = formatCurrency(diff);
+}
+
+calculate();
+</script>
+
+</body>
+</html>
