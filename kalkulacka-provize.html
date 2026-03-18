@@ -1,1 +1,964 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kalkulačka provize online | RychléVýpočty.cz</title>
+  <meta name="description" content="Spočítejte provizi z částky nebo obratu online. Přehledná kalkulačka vypočítá výši provize, výslednou částku po provizi i celkovou odměnu podle procent nebo pevné sazby.">
+  <meta name="keywords" content="kalkulačka provize, výpočet provize, provize z obratu, procenta provize, provizní odměna kalkulačka">
+  <meta name="author" content="RychléVýpočty.cz">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://rychlevypocty.cz/kalkulacka-provize.html">
 
+  <meta property="og:title" content="Kalkulačka provize online | RychléVýpočty.cz">
+  <meta property="og:description" content="Rychlý výpočet provize z částky, obratu nebo prodejní ceny.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rychlevypocty.cz/kalkulacka-provize.html">
+  <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Kalkulačka provize online | RychléVýpočty.cz">
+  <meta name="twitter:description" content="Spočítejte výši provize, čistý výnos i konečnou částku přehledně a zdarma.">
+
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #5f6b85;
+      --primary: #2152ff;
+      --primary-dark: #183dbf;
+      --border: #dbe3f0;
+      --success: #138a4b;
+      --warning: #b66a00;
+      --danger: #c63d2f;
+      --shadow: 0 12px 32px rgba(20, 32, 70, 0.08);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #f7f9fd 0%, #eef3fb 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    a:hover { text-decoration: underline; }
+
+    .container {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      padding: 18px 0;
+      border-bottom: 1px solid rgba(219, 227, 240, 0.8);
+      background: rgba(255, 255, 255, 0.84);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+      line-height: 1;
+    }
+
+    .brand span { color: var(--primary); }
+
+    .topnav {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      font-size: 0.97rem;
+    }
+
+    .hero {
+      padding: 42px 0 20px;
+    }
+
+    .breadcrumbs {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.12fr 0.88fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .hero-copy h1 {
+      font-size: clamp(2rem, 4vw, 3.15rem);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      margin: 0 0 16px;
+    }
+
+    .hero-copy p {
+      margin: 0 0 16px;
+      font-size: 1.06rem;
+      color: var(--muted);
+      max-width: 760px;
+    }
+
+    .hero-points {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .hero-pill {
+      background: rgba(33, 82, 255, 0.08);
+      color: var(--primary-dark);
+      border: 1px solid rgba(33, 82, 255, 0.12);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .hero-box {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-box h2 {
+      margin: 0 0 10px;
+      font-size: 1.2rem;
+    }
+
+    .hero-box p {
+      margin: 0 0 10px;
+      color: var(--muted);
+    }
+
+    .hero-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.02fr 0.98fr;
+      gap: 28px;
+      align-items: start;
+      padding: 22px 0 32px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .card-header {
+      padding: 24px 24px 10px;
+    }
+
+    .card-header h2,
+    .card-header h3 {
+      margin: 0 0 8px;
+      font-size: 1.3rem;
+      letter-spacing: -0.02em;
+    }
+
+    .card-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .card-body {
+      padding: 20px 24px 24px;
+    }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .field label {
+      font-weight: 700;
+      font-size: 0.96rem;
+    }
+
+    .field small {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: -2px;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      padding: 14px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      font-size: 1rem;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      font-family: inherit;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      outline: none;
+      border-color: rgba(33, 82, 255, 0.45);
+      box-shadow: 0 0 0 4px rgba(33, 82, 255, 0.10);
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.06s ease, background 0.15s ease;
+    }
+
+    button:hover { transform: translateY(-1px); }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover { background: var(--primary-dark); }
+
+    .btn-secondary {
+      background: #eef3ff;
+      color: var(--primary-dark);
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .result-box {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+
+    .result-box.highlight {
+      background: linear-gradient(180deg, #eef7ff 0%, #f9fcff 100%);
+      border-color: rgba(33, 82, 255, 0.18);
+    }
+
+    .result-label {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .result-value {
+      font-size: clamp(1.2rem, 2.4vw, 2rem);
+      line-height: 1.15;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      word-break: break-word;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+
+    .badge.success {
+      background: rgba(19, 138, 75, 0.10);
+      color: var(--success);
+    }
+
+    .badge.warning {
+      background: rgba(182, 106, 0, 0.11);
+      color: var(--warning);
+    }
+
+    .info-list {
+      display: grid;
+      gap: 12px;
+      margin: 18px 0 0;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid #edf2fa;
+    }
+
+    .info-row:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .info-row span:first-child { color: var(--muted); }
+
+    .note {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1px solid #e7edf7;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 18px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: #fff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 660px;
+    }
+
+    th, td {
+      padding: 14px;
+      text-align: left;
+      border-bottom: 1px solid #edf2fa;
+      font-size: 0.96rem;
+    }
+
+    th {
+      background: #f8fbff;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    tr:last-child td { border-bottom: 0; }
+
+    .content-section {
+      padding: 8px 0;
+    }
+
+    .content-section h2 {
+      font-size: 1.7rem;
+      letter-spacing: -0.03em;
+      margin: 0 0 14px;
+    }
+
+    .content-section h3 {
+      font-size: 1.15rem;
+      margin: 28px 0 10px;
+    }
+
+    .content-section p {
+      color: var(--muted);
+      margin: 0 0 14px;
+    }
+
+    .content-section ul {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    .content-section li { margin-bottom: 8px; }
+
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .related-card {
+      display: block;
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      color: var(--text);
+      box-shadow: var(--shadow);
+    }
+
+    .related-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .related-card span {
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    footer {
+      margin-top: 40px;
+      border-top: 1px solid rgba(219, 227, 240, 0.9);
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .footer-inner {
+      padding: 24px 0 40px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .layout,
+      .related-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .container {
+        width: min(100% - 24px, 1160px);
+      }
+
+      .field-grid,
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 28px;
+      }
+
+      .card-header,
+      .card-body,
+      .hero-box {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebApplication",
+    "name":"Kalkulačka provize",
+    "url":"https://rychlevypocty.cz/kalkulacka-provize.html",
+    "applicationCategory":"FinanceApplication",
+    "operatingSystem":"Any",
+    "description":"Online kalkulačka pro výpočet provize z částky nebo obratu.",
+    "offers":{
+      "@type":"Offer",
+      "price":"0",
+      "priceCurrency":"CZK"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"Jak se počítá provize z částky?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Provize se obvykle počítá jako procento ze zadané částky nebo obratu. Například 10 % z 50 000 Kč znamená provizi 5 000 Kč."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Lze do výpočtu zahrnout i pevnou odměnu?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Ano. Kalkulačka umožňuje přidat k procentní provizi i pevnou částku, takže získáte celkovou odměnu v jednom výsledku."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"K čemu se kalkulačka provize hodí?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Hodí se pro obchodníky, zprostředkovatele, freelancery, affiliate partnery i firmy, které chtějí rychle spočítat provizní odměnu nebo čistý výnos po provizi."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="/">Rychlé<span>Výpočty</span>.cz</a>
+      <nav class="topnav" aria-label="Hlavní navigace">
+        <a href="/">Domů</a>
+        <a href="/kalkulacka-marze-a-prirazky.html">Marže a přirážka</a>
+        <a href="/kalkulacka-slevy.html">Slevy</a>
+        <a href="/procenta-kalkulacka.html">Procenta</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumbs">
+          <a href="/">RychléVýpočty.cz</a> / Kalkulačka provize
+        </div>
+
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <h1>Kalkulačka provize</h1>
+            <p>Spočítejte si rychle provizi z částky, obratu nebo prodeje. Kalkulačka vypočítá procentní provizi, pevnou odměnu, celkovou provizi i částku, která zůstane po odečtení provize.</p>
+            <p>Hodí se pro obchod, zprostředkování, affiliate spolupráce, realitní služby, prodej i běžné firemní plánování odměn.</p>
+
+            <div class="hero-points">
+              <div class="hero-pill">Provize z obratu</div>
+              <div class="hero-pill">Procentní i pevná složka</div>
+              <div class="hero-pill">Výsledná částka po provizi</div>
+              <div class="hero-pill">Rychlý přehled odměny</div>
+            </div>
+          </div>
+
+          <div class="hero-box">
+            <h2>Co kalkulačka umí</h2>
+            <p>Ze zadané částky spočítá výši provize podle procentní sazby a případně přidá i pevnou odměnu. Zobrazí celkovou provizi, čistou částku po provizi i efektivní sazbu.</p>
+            <p>Výpočet je vhodný pro rychlé obchodní rozhodování, odhad výnosu nebo kontrolu provizních podmínek.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container layout">
+      <div class="card">
+        <div class="card-header">
+          <h2>Zadání provize</h2>
+          <p>Vyplňte částku, procentní sazbu a případnou pevnou odměnu. Výsledek se přepočítá okamžitě.</p>
+        </div>
+        <div class="card-body">
+          <div class="field-grid">
+            <div class="field">
+              <label for="baseAmount">Základní částka / obrat (Kč)</label>
+              <input type="number" id="baseAmount" min="0" step="1" value="100000" inputmode="decimal">
+              <small>Částka, ze které se bude provize počítat.</small>
+            </div>
+
+            <div class="field">
+              <label for="commissionRate">Provize (%)</label>
+              <input type="number" id="commissionRate" min="0" step="0.01" value="8" inputmode="decimal">
+              <small>Procentní sazba provize ze zadané částky.</small>
+            </div>
+
+            <div class="field">
+              <label for="fixedCommission">Pevná provize (Kč)</label>
+              <input type="number" id="fixedCommission" min="0" step="1" value="0" inputmode="decimal">
+              <small>Volitelná pevná odměna přidaná k procentní provizi.</small>
+            </div>
+
+            <div class="field">
+              <label for="calculationMode">Režim výpočtu</label>
+              <select id="calculationMode">
+                <option value="fromBase" selected>Provize se počítá ze základní částky</option>
+                <option value="includedInTotal">Provize je zahrnutá v celkové částce</option>
+              </select>
+              <small>Vyberte, zda je provize navíc, nebo už je součástí celkové částky.</small>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button class="btn-primary" type="button" id="calculateBtn">Spočítat provizi</button>
+            <button class="btn-secondary" type="button" id="resetBtn">Obnovit výchozí hodnoty</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>Výsledek výpočtu</h2>
+          <p>Přehled výše provize, čisté částky a efektivní sazby.</p>
+        </div>
+        <div class="card-body">
+          <div class="results-grid">
+            <div class="result-box highlight">
+              <div class="result-label">Celková provize</div>
+              <div class="result-value" id="totalCommissionResult">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Částka po provizi</div>
+              <div class="result-value" id="netAmountResult">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Procentní složka</div>
+              <div class="result-value" id="percentCommissionResult">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Efektivní sazba</div>
+              <div class="result-value" id="effectiveRateResult">0 %</div>
+            </div>
+          </div>
+
+          <div id="resultBadge" class="badge success">Výpočet připraven</div>
+
+          <div class="info-list">
+            <div class="info-row">
+              <span>Základní částka</span>
+              <strong id="baseAmountResult">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Procentní sazba</span>
+              <strong id="commissionRateResult">0 %</strong>
+            </div>
+            <div class="info-row">
+              <span>Pevná provize</span>
+              <strong id="fixedCommissionResult">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Částka před provizí</span>
+              <strong id="grossAmountResult">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Částka po provizi</span>
+              <strong id="afterCommissionResult">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Rozdíl v Kč</span>
+              <strong id="differenceResult">0 Kč</strong>
+            </div>
+          </div>
+
+          <div class="note" id="resultNote">
+            Výsledek je orientační pomůcka pro rychlý výpočet provizní odměny a částky po odečtení provize.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="card">
+        <div class="card-header">
+          <h3>Rozpis výpočtu</h3>
+          <p>Přehled jednotlivých položek, které tvoří výslednou provizi a konečnou částku.</p>
+        </div>
+        <div class="card-body">
+          <div class="table-wrap">
+            <table aria-label="Rozpis výpočtu provize">
+              <thead>
+                <tr>
+                  <th>Položka</th>
+                  <th>Hodnota</th>
+                  <th>Poznámka</th>
+                </tr>
+              </thead>
+              <tbody id="summaryTableBody">
+                <tr>
+                  <td>Provize</td>
+                  <td>—</td>
+                  <td>Po výpočtu se zobrazí detailní přehled.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container content-section">
+      <h2>Jak kalkulačka provize funguje</h2>
+      <p>Kalkulačka vychází ze zadané částky a provizní sazby. V základním režimu spočítá procentní provizi ze zadané částky a případně k ní přičte pevnou odměnu. Ve druhém režimu umí odhadnout, jaká část z celkové částky připadá na provizi, pokud je provize už v ceně zahrnutá.</p>
+
+      <h3>Co ve výsledku uvidíte</h3>
+      <ul>
+        <li>výši procentní provize,</li>
+        <li>pevnou složku provize,</li>
+        <li>celkovou provizní odměnu,</li>
+        <li>částku, která zůstane po odečtení provize,</li>
+        <li>efektivní sazbu vůči celé částce.</li>
+      </ul>
+
+      <h3>Kdy se výpočet hodí</h3>
+      <p>Kalkulačka je užitečná pro obchodníky, zprostředkovatele, firmy, affiliate partnery, freelancery i realitní praxi. Pomůže při nastavování provizních pravidel, kontrole smluvené odměny i při rychlém odhadu zisku z obchodu.</p>
+
+      <h3>Na co si dát pozor</h3>
+      <p>Skutečný výpočet provize může být ve smlouvě navázaný i na další podmínky, například stropy, minimální odměnu, více úrovní sazeb nebo DPH. Výsledek proto berte jako praktický orientační výpočet.</p>
+    </section>
+
+    <section class="container content-section">
+      <h2>Související kalkulačky</h2>
+      <div class="related-grid">
+        <a class="related-card" href="/kalkulacka-marze-a-prirazky.html">
+          <strong>Kalkulačka marže a přirážky</strong>
+          <span>Výpočet prodejní ceny, zisku, marže i přirážky.</span>
+        </a>
+
+        <a class="related-card" href="/kalkulacka-slevy.html">
+          <strong>Kalkulačka slevy</strong>
+          <span>Výpočet ceny po slevě a výše úspory.</span>
+        </a>
+
+        <a class="related-card" href="/zdrazeni-a-zlevneni-kalkulacka.html">
+          <strong>Kalkulačka zdražení a zlevnění</strong>
+          <span>Procentní změna ceny a rozdíl mezi částkami.</span>
+        </a>
+
+        <a class="related-card" href="/procenta-kalkulacka.html">
+          <strong>Kalkulačka procent</strong>
+          <span>Výpočet procent z částky i procentní změny.</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      © 2026 RychléVýpočty.cz — online kalkulačky a praktické výpočty pro každodenní použití.
+    </div>
+  </footer>
+
+  <script>
+    const baseAmountInput = document.getElementById('baseAmount');
+    const commissionRateInput = document.getElementById('commissionRate');
+    const fixedCommissionInput = document.getElementById('fixedCommission');
+    const calculationModeInput = document.getElementById('calculationMode');
+
+    const outputs = {
+      totalCommissionResult: document.getElementById('totalCommissionResult'),
+      netAmountResult: document.getElementById('netAmountResult'),
+      percentCommissionResult: document.getElementById('percentCommissionResult'),
+      effectiveRateResult: document.getElementById('effectiveRateResult'),
+      resultBadge: document.getElementById('resultBadge'),
+      baseAmountResult: document.getElementById('baseAmountResult'),
+      commissionRateResult: document.getElementById('commissionRateResult'),
+      fixedCommissionResult: document.getElementById('fixedCommissionResult'),
+      grossAmountResult: document.getElementById('grossAmountResult'),
+      afterCommissionResult: document.getElementById('afterCommissionResult'),
+      differenceResult: document.getElementById('differenceResult'),
+      resultNote: document.getElementById('resultNote'),
+      summaryTableBody: document.getElementById('summaryTableBody')
+    };
+
+    function formatCurrency(value) {
+      return new Intl.NumberFormat('cs-CZ', {
+        style: 'currency',
+        currency: 'CZK',
+        maximumFractionDigits: 0
+      }).format(value);
+    }
+
+    function formatPercent(value) {
+      return new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: value % 1 === 0 ? 0 : 2,
+        maximumFractionDigits: 2
+      }).format(value) + ' %';
+    }
+
+    function roundCurrency(value) {
+      return Math.round(value);
+    }
+
+    function buildSummaryRows(rows) {
+      outputs.summaryTableBody.innerHTML = rows.map(row => `
+        <tr>
+          <td>${row.label}</td>
+          <td>${row.amount}</td>
+          <td>${row.note}</td>
+        </tr>
+      `).join('');
+    }
+
+    function calculateCommission() {
+      const baseAmount = Number(baseAmountInput.value);
+      const commissionRate = Number(commissionRateInput.value);
+      const fixedCommission = Number(fixedCommissionInput.value) || 0;
+      const calculationMode = calculationModeInput.value;
+
+      if (!baseAmount || baseAmount <= 0 || commissionRate < 0 || fixedCommission < 0) {
+        outputs.totalCommissionResult.textContent = '0 Kč';
+        outputs.netAmountResult.textContent = '0 Kč';
+        outputs.percentCommissionResult.textContent = '0 Kč';
+        outputs.effectiveRateResult.textContent = '0 %';
+        outputs.baseAmountResult.textContent = '0 Kč';
+        outputs.commissionRateResult.textContent = '0 %';
+        outputs.fixedCommissionResult.textContent = '0 Kč';
+        outputs.grossAmountResult.textContent = '0 Kč';
+        outputs.afterCommissionResult.textContent = '0 Kč';
+        outputs.differenceResult.textContent = '0 Kč';
+        outputs.resultBadge.className = 'badge warning';
+        outputs.resultBadge.textContent = 'Chybí vstupní data';
+        outputs.resultNote.textContent = 'Zadejte platnou částku a provizní sazbu.';
+        buildSummaryRows([
+          {
+            label: 'Výpočet',
+            amount: '—',
+            note: 'Zadejte platné vstupní hodnoty.'
+          }
+        ]);
+        return;
+      }
+
+      let percentCommission = 0;
+      let totalCommission = 0;
+      let grossAmount = baseAmount;
+      let afterCommission = 0;
+      let effectiveRate = 0;
+
+      if (calculationMode === 'fromBase') {
+        percentCommission = baseAmount * (commissionRate / 100);
+        totalCommission = percentCommission + fixedCommission;
+        afterCommission = baseAmount - totalCommission;
+        effectiveRate = (totalCommission / baseAmount) * 100;
+      } else {
+        const percentOnlyCommission = baseAmount * (commissionRate / (100 + commissionRate));
+        percentCommission = Math.max(0, percentOnlyCommission);
+        totalCommission = percentCommission + fixedCommission;
+        afterCommission = baseAmount - totalCommission;
+        effectiveRate = (totalCommission / baseAmount) * 100;
+      }
+
+      percentCommission = roundCurrency(percentCommission);
+      totalCommission = roundCurrency(totalCommission);
+      afterCommission = roundCurrency(afterCommission);
+      effectiveRate = Math.max(0, effectiveRate);
+
+      outputs.totalCommissionResult.textContent = formatCurrency(totalCommission);
+      outputs.netAmountResult.textContent = formatCurrency(afterCommission);
+      outputs.percentCommissionResult.textContent = formatCurrency(percentCommission);
+      outputs.effectiveRateResult.textContent = formatPercent(effectiveRate);
+
+      outputs.baseAmountResult.textContent = formatCurrency(baseAmount);
+      outputs.commissionRateResult.textContent = formatPercent(commissionRate);
+      outputs.fixedCommissionResult.textContent = formatCurrency(fixedCommission);
+      outputs.grossAmountResult.textContent = formatCurrency(grossAmount);
+      outputs.afterCommissionResult.textContent = formatCurrency(afterCommission);
+      outputs.differenceResult.textContent = formatCurrency(totalCommission);
+
+      if (effectiveRate <= 10) {
+        outputs.resultBadge.className = 'badge success';
+        outputs.resultBadge.textContent = 'Nižší efektivní provize';
+      } else {
+        outputs.resultBadge.className = 'badge warning';
+        outputs.resultBadge.textContent = 'Vyšší efektivní provize';
+      }
+
+      outputs.resultNote.textContent = calculationMode === 'fromBase'
+        ? `Ze zadané částky ${formatCurrency(baseAmount)} vychází celková provize přibližně ${formatCurrency(totalCommission)} a po jejím odečtení zůstává ${formatCurrency(afterCommission)}.`
+        : `Pokud je provize už zahrnutá v částce ${formatCurrency(baseAmount)}, odpovídá celková provize přibližně ${formatCurrency(totalCommission)} a čistá částka po provizi je ${formatCurrency(afterCommission)}.`;
+
+      buildSummaryRows([
+        {
+          label: 'Základní částka',
+          amount: formatCurrency(baseAmount),
+          note: 'Výchozí částka pro výpočet'
+        },
+        {
+          label: 'Provizní sazba',
+          amount: formatPercent(commissionRate),
+          note: 'Procentní složka provize'
+        },
+        {
+          label: 'Procentní provize',
+          amount: formatCurrency(percentCommission),
+          note: 'Výpočet podle zadané sazby'
+        },
+        {
+          label: 'Pevná provize',
+          amount: formatCurrency(fixedCommission),
+          note: 'Volitelná pevná složka odměny'
+        },
+        {
+          label: 'Celková provize',
+          amount: formatCurrency(totalCommission),
+          note: 'Součet procentní a pevné složky'
+        },
+        {
+          label: 'Částka po provizi',
+          amount: formatCurrency(afterCommission),
+          note: 'Zůstatek po odečtení provize'
+        },
+        {
+          label: 'Efektivní sazba',
+          amount: formatPercent(effectiveRate),
+          note: 'Skutečný podíl provize vůči celé částce'
+        }
+      ]);
+    }
+
+    document.getElementById('calculateBtn').addEventListener('click', calculateCommission);
+
+    document.getElementById('resetBtn').addEventListener('click', function() {
+      baseAmountInput.value = 100000;
+      commissionRateInput.value = 8;
+      fixedCommissionInput.value = 0;
+      calculationModeInput.value = 'fromBase';
+      calculateCommission();
+    });
+
+    [baseAmountInput, commissionRateInput, fixedCommissionInput, calculationModeInput].forEach(el => {
+      el.addEventListener('input', calculateCommission);
+      el.addEventListener('change', calculateCommission);
+    });
+
+    calculateCommission();
+  </script>
+</body>
+</html>
