@@ -1,1 +1,1124 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <title>Kalkulačka jednotkové ceny online zdarma | Cena za kg, l, m², kus | RychléVýpočty.cz</title>
+  <meta name="description" content="Spočítejte si jednotkovou cenu online. Přehledná kalkulačka ceny za kg, g, l, ml, m², cm² nebo kus zdarma pro rychlé porovnání výrobků a nabídek.">
+  <meta name="keywords" content="kalkulačka jednotkové ceny, cena za kg, cena za litr, cena za m2, jednotková cena, porovnání cen, cena za kus">
+  <meta name="author" content="RychléVýpočty.cz">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://rychlevypocty.cz/jednotkova-cena-kalkulacka.html">
+
+  <meta property="og:title" content="Kalkulačka jednotkové ceny online zdarma | RychléVýpočty.cz">
+  <meta property="og:description" content="Rychlý výpočet ceny za kg, litr, m² nebo kus pro snadné porovnání výrobků a nabídek.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rychlevypocty.cz/jednotkova-cena-kalkulacka.html">
+  <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Kalkulačka jednotkové ceny online zdarma | RychléVýpočty.cz">
+  <meta name="twitter:description" content="Spočítejte si cenu za jednotku a porovnejte, která nabídka je výhodnější.">
+
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #5f6b85;
+      --primary: #2152ff;
+      --primary-dark: #183dbf;
+      --border: #dbe3f0;
+      --success: #138a4b;
+      --warning: #b66a00;
+      --shadow: 0 12px 32px rgba(20, 32, 70, 0.08);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #f7f9fd 0%, #eef3fb 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      padding: 18px 0;
+      border-bottom: 1px solid rgba(219, 227, 240, 0.8);
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+
+    .brand span {
+      color: var(--primary);
+    }
+
+    .topnav {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      font-size: 0.97rem;
+    }
+
+    .hero {
+      padding: 42px 0 20px;
+    }
+
+    .breadcrumbs {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .hero-copy h1 {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      margin: 0 0 16px;
+    }
+
+    .hero-copy p {
+      margin: 0 0 16px;
+      font-size: 1.06rem;
+      color: var(--muted);
+      max-width: 720px;
+    }
+
+    .hero-points {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .hero-pill {
+      background: rgba(33, 82, 255, 0.08);
+      color: var(--primary-dark);
+      border: 1px solid rgba(33, 82, 255, 0.12);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .hero-box {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-box h2 {
+      margin: 0 0 10px;
+      font-size: 1.2rem;
+    }
+
+    .hero-box p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.04fr 0.96fr;
+      gap: 28px;
+      align-items: start;
+      padding: 22px 0 32px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .card-header {
+      padding: 24px 24px 10px;
+    }
+
+    .card-header h2,
+    .card-header h3 {
+      margin: 0 0 8px;
+      font-size: 1.3rem;
+      letter-spacing: -0.02em;
+    }
+
+    .card-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .card-body {
+      padding: 20px 24px 24px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field label {
+      font-weight: 700;
+      font-size: 0.96rem;
+    }
+
+    .field small {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: -2px;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      padding: 14px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      font-size: 1rem;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      outline: none;
+      border-color: rgba(33, 82, 255, 0.45);
+      box-shadow: 0 0 0 4px rgba(33, 82, 255, 0.10);
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    .compare-card {
+      margin-top: 18px;
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+
+    .compare-card h3 {
+      margin: 0 0 12px;
+      font-size: 1.05rem;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.06s ease, background 0.15s ease, opacity 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background: #eef3ff;
+      color: var(--primary-dark);
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .result-box {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+
+    .highlight {
+      background: linear-gradient(180deg, #eef7ff 0%, #f9fcff 100%);
+      border-color: rgba(33, 82, 255, 0.18);
+    }
+
+    .result-label {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .result-value {
+      font-size: clamp(1.15rem, 2.1vw, 1.85rem);
+      line-height: 1.15;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+
+    .badge.success {
+      background: rgba(19, 138, 75, 0.10);
+      color: var(--success);
+    }
+
+    .badge.warning {
+      background: rgba(182, 106, 0, 0.11);
+      color: var(--warning);
+    }
+
+    .info-list {
+      display: grid;
+      gap: 12px;
+      margin: 18px 0 0;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid #edf2fa;
+    }
+
+    .info-row:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .info-row span:first-child {
+      color: var(--muted);
+    }
+
+    .note {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1px solid #e7edf7;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 18px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 640px;
+      background: #fff;
+    }
+
+    th, td {
+      padding: 14px 14px;
+      text-align: left;
+      border-bottom: 1px solid #edf2fa;
+      font-size: 0.96rem;
+    }
+
+    th {
+      background: #f8fbff;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .content-section {
+      padding: 8px 0 8px;
+    }
+
+    .content-section h2 {
+      font-size: 1.7rem;
+      letter-spacing: -0.03em;
+      margin: 0 0 14px;
+    }
+
+    .content-section h3 {
+      font-size: 1.15rem;
+      margin: 28px 0 10px;
+    }
+
+    .content-section p {
+      color: var(--muted);
+      margin: 0 0 14px;
+    }
+
+    .content-section ul {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    .content-section li {
+      margin-bottom: 8px;
+    }
+
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .related-card {
+      display: block;
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      color: var(--text);
+      box-shadow: var(--shadow);
+    }
+
+    .related-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .related-card span {
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    footer {
+      margin-top: 40px;
+      border-top: 1px solid rgba(219, 227, 240, 0.9);
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .footer-inner {
+      padding: 24px 0 40px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .layout,
+      .related-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .container {
+        width: min(100% - 24px, 1160px);
+      }
+
+      .form-grid,
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 28px;
+      }
+
+      .card-header,
+      .card-body,
+      .hero-box {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .info-row {
+        flex-direction: column;
+        gap: 6px;
+      }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebApplication",
+    "name":"Kalkulačka jednotkové ceny",
+    "url":"https://rychlevypocty.cz/jednotkova-cena-kalkulacka.html",
+    "applicationCategory":"UtilitiesApplication",
+    "operatingSystem":"Any",
+    "description":"Online kalkulačka pro výpočet jednotkové ceny za kilogram, litr, metr čtvereční nebo kus.",
+    "offers":{
+      "@type":"Offer",
+      "price":"0",
+      "priceCurrency":"CZK"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"Co je jednotková cena?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Jednotková cena vyjadřuje cenu za jednu základní jednotku, například za 1 kilogram, 1 litr, 1 metr čtvereční nebo 1 kus. Umožňuje rychle porovnat, která nabídka je skutečně výhodnější."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Kdy se kalkulačka jednotkové ceny hodí?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Hodí se při porovnání balení potravin, stavebních materiálů, nápojů, drogistického zboží nebo jakýchkoli nabídek, kde je potřeba zjistit cenu za stejnou jednotku."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Jak poznám výhodnější nabídku?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Výhodnější je obvykle ta nabídka, která má nižší jednotkovou cenu při stejné kvalitě a srovnatelných podmínkách. Kalkulačka vám ukáže nejen cenu za jednotku, ale i přímé srovnání dvou variant."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="/">Rychlé<span>Výpočty</span>.cz</a>
+      <nav class="topnav" aria-label="Hlavní navigace">
+        <a href="/">Domů</a>
+        <a href="/procenta-kalkulacka.html">Procenta</a>
+        <a href="/kalkulacka-marze-a-prirazky.html">Marže a přirážka</a>
+        <a href="/prevodnik-jednotek.html">Převodník jednotek</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumbs">
+          <a href="/">RychléVýpočty.cz</a> / Kalkulačka jednotkové ceny
+        </div>
+
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <h1>Kalkulačka jednotkové ceny</h1>
+            <p>Spočítejte si cenu za kilogram, litr, metr čtvereční, kus nebo jinou jednotku a snadno porovnejte, která nabídka je výhodnější. Kalkulačka se hodí pro nákupy, cenové nabídky, stavebnictví i podnikání.</p>
+            <p>Zadejte cenu, množství a vyberte typ jednotky. Výsledkem je jednotková cena a volitelně i přímé srovnání dvou variant.</p>
+
+            <div class="hero-points">
+              <div class="hero-pill">Cena za kg</div>
+              <div class="hero-pill">Cena za l</div>
+              <div class="hero-pill">Cena za m²</div>
+              <div class="hero-pill">Porovnání dvou nabídek</div>
+            </div>
+          </div>
+
+          <div class="hero-box">
+            <h2>Co kalkulačka umí</h2>
+            <p>Vypočítá cenu za jednu základní jednotku a pomůže rychle zjistit, která varianta je výhodnější. Hodí se pro potraviny, stavební materiály, balení výrobků i profesionální cenové porovnání.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container layout">
+      <div class="card">
+        <div class="card-header">
+          <h2>Zadání výpočtu</h2>
+          <p>Vyplňte cenu a množství hlavní nabídky. Pro srovnání můžete doplnit i druhou variantu.</p>
+        </div>
+        <div class="card-body">
+          <form id="unitPriceForm">
+            <div class="form-grid">
+              <div class="field">
+                <label for="unitType">Typ jednotky</label>
+                <select id="unitType">
+                  <option value="weight" selected>Hmotnost</option>
+                  <option value="volume">Objem</option>
+                  <option value="area">Plocha</option>
+                  <option value="piece">Kusy</option>
+                  <option value="length">Délka</option>
+                </select>
+                <small>Vyberte, podle čeho chcete jednotkovou cenu počítat.</small>
+              </div>
+
+              <div class="field">
+                <label for="priceA">Cena nabídky A</label>
+                <input type="number" id="priceA" min="0.01" step="0.01" value="129.90" inputmode="decimal">
+                <small>Celková cena hlavní varianty v Kč.</small>
+              </div>
+
+              <div class="field">
+                <label for="amountA">Množství nabídky A</label>
+                <input type="number" id="amountA" min="0.0001" step="0.0001" value="0.75" inputmode="decimal">
+                <small>Například 0,75 kg, 1,5 l nebo 12 kusů.</small>
+              </div>
+
+              <div class="field">
+                <label for="amountUnitA">Jednotka nabídky A</label>
+                <select id="amountUnitA"></select>
+                <small>Zvolte jednotku odpovídající zadanému množství.</small>
+              </div>
+            </div>
+
+            <div class="compare-card">
+              <h3>Volitelné porovnání s nabídkou B</h3>
+              <div class="form-grid">
+                <div class="field">
+                  <label for="priceB">Cena nabídky B</label>
+                  <input type="number" id="priceB" min="0" step="0.01" value="179.90" inputmode="decimal">
+                  <small>Nechte 0, pokud nechcete druhou variantu počítat.</small>
+                </div>
+
+                <div class="field">
+                  <label for="amountB">Množství nabídky B</label>
+                  <input type="number" id="amountB" min="0" step="0.0001" value="1" inputmode="decimal">
+                  <small>Množství druhé nabídky ve zvolené jednotce.</small>
+                </div>
+
+                <div class="field">
+                  <label for="amountUnitB">Jednotka nabídky B</label>
+                  <select id="amountUnitB"></select>
+                  <small>Můžete použít i jinou jednotku stejné kategorie.</small>
+                </div>
+
+                <div class="field">
+                  <label for="discountB">Sleva nabídky B (%)</label>
+                  <input type="number" id="discountB" min="0" max="100" step="0.01" value="0" inputmode="decimal">
+                  <small>Volitelná sleva pro reálnější porovnání ceny.</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="actions">
+              <button type="submit" class="btn-primary">Spočítat jednotkovou cenu</button>
+              <button type="button" class="btn-secondary" id="resetBtn">Obnovit výchozí hodnoty</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>Výsledek výpočtu</h2>
+          <p>Přehled jednotkové ceny a srovnání nabídek podle stejné základní jednotky.</p>
+        </div>
+        <div class="card-body">
+          <div class="results-grid">
+            <div class="result-box highlight">
+              <div class="result-label">Jednotková cena nabídky A</div>
+              <div class="result-value" id="unitPriceA">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Jednotková cena nabídky B</div>
+              <div class="result-value" id="unitPriceB">—</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Rozdíl v jednotkové ceně</div>
+              <div class="result-value" id="differenceValue">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Výhodnější nabídka</div>
+              <div class="result-value" id="winnerOutput">A</div>
+            </div>
+          </div>
+
+          <div id="statusBadge" class="badge success">Nabídka A je výhodnější</div>
+
+          <div class="info-list">
+            <div class="info-row">
+              <span>Základní jednotka</span>
+              <strong id="baseUnitOutput">0</strong>
+            </div>
+            <div class="info-row">
+              <span>Efektivní cena nabídky B po slevě</span>
+              <strong id="effectivePriceB">—</strong>
+            </div>
+            <div class="info-row">
+              <span>Úspora při výběru lepší varianty</span>
+              <strong id="savingsOutput">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Poměr ceny A vůči B</span>
+              <strong id="ratioOutput">—</strong>
+            </div>
+            <div class="info-row">
+              <span>Srovnání je počítané na</span>
+              <strong id="comparisonLabel">—</strong>
+            </div>
+          </div>
+
+          <div class="note">
+            Kalkulačka porovnává čistě cenu za stejnou jednotku. Při rozhodování může být důležitá i kvalita, značka, složení, životnost výrobku, doprava nebo další podmínky nabídky.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="card">
+        <div class="card-header">
+          <h3>Přehled porovnání</h3>
+          <p>Souhrn cen, množství a jednotkových hodnot pro obě nabídky.</p>
+        </div>
+        <div class="card-body">
+          <div class="table-wrap">
+            <table aria-label="Přehled jednotkové ceny">
+              <thead>
+                <tr>
+                  <th>Nabídka</th>
+                  <th>Celková cena</th>
+                  <th>Množství po převodu</th>
+                  <th>Jednotková cena</th>
+                </tr>
+              </thead>
+              <tbody id="summaryTableBody">
+                <tr>
+                  <td>A</td>
+                  <td>0 Kč</td>
+                  <td>0</td>
+                  <td>0 Kč</td>
+                </tr>
+                <tr>
+                  <td>B</td>
+                  <td>—</td>
+                  <td>—</td>
+                  <td>—</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container content-section">
+      <h2>Jak kalkulačka jednotkové ceny funguje</h2>
+      <p>Kalkulačka převede zadané množství na společnou základní jednotku, například kilogram, litr, metr čtvereční nebo kus. Potom vydělí celkovou cenu tímto množstvím a získá cenu za jednu jednotku. Díky tomu lze férově porovnat i nabídky s rozdílným balením nebo jednotkami.</p>
+
+      <h3>Kdy se jednotková cena hodí</h3>
+      <ul>
+        <li>při porovnání balení potravin a drogerie,</li>
+        <li>při srovnání stavebních materiálů podle m² nebo m,</li>
+        <li>při hodnocení výhodnosti akčních nabídek,</li>
+        <li>pro podnikání, nákup a cenové nabídky.</li>
+      </ul>
+
+      <h3>Proč nestačí jen celková cena</h3>
+      <p>Levnější balení nemusí být automaticky výhodnější. Menší balení může mít vyšší cenu za kilogram, litr nebo kus. Právě proto je jednotková cena mnohem přesnější ukazatel skutečné výhodnosti nabídky.</p>
+
+      <h3>Na co si dát pozor při porovnání</h3>
+      <p>Jednotková cena je skvělý základ, ale není to jediné kritérium. U některých výrobků může hrát roli kvalita, složení, značka, životnost nebo dodatečné náklady. Kalkulačka je ideální pro první rychlý filtr a čisté cenové srovnání.</p>
+    </section>
+
+    <section class="container content-section">
+      <h2>Související kalkulačky</h2>
+      <div class="related-grid">
+        <a class="related-card" href="/procenta-kalkulacka.html">
+          <strong>Kalkulačka procent</strong>
+          <span>Rychlý výpočet procent, navýšení, slevy i procentní změny.</span>
+        </a>
+
+        <a class="related-card" href="/kalkulacka-marze-a-prirazky.html">
+          <strong>Kalkulačka marže a přirážky</strong>
+          <span>Výpočet prodejní ceny, zisku, marže i přirážky pro cenotvorbu.</span>
+        </a>
+
+        <a class="related-card" href="/dph-kalkulacka.html">
+          <strong>DPH kalkulačka</strong>
+          <span>Rychlý výpočet ceny s DPH, bez DPH a samotné hodnoty DPH.</span>
+        </a>
+
+        <a class="related-card" href="/prevodnik-jednotek.html">
+          <strong>Převodník jednotek</strong>
+          <span>Převody délky, hmotnosti, objemu, plochy a teploty v jednom nástroji.</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      © 2026 RychléVýpočty.cz — online kalkulačky a praktické výpočty pro každodenní použití.
+    </div>
+  </footer>
+
+  <script>
+    const unitGroups = {
+      weight: {
+        baseUnit: 'kg',
+        label: '1 kg',
+        units: {
+          g: { label: 'Gram (g)', factor: 0.001, short: 'g' },
+          kg: { label: 'Kilogram (kg)', factor: 1, short: 'kg' }
+        },
+        defaults: { a: 'kg', b: 'kg' }
+      },
+      volume: {
+        baseUnit: 'l',
+        label: '1 l',
+        units: {
+          ml: { label: 'Mililitr (ml)', factor: 0.001, short: 'ml' },
+          l: { label: 'Litr (l)', factor: 1, short: 'l' }
+        },
+        defaults: { a: 'l', b: 'l' }
+      },
+      area: {
+        baseUnit: 'm2',
+        label: '1 m²',
+        units: {
+          cm2: { label: 'Centimetr čtvereční (cm²)', factor: 0.0001, short: 'cm²' },
+          m2: { label: 'Metr čtvereční (m²)', factor: 1, short: 'm²' }
+        },
+        defaults: { a: 'm2', b: 'm2' }
+      },
+      piece: {
+        baseUnit: 'pcs',
+        label: '1 kus',
+        units: {
+          pcs: { label: 'Kus (ks)', factor: 1, short: 'ks' },
+          pack: { label: 'Balení (1 balení)', factor: 1, short: 'bal.' }
+        },
+        defaults: { a: 'pcs', b: 'pcs' }
+      },
+      length: {
+        baseUnit: 'm',
+        label: '1 m',
+        units: {
+          cm: { label: 'Centimetr (cm)', factor: 0.01, short: 'cm' },
+          m: { label: 'Metr (m)', factor: 1, short: 'm' }
+        },
+        defaults: { a: 'm', b: 'm' }
+      }
+    };
+
+    const form = document.getElementById('unitPriceForm');
+    const unitTypeEl = document.getElementById('unitType');
+    const amountUnitAEl = document.getElementById('amountUnitA');
+    const amountUnitBEl = document.getElementById('amountUnitB');
+    const resetBtn = document.getElementById('resetBtn');
+
+    const outputs = {
+      unitPriceA: document.getElementById('unitPriceA'),
+      unitPriceB: document.getElementById('unitPriceB'),
+      differenceValue: document.getElementById('differenceValue'),
+      winnerOutput: document.getElementById('winnerOutput'),
+      statusBadge: document.getElementById('statusBadge'),
+      baseUnitOutput: document.getElementById('baseUnitOutput'),
+      effectivePriceB: document.getElementById('effectivePriceB'),
+      savingsOutput: document.getElementById('savingsOutput'),
+      ratioOutput: document.getElementById('ratioOutput'),
+      comparisonLabel: document.getElementById('comparisonLabel'),
+      summaryTableBody: document.getElementById('summaryTableBody')
+    };
+
+    function formatCurrency(value) {
+      return new Intl.NumberFormat('cs-CZ', {
+        style: 'currency',
+        currency: 'CZK',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2
+      }).format(value);
+    }
+
+    function formatNumber(value, digits = 4) {
+      return new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: digits
+      }).format(value);
+    }
+
+    function fillUnitSelects() {
+      const group = unitGroups[unitTypeEl.value];
+      amountUnitAEl.innerHTML = '';
+      amountUnitBEl.innerHTML = '';
+
+      Object.entries(group.units).forEach(([key, unit]) => {
+        const optionA = document.createElement('option');
+        optionA.value = key;
+        optionA.textContent = unit.label;
+        amountUnitAEl.appendChild(optionA);
+
+        const optionB = document.createElement('option');
+        optionB.value = key;
+        optionB.textContent = unit.label;
+        amountUnitBEl.appendChild(optionB);
+      });
+
+      amountUnitAEl.value = group.defaults.a;
+      amountUnitBEl.value = group.defaults.b;
+    }
+
+    function getValues() {
+      return {
+        unitType: unitTypeEl.value,
+        priceA: Number(document.getElementById('priceA').value),
+        amountA: Number(document.getElementById('amountA').value),
+        amountUnitA: amountUnitAEl.value,
+        priceB: Number(document.getElementById('priceB').value),
+        amountB: Number(document.getElementById('amountB').value),
+        amountUnitB: amountUnitBEl.value,
+        discountB: Number(document.getElementById('discountB').value)
+      };
+    }
+
+    function validate(values) {
+      if (!values.priceA || values.priceA <= 0) return 'Zadejte platnou cenu nabídky A.';
+      if (!values.amountA || values.amountA <= 0) return 'Zadejte platné množství nabídky A.';
+      if (Number.isNaN(values.priceB) || values.priceB < 0) return 'Zadejte platnou cenu nabídky B.';
+      if (values.priceB > 0 && (!values.amountB || values.amountB <= 0)) return 'Zadejte platné množství nabídky B.';
+      if (Number.isNaN(values.discountB) || values.discountB < 0 || values.discountB > 100) return 'Sleva nabídky B musí být mezi 0 a 100 %.';
+      return '';
+    }
+
+    function convertToBase(amount, factor) {
+      return amount * factor;
+    }
+
+    function calculate(values) {
+      const group = unitGroups[values.unitType];
+
+      const amountABase = convertToBase(values.amountA, group.units[values.amountUnitA].factor);
+      const unitPriceA = values.priceA / amountABase;
+
+      let hasB = values.priceB > 0 && values.amountB > 0;
+      let effectivePriceB = 0;
+      let amountBBase = 0;
+      let unitPriceB = 0;
+      let difference = 0;
+      let savings = 0;
+      let ratio = 0;
+      let winner = 'A';
+
+      if (hasB) {
+        effectivePriceB = values.priceB * (1 - values.discountB / 100);
+        amountBBase = convertToBase(values.amountB, group.units[values.amountUnitB].factor);
+        unitPriceB = effectivePriceB / amountBBase;
+        difference = Math.abs(unitPriceA - unitPriceB);
+        ratio = unitPriceB > 0 ? unitPriceA / unitPriceB : 0;
+
+        if (unitPriceA < unitPriceB) {
+          winner = 'A';
+          savings = unitPriceB - unitPriceA;
+        } else if (unitPriceB < unitPriceA) {
+          winner = 'B';
+          savings = unitPriceA - unitPriceB;
+        } else {
+          winner = 'Stejné';
+          savings = 0;
+        }
+      }
+
+      return {
+        group,
+        amountABase,
+        unitPriceA,
+        hasB,
+        effectivePriceB,
+        amountBBase,
+        unitPriceB,
+        difference,
+        savings,
+        ratio,
+        winner
+      };
+    }
+
+    function render(values, result) {
+      outputs.unitPriceA.textContent = `${formatCurrency(result.unitPriceA)} / ${result.group.label}`;
+      outputs.baseUnitOutput.textContent = result.group.label;
+      outputs.comparisonLabel.textContent = result.group.label;
+
+      if (result.hasB) {
+        outputs.unitPriceB.textContent = `${formatCurrency(result.unitPriceB)} / ${result.group.label}`;
+        outputs.differenceValue.textContent = `${formatCurrency(result.difference)} / ${result.group.label}`;
+        outputs.winnerOutput.textContent = result.winner;
+        outputs.effectivePriceB.textContent = formatCurrency(result.effectivePriceB);
+        outputs.savingsOutput.textContent = `${formatCurrency(result.savings)} / ${result.group.label}`;
+        outputs.ratioOutput.textContent = `${formatNumber(result.ratio, 3)}×`;
+
+        if (result.winner === 'A') {
+          outputs.statusBadge.className = 'badge success';
+          outputs.statusBadge.textContent = 'Nabídka A je výhodnější';
+        } else if (result.winner === 'B') {
+          outputs.statusBadge.className = 'badge warning';
+          outputs.statusBadge.textContent = 'Nabídka B je výhodnější';
+        } else {
+          outputs.statusBadge.className = 'badge success';
+          outputs.statusBadge.textContent = 'Obě nabídky mají stejnou jednotkovou cenu';
+        }
+      } else {
+        outputs.unitPriceB.textContent = '—';
+        outputs.differenceValue.textContent = '—';
+        outputs.winnerOutput.textContent = '—';
+        outputs.effectivePriceB.textContent = '—';
+        outputs.savingsOutput.textContent = '—';
+        outputs.ratioOutput.textContent = '—';
+        outputs.statusBadge.className = 'badge success';
+        outputs.statusBadge.textContent = 'Spočítaná je hlavní nabídka A';
+      }
+
+      outputs.summaryTableBody.innerHTML = `
+        <tr>
+          <td>A</td>
+          <td>${formatCurrency(values.priceA)}</td>
+          <td>${formatNumber(result.amountABase)} ${result.group.units[result.group.baseUnit].short}</td>
+          <td>${formatCurrency(result.unitPriceA)} / ${result.group.label}</td>
+        </tr>
+        <tr>
+          <td>B</td>
+          <td>${result.hasB ? formatCurrency(result.effectivePriceB) : '—'}</td>
+          <td>${result.hasB ? `${formatNumber(result.amountBBase)} ${result.group.units[result.group.baseUnit].short}` : '—'}</td>
+          <td>${result.hasB ? `${formatCurrency(result.unitPriceB)} / ${result.group.label}` : '—'}</td>
+        </tr>
+      `;
+    }
+
+    function runCalculation() {
+      const values = getValues();
+      const error = validate(values);
+
+      if (error) {
+        alert(error);
+        return;
+      }
+
+      const result = calculate(values);
+      render(values, result);
+    }
+
+    unitTypeEl.addEventListener('change', function() {
+      fillUnitSelects();
+      runCalculation();
+    });
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      runCalculation();
+    });
+
+    ['priceA', 'amountA', 'priceB', 'amountB', 'discountB'].forEach(id => {
+      document.getElementById(id).addEventListener('input', runCalculation);
+      document.getElementById(id).addEventListener('change', runCalculation);
+    });
+
+    [amountUnitAEl, amountUnitBEl].forEach(el => {
+      el.addEventListener('change', runCalculation);
+    });
+
+    resetBtn.addEventListener('click', function() {
+      unitTypeEl.value = 'weight';
+      fillUnitSelects();
+      document.getElementById('priceA').value = 129.90;
+      document.getElementById('amountA').value = 0.75;
+      document.getElementById('priceB').value = 179.90;
+      document.getElementById('amountB').value = 1;
+      document.getElementById('discountB').value = 0;
+      runCalculation();
+    });
+
+    fillUnitSelects();
+    runCalculation();
+  </script>
+</body>
+</html>
