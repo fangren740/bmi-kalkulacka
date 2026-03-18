@@ -1,1 +1,1003 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kalkulačka spotřeby plynu online | RychléVýpočty.cz</title>
+  <meta name="description" content="Spočítejte spotřebu plynu a odhad ceny za den, měsíc i rok. Přehledná kalkulačka pro vytápění, vaření i ohřev vody s převodem m³ na kWh.">
+  <meta name="keywords" content="spotřeba plynu kalkulačka, kalkulačka plynu, cena plynu kalkulačka, m3 na kwh plyn, náklady na plyn">
+  <meta name="author" content="RychléVýpočty.cz">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://rychlevypocty.cz/spotreba-plynu-kalkulacka.html">
 
+  <meta property="og:title" content="Kalkulačka spotřeby plynu online | RychléVýpočty.cz">
+  <meta property="og:description" content="Výpočet spotřeby plynu a odhadu ceny provozu za den, měsíc i rok.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rychlevypocty.cz/spotreba-plynu-kalkulacka.html">
+  <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Kalkulačka spotřeby plynu online | RychléVýpočty.cz">
+  <meta name="twitter:description" content="Spočítejte spotřebu plynu v m³ i kWh a odhadněte náklady přehledně a zdarma.">
+
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #5f6b85;
+      --primary: #2152ff;
+      --primary-dark: #183dbf;
+      --border: #dbe3f0;
+      --success: #138a4b;
+      --warning: #b66a00;
+      --danger: #c63d2f;
+      --shadow: 0 12px 32px rgba(20, 32, 70, 0.08);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #f7f9fd 0%, #eef3fb 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    a:hover { text-decoration: underline; }
+
+    .container {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      padding: 18px 0;
+      border-bottom: 1px solid rgba(219, 227, 240, 0.8);
+      background: rgba(255, 255, 255, 0.84);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+      line-height: 1;
+    }
+
+    .brand span { color: var(--primary); }
+
+    .topnav {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      font-size: 0.97rem;
+    }
+
+    .hero {
+      padding: 42px 0 20px;
+    }
+
+    .breadcrumbs {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.12fr 0.88fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .hero-copy h1 {
+      font-size: clamp(2rem, 4vw, 3.15rem);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      margin: 0 0 16px;
+    }
+
+    .hero-copy p {
+      margin: 0 0 16px;
+      font-size: 1.06rem;
+      color: var(--muted);
+      max-width: 760px;
+    }
+
+    .hero-points {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .hero-pill {
+      background: rgba(33, 82, 255, 0.08);
+      color: var(--primary-dark);
+      border: 1px solid rgba(33, 82, 255, 0.12);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .hero-box {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-box h2 {
+      margin: 0 0 10px;
+      font-size: 1.2rem;
+    }
+
+    .hero-box p {
+      margin: 0 0 10px;
+      color: var(--muted);
+    }
+
+    .hero-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.02fr 0.98fr;
+      gap: 28px;
+      align-items: start;
+      padding: 22px 0 32px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .card-header {
+      padding: 24px 24px 10px;
+    }
+
+    .card-header h2,
+    .card-header h3 {
+      margin: 0 0 8px;
+      font-size: 1.3rem;
+      letter-spacing: -0.02em;
+    }
+
+    .card-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .card-body {
+      padding: 20px 24px 24px;
+    }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .field label {
+      font-weight: 700;
+      font-size: 0.96rem;
+    }
+
+    .field small {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: -2px;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      padding: 14px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      font-size: 1rem;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      font-family: inherit;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      outline: none;
+      border-color: rgba(33, 82, 255, 0.45);
+      box-shadow: 0 0 0 4px rgba(33, 82, 255, 0.10);
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.06s ease, background 0.15s ease;
+    }
+
+    button:hover { transform: translateY(-1px); }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover { background: var(--primary-dark); }
+
+    .btn-secondary {
+      background: #eef3ff;
+      color: var(--primary-dark);
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .result-box {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+
+    .result-box.highlight {
+      background: linear-gradient(180deg, #eef7ff 0%, #f9fcff 100%);
+      border-color: rgba(33, 82, 255, 0.18);
+    }
+
+    .result-label {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .result-value {
+      font-size: clamp(1.2rem, 2.4vw, 2rem);
+      line-height: 1.15;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      word-break: break-word;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+
+    .badge.success {
+      background: rgba(19, 138, 75, 0.10);
+      color: var(--success);
+    }
+
+    .badge.warning {
+      background: rgba(182, 106, 0, 0.11);
+      color: var(--warning);
+    }
+
+    .info-list {
+      display: grid;
+      gap: 12px;
+      margin: 18px 0 0;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid #edf2fa;
+    }
+
+    .info-row:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .info-row span:first-child { color: var(--muted); }
+
+    .note {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1px solid #e7edf7;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 18px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: #fff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 660px;
+    }
+
+    th, td {
+      padding: 14px;
+      text-align: left;
+      border-bottom: 1px solid #edf2fa;
+      font-size: 0.96rem;
+    }
+
+    th {
+      background: #f8fbff;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    tr:last-child td { border-bottom: 0; }
+
+    .content-section {
+      padding: 8px 0;
+    }
+
+    .content-section h2 {
+      font-size: 1.7rem;
+      letter-spacing: -0.03em;
+      margin: 0 0 14px;
+    }
+
+    .content-section h3 {
+      font-size: 1.15rem;
+      margin: 28px 0 10px;
+    }
+
+    .content-section p {
+      color: var(--muted);
+      margin: 0 0 14px;
+    }
+
+    .content-section ul {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    .content-section li { margin-bottom: 8px; }
+
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .related-card {
+      display: block;
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      color: var(--text);
+      box-shadow: var(--shadow);
+    }
+
+    .related-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .related-card span {
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    footer {
+      margin-top: 40px;
+      border-top: 1px solid rgba(219, 227, 240, 0.9);
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .footer-inner {
+      padding: 24px 0 40px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .layout,
+      .related-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .container {
+        width: min(100% - 24px, 1160px);
+      }
+
+      .field-grid,
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 28px;
+      }
+
+      .card-header,
+      .card-body,
+      .hero-box {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebApplication",
+    "name":"Kalkulačka spotřeby plynu",
+    "url":"https://rychlevypocty.cz/spotreba-plynu-kalkulacka.html",
+    "applicationCategory":"FinanceApplication",
+    "operatingSystem":"Any",
+    "description":"Online kalkulačka pro výpočet spotřeby plynu a odhadu ceny provozu.",
+    "offers":{
+      "@type":"Offer",
+      "price":"0",
+      "priceCurrency":"CZK"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"Jak spočítat spotřebu plynu?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Spotřebu plynu lze počítat podle odběru v m3 nebo podle energetické hodnoty v kWh. Pro orientační přepočet se často používá převod zhruba 10,55 kWh na 1 m3 plynu."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Co ovlivňuje cenu plynu?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Cena plynu závisí na spotřebě, jednotkové ceně za kWh nebo m3, distribučních poplatcích a způsobu využití, například pro vytápění, ohřev vody nebo vaření."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Je výpočet spotřeby plynu přesný?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Výsledek je orientační. Skutečná spotřeba i cena se mohou lišit podle kvality plynu, přepočtového koeficientu, účinnosti spotřebiče a konkrétního tarifu."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="/">Rychlé<span>Výpočty</span>.cz</a>
+      <nav class="topnav" aria-label="Hlavní navigace">
+        <a href="/">Domů</a>
+        <a href="/spotreba-elektriny-kalkulacka.html">Spotřeba elektřiny</a>
+        <a href="/cena-za-km-kalkulacka.html">Cena za km</a>
+        <a href="/jednotkova-cena-kalkulacka.html">Jednotková cena</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumbs">
+          <a href="/">RychléVýpočty.cz</a> / Kalkulačka spotřeby plynu
+        </div>
+
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <h1>Kalkulačka spotřeby plynu</h1>
+            <p>Spočítejte si orientační spotřebu plynu a odhad ceny za den, měsíc i rok. Kalkulačka umí pracovat s odběrem v m³ i s přepočtem na kWh, takže je vhodná pro vytápění, ohřev vody i vaření.</p>
+            <p>Hodí se pro rychlou orientaci v nákladech domácnosti, porovnání spotřebičů i odhad budoucích výdajů při změně ceny plynu nebo spotřeby.</p>
+
+            <div class="hero-points">
+              <div class="hero-pill">m³ i kWh</div>
+              <div class="hero-pill">Den, měsíc i rok</div>
+              <div class="hero-pill">Vytápění, voda i vaření</div>
+              <div class="hero-pill">Rychlý odhad nákladů</div>
+            </div>
+          </div>
+
+          <div class="hero-box">
+            <h2>Co kalkulačka umí</h2>
+            <p>Zadanou spotřebu plynu přepočítá mezi m³ a kWh, vypočítá odhad ceny provozu a zobrazí přehled pro denní, měsíční i roční období. Můžete zadat i vlastní přepočtový koeficient.</p>
+            <p>Výsledek je vhodný jako orientační pomůcka pro domácnosti i menší provozy.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container layout">
+      <div class="card">
+        <div class="card-header">
+          <h2>Zadání spotřeby plynu</h2>
+          <p>Vyplňte základní údaje. Výsledek se přepočítá okamžitě.</p>
+        </div>
+        <div class="card-body">
+          <div class="field-grid">
+            <div class="field">
+              <label for="consumptionValue">Spotřeba</label>
+              <input type="number" id="consumptionValue" min="0" step="0.01" value="2.8" inputmode="decimal">
+              <small>Zadejte denní nebo měsíční spotřebu podle zvoleného režimu.</small>
+            </div>
+
+            <div class="field">
+              <label for="inputUnit">Jednotka spotřeby</label>
+              <select id="inputUnit">
+                <option value="m3" selected>m³ plynu</option>
+                <option value="kwh">kWh</option>
+              </select>
+              <small>Vyberte, v jaké jednotce zadáváte spotřebu.</small>
+            </div>
+
+            <div class="field">
+              <label for="periodType">Zadané období</label>
+              <select id="periodType">
+                <option value="day" selected>Za den</option>
+                <option value="month">Za měsíc</option>
+              </select>
+              <small>Kalkulačka dopočítá i ostatní období.</small>
+            </div>
+
+            <div class="field">
+              <label for="pricePerKwh">Cena plynu za kWh (Kč)</label>
+              <input type="number" id="pricePerKwh" min="0" step="0.01" value="1.85" inputmode="decimal">
+              <small>Orientační cena včetně komodity a souvisejících nákladů podle vašeho tarifu.</small>
+            </div>
+
+            <div class="field">
+              <label for="conversionFactor">Přepočet 1 m³ na kWh</label>
+              <input type="number" id="conversionFactor" min="0" step="0.01" value="10.55" inputmode="decimal">
+              <small>Běžný orientační koeficient. Skutečný se může lišit podle dodavatele a kvality plynu.</small>
+            </div>
+
+            <div class="field">
+              <label for="usageType">Typ využití</label>
+              <select id="usageType">
+                <option value="general" selected>Obecné použití</option>
+                <option value="heating">Vytápění</option>
+                <option value="water">Ohřev vody</option>
+                <option value="cooking">Vaření</option>
+              </select>
+              <small>Jen pro orientační popisek výsledku.</small>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button class="btn-primary" type="button" id="calculateBtn">Spočítat spotřebu plynu</button>
+            <button class="btn-secondary" type="button" id="resetBtn">Obnovit výchozí hodnoty</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>Výsledek výpočtu</h2>
+          <p>Přehled spotřeby plynu a odhad ceny provozu.</p>
+        </div>
+        <div class="card-body">
+          <div class="results-grid">
+            <div class="result-box highlight">
+              <div class="result-label">Roční náklad</div>
+              <div class="result-value" id="yearCostResult">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Měsíční náklad</div>
+              <div class="result-value" id="monthCostResult">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Roční spotřeba</div>
+              <div class="result-value" id="yearConsumptionResult">0 kWh</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Denní náklad</div>
+              <div class="result-value" id="dayCostResult">0 Kč</div>
+            </div>
+          </div>
+
+          <div id="resultBadge" class="badge success">Výpočet připraven</div>
+
+          <div class="info-list">
+            <div class="info-row">
+              <span>Spotřeba za den</span>
+              <strong id="dayConsumptionResult">0 m³</strong>
+            </div>
+            <div class="info-row">
+              <span>Spotřeba za měsíc</span>
+              <strong id="monthConsumptionResult">0 m³</strong>
+            </div>
+            <div class="info-row">
+              <span>Spotřeba za rok</span>
+              <strong id="yearConsumptionM3Result">0 m³</strong>
+            </div>
+            <div class="info-row">
+              <span>Roční spotřeba v kWh</span>
+              <strong id="yearConsumptionKwhResult">0 kWh</strong>
+            </div>
+            <div class="info-row">
+              <span>Cena za kWh</span>
+              <strong id="pricePerKwhResult">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Přepočtový koeficient</span>
+              <strong id="conversionFactorResult">0</strong>
+            </div>
+          </div>
+
+          <div class="note" id="resultNote">
+            Výsledek je orientační a slouží pro rychlý odhad spotřeby a ceny plynu.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="card">
+        <div class="card-header">
+          <h3>Rozpis výpočtu</h3>
+          <p>Přehled hlavních hodnot, ze kterých se odhad spotřeby a ceny plynu počítá.</p>
+        </div>
+        <div class="card-body">
+          <div class="table-wrap">
+            <table aria-label="Rozpis spotřeby plynu">
+              <thead>
+                <tr>
+                  <th>Položka</th>
+                  <th>Hodnota</th>
+                  <th>Poznámka</th>
+                </tr>
+              </thead>
+              <tbody id="summaryTableBody">
+                <tr>
+                  <td>Spotřeba plynu</td>
+                  <td>—</td>
+                  <td>Po výpočtu se zobrazí detailní přehled.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container content-section">
+      <h2>Jak kalkulačka spotřeby plynu funguje</h2>
+      <p>Kalkulačka pracuje se zadanou spotřebou plynu v m³ nebo kWh. Pomocí přepočtového koeficientu umí převést kubíky na energetickou hodnotu a následně dopočítat orientační cenu podle ceny za kWh. Výsledek zobrazí pro den, měsíc i rok.</p>
+
+      <h3>Co ve výsledku uvidíte</h3>
+      <ul>
+        <li>spotřebu plynu v m³ i kWh,</li>
+        <li>odhad ceny za den, měsíc a rok,</li>
+        <li>přepočet podle zadaného koeficientu,</li>
+        <li>rychlý přehled vhodný pro domácí rozpočet.</li>
+      </ul>
+
+      <h3>Kdy se výpočet hodí</h3>
+      <p>Kalkulačka je užitečná při odhadu nákladů na vytápění, ohřev vody, vaření nebo při porovnání různých tarifů a změn cen energií. Pomůže i tehdy, když chcete z faktury nebo odečtu plynoměru rychle odvodit přibližnou cenu provozu.</p>
+
+      <h3>Na co si dát pozor</h3>
+      <p>Skutečný přepočet plynu na kWh může záviset na spalném teple a přepočtovém koeficientu od dodavatele. Výpočet proto berte jako orientační, ne jako přesný podklad k vyúčtování.</p>
+    </section>
+
+    <section class="container content-section">
+      <h2>Související kalkulačky</h2>
+      <div class="related-grid">
+        <a class="related-card" href="/spotreba-elektriny-kalkulacka.html">
+          <strong>Kalkulačka spotřeby elektřiny</strong>
+          <span>Odhad spotřeby a ceny provozu spotřebiče za den, měsíc i rok.</span>
+        </a>
+
+        <a class="related-card" href="/cena-za-km-kalkulacka.html">
+          <strong>Kalkulačka ceny za km</strong>
+          <span>Výpočet nákladů na 1 km, trasu i měsíční provoz auta.</span>
+        </a>
+
+        <a class="related-card" href="/spotreba-paliva-kalkulacka.html">
+          <strong>Kalkulačka spotřeby paliva</strong>
+          <span>Výpočet spotřeby na 100 km a ceny celé trasy.</span>
+        </a>
+
+        <a class="related-card" href="/jednotkova-cena-kalkulacka.html">
+          <strong>Kalkulačka jednotkové ceny</strong>
+          <span>Porovnání cen za kg, litr, m² nebo kus.</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      © 2026 RychléVýpočty.cz — online kalkulačky a praktické výpočty pro každodenní použití.
+    </div>
+  </footer>
+
+  <script>
+    const consumptionValueInput = document.getElementById('consumptionValue');
+    const inputUnitInput = document.getElementById('inputUnit');
+    const periodTypeInput = document.getElementById('periodType');
+    const pricePerKwhInput = document.getElementById('pricePerKwh');
+    const conversionFactorInput = document.getElementById('conversionFactor');
+    const usageTypeInput = document.getElementById('usageType');
+
+    const outputs = {
+      yearCostResult: document.getElementById('yearCostResult'),
+      monthCostResult: document.getElementById('monthCostResult'),
+      yearConsumptionResult: document.getElementById('yearConsumptionResult'),
+      dayCostResult: document.getElementById('dayCostResult'),
+      resultBadge: document.getElementById('resultBadge'),
+      dayConsumptionResult: document.getElementById('dayConsumptionResult'),
+      monthConsumptionResult: document.getElementById('monthConsumptionResult'),
+      yearConsumptionM3Result: document.getElementById('yearConsumptionM3Result'),
+      yearConsumptionKwhResult: document.getElementById('yearConsumptionKwhResult'),
+      pricePerKwhResult: document.getElementById('pricePerKwhResult'),
+      conversionFactorResult: document.getElementById('conversionFactorResult'),
+      resultNote: document.getElementById('resultNote'),
+      summaryTableBody: document.getElementById('summaryTableBody')
+    };
+
+    function formatCurrency(value) {
+      return new Intl.NumberFormat('cs-CZ', {
+        style: 'currency',
+        currency: 'CZK',
+        maximumFractionDigits: 0
+      }).format(value);
+    }
+
+    function formatNumber(value, unit, digits = 2) {
+      return `${new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: value % 1 === 0 ? 0 : Math.min(digits, 2),
+        maximumFractionDigits: digits
+      }).format(value)} ${unit}`;
+    }
+
+    function buildSummaryRows(rows) {
+      outputs.summaryTableBody.innerHTML = rows.map(row => `
+        <tr>
+          <td>${row.label}</td>
+          <td>${row.amount}</td>
+          <td>${row.note}</td>
+        </tr>
+      `).join('');
+    }
+
+    function getUsageLabel(value) {
+      if (value === 'heating') return 'vytápění';
+      if (value === 'water') return 'ohřev vody';
+      if (value === 'cooking') return 'vaření';
+      return 'obecné použití';
+    }
+
+    function calculateGasConsumption() {
+      const consumptionValue = Number(consumptionValueInput.value);
+      const inputUnit = inputUnitInput.value;
+      const periodType = periodTypeInput.value;
+      const pricePerKwh = Number(pricePerKwhInput.value);
+      const conversionFactor = Number(conversionFactorInput.value);
+      const usageType = usageTypeInput.value;
+
+      if (!consumptionValue || consumptionValue <= 0 || pricePerKwh < 0 || !conversionFactor || conversionFactor <= 0) {
+        outputs.yearCostResult.textContent = '0 Kč';
+        outputs.monthCostResult.textContent = '0 Kč';
+        outputs.yearConsumptionResult.textContent = '0 kWh';
+        outputs.dayCostResult.textContent = '0 Kč';
+        outputs.dayConsumptionResult.textContent = '0 m³';
+        outputs.monthConsumptionResult.textContent = '0 m³';
+        outputs.yearConsumptionM3Result.textContent = '0 m³';
+        outputs.yearConsumptionKwhResult.textContent = '0 kWh';
+        outputs.pricePerKwhResult.textContent = '0 Kč';
+        outputs.conversionFactorResult.textContent = '0';
+        outputs.resultBadge.className = 'badge warning';
+        outputs.resultBadge.textContent = 'Chybí vstupní data';
+        outputs.resultNote.textContent = 'Zadejte platnou spotřebu, cenu za kWh a přepočtový koeficient.';
+        buildSummaryRows([
+          {
+            label: 'Výpočet',
+            amount: '—',
+            note: 'Zadejte platné vstupní hodnoty.'
+          }
+        ]);
+        return;
+      }
+
+      let dailyM3 = 0;
+      let monthlyM3 = 0;
+
+      if (inputUnit === 'm3') {
+        if (periodType === 'day') {
+          dailyM3 = consumptionValue;
+          monthlyM3 = dailyM3 * 30;
+        } else {
+          monthlyM3 = consumptionValue;
+          dailyM3 = monthlyM3 / 30;
+        }
+      } else {
+        const dailyKwh = periodType === 'day' ? consumptionValue : consumptionValue / 30;
+        const monthlyKwh = periodType === 'day' ? dailyKwh * 30 : consumptionValue;
+        dailyM3 = dailyKwh / conversionFactor;
+        monthlyM3 = monthlyKwh / conversionFactor;
+      }
+
+      const yearlyM3 = monthlyM3 * 12;
+      const dailyKwh = dailyM3 * conversionFactor;
+      const monthlyKwh = monthlyM3 * conversionFactor;
+      const yearlyKwh = yearlyM3 * conversionFactor;
+
+      const dayCost = dailyKwh * pricePerKwh;
+      const monthCost = monthlyKwh * pricePerKwh;
+      const yearCost = yearlyKwh * pricePerKwh;
+
+      outputs.yearCostResult.textContent = formatCurrency(yearCost);
+      outputs.monthCostResult.textContent = formatCurrency(monthCost);
+      outputs.yearConsumptionResult.textContent = formatNumber(yearlyKwh, 'kWh', 0);
+      outputs.dayCostResult.textContent = formatCurrency(dayCost);
+
+      outputs.dayConsumptionResult.textContent = formatNumber(dailyM3, 'm³');
+      outputs.monthConsumptionResult.textContent = formatNumber(monthlyM3, 'm³');
+      outputs.yearConsumptionM3Result.textContent = formatNumber(yearlyM3, 'm³');
+      outputs.yearConsumptionKwhResult.textContent = formatNumber(yearlyKwh, 'kWh', 0);
+      outputs.pricePerKwhResult.textContent = formatCurrency(pricePerKwh);
+      outputs.conversionFactorResult.textContent = new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2
+      }).format(conversionFactor);
+
+      if (yearCost < 10000) {
+        outputs.resultBadge.className = 'badge success';
+        outputs.resultBadge.textContent = 'Nižší roční náklad';
+      } else {
+        outputs.resultBadge.className = 'badge warning';
+        outputs.resultBadge.textContent = 'Vyšší roční náklad';
+      }
+
+      outputs.resultNote.textContent = `Pro ${getUsageLabel(usageType)} vychází orientační roční spotřeba na ${formatNumber(yearlyM3, 'm³')} a přibližný roční náklad na ${formatCurrency(yearCost)}. Výsledek je orientační a může se lišit podle tarifu a skutečného přepočtu dodavatele.`;
+
+      buildSummaryRows([
+        {
+          label: 'Zadaná spotřeba',
+          amount: inputUnit === 'm3'
+            ? formatNumber(consumptionValue, 'm³')
+            : formatNumber(consumptionValue, 'kWh'),
+          note: periodType === 'day' ? 'Zadaná spotřeba za den' : 'Zadaná spotřeba za měsíc'
+        },
+        {
+          label: 'Přepočtový koeficient',
+          amount: `${new Intl.NumberFormat('cs-CZ', { maximumFractionDigits: 2 }).format(conversionFactor)} kWh / m³`,
+          note: 'Orientační převod mezi m³ a kWh'
+        },
+        {
+          label: 'Denní spotřeba',
+          amount: `${formatNumber(dailyM3, 'm³')} / ${formatNumber(dailyKwh, 'kWh', 1)}`,
+          note: 'Spotřeba přepočtená na 1 den'
+        },
+        {
+          label: 'Měsíční spotřeba',
+          amount: `${formatNumber(monthlyM3, 'm³')} / ${formatNumber(monthlyKwh, 'kWh', 0)}`,
+          note: 'Spotřeba přepočtená na 1 měsíc'
+        },
+        {
+          label: 'Roční spotřeba',
+          amount: `${formatNumber(yearlyM3, 'm³')} / ${formatNumber(yearlyKwh, 'kWh', 0)}`,
+          note: 'Spotřeba přepočtená na 12 měsíců'
+        },
+        {
+          label: 'Cena za kWh',
+          amount: formatCurrency(pricePerKwh),
+          note: 'Zadaná jednotková cena plynu'
+        },
+        {
+          label: 'Měsíční náklad',
+          amount: formatCurrency(monthCost),
+          note: 'Orientační cena provozu za měsíc'
+        },
+        {
+          label: 'Roční náklad',
+          amount: formatCurrency(yearCost),
+          note: 'Orientační cena provozu za rok'
+        }
+      ]);
+    }
+
+    document.getElementById('calculateBtn').addEventListener('click', calculateGasConsumption);
+
+    document.getElementById('resetBtn').addEventListener('click', function() {
+      consumptionValueInput.value = 2.8;
+      inputUnitInput.value = 'm3';
+      periodTypeInput.value = 'day';
+      pricePerKwhInput.value = 1.85;
+      conversionFactorInput.value = 10.55;
+      usageTypeInput.value = 'general';
+      calculateGasConsumption();
+    });
+
+    [consumptionValueInput, inputUnitInput, periodTypeInput, pricePerKwhInput, conversionFactorInput, usageTypeInput].forEach(el => {
+      el.addEventListener('input', calculateGasConsumption);
+      el.addEventListener('change', calculateGasConsumption);
+    });
+
+    calculateGasConsumption();
+  </script>
+</body>
+</html>
