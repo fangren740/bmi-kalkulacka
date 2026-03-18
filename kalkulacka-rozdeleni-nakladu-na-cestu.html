@@ -1,1 +1,1004 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kalkulačka rozdělení nákladů na cestu online | RychléVýpočty.cz</title>
+  <meta name="description" content="Spočítejte, jak rozdělit náklady na cestu mezi více lidí. Přehledná kalkulačka rozdělí benzín, mýto, dálniční poplatky i další výdaje mezi spolucestující.">
+  <meta name="keywords" content="kalkulačka rozdělení nákladů na cestu, kalkulačka spolujízdy, rozdělení nákladů auto, kolik komu zaplatit za cestu, sdílení nákladů na benzín">
+  <meta name="author" content="RychléVýpočty.cz">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://rychlevypocty.cz/kalkulacka-rozdeleni-nakladu-na-cestu.html">
 
+  <meta property="og:title" content="Kalkulačka rozdělení nákladů na cestu online | RychléVýpočty.cz">
+  <meta property="og:description" content="Jednoduchý výpočet, jak rozdělit náklady na cestu mezi více lidí.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rychlevypocty.cz/kalkulacka-rozdeleni-nakladu-na-cestu.html">
+  <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Kalkulačka rozdělení nákladů na cestu online | RychléVýpočty.cz">
+  <meta name="twitter:description" content="Spočítejte si přehledně, kolik má každý zaplatit za společnou cestu.">
+
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #5f6b85;
+      --primary: #2152ff;
+      --primary-dark: #183dbf;
+      --border: #dbe3f0;
+      --success: #138a4b;
+      --warning: #b66a00;
+      --danger: #c63d2f;
+      --shadow: 0 12px 32px rgba(20, 32, 70, 0.08);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #f7f9fd 0%, #eef3fb 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    a:hover { text-decoration: underline; }
+
+    .container {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      padding: 18px 0;
+      border-bottom: 1px solid rgba(219, 227, 240, 0.8);
+      background: rgba(255, 255, 255, 0.84);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+      line-height: 1;
+    }
+
+    .brand span { color: var(--primary); }
+
+    .topnav {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      font-size: 0.97rem;
+    }
+
+    .hero {
+      padding: 42px 0 20px;
+    }
+
+    .breadcrumbs {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.12fr 0.88fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .hero-copy h1 {
+      font-size: clamp(2rem, 4vw, 3.15rem);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      margin: 0 0 16px;
+    }
+
+    .hero-copy p {
+      margin: 0 0 16px;
+      font-size: 1.06rem;
+      color: var(--muted);
+      max-width: 760px;
+    }
+
+    .hero-points {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .hero-pill {
+      background: rgba(33, 82, 255, 0.08);
+      color: var(--primary-dark);
+      border: 1px solid rgba(33, 82, 255, 0.12);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .hero-box {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-box h2 {
+      margin: 0 0 10px;
+      font-size: 1.2rem;
+    }
+
+    .hero-box p {
+      margin: 0 0 10px;
+      color: var(--muted);
+    }
+
+    .hero-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.02fr 0.98fr;
+      gap: 28px;
+      align-items: start;
+      padding: 22px 0 32px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .card-header {
+      padding: 24px 24px 10px;
+    }
+
+    .card-header h2,
+    .card-header h3 {
+      margin: 0 0 8px;
+      font-size: 1.3rem;
+      letter-spacing: -0.02em;
+    }
+
+    .card-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .card-body {
+      padding: 20px 24px 24px;
+    }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .field label {
+      font-weight: 700;
+      font-size: 0.96rem;
+    }
+
+    .field small {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: -2px;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      padding: 14px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      font-size: 1rem;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      font-family: inherit;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      outline: none;
+      border-color: rgba(33, 82, 255, 0.45);
+      box-shadow: 0 0 0 4px rgba(33, 82, 255, 0.10);
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: #fbfdff;
+      margin-bottom: 14px;
+    }
+
+    .checkbox-row input {
+      margin-top: 3px;
+      transform: scale(1.1);
+    }
+
+    .checkbox-row label {
+      margin: 0;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
+
+    .checkbox-row span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.88rem;
+      font-weight: 400;
+      margin-top: 2px;
+    }
+
+    .full { grid-column: 1 / -1; }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.06s ease, background 0.15s ease;
+    }
+
+    button:hover { transform: translateY(-1px); }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover { background: var(--primary-dark); }
+
+    .btn-secondary {
+      background: #eef3ff;
+      color: var(--primary-dark);
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .result-box {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+
+    .result-box.highlight {
+      background: linear-gradient(180deg, #eef7ff 0%, #f9fcff 100%);
+      border-color: rgba(33, 82, 255, 0.18);
+    }
+
+    .result-label {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .result-value {
+      font-size: clamp(1.2rem, 2.4vw, 2rem);
+      line-height: 1.15;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      word-break: break-word;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+
+    .badge.success {
+      background: rgba(19, 138, 75, 0.10);
+      color: var(--success);
+    }
+
+    .badge.warning {
+      background: rgba(182, 106, 0, 0.11);
+      color: var(--warning);
+    }
+
+    .info-list {
+      display: grid;
+      gap: 12px;
+      margin: 18px 0 0;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid #edf2fa;
+    }
+
+    .info-row:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .info-row span:first-child { color: var(--muted); }
+
+    .note {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1px solid #e7edf7;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 18px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: #fff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 660px;
+    }
+
+    th, td {
+      padding: 14px;
+      text-align: left;
+      border-bottom: 1px solid #edf2fa;
+      font-size: 0.96rem;
+    }
+
+    th {
+      background: #f8fbff;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    tr:last-child td { border-bottom: 0; }
+
+    .content-section {
+      padding: 8px 0;
+    }
+
+    .content-section h2 {
+      font-size: 1.7rem;
+      letter-spacing: -0.03em;
+      margin: 0 0 14px;
+    }
+
+    .content-section h3 {
+      font-size: 1.15rem;
+      margin: 28px 0 10px;
+    }
+
+    .content-section p {
+      color: var(--muted);
+      margin: 0 0 14px;
+    }
+
+    .content-section ul {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    .content-section li { margin-bottom: 8px; }
+
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .related-card {
+      display: block;
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      color: var(--text);
+      box-shadow: var(--shadow);
+    }
+
+    .related-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .related-card span {
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    footer {
+      margin-top: 40px;
+      border-top: 1px solid rgba(219, 227, 240, 0.9);
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .footer-inner {
+      padding: 24px 0 40px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .layout,
+      .related-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .container {
+        width: min(100% - 24px, 1160px);
+      }
+
+      .field-grid,
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 28px;
+      }
+
+      .card-header,
+      .card-body,
+      .hero-box {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebApplication",
+    "name":"Kalkulačka rozdělení nákladů na cestu",
+    "url":"https://rychlevypocty.cz/kalkulacka-rozdeleni-nakladu-na-cestu.html",
+    "applicationCategory":"FinanceApplication",
+    "operatingSystem":"Any",
+    "description":"Online kalkulačka pro rozdělení nákladů na cestu mezi více lidí.",
+    "offers":{
+      "@type":"Offer",
+      "price":"0",
+      "priceCurrency":"CZK"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"Jak rozdělit náklady na cestu mezi více lidí?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Celkové náklady na cestu lze rozdělit rovným dílem mezi všechny účastníky, nebo lze zohlednit i vyšší podíl řidiče, pokud má nést menší část ceny."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Co všechno do nákladů na cestu započítat?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Do nákladů na cestu se často počítá palivo, dálniční známka, mýto, parkovné, trajekt nebo další společné výdaje spojené s dopravou."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Má řidič platit stejně jako ostatní?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Záleží na domluvě. Někdy se náklady dělí rovným dílem mezi všechny, jindy má řidič nižší podíl jako kompenzaci za řízení a použití auta."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="/">Rychlé<span>Výpočty</span>.cz</a>
+      <nav class="topnav" aria-label="Hlavní navigace">
+        <a href="/">Domů</a>
+        <a href="/spotreba-paliva-kalkulacka.html">Spotřeba paliva</a>
+        <a href="/cena-za-km-kalkulacka.html">Cena za km</a>
+        <a href="/spotreba-elektriny-kalkulacka.html">Spotřeba elektřiny</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumbs">
+          <a href="/">RychléVýpočty.cz</a> / Kalkulačka rozdělení nákladů na cestu
+        </div>
+
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <h1>Kalkulačka rozdělení nákladů na cestu</h1>
+            <p>Spočítejte si přehledně, kolik má každý zaplatit za společnou cestu autem. Kalkulačka rozdělí náklady mezi spolucestující podle počtu osob a volitelně zohlední i nižší podíl řidiče.</p>
+            <p>Hodí se pro výlety, dovolené, spolujízdu, pracovní cesty i běžné sdílení nákladů na benzín, mýto, parkovné nebo další společné výdaje.</p>
+
+            <div class="hero-points">
+              <div class="hero-pill">Rozdělení ceny cesty</div>
+              <div class="hero-pill">Rovným dílem nebo s výhodou pro řidiče</div>
+              <div class="hero-pill">Palivo, mýto i parkovné</div>
+              <div class="hero-pill">Rychlý přehled pro každého</div>
+            </div>
+          </div>
+
+          <div class="hero-box">
+            <h2>Co kalkulačka umí</h2>
+            <p>Sečte hlavní náklady na cestu a rozdělí je mezi všechny účastníky. Můžete si zvolit, zda se cena rozdělí úplně rovnoměrně, nebo zda bude mít řidič nižší podíl.</p>
+            <p>Výsledek je vhodný pro rychlou domluvu mezi spolucestujícími a přehledné vyčíslení částky pro každého.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container layout">
+      <div class="card">
+        <div class="card-header">
+          <h2>Zadání cesty</h2>
+          <p>Vyplňte náklady a počet osob. Výsledek se přepočítá okamžitě.</p>
+        </div>
+        <div class="card-body">
+          <div class="field-grid">
+            <div class="field">
+              <label for="fuelCost">Náklady na palivo (Kč)</label>
+              <input type="number" id="fuelCost" min="0" step="1" value="900" inputmode="decimal">
+              <small>Benzín nebo nafta za celou cestu.</small>
+            </div>
+
+            <div class="field">
+              <label for="tollCost">Mýto / dálniční poplatky (Kč)</label>
+              <input type="number" id="tollCost" min="0" step="1" value="300" inputmode="decimal">
+              <small>Dálniční známka, mýto, trajekt nebo podobné poplatky.</small>
+            </div>
+
+            <div class="field">
+              <label for="parkingCost">Parkovné a další náklady (Kč)</label>
+              <input type="number" id="parkingCost" min="0" step="1" value="150" inputmode="decimal">
+              <small>Parkovné, tunely, poplatky za vjezd nebo jiné společné výdaje.</small>
+            </div>
+
+            <div class="field">
+              <label for="peopleCount">Počet osob včetně řidiče</label>
+              <input type="number" id="peopleCount" min="1" step="1" value="4" inputmode="numeric">
+              <small>Celkový počet lidí, mezi které se cesta rozděluje.</small>
+            </div>
+          </div>
+
+          <div class="checkbox-row">
+            <input type="checkbox" id="driverDiscountToggle">
+            <label for="driverDiscountToggle">
+              Řidič má platit nižší podíl
+              <span>Zapněte, pokud chcete řidiče zvýhodnit oproti ostatním cestujícím.</span>
+            </label>
+          </div>
+
+          <div class="field">
+            <label for="driverDiscount">Sleva pro řidiče (%)</label>
+            <input type="number" id="driverDiscount" min="0" max="100" step="1" value="25" inputmode="decimal">
+            <small>Například 25 % znamená, že řidič zaplatí o čtvrtinu méně než běžný podíl.</small>
+          </div>
+
+          <div class="actions">
+            <button class="btn-primary" type="button" id="calculateBtn">Spočítat rozdělení</button>
+            <button class="btn-secondary" type="button" id="resetBtn">Obnovit výchozí hodnoty</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>Výsledek výpočtu</h2>
+          <p>Přehled celkové ceny cesty a částky pro jednotlivé účastníky.</p>
+        </div>
+        <div class="card-body">
+          <div class="results-grid">
+            <div class="result-box highlight">
+              <div class="result-label">Celkové náklady</div>
+              <div class="result-value" id="totalCostResult">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Běžný podíl na osobu</div>
+              <div class="result-value" id="standardShareResult">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Podíl řidiče</div>
+              <div class="result-value" id="driverShareResult">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Podíl ostatních</div>
+              <div class="result-value" id="passengerShareResult">0 Kč</div>
+            </div>
+          </div>
+
+          <div id="resultBadge" class="badge success">Výpočet připraven</div>
+
+          <div class="info-list">
+            <div class="info-row">
+              <span>Náklady na palivo</span>
+              <strong id="fuelCostResult">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Mýto a dálniční poplatky</span>
+              <strong id="tollCostResult">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Parkovné a další náklady</span>
+              <strong id="parkingCostResult">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Počet osob</span>
+              <strong id="peopleCountResult">0</strong>
+            </div>
+            <div class="info-row">
+              <span>Rozdíl proti rovnému dělení</span>
+              <strong id="differenceResult">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Celkem vybráno od skupiny</span>
+              <strong id="collectedTotalResult">0 Kč</strong>
+            </div>
+          </div>
+
+          <div class="note" id="resultNote">
+            Výsledek je orientační pomůcka pro rychlé a přehledné rozdělení ceny společné cesty.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="card">
+        <div class="card-header">
+          <h3>Rozpis výpočtu</h3>
+          <p>Přehled toho, jak byla výsledná částka mezi účastníky cesty rozdělena.</p>
+        </div>
+        <div class="card-body">
+          <div class="table-wrap">
+            <table aria-label="Rozpis rozdělení nákladů na cestu">
+              <thead>
+                <tr>
+                  <th>Položka</th>
+                  <th>Hodnota</th>
+                  <th>Poznámka</th>
+                </tr>
+              </thead>
+              <tbody id="summaryTableBody">
+                <tr>
+                  <td>Celkové náklady</td>
+                  <td>—</td>
+                  <td>Po výpočtu se zobrazí detailní přehled.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container content-section">
+      <h2>Jak kalkulačka rozdělení nákladů na cestu funguje</h2>
+      <p>Kalkulačka sečte všechny zadané náklady na cestu a rozdělí je mezi zadaný počet osob. Základní režim počítá s rovnoměrným dělením. Pokud ale chcete řidiče zvýhodnit, můžete nastavit slevu pro řidiče a kalkulačka přepočítá vyšší podíl pro ostatní cestující.</p>
+
+      <h3>Co všechno můžete do ceny cesty započítat</h3>
+      <ul>
+        <li>náklady na benzín nebo naftu,</li>
+        <li>mýto, dálniční známku nebo trajekt,</li>
+        <li>parkovné, tunely nebo další společné poplatky,</li>
+        <li>libovolné doplňkové výdaje spojené s cestou autem.</li>
+      </ul>
+
+      <h3>Kdy se výpočet hodí</h3>
+      <p>Nejčastěji při spolujízdě na výlet, dovolenou, festival, služební cestu nebo pravidelné dojíždění. Výsledek pomůže předejít dohadům a rychle ukáže, kolik má zaplatit každý člověk ve skupině.</p>
+
+      <h3>Rovné dělení vs. zvýhodnění řidiče</h3>
+      <p>Rovné dělení je nejjednodušší a často dává smysl tam, kde všichni využívají cestu stejně. Zvýhodnění řidiče se hodí ve chvíli, kdy skupina chce ocenit řízení, použití auta nebo odpovědnost spojenou s cestou.</p>
+    </section>
+
+    <section class="container content-section">
+      <h2>Související kalkulačky</h2>
+      <div class="related-grid">
+        <a class="related-card" href="/spotreba-paliva-kalkulacka.html">
+          <strong>Kalkulačka spotřeby paliva</strong>
+          <span>Výpočet spotřeby na 100 km, ceny jízdy a nákladů trasy.</span>
+        </a>
+
+        <a class="related-card" href="/cena-za-km-kalkulacka.html">
+          <strong>Kalkulačka ceny za km</strong>
+          <span>Výpočet nákladů na 1 km a ceny celé cesty autem.</span>
+        </a>
+
+        <a class="related-card" href="/spotreba-elektriny-kalkulacka.html">
+          <strong>Kalkulačka spotřeby elektřiny</strong>
+          <span>Odhad nákladů na provoz spotřebičů za den, měsíc i rok.</span>
+        </a>
+
+        <a class="related-card" href="/jednotkova-cena-kalkulacka.html">
+          <strong>Kalkulačka jednotkové ceny</strong>
+          <span>Porovnání cen různých balení a nabídek podle jednotky.</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      © 2026 RychléVýpočty.cz — online kalkulačky a praktické výpočty pro každodenní použití.
+    </div>
+  </footer>
+
+  <script>
+    const fuelCostInput = document.getElementById('fuelCost');
+    const tollCostInput = document.getElementById('tollCost');
+    const parkingCostInput = document.getElementById('parkingCost');
+    const peopleCountInput = document.getElementById('peopleCount');
+    const driverDiscountToggleInput = document.getElementById('driverDiscountToggle');
+    const driverDiscountInput = document.getElementById('driverDiscount');
+
+    const outputs = {
+      totalCostResult: document.getElementById('totalCostResult'),
+      standardShareResult: document.getElementById('standardShareResult'),
+      driverShareResult: document.getElementById('driverShareResult'),
+      passengerShareResult: document.getElementById('passengerShareResult'),
+      resultBadge: document.getElementById('resultBadge'),
+      fuelCostResult: document.getElementById('fuelCostResult'),
+      tollCostResult: document.getElementById('tollCostResult'),
+      parkingCostResult: document.getElementById('parkingCostResult'),
+      peopleCountResult: document.getElementById('peopleCountResult'),
+      differenceResult: document.getElementById('differenceResult'),
+      collectedTotalResult: document.getElementById('collectedTotalResult'),
+      resultNote: document.getElementById('resultNote'),
+      summaryTableBody: document.getElementById('summaryTableBody')
+    };
+
+    function formatCurrency(value) {
+      return new Intl.NumberFormat('cs-CZ', {
+        style: 'currency',
+        currency: 'CZK',
+        maximumFractionDigits: 0
+      }).format(value);
+    }
+
+    function roundCurrency(value) {
+      return Math.round(value);
+    }
+
+    function buildSummaryRows(rows) {
+      outputs.summaryTableBody.innerHTML = rows.map(row => `
+        <tr>
+          <td>${row.label}</td>
+          <td>${row.amount}</td>
+          <td>${row.note}</td>
+        </tr>
+      `).join('');
+    }
+
+    function calculateTripSplit() {
+      const fuelCost = Number(fuelCostInput.value) || 0;
+      const tollCost = Number(tollCostInput.value) || 0;
+      const parkingCost = Number(parkingCostInput.value) || 0;
+      const peopleCount = Number(peopleCountInput.value);
+      const driverDiscountEnabled = driverDiscountToggleInput.checked;
+      const driverDiscount = Math.min(100, Math.max(0, Number(driverDiscountInput.value) || 0));
+
+      if (!peopleCount || peopleCount < 1) {
+        outputs.totalCostResult.textContent = '0 Kč';
+        outputs.standardShareResult.textContent = '0 Kč';
+        outputs.driverShareResult.textContent = '0 Kč';
+        outputs.passengerShareResult.textContent = '0 Kč';
+        outputs.fuelCostResult.textContent = '0 Kč';
+        outputs.tollCostResult.textContent = '0 Kč';
+        outputs.parkingCostResult.textContent = '0 Kč';
+        outputs.peopleCountResult.textContent = '0';
+        outputs.differenceResult.textContent = '0 Kč';
+        outputs.collectedTotalResult.textContent = '0 Kč';
+        outputs.resultBadge.className = 'badge warning';
+        outputs.resultBadge.textContent = 'Chybí vstupní data';
+        outputs.resultNote.textContent = 'Zadejte platný počet osob.';
+        buildSummaryRows([
+          {
+            label: 'Výpočet',
+            amount: '—',
+            note: 'Zadejte platný počet osob.'
+          }
+        ]);
+        return;
+      }
+
+      const totalCost = fuelCost + tollCost + parkingCost;
+      const standardShare = peopleCount > 0 ? totalCost / peopleCount : 0;
+
+      let driverShare = standardShare;
+      let passengerShare = standardShare;
+
+      if (driverDiscountEnabled && peopleCount > 1) {
+        driverShare = standardShare * (1 - driverDiscount / 100);
+        passengerShare = (totalCost - driverShare) / (peopleCount - 1);
+      }
+
+      const roundedStandardShare = roundCurrency(standardShare);
+      const roundedDriverShare = roundCurrency(driverShare);
+      const roundedPassengerShare = roundCurrency(passengerShare);
+      const collectedTotal = driverDiscountEnabled && peopleCount > 1
+        ? roundedDriverShare + (roundedPassengerShare * (peopleCount - 1))
+        : roundedStandardShare * peopleCount;
+      const difference = roundedStandardShare - roundedDriverShare;
+
+      outputs.totalCostResult.textContent = formatCurrency(totalCost);
+      outputs.standardShareResult.textContent = formatCurrency(roundedStandardShare);
+      outputs.driverShareResult.textContent = formatCurrency(roundedDriverShare);
+      outputs.passengerShareResult.textContent = formatCurrency(roundedPassengerShare);
+
+      outputs.fuelCostResult.textContent = formatCurrency(fuelCost);
+      outputs.tollCostResult.textContent = formatCurrency(tollCost);
+      outputs.parkingCostResult.textContent = formatCurrency(parkingCost);
+      outputs.peopleCountResult.textContent = String(peopleCount);
+      outputs.differenceResult.textContent = formatCurrency(difference);
+      outputs.collectedTotalResult.textContent = formatCurrency(collectedTotal);
+
+      if (driverDiscountEnabled && peopleCount > 1) {
+        outputs.resultBadge.className = 'badge success';
+        outputs.resultBadge.textContent = 'Řidič má zvýhodněný podíl';
+        outputs.resultNote.textContent = `Celkové náklady ${formatCurrency(totalCost)} jsou rozdělené mezi ${peopleCount} osob. Řidič platí přibližně ${formatCurrency(roundedDriverShare)} a každý další cestující přibližně ${formatCurrency(roundedPassengerShare)}.`;
+      } else {
+        outputs.resultBadge.className = 'badge success';
+        outputs.resultBadge.textContent = 'Rovnoměrné rozdělení';
+        outputs.resultNote.textContent = `Celkové náklady ${formatCurrency(totalCost)} se při rovnoměrném rozdělení mezi ${peopleCount} osob dělí na přibližně ${formatCurrency(roundedStandardShare)} na osobu.`;
+      }
+
+      buildSummaryRows([
+        {
+          label: 'Náklady na palivo',
+          amount: formatCurrency(fuelCost),
+          note: 'Palivo za celou cestu'
+        },
+        {
+          label: 'Mýto a dálniční poplatky',
+          amount: formatCurrency(tollCost),
+          note: 'Dálniční známka, mýto nebo podobné poplatky'
+        },
+        {
+          label: 'Parkovné a další náklady',
+          amount: formatCurrency(parkingCost),
+          note: 'Ostatní společné výdaje'
+        },
+        {
+          label: 'Celkové náklady',
+          amount: formatCurrency(totalCost),
+          note: 'Součet všech zadaných výdajů'
+        },
+        {
+          label: 'Počet osob',
+          amount: String(peopleCount),
+          note: 'Včetně řidiče'
+        },
+        {
+          label: 'Běžný podíl na osobu',
+          amount: formatCurrency(roundedStandardShare),
+          note: 'Částka při rovnoměrném dělení'
+        },
+        {
+          label: 'Podíl řidiče',
+          amount: formatCurrency(roundedDriverShare),
+          note: driverDiscountEnabled && peopleCount > 1 ? 'Zohledněná sleva pro řidiče' : 'Stejný podíl jako ostatní'
+        },
+        {
+          label: 'Podíl ostatních cestujících',
+          amount: formatCurrency(roundedPassengerShare),
+          note: driverDiscountEnabled && peopleCount > 1 ? 'Přepočtený podíl po slevě pro řidiče' : 'Stejný podíl jako řidič'
+        }
+      ]);
+    }
+
+    document.getElementById('calculateBtn').addEventListener('click', calculateTripSplit);
+
+    document.getElementById('resetBtn').addEventListener('click', function() {
+      fuelCostInput.value = 900;
+      tollCostInput.value = 300;
+      parkingCostInput.value = 150;
+      peopleCountInput.value = 4;
+      driverDiscountToggleInput.checked = false;
+      driverDiscountInput.value = 25;
+      calculateTripSplit();
+    });
+
+    [fuelCostInput, tollCostInput, parkingCostInput, peopleCountInput, driverDiscountToggleInput, driverDiscountInput].forEach(el => {
+      el.addEventListener('input', calculateTripSplit);
+      el.addEventListener('change', calculateTripSplit);
+    });
+
+    calculateTripSplit();
+  </script>
+</body>
+</html>
