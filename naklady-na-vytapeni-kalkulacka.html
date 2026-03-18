@@ -1,1 +1,1000 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kalkulačka nákladů na vytápění online | RychléVýpočty.cz</title>
+  <meta name="description" content="Spočítejte orientační náklady na vytápění bytu nebo domu online. Přehledná kalkulačka porovná plyn, elektřinu, dřevo, pelety i tepelné čerpadlo.">
+  <meta name="keywords" content="kalkulačka nákladů na vytápění, vytápění kalkulačka, porovnání vytápění, náklady na topení, cena vytápění domu">
+  <meta name="author" content="RychléVýpočty.cz">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://rychlevypocty.cz/naklady-na-vytapeni-kalkulacka.html">
 
+  <meta property="og:title" content="Kalkulačka nákladů na vytápění online | RychléVýpočty.cz">
+  <meta property="og:description" content="Orientační výpočet ročních a měsíčních nákladů na vytápění podle typu zdroje tepla.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rychlevypocty.cz/naklady-na-vytapeni-kalkulacka.html">
+  <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Kalkulačka nákladů na vytápění online | RychléVýpočty.cz">
+  <meta name="twitter:description" content="Spočítejte si přibližné náklady na topení a porovnejte různé zdroje tepla.">
+
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #5f6b85;
+      --primary: #2152ff;
+      --primary-dark: #183dbf;
+      --border: #dbe3f0;
+      --success: #138a4b;
+      --warning: #b66a00;
+      --danger: #c63d2f;
+      --shadow: 0 12px 32px rgba(20, 32, 70, 0.08);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #f7f9fd 0%, #eef3fb 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    a:hover { text-decoration: underline; }
+
+    .container {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      padding: 18px 0;
+      border-bottom: 1px solid rgba(219, 227, 240, 0.8);
+      background: rgba(255, 255, 255, 0.84);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+      line-height: 1;
+    }
+
+    .brand span { color: var(--primary); }
+
+    .topnav {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      font-size: 0.97rem;
+    }
+
+    .hero {
+      padding: 42px 0 20px;
+    }
+
+    .breadcrumbs {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.12fr 0.88fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .hero-copy h1 {
+      font-size: clamp(2rem, 4vw, 3.15rem);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      margin: 0 0 16px;
+    }
+
+    .hero-copy p {
+      margin: 0 0 16px;
+      font-size: 1.06rem;
+      color: var(--muted);
+      max-width: 760px;
+    }
+
+    .hero-points {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .hero-pill {
+      background: rgba(33, 82, 255, 0.08);
+      color: var(--primary-dark);
+      border: 1px solid rgba(33, 82, 255, 0.12);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .hero-box {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-box h2 {
+      margin: 0 0 10px;
+      font-size: 1.2rem;
+    }
+
+    .hero-box p {
+      margin: 0 0 10px;
+      color: var(--muted);
+    }
+
+    .hero-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.02fr 0.98fr;
+      gap: 28px;
+      align-items: start;
+      padding: 22px 0 32px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .card-header {
+      padding: 24px 24px 10px;
+    }
+
+    .card-header h2,
+    .card-header h3 {
+      margin: 0 0 8px;
+      font-size: 1.3rem;
+      letter-spacing: -0.02em;
+    }
+
+    .card-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .card-body {
+      padding: 20px 24px 24px;
+    }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .field label {
+      font-weight: 700;
+      font-size: 0.96rem;
+    }
+
+    .field small {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: -2px;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      padding: 14px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      font-size: 1rem;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      font-family: inherit;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      outline: none;
+      border-color: rgba(33, 82, 255, 0.45);
+      box-shadow: 0 0 0 4px rgba(33, 82, 255, 0.10);
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.06s ease, background 0.15s ease;
+    }
+
+    button:hover { transform: translateY(-1px); }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover { background: var(--primary-dark); }
+
+    .btn-secondary {
+      background: #eef3ff;
+      color: var(--primary-dark);
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .result-box {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+
+    .result-box.highlight {
+      background: linear-gradient(180deg, #eef7ff 0%, #f9fcff 100%);
+      border-color: rgba(33, 82, 255, 0.18);
+    }
+
+    .result-label {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .result-value {
+      font-size: clamp(1.2rem, 2.4vw, 2rem);
+      line-height: 1.15;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      word-break: break-word;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+
+    .badge.success {
+      background: rgba(19, 138, 75, 0.10);
+      color: var(--success);
+    }
+
+    .badge.warning {
+      background: rgba(182, 106, 0, 0.11);
+      color: var(--warning);
+    }
+
+    .info-list {
+      display: grid;
+      gap: 12px;
+      margin: 18px 0 0;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid #edf2fa;
+    }
+
+    .info-row:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .info-row span:first-child { color: var(--muted); }
+
+    .note {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1px solid #e7edf7;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 18px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: #fff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 660px;
+    }
+
+    th, td {
+      padding: 14px;
+      text-align: left;
+      border-bottom: 1px solid #edf2fa;
+      font-size: 0.96rem;
+    }
+
+    th {
+      background: #f8fbff;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    tr:last-child td { border-bottom: 0; }
+
+    .content-section {
+      padding: 8px 0;
+    }
+
+    .content-section h2 {
+      font-size: 1.7rem;
+      letter-spacing: -0.03em;
+      margin: 0 0 14px;
+    }
+
+    .content-section h3 {
+      font-size: 1.15rem;
+      margin: 28px 0 10px;
+    }
+
+    .content-section p {
+      color: var(--muted);
+      margin: 0 0 14px;
+    }
+
+    .content-section ul {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    .content-section li { margin-bottom: 8px; }
+
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .related-card {
+      display: block;
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      color: var(--text);
+      box-shadow: var(--shadow);
+    }
+
+    .related-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .related-card span {
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    footer {
+      margin-top: 40px;
+      border-top: 1px solid rgba(219, 227, 240, 0.9);
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .footer-inner {
+      padding: 24px 0 40px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .layout,
+      .related-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .container {
+        width: min(100% - 24px, 1160px);
+      }
+
+      .field-grid,
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 28px;
+      }
+
+      .card-header,
+      .card-body,
+      .hero-box {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebApplication",
+    "name":"Kalkulačka nákladů na vytápění",
+    "url":"https://rychlevypocty.cz/naklady-na-vytapeni-kalkulacka.html",
+    "applicationCategory":"FinanceApplication",
+    "operatingSystem":"Any",
+    "description":"Online kalkulačka pro orientační výpočet nákladů na vytápění podle typu zdroje tepla.",
+    "offers":{
+      "@type":"Offer",
+      "price":"0",
+      "priceCurrency":"CZK"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"Jak spočítat náklady na vytápění?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Orientační náklady na vytápění se počítají z roční potřeby tepla, účinnosti zdroje a ceny energie nebo paliva. Výsledkem je odhad měsíčního i ročního nákladu."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Co ovlivňuje cenu vytápění domu nebo bytu?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Cenu vytápění ovlivňuje velikost vytápěné plochy, tepelná ztráta objektu, zvolený zdroj tepla, účinnost systému, cena energie a délka topné sezóny."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Je porovnání různých způsobů vytápění přesné?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Výsledek je orientační. Skutečné náklady se mohou lišit podle typu domu, izolace, reálné spotřeby, počasí, tarifu a konkrétní technologie."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="/">Rychlé<span>Výpočty</span>.cz</a>
+      <nav class="topnav" aria-label="Hlavní navigace">
+        <a href="/">Domů</a>
+        <a href="/spotreba-plynu-kalkulacka.html">Spotřeba plynu</a>
+        <a href="/spotreba-elektriny-kalkulacka.html">Spotřeba elektřiny</a>
+        <a href="/jednotkova-cena-kalkulacka.html">Jednotková cena</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumbs">
+          <a href="/">RychléVýpočty.cz</a> / Kalkulačka nákladů na vytápění
+        </div>
+
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <h1>Kalkulačka nákladů na vytápění</h1>
+            <p>Spočítejte si orientační náklady na vytápění bytu nebo domu a porovnejte různé zdroje tepla. Kalkulačka pracuje s vytápěnou plochou, typem objektu, roční potřebou tepla a cenou energie.</p>
+            <p>Hodí se pro rychlé srovnání plynu, přímotopu, tepelného čerpadla, pelet i dřeva při plánování provozu domácnosti nebo výběru vhodnějšího způsobu vytápění.</p>
+
+            <div class="hero-points">
+              <div class="hero-pill">Měsíční i roční náklad</div>
+              <div class="hero-pill">Plyn, elektřina, dřevo, pelety</div>
+              <div class="hero-pill">Účinnost zdroje tepla</div>
+              <div class="hero-pill">Rychlé orientační srovnání</div>
+            </div>
+          </div>
+
+          <div class="hero-box">
+            <h2>Co kalkulačka umí</h2>
+            <p>Z odhadované potřeby tepla spočítá náklad na vytápění podle zvoleného zdroje energie a jeho účinnosti. Výstup ukáže roční i měsíční náklad, spotřebu energie a cenu za 1 m².</p>
+            <p>Výsledek je vhodný jako orientační pomůcka při rozhodování o způsobu vytápění nebo při plánování rozpočtu domácnosti.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container layout">
+      <div class="card">
+        <div class="card-header">
+          <h2>Zadání vytápění</h2>
+          <p>Vyplňte základní údaje o objektu a zvoleném zdroji tepla. Výsledek se přepočítá okamžitě.</p>
+        </div>
+        <div class="card-body">
+          <div class="field-grid">
+            <div class="field">
+              <label for="floorArea">Vytápěná plocha (m²)</label>
+              <input type="number" id="floorArea" min="0" step="1" value="120" inputmode="decimal">
+              <small>Podlahová plocha, kterou chcete vytápět.</small>
+            </div>
+
+            <div class="field">
+              <label for="buildingType">Typ objektu</label>
+              <select id="buildingType">
+                <option value="well" selected>Dobře zateplený dům / byt</option>
+                <option value="standard">Běžný objekt</option>
+                <option value="older">Starší méně úsporný objekt</option>
+              </select>
+              <small>Ovlivňuje orientační potřebu tepla na 1 m².</small>
+            </div>
+
+            <div class="field">
+              <label for="heatingSource">Zdroj vytápění</label>
+              <select id="heatingSource">
+                <option value="gas" selected>Plyn</option>
+                <option value="electric">Elektřina</option>
+                <option value="heatpump">Tepelné čerpadlo</option>
+                <option value="pellets">Pelety</option>
+                <option value="wood">Dřevo</option>
+              </select>
+              <small>Typ zdroje tepla, který chcete vyhodnotit.</small>
+            </div>
+
+            <div class="field">
+              <label for="energyPrice">Cena energie / paliva (Kč za kWh)</label>
+              <input type="number" id="energyPrice" min="0" step="0.01" value="1.90" inputmode="decimal">
+              <small>Orientační cena za využitelnou nebo nakupovanou energii podle zvoleného zdroje.</small>
+            </div>
+
+            <div class="field">
+              <label for="efficiency">Účinnost zdroje (%)</label>
+              <input type="number" id="efficiency" min="1" max="500" step="1" value="92" inputmode="decimal">
+              <small>Například kotel 85–95 %, tepelné čerpadlo můžete zadat jako COP × 100.</small>
+            </div>
+
+            <div class="field">
+              <label for="heatingMonths">Délka topné sezóny (měsíce)</label>
+              <input type="number" id="heatingMonths" min="1" max="12" step="1" value="7" inputmode="numeric">
+              <small>Slouží pro orientační měsíční rozložení nákladů.</small>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button class="btn-primary" type="button" id="calculateBtn">Spočítat náklady na vytápění</button>
+            <button class="btn-secondary" type="button" id="resetBtn">Obnovit výchozí hodnoty</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>Výsledek výpočtu</h2>
+          <p>Přehled potřeby tepla, spotřeby energie a orientační ceny vytápění.</p>
+        </div>
+        <div class="card-body">
+          <div class="results-grid">
+            <div class="result-box highlight">
+              <div class="result-label">Roční náklad na vytápění</div>
+              <div class="result-value" id="yearCostResult">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Měsíční náklad v sezóně</div>
+              <div class="result-value" id="monthCostResult">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Roční potřeba tepla</div>
+              <div class="result-value" id="heatNeedResult">0 kWh</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Nakupovaná energie</div>
+              <div class="result-value" id="purchasedEnergyResult">0 kWh</div>
+            </div>
+          </div>
+
+          <div id="resultBadge" class="badge success">Výpočet připraven</div>
+
+          <div class="info-list">
+            <div class="info-row">
+              <span>Vytápěná plocha</span>
+              <strong id="floorAreaResult">0 m²</strong>
+            </div>
+            <div class="info-row">
+              <span>Potřeba tepla na 1 m²</span>
+              <strong id="heatPerM2Result">0 kWh</strong>
+            </div>
+            <div class="info-row">
+              <span>Cena energie</span>
+              <strong id="energyPriceResult">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Účinnost zdroje</span>
+              <strong id="efficiencyResult">0 %</strong>
+            </div>
+            <div class="info-row">
+              <span>Náklad na 1 m² ročně</span>
+              <strong id="costPerM2Result">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Topná sezóna</span>
+              <strong id="heatingMonthsResult">0 měsíců</strong>
+            </div>
+          </div>
+
+          <div class="note" id="resultNote">
+            Výsledek je orientační a slouží pro rychlý odhad nákladů na topení.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="card">
+        <div class="card-header">
+          <h3>Rozpis výpočtu</h3>
+          <p>Přehled hlavních vstupů a výpočtových kroků pro odhad ceny vytápění.</p>
+        </div>
+        <div class="card-body">
+          <div class="table-wrap">
+            <table aria-label="Rozpis nákladů na vytápění">
+              <thead>
+                <tr>
+                  <th>Položka</th>
+                  <th>Hodnota</th>
+                  <th>Poznámka</th>
+                </tr>
+              </thead>
+              <tbody id="summaryTableBody">
+                <tr>
+                  <td>Náklady na vytápění</td>
+                  <td>—</td>
+                  <td>Po výpočtu se zobrazí detailní přehled.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container content-section">
+      <h2>Jak kalkulačka nákladů na vytápění funguje</h2>
+      <p>Kalkulačka nejprve odhadne roční potřebu tepla podle vytápěné plochy a typu objektu. Následně tuto potřebu upraví podle účinnosti zdroje tepla, takže získá přibližné množství energie nebo paliva, které je potřeba nakoupit. Nakonec výsledek vynásobí cenou za kWh a dopočítá měsíční i roční náklad.</p>
+
+      <h3>Co ve výsledku uvidíte</h3>
+      <ul>
+        <li>roční potřebu tepla v kWh,</li>
+        <li>potřebnou nakupovanou energii podle účinnosti zdroje,</li>
+        <li>odhad měsíčního a ročního nákladu,</li>
+        <li>cenu vytápění přepočtenou na 1 m².</li>
+      </ul>
+
+      <h3>Kdy se výpočet hodí</h3>
+      <p>Kalkulačka je užitečná při porovnání technologií vytápění, plánování rekonstrukce, výběru nového zdroje tepla nebo při běžném odhadu provozních nákladů domu a bytu. Pomůže i při rychlém srovnání, jak změna ceny energie ovlivní rodinný rozpočet.</p>
+
+      <h3>Na co si dát pozor</h3>
+      <p>Skutečné náklady se mohou výrazně lišit podle izolace, venkovních teplot, reálného chování domácnosti, nastavené teploty v interiéru, typu soustavy a konkrétního tarifu. Výsledek proto berte jako orientační model, ne jako přesnou předpověď vyúčtování.</p>
+    </section>
+
+    <section class="container content-section">
+      <h2>Související kalkulačky</h2>
+      <div class="related-grid">
+        <a class="related-card" href="/spotreba-plynu-kalkulacka.html">
+          <strong>Kalkulačka spotřeby plynu</strong>
+          <span>Výpočet spotřeby plynu a odhadu ceny za den, měsíc i rok.</span>
+        </a>
+
+        <a class="related-card" href="/spotreba-elektriny-kalkulacka.html">
+          <strong>Kalkulačka spotřeby elektřiny</strong>
+          <span>Odhad spotřeby a ceny provozu spotřebičů.</span>
+        </a>
+
+        <a class="related-card" href="/jednotkova-cena-kalkulacka.html">
+          <strong>Kalkulačka jednotkové ceny</strong>
+          <span>Porovnání ceny různých balení a jednotek.</span>
+        </a>
+
+        <a class="related-card" href="/inflace-kalkulacka.html">
+          <strong>Inflační kalkulačka</strong>
+          <span>Výpočet dopadu inflace na ceny a kupní sílu peněz.</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      © 2026 RychléVýpočty.cz — online kalkulačky a praktické výpočty pro každodenní použití.
+    </div>
+  </footer>
+
+  <script>
+    const floorAreaInput = document.getElementById('floorArea');
+    const buildingTypeInput = document.getElementById('buildingType');
+    const heatingSourceInput = document.getElementById('heatingSource');
+    const energyPriceInput = document.getElementById('energyPrice');
+    const efficiencyInput = document.getElementById('efficiency');
+    const heatingMonthsInput = document.getElementById('heatingMonths');
+
+    const outputs = {
+      yearCostResult: document.getElementById('yearCostResult'),
+      monthCostResult: document.getElementById('monthCostResult'),
+      heatNeedResult: document.getElementById('heatNeedResult'),
+      purchasedEnergyResult: document.getElementById('purchasedEnergyResult'),
+      resultBadge: document.getElementById('resultBadge'),
+      floorAreaResult: document.getElementById('floorAreaResult'),
+      heatPerM2Result: document.getElementById('heatPerM2Result'),
+      energyPriceResult: document.getElementById('energyPriceResult'),
+      efficiencyResult: document.getElementById('efficiencyResult'),
+      costPerM2Result: document.getElementById('costPerM2Result'),
+      heatingMonthsResult: document.getElementById('heatingMonthsResult'),
+      resultNote: document.getElementById('resultNote'),
+      summaryTableBody: document.getElementById('summaryTableBody')
+    };
+
+    const HEAT_NEED_BY_TYPE = {
+      well: 70,
+      standard: 110,
+      older: 170
+    };
+
+    const SOURCE_DEFAULTS = {
+      gas: { price: 1.90, efficiency: 92 },
+      electric: { price: 4.80, efficiency: 99 },
+      heatpump: { price: 4.80, efficiency: 300 },
+      pellets: { price: 1.65, efficiency: 85 },
+      wood: { price: 1.20, efficiency: 75 }
+    };
+
+    function formatCurrency(value) {
+      return new Intl.NumberFormat('cs-CZ', {
+        style: 'currency',
+        currency: 'CZK',
+        maximumFractionDigits: 0
+      }).format(value);
+    }
+
+    function formatNumber(value, unit, digits = 0) {
+      return `${new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: digits,
+        maximumFractionDigits: digits
+      }).format(value)} ${unit}`;
+    }
+
+    function buildSummaryRows(rows) {
+      outputs.summaryTableBody.innerHTML = rows.map(row => `
+        <tr>
+          <td>${row.label}</td>
+          <td>${row.amount}</td>
+          <td>${row.note}</td>
+        </tr>
+      `).join('');
+    }
+
+    function updateSourceDefaults() {
+      const source = heatingSourceInput.value;
+      const defaults = SOURCE_DEFAULTS[source];
+      energyPriceInput.value = defaults.price;
+      efficiencyInput.value = defaults.efficiency;
+      calculateHeatingCosts();
+    }
+
+    function calculateHeatingCosts() {
+      const floorArea = Number(floorAreaInput.value);
+      const buildingType = buildingTypeInput.value;
+      const heatingSource = heatingSourceInput.value;
+      const energyPrice = Number(energyPriceInput.value);
+      const efficiency = Number(efficiencyInput.value);
+      const heatingMonths = Number(heatingMonthsInput.value);
+
+      if (!floorArea || floorArea <= 0 || !energyPrice || energyPrice < 0 || !efficiency || efficiency <= 0 || !heatingMonths || heatingMonths <= 0) {
+        outputs.yearCostResult.textContent = '0 Kč';
+        outputs.monthCostResult.textContent = '0 Kč';
+        outputs.heatNeedResult.textContent = '0 kWh';
+        outputs.purchasedEnergyResult.textContent = '0 kWh';
+        outputs.floorAreaResult.textContent = '0 m²';
+        outputs.heatPerM2Result.textContent = '0 kWh';
+        outputs.energyPriceResult.textContent = '0 Kč';
+        outputs.efficiencyResult.textContent = '0 %';
+        outputs.costPerM2Result.textContent = '0 Kč';
+        outputs.heatingMonthsResult.textContent = '0 měsíců';
+        outputs.resultBadge.className = 'badge warning';
+        outputs.resultBadge.textContent = 'Chybí vstupní data';
+        outputs.resultNote.textContent = 'Zadejte platnou plochu, cenu energie, účinnost a délku topné sezóny.';
+        buildSummaryRows([
+          {
+            label: 'Výpočet',
+            amount: '—',
+            note: 'Zadejte platné vstupní hodnoty.'
+          }
+        ]);
+        return;
+      }
+
+      const heatPerM2 = HEAT_NEED_BY_TYPE[buildingType];
+      const yearlyHeatNeed = floorArea * heatPerM2;
+      const purchasedEnergy = yearlyHeatNeed / (efficiency / 100);
+      const yearCost = purchasedEnergy * energyPrice;
+      const monthCost = yearCost / heatingMonths;
+      const costPerM2 = yearCost / floorArea;
+
+      outputs.yearCostResult.textContent = formatCurrency(yearCost);
+      outputs.monthCostResult.textContent = formatCurrency(monthCost);
+      outputs.heatNeedResult.textContent = formatNumber(Math.round(yearlyHeatNeed), 'kWh');
+      outputs.purchasedEnergyResult.textContent = formatNumber(Math.round(purchasedEnergy), 'kWh');
+      outputs.floorAreaResult.textContent = formatNumber(floorArea, 'm²');
+      outputs.heatPerM2Result.textContent = formatNumber(heatPerM2, 'kWh');
+      outputs.energyPriceResult.textContent = formatCurrency(energyPrice);
+      outputs.efficiencyResult.textContent = formatNumber(efficiency, '%');
+      outputs.costPerM2Result.textContent = formatCurrency(costPerM2);
+      outputs.heatingMonthsResult.textContent = formatNumber(heatingMonths, 'měsíců');
+
+      if (yearCost <= 25000) {
+        outputs.resultBadge.className = 'badge success';
+        outputs.resultBadge.textContent = 'Nižší roční náklad';
+      } else {
+        outputs.resultBadge.className = 'badge warning';
+        outputs.resultBadge.textContent = 'Vyšší roční náklad';
+      }
+
+      const sourceNames = {
+        gas: 'plyn',
+        electric: 'elektřina',
+        heatpump: 'tepelné čerpadlo',
+        pellets: 'pelety',
+        wood: 'dřevo'
+      };
+
+      outputs.resultNote.textContent = `Při vytápění zdrojem ${sourceNames[heatingSource]} vychází orientační roční náklad přibližně na ${formatCurrency(yearCost)} a měsíční náklad během topné sezóny na ${formatCurrency(monthCost)}. Výsledek je orientační a závisí na reálné spotřebě i ceně energie.`;
+
+      buildSummaryRows([
+        {
+          label: 'Vytápěná plocha',
+          amount: formatNumber(floorArea, 'm²'),
+          note: 'Plocha zahrnutá do výpočtu'
+        },
+        {
+          label: 'Potřeba tepla na 1 m²',
+          amount: formatNumber(heatPerM2, 'kWh'),
+          note: 'Orientační hodnota podle typu objektu'
+        },
+        {
+          label: 'Roční potřeba tepla',
+          amount: formatNumber(Math.round(yearlyHeatNeed), 'kWh'),
+          note: 'Odhad tepla potřebného pro vytápění'
+        },
+        {
+          label: 'Účinnost zdroje',
+          amount: formatNumber(efficiency, '%'),
+          note: 'Vyšší účinnost znamená nižší potřebu nakupované energie'
+        },
+        {
+          label: 'Nakupovaná energie',
+          amount: formatNumber(Math.round(purchasedEnergy), 'kWh'),
+          note: 'Roční energie potřebná po započtení účinnosti'
+        },
+        {
+          label: 'Cena energie',
+          amount: formatCurrency(energyPrice),
+          note: 'Zadaná cena za 1 kWh'
+        },
+        {
+          label: 'Roční náklad na vytápění',
+          amount: formatCurrency(yearCost),
+          note: 'Orientační roční cena provozu'
+        },
+        {
+          label: 'Měsíční náklad v sezóně',
+          amount: formatCurrency(monthCost),
+          note: 'Průměrný náklad rozložený do topných měsíců'
+        }
+      ]);
+    }
+
+    document.getElementById('calculateBtn').addEventListener('click', calculateHeatingCosts);
+    document.getElementById('resetBtn').addEventListener('click', function() {
+      floorAreaInput.value = 120;
+      buildingTypeInput.value = 'well';
+      heatingSourceInput.value = 'gas';
+      energyPriceInput.value = 1.90;
+      efficiencyInput.value = 92;
+      heatingMonthsInput.value = 7;
+      calculateHeatingCosts();
+    });
+
+    heatingSourceInput.addEventListener('change', updateSourceDefaults);
+
+    [floorAreaInput, buildingTypeInput, energyPriceInput, efficiencyInput, heatingMonthsInput].forEach(el => {
+      el.addEventListener('input', calculateHeatingCosts);
+      el.addEventListener('change', calculateHeatingCosts);
+    });
+
+    calculateHeatingCosts();
+  </script>
+</body>
+</html>
