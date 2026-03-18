@@ -1,1 +1,1107 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kalkulačka přesčasů online zdarma | Výpočet odměny za přesčas | RychléVýpočty.cz</title>
+  <meta name="description" content="Spočítejte si orientační odměnu za přesčasové hodiny. Kalkulačka umí výpočet z hodinové nebo měsíční mzdy, příplatek v procentech i celkovou odměnu za přesčas.">
+  <meta name="keywords" content="kalkulačka přesčasů, přesčasy kalkulačka, výpočet přesčasů, příplatek za přesčas, odměna za přesčas, přesčasové hodiny">
+  <meta name="author" content="RychléVýpočty.cz">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://rychlevypocty.cz/kalkulacka-prescasu.html">
 
+  <meta property="og:title" content="Kalkulačka přesčasů online zdarma | RychléVýpočty.cz">
+  <meta property="og:description" content="Orientační výpočet odměny za přesčasové hodiny včetně příplatku a celkové částky.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rychlevypocty.cz/kalkulacka-prescasu.html">
+  <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Kalkulačka přesčasů online zdarma | RychléVýpočty.cz">
+  <meta name="twitter:description" content="Přehledný výpočet odměny za přesčasy podle hodinové nebo měsíční mzdy.">
+
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #5f6b85;
+      --primary: #2152ff;
+      --primary-dark: #183dbf;
+      --border: #dbe3f0;
+      --success: #138a4b;
+      --warning: #b66a00;
+      --shadow: 0 12px 32px rgba(20, 32, 70, 0.08);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #f7f9fd 0%, #eef3fb 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      padding: 18px 0;
+      border-bottom: 1px solid rgba(219, 227, 240, 0.8);
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+
+    .brand span {
+      color: var(--primary);
+    }
+
+    .topnav {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      font-size: 0.97rem;
+    }
+
+    .hero {
+      padding: 42px 0 20px;
+    }
+
+    .breadcrumbs {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .hero-copy h1 {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      margin: 0 0 16px;
+    }
+
+    .hero-copy p {
+      margin: 0 0 16px;
+      font-size: 1.06rem;
+      color: var(--muted);
+      max-width: 720px;
+    }
+
+    .hero-points {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .hero-pill {
+      background: rgba(33, 82, 255, 0.08);
+      color: var(--primary-dark);
+      border: 1px solid rgba(33, 82, 255, 0.12);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .hero-box {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-box h2 {
+      margin: 0 0 10px;
+      font-size: 1.2rem;
+    }
+
+    .hero-box p {
+      margin: 0 0 12px;
+      color: var(--muted);
+    }
+
+    .hero-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.04fr 0.96fr;
+      gap: 28px;
+      align-items: start;
+      padding: 22px 0 32px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .card-header {
+      padding: 24px 24px 10px;
+    }
+
+    .card-header h2,
+    .card-header h3 {
+      margin: 0 0 8px;
+      font-size: 1.3rem;
+      letter-spacing: -0.02em;
+    }
+
+    .card-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .card-body {
+      padding: 20px 24px 24px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field label {
+      font-weight: 700;
+      font-size: 0.96rem;
+    }
+
+    .field small {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: -2px;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      padding: 14px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      font-size: 1rem;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      outline: none;
+      border-color: rgba(33, 82, 255, 0.45);
+      box-shadow: 0 0 0 4px rgba(33, 82, 255, 0.10);
+    }
+
+    .inline-options {
+      display: grid;
+      gap: 12px;
+      margin-top: 4px;
+    }
+
+    .option-box {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      padding: 14px 16px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: #fbfdff;
+    }
+
+    .option-box input {
+      margin-top: 3px;
+      transform: scale(1.05);
+    }
+
+    .option-box span {
+      display: block;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .option-box small {
+      display: block;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.06s ease, background 0.15s ease, opacity 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background: #eef3ff;
+      color: var(--primary-dark);
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .result-box {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+
+    .result-label {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .result-value {
+      font-size: clamp(1.2rem, 2.4vw, 2rem);
+      line-height: 1.15;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .highlight {
+      background: linear-gradient(180deg, #eef7ff 0%, #f9fcff 100%);
+      border-color: rgba(33, 82, 255, 0.18);
+    }
+
+    .info-list {
+      display: grid;
+      gap: 12px;
+      margin: 18px 0 0;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid #edf2fa;
+    }
+
+    .info-row:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .info-row span:first-child {
+      color: var(--muted);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+
+    .badge.success {
+      background: rgba(19, 138, 75, 0.10);
+      color: var(--success);
+    }
+
+    .badge.warning {
+      background: rgba(182, 106, 0, 0.11);
+      color: var(--warning);
+    }
+
+    .note {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1px solid #e7edf7;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 18px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 640px;
+      background: #fff;
+    }
+
+    th, td {
+      padding: 14px 14px;
+      text-align: left;
+      border-bottom: 1px solid #edf2fa;
+      font-size: 0.96rem;
+    }
+
+    th {
+      background: #f8fbff;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .content-section {
+      padding: 8px 0 8px;
+    }
+
+    .content-section h2 {
+      font-size: 1.7rem;
+      letter-spacing: -0.03em;
+      margin: 0 0 14px;
+    }
+
+    .content-section h3 {
+      font-size: 1.15rem;
+      margin: 28px 0 10px;
+    }
+
+    .content-section p {
+      color: var(--muted);
+      margin: 0 0 14px;
+    }
+
+    .content-section ul {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    .content-section li {
+      margin-bottom: 8px;
+    }
+
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .related-card {
+      display: block;
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      color: var(--text);
+      box-shadow: var(--shadow);
+    }
+
+    .related-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .related-card span {
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    footer {
+      margin-top: 40px;
+      border-top: 1px solid rgba(219, 227, 240, 0.9);
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .footer-inner {
+      padding: 24px 0 40px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .layout,
+      .related-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .container {
+        width: min(100% - 24px, 1160px);
+      }
+
+      .form-grid,
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 28px;
+      }
+
+      .card-header,
+      .card-body,
+      .hero-box {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .info-row {
+        flex-direction: column;
+      }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebApplication",
+    "name":"Kalkulačka přesčasů",
+    "url":"https://rychlevypocty.cz/kalkulacka-prescasu.html",
+    "applicationCategory":"FinanceApplication",
+    "operatingSystem":"Any",
+    "description":"Online kalkulačka pro orientační výpočet odměny za přesčasové hodiny včetně příplatku a celkové částky.",
+    "offers":{
+      "@type":"Offer",
+      "price":"0",
+      "priceCurrency":"CZK"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"Jak se počítá odměna za přesčas?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Odměna za přesčas se obvykle skládá ze základní mzdy za odpracované přesčasové hodiny a z příplatku. Kalkulačka proto nejprve spočítá základ za přesčasové hodiny a poté dopočítá příplatek podle zadaného procenta."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Lze počítat přesčasy z měsíční mzdy?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Ano. Pokud neznáte hodinovou mzdu, můžete zadat měsíční mzdu a měsíční fond hodin. Kalkulačka nejprve dopočítá orientační hodinovou sazbu a z ní pak vypočte odměnu za přesčasy."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Je kalkulačka vhodná i pro víkend nebo svátek?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Ano. Kalkulačka umožňuje vybrat typ směny nebo zadat vlastní příplatek v procentech. Díky tomu je vhodná pro běžný přesčas, víkend, svátek i jiné interní režimy odměňování."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="/">Rychlé<span>Výpočty</span>.cz</a>
+      <nav class="topnav" aria-label="Hlavní navigace">
+        <a href="/">Domů</a>
+        <a href="/cista-mzda-kalkulacka.html">Čistá mzda</a>
+        <a href="/kalkulacka-hodinove-mzdy.html">Hodinová mzda</a>
+        <a href="/kalkulacka-odpracovanych-hodin.html">Odpracované hodiny</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumbs">
+          <a href="/">RychléVýpočty.cz</a> / Kalkulačka přesčasů
+        </div>
+
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <h1>Kalkulačka přesčasů</h1>
+            <p>Spočítejte si orientační odměnu za přesčasové hodiny. Kalkulačka umí výpočet z přímé hodinové mzdy nebo z měsíční mzdy a měsíčního fondu hodin, takže je vhodná pro různé typy pracovních režimů.</p>
+            <p>Výsledek ukáže základní odměnu za přesčasové hodiny, příplatek, celkovou částku i průměrnou odměnu za jednu přesčasovou hodinu. Hodí se pro běžný přesčas, víkend, svátek i vlastní interní sazby.</p>
+
+            <div class="hero-points">
+              <div class="hero-pill">Z hodinové i měsíční mzdy</div>
+              <div class="hero-pill">Výpočet příplatku</div>
+              <div class="hero-pill">Běžný přesčas i svátek</div>
+              <div class="hero-pill">Vlastní procento příplatku</div>
+            </div>
+          </div>
+
+          <div class="hero-box">
+            <h2>Co kalkulačka umí</h2>
+            <p>Počítá orientační odměnu za přesčasy podle počtu hodin a zvoleného typu příplatku. Umožní rychle porovnat více scénářů a ověřit, jak se změní celková odměna při různém počtu hodin nebo rozdílném příplatku.</p>
+            <p>Kalkulačka je záměrně flexibilní, takže ji lze použít i v situacích, kdy se interní sazby zaměstnavatele liší od běžných režimů.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container layout">
+      <div class="card">
+        <div class="card-header">
+          <h2>Zadání přesčasů</h2>
+          <p>Vyberte způsob výpočtu hodinové sazby, počet přesčasových hodin a typ příplatku. Kalkulačka výsledek automaticky přepočítá.</p>
+        </div>
+        <div class="card-body">
+          <form id="overtimeForm">
+            <div class="form-grid">
+              <div class="field">
+                <label for="rateMode">Způsob zadání mzdy</label>
+                <select id="rateMode">
+                  <option value="hourly" selected>Znám hodinovou mzdu</option>
+                  <option value="monthly">Znám měsíční mzdu</option>
+                </select>
+                <small>Můžete zadat přímo hodinovou sazbu nebo ji dopočítat z měsíční mzdy.</small>
+              </div>
+
+              <div class="field" id="hourlyRateField">
+                <label for="hourlyRate">Hodinová mzda</label>
+                <input type="number" id="hourlyRate" min="1" step="0.01" value="180" inputmode="decimal">
+                <small>Základní odměna za 1 hodinu práce.</small>
+              </div>
+
+              <div class="field hidden" id="monthlySalaryField">
+                <label for="monthlySalary">Měsíční mzda</label>
+                <input type="number" id="monthlySalary" min="1" step="1" value="32000" inputmode="decimal">
+                <small>Měsíční hrubá mzda použitá pro orientační přepočet.</small>
+              </div>
+
+              <div class="field hidden" id="monthlyHoursField">
+                <label for="monthlyHours">Měsíční fond hodin</label>
+                <input type="number" id="monthlyHours" min="1" step="0.1" value="168" inputmode="decimal">
+                <small>Počet hodin, ze kterých se dopočítá hodinová sazba.</small>
+              </div>
+
+              <div class="field">
+                <label for="overtimeHours">Počet přesčasových hodin</label>
+                <input type="number" id="overtimeHours" min="0.1" step="0.1" value="8" inputmode="decimal">
+                <small>Celkový počet hodin přesčasové práce.</small>
+              </div>
+
+              <div class="field">
+                <label for="overtimeType">Typ přesčasu</label>
+                <select id="overtimeType">
+                  <option value="25" selected>Běžný přesčas – 25 %</option>
+                  <option value="50">Vyšší příplatek – 50 %</option>
+                  <option value="100">Svátek / plný příplatek – 100 %</option>
+                  <option value="custom">Vlastní příplatek</option>
+                </select>
+                <small>Vyberte režim příplatku nebo zadejte vlastní procento.</small>
+              </div>
+
+              <div class="field hidden" id="customRateField">
+                <label for="customRate">Vlastní příplatek (%)</label>
+                <input type="number" id="customRate" min="0" step="0.01" value="25" inputmode="decimal">
+                <small>Například 30, 40 nebo 75 % podle interních pravidel.</small>
+              </div>
+
+              <div class="field full">
+                <label>Doplňující nastavení</label>
+                <div class="inline-options">
+                  <label class="option-box" for="roundWholeCrown">
+                    <input type="checkbox" id="roundWholeCrown">
+                    <div>
+                      <span>Zaokrouhlit výsledky na celé koruny</span>
+                      <small>Vhodné pro rychlý orientační přehled bez desetinných míst.</small>
+                    </div>
+                  </label>
+                </div>
+              </div>
+
+              <div class="actions full">
+                <button type="submit" class="btn-primary">Spočítat přesčasy</button>
+                <button type="button" class="btn-secondary" id="resetBtn">Obnovit výchozí hodnoty</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>Výsledek výpočtu</h2>
+          <p>Orientační přehled odměny za přesčas podle zadaných parametrů.</p>
+        </div>
+        <div class="card-body">
+          <div class="results-grid">
+            <div class="result-box highlight">
+              <div class="result-label">Celková odměna za přesčas</div>
+              <div class="result-value" id="totalOvertimePay">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Základ za přesčasové hodiny</div>
+              <div class="result-value" id="basePay">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Příplatek</div>
+              <div class="result-value" id="bonusPay">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Průměr za 1 přesčasovou hodinu</div>
+              <div class="result-value" id="averagePerHour">0 Kč</div>
+            </div>
+          </div>
+
+          <div id="statusBadge" class="badge success">Výpočet připraven</div>
+
+          <div class="info-list">
+            <div class="info-row">
+              <span>Vypočtená hodinová sazba</span>
+              <strong id="summaryHourlyRate">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Počet přesčasových hodin</span>
+              <strong id="summaryHours">0 h</strong>
+            </div>
+            <div class="info-row">
+              <span>Příplatek</span>
+              <strong id="summaryPercent">0 %</strong>
+            </div>
+            <div class="info-row">
+              <span>Typ zadání mzdy</span>
+              <strong id="summaryMode">–</strong>
+            </div>
+            <div class="info-row">
+              <span>Typ přesčasu</span>
+              <strong id="summaryType">–</strong>
+            </div>
+          </div>
+
+          <div class="note" id="resultNote">
+            Kalkulačka poskytuje orientační výsledek. Skutečné odměňování může záviset na konkrétní smlouvě, kolektivní smlouvě, interních pravidlech zaměstnavatele nebo náhradním volnu.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="card">
+        <div class="card-header">
+          <h3>Přehled výpočtu</h3>
+          <p>Detailní rozpis, jak se skládá celková odměna za přesčasové hodiny.</p>
+        </div>
+        <div class="card-body">
+          <div class="table-wrap">
+            <table aria-label="Přehled výpočtu přesčasů">
+              <thead>
+                <tr>
+                  <th>Položka</th>
+                  <th>Popis</th>
+                  <th>Hodnota</th>
+                </tr>
+              </thead>
+              <tbody id="breakdownBody">
+                <tr>
+                  <td colspan="3">Po zadání údajů se zobrazí orientační rozpis výpočtu.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container content-section">
+      <h2>Jak kalkulačka přesčasů funguje</h2>
+      <p>Kalkulačka nejprve určí hodinovou sazbu. Tu lze zadat přímo, nebo ji orientačně dopočítat z měsíční mzdy a měsíčního fondu hodin. Následně spočítá základní odměnu za zadaný počet přesčasových hodin a k ní přidá příplatek podle vybraného režimu.</p>
+
+      <h3>Co ve výsledku uvidíte</h3>
+      <ul>
+        <li>základní odměnu za přesčasové hodiny,</li>
+        <li>samostatně vypočtený příplatek,</li>
+        <li>celkovou odměnu za přesčas,</li>
+        <li>průměrnou odměnu za jednu přesčasovou hodinu,</li>
+        <li>přehled použitých vstupů a sazeb.</li>
+      </ul>
+
+      <h3>Kdy se nástroj nejvíc hodí</h3>
+      <p>Typicky při kontrole výplatní pásky, rychlém odhadu odměny za extra směnu, porovnání různých příplatků nebo při plánování, jestli se přesčas vyplatí více finančně nebo formou náhradního volna.</p>
+
+      <h3>Na co myslet při interpretaci výsledku</h3>
+      <p>Výsledek je orientační. V praxi může být odměna za přesčas ovlivněná konkrétní pracovní smlouvou, vnitřními pravidly zaměstnavatele, dohodnutým náhradním volnem nebo kombinací více příplatků. Proto je užitečné brát kalkulačku hlavně jako rychlý přehled a porovnání variant.</p>
+    </section>
+
+    <section class="container content-section">
+      <h2>Související kalkulačky</h2>
+      <div class="related-grid">
+        <a class="related-card" href="/cista-mzda-kalkulacka.html">
+          <strong>Kalkulačka čisté mzdy</strong>
+          <span>Výpočet čisté mzdy, odvodů a nákladů zaměstnavatele.</span>
+        </a>
+
+        <a class="related-card" href="/kalkulacka-hodinove-mzdy.html">
+          <strong>Kalkulačka hodinové mzdy</strong>
+          <span>Přepočet měsíčního příjmu na hodinovou sazbu.</span>
+        </a>
+
+        <a class="related-card" href="/kalkulacka-odpracovanych-hodin.html">
+          <strong>Kalkulačka odpracovaných hodin</strong>
+          <span>Výpočet čistého času za směny a měsíce.</span>
+        </a>
+
+        <a class="related-card" href="/dpp-dpc-kalkulacka.html">
+          <strong>DPP / DPČ kalkulačka</strong>
+          <span>Orientační výpočet čisté odměny z dohody.</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      © 2026 RychléVýpočty.cz — online kalkulačky a praktické výpočty pro každodenní použití.
+    </div>
+  </footer>
+
+  <script>
+    const form = document.getElementById('overtimeForm');
+    const resetBtn = document.getElementById('resetBtn');
+
+    const rateMode = document.getElementById('rateMode');
+    const overtimeType = document.getElementById('overtimeType');
+
+    const hourlyRateField = document.getElementById('hourlyRateField');
+    const monthlySalaryField = document.getElementById('monthlySalaryField');
+    const monthlyHoursField = document.getElementById('monthlyHoursField');
+    const customRateField = document.getElementById('customRateField');
+
+    const outputs = {
+      totalOvertimePay: document.getElementById('totalOvertimePay'),
+      basePay: document.getElementById('basePay'),
+      bonusPay: document.getElementById('bonusPay'),
+      averagePerHour: document.getElementById('averagePerHour'),
+      summaryHourlyRate: document.getElementById('summaryHourlyRate'),
+      summaryHours: document.getElementById('summaryHours'),
+      summaryPercent: document.getElementById('summaryPercent'),
+      summaryMode: document.getElementById('summaryMode'),
+      summaryType: document.getElementById('summaryType'),
+      statusBadge: document.getElementById('statusBadge'),
+      resultNote: document.getElementById('resultNote'),
+      breakdownBody: document.getElementById('breakdownBody')
+    };
+
+    function formatCurrency(value, roundWhole = false) {
+      return new Intl.NumberFormat('cs-CZ', {
+        style: 'currency',
+        currency: 'CZK',
+        minimumFractionDigits: roundWhole ? 0 : 2,
+        maximumFractionDigits: roundWhole ? 0 : 2
+      }).format(value);
+    }
+
+    function formatNumber(value, digits = 2) {
+      return new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: digits
+      }).format(value);
+    }
+
+    function getValues() {
+      return {
+        rateMode: document.getElementById('rateMode').value,
+        hourlyRate: Number(document.getElementById('hourlyRate').value),
+        monthlySalary: Number(document.getElementById('monthlySalary').value),
+        monthlyHours: Number(document.getElementById('monthlyHours').value),
+        overtimeHours: Number(document.getElementById('overtimeHours').value),
+        overtimeType: document.getElementById('overtimeType').value,
+        customRate: Number(document.getElementById('customRate').value),
+        roundWholeCrown: document.getElementById('roundWholeCrown').checked
+      };
+    }
+
+    function validate(values) {
+      if (values.rateMode === 'hourly' && (!values.hourlyRate || values.hourlyRate <= 0)) {
+        return 'Zadejte platnou hodinovou mzdu.';
+      }
+
+      if (values.rateMode === 'monthly' && (!values.monthlySalary || values.monthlySalary <= 0)) {
+        return 'Zadejte platnou měsíční mzdu.';
+      }
+
+      if (values.rateMode === 'monthly' && (!values.monthlyHours || values.monthlyHours <= 0)) {
+        return 'Zadejte platný měsíční fond hodin.';
+      }
+
+      if (!values.overtimeHours || values.overtimeHours <= 0) {
+        return 'Zadejte platný počet přesčasových hodin.';
+      }
+
+      if (values.overtimeType === 'custom' && values.customRate < 0) {
+        return 'Vlastní příplatek nemůže být záporný.';
+      }
+
+      return '';
+    }
+
+    function getOvertimePercent(values) {
+      if (values.overtimeType === 'custom') {
+        return values.customRate;
+      }
+      return Number(values.overtimeType);
+    }
+
+    function getOvertimeTypeLabel(values, percent) {
+      if (values.overtimeType === '25') return 'Běžný přesčas';
+      if (values.overtimeType === '50') return 'Vyšší příplatek';
+      if (values.overtimeType === '100') return 'Svátek / plný příplatek';
+      return 'Vlastní režim (' + formatNumber(percent, 2) + ' %)';
+    }
+
+    function calculate(values) {
+      const hourlyRate = values.rateMode === 'hourly'
+        ? values.hourlyRate
+        : (values.monthlySalary / values.monthlyHours);
+
+      const percent = getOvertimePercent(values);
+      const basePay = hourlyRate * values.overtimeHours;
+      const bonusPay = basePay * (percent / 100);
+      const totalOvertimePay = basePay + bonusPay;
+      const averagePerHour = totalOvertimePay / values.overtimeHours;
+
+      return {
+        hourlyRate,
+        percent,
+        basePay,
+        bonusPay,
+        totalOvertimePay,
+        averagePerHour,
+        overtimeTypeLabel: getOvertimeTypeLabel(values, percent)
+      };
+    }
+
+    function buildBreakdown(values, result) {
+      return [
+        {
+          label: 'Hodinová sazba',
+          description: values.rateMode === 'hourly'
+            ? 'Přímo zadaná hodinová mzda.'
+            : 'Orientačně dopočtená z měsíční mzdy a měsíčního fondu hodin.',
+          value: formatCurrency(result.hourlyRate, values.roundWholeCrown)
+        },
+        {
+          label: 'Počet přesčasových hodin',
+          description: 'Celkový počet hodin zahrnutých do výpočtu.',
+          value: formatNumber(values.overtimeHours, 2) + ' h'
+        },
+        {
+          label: 'Základ za přesčas',
+          description: 'Hodinová sazba × počet přesčasových hodin.',
+          value: formatCurrency(result.basePay, values.roundWholeCrown)
+        },
+        {
+          label: 'Příplatek',
+          description: 'Navýšení podle zadaného procenta příplatku.',
+          value: formatCurrency(result.bonusPay, values.roundWholeCrown)
+        },
+        {
+          label: 'Celková odměna',
+          description: 'Součet základu a příplatku.',
+          value: formatCurrency(result.totalOvertimePay, values.roundWholeCrown)
+        }
+      ];
+    }
+
+    function renderBreakdown(rows) {
+      outputs.breakdownBody.innerHTML = rows.map(row => `
+        <tr>
+          <td>${row.label}</td>
+          <td>${row.description}</td>
+          <td>${row.value}</td>
+        </tr>
+      `).join('');
+    }
+
+    function render(values, result) {
+      outputs.totalOvertimePay.textContent = formatCurrency(result.totalOvertimePay, values.roundWholeCrown);
+      outputs.basePay.textContent = formatCurrency(result.basePay, values.roundWholeCrown);
+      outputs.bonusPay.textContent = formatCurrency(result.bonusPay, values.roundWholeCrown);
+      outputs.averagePerHour.textContent = formatCurrency(result.averagePerHour, values.roundWholeCrown);
+
+      outputs.summaryHourlyRate.textContent = formatCurrency(result.hourlyRate, values.roundWholeCrown);
+      outputs.summaryHours.textContent = formatNumber(values.overtimeHours, 2) + ' h';
+      outputs.summaryPercent.textContent = formatNumber(result.percent, 2) + ' %';
+      outputs.summaryMode.textContent = values.rateMode === 'hourly' ? 'Hodinová mzda' : 'Měsíční mzda';
+      outputs.summaryType.textContent = result.overtimeTypeLabel;
+
+      outputs.statusBadge.textContent = result.percent > 0 ? 'Zahrnut příplatek' : 'Pouze základní odměna';
+      outputs.statusBadge.className = result.percent > 0 ? 'badge warning' : 'badge success';
+
+      if (values.rateMode === 'monthly') {
+        outputs.resultNote.textContent = 'Hodinová sazba byla orientačně dopočtena z měsíční mzdy a měsíčního fondu hodin. Skutečný interní výpočet zaměstnavatele se může lišit podle konkrétních pravidel nebo použitých průměrů.';
+      } else {
+        outputs.resultNote.textContent = 'Kalkulačka poskytuje orientační výsledek. Skutečné odměňování může záviset na konkrétní smlouvě, kolektivní smlouvě, interních pravidlech zaměstnavatele nebo náhradním volnu.';
+      }
+
+      renderBreakdown(buildBreakdown(values, result));
+    }
+
+    function updateVisibility() {
+      const mode = rateMode.value;
+      const type = overtimeType.value;
+
+      hourlyRateField.classList.toggle('hidden', mode !== 'hourly');
+      monthlySalaryField.classList.toggle('hidden', mode !== 'monthly');
+      monthlyHoursField.classList.toggle('hidden', mode !== 'monthly');
+      customRateField.classList.toggle('hidden', type !== 'custom');
+    }
+
+    function runCalculation() {
+      const values = getValues();
+      const error = validate(values);
+
+      if (error) {
+        alert(error);
+        return;
+      }
+
+      const result = calculate(values);
+      render(values, result);
+    }
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      runCalculation();
+    });
+
+    ['rateMode', 'hourlyRate', 'monthlySalary', 'monthlyHours', 'overtimeHours', 'overtimeType', 'customRate', 'roundWholeCrown'].forEach(id => {
+      document.getElementById(id).addEventListener('input', function() {
+        updateVisibility();
+        runCalculation();
+      });
+      document.getElementById(id).addEventListener('change', function() {
+        updateVisibility();
+        runCalculation();
+      });
+    });
+
+    resetBtn.addEventListener('click', function() {
+      document.getElementById('rateMode').value = 'hourly';
+      document.getElementById('hourlyRate').value = 180;
+      document.getElementById('monthlySalary').value = 32000;
+      document.getElementById('monthlyHours').value = 168;
+      document.getElementById('overtimeHours').value = 8;
+      document.getElementById('overtimeType').value = '25';
+      document.getElementById('customRate').value = 25;
+      document.getElementById('roundWholeCrown').checked = false;
+
+      updateVisibility();
+      runCalculation();
+    });
+
+    updateVisibility();
+    runCalculation();
+  </script>
+</body>
+</html>
