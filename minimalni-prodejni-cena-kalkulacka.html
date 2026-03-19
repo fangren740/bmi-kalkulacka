@@ -1,1 +1,1069 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <title>Kalkulačka minimální prodejní ceny online zdarma | RychléVýpočty.cz</title>
+  <meta name="description" content="Spočítejte si minimální prodejní cenu produktu nebo služby podle nákladů, provize, DPH a cílové marže. Přehledná online kalkulačka pro cenotvorbu a rychlé business rozhodování.">
+  <meta name="keywords" content="minimální prodejní cena kalkulačka, kalkulačka prodejní ceny, cenotvorba kalkulačka, jak stanovit prodejní cenu, minimální cena produktu, kalkulačka marže a ceny">
+  <meta name="author" content="RychléVýpočty.cz">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://rychlevypocty.cz/minimalni-prodejni-cena-kalkulacka.html">
+
+  <meta property="og:title" content="Kalkulačka minimální prodejní ceny online zdarma | RychléVýpočty.cz">
+  <meta property="og:description" content="Rychlý výpočet minimální prodejní ceny podle nákladů, provize, DPH a požadované marže.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rychlevypocty.cz/minimalni-prodejni-cena-kalkulacka.html">
+  <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Kalkulačka minimální prodejní ceny online zdarma | RychléVýpočty.cz">
+  <meta name="twitter:description" content="Spočítejte si minimální cenu, pod kterou se vám prodej nevyplatí.">
+
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #5f6b85;
+      --primary: #2152ff;
+      --primary-dark: #183dbf;
+      --border: #dbe3f0;
+      --success: #138a4b;
+      --warning: #b66a00;
+      --shadow: 0 12px 32px rgba(20, 32, 70, 0.08);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #f7f9fd 0%, #eef3fb 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      padding: 18px 0;
+      border-bottom: 1px solid rgba(219, 227, 240, 0.8);
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+      line-height: 1;
+    }
+
+    .brand span {
+      color: var(--primary);
+    }
+
+    .topnav {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      font-size: 0.97rem;
+    }
+
+    .topnav a {
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .topnav a:hover {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    .hero {
+      padding: 42px 0 20px;
+    }
+
+    .breadcrumbs {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .hero-copy h1 {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      margin: 0 0 16px;
+    }
+
+    .hero-copy p {
+      margin: 0 0 16px;
+      font-size: 1.06rem;
+      color: var(--muted);
+      max-width: 720px;
+    }
+
+    .hero-points {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .hero-pill {
+      background: rgba(33, 82, 255, 0.08);
+      color: var(--primary-dark);
+      border: 1px solid rgba(33, 82, 255, 0.12);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .hero-box {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-box h2 {
+      margin: 0 0 10px;
+      font-size: 1.2rem;
+    }
+
+    .hero-box p {
+      margin: 0 0 14px;
+      color: var(--muted);
+    }
+
+    .hero-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.04fr 0.96fr;
+      gap: 28px;
+      align-items: start;
+      padding: 22px 0 32px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .card-header {
+      padding: 24px 24px 10px;
+    }
+
+    .card-header h2,
+    .card-header h3 {
+      margin: 0 0 8px;
+      font-size: 1.3rem;
+      letter-spacing: -0.02em;
+    }
+
+    .card-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .card-body {
+      padding: 20px 24px 24px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field label {
+      font-weight: 700;
+      font-size: 0.96rem;
+    }
+
+    .field small {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: -2px;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      padding: 14px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      font-size: 1rem;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      outline: none;
+      border-color: rgba(33, 82, 255, 0.45);
+      box-shadow: 0 0 0 4px rgba(33, 82, 255, 0.10);
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.06s ease, background 0.15s ease, opacity 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background: #eef3ff;
+      color: var(--primary-dark);
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .result-box {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+
+    .result-label {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .result-value {
+      font-size: clamp(1.15rem, 2.1vw, 1.85rem);
+      line-height: 1.15;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .highlight {
+      background: linear-gradient(180deg, #eef7ff 0%, #f9fcff 100%);
+      border-color: rgba(33, 82, 255, 0.18);
+    }
+
+    .info-list {
+      display: grid;
+      gap: 12px;
+      margin: 18px 0 0;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid #edf2fa;
+    }
+
+    .info-row:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .info-row span:first-child {
+      color: var(--muted);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+
+    .badge.success {
+      background: rgba(19, 138, 75, 0.10);
+      color: var(--success);
+    }
+
+    .badge.warning {
+      background: rgba(182, 106, 0, 0.11);
+      color: var(--warning);
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 18px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 640px;
+      background: #fff;
+    }
+
+    th, td {
+      padding: 14px 14px;
+      text-align: left;
+      border-bottom: 1px solid #edf2fa;
+      font-size: 0.96rem;
+    }
+
+    th {
+      background: #f8fbff;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .note {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1px solid #e7edf7;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .content-section {
+      padding: 8px 0 8px;
+    }
+
+    .content-section h2 {
+      font-size: 1.7rem;
+      letter-spacing: -0.03em;
+      margin: 0 0 14px;
+    }
+
+    .content-section h3 {
+      font-size: 1.15rem;
+      margin: 28px 0 10px;
+    }
+
+    .content-section p {
+      color: var(--muted);
+      margin: 0 0 14px;
+    }
+
+    .content-section ul {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    .content-section li {
+      margin-bottom: 8px;
+    }
+
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .related-card {
+      display: block;
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      color: var(--text);
+      box-shadow: var(--shadow);
+    }
+
+    .related-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .related-card span {
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    footer {
+      margin-top: 40px;
+      border-top: 1px solid rgba(219, 227, 240, 0.9);
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .footer-inner {
+      padding: 24px 0 40px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .layout,
+      .related-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .container {
+        width: min(100% - 24px, 1160px);
+      }
+
+      .form-grid,
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 28px;
+      }
+
+      .card-header,
+      .card-body,
+      .hero-box {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .info-row {
+        flex-direction: column;
+        gap: 6px;
+      }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebApplication",
+    "name":"Kalkulačka minimální prodejní ceny",
+    "url":"https://rychlevypocty.cz/minimalni-prodejni-cena-kalkulacka.html",
+    "applicationCategory":"BusinessApplication",
+    "operatingSystem":"Any",
+    "description":"Online kalkulačka pro výpočet minimální prodejní ceny podle nákladů, provizí, DPH a cílové marže.",
+    "offers":{
+      "@type":"Offer",
+      "price":"0",
+      "priceCurrency":"CZK"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"Co je minimální prodejní cena?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Minimální prodejní cena je nejnižší cena, za kterou můžete produkt nebo službu prodávat, aniž byste šli pod požadovanou hranici nákladů nebo pod cílovou marži."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Jak se minimální prodejní cena počítá?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Výpočet vychází z přímých nákladů, dalších jednotkových nákladů, provizí, poplatků a případně požadované marže. Pokud se cena zobrazuje s DPH, připočítává se na závěr i odpovídající sazba DPH."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Je minimální prodejní cena totéž co běžná prodejní cena?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Ne. Minimální prodejní cena ukazuje dolní hranici. Reálná prodejní cena může být vyšší podle trhu, konkurence, značky, marketingu a obchodní strategie."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="/">Rychlé<span>Výpočty</span>.cz</a>
+      <nav class="topnav" aria-label="Hlavní navigace">
+        <a href="/">Domů</a>
+        <a href="/kalkulacka-marze-a-prirazky.html">Marže a přirážka</a>
+        <a href="/dph-kalkulacka.html">DPH kalkulačka</a>
+        <a href="/bod-zvratu-kalkulacka.html">Bod zvratu</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumbs">
+          <a href="/">RychléVýpočty.cz</a> / Kalkulačka minimální prodejní ceny
+        </div>
+
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <h1>Kalkulačka minimální prodejní ceny</h1>
+            <p>Spočítejte si minimální prodejní cenu produktu nebo služby podle přímých nákladů, dalších jednotkových výdajů, provize, fixních nákladů přepočtených na kus a požadované marže. Kalkulačka pomůže rychle zjistit, pod jakou cenu už prodej přestává dávat smysl.</p>
+            <p>Hodí se pro e-shopy, freelancery, malé firmy i každého, kdo potřebuje nastavit cenu prakticky a bez zbytečného tipování.</p>
+
+            <div class="hero-points">
+              <div class="hero-pill">Minimální cena bez DPH</div>
+              <div class="hero-pill">Minimální cena s DPH</div>
+              <div class="hero-pill">Krytí nákladů a marže</div>
+              <div class="hero-pill">Rychlá cenotvorba</div>
+            </div>
+          </div>
+
+          <div class="hero-box">
+            <h2>Co kalkulačka umí</h2>
+            <p>Ukáže minimální cenu potřebnou pro pokrytí nákladů a případně i cílové marže. Zvládne počítat s provizemi z prodeje, fixními náklady na kus i DPH, takže je výsledek použitelnější než jednoduchý součet nákladů.</p>
+            <p>Je to praktický tool pro základní cenotvorbu, rychlé rozhodování i kontrolu, zda zvolená cena dává ekonomicky smysl.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container layout">
+      <div class="card">
+        <div class="card-header">
+          <h2>Zadání pro výpočet</h2>
+          <p>Vyplňte náklady, poplatky a požadovanou marži. Kalkulačka automaticky dopočítá minimální cenu.</p>
+        </div>
+        <div class="card-body">
+          <form id="pricingForm">
+            <div class="form-grid">
+              <div class="field">
+                <label for="directCosts">Přímé náklady na kus (Kč)</label>
+                <input type="number" id="directCosts" min="0" step="0.01" value="350" inputmode="decimal">
+                <small>Například materiál, nákupní cena, výroba nebo čas přepočtený na kus.</small>
+              </div>
+
+              <div class="field">
+                <label for="extraCosts">Další jednotkové náklady (Kč)</label>
+                <input type="number" id="extraCosts" min="0" step="0.01" value="45" inputmode="decimal">
+                <small>Například balení, doprava, administrace nebo drobné provozní náklady.</small>
+              </div>
+
+              <div class="field">
+                <label for="fixedCostsPerUnit">Fixní náklady na kus (Kč)</label>
+                <input type="number" id="fixedCostsPerUnit" min="0" step="0.01" value="30" inputmode="decimal">
+                <small>Orientační podíl fixních nákladů přepočtený na jeden prodaný kus.</small>
+              </div>
+
+              <div class="field">
+                <label for="commissionPercent">Provize nebo poplatek z ceny (%)</label>
+                <input type="number" id="commissionPercent" min="0" max="95" step="0.1" value="12" inputmode="decimal">
+                <small>Například marketplace provize, platební brána nebo obchodní zastoupení.</small>
+              </div>
+
+              <div class="field">
+                <label for="targetMargin">Požadovaná marže (%)</label>
+                <input type="number" id="targetMargin" min="0" max="90" step="0.1" value="20" inputmode="decimal">
+                <small>Požadovaná marže z prodejní ceny bez DPH.</small>
+              </div>
+
+              <div class="field">
+                <label for="vatRate">Sazba DPH (%)</label>
+                <select id="vatRate">
+                  <option value="0">Bez DPH</option>
+                  <option value="12">12 %</option>
+                  <option value="21" selected>21 %</option>
+                </select>
+                <small>DPH se připočte až k ceně bez DPH.</small>
+              </div>
+
+              <div class="field">
+                <label for="priceMode">Režim výpočtu</label>
+                <select id="priceMode">
+                  <option value="margin" selected>Pokrýt náklady + cílová marže</option>
+                  <option value="breakeven">Pouze pokrýt náklady</option>
+                </select>
+                <small>V režimu break-even se cílová marže ignoruje.</small>
+              </div>
+
+              <div class="field">
+                <label for="currentPrice">Vaše aktuální cena bez DPH (Kč)</label>
+                <input type="number" id="currentPrice" min="0" step="0.01" value="620" inputmode="decimal">
+                <small>Volitelné pro rychlé porovnání s vypočteným minimem.</small>
+              </div>
+
+              <div class="actions full">
+                <button type="submit" class="btn-primary">Spočítat minimální cenu</button>
+                <button type="button" class="btn-secondary" id="resetBtn">Obnovit výchozí hodnoty</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>Výsledek výpočtu</h2>
+          <p>Přehled minimální ceny a rozpadu hlavních nákladových složek.</p>
+        </div>
+        <div class="card-body">
+          <div class="results-grid">
+            <div class="result-box highlight">
+              <div class="result-label">Minimální cena bez DPH</div>
+              <div class="result-value" id="minPriceNet">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Minimální cena s DPH</div>
+              <div class="result-value" id="minPriceGross">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Cílová marže v Kč</div>
+              <div class="result-value" id="marginAmount">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Rozdíl oproti aktuální ceně</div>
+              <div class="result-value" id="priceDifference">0 Kč</div>
+            </div>
+          </div>
+
+          <div id="statusBadge" class="badge success">Aktuální nastavení ceny vypadá bezpečně</div>
+
+          <div class="info-list">
+            <div class="info-row">
+              <span>Celkové náklady na kus</span>
+              <strong id="totalCosts">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Provize v Kč při minimální ceně</span>
+              <strong id="commissionAmount">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>DPH v Kč</span>
+              <strong id="vatAmount">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Aktuální cena bez DPH</span>
+              <strong id="currentPriceResult">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Aktuální cena s DPH</span>
+              <strong id="currentPriceGrossResult">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Reálná marže při aktuální ceně</span>
+              <strong id="actualMarginResult">0 %</strong>
+            </div>
+          </div>
+
+          <div class="note" id="interpretationNote">
+            Výpočet je orientační a slouží jako praktická pomůcka pro cenotvorbu. Reálná prodejní cena může být vyšší podle trhu, konkurence, značky, poptávky nebo obchodní strategie.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="card">
+        <div class="card-header">
+          <h3>Přehled výpočtu minimální ceny</h3>
+          <p>Souhrn hlavních složek, které vstupují do cenotvorby.</p>
+        </div>
+        <div class="card-body">
+          <div class="table-wrap">
+            <table aria-label="Přehled minimální prodejní ceny">
+              <thead>
+                <tr>
+                  <th>Položka</th>
+                  <th>Hodnota</th>
+                  <th>Význam</th>
+                </tr>
+              </thead>
+              <tbody id="summaryTableBody">
+                <tr>
+                  <td>Celkové náklady na kus</td>
+                  <td>0 Kč</td>
+                  <td>Součet nákladových složek bez provize</td>
+                </tr>
+                <tr>
+                  <td>Provize</td>
+                  <td>0 Kč</td>
+                  <td>Proměnlivý poplatek z prodejní ceny</td>
+                </tr>
+                <tr>
+                  <td>Požadovaná marže</td>
+                  <td>0 Kč</td>
+                  <td>Rezerva nad náklady podle zvoleného cíle</td>
+                </tr>
+                <tr>
+                  <td>Minimální cena bez DPH</td>
+                  <td>0 Kč</td>
+                  <td>Dolní hranice prodejní ceny</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container content-section">
+      <h2>Jak kalkulačka minimální prodejní ceny funguje</h2>
+      <p>Kalkulačka vychází z přímých nákladů, dalších jednotkových výdajů, fixních nákladů přepočtených na kus a případné provize z prodeje. Podle zvoleného režimu pak buď dopočítá cenu potřebnou pouze pro pokrytí nákladů, nebo cenu potřebnou i pro dosažení zadané marže.</p>
+
+      <h3>Co je minimální prodejní cena</h3>
+      <p>Minimální prodejní cena je dolní hranice, pod kterou už prodej ekonomicky přestává dávat smysl. Užitečná je hlavně při cenotvorbě, kontrole slev, nastavování ceníku nebo vyhodnocování, jestli konkrétní nabídka není příliš nízko.</p>
+
+      <h3>Kdy se kalkulačka hodí</h3>
+      <ul>
+        <li>při nastavování ceníku produktu nebo služby,</li>
+        <li>při kontrole, zda sleva ještě dává smysl,</li>
+        <li>při prodeji přes marketplace s provizí,</li>
+        <li>při rozhodování, jestli aktuální cena skutečně nese požadovanou marži.</li>
+      </ul>
+
+      <h3>Proč nestačí jen sečíst náklady</h3>
+      <p>U jednoduchého součtu nákladů často uniká provize z prodeje, DPH nebo požadovaná rezerva pro zisk. Výsledkem může být cena, která vypadá dobře na první pohled, ale ve skutečnosti je příliš nízká. Tahle kalkulačka proto pracuje praktičtěji a počítá i s těmito prvky.</p>
+
+      <h3>Jak výsledek správně číst</h3>
+      <p>Minimální cena bez DPH je hlavní pracovní hodnota pro cenotvorbu. Cena s DPH je užitečná pro finální komunikaci směrem k zákazníkovi. Pokud je vaše aktuální cena pod vypočtenou minimální hodnotou, pravděpodobně prodáváte příliš levně vzhledem k zadaným nákladům a cíli.</p>
+    </section>
+
+    <section class="container content-section">
+      <h2>Na co si dát při cenotvorbě pozor</h2>
+      <p>Kalkulačka neřeší vše. Reálnou cenu ovlivňuje také konkurence, pozice značky, sezónnost, vratky, reklamace, marketing nebo objem prodeje. Přesto je minimální prodejní cena velmi důležitý základ, bez kterého se cenotvorba často mění v odhad bez kontroly ekonomiky.</p>
+      <p>Pro rozumné rozhodování je dobré minimální cenu kombinovat s pohledem na marži, DPH a bod zvratu. Právě tím vzniká praktičtější business rozhodování místo pouhého nastavování ceny odhadem.</p>
+    </section>
+
+    <section class="container content-section">
+      <h2>Související kalkulačky</h2>
+      <div class="related-grid">
+        <a class="related-card" href="/kalkulacka-marze-a-prirazky.html">
+          <strong>Kalkulačka marže a přirážky</strong>
+          <span>Rychlý výpočet marže, přirážky a převodu mezi oběma pohledy.</span>
+        </a>
+
+        <a class="related-card" href="/dph-kalkulacka.html">
+          <strong>DPH kalkulačka</strong>
+          <span>Výpočet ceny bez DPH, s DPH i samotné částky daně.</span>
+        </a>
+
+        <a class="related-card" href="/bod-zvratu-kalkulacka.html">
+          <strong>Bod zvratu kalkulačka</strong>
+          <span>Spočítejte, kolik kusů nebo jaký obrat je potřeba pro pokrytí fixních nákladů.</span>
+        </a>
+
+        <a class="related-card" href="/kalkulacka-provize.html">
+          <strong>Kalkulačka provize</strong>
+          <span>Výpočet provize z obratu, ceny nebo obchodního výsledku.</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      © 2026 RychléVýpočty.cz — online kalkulačky a praktické výpočty pro každodenní použití.
+    </div>
+  </footer>
+
+  <script>
+    const form = document.getElementById('pricingForm');
+    const resetBtn = document.getElementById('resetBtn');
+
+    const outputs = {
+      minPriceNet: document.getElementById('minPriceNet'),
+      minPriceGross: document.getElementById('minPriceGross'),
+      marginAmount: document.getElementById('marginAmount'),
+      priceDifference: document.getElementById('priceDifference'),
+      totalCosts: document.getElementById('totalCosts'),
+      commissionAmount: document.getElementById('commissionAmount'),
+      vatAmount: document.getElementById('vatAmount'),
+      currentPriceResult: document.getElementById('currentPriceResult'),
+      currentPriceGrossResult: document.getElementById('currentPriceGrossResult'),
+      actualMarginResult: document.getElementById('actualMarginResult'),
+      statusBadge: document.getElementById('statusBadge'),
+      interpretationNote: document.getElementById('interpretationNote'),
+      summaryTableBody: document.getElementById('summaryTableBody')
+    };
+
+    function formatCurrency(value) {
+      return new Intl.NumberFormat('cs-CZ', {
+        style: 'currency',
+        currency: 'CZK',
+        maximumFractionDigits: 0
+      }).format(value);
+    }
+
+    function formatCurrencyPrecise(value) {
+      return new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2
+      }).format(value) + ' Kč';
+    }
+
+    function formatPercent(value) {
+      return new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 1
+      }).format(value) + ' %';
+    }
+
+    function getValues() {
+      return {
+        directCosts: Number(document.getElementById('directCosts').value),
+        extraCosts: Number(document.getElementById('extraCosts').value),
+        fixedCostsPerUnit: Number(document.getElementById('fixedCostsPerUnit').value),
+        commissionPercent: Number(document.getElementById('commissionPercent').value),
+        targetMargin: Number(document.getElementById('targetMargin').value),
+        vatRate: Number(document.getElementById('vatRate').value),
+        priceMode: document.getElementById('priceMode').value,
+        currentPrice: Number(document.getElementById('currentPrice').value)
+      };
+    }
+
+    function validate(values) {
+      if (Number.isNaN(values.directCosts) || values.directCosts < 0) return 'Zadejte platné přímé náklady.';
+      if (Number.isNaN(values.extraCosts) || values.extraCosts < 0) return 'Zadejte platné další jednotkové náklady.';
+      if (Number.isNaN(values.fixedCostsPerUnit) || values.fixedCostsPerUnit < 0) return 'Zadejte platné fixní náklady na kus.';
+      if (Number.isNaN(values.commissionPercent) || values.commissionPercent < 0 || values.commissionPercent >= 100) return 'Zadejte platnou provizi v procentech.';
+      if (Number.isNaN(values.targetMargin) || values.targetMargin < 0 || values.targetMargin >= 100) return 'Zadejte platnou cílovou marži.';
+      if (Number.isNaN(values.currentPrice) || values.currentPrice < 0) return 'Zadejte platnou aktuální cenu.';
+      if (values.priceMode === 'margin' && (values.commissionPercent + values.targetMargin >= 100)) return 'Součet provize a cílové marže musí být nižší než 100 %.';
+      if (values.priceMode === 'breakeven' && values.commissionPercent >= 100) return 'Provize musí být nižší než 100 %.';
+      return '';
+    }
+
+    function calculatePricing(values) {
+      const totalCosts = values.directCosts + values.extraCosts + values.fixedCostsPerUnit;
+      const commissionRate = values.commissionPercent / 100;
+      const marginRate = values.priceMode === 'margin' ? values.targetMargin / 100 : 0;
+      const minPriceNet = totalCosts / (1 - commissionRate - marginRate);
+      const commissionAmount = minPriceNet * commissionRate;
+      const marginAmount = minPriceNet * marginRate;
+      const vatAmount = minPriceNet * (values.vatRate / 100);
+      const minPriceGross = minPriceNet + vatAmount;
+
+      const currentCommission = values.currentPrice * commissionRate;
+      const currentProfit = values.currentPrice - totalCosts - currentCommission;
+      const actualMargin = values.currentPrice > 0 ? (currentProfit / values.currentPrice) * 100 : 0;
+      const currentPriceGross = values.currentPrice * (1 + values.vatRate / 100);
+      const priceDifference = values.currentPrice - minPriceNet;
+
+      return {
+        totalCosts,
+        minPriceNet,
+        minPriceGross,
+        commissionAmount,
+        marginAmount,
+        vatAmount,
+        currentPriceGross,
+        actualMargin,
+        priceDifference,
+        currentProfit
+      };
+    }
+
+    function renderTable(result, values) {
+      outputs.summaryTableBody.innerHTML = `
+        <tr>
+          <td>Celkové náklady na kus</td>
+          <td>${formatCurrency(result.totalCosts)}</td>
+          <td>Součet nákladových složek bez provize</td>
+        </tr>
+        <tr>
+          <td>Provize</td>
+          <td>${formatCurrency(result.commissionAmount)}</td>
+          <td>Proměnlivý poplatek z prodejní ceny</td>
+        </tr>
+        <tr>
+          <td>Požadovaná marže</td>
+          <td>${formatCurrency(result.marginAmount)}</td>
+          <td>Rezerva nad náklady podle zvoleného cíle</td>
+        </tr>
+        <tr>
+          <td>Minimální cena bez DPH</td>
+          <td>${formatCurrency(result.minPriceNet)}</td>
+          <td>Dolní hranice prodejní ceny</td>
+        </tr>
+      `;
+    }
+
+    function getInterpretation(values, result) {
+      if (values.currentPrice === 0) {
+        return 'Výsledek ukazuje dolní hranici ceny podle zadaných nákladů, provize a cílové marže. Pro reálné nastavení ceny je vhodné přidat i pohled na trh, konkurenci a vnímanou hodnotu nabídky.';
+      }
+
+      if (result.priceDifference < 0) {
+        return 'Vaše aktuální cena je pod vypočtenou minimální hranicí. To znamená, že při zadaných nákladech a cíli pravděpodobně prodáváte příliš levně a cena by si zasloužila revizi.';
+      }
+
+      if (result.priceDifference < result.minPriceNet * 0.1) {
+        return 'Vaše aktuální cena je jen mírně nad vypočteným minimem. Provoz je sice teoreticky udržitelný, ale prostor pro chyby, slevy nebo nečekané náklady je poměrně malý.';
+      }
+
+      return 'Vaše aktuální cena je nad vypočteným minimem s rozumnou rezervou. To je zdravější výchozí pozice pro slevy, akce, změny nákladů nebo tlak konkurence.';
+    }
+
+    function render(values, result) {
+      outputs.minPriceNet.textContent = formatCurrency(result.minPriceNet);
+      outputs.minPriceGross.textContent = formatCurrency(result.minPriceGross);
+      outputs.marginAmount.textContent = formatCurrency(result.marginAmount);
+      outputs.priceDifference.textContent = formatCurrency(result.priceDifference);
+      outputs.totalCosts.textContent = formatCurrency(result.totalCosts);
+      outputs.commissionAmount.textContent = formatCurrency(result.commissionAmount);
+      outputs.vatAmount.textContent = formatCurrency(result.vatAmount);
+      outputs.currentPriceResult.textContent = formatCurrency(values.currentPrice);
+      outputs.currentPriceGrossResult.textContent = formatCurrency(result.currentPriceGross);
+      outputs.actualMarginResult.textContent = formatPercent(result.actualMargin);
+      outputs.interpretationNote.textContent = getInterpretation(values, result);
+
+      if (values.currentPrice > 0 && values.currentPrice < result.minPriceNet) {
+        outputs.statusBadge.className = 'badge warning';
+        outputs.statusBadge.textContent = 'Aktuální cena je pod vypočteným minimem';
+      } else if (values.currentPrice > 0 && values.currentPrice < result.minPriceNet * 1.1) {
+        outputs.statusBadge.className = 'badge warning';
+        outputs.statusBadge.textContent = 'Cena je jen těsně nad minimem';
+      } else {
+        outputs.statusBadge.className = 'badge success';
+        outputs.statusBadge.textContent = 'Aktuální nastavení ceny vypadá bezpečně';
+      }
+
+      renderTable(result, values);
+    }
+
+    function runCalculation() {
+      const values = getValues();
+      const error = validate(values);
+
+      if (error) {
+        alert(error);
+        return;
+      }
+
+      const result = calculatePricing(values);
+      render(values, result);
+    }
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      runCalculation();
+    });
+
+    ['directCosts', 'extraCosts', 'fixedCostsPerUnit', 'commissionPercent', 'targetMargin', 'vatRate', 'priceMode', 'currentPrice'].forEach(id => {
+      document.getElementById(id).addEventListener('input', runCalculation);
+      document.getElementById(id).addEventListener('change', runCalculation);
+    });
+
+    resetBtn.addEventListener('click', function() {
+      document.getElementById('directCosts').value = 350;
+      document.getElementById('extraCosts').value = 45;
+      document.getElementById('fixedCostsPerUnit').value = 30;
+      document.getElementById('commissionPercent').value = 12;
+      document.getElementById('targetMargin').value = 20;
+      document.getElementById('vatRate').value = 21;
+      document.getElementById('priceMode').value = 'margin';
+      document.getElementById('currentPrice').value = 620;
+      runCalculation();
+    });
+
+    runCalculation();
+  </script>
+</body>
+</html>
