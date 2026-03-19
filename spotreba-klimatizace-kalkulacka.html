@@ -1,1 +1,1104 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <title>Kalkulačka spotřeby klimatizace online zdarma | RychléVýpočty.cz</title>
+  <meta name="description" content="Spočítejte si spotřebu klimatizace a orientační náklady na provoz. Přehledná online kalkulačka pro výpočet kWh a ceny za hodinu, den, měsíc i sezónu podle příkonu a doby používání.">
+  <meta name="keywords" content="spotřeba klimatizace kalkulačka, kalkulačka klimatizace, kolik stojí klimatizace, spotřeba klimy, provoz klimatizace cena, klimatizace kWh">
+  <meta name="author" content="RychléVýpočty.cz">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://rychlevypocty.cz/spotreba-klimatizace-kalkulacka.html">
+
+  <meta property="og:title" content="Kalkulačka spotřeby klimatizace online zdarma | RychléVýpočty.cz">
+  <meta property="og:description" content="Rychlý výpočet spotřeby klimatizace a orientačních nákladů na provoz podle příkonu a času používání.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rychlevypocty.cz/spotreba-klimatizace-kalkulacka.html">
+  <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Kalkulačka spotřeby klimatizace online zdarma | RychléVýpočty.cz">
+  <meta name="twitter:description" content="Zjistěte spotřebu klimatizace a cenu provozu za hodinu, den, měsíc i sezónu.">
+
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #5f6b85;
+      --primary: #2152ff;
+      --primary-dark: #183dbf;
+      --border: #dbe3f0;
+      --success: #138a4b;
+      --warning: #b66a00;
+      --shadow: 0 12px 32px rgba(20, 32, 70, 0.08);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #f7f9fd 0%, #eef3fb 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      padding: 18px 0;
+      border-bottom: 1px solid rgba(219, 227, 240, 0.8);
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+      line-height: 1;
+    }
+
+    .brand span {
+      color: var(--primary);
+    }
+
+    .topnav {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      font-size: 0.97rem;
+    }
+
+    .topnav a {
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .topnav a:hover {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    .hero {
+      padding: 42px 0 20px;
+    }
+
+    .breadcrumbs {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .hero-copy h1 {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      margin: 0 0 16px;
+    }
+
+    .hero-copy p {
+      margin: 0 0 16px;
+      font-size: 1.06rem;
+      color: var(--muted);
+      max-width: 720px;
+    }
+
+    .hero-points {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .hero-pill {
+      background: rgba(33, 82, 255, 0.08);
+      color: var(--primary-dark);
+      border: 1px solid rgba(33, 82, 255, 0.12);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .hero-box {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-box h2 {
+      margin: 0 0 10px;
+      font-size: 1.2rem;
+    }
+
+    .hero-box p {
+      margin: 0 0 14px;
+      color: var(--muted);
+    }
+
+    .hero-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.04fr 0.96fr;
+      gap: 28px;
+      align-items: start;
+      padding: 22px 0 32px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .card-header {
+      padding: 24px 24px 10px;
+    }
+
+    .card-header h2,
+    .card-header h3 {
+      margin: 0 0 8px;
+      font-size: 1.3rem;
+      letter-spacing: -0.02em;
+    }
+
+    .card-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .card-body {
+      padding: 20px 24px 24px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field label {
+      font-weight: 700;
+      font-size: 0.96rem;
+    }
+
+    .field small {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: -2px;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      padding: 14px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      font-size: 1rem;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      outline: none;
+      border-color: rgba(33, 82, 255, 0.45);
+      box-shadow: 0 0 0 4px rgba(33, 82, 255, 0.10);
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.06s ease, background 0.15s ease, opacity 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background: #eef3ff;
+      color: var(--primary-dark);
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .result-box {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+
+    .result-label {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .result-value {
+      font-size: clamp(1.15rem, 2.1vw, 1.85rem);
+      line-height: 1.15;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .highlight {
+      background: linear-gradient(180deg, #eef7ff 0%, #f9fcff 100%);
+      border-color: rgba(33, 82, 255, 0.18);
+    }
+
+    .info-list {
+      display: grid;
+      gap: 12px;
+      margin: 18px 0 0;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid #edf2fa;
+    }
+
+    .info-row:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .info-row span:first-child {
+      color: var(--muted);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+
+    .badge.success {
+      background: rgba(19, 138, 75, 0.10);
+      color: var(--success);
+    }
+
+    .badge.warning {
+      background: rgba(182, 106, 0, 0.11);
+      color: var(--warning);
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 18px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 640px;
+      background: #fff;
+    }
+
+    th, td {
+      padding: 14px 14px;
+      text-align: left;
+      border-bottom: 1px solid #edf2fa;
+      font-size: 0.96rem;
+    }
+
+    th {
+      background: #f8fbff;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .note {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1px solid #e7edf7;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .content-section {
+      padding: 8px 0 8px;
+    }
+
+    .content-section h2 {
+      font-size: 1.7rem;
+      letter-spacing: -0.03em;
+      margin: 0 0 14px;
+    }
+
+    .content-section h3 {
+      font-size: 1.15rem;
+      margin: 28px 0 10px;
+    }
+
+    .content-section p {
+      color: var(--muted);
+      margin: 0 0 14px;
+    }
+
+    .content-section ul {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    .content-section li {
+      margin-bottom: 8px;
+    }
+
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .related-card {
+      display: block;
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      color: var(--text);
+      box-shadow: var(--shadow);
+    }
+
+    .related-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .related-card span {
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    footer {
+      margin-top: 40px;
+      border-top: 1px solid rgba(219, 227, 240, 0.9);
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .footer-inner {
+      padding: 24px 0 40px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .layout,
+      .related-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .container {
+        width: min(100% - 24px, 1160px);
+      }
+
+      .form-grid,
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 28px;
+      }
+
+      .card-header,
+      .card-body,
+      .hero-box {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .info-row {
+        flex-direction: column;
+        gap: 6px;
+      }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebApplication",
+    "name":"Kalkulačka spotřeby klimatizace",
+    "url":"https://rychlevypocty.cz/spotreba-klimatizace-kalkulacka.html",
+    "applicationCategory":"UtilitiesApplication",
+    "operatingSystem":"Any",
+    "description":"Online kalkulačka pro výpočet spotřeby klimatizace a orientačních nákladů na provoz podle příkonu, času používání a ceny elektřiny.",
+    "offers":{
+      "@type":"Offer",
+      "price":"0",
+      "priceCurrency":"CZK"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"Jak se počítá spotřeba klimatizace?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Spotřeba klimatizace se orientačně počítá z příkonu zařízení, doby používání a ceny elektřiny za kWh. Výsledek lze přepočítat na hodinu, den, měsíc i delší období."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Je klimatizace drahá na provoz?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Záleží na příkonu, době používání, režimu provozu a ceně elektřiny. Modernější klimatizace bývají úspornější, ale při častém používání v létě se náklady mohou nasčítat."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Je výpočet přesný?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Výpočet je orientační. Skutečná spotřeba závisí na venkovní teplotě, nastavené teplotě, účinnosti zařízení, velikosti místnosti a reálném způsobu používání."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="/">Rychlé<span>Výpočty</span>.cz</a>
+      <nav class="topnav" aria-label="Hlavní navigace">
+        <a href="/">Domů</a>
+        <a href="/spotreba-elektriny-kalkulacka.html">Spotřeba elektřiny</a>
+        <a href="/led-uspora-elektriny-kalkulacka.html">LED úspora</a>
+        <a href="/navratnost-fotovoltaiky-kalkulacka.html">Fotovoltaika</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumbs">
+          <a href="/">RychléVýpočty.cz</a> / Kalkulačka spotřeby klimatizace
+        </div>
+
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <h1>Kalkulačka spotřeby klimatizace</h1>
+            <p>Spočítejte si orientační spotřebu klimatizace a cenu jejího provozu. Kalkulačka ukáže náklady za hodinu, den, měsíc i celou sezónu podle příkonu, doby používání a ceny elektřiny.</p>
+            <p>Hodí se pro domácnosti, kanceláře i byty, kde chcete rychle zjistit, jak se klimatizace projeví na účtu za elektřinu a jak se liší různé scénáře používání.</p>
+
+            <div class="hero-points">
+              <div class="hero-pill">Cena za hodinu</div>
+              <div class="hero-pill">Cena za den</div>
+              <div class="hero-pill">Cena za měsíc</div>
+              <div class="hero-pill">Cena za sezónu</div>
+            </div>
+          </div>
+
+          <div class="hero-box">
+            <h2>Co kalkulačka umí</h2>
+            <p>Rychle přepočítá příkon klimatizace na spotřebu v kWh a orientační cenu provozu. Umí zohlednit počet hodin denně, počet dnů v měsíci i délku celé sezóny.</p>
+            <p>Je to praktický nástroj pro domácí orientaci i pro porovnání úspornějšího a intenzivnějšího režimu používání.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container layout">
+      <div class="card">
+        <div class="card-header">
+          <h2>Zadání pro výpočet</h2>
+          <p>Vyplňte základní údaje o klimatizaci a způsobu používání. Výsledek se ihned přepočítá.</p>
+        </div>
+        <div class="card-body">
+          <form id="acForm">
+            <div class="form-grid">
+              <div class="field">
+                <label for="acPower">Příkon klimatizace (W)</label>
+                <input type="number" id="acPower" min="1" step="1" value="1200" inputmode="numeric">
+                <small>Například 800 až 2000 W podle typu a výkonu zařízení.</small>
+              </div>
+
+              <div class="field">
+                <label for="hoursPerDay">Použití za den (hodiny)</label>
+                <input type="number" id="hoursPerDay" min="0.1" step="0.1" value="6" inputmode="decimal">
+                <small>Kolik hodin denně klimatizace běží.</small>
+              </div>
+
+              <div class="field">
+                <label for="daysPerMonth">Počet dnů v měsíci</label>
+                <input type="number" id="daysPerMonth" min="1" step="1" value="30" inputmode="numeric">
+                <small>Pro běžný měsíční přepočet.</small>
+              </div>
+
+              <div class="field">
+                <label for="seasonDays">Počet dnů sezóny</label>
+                <input type="number" id="seasonDays" min="1" step="1" value="90" inputmode="numeric">
+                <small>Například délka letní sezóny používání.</small>
+              </div>
+
+              <div class="field">
+                <label for="pricePerKwh">Cena elektřiny za kWh (Kč)</label>
+                <input type="number" id="pricePerKwh" min="0" step="0.01" value="6.50" inputmode="decimal">
+                <small>Orientační celková cena elektřiny včetně dalších složek.</small>
+              </div>
+
+              <div class="field">
+                <label for="usageMode">Režim používání</label>
+                <select id="usageMode">
+                  <option value="eco">Úspornější režim</option>
+                  <option value="standard" selected>Běžný režim</option>
+                  <option value="intense">Intenzivní používání</option>
+                  <option value="custom">Vlastní nastavení</option>
+                </select>
+                <small>Pomůže rychle nastavit typický scénář hodin provozu.</small>
+              </div>
+
+              <div class="field">
+                <label for="efficiencyFactor">Koeficient reálného zatížení (%)</label>
+                <input type="number" id="efficiencyFactor" min="10" max="100" step="1" value="75" inputmode="numeric">
+                <small>Klimatizace neběží vždy na plný příkon. Tímto upravíte reálnou zátěž.</small>
+              </div>
+
+              <div class="field">
+                <label for="standbyPower">Příkon ve standby (W)</label>
+                <input type="number" id="standbyPower" min="0" step="0.1" value="2" inputmode="decimal">
+                <small>Volitelné. Spotřeba mimo aktivní chlazení.</small>
+              </div>
+
+              <div class="actions full">
+                <button type="submit" class="btn-primary">Spočítat spotřebu klimatizace</button>
+                <button type="button" class="btn-secondary" id="resetBtn">Obnovit výchozí hodnoty</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>Výsledek výpočtu</h2>
+          <p>Přehled spotřeby a orientačních nákladů klimatizace.</p>
+        </div>
+        <div class="card-body">
+          <div class="results-grid">
+            <div class="result-box highlight">
+              <div class="result-label">Cena za den</div>
+              <div class="result-value" id="dailyCostResult">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Cena za měsíc</div>
+              <div class="result-value" id="monthlyCostResult">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Cena za sezónu</div>
+              <div class="result-value" id="seasonCostResult">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Spotřeba za sezónu</div>
+              <div class="result-value" id="seasonConsumptionResult">0 kWh</div>
+            </div>
+          </div>
+
+          <div id="statusBadge" class="badge success">Provoz klimatizace je v běžném rozsahu</div>
+
+          <div class="info-list">
+            <div class="info-row">
+              <span>Spotřeba za hodinu</span>
+              <strong id="hourlyConsumptionResult">0 kWh</strong>
+            </div>
+            <div class="info-row">
+              <span>Cena za hodinu</span>
+              <strong id="hourlyCostResult">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Spotřeba za den</span>
+              <strong id="dailyConsumptionResult">0 kWh</strong>
+            </div>
+            <div class="info-row">
+              <span>Spotřeba za měsíc</span>
+              <strong id="monthlyConsumptionResult">0 kWh</strong>
+            </div>
+            <div class="info-row">
+              <span>Reálný používaný příkon</span>
+              <strong id="effectivePowerResult">0 W</strong>
+            </div>
+            <div class="info-row">
+              <span>Standby spotřeba za sezónu</span>
+              <strong id="standbySeasonResult">0 kWh</strong>
+            </div>
+          </div>
+
+          <div class="note" id="interpretationNote">
+            Výpočet je orientační. Reálné náklady ovlivňuje venkovní teplota, velikost místnosti, nastavená teplota, izolace a účinnost zařízení.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="card">
+        <div class="card-header">
+          <h3>Přehled nákladů klimatizace</h3>
+          <p>Souhrn hlavních hodnot pro hodinu, den, měsíc a sezónu.</p>
+        </div>
+        <div class="card-body">
+          <div class="table-wrap">
+            <table aria-label="Přehled spotřeby klimatizace">
+              <thead>
+                <tr>
+                  <th>Období</th>
+                  <th>Spotřeba</th>
+                  <th>Odhad ceny</th>
+                  <th>Poznámka</th>
+                </tr>
+              </thead>
+              <tbody id="summaryTableBody">
+                <tr>
+                  <td>Hodina</td>
+                  <td>0 kWh</td>
+                  <td>0 Kč</td>
+                  <td>Běžný hodinový provoz</td>
+                </tr>
+                <tr>
+                  <td>Den</td>
+                  <td>0 kWh</td>
+                  <td>0 Kč</td>
+                  <td>Podle zadaného počtu hodin</td>
+                </tr>
+                <tr>
+                  <td>Měsíc</td>
+                  <td>0 kWh</td>
+                  <td>0 Kč</td>
+                  <td>Orientační měsíční provoz</td>
+                </tr>
+                <tr>
+                  <td>Sezóna</td>
+                  <td>0 kWh</td>
+                  <td>0 Kč</td>
+                  <td>Součet za celé období používání</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container content-section">
+      <h2>Jak kalkulačka spotřeby klimatizace funguje</h2>
+      <p>Kalkulačka vychází z příkonu klimatizace, počtu hodin používání a ceny elektřiny. Pro realističtější odhad umožňuje upravit koeficient reálného zatížení, protože klimatizace obvykle neběží stále na plný výkon. Výsledek se přepočítává na den, měsíc i sezónu.</p>
+
+      <h3>Co kalkulačka počítá</h3>
+      <ul>
+        <li>spotřebu klimatizace za hodinu, den, měsíc a sezónu,</li>
+        <li>cenu provozu za různá období,</li>
+        <li>reálný používaný příkon podle zatížení,</li>
+        <li>volitelně i malou standby spotřebu mimo aktivní provoz.</li>
+      </ul>
+
+      <h3>Proč záleží na reálném zatížení</h3>
+      <p>Klimatizace se v praxi chová jinak než jednoduchý odporový spotřebič. Po dosažení požadované teploty výkon často kolísá, zařízení cykluje nebo přechází do úspornějšího režimu. Proto dává smysl pracovat s koeficientem zatížení, ne jen s maximálním štítkovým příkonem.</p>
+
+      <h3>Kdy bývá provoz dražší</h3>
+      <p>Náklady rostou hlavně tehdy, když klimatizace běží dlouho, místnost je špatně izolovaná, teplotní rozdíl je velký nebo je zařízení slabé vůči prostoru, který má chladit. Významnou roli hraje i cena elektřiny a délka sezóny.</p>
+
+      <h3>Jak výsledek správně číst</h3>
+      <p>Cena za hodinu je rychlá orientace. Cena za den, měsíc a sezónu je důležitější pro rozpočet. Právě sezónní pohled nejlépe ukáže, jak moc se klimatizace projeví na celkových nákladech domácnosti nebo kanceláře.</p>
+    </section>
+
+    <section class="container content-section">
+      <h2>Na co si dát pozor</h2>
+      <p>Skutečná spotřeba závisí na řadě faktorů: venkovní teplotě, nastavené teplotě v místnosti, velikosti prostoru, kvalitě izolace, poloze bytu či domu, typu klimatizace i její údržbě. Tato kalkulačka proto slouží hlavně jako praktický odhad, ne jako přesný měřicí nástroj.</p>
+      <p>Pro lepší představu je vhodné srovnat výsledek i s dalšími domácími spotřebiči a náklady na elektřinu, aby bylo vidět, kde má úspora největší efekt.</p>
+    </section>
+
+    <section class="container content-section">
+      <h2>Související kalkulačky</h2>
+      <div class="related-grid">
+        <a class="related-card" href="/spotreba-elektriny-kalkulacka.html">
+          <strong>Kalkulačka spotřeby elektřiny</strong>
+          <span>Obecný výpočet spotřeby a ceny provozu spotřebičů.</span>
+        </a>
+
+        <a class="related-card" href="/led-uspora-elektriny-kalkulacka.html">
+          <strong>Kalkulačka úspory při výměně za LED</strong>
+          <span>Porovnání nákladů a úspor u osvětlení.</span>
+        </a>
+
+        <a class="related-card" href="/navratnost-fotovoltaiky-kalkulacka.html">
+          <strong>Kalkulačka návratnosti fotovoltaiky</strong>
+          <span>Odhad návratnosti a úspor u domácí FVE.</span>
+        </a>
+
+        <a class="related-card" href="/spotreba-vody-a-naklady-kalkulacka.html">
+          <strong>Kalkulačka spotřeby vody a nákladů</strong>
+          <span>Další praktický pohled na provozní náklady domácnosti.</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      © 2026 RychléVýpočty.cz — online kalkulačky a praktické výpočty pro každodenní použití.
+    </div>
+  </footer>
+
+  <script>
+    const form = document.getElementById('acForm');
+    const resetBtn = document.getElementById('resetBtn');
+
+    const outputs = {
+      dailyCostResult: document.getElementById('dailyCostResult'),
+      monthlyCostResult: document.getElementById('monthlyCostResult'),
+      seasonCostResult: document.getElementById('seasonCostResult'),
+      seasonConsumptionResult: document.getElementById('seasonConsumptionResult'),
+      hourlyConsumptionResult: document.getElementById('hourlyConsumptionResult'),
+      hourlyCostResult: document.getElementById('hourlyCostResult'),
+      dailyConsumptionResult: document.getElementById('dailyConsumptionResult'),
+      monthlyConsumptionResult: document.getElementById('monthlyConsumptionResult'),
+      effectivePowerResult: document.getElementById('effectivePowerResult'),
+      standbySeasonResult: document.getElementById('standbySeasonResult'),
+      statusBadge: document.getElementById('statusBadge'),
+      interpretationNote: document.getElementById('interpretationNote'),
+      summaryTableBody: document.getElementById('summaryTableBody')
+    };
+
+    function formatCurrency(value) {
+      return new Intl.NumberFormat('cs-CZ', {
+        style: 'currency',
+        currency: 'CZK',
+        maximumFractionDigits: 0
+      }).format(value);
+    }
+
+    function formatKwh(value) {
+      return new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2
+      }).format(value) + ' kWh';
+    }
+
+    function formatWatts(value) {
+      return new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
+      }).format(value) + ' W';
+    }
+
+    function getValues() {
+      return {
+        acPower: Number(document.getElementById('acPower').value),
+        hoursPerDay: Number(document.getElementById('hoursPerDay').value),
+        daysPerMonth: Number(document.getElementById('daysPerMonth').value),
+        seasonDays: Number(document.getElementById('seasonDays').value),
+        pricePerKwh: Number(document.getElementById('pricePerKwh').value),
+        usageMode: document.getElementById('usageMode').value,
+        efficiencyFactor: Number(document.getElementById('efficiencyFactor').value),
+        standbyPower: Number(document.getElementById('standbyPower').value)
+      };
+    }
+
+    function applyUsageMode(values) {
+      if (values.usageMode === 'eco') {
+        values.hoursPerDay = 3;
+        values.efficiencyFactor = 60;
+        document.getElementById('hoursPerDay').value = 3;
+        document.getElementById('efficiencyFactor').value = 60;
+      } else if (values.usageMode === 'standard') {
+        values.hoursPerDay = 6;
+        values.efficiencyFactor = 75;
+        document.getElementById('hoursPerDay').value = 6;
+        document.getElementById('efficiencyFactor').value = 75;
+      } else if (values.usageMode === 'intense') {
+        values.hoursPerDay = 10;
+        values.efficiencyFactor = 90;
+        document.getElementById('hoursPerDay').value = 10;
+        document.getElementById('efficiencyFactor').value = 90;
+      }
+      return values;
+    }
+
+    function validate(values) {
+      if (!values.acPower || values.acPower <= 0) return 'Zadejte platný příkon klimatizace.';
+      if (!values.hoursPerDay || values.hoursPerDay <= 0) return 'Zadejte platný počet hodin používání za den.';
+      if (!values.daysPerMonth || values.daysPerMonth <= 0) return 'Zadejte platný počet dnů v měsíci.';
+      if (!values.seasonDays || values.seasonDays <= 0) return 'Zadejte platný počet dnů sezóny.';
+      if (Number.isNaN(values.pricePerKwh) || values.pricePerKwh < 0) return 'Zadejte platnou cenu elektřiny za kWh.';
+      if (Number.isNaN(values.efficiencyFactor) || values.efficiencyFactor <= 0 || values.efficiencyFactor > 100) return 'Zadejte platný koeficient reálného zatížení.';
+      if (Number.isNaN(values.standbyPower) || values.standbyPower < 0) return 'Zadejte platný standby příkon.';
+      return '';
+    }
+
+    function calculateConsumption(values) {
+      const effectivePower = values.acPower * (values.efficiencyFactor / 100);
+      const hourlyKwh = effectivePower / 1000;
+      const hourlyCost = hourlyKwh * values.pricePerKwh;
+
+      const dailyKwh = hourlyKwh * values.hoursPerDay;
+      const dailyCost = dailyKwh * values.pricePerKwh;
+
+      const monthlyKwh = dailyKwh * values.daysPerMonth;
+      const monthlyCost = monthlyKwh * values.pricePerKwh;
+
+      const activeSeasonKwh = dailyKwh * values.seasonDays;
+      const standbyHoursPerDay = Math.max(0, 24 - values.hoursPerDay);
+      const standbySeasonKwh = (values.standbyPower / 1000) * standbyHoursPerDay * values.seasonDays;
+      const seasonKwh = activeSeasonKwh + standbySeasonKwh;
+      const seasonCost = seasonKwh * values.pricePerKwh;
+
+      return {
+        effectivePower,
+        hourlyKwh,
+        hourlyCost,
+        dailyKwh,
+        dailyCost,
+        monthlyKwh,
+        monthlyCost,
+        activeSeasonKwh,
+        standbySeasonKwh,
+        seasonKwh,
+        seasonCost
+      };
+    }
+
+    function renderTable(result) {
+      outputs.summaryTableBody.innerHTML = `
+        <tr>
+          <td>Hodina</td>
+          <td>${formatKwh(result.hourlyKwh)}</td>
+          <td>${formatCurrency(result.hourlyCost)}</td>
+          <td>Běžný hodinový provoz</td>
+        </tr>
+        <tr>
+          <td>Den</td>
+          <td>${formatKwh(result.dailyKwh)}</td>
+          <td>${formatCurrency(result.dailyCost)}</td>
+          <td>Podle zadaného počtu hodin</td>
+        </tr>
+        <tr>
+          <td>Měsíc</td>
+          <td>${formatKwh(result.monthlyKwh)}</td>
+          <td>${formatCurrency(result.monthlyCost)}</td>
+          <td>Orientační měsíční provoz</td>
+        </tr>
+        <tr>
+          <td>Sezóna</td>
+          <td>${formatKwh(result.seasonKwh)}</td>
+          <td>${formatCurrency(result.seasonCost)}</td>
+          <td>Součet za celé období používání</td>
+        </tr>
+      `;
+    }
+
+    function getInterpretation(values, result) {
+      if (result.seasonCost > 5000) {
+        return 'Sezónní provoz klimatizace už vychází poměrně citelně. Dává smysl hlídat nastavenou teplotu, délku provozu a zbytečně nejet stále na vyšší výkon.';
+      }
+
+      if (result.seasonCost > 2000) {
+        return 'Náklady na klimatizaci jsou ve středním pásmu. Výsledek dává dobrý orientační základ pro porovnání s jinými domácími spotřebiči a pro optimalizaci používání.';
+      }
+
+      return 'Provoz klimatizace vychází spíše úsporně. To může znamenat nižší příkon, rozumný počet hodin provozu nebo střídmější používání během sezóny.';
+    }
+
+    function render(values, result) {
+      outputs.dailyCostResult.textContent = formatCurrency(result.dailyCost);
+      outputs.monthlyCostResult.textContent = formatCurrency(result.monthlyCost);
+      outputs.seasonCostResult.textContent = formatCurrency(result.seasonCost);
+      outputs.seasonConsumptionResult.textContent = formatKwh(result.seasonKwh);
+      outputs.hourlyConsumptionResult.textContent = formatKwh(result.hourlyKwh);
+      outputs.hourlyCostResult.textContent = formatCurrency(result.hourlyCost);
+      outputs.dailyConsumptionResult.textContent = formatKwh(result.dailyKwh);
+      outputs.monthlyConsumptionResult.textContent = formatKwh(result.monthlyKwh);
+      outputs.effectivePowerResult.textContent = formatWatts(result.effectivePower);
+      outputs.standbySeasonResult.textContent = formatKwh(result.standbySeasonKwh);
+      outputs.interpretationNote.textContent = getInterpretation(values, result);
+
+      if (result.seasonCost > 5000) {
+        outputs.statusBadge.className = 'badge warning';
+        outputs.statusBadge.textContent = 'Sezónní náklady klimatizace už jsou poměrně vyšší';
+      } else {
+        outputs.statusBadge.className = 'badge success';
+        outputs.statusBadge.textContent = 'Provoz klimatizace je v běžném rozsahu';
+      }
+
+      renderTable(result);
+    }
+
+    function runCalculation() {
+      let values = getValues();
+
+      if (values.usageMode !== 'custom') {
+        values = applyUsageMode(values);
+      }
+
+      const error = validate(values);
+      if (error) {
+        alert(error);
+        return;
+      }
+
+      const result = calculateConsumption(values);
+      render(values, result);
+    }
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      runCalculation();
+    });
+
+    ['acPower', 'hoursPerDay', 'daysPerMonth', 'seasonDays', 'pricePerKwh', 'usageMode', 'efficiencyFactor', 'standbyPower'].forEach(id => {
+      document.getElementById(id).addEventListener('input', function() {
+        if (id === 'hoursPerDay' || id === 'efficiencyFactor') {
+          document.getElementById('usageMode').value = 'custom';
+        }
+        runCalculation();
+      });
+      document.getElementById(id).addEventListener('change', function() {
+        if (id === 'hoursPerDay' || id === 'efficiencyFactor') {
+          document.getElementById('usageMode').value = 'custom';
+        }
+        runCalculation();
+      });
+    });
+
+    resetBtn.addEventListener('click', function() {
+      document.getElementById('acPower').value = 1200;
+      document.getElementById('hoursPerDay').value = 6;
+      document.getElementById('daysPerMonth').value = 30;
+      document.getElementById('seasonDays').value = 90;
+      document.getElementById('pricePerKwh').value = 6.50;
+      document.getElementById('usageMode').value = 'standard';
+      document.getElementById('efficiencyFactor').value = 75;
+      document.getElementById('standbyPower').value = 2;
+      runCalculation();
+    });
+
+    runCalculation();
+  </script>
+</body>
+</html>
