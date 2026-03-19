@@ -1,1 +1,1088 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <title>Kalkulačka obratu pro cílový zisk online zdarma | RychléVýpočty.cz</title>
+  <meta name="description" content="Spočítejte si, jaký obrat potřebujete pro dosažení cílového zisku. Přehledná online kalkulačka podle fixních nákladů, marže, variabilních nákladů a požadovaného výsledku.">
+  <meta name="keywords" content="obrat pro cílový zisk kalkulačka, kalkulačka cílového zisku, jaký obrat potřebuji, kalkulačka obratu, podnikatelský obrat kalkulačka, cílový zisk výpočet">
+  <meta name="author" content="RychléVýpočty.cz">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://rychlevypocty.cz/obrat-pro-cilovy-zisk-kalkulacka.html">
+
+  <meta property="og:title" content="Kalkulačka obratu pro cílový zisk online zdarma | RychléVýpočty.cz">
+  <meta property="og:description" content="Rychlý výpočet potřebného obratu pro dosažení cílového zisku podle fixních nákladů a ziskovosti.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rychlevypocty.cz/obrat-pro-cilovy-zisk-kalkulacka.html">
+  <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Kalkulačka obratu pro cílový zisk online zdarma | RychléVýpočty.cz">
+  <meta name="twitter:description" content="Zjistěte, jaký obrat potřebujete pro dosažení konkrétního zisku.">
+
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #5f6b85;
+      --primary: #2152ff;
+      --primary-dark: #183dbf;
+      --border: #dbe3f0;
+      --success: #138a4b;
+      --warning: #b66a00;
+      --shadow: 0 12px 32px rgba(20, 32, 70, 0.08);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #f7f9fd 0%, #eef3fb 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      padding: 18px 0;
+      border-bottom: 1px solid rgba(219, 227, 240, 0.8);
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+      line-height: 1;
+    }
+
+    .brand span {
+      color: var(--primary);
+    }
+
+    .topnav {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      font-size: 0.97rem;
+    }
+
+    .topnav a {
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .topnav a:hover {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    .hero {
+      padding: 42px 0 20px;
+    }
+
+    .breadcrumbs {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .hero-copy h1 {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      margin: 0 0 16px;
+    }
+
+    .hero-copy p {
+      margin: 0 0 16px;
+      font-size: 1.06rem;
+      color: var(--muted);
+      max-width: 720px;
+    }
+
+    .hero-points {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .hero-pill {
+      background: rgba(33, 82, 255, 0.08);
+      color: var(--primary-dark);
+      border: 1px solid rgba(33, 82, 255, 0.12);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .hero-box {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-box h2 {
+      margin: 0 0 10px;
+      font-size: 1.2rem;
+    }
+
+    .hero-box p {
+      margin: 0 0 14px;
+      color: var(--muted);
+    }
+
+    .hero-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.04fr 0.96fr;
+      gap: 28px;
+      align-items: start;
+      padding: 22px 0 32px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .card-header {
+      padding: 24px 24px 10px;
+    }
+
+    .card-header h2,
+    .card-header h3 {
+      margin: 0 0 8px;
+      font-size: 1.3rem;
+      letter-spacing: -0.02em;
+    }
+
+    .card-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .card-body {
+      padding: 20px 24px 24px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field label {
+      font-weight: 700;
+      font-size: 0.96rem;
+    }
+
+    .field small {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: -2px;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      padding: 14px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      font-size: 1rem;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      outline: none;
+      border-color: rgba(33, 82, 255, 0.45);
+      box-shadow: 0 0 0 4px rgba(33, 82, 255, 0.10);
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.06s ease, background 0.15s ease, opacity 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background: #eef3ff;
+      color: var(--primary-dark);
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .result-box {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+
+    .result-label {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .result-value {
+      font-size: clamp(1.15rem, 2.1vw, 1.85rem);
+      line-height: 1.15;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .highlight {
+      background: linear-gradient(180deg, #eef7ff 0%, #f9fcff 100%);
+      border-color: rgba(33, 82, 255, 0.18);
+    }
+
+    .info-list {
+      display: grid;
+      gap: 12px;
+      margin: 18px 0 0;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid #edf2fa;
+    }
+
+    .info-row:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .info-row span:first-child {
+      color: var(--muted);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+
+    .badge.success {
+      background: rgba(19, 138, 75, 0.10);
+      color: var(--success);
+    }
+
+    .badge.warning {
+      background: rgba(182, 106, 0, 0.11);
+      color: var(--warning);
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 18px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 640px;
+      background: #fff;
+    }
+
+    th, td {
+      padding: 14px 14px;
+      text-align: left;
+      border-bottom: 1px solid #edf2fa;
+      font-size: 0.96rem;
+    }
+
+    th {
+      background: #f8fbff;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .note {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1px solid #e7edf7;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .content-section {
+      padding: 8px 0 8px;
+    }
+
+    .content-section h2 {
+      font-size: 1.7rem;
+      letter-spacing: -0.03em;
+      margin: 0 0 14px;
+    }
+
+    .content-section h3 {
+      font-size: 1.15rem;
+      margin: 28px 0 10px;
+    }
+
+    .content-section p {
+      color: var(--muted);
+      margin: 0 0 14px;
+    }
+
+    .content-section ul {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    .content-section li {
+      margin-bottom: 8px;
+    }
+
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .related-card {
+      display: block;
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      color: var(--text);
+      box-shadow: var(--shadow);
+    }
+
+    .related-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .related-card span {
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    footer {
+      margin-top: 40px;
+      border-top: 1px solid rgba(219, 227, 240, 0.9);
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .footer-inner {
+      padding: 24px 0 40px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .layout,
+      .related-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .container {
+        width: min(100% - 24px, 1160px);
+      }
+
+      .form-grid,
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 28px;
+      }
+
+      .card-header,
+      .card-body,
+      .hero-box {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .info-row {
+        flex-direction: column;
+        gap: 6px;
+      }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebApplication",
+    "name":"Kalkulačka obratu pro cílový zisk",
+    "url":"https://rychlevypocty.cz/obrat-pro-cilovy-zisk-kalkulacka.html",
+    "applicationCategory":"BusinessApplication",
+    "operatingSystem":"Any",
+    "description":"Online kalkulačka pro výpočet potřebného obratu pro dosažení cílového zisku podle fixních nákladů, variabilních nákladů a marže.",
+    "offers":{
+      "@type":"Offer",
+      "price":"0",
+      "priceCurrency":"CZK"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"Co znamená obrat pro cílový zisk?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Obrat pro cílový zisk je taková výše tržeb, kterou potřebujete dosáhnout, aby po pokrytí variabilních a fixních nákladů zůstal požadovaný zisk."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Jak se potřebný obrat počítá?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Výpočet vychází z příspěvku na úhradu, tedy z toho, jaká část obratu po odečtení variabilních nákladů zůstává na pokrytí fixních nákladů a zisku. Cílový zisk se přičte k fixním nákladům a výsledek se vydělí příspěvkovou marží."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Je to stejné jako bod zvratu?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Ne. Bod zvratu ukazuje obrat potřebný k nulovému výsledku. Kalkulačka obratu pro cílový zisk jde dál a počítá obrat potřebný pro konkrétní požadovaný zisk."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="/">Rychlé<span>Výpočty</span>.cz</a>
+      <nav class="topnav" aria-label="Hlavní navigace">
+        <a href="/">Domů</a>
+        <a href="/bod-zvratu-kalkulacka.html">Bod zvratu</a>
+        <a href="/minimalni-prodejni-cena-kalkulacka.html">Minimální cena</a>
+        <a href="/kalkulacka-marze-a-prirazky.html">Marže a přirážka</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumbs">
+          <a href="/">RychléVýpočty.cz</a> / Kalkulačka obratu pro cílový zisk
+        </div>
+
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <h1>Kalkulačka obratu pro cílový zisk</h1>
+            <p>Spočítejte si, jaký obrat potřebujete pro dosažení konkrétního cílového zisku. Kalkulačka vychází z fixních nákladů, variabilních nákladů nebo příspěvkové marže a pomůže rychle zjistit, jak vysoké tržby jsou potřeba pro smysluplný podnikatelský výsledek.</p>
+            <p>Hodí se pro malé firmy, freelancery, e-shopy, služby i každého, kdo chce převést ziskový cíl do konkrétního obratu a počtu zakázek nebo kusů.</p>
+
+            <div class="hero-points">
+              <div class="hero-pill">Potřebný obrat</div>
+              <div class="hero-pill">Cílový zisk</div>
+              <div class="hero-pill">Počet kusů nebo zakázek</div>
+              <div class="hero-pill">Praktické business plánování</div>
+            </div>
+          </div>
+
+          <div class="hero-box">
+            <h2>Co kalkulačka umí</h2>
+            <p>Pomůže přepočítat ziskový cíl do konkrétního obratu a ukáže, jak velkou rezervu po odečtení variabilních nákladů musíte vytvořit pro pokrytí fixních nákladů i požadovaného zisku.</p>
+            <p>Je to velmi praktický tool pro plánování, cenotvorbu i rychlou kontrolu realistických obchodních cílů.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container layout">
+      <div class="card">
+        <div class="card-header">
+          <h2>Zadání pro výpočet</h2>
+          <p>Vyplňte fixní náklady, cílový zisk a údaje o variabilních nákladech nebo příspěvkové marži.</p>
+        </div>
+        <div class="card-body">
+          <form id="targetProfitForm">
+            <div class="form-grid">
+              <div class="field">
+                <label for="fixedCosts">Fixní náklady za období (Kč)</label>
+                <input type="number" id="fixedCosts" min="0" step="100" value="120000" inputmode="numeric">
+                <small>Například nájem, mzdy, software, administrativa nebo leasing.</small>
+              </div>
+
+              <div class="field">
+                <label for="targetProfit">Cílový zisk za období (Kč)</label>
+                <input type="number" id="targetProfit" min="0" step="100" value="80000" inputmode="numeric">
+                <small>Kolik chcete po pokrytí všech nákladů skutečně vydělat.</small>
+              </div>
+
+              <div class="field">
+                <label for="calculationMode">Režim výpočtu</label>
+                <select id="calculationMode">
+                  <option value="margin" selected>Podle příspěvkové marže</option>
+                  <option value="price-cost">Podle ceny a variabilních nákladů na kus</option>
+                </select>
+                <small>Zvolte, jakým způsobem chcete potřebný obrat dopočítat.</small>
+              </div>
+
+              <div class="field">
+                <label for="contributionMargin">Příspěvková marže z obratu (%)</label>
+                <input type="number" id="contributionMargin" min="0.1" max="95" step="0.1" value="35" inputmode="decimal">
+                <small>Kolik procent z obratu zbývá po odečtení variabilních nákladů.</small>
+              </div>
+
+              <div class="field">
+                <label for="unitPrice">Prodejní cena za kus nebo zakázku (Kč)</label>
+                <input type="number" id="unitPrice" min="0" step="0.01" value="2500" inputmode="decimal">
+                <small>Volitelné, ale užitečné pro odhad počtu kusů nebo zakázek.</small>
+              </div>
+
+              <div class="field">
+                <label for="variableCostPerUnit">Variabilní náklady na kus (Kč)</label>
+                <input type="number" id="variableCostPerUnit" min="0" step="0.01" value="1500" inputmode="decimal">
+                <small>Například materiál, provize, doprava nebo přímé náklady na zakázku.</small>
+              </div>
+
+              <div class="field">
+                <label for="currentTurnover">Aktuální obrat za období (Kč)</label>
+                <input type="number" id="currentTurnover" min="0" step="100" value="450000" inputmode="numeric">
+                <small>Volitelné pro rychlé porovnání s potřebným obratem.</small>
+              </div>
+
+              <div class="field">
+                <label for="periodLabel">Sledované období</label>
+                <select id="periodLabel">
+                  <option value="měsíc" selected>Měsíc</option>
+                  <option value="čtvrtletí">Čtvrtletí</option>
+                  <option value="rok">Rok</option>
+                </select>
+                <small>Pomůže lépe interpretovat výsledky v kontextu období.</small>
+              </div>
+
+              <div class="actions full">
+                <button type="submit" class="btn-primary">Spočítat potřebný obrat</button>
+                <button type="button" class="btn-secondary" id="resetBtn">Obnovit výchozí hodnoty</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>Výsledek výpočtu</h2>
+          <p>Přehled obratu, který potřebujete pro dosažení zadaného cílového zisku.</p>
+        </div>
+        <div class="card-body">
+          <div class="results-grid">
+            <div class="result-box highlight">
+              <div class="result-label">Potřebný obrat</div>
+              <div class="result-value" id="requiredTurnover">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Potřebný příspěvek na úhradu</div>
+              <div class="result-value" id="requiredContribution">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Potřebný počet kusů / zakázek</div>
+              <div class="result-value" id="requiredUnits">0</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Rozdíl oproti aktuálnímu obratu</div>
+              <div class="result-value" id="turnoverGap">0 Kč</div>
+            </div>
+          </div>
+
+          <div id="statusBadge" class="badge success">Aktuální obrat už se blíží zadanému cíli</div>
+
+          <div class="info-list">
+            <div class="info-row">
+              <span>Příspěvková marže</span>
+              <strong id="contributionMarginResult">0 %</strong>
+            </div>
+            <div class="info-row">
+              <span>Příspěvek na kus / zakázku</span>
+              <strong id="contributionPerUnitResult">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Fixní náklady</span>
+              <strong id="fixedCostsResult">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Cílový zisk</span>
+              <strong id="targetProfitResult">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Aktuální obrat</span>
+              <strong id="currentTurnoverResult">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Podíl cílového zisku na potřebném obratu</span>
+              <strong id="profitShareResult">0 %</strong>
+            </div>
+          </div>
+
+          <div class="note" id="interpretationNote">
+            Výpočet je orientační. V praxi může skutečný potřebný obrat ovlivnit mix produktů, sezónnost, slevy, reklamace nebo změna nákladů.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="card">
+        <div class="card-header">
+          <h3>Přehled výpočtu</h3>
+          <p>Souhrn hlavních hodnot potřebných pro dosažení cílového zisku.</p>
+        </div>
+        <div class="card-body">
+          <div class="table-wrap">
+            <table aria-label="Přehled obratu pro cílový zisk">
+              <thead>
+                <tr>
+                  <th>Položka</th>
+                  <th>Hodnota</th>
+                  <th>Význam</th>
+                </tr>
+              </thead>
+              <tbody id="summaryTableBody">
+                <tr>
+                  <td>Fixní náklady + cílový zisk</td>
+                  <td>0 Kč</td>
+                  <td>Částka, kterou musí pokrýt příspěvek na úhradu</td>
+                </tr>
+                <tr>
+                  <td>Příspěvková marže</td>
+                  <td>0 %</td>
+                  <td>Kolik z obratu zbývá po variabilních nákladech</td>
+                </tr>
+                <tr>
+                  <td>Potřebný obrat</td>
+                  <td>0 Kč</td>
+                  <td>Tržby nutné pro dosažení cílového zisku</td>
+                </tr>
+                <tr>
+                  <td>Potřebný počet kusů / zakázek</td>
+                  <td>0</td>
+                  <td>Orientační převod na objem prodeje</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container content-section">
+      <h2>Jak kalkulačka obratu pro cílový zisk funguje</h2>
+      <p>Kalkulačka počítá z principu příspěvku na úhradu. Ten ukazuje, jaká část obratu zůstává po odečtení variabilních nákladů a může být použita na pokrytí fixních nákladů a zisku. Pokud k fixním nákladům připočtete cílový zisk, získáte částku, kterou musí příspěvek na úhradu pokrýt. Z ní se pak dopočítá potřebný obrat.</p>
+
+      <h3>Co je příspěvková marže</h3>
+      <p>Příspěvková marže vyjadřuje, kolik procent z obratu zůstane po odečtení variabilních nákladů. Čím vyšší příspěvková marže, tím nižší obrat potřebujete pro dosažení stejného ziskového cíle.</p>
+
+      <h3>K čemu se kalkulačka hodí</h3>
+      <ul>
+        <li>pro nastavení realistického obchodního cíle,</li>
+        <li>pro plánování obratu na měsíc, čtvrtletí nebo rok,</li>
+        <li>pro převod ziskového cíle na konkrétní tržby a objem prodeje,</li>
+        <li>pro rychlé porovnání, zda současný výkon firmy stačí na požadovaný výsledek.</li>
+      </ul>
+
+      <h3>Rozdíl oproti bodu zvratu</h3>
+      <p>Bod zvratu ukazuje obrat potřebný k nulovému výsledku. Tato kalkulačka jde o krok dál a přidává konkrétní cílový zisk. Díky tomu je praktičtější pro podnikatele, kteří nechtějí jen pokrýt náklady, ale plánují reálný výdělek.</p>
+
+      <h3>Jak správně číst výsledek</h3>
+      <p>Potřebný obrat je hlavní výstup. Pokud zadáte i prodejní cenu a variabilní náklady na kus, kalkulačka dopočítá orientační počet kusů nebo zakázek. To je užitečné zejména pro firmy a freelancery, kteří lépe přemýšlejí v počtu objednávek než v samotném obratu.</p>
+    </section>
+
+    <section class="container content-section">
+      <h2>Na co si dát při plánování pozor</h2>
+      <p>Výpočet pracuje se zjednodušeným modelem. V reálném podnikání se může měnit průměrná marže, struktura prodeje, výše slev, návratnost reklam, sezónnost nebo vývoj fixních nákladů. Proto je vhodné brát výsledek jako velmi užitečný orientační rámec, ne jako absolutní garanci.</p>
+      <p>Přesto jde o silný rozhodovací nástroj, protože pomáhá převést abstraktní ziskový cíl do konkrétních čísel, se kterými lze dále pracovat v cenotvorbě, obchodním plánu i interním řízení výkonu.</p>
+    </section>
+
+    <section class="container content-section">
+      <h2>Související kalkulačky</h2>
+      <div class="related-grid">
+        <a class="related-card" href="/bod-zvratu-kalkulacka.html">
+          <strong>Bod zvratu kalkulačka</strong>
+          <span>Spočítejte obrat nebo počet kusů potřebný pro pokrytí fixních nákladů.</span>
+        </a>
+
+        <a class="related-card" href="/minimalni-prodejni-cena-kalkulacka.html">
+          <strong>Kalkulačka minimální prodejní ceny</strong>
+          <span>Zjistěte, pod jakou cenu už se prodej přestává vyplácet.</span>
+        </a>
+
+        <a class="related-card" href="/kalkulacka-marze-a-prirazky.html">
+          <strong>Kalkulačka marže a přirážky</strong>
+          <span>Rychlý výpočet marže, přirážky a cenových vztahů.</span>
+        </a>
+
+        <a class="related-card" href="/navratnost-investice-kalkulacka.html">
+          <strong>Kalkulačka návratnosti investice</strong>
+          <span>Odhad návratnosti a efektivity investice nebo projektu.</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      © 2026 RychléVýpočty.cz — online kalkulačky a praktické výpočty pro každodenní použití.
+    </div>
+  </footer>
+
+  <script>
+    const form = document.getElementById('targetProfitForm');
+    const resetBtn = document.getElementById('resetBtn');
+
+    const outputs = {
+      requiredTurnover: document.getElementById('requiredTurnover'),
+      requiredContribution: document.getElementById('requiredContribution'),
+      requiredUnits: document.getElementById('requiredUnits'),
+      turnoverGap: document.getElementById('turnoverGap'),
+      contributionMarginResult: document.getElementById('contributionMarginResult'),
+      contributionPerUnitResult: document.getElementById('contributionPerUnitResult'),
+      fixedCostsResult: document.getElementById('fixedCostsResult'),
+      targetProfitResult: document.getElementById('targetProfitResult'),
+      currentTurnoverResult: document.getElementById('currentTurnoverResult'),
+      profitShareResult: document.getElementById('profitShareResult'),
+      statusBadge: document.getElementById('statusBadge'),
+      interpretationNote: document.getElementById('interpretationNote'),
+      summaryTableBody: document.getElementById('summaryTableBody')
+    };
+
+    function formatCurrency(value) {
+      return new Intl.NumberFormat('cs-CZ', {
+        style: 'currency',
+        currency: 'CZK',
+        maximumFractionDigits: 0
+      }).format(value);
+    }
+
+    function formatCurrencyPrecise(value) {
+      return new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2
+      }).format(value) + ' Kč';
+    }
+
+    function formatPercent(value) {
+      return new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 1
+      }).format(value) + ' %';
+    }
+
+    function formatUnits(value) {
+      return new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 1
+      }).format(value);
+    }
+
+    function getValues() {
+      return {
+        fixedCosts: Number(document.getElementById('fixedCosts').value),
+        targetProfit: Number(document.getElementById('targetProfit').value),
+        calculationMode: document.getElementById('calculationMode').value,
+        contributionMargin: Number(document.getElementById('contributionMargin').value),
+        unitPrice: Number(document.getElementById('unitPrice').value),
+        variableCostPerUnit: Number(document.getElementById('variableCostPerUnit').value),
+        currentTurnover: Number(document.getElementById('currentTurnover').value),
+        periodLabel: document.getElementById('periodLabel').value
+      };
+    }
+
+    function validate(values) {
+      if (Number.isNaN(values.fixedCosts) || values.fixedCosts < 0) return 'Zadejte platné fixní náklady.';
+      if (Number.isNaN(values.targetProfit) || values.targetProfit < 0) return 'Zadejte platný cílový zisk.';
+      if (values.calculationMode === 'margin') {
+        if (Number.isNaN(values.contributionMargin) || values.contributionMargin <= 0 || values.contributionMargin >= 100) {
+          return 'Zadejte platnou příspěvkovou marži v procentech.';
+        }
+      }
+      if (values.calculationMode === 'price-cost') {
+        if (Number.isNaN(values.unitPrice) || values.unitPrice <= 0) return 'Zadejte platnou prodejní cenu za kus nebo zakázku.';
+        if (Number.isNaN(values.variableCostPerUnit) || values.variableCostPerUnit < 0) return 'Zadejte platné variabilní náklady na kus.';
+        if (values.variableCostPerUnit >= values.unitPrice) return 'Variabilní náklady na kus musí být nižší než prodejní cena.';
+      } else {
+        if (Number.isNaN(values.unitPrice) || values.unitPrice < 0) return 'Zadejte platnou prodejní cenu za kus nebo zakázku.';
+        if (Number.isNaN(values.variableCostPerUnit) || values.variableCostPerUnit < 0) return 'Zadejte platné variabilní náklady na kus.';
+      }
+      if (Number.isNaN(values.currentTurnover) || values.currentTurnover < 0) return 'Zadejte platný aktuální obrat.';
+      return '';
+    }
+
+    function calculateTarget(values) {
+      const requiredContribution = values.fixedCosts + values.targetProfit;
+
+      let contributionMarginRate;
+      if (values.calculationMode === 'price-cost') {
+        contributionMarginRate = (values.unitPrice - values.variableCostPerUnit) / values.unitPrice;
+      } else {
+        contributionMarginRate = values.contributionMargin / 100;
+      }
+
+      const requiredTurnover = requiredContribution / contributionMarginRate;
+
+      let contributionPerUnit = 0;
+      let requiredUnits = 0;
+
+      if (values.unitPrice > 0) {
+        contributionPerUnit = values.calculationMode === 'price-cost'
+          ? (values.unitPrice - values.variableCostPerUnit)
+          : values.unitPrice * contributionMarginRate;
+
+        requiredUnits = contributionPerUnit > 0 ? requiredContribution / contributionPerUnit : 0;
+      }
+
+      const turnoverGap = requiredTurnover - values.currentTurnover;
+      const profitShare = requiredTurnover > 0 ? (values.targetProfit / requiredTurnover) * 100 : 0;
+
+      return {
+        requiredContribution,
+        contributionMarginRate,
+        requiredTurnover,
+        contributionPerUnit,
+        requiredUnits,
+        turnoverGap,
+        profitShare
+      };
+    }
+
+    function renderTable(result) {
+      outputs.summaryTableBody.innerHTML = `
+        <tr>
+          <td>Fixní náklady + cílový zisk</td>
+          <td>${formatCurrency(result.requiredContribution)}</td>
+          <td>Částka, kterou musí pokrýt příspěvek na úhradu</td>
+        </tr>
+        <tr>
+          <td>Příspěvková marže</td>
+          <td>${formatPercent(result.contributionMarginRate * 100)}</td>
+          <td>Kolik z obratu zbývá po variabilních nákladech</td>
+        </tr>
+        <tr>
+          <td>Potřebný obrat</td>
+          <td>${formatCurrency(result.requiredTurnover)}</td>
+          <td>Tržby nutné pro dosažení cílového zisku</td>
+        </tr>
+        <tr>
+          <td>Potřebný počet kusů / zakázek</td>
+          <td>${formatUnits(result.requiredUnits)}</td>
+          <td>Orientační převod na objem prodeje</td>
+        </tr>
+      `;
+    }
+
+    function getInterpretation(values, result) {
+      const label = values.periodLabel;
+      if (result.turnoverGap <= 0) {
+        return `Aktuální obrat už podle zadaných hodnot stačí na dosažení cílového zisku za ${label}. Teď dává smysl hlídat spíš skutečnou marži, mix zakázek a stabilitu nákladů.`;
+      }
+
+      if (result.turnoverGap <= result.requiredTurnover * 0.15) {
+        return `K dosažení cílového zisku za ${label} chybí už relativně malý rozdíl v obratu. To je dobrá pozice pro jemné zlepšení ceny, objemu prodeje nebo efektivity.`;
+      }
+
+      return `K dosažení cílového zisku za ${label} je potřeba citelně vyšší obrat. Dává smysl pracovat s kombinací vyšší příspěvkové marže, lepší cenotvorby a vyššího objemu prodeje.`;
+    }
+
+    function render(values, result) {
+      outputs.requiredTurnover.textContent = formatCurrency(result.requiredTurnover);
+      outputs.requiredContribution.textContent = formatCurrency(result.requiredContribution);
+      outputs.requiredUnits.textContent = formatUnits(result.requiredUnits);
+      outputs.turnoverGap.textContent = formatCurrency(result.turnoverGap);
+      outputs.contributionMarginResult.textContent = formatPercent(result.contributionMarginRate * 100);
+      outputs.contributionPerUnitResult.textContent = formatCurrencyPrecise(result.contributionPerUnit);
+      outputs.fixedCostsResult.textContent = formatCurrency(values.fixedCosts);
+      outputs.targetProfitResult.textContent = formatCurrency(values.targetProfit);
+      outputs.currentTurnoverResult.textContent = formatCurrency(values.currentTurnover);
+      outputs.profitShareResult.textContent = formatPercent(result.profitShare);
+      outputs.interpretationNote.textContent = getInterpretation(values, result);
+
+      if (result.turnoverGap > result.requiredTurnover * 0.25) {
+        outputs.statusBadge.className = 'badge warning';
+        outputs.statusBadge.textContent = 'Aktuální obrat je od cílového výsledku zatím dál';
+      } else if (result.turnoverGap > 0) {
+        outputs.statusBadge.className = 'badge warning';
+        outputs.statusBadge.textContent = 'K cílovému zisku ještě část obratu chybí';
+      } else {
+        outputs.statusBadge.className = 'badge success';
+        outputs.statusBadge.textContent = 'Aktuální obrat už se blíží zadanému cíli';
+      }
+
+      renderTable(result);
+    }
+
+    function runCalculation() {
+      const values = getValues();
+      const error = validate(values);
+
+      if (error) {
+        alert(error);
+        return;
+      }
+
+      const result = calculateTarget(values);
+      render(values, result);
+    }
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      runCalculation();
+    });
+
+    ['fixedCosts', 'targetProfit', 'calculationMode', 'contributionMargin', 'unitPrice', 'variableCostPerUnit', 'currentTurnover', 'periodLabel'].forEach(id => {
+      document.getElementById(id).addEventListener('input', runCalculation);
+      document.getElementById(id).addEventListener('change', runCalculation);
+    });
+
+    resetBtn.addEventListener('click', function() {
+      document.getElementById('fixedCosts').value = 120000;
+      document.getElementById('targetProfit').value = 80000;
+      document.getElementById('calculationMode').value = 'margin';
+      document.getElementById('contributionMargin').value = 35;
+      document.getElementById('unitPrice').value = 2500;
+      document.getElementById('variableCostPerUnit').value = 1500;
+      document.getElementById('currentTurnover').value = 450000;
+      document.getElementById('periodLabel').value = 'měsíc';
+      runCalculation();
+    });
+
+    runCalculation();
+  </script>
+</body>
+</html>
