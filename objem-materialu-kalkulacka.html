@@ -1,1 +1,1213 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <title>Kalkulačka objemu materiálu online zdarma | RychléVýpočty.cz</title>
+  <meta name="description" content="Spočítejte si objem materiálu pro desku, výkop, zásyp nebo betonáž. Přehledná online kalkulačka objemu v m³, litrech i orientační hmotnosti podle rozměrů a typu materiálu.">
+  <meta name="keywords" content="objem materiálu kalkulačka, kalkulačka objemu, výpočet m3 materiálu, kolik betonu potřebuji, objem zásypu, kalkulačka výkopu">
+  <meta name="author" content="RychléVýpočty.cz">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://rychlevypocty.cz/objem-materialu-kalkulacka.html">
+
+  <meta property="og:title" content="Kalkulačka objemu materiálu online zdarma | RychléVýpočty.cz">
+  <meta property="og:description" content="Rychlý výpočet objemu materiálu v m³ a litrech podle rozměrů, tvaru a typu materiálu.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rychlevypocty.cz/objem-materialu-kalkulacka.html">
+  <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Kalkulačka objemu materiálu online zdarma | RychléVýpočty.cz">
+  <meta name="twitter:description" content="Zjistěte objem materiálu pro beton, zeminu, štěrk, písek a další materiály podle rozměrů.">
+
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #5f6b85;
+      --primary: #2152ff;
+      --primary-dark: #183dbf;
+      --border: #dbe3f0;
+      --success: #138a4b;
+      --warning: #b66a00;
+      --shadow: 0 12px 32px rgba(20, 32, 70, 0.08);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #f7f9fd 0%, #eef3fb 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      padding: 18px 0;
+      border-bottom: 1px solid rgba(219, 227, 240, 0.8);
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+      line-height: 1;
+    }
+
+    .brand span {
+      color: var(--primary);
+    }
+
+    .topnav {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      font-size: 0.97rem;
+    }
+
+    .topnav a {
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .topnav a:hover {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    .hero {
+      padding: 42px 0 20px;
+    }
+
+    .breadcrumbs {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .hero-copy h1 {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      margin: 0 0 16px;
+    }
+
+    .hero-copy p {
+      margin: 0 0 16px;
+      font-size: 1.06rem;
+      color: var(--muted);
+      max-width: 720px;
+    }
+
+    .hero-points {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .hero-pill {
+      background: rgba(33, 82, 255, 0.08);
+      color: var(--primary-dark);
+      border: 1px solid rgba(33, 82, 255, 0.12);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .hero-box {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-box h2 {
+      margin: 0 0 10px;
+      font-size: 1.2rem;
+    }
+
+    .hero-box p {
+      margin: 0 0 14px;
+      color: var(--muted);
+    }
+
+    .hero-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.04fr 0.96fr;
+      gap: 28px;
+      align-items: start;
+      padding: 22px 0 32px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .card-header {
+      padding: 24px 24px 10px;
+    }
+
+    .card-header h2,
+    .card-header h3 {
+      margin: 0 0 8px;
+      font-size: 1.3rem;
+      letter-spacing: -0.02em;
+    }
+
+    .card-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .card-body {
+      padding: 20px 24px 24px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field label {
+      font-weight: 700;
+      font-size: 0.96rem;
+    }
+
+    .field small {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: -2px;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      padding: 14px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      font-size: 1rem;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      outline: none;
+      border-color: rgba(33, 82, 255, 0.45);
+      box-shadow: 0 0 0 4px rgba(33, 82, 255, 0.10);
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    .shape-note {
+      margin-top: 6px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1px solid #e7edf7;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.06s ease, background 0.15s ease, opacity 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background: #eef3ff;
+      color: var(--primary-dark);
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .result-box {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+
+    .result-label {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .result-value {
+      font-size: clamp(1.15rem, 2.1vw, 1.85rem);
+      line-height: 1.15;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .highlight {
+      background: linear-gradient(180deg, #eef7ff 0%, #f9fcff 100%);
+      border-color: rgba(33, 82, 255, 0.18);
+    }
+
+    .info-list {
+      display: grid;
+      gap: 12px;
+      margin: 18px 0 0;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid #edf2fa;
+    }
+
+    .info-row:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .info-row span:first-child {
+      color: var(--muted);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+
+    .badge.success {
+      background: rgba(19, 138, 75, 0.10);
+      color: var(--success);
+    }
+
+    .badge.warning {
+      background: rgba(182, 106, 0, 0.11);
+      color: var(--warning);
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 18px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 640px;
+      background: #fff;
+    }
+
+    th, td {
+      padding: 14px 14px;
+      text-align: left;
+      border-bottom: 1px solid #edf2fa;
+      font-size: 0.96rem;
+    }
+
+    th {
+      background: #f8fbff;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .note {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1px solid #e7edf7;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .content-section {
+      padding: 8px 0 8px;
+    }
+
+    .content-section h2 {
+      font-size: 1.7rem;
+      letter-spacing: -0.03em;
+      margin: 0 0 14px;
+    }
+
+    .content-section h3 {
+      font-size: 1.15rem;
+      margin: 28px 0 10px;
+    }
+
+    .content-section p {
+      color: var(--muted);
+      margin: 0 0 14px;
+    }
+
+    .content-section ul {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    .content-section li {
+      margin-bottom: 8px;
+    }
+
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .related-card {
+      display: block;
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      color: var(--text);
+      box-shadow: var(--shadow);
+    }
+
+    .related-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .related-card span {
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    footer {
+      margin-top: 40px;
+      border-top: 1px solid rgba(219, 227, 240, 0.9);
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .footer-inner {
+      padding: 24px 0 40px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .layout,
+      .related-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .container {
+        width: min(100% - 24px, 1160px);
+      }
+
+      .form-grid,
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 28px;
+      }
+
+      .card-header,
+      .card-body,
+      .hero-box {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .info-row {
+        flex-direction: column;
+        gap: 6px;
+      }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebApplication",
+    "name":"Kalkulačka objemu materiálu",
+    "url":"https://rychlevypocty.cz/objem-materialu-kalkulacka.html",
+    "applicationCategory":"UtilitiesApplication",
+    "operatingSystem":"Any",
+    "description":"Online kalkulačka pro výpočet objemu materiálu podle rozměrů, tvaru a typu materiálu v m3, litrech a orientační hmotnosti.",
+    "offers":{
+      "@type":"Offer",
+      "price":"0",
+      "priceCurrency":"CZK"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"Jak se počítá objem materiálu?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Objem materiálu se počítá podle tvaru a rozměrů prostoru. U jednoduchých tvarů jako kvádr stačí délka, šířka a výška. Výsledek se obvykle uvádí v metrech krychlových nebo litrech."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"K čemu se kalkulačka objemu materiálu hodí?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Kalkulačka se hodí pro odhad množství betonu, zeminy, štěrku, písku, mulče nebo jiného materiálu při stavbě, rekonstrukci, zahradních úpravách nebo výkopech."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Je výpočet přesný?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Výpočet je orientační a vychází ze zadaných rozměrů. V praxi je vhodné počítat s malou rezervou kvůli nerovnostem terénu, zhutnění materiálu nebo ztrátám při práci."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="/">Rychlé<span>Výpočty</span>.cz</a>
+      <nav class="topnav" aria-label="Hlavní navigace">
+        <a href="/">Domů</a>
+        <a href="/prevodnik-jednotek.html">Převodník jednotek</a>
+        <a href="/spotreba-vody-a-naklady-kalkulacka.html">Náklady domácnosti</a>
+        <a href="/bod-zvratu-kalkulacka.html">Bod zvratu</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumbs">
+          <a href="/">RychléVýpočty.cz</a> / Kalkulačka objemu materiálu
+        </div>
+
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <h1>Kalkulačka objemu materiálu</h1>
+            <p>Spočítejte si objem materiálu pro betonáž, výkop, zásyp, podsyp, mulč nebo jiný sypký či stavební materiál. Kalkulačka funguje pro základní tvary a výsledek ukáže v metrech krychlových, litrech i orientační hmotnosti.</p>
+            <p>Hodí se pro stavbu, rekonstrukci, zahradu i běžné domácí projekty, kde potřebujete rychle zjistit, kolik materiálu objednat nebo převézt.</p>
+
+            <div class="hero-points">
+              <div class="hero-pill">Objem v m³</div>
+              <div class="hero-pill">Objem v litrech</div>
+              <div class="hero-pill">Rezerva materiálu</div>
+              <div class="hero-pill">Orientační hmotnost</div>
+            </div>
+          </div>
+
+          <div class="hero-box">
+            <h2>Co kalkulačka umí</h2>
+            <p>Umožní spočítat objem pro kvádr, válec nebo výkop se šikmými stěnami. Kromě samotného objemu přidá i doporučené množství s rezervou a orientační přepočet na hmotnost podle typu materiálu.</p>
+            <p>Je to praktický tool pro rychlý odhad, abyste neobjednali zbytečně málo ani zbytečně moc materiálu.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container layout">
+      <div class="card">
+        <div class="card-header">
+          <h2>Zadání pro výpočet</h2>
+          <p>Vyplňte tvar prostoru, rozměry a případně typ materiálu. Kalkulačka vše přepočítá automaticky.</p>
+        </div>
+        <div class="card-body">
+          <form id="volumeForm">
+            <div class="form-grid">
+              <div class="field">
+                <label for="shapeType">Tvar výpočtu</label>
+                <select id="shapeType">
+                  <option value="rectangular" selected>Obdélníkový / kvádr</option>
+                  <option value="cylindrical">Kruhový / válec</option>
+                  <option value="trapezoid">Výkop se šikmými stěnami</option>
+                </select>
+                <small>Zvolte tvar, který nejlépe odpovídá prostoru nebo vrstvě materiálu.</small>
+              </div>
+
+              <div class="field">
+                <label for="materialType">Typ materiálu</label>
+                <select id="materialType">
+                  <option value="soil">Zemina</option>
+                  <option value="sand">Písek</option>
+                  <option value="gravel">Štěrk</option>
+                  <option value="concrete" selected>Beton</option>
+                  <option value="mulch">Mulč</option>
+                  <option value="custom">Vlastní hustota</option>
+                </select>
+                <small>Slouží pro orientační přepočet objemu na hmotnost.</small>
+              </div>
+
+              <div class="field rect-field">
+                <label for="length">Délka (m)</label>
+                <input type="number" id="length" min="0.01" step="0.01" value="6" inputmode="decimal">
+                <small>Například délka desky, výkopu nebo vrstvy.</small>
+              </div>
+
+              <div class="field rect-field">
+                <label for="width">Šířka (m)</label>
+                <input type="number" id="width" min="0.01" step="0.01" value="3" inputmode="decimal">
+                <small>Šířka prostoru nebo plochy.</small>
+              </div>
+
+              <div class="field rect-field">
+                <label for="height">Výška / hloubka (m)</label>
+                <input type="number" id="height" min="0.01" step="0.01" value="0.15" inputmode="decimal">
+                <small>Tloušťka vrstvy, hloubka výkopu nebo výška prvku.</small>
+              </div>
+
+              <div class="field cyl-field hidden">
+                <label for="diameter">Průměr (m)</label>
+                <input type="number" id="diameter" min="0.01" step="0.01" value="1.2" inputmode="decimal">
+                <small>Například pro kulatý otvor, sloup nebo studnu.</small>
+              </div>
+
+              <div class="field cyl-field hidden">
+                <label for="cylHeight">Výška / hloubka válce (m)</label>
+                <input type="number" id="cylHeight" min="0.01" step="0.01" value="1" inputmode="decimal">
+                <small>Výška nebo hloubka kruhového prostoru.</small>
+              </div>
+
+              <div class="field trap-field hidden">
+                <label for="topWidth">Horní šířka (m)</label>
+                <input type="number" id="topWidth" min="0.01" step="0.01" value="1.2" inputmode="decimal">
+                <small>Šířka výkopu nebo vrstvy v horní části.</small>
+              </div>
+
+              <div class="field trap-field hidden">
+                <label for="bottomWidth">Spodní šířka (m)</label>
+                <input type="number" id="bottomWidth" min="0.01" step="0.01" value="0.6" inputmode="decimal">
+                <small>Šířka na dně výkopu nebo ve spodní části.</small>
+              </div>
+
+              <div class="field trap-field hidden">
+                <label for="trapLength">Délka výkopu (m)</label>
+                <input type="number" id="trapLength" min="0.01" step="0.01" value="10" inputmode="decimal">
+                <small>Délka výkopu nebo pásu.</small>
+              </div>
+
+              <div class="field trap-field hidden">
+                <label for="trapDepth">Hloubka (m)</label>
+                <input type="number" id="trapDepth" min="0.01" step="0.01" value="0.8" inputmode="decimal">
+                <small>Hloubka výkopu nebo výška průřezu.</small>
+              </div>
+
+              <div class="field">
+                <label for="reservePercent">Rezerva materiálu (%)</label>
+                <input type="number" id="reservePercent" min="0" max="50" step="0.1" value="10" inputmode="decimal">
+                <small>Například rezerva na nerovnosti, zhutnění nebo prořezy.</small>
+              </div>
+
+              <div class="field custom-density-field hidden">
+                <label for="customDensity">Vlastní hustota (kg / m³)</label>
+                <input type="number" id="customDensity" min="1" step="1" value="1800" inputmode="numeric">
+                <small>Zadejte vlastní orientační hustotu materiálu.</small>
+              </div>
+
+              <div class="field full">
+                <div class="shape-note" id="shapeHelp">
+                  Pro obdélníkový tvar se objem počítá jako délka × šířka × výška.
+                </div>
+              </div>
+
+              <div class="actions full">
+                <button type="submit" class="btn-primary">Spočítat objem materiálu</button>
+                <button type="button" class="btn-secondary" id="resetBtn">Obnovit výchozí hodnoty</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>Výsledek výpočtu</h2>
+          <p>Přehled objemu, rezervy a orientační hmotnosti materiálu.</p>
+        </div>
+        <div class="card-body">
+          <div class="results-grid">
+            <div class="result-box highlight">
+              <div class="result-label">Objem materiálu</div>
+              <div class="result-value" id="volumeResult">0 m³</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Objem s rezervou</div>
+              <div class="result-value" id="volumeWithReserveResult">0 m³</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Objem v litrech</div>
+              <div class="result-value" id="litersResult">0 l</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Orientační hmotnost</div>
+              <div class="result-value" id="weightResult">0 kg</div>
+            </div>
+          </div>
+
+          <div id="statusBadge" class="badge success">Výpočet je vhodný jako běžný orientační odhad</div>
+
+          <div class="info-list">
+            <div class="info-row">
+              <span>Použitá hustota materiálu</span>
+              <strong id="densityResult">0 kg / m³</strong>
+            </div>
+            <div class="info-row">
+              <span>Rezerva materiálu</span>
+              <strong id="reserveResult">0 %</strong>
+            </div>
+            <div class="info-row">
+              <span>Objem rezervy navíc</span>
+              <strong id="extraVolumeResult">0 m³</strong>
+            </div>
+            <div class="info-row">
+              <span>Hmotnost s rezervou</span>
+              <strong id="weightWithReserveResult">0 kg</strong>
+            </div>
+            <div class="info-row">
+              <span>Typ materiálu</span>
+              <strong id="materialLabelResult">—</strong>
+            </div>
+            <div class="info-row">
+              <span>Tvar výpočtu</span>
+              <strong id="shapeLabelResult">—</strong>
+            </div>
+          </div>
+
+          <div class="note" id="interpretationNote">
+            Výpočet je orientační. V praxi je vhodné počítat s rezervou podle typu práce, nerovností, zhutnění a způsobu ukládání materiálu.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="card">
+        <div class="card-header">
+          <h3>Přehled výpočtu objemu</h3>
+          <p>Souhrn hlavních hodnot pro objednávku nebo odhad přepravy materiálu.</p>
+        </div>
+        <div class="card-body">
+          <div class="table-wrap">
+            <table aria-label="Přehled objemu materiálu">
+              <thead>
+                <tr>
+                  <th>Položka</th>
+                  <th>Hodnota</th>
+                  <th>Poznámka</th>
+                </tr>
+              </thead>
+              <tbody id="summaryTableBody">
+                <tr>
+                  <td>Čistý objem</td>
+                  <td>0 m³</td>
+                  <td>Základní výpočet bez rezervy</td>
+                </tr>
+                <tr>
+                  <td>Objem s rezervou</td>
+                  <td>0 m³</td>
+                  <td>Doporučené množství pro objednávku</td>
+                </tr>
+                <tr>
+                  <td>Objem v litrech</td>
+                  <td>0 l</td>
+                  <td>Přepočet pro menší objemy</td>
+                </tr>
+                <tr>
+                  <td>Orientační hmotnost</td>
+                  <td>0 kg</td>
+                  <td>Podle zvoleného materiálu</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container content-section">
+      <h2>Jak kalkulačka objemu materiálu funguje</h2>
+      <p>Kalkulačka počítá objem podle zvoleného tvaru a rozměrů. U kvádru používá délku, šířku a výšku. U válce pracuje s průměrem a výškou. U výkopu se šikmými stěnami počítá s průměrnou šířkou mezi horní a spodní hranou. Výsledek se zobrazuje v metrech krychlových a litrech.</p>
+
+      <h3>K čemu se kalkulačka hodí</h3>
+      <ul>
+        <li>pro odhad množství betonu do desky, patek nebo základů,</li>
+        <li>pro výkop a zásyp zeminy nebo štěrku,</li>
+        <li>pro výpočet mulče, písku nebo podsypu na zahradě,</li>
+        <li>pro rychlou orientaci při objednávce materiálu nebo dopravě.</li>
+      </ul>
+
+      <h3>Proč počítat i s rezervou</h3>
+      <p>V praxi bývá rozumné objednat mírně vyšší množství, než vychází z čistého geometrického objemu. Důvodem jsou nerovnosti terénu, zhutnění, přesahy, ztráty při manipulaci nebo drobné nepřesnosti v rozměrech.</p>
+
+      <h3>Co znamená orientační hmotnost</h3>
+      <p>Různé materiály mají různou hustotu. Právě proto stejný objem betonu, štěrku nebo mulče neznamená stejnou hmotnost. Přepočet na kilogramy slouží hlavně pro lepší orientaci při dopravě, manipulaci a objednávce.</p>
+
+      <h3>Kdy je výpočet nejpřesnější</h3>
+      <p>Nejpřesnější bývá tehdy, když dobře znáte skutečné rozměry a materiál má rovnoměrné uložení. U složitějších tvarů, svažitého terénu nebo nerovného výkopu je vhodné brát výsledek jako praktický odhad a přidat rozumnou rezervu.</p>
+    </section>
+
+    <section class="container content-section">
+      <h2>Na co si dát pozor</h2>
+      <p>Tato kalkulačka zjednodušuje realitu na základní tvary. U složitějších stavebních nebo zahradních situací může být skutečný objem odlišný. U sypkých materiálů se navíc může měnit objem podle vlhkosti, zhutnění a způsobu uložení.</p>
+      <p>Přesto jde o velmi užitečný nástroj pro první odhad, rychlé srovnání a kontrolu, zda se plánované množství materiálu pohybuje v rozumném rozsahu.</p>
+    </section>
+
+    <section class="container content-section">
+      <h2>Související kalkulačky</h2>
+      <div class="related-grid">
+        <a class="related-card" href="/prevodnik-jednotek.html">
+          <strong>Převodník jednotek</strong>
+          <span>Převody délek, objemů, hmotnosti a dalších jednotek na jednom místě.</span>
+        </a>
+
+        <a class="related-card" href="/spotreba-vody-a-naklady-kalkulacka.html">
+          <strong>Kalkulačka spotřeby vody a nákladů</strong>
+          <span>Praktický přehled spotřeby vody a orientačních nákladů domácnosti.</span>
+        </a>
+
+        <a class="related-card" href="/led-uspora-elektriny-kalkulacka.html">
+          <strong>Kalkulačka úspory elektřiny při výměně za LED</strong>
+          <span>Odhad spotřeby, úspory a návratnosti u LED osvětlení.</span>
+        </a>
+
+        <a class="related-card" href="/spotreba-elektriny-kalkulacka.html">
+          <strong>Kalkulačka spotřeby elektřiny</strong>
+          <span>Výpočet spotřeby a ceny provozu spotřebiče za den, měsíc i rok.</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      © 2026 RychléVýpočty.cz — online kalkulačky a praktické výpočty pro každodenní použití.
+    </div>
+  </footer>
+
+  <script>
+    const form = document.getElementById('volumeForm');
+    const resetBtn = document.getElementById('resetBtn');
+
+    const shapeType = document.getElementById('shapeType');
+    const materialType = document.getElementById('materialType');
+    const shapeHelp = document.getElementById('shapeHelp');
+
+    const outputs = {
+      volumeResult: document.getElementById('volumeResult'),
+      volumeWithReserveResult: document.getElementById('volumeWithReserveResult'),
+      litersResult: document.getElementById('litersResult'),
+      weightResult: document.getElementById('weightResult'),
+      densityResult: document.getElementById('densityResult'),
+      reserveResult: document.getElementById('reserveResult'),
+      extraVolumeResult: document.getElementById('extraVolumeResult'),
+      weightWithReserveResult: document.getElementById('weightWithReserveResult'),
+      materialLabelResult: document.getElementById('materialLabelResult'),
+      shapeLabelResult: document.getElementById('shapeLabelResult'),
+      statusBadge: document.getElementById('statusBadge'),
+      interpretationNote: document.getElementById('interpretationNote'),
+      summaryTableBody: document.getElementById('summaryTableBody')
+    };
+
+    const materialDensityMap = {
+      soil: { label: 'Zemina', density: 1600 },
+      sand: { label: 'Písek', density: 1700 },
+      gravel: { label: 'Štěrk', density: 1750 },
+      concrete: { label: 'Beton', density: 2400 },
+      mulch: { label: 'Mulč', density: 350 },
+      custom: { label: 'Vlastní hustota', density: 1800 }
+    };
+
+    const shapeLabelMap = {
+      rectangular: 'Obdélníkový / kvádr',
+      cylindrical: 'Kruhový / válec',
+      trapezoid: 'Výkop se šikmými stěnami'
+    };
+
+    function formatCubicMeters(value) {
+      return new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 3
+      }).format(value) + ' m³';
+    }
+
+    function formatLiters(value) {
+      return new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
+      }).format(value) + ' l';
+    }
+
+    function formatKilograms(value) {
+      return new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
+      }).format(value) + ' kg';
+    }
+
+    function formatDensity(value) {
+      return new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
+      }).format(value) + ' kg / m³';
+    }
+
+    function formatPercent(value) {
+      return new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 1
+      }).format(value) + ' %';
+    }
+
+    function toggleFields() {
+      const currentShape = shapeType.value;
+      document.querySelectorAll('.rect-field').forEach(el => el.classList.toggle('hidden', currentShape !== 'rectangular'));
+      document.querySelectorAll('.cyl-field').forEach(el => el.classList.toggle('hidden', currentShape !== 'cylindrical'));
+      document.querySelectorAll('.trap-field').forEach(el => el.classList.toggle('hidden', currentShape !== 'trapezoid'));
+
+      if (currentShape === 'rectangular') {
+        shapeHelp.textContent = 'Pro obdélníkový tvar se objem počítá jako délka × šířka × výška.';
+      } else if (currentShape === 'cylindrical') {
+        shapeHelp.textContent = 'Pro kruhový tvar se objem počítá jako π × r² × výška.';
+      } else {
+        shapeHelp.textContent = 'U výkopu se šikmými stěnami kalkulačka používá průměrnou šířku mezi horní a spodní hranou × délka × hloubka.';
+      }
+    }
+
+    function toggleCustomDensity() {
+      const show = materialType.value === 'custom';
+      document.querySelector('.custom-density-field').classList.toggle('hidden', !show);
+    }
+
+    function getValues() {
+      return {
+        shapeType: shapeType.value,
+        materialType: materialType.value,
+        length: Number(document.getElementById('length').value),
+        width: Number(document.getElementById('width').value),
+        height: Number(document.getElementById('height').value),
+        diameter: Number(document.getElementById('diameter').value),
+        cylHeight: Number(document.getElementById('cylHeight').value),
+        topWidth: Number(document.getElementById('topWidth').value),
+        bottomWidth: Number(document.getElementById('bottomWidth').value),
+        trapLength: Number(document.getElementById('trapLength').value),
+        trapDepth: Number(document.getElementById('trapDepth').value),
+        reservePercent: Number(document.getElementById('reservePercent').value),
+        customDensity: Number(document.getElementById('customDensity').value)
+      };
+    }
+
+    function validate(values) {
+      if (Number.isNaN(values.reservePercent) || values.reservePercent < 0 || values.reservePercent > 50) {
+        return 'Zadejte platnou rezervu materiálu.';
+      }
+
+      if (values.materialType === 'custom' && (!values.customDensity || values.customDensity <= 0)) {
+        return 'Zadejte platnou vlastní hustotu materiálu.';
+      }
+
+      if (values.shapeType === 'rectangular') {
+        if (!values.length || values.length <= 0) return 'Zadejte platnou délku.';
+        if (!values.width || values.width <= 0) return 'Zadejte platnou šířku.';
+        if (!values.height || values.height <= 0) return 'Zadejte platnou výšku nebo hloubku.';
+      }
+
+      if (values.shapeType === 'cylindrical') {
+        if (!values.diameter || values.diameter <= 0) return 'Zadejte platný průměr.';
+        if (!values.cylHeight || values.cylHeight <= 0) return 'Zadejte platnou výšku nebo hloubku.';
+      }
+
+      if (values.shapeType === 'trapezoid') {
+        if (!values.topWidth || values.topWidth <= 0) return 'Zadejte platnou horní šířku.';
+        if (!values.bottomWidth || values.bottomWidth <= 0) return 'Zadejte platnou spodní šířku.';
+        if (!values.trapLength || values.trapLength <= 0) return 'Zadejte platnou délku výkopu.';
+        if (!values.trapDepth || values.trapDepth <= 0) return 'Zadejte platnou hloubku.';
+      }
+
+      return '';
+    }
+
+    function calculateVolume(values) {
+      let volume = 0;
+
+      if (values.shapeType === 'rectangular') {
+        volume = values.length * values.width * values.height;
+      } else if (values.shapeType === 'cylindrical') {
+        const radius = values.diameter / 2;
+        volume = Math.PI * radius * radius * values.cylHeight;
+      } else if (values.shapeType === 'trapezoid') {
+        const averageWidth = (values.topWidth + values.bottomWidth) / 2;
+        volume = averageWidth * values.trapLength * values.trapDepth;
+      }
+
+      const density = values.materialType === 'custom'
+        ? values.customDensity
+        : materialDensityMap[values.materialType].density;
+
+      const reserveMultiplier = 1 + (values.reservePercent / 100);
+      const volumeWithReserve = volume * reserveMultiplier;
+      const extraVolume = volumeWithReserve - volume;
+      const liters = volume * 1000;
+      const weight = volume * density;
+      const weightWithReserve = volumeWithReserve * density;
+
+      return {
+        volume,
+        volumeWithReserve,
+        extraVolume,
+        liters,
+        density,
+        weight,
+        weightWithReserve
+      };
+    }
+
+    function renderTable(result) {
+      outputs.summaryTableBody.innerHTML = `
+        <tr>
+          <td>Čistý objem</td>
+          <td>${formatCubicMeters(result.volume)}</td>
+          <td>Základní výpočet bez rezervy</td>
+        </tr>
+        <tr>
+          <td>Objem s rezervou</td>
+          <td>${formatCubicMeters(result.volumeWithReserve)}</td>
+          <td>Doporučené množství pro objednávku</td>
+        </tr>
+        <tr>
+          <td>Objem v litrech</td>
+          <td>${formatLiters(result.liters)}</td>
+          <td>Přepočet pro menší objemy</td>
+        </tr>
+        <tr>
+          <td>Orientační hmotnost</td>
+          <td>${formatKilograms(result.weight)}</td>
+          <td>Podle zvoleného materiálu</td>
+        </tr>
+      `;
+    }
+
+    function getInterpretation(values, result) {
+      const materialLabel = materialDensityMap[values.materialType].label;
+      if (result.volumeWithReserve > 10) {
+        return `Výpočet ukazuje už poměrně větší objem materiálu. U materiálu typu ${materialLabel.toLowerCase()} dává smysl dopředu řešit i logistiku, dopravu a způsob uložení.`;
+      }
+
+      if (result.volumeWithReserve > 3) {
+        return `Jde o středně velký objem materiálu. Pro ${materialLabel.toLowerCase()} je rozumné počítat s rezervou a ověřit, jestli dodavatel pracuje s objemem, hmotností nebo kombinací obojího.`;
+      }
+
+      return `Jde o menší až běžný objem materiálu. Výpočet je vhodný jako praktický orientační základ pro objednávku nebo nákup.`;
+    }
+
+    function render(values, result) {
+      const materialLabel = materialDensityMap[values.materialType].label;
+      const shapeLabel = shapeLabelMap[values.shapeType];
+
+      outputs.volumeResult.textContent = formatCubicMeters(result.volume);
+      outputs.volumeWithReserveResult.textContent = formatCubicMeters(result.volumeWithReserve);
+      outputs.litersResult.textContent = formatLiters(result.liters);
+      outputs.weightResult.textContent = formatKilograms(result.weight);
+      outputs.densityResult.textContent = formatDensity(result.density);
+      outputs.reserveResult.textContent = formatPercent(values.reservePercent);
+      outputs.extraVolumeResult.textContent = formatCubicMeters(result.extraVolume);
+      outputs.weightWithReserveResult.textContent = formatKilograms(result.weightWithReserve);
+      outputs.materialLabelResult.textContent = materialLabel;
+      outputs.shapeLabelResult.textContent = shapeLabel;
+      outputs.interpretationNote.textContent = getInterpretation(values, result);
+
+      if (values.reservePercent < 5) {
+        outputs.statusBadge.className = 'badge warning';
+        outputs.statusBadge.textContent = 'Rezerva je spíše nižší, zvažte bezpečný polštář navíc';
+      } else {
+        outputs.statusBadge.className = 'badge success';
+        outputs.statusBadge.textContent = 'Výpočet je vhodný jako běžný orientační odhad';
+      }
+
+      renderTable(result);
+    }
+
+    function runCalculation() {
+      toggleFields();
+      toggleCustomDensity();
+
+      const values = getValues();
+      const error = validate(values);
+
+      if (error) {
+        alert(error);
+        return;
+      }
+
+      const result = calculateVolume(values);
+      render(values, result);
+    }
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      runCalculation();
+    });
+
+    [
+      'shapeType', 'materialType', 'length', 'width', 'height', 'diameter', 'cylHeight',
+      'topWidth', 'bottomWidth', 'trapLength', 'trapDepth', 'reservePercent', 'customDensity'
+    ].forEach(id => {
+      document.getElementById(id).addEventListener('input', runCalculation);
+      document.getElementById(id).addEventListener('change', runCalculation);
+    });
+
+    resetBtn.addEventListener('click', function() {
+      document.getElementById('shapeType').value = 'rectangular';
+      document.getElementById('materialType').value = 'concrete';
+      document.getElementById('length').value = 6;
+      document.getElementById('width').value = 3;
+      document.getElementById('height').value = 0.15;
+      document.getElementById('diameter').value = 1.2;
+      document.getElementById('cylHeight').value = 1;
+      document.getElementById('topWidth').value = 1.2;
+      document.getElementById('bottomWidth').value = 0.6;
+      document.getElementById('trapLength').value = 10;
+      document.getElementById('trapDepth').value = 0.8;
+      document.getElementById('reservePercent').value = 10;
+      document.getElementById('customDensity').value = 1800;
+      runCalculation();
+    });
+
+    toggleFields();
+    toggleCustomDensity();
+    runCalculation();
+  </script>
+</body>
+</html>
