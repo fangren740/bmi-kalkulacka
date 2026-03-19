@@ -1,1 +1,1114 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <title>Kalkulačka spotřeby vody a nákladů online zdarma | RychléVýpočty.cz</title>
+  <meta name="description" content="Spočítejte si spotřebu vody a orientační náklady za vodné a stočné. Přehledná online kalkulačka pro domácnosti podle počtu osob, denní spotřeby, ceny za m³ a délky období.">
+  <meta name="keywords" content="spotřeba vody kalkulačka, kalkulačka vody, vodné a stočné kalkulačka, náklady na vodu, kolik stojí voda, spotřeba vody domácnosti">
+  <meta name="author" content="RychléVýpočty.cz">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://rychlevypocty.cz/spotreba-vody-a-naklady-kalkulacka.html">
+
+  <meta property="og:title" content="Kalkulačka spotřeby vody a nákladů online zdarma | RychléVýpočty.cz">
+  <meta property="og:description" content="Rychlý výpočet spotřeby vody a nákladů na vodné a stočné podle počtu osob, spotřeby a ceny za m³.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rychlevypocty.cz/spotreba-vody-a-naklady-kalkulacka.html">
+  <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Kalkulačka spotřeby vody a nákladů online zdarma | RychléVýpočty.cz">
+  <meta name="twitter:description" content="Spočítejte si spotřebu vody a odhad ceny za vodné a stočné během pár sekund.">
+
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #5f6b85;
+      --primary: #2152ff;
+      --primary-dark: #183dbf;
+      --border: #dbe3f0;
+      --success: #138a4b;
+      --warning: #b66a00;
+      --shadow: 0 12px 32px rgba(20, 32, 70, 0.08);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #f7f9fd 0%, #eef3fb 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      padding: 18px 0;
+      border-bottom: 1px solid rgba(219, 227, 240, 0.8);
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+      line-height: 1;
+    }
+
+    .brand span {
+      color: var(--primary);
+    }
+
+    .topnav {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      font-size: 0.97rem;
+    }
+
+    .topnav a {
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .topnav a:hover {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    .hero {
+      padding: 42px 0 20px;
+    }
+
+    .breadcrumbs {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .hero-copy h1 {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      margin: 0 0 16px;
+    }
+
+    .hero-copy p {
+      margin: 0 0 16px;
+      font-size: 1.06rem;
+      color: var(--muted);
+      max-width: 720px;
+    }
+
+    .hero-points {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .hero-pill {
+      background: rgba(33, 82, 255, 0.08);
+      color: var(--primary-dark);
+      border: 1px solid rgba(33, 82, 255, 0.12);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .hero-box {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-box h2 {
+      margin: 0 0 10px;
+      font-size: 1.2rem;
+    }
+
+    .hero-box p {
+      margin: 0 0 14px;
+      color: var(--muted);
+    }
+
+    .hero-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.04fr 0.96fr;
+      gap: 28px;
+      align-items: start;
+      padding: 22px 0 32px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .card-header {
+      padding: 24px 24px 10px;
+    }
+
+    .card-header h2,
+    .card-header h3 {
+      margin: 0 0 8px;
+      font-size: 1.3rem;
+      letter-spacing: -0.02em;
+    }
+
+    .card-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .card-body {
+      padding: 20px 24px 24px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field label {
+      font-weight: 700;
+      font-size: 0.96rem;
+    }
+
+    .field small {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: -2px;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      padding: 14px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      font-size: 1rem;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      outline: none;
+      border-color: rgba(33, 82, 255, 0.45);
+      box-shadow: 0 0 0 4px rgba(33, 82, 255, 0.10);
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.06s ease, background 0.15s ease, opacity 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background: #eef3ff;
+      color: var(--primary-dark);
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .result-box {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+
+    .result-label {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .result-value {
+      font-size: clamp(1.15rem, 2.1vw, 1.85rem);
+      line-height: 1.15;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .highlight {
+      background: linear-gradient(180deg, #eef7ff 0%, #f9fcff 100%);
+      border-color: rgba(33, 82, 255, 0.18);
+    }
+
+    .info-list {
+      display: grid;
+      gap: 12px;
+      margin: 18px 0 0;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid #edf2fa;
+    }
+
+    .info-row:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .info-row span:first-child {
+      color: var(--muted);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+
+    .badge.success {
+      background: rgba(19, 138, 75, 0.10);
+      color: var(--success);
+    }
+
+    .badge.warning {
+      background: rgba(182, 106, 0, 0.11);
+      color: var(--warning);
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 18px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 640px;
+      background: #fff;
+    }
+
+    th, td {
+      padding: 14px 14px;
+      text-align: left;
+      border-bottom: 1px solid #edf2fa;
+      font-size: 0.96rem;
+    }
+
+    th {
+      background: #f8fbff;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .note {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1px solid #e7edf7;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .content-section {
+      padding: 8px 0 8px;
+    }
+
+    .content-section h2 {
+      font-size: 1.7rem;
+      letter-spacing: -0.03em;
+      margin: 0 0 14px;
+    }
+
+    .content-section h3 {
+      font-size: 1.15rem;
+      margin: 28px 0 10px;
+    }
+
+    .content-section p {
+      color: var(--muted);
+      margin: 0 0 14px;
+    }
+
+    .content-section ul {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    .content-section li {
+      margin-bottom: 8px;
+    }
+
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .related-card {
+      display: block;
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      color: var(--text);
+      box-shadow: var(--shadow);
+    }
+
+    .related-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .related-card span {
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    footer {
+      margin-top: 40px;
+      border-top: 1px solid rgba(219, 227, 240, 0.9);
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .footer-inner {
+      padding: 24px 0 40px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .layout,
+      .related-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .container {
+        width: min(100% - 24px, 1160px);
+      }
+
+      .form-grid,
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 28px;
+      }
+
+      .card-header,
+      .card-body,
+      .hero-box {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .info-row {
+        flex-direction: column;
+        gap: 6px;
+      }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebApplication",
+    "name":"Kalkulačka spotřeby vody a nákladů",
+    "url":"https://rychlevypocty.cz/spotreba-vody-a-naklady-kalkulacka.html",
+    "applicationCategory":"UtilitiesApplication",
+    "operatingSystem":"Any",
+    "description":"Online kalkulačka pro výpočet spotřeby vody a orientačních nákladů na vodné a stočné podle počtu osob, spotřeby a ceny za m3.",
+    "offers":{
+      "@type":"Offer",
+      "price":"0",
+      "priceCurrency":"CZK"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"Jak se počítá spotřeba vody v domácnosti?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Spotřeba vody se orientačně počítá podle počtu osob, průměrné denní spotřeby na osobu a délky sledovaného období. Výsledek se obvykle převádí z litrů na metry krychlové, protože vodné a stočné se účtuje za m3."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Co je vodné a stočné?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Vodné je cena za dodanou pitnou vodu. Stočné je cena za odvedení a čištění odpadní vody. V praxi se náklady domácnosti často skládají z obou těchto položek."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Je výsledek kalkulačky přesný?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Výpočet je orientační. Skutečný účet za vodu se může lišit podle konkrétního ceníku dodavatele, pevných poplatků, způsobu rozúčtování v domě a reálného chování domácnosti."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="/">Rychlé<span>Výpočty</span>.cz</a>
+      <nav class="topnav" aria-label="Hlavní navigace">
+        <a href="/">Domů</a>
+        <a href="/spotreba-elektriny-kalkulacka.html">Spotřeba elektřiny</a>
+        <a href="/spotreba-plynu-kalkulacka.html">Spotřeba plynu</a>
+        <a href="/naklady-na-vytapeni-kalkulacka.html">Náklady na vytápění</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumbs">
+          <a href="/">RychléVýpočty.cz</a> / Kalkulačka spotřeby vody a nákladů
+        </div>
+
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <h1>Kalkulačka spotřeby vody a nákladů</h1>
+            <p>Spočítejte si orientační spotřebu vody v domácnosti a navazující náklady na vodné a stočné. Kalkulačka je vhodná pro byty, domy i rychlé porovnání různých scénářů spotřeby.</p>
+            <p>Zadejte počet osob, denní spotřebu vody na osobu, cenu vodného a stočného, případně pevný měsíční poplatek. Výsledkem získáte přehled za měsíc, rok i zvolené období.</p>
+
+            <div class="hero-points">
+              <div class="hero-pill">Spotřeba v litrech i m³</div>
+              <div class="hero-pill">Vodné a stočné zvlášť</div>
+              <div class="hero-pill">Měsíční i roční odhad</div>
+              <div class="hero-pill">Praktický rozpad nákladů</div>
+            </div>
+          </div>
+
+          <div class="hero-box">
+            <h2>Co kalkulačka umí</h2>
+            <p>Pomůže rychle odhadnout, kolik vody domácnost spotřebuje a kolik to může stát. Výpočet rozlišuje vodné, stočné i pevné měsíční poplatky, takže výstup je použitelnější než pouhý přepočet litrů na m³.</p>
+            <p>Hodí se pro kontrolu rozpočtu, porovnání domácností i orientační odhad před změnou návyků nebo ceníku.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container layout">
+      <div class="card">
+        <div class="card-header">
+          <h2>Zadání pro výpočet</h2>
+          <p>Vyplňte údaje o domácnosti a ceně vody. Kalkulačka průběžně přepočítá spotřebu i náklady.</p>
+        </div>
+        <div class="card-body">
+          <form id="waterForm">
+            <div class="form-grid">
+              <div class="field">
+                <label for="persons">Počet osob v domácnosti</label>
+                <input type="number" id="persons" min="1" step="1" value="3" inputmode="numeric">
+                <small>Kolik osob běžně sdílí spotřebu vody.</small>
+              </div>
+
+              <div class="field">
+                <label for="dailyLiters">Denní spotřeba na osobu (l)</label>
+                <input type="number" id="dailyLiters" min="1" step="1" value="90" inputmode="numeric">
+                <small>Orientační průměr na jednoho člověka za den.</small>
+              </div>
+
+              <div class="field">
+                <label for="waterPrice">Vodné za 1 m³ (Kč)</label>
+                <input type="number" id="waterPrice" min="0" step="0.01" value="65" inputmode="decimal">
+                <small>Cena za dodanou vodu bez pevných měsíčních poplatků.</small>
+              </div>
+
+              <div class="field">
+                <label for="sewerPrice">Stočné za 1 m³ (Kč)</label>
+                <input type="number" id="sewerPrice" min="0" step="0.01" value="60" inputmode="decimal">
+                <small>Cena za odvedení a čištění odpadní vody.</small>
+              </div>
+
+              <div class="field">
+                <label for="monthlyFee">Pevný měsíční poplatek (Kč)</label>
+                <input type="number" id="monthlyFee" min="0" step="0.01" value="150" inputmode="decimal">
+                <small>Volitelné. Například stálá složka nebo rozúčtovaný poplatek.</small>
+              </div>
+
+              <div class="field">
+                <label for="periodMonths">Sledované období (měsíce)</label>
+                <input type="number" id="periodMonths" min="1" step="1" value="12" inputmode="numeric">
+                <small>Například 1 měsíc, 3 měsíce, 6 měsíců nebo 12 měsíců.</small>
+              </div>
+
+              <div class="field">
+                <label for="usageProfile">Profil domácnosti</label>
+                <select id="usageProfile">
+                  <option value="economical">Úspornější provoz</option>
+                  <option value="standard" selected>Běžná domácnost</option>
+                  <option value="higher">Vyšší spotřeba</option>
+                  <option value="custom">Vlastní hodnoty</option>
+                </select>
+                <small>Profil může rychle upravit denní spotřebu na osobu.</small>
+              </div>
+
+              <div class="field">
+                <label for="includeSewer">Zahrnout stočné</label>
+                <select id="includeSewer">
+                  <option value="yes" selected>Ano</option>
+                  <option value="no">Ne</option>
+                </select>
+                <small>V některých situacích chcete vidět jen samotné vodné.</small>
+              </div>
+
+              <div class="actions full">
+                <button type="submit" class="btn-primary">Spočítat spotřebu a náklady</button>
+                <button type="button" class="btn-secondary" id="resetBtn">Obnovit výchozí hodnoty</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>Výsledek výpočtu</h2>
+          <p>Přehled spotřeby vody a orientačních nákladů na domácnost.</p>
+        </div>
+        <div class="card-body">
+          <div class="results-grid">
+            <div class="result-box highlight">
+              <div class="result-label">Spotřeba za měsíc</div>
+              <div class="result-value" id="monthlyConsumption">0 m³</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Náklad za měsíc</div>
+              <div class="result-value" id="monthlyCost">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Spotřeba za zvolené období</div>
+              <div class="result-value" id="periodConsumption">0 m³</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Náklad za zvolené období</div>
+              <div class="result-value" id="periodCost">0 Kč</div>
+            </div>
+          </div>
+
+          <div id="statusBadge" class="badge success">Spotřeba domácnosti je v běžném rozsahu</div>
+
+          <div class="info-list">
+            <div class="info-row">
+              <span>Spotřeba za den</span>
+              <strong id="dailyConsumption">0 l</strong>
+            </div>
+            <div class="info-row">
+              <span>Spotřeba na osobu za den</span>
+              <strong id="dailyPerPerson">0 l</strong>
+            </div>
+            <div class="info-row">
+              <span>Roční spotřeba</span>
+              <strong id="yearlyConsumption">0 m³</strong>
+            </div>
+            <div class="info-row">
+              <span>Roční náklad</span>
+              <strong id="yearlyCost">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Vodné za měsíc</span>
+              <strong id="monthlyWaterCost">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Stočné za měsíc</span>
+              <strong id="monthlySewerCost">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Pevné poplatky za měsíc</span>
+              <strong id="monthlyFixedCost">0 Kč</strong>
+            </div>
+          </div>
+
+          <div class="note">
+            Výpočet je orientační. Skutečný účet za vodu se může lišit podle lokality, ceníku dodavatele, rozúčtování v domě, pevných složek ceny i reálného chování domácnosti.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="card">
+        <div class="card-header">
+          <h3>Přehled spotřeby a nákladů</h3>
+          <p>Souhrn hlavních hodnot pro den, měsíc, rok a zadané období.</p>
+        </div>
+        <div class="card-body">
+          <div class="table-wrap">
+            <table aria-label="Přehled spotřeby vody a nákladů">
+              <thead>
+                <tr>
+                  <th>Období</th>
+                  <th>Spotřeba</th>
+                  <th>Vodné</th>
+                  <th>Stočné</th>
+                  <th>Celkem</th>
+                </tr>
+              </thead>
+              <tbody id="summaryTableBody">
+                <tr>
+                  <td>Den</td>
+                  <td>0 l</td>
+                  <td>0 Kč</td>
+                  <td>0 Kč</td>
+                  <td>0 Kč</td>
+                </tr>
+                <tr>
+                  <td>Měsíc</td>
+                  <td>0 m³</td>
+                  <td>0 Kč</td>
+                  <td>0 Kč</td>
+                  <td>0 Kč</td>
+                </tr>
+                <tr>
+                  <td>Rok</td>
+                  <td>0 m³</td>
+                  <td>0 Kč</td>
+                  <td>0 Kč</td>
+                  <td>0 Kč</td>
+                </tr>
+                <tr>
+                  <td>Zadané období</td>
+                  <td>0 m³</td>
+                  <td>0 Kč</td>
+                  <td>0 Kč</td>
+                  <td>0 Kč</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container content-section">
+      <h2>Jak kalkulačka spotřeby vody funguje</h2>
+      <p>Kalkulačka vychází z počtu osob v domácnosti, průměrné denní spotřeby vody na osobu a délky období. Denní spotřeba v litrech se přepočítá na měsíční a roční spotřebu v metrech krychlových, protože právě v m³ se obvykle účtuje vodné i stočné.</p>
+
+      <h3>Co kalkulačka počítá</h3>
+      <ul>
+        <li>celkovou denní spotřebu domácnosti v litrech,</li>
+        <li>měsíční, roční a zadanou spotřebu v m³,</li>
+        <li>orientační náklad na vodné,</li>
+        <li>orientační náklad na stočné,</li>
+        <li>celkovou cenu včetně pevného měsíčního poplatku.</li>
+      </ul>
+
+      <h3>Co je vodné a stočné</h3>
+      <p>Vodné je cena za dodávku pitné vody. Stočné je cena za odvedení a čištění odpadní vody. U většiny domácností tvoří výsledný účet kombinace obou položek, proto je praktické počítat je odděleně i dohromady.</p>
+
+      <h3>Kolik vody běžně spotřebuje domácnost</h3>
+      <p>Reálná spotřeba se liší podle velikosti domácnosti, způsobu ohřevu vody, četnosti koupání, praní, mytí nádobí nebo zalévání. Tato kalkulačka slouží hlavně jako rychlá orientace a srovnání scénářů, ne jako náhrada skutečného odečtu z vodoměru.</p>
+
+      <h3>Kdy se kalkulačka hodí</h3>
+      <p>Hodí se při kontrole měsíčních nákladů, porovnání bytů a domů, plánování rodinného rozpočtu, vyhodnocení úsporných opatření i při orientační kontrole rozúčtování nákladů.</p>
+    </section>
+
+    <section class="container content-section">
+      <h2>Na co si dát při odhadu pozor</h2>
+      <p>Výpočet nepostihuje všechny možné detaily ceníku. V praxi mohou výsledný účet ovlivnit další pevné položky, jiný způsob rozúčtování v SVJ nebo družstvu, sezonní změny spotřeby či zvláštní případy jako voda na zahradu nebo vlastní zdroj vody.</p>
+      <p>Pro běžné domácí použití je ale takový orientační přehled velmi užitečný, protože umožní rychle zjistit, zda se pohybujete v rozumném rozsahu, a jak se na účtu projeví změna spotřeby nebo cen za m³.</p>
+    </section>
+
+    <section class="container content-section">
+      <h2>Související kalkulačky</h2>
+      <div class="related-grid">
+        <a class="related-card" href="/spotreba-elektriny-kalkulacka.html">
+          <strong>Kalkulačka spotřeby elektřiny</strong>
+          <span>Odhad kWh a nákladů na provoz spotřebičů za den, měsíc i rok.</span>
+        </a>
+
+        <a class="related-card" href="/spotreba-plynu-kalkulacka.html">
+          <strong>Kalkulačka spotřeby plynu</strong>
+          <span>Výpočet spotřeby plynu a orientačních nákladů domácnosti.</span>
+        </a>
+
+        <a class="related-card" href="/naklady-na-vytapeni-kalkulacka.html">
+          <strong>Kalkulačka nákladů na vytápění</strong>
+          <span>Porovnání orientačních nákladů podle typu vytápění a spotřeby.</span>
+        </a>
+
+        <a class="related-card" href="/navratnost-fotovoltaiky-kalkulacka.html">
+          <strong>Kalkulačka návratnosti fotovoltaiky</strong>
+          <span>Odhad úspor a návratnosti investice do domácí fotovoltaiky.</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      © 2026 RychléVýpočty.cz — online kalkulačky a praktické výpočty pro každodenní použití.
+    </div>
+  </footer>
+
+  <script>
+    const form = document.getElementById('waterForm');
+    const resetBtn = document.getElementById('resetBtn');
+
+    const outputs = {
+      monthlyConsumption: document.getElementById('monthlyConsumption'),
+      monthlyCost: document.getElementById('monthlyCost'),
+      periodConsumption: document.getElementById('periodConsumption'),
+      periodCost: document.getElementById('periodCost'),
+      dailyConsumption: document.getElementById('dailyConsumption'),
+      dailyPerPerson: document.getElementById('dailyPerPerson'),
+      yearlyConsumption: document.getElementById('yearlyConsumption'),
+      yearlyCost: document.getElementById('yearlyCost'),
+      monthlyWaterCost: document.getElementById('monthlyWaterCost'),
+      monthlySewerCost: document.getElementById('monthlySewerCost'),
+      monthlyFixedCost: document.getElementById('monthlyFixedCost'),
+      statusBadge: document.getElementById('statusBadge'),
+      summaryTableBody: document.getElementById('summaryTableBody')
+    };
+
+    function formatCurrency(value) {
+      return new Intl.NumberFormat('cs-CZ', {
+        style: 'currency',
+        currency: 'CZK',
+        maximumFractionDigits: 0
+      }).format(value);
+    }
+
+    function formatLiters(value) {
+      return new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
+      }).format(value) + ' l';
+    }
+
+    function formatM3(value) {
+      return new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2
+      }).format(value) + ' m³';
+    }
+
+    function getValues() {
+      return {
+        persons: Number(document.getElementById('persons').value),
+        dailyLiters: Number(document.getElementById('dailyLiters').value),
+        waterPrice: Number(document.getElementById('waterPrice').value),
+        sewerPrice: Number(document.getElementById('sewerPrice').value),
+        monthlyFee: Number(document.getElementById('monthlyFee').value),
+        periodMonths: Number(document.getElementById('periodMonths').value),
+        usageProfile: document.getElementById('usageProfile').value,
+        includeSewer: document.getElementById('includeSewer').value
+      };
+    }
+
+    function applyProfile(values) {
+      if (values.usageProfile === 'economical') {
+        values.dailyLiters = 70;
+        document.getElementById('dailyLiters').value = 70;
+      } else if (values.usageProfile === 'standard') {
+        values.dailyLiters = 90;
+        document.getElementById('dailyLiters').value = 90;
+      } else if (values.usageProfile === 'higher') {
+        values.dailyLiters = 120;
+        document.getElementById('dailyLiters').value = 120;
+      }
+      return values;
+    }
+
+    function validate(values) {
+      if (!values.persons || values.persons <= 0) return 'Zadejte platný počet osob v domácnosti.';
+      if (!values.dailyLiters || values.dailyLiters <= 0) return 'Zadejte platnou denní spotřebu na osobu.';
+      if (Number.isNaN(values.waterPrice) || values.waterPrice < 0) return 'Zadejte platnou cenu vodného za m³.';
+      if (Number.isNaN(values.sewerPrice) || values.sewerPrice < 0) return 'Zadejte platnou cenu stočného za m³.';
+      if (Number.isNaN(values.monthlyFee) || values.monthlyFee < 0) return 'Zadejte platný pevný měsíční poplatek.';
+      if (!values.periodMonths || values.periodMonths <= 0) return 'Zadejte platný počet měsíců sledovaného období.';
+      return '';
+    }
+
+    function calculateWater(values) {
+      const daysPerMonth = 30;
+      const daysPerYear = 365;
+
+      const dailyHouseholdLiters = values.persons * values.dailyLiters;
+      const dailyHouseholdM3 = dailyHouseholdLiters / 1000;
+
+      const monthlyM3 = dailyHouseholdM3 * daysPerMonth;
+      const yearlyM3 = dailyHouseholdM3 * daysPerYear;
+      const periodM3 = monthlyM3 * values.periodMonths;
+
+      const monthlyWaterCost = monthlyM3 * values.waterPrice;
+      const monthlySewerCost = values.includeSewer === 'yes' ? monthlyM3 * values.sewerPrice : 0;
+      const monthlyTotal = monthlyWaterCost + monthlySewerCost + values.monthlyFee;
+
+      const yearlyWaterCost = yearlyM3 * values.waterPrice;
+      const yearlySewerCost = values.includeSewer === 'yes' ? yearlyM3 * values.sewerPrice : 0;
+      const yearlyTotal = yearlyWaterCost + yearlySewerCost + (values.monthlyFee * 12);
+
+      const periodWaterCost = periodM3 * values.waterPrice;
+      const periodSewerCost = values.includeSewer === 'yes' ? periodM3 * values.sewerPrice : 0;
+      const periodTotal = periodWaterCost + periodSewerCost + (values.monthlyFee * values.periodMonths);
+
+      const dailyWaterCost = dailyHouseholdM3 * values.waterPrice;
+      const dailySewerCost = values.includeSewer === 'yes' ? dailyHouseholdM3 * values.sewerPrice : 0;
+      const dailyTotal = dailyWaterCost + dailySewerCost;
+
+      return {
+        dailyHouseholdLiters,
+        dailyHouseholdM3,
+        monthlyM3,
+        yearlyM3,
+        periodM3,
+        dailyWaterCost,
+        dailySewerCost,
+        dailyTotal,
+        monthlyWaterCost,
+        monthlySewerCost,
+        monthlyTotal,
+        yearlyWaterCost,
+        yearlySewerCost,
+        yearlyTotal,
+        periodWaterCost,
+        periodSewerCost,
+        periodTotal
+      };
+    }
+
+    function renderTable(result, values) {
+      outputs.summaryTableBody.innerHTML = `
+        <tr>
+          <td>Den</td>
+          <td>${formatLiters(result.dailyHouseholdLiters)}</td>
+          <td>${formatCurrency(result.dailyWaterCost)}</td>
+          <td>${formatCurrency(result.dailySewerCost)}</td>
+          <td>${formatCurrency(result.dailyTotal)}</td>
+        </tr>
+        <tr>
+          <td>Měsíc</td>
+          <td>${formatM3(result.monthlyM3)}</td>
+          <td>${formatCurrency(result.monthlyWaterCost)}</td>
+          <td>${formatCurrency(result.monthlySewerCost)}</td>
+          <td>${formatCurrency(result.monthlyTotal)}</td>
+        </tr>
+        <tr>
+          <td>Rok</td>
+          <td>${formatM3(result.yearlyM3)}</td>
+          <td>${formatCurrency(result.yearlyWaterCost)}</td>
+          <td>${formatCurrency(result.yearlySewerCost)}</td>
+          <td>${formatCurrency(result.yearlyTotal)}</td>
+        </tr>
+        <tr>
+          <td>Zadané období</td>
+          <td>${formatM3(result.periodM3)}</td>
+          <td>${formatCurrency(result.periodWaterCost)}</td>
+          <td>${formatCurrency(result.periodSewerCost)}</td>
+          <td>${formatCurrency(result.periodTotal)}</td>
+        </tr>
+      `;
+    }
+
+    function render(values, result) {
+      outputs.monthlyConsumption.textContent = formatM3(result.monthlyM3);
+      outputs.monthlyCost.textContent = formatCurrency(result.monthlyTotal);
+      outputs.periodConsumption.textContent = formatM3(result.periodM3);
+      outputs.periodCost.textContent = formatCurrency(result.periodTotal);
+      outputs.dailyConsumption.textContent = formatLiters(result.dailyHouseholdLiters);
+      outputs.dailyPerPerson.textContent = formatLiters(values.dailyLiters);
+      outputs.yearlyConsumption.textContent = formatM3(result.yearlyM3);
+      outputs.yearlyCost.textContent = formatCurrency(result.yearlyTotal);
+      outputs.monthlyWaterCost.textContent = formatCurrency(result.monthlyWaterCost);
+      outputs.monthlySewerCost.textContent = formatCurrency(result.monthlySewerCost);
+      outputs.monthlyFixedCost.textContent = formatCurrency(values.monthlyFee);
+
+      if (values.dailyLiters > 110 || result.yearlyTotal > 30000) {
+        outputs.statusBadge.className = 'badge warning';
+        outputs.statusBadge.textContent = 'Spotřeba nebo roční náklad už jsou spíše vyšší';
+      } else {
+        outputs.statusBadge.className = 'badge success';
+        outputs.statusBadge.textContent = 'Spotřeba domácnosti je v běžném rozsahu';
+      }
+
+      renderTable(result, values);
+    }
+
+    function runCalculation() {
+      let values = getValues();
+
+      if (values.usageProfile !== 'custom') {
+        values = applyProfile(values);
+      }
+
+      const error = validate(values);
+
+      if (error) {
+        alert(error);
+        return;
+      }
+
+      const result = calculateWater(values);
+      render(values, result);
+    }
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      runCalculation();
+    });
+
+    ['persons', 'dailyLiters', 'waterPrice', 'sewerPrice', 'monthlyFee', 'periodMonths', 'usageProfile', 'includeSewer'].forEach(id => {
+      document.getElementById(id).addEventListener('input', runCalculation);
+      document.getElementById(id).addEventListener('change', function() {
+        if (id === 'dailyLiters') {
+          document.getElementById('usageProfile').value = 'custom';
+        }
+        runCalculation();
+      });
+    });
+
+    resetBtn.addEventListener('click', function() {
+      document.getElementById('persons').value = 3;
+      document.getElementById('dailyLiters').value = 90;
+      document.getElementById('waterPrice').value = 65;
+      document.getElementById('sewerPrice').value = 60;
+      document.getElementById('monthlyFee').value = 150;
+      document.getElementById('periodMonths').value = 12;
+      document.getElementById('usageProfile').value = 'standard';
+      document.getElementById('includeSewer').value = 'yes';
+      runCalculation();
+    });
+
+    runCalculation();
+  </script>
+</body>
+</html>
