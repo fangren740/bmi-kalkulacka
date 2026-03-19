@@ -1,1 +1,1103 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kalkulačka měsíčních nákladů na bydlení online | RychléVýpočty.cz</title>
+  <meta name="description" content="Spočítejte si celkové měsíční náklady na bydlení. Přehledná kalkulačka pro nájem nebo vlastní bydlení včetně energií, vody, internetu, fondu oprav, pojištění i dalších pravidelných výdajů.">
+  <meta name="keywords" content="měsíční náklady na bydlení kalkulačka, kalkulačka nákladů na bydlení, náklady na bydlení, kolik stojí bydlení měsíčně, rozpočet domácnosti bydlení">
+  <meta name="author" content="RychléVýpočty.cz">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://rychlevypocty.cz/mesicni-naklady-na-bydleni-kalkulacka.html">
 
+  <meta property="og:title" content="Kalkulačka měsíčních nákladů na bydlení online | RychléVýpočty.cz">
+  <meta property="og:description" content="Spočítejte si celkové měsíční náklady na bydlení včetně nájmu nebo splátky hypotéky, energií, vody, internetu, pojištění i dalších výdajů.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rychlevypocty.cz/mesicni-naklady-na-bydleni-kalkulacka.html">
+  <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Kalkulačka měsíčních nákladů na bydlení | RychléVýpočty.cz">
+  <meta name="twitter:description" content="Rychlý výpočet celkových měsíčních nákladů na bydlení pro nájem i vlastní nemovitost.">
+
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #5f6b85;
+      --primary: #2152ff;
+      --primary-dark: #183dbf;
+      --border: #dbe3f0;
+      --success: #138a4b;
+      --warning: #b66a00;
+      --danger: #c53a2f;
+      --shadow: 0 12px 32px rgba(20, 32, 70, 0.08);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #f7f9fd 0%, #eef3fb 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      padding: 18px 0;
+      border-bottom: 1px solid rgba(219, 227, 240, 0.8);
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .brand span {
+      color: var(--primary);
+    }
+
+    .topnav {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      font-size: 0.97rem;
+    }
+
+    .hero {
+      padding: 42px 0 20px;
+    }
+
+    .breadcrumbs {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .hero-copy h1 {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      margin: 0 0 16px;
+    }
+
+    .hero-copy p {
+      margin: 0 0 16px;
+      font-size: 1.06rem;
+      color: var(--muted);
+      max-width: 720px;
+    }
+
+    .hero-points {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .hero-pill {
+      background: rgba(33, 82, 255, 0.08);
+      color: var(--primary-dark);
+      border: 1px solid rgba(33, 82, 255, 0.12);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .hero-box {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-box h2 {
+      margin: 0 0 10px;
+      font-size: 1.2rem;
+    }
+
+    .hero-box p {
+      margin: 0 0 12px;
+      color: var(--muted);
+    }
+
+    .hero-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.06fr 0.94fr;
+      gap: 28px;
+      align-items: start;
+      padding: 22px 0 32px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .card-header {
+      padding: 24px 24px 10px;
+    }
+
+    .card-header h2,
+    .card-header h3 {
+      margin: 0 0 8px;
+      font-size: 1.3rem;
+      letter-spacing: -0.02em;
+    }
+
+    .card-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .card-body {
+      padding: 20px 24px 24px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field label {
+      font-weight: 700;
+      font-size: 0.96rem;
+    }
+
+    .field small {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: -2px;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      padding: 14px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      font-size: 1rem;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      outline: none;
+      border-color: rgba(33, 82, 255, 0.45);
+      box-shadow: 0 0 0 4px rgba(33, 82, 255, 0.10);
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.06s ease, background 0.15s ease, opacity 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background: #eef3ff;
+      color: var(--primary-dark);
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .result-box {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+
+    .result-label {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .result-value {
+      font-size: clamp(1.25rem, 2.4vw, 2rem);
+      line-height: 1.15;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .highlight {
+      background: linear-gradient(180deg, #eef7ff 0%, #f9fcff 100%);
+      border-color: rgba(33, 82, 255, 0.18);
+    }
+
+    .info-list {
+      display: grid;
+      gap: 12px;
+      margin: 18px 0 0;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid #edf2fa;
+    }
+
+    .info-row:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .info-row span:first-child {
+      color: var(--muted);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+
+    .badge.success {
+      background: rgba(19, 138, 75, 0.10);
+      color: var(--success);
+    }
+
+    .badge.warning {
+      background: rgba(182, 106, 0, 0.11);
+      color: var(--warning);
+    }
+
+    .badge.danger {
+      background: rgba(197, 58, 47, 0.10);
+      color: var(--danger);
+    }
+
+    .note {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1px solid #e7edf7;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 18px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 680px;
+      background: #fff;
+    }
+
+    th, td {
+      padding: 14px 14px;
+      text-align: left;
+      border-bottom: 1px solid #edf2fa;
+      font-size: 0.96rem;
+    }
+
+    th {
+      background: #f8fbff;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .content-section {
+      padding: 8px 0 8px;
+    }
+
+    .content-section h2 {
+      font-size: 1.7rem;
+      letter-spacing: -0.03em;
+      margin: 0 0 14px;
+    }
+
+    .content-section h3 {
+      font-size: 1.15rem;
+      margin: 28px 0 10px;
+    }
+
+    .content-section p {
+      color: var(--muted);
+      margin: 0 0 14px;
+    }
+
+    .content-section ul {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    .content-section li {
+      margin-bottom: 8px;
+    }
+
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .related-card {
+      display: block;
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      color: var(--text);
+      box-shadow: var(--shadow);
+    }
+
+    .related-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .related-card span {
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    footer {
+      margin-top: 40px;
+      border-top: 1px solid rgba(219, 227, 240, 0.9);
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .footer-inner {
+      padding: 24px 0 40px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .layout,
+      .related-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .container {
+        width: min(100% - 24px, 1160px);
+      }
+
+      .form-grid,
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 28px;
+      }
+
+      .card-header,
+      .card-body,
+      .hero-box {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebApplication",
+    "name":"Kalkulačka měsíčních nákladů na bydlení",
+    "url":"https://rychlevypocty.cz/mesicni-naklady-na-bydleni-kalkulacka.html",
+    "applicationCategory":"FinanceApplication",
+    "operatingSystem":"Any",
+    "description":"Online kalkulačka pro výpočet celkových měsíčních nákladů na bydlení včetně nájmu nebo hypotéky, energií, vody, internetu, pojištění a dalších pravidelných výdajů.",
+    "offers":{
+      "@type":"Offer",
+      "price":"0",
+      "priceCurrency":"CZK"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"Co všechno patří do měsíčních nákladů na bydlení?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Do měsíčních nákladů na bydlení obvykle patří nájem nebo splátka hypotéky, elektřina, plyn, voda, vytápění, internet, služby domu, fond oprav, pojištění domácnosti nebo nemovitosti a další pravidelné výdaje spojené s provozem bytu nebo domu."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Má smysl započítat i roční výdaje?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Ano. Roční pojištění, daň z nemovitosti nebo plánovaná rezerva na opravy sice neodchází každý měsíc ve stejné výši, ale pro realistický rozpočet je vhodné tyto částky rozpočítat na měsíce."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Je lepší počítat náklady na osobu nebo na metr čtvereční?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Obojí má smysl. Náklad na osobu pomáhá v domácím rozpočtu a při sdíleném bydlení. Náklad na metr čtvereční je užitečný pro srovnání různých bytů, domů nebo lokalit."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="/">Rychlé<span>Výpočty</span>.cz</a>
+      <nav class="topnav" aria-label="Hlavní navigace">
+        <a href="/">Domů</a>
+        <a href="/hypotecni-kalkulacka.html">Hypotéka</a>
+        <a href="/spotreba-elektriny-kalkulacka.html">Elektřina</a>
+        <a href="/spotreba-vody-a-naklady-kalkulacka.html">Voda</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumbs">
+          <a href="/">RychléVýpočty.cz</a> / Kalkulačka měsíčních nákladů na bydlení
+        </div>
+
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <h1>Kalkulačka měsíčních nákladů na bydlení</h1>
+            <p>Spočítejte si celkové měsíční náklady na bydlení v jednom přehledu. Kalkulačka je vhodná pro nájem i vlastní bydlení a pomůže vám rychle zjistit, kolik vás skutečně stojí domácnost po započtení energií, vody, internetu, služeb, pojištění i dalších pravidelných výdajů.</p>
+            <p>Zadejte své měsíční nebo ročně rozpočítané náklady a okamžitě uvidíte souhrn za měsíc, rok, na osobu i na metr čtvereční.</p>
+
+            <div class="hero-points">
+              <div class="hero-pill">Celkový měsíční součet</div>
+              <div class="hero-pill">Náklad na osobu</div>
+              <div class="hero-pill">Náklad na m²</div>
+              <div class="hero-pill">Podíl na příjmu</div>
+            </div>
+          </div>
+
+          <div class="hero-box">
+            <h2>Co kalkulačka umí</h2>
+            <p>Sečte hlavní náklady spojené s bydlením a rozdělí je na fixní a provozní část. Výsledek je vhodný pro plánování rozpočtu, porovnání bytu a domu, kontrolu výdajů i rozhodování mezi nájmem a vlastním bydlením.</p>
+            <p>Hodí se také při stěhování, změně dodavatele energií nebo při nastavování rezervy pro domácnost.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container layout">
+      <div class="card">
+        <div class="card-header">
+          <h2>Zadání nákladů na bydlení</h2>
+          <p>Vyplňte orientační měsíční výdaje. U ročních nákladů zadejte měsíční průměr nebo částku rozpočítanou na 12 měsíců.</p>
+        </div>
+        <div class="card-body">
+          <form id="housingForm">
+            <div class="form-grid">
+              <div class="field">
+                <label for="housingType">Typ bydlení</label>
+                <select id="housingType">
+                  <option value="rent" selected>Nájemní bydlení</option>
+                  <option value="own">Vlastní bydlení</option>
+                </select>
+                <small>Jen pro lepší interpretaci výsledku.</small>
+              </div>
+
+              <div class="field">
+                <label for="primaryCost">Nájem / splátka hypotéky</label>
+                <input type="number" id="primaryCost" min="0" step="100" value="18000" inputmode="decimal">
+                <small>Hlavní pravidelná měsíční platba za bydlení.</small>
+              </div>
+
+              <div class="field">
+                <label for="electricity">Elektřina</label>
+                <input type="number" id="electricity" min="0" step="50" value="1800" inputmode="decimal">
+                <small>Měsíční záloha nebo průměrná měsíční částka.</small>
+              </div>
+
+              <div class="field">
+                <label for="gas">Plyn</label>
+                <input type="number" id="gas" min="0" step="50" value="900" inputmode="decimal">
+                <small>Vyplňte jen pokud plyn používáte.</small>
+              </div>
+
+              <div class="field">
+                <label for="water">Voda a stočné</label>
+                <input type="number" id="water" min="0" step="50" value="900" inputmode="decimal">
+                <small>Průměrná měsíční platba za vodu.</small>
+              </div>
+
+              <div class="field">
+                <label for="heating">Vytápění / teplo</label>
+                <input type="number" id="heating" min="0" step="50" value="1500" inputmode="decimal">
+                <small>Např. centrální teplo nebo samostatné topení.</small>
+              </div>
+
+              <div class="field">
+                <label for="services">Služby domu / SVJ / fond domu</label>
+                <input type="number" id="services" min="0" step="50" value="2200" inputmode="decimal">
+                <small>Např. úklid, výtah, společné prostory nebo služby správce.</small>
+              </div>
+
+              <div class="field">
+                <label for="internet">Internet a TV</label>
+                <input type="number" id="internet" min="0" step="50" value="700" inputmode="decimal">
+                <small>Pravidelné měsíční poplatky za připojení a televizi.</small>
+              </div>
+
+              <div class="field">
+                <label for="insurance">Pojištění domácnosti / nemovitosti</label>
+                <input type="number" id="insurance" min="0" step="10" value="300" inputmode="decimal">
+                <small>Měsíční průměr z roční pojistky.</small>
+              </div>
+
+              <div class="field">
+                <label for="repairReserve">Rezerva na opravy a údržbu</label>
+                <input type="number" id="repairReserve" min="0" step="50" value="1500" inputmode="decimal">
+                <small>Vhodné hlavně u vlastního bydlení nebo starší nemovitosti.</small>
+              </div>
+
+              <div class="field">
+                <label for="parking">Parkování / garáž</label>
+                <input type="number" id="parking" min="0" step="50" value="0" inputmode="decimal">
+                <small>Vyplňte, pokud parkování platíte samostatně.</small>
+              </div>
+
+              <div class="field">
+                <label for="other">Ostatní měsíční náklady</label>
+                <input type="number" id="other" min="0" step="50" value="500" inputmode="decimal">
+                <small>Např. odpad, komín, drobné pravidelné poplatky.</small>
+              </div>
+
+              <div class="field">
+                <label for="people">Počet osob v domácnosti</label>
+                <input type="number" id="people" min="1" step="1" value="2" inputmode="numeric">
+                <small>Pro výpočet nákladu na osobu.</small>
+              </div>
+
+              <div class="field">
+                <label for="area">Podlahová plocha (m²)</label>
+                <input type="number" id="area" min="1" step="1" value="65" inputmode="decimal">
+                <small>Pro orientační náklad na metr čtvereční.</small>
+              </div>
+
+              <div class="field full">
+                <label for="netIncome">Čistý měsíční příjem domácnosti</label>
+                <input type="number" id="netIncome" min="0" step="100" value="55000" inputmode="decimal">
+                <small>Nepovinné, ale užitečné pro posouzení, jak velkou část rozpočtu bydlení tvoří.</small>
+              </div>
+
+              <div class="actions full">
+                <button type="submit" class="btn-primary">Spočítat náklady na bydlení</button>
+                <button type="button" class="btn-secondary" id="resetBtn">Obnovit výchozí hodnoty</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>Výsledek výpočtu</h2>
+          <p>Souhrn celkových nákladů na bydlení podle zadaných údajů.</p>
+        </div>
+        <div class="card-body">
+          <div class="results-grid">
+            <div class="result-box highlight">
+              <div class="result-label">Celkové měsíční náklady</div>
+              <div class="result-value" id="monthlyTotal">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Celkové roční náklady</div>
+              <div class="result-value" id="yearlyTotal">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Náklad na osobu / měsíc</div>
+              <div class="result-value" id="perPerson">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Náklad na m² / měsíc</div>
+              <div class="result-value" id="perSquareMeter">0 Kč</div>
+            </div>
+          </div>
+
+          <div id="burdenBadge" class="badge success">Podíl bydlení na příjmu: 0 %</div>
+
+          <div class="info-list">
+            <div class="info-row">
+              <span>Hlavní platba za bydlení</span>
+              <strong id="summaryPrimary">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Provozní náklady celkem</span>
+              <strong id="summaryUtilities">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Fixní a rezervní náklady</span>
+              <strong id="summaryFixed">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Počet osob v domácnosti</span>
+              <strong id="summaryPeople">0</strong>
+            </div>
+            <div class="info-row">
+              <span>Podlahová plocha</span>
+              <strong id="summaryArea">0 m²</strong>
+            </div>
+          </div>
+
+          <div class="note">
+            Výpočet je orientační a závisí na zadaných údajích. Pro přesnější plánování je vhodné započítat i nepravidelné roční výdaje, očekávané opravy a případné sezónní výkyvy u energií.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="card">
+        <div class="card-header">
+          <h3>Rozpis měsíčních nákladů</h3>
+          <p>Přehled jednotlivých položek a jejich podílu na celkovém rozpočtu bydlení.</p>
+        </div>
+        <div class="card-body">
+          <div class="table-wrap">
+            <table aria-label="Rozpis měsíčních nákladů na bydlení">
+              <thead>
+                <tr>
+                  <th>Položka</th>
+                  <th>Měsíční náklad</th>
+                  <th>Roční náklad</th>
+                  <th>Podíl na celku</th>
+                </tr>
+              </thead>
+              <tbody id="breakdownBody">
+                <tr>
+                  <td colspan="4">Po zadání údajů se zobrazí detailní rozpis nákladů.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container content-section">
+      <h2>Jak kalkulačka měsíčních nákladů na bydlení funguje</h2>
+      <p>Tento nástroj sčítá hlavní pravidelné výdaje spojené s provozem bytu nebo domu. Kromě nájmu nebo splátky hypotéky počítá i s energiemi, vodou, internetem, službami domu, pojištěním a rezervou na opravy. Díky tomu dostanete realističtější obrázek o tom, kolik vás bydlení skutečně stojí každý měsíc.</p>
+
+      <h3>Proč nestačí sledovat jen nájem nebo hypotéku</h3>
+      <p>Samotná splátka nebo nájem obvykle tvoří jen část celkového rozpočtu bydlení. Významnou roli hrají také zálohy na energie, voda, teplo, fond oprav, služby domu, internet, pojištění nebo průběžná údržba. Právě tyto položky často rozhodují, jestli je bydlení dlouhodobě udržitelné.</p>
+
+      <h3>Co vám výstup pomůže vyhodnotit</h3>
+      <ul>
+        <li>kolik vás stojí bydlení za měsíc a za rok,</li>
+        <li>jaký je náklad na jednu osobu v domácnosti,</li>
+        <li>jak drahé bydlení máte v přepočtu na m²,</li>
+        <li>jak velkou část čistého příjmu domácnosti bydlení zabírá,</li>
+        <li>kde je největší prostor pro optimalizaci výdajů.</li>
+      </ul>
+
+      <h3>Kdy je výpočet zvlášť užitečný</h3>
+      <p>Kalkulačka se hodí při stěhování, rozhodování mezi nájmem a vlastním bydlením, porovnávání různých bytů, nastavování domácího rozpočtu nebo při kontrole, zda se náklady na bydlení nezačínají dostávat na příliš vysokou úroveň vůči příjmům domácnosti.</p>
+    </section>
+
+    <section class="container content-section">
+      <h2>Jak interpretovat podíl bydlení na příjmu</h2>
+      <p>Podíl nákladů na bydlení na čistém příjmu domácnosti je praktický orientační ukazatel. Čím vyšší je, tím méně prostoru zbývá na běžné životní výdaje, rezervu a neočekávané situace. Přesná hranice závisí na typu domácnosti, lokalitě i celkové finanční situaci, ale dlouhodobě příliš vysoký podíl bývá rizikový.</p>
+
+      <h3>Co zohlednit u nájemního bydlení</h3>
+      <p>U nájmu bývá důležité sledovat hlavně součet nájemného, služeb a energií. Praktické je počítat i s drobnou rezervou na stěhování, vybavení nebo zvýšení záloh. Reálný měsíční náklad je často vyšší než samotný inzerovaný nájem.</p>
+
+      <h3>Co zohlednit u vlastního bydlení</h3>
+      <p>U vlastního bydlení dává smysl vedle hypotéky počítat i s fondem oprav, pojištěním, daní z nemovitosti rozpočítanou na měsíc a rezervou na údržbu. Právě tato vrstva bývá v domácím rozpočtu často podceňovaná.</p>
+    </section>
+
+    <section class="container content-section">
+      <h2>Související kalkulačky</h2>
+      <div class="related-grid">
+        <a class="related-card" href="/spotreba-elektriny-kalkulacka.html">
+          <strong>Kalkulačka spotřeby elektřiny</strong>
+          <span>Podrobnější odhad spotřeby a ceny provozu spotřebičů.</span>
+        </a>
+
+        <a class="related-card" href="/spotreba-vody-a-naklady-kalkulacka.html">
+          <strong>Kalkulačka spotřeby vody a nákladů</strong>
+          <span>Výpočet vodného, stočného a spotřeby domácnosti.</span>
+        </a>
+
+        <a class="related-card" href="/naklady-na-vytapeni-kalkulacka.html">
+          <strong>Kalkulačka nákladů na vytápění</strong>
+          <span>Orientační porovnání nákladů na topení podle způsobu vytápění.</span>
+        </a>
+
+        <a class="related-card" href="/hypotecni-kalkulacka.html">
+          <strong>Hypoteční kalkulačka</strong>
+          <span>Spočítejte si splátku hypotéky a celkové přeplacení.</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      © 2026 RychléVýpočty.cz — online kalkulačky a praktické výpočty pro každodenní použití.
+    </div>
+  </footer>
+
+  <script>
+    const form = document.getElementById('housingForm');
+    const resetBtn = document.getElementById('resetBtn');
+
+    const outputs = {
+      monthlyTotal: document.getElementById('monthlyTotal'),
+      yearlyTotal: document.getElementById('yearlyTotal'),
+      perPerson: document.getElementById('perPerson'),
+      perSquareMeter: document.getElementById('perSquareMeter'),
+      summaryPrimary: document.getElementById('summaryPrimary'),
+      summaryUtilities: document.getElementById('summaryUtilities'),
+      summaryFixed: document.getElementById('summaryFixed'),
+      summaryPeople: document.getElementById('summaryPeople'),
+      summaryArea: document.getElementById('summaryArea'),
+      burdenBadge: document.getElementById('burdenBadge'),
+      breakdownBody: document.getElementById('breakdownBody')
+    };
+
+    function formatCurrency(value, digits = 0) {
+      return new Intl.NumberFormat('cs-CZ', {
+        style: 'currency',
+        currency: 'CZK',
+        minimumFractionDigits: digits,
+        maximumFractionDigits: digits
+      }).format(value);
+    }
+
+    function formatPercent(value, digits = 1) {
+      return new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: digits
+      }).format(value) + ' %';
+    }
+
+    function formatNumber(value, digits = 1) {
+      return new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: digits
+      }).format(value);
+    }
+
+    function getValues() {
+      return {
+        housingType: document.getElementById('housingType').value,
+        primaryCost: Number(document.getElementById('primaryCost').value),
+        electricity: Number(document.getElementById('electricity').value),
+        gas: Number(document.getElementById('gas').value),
+        water: Number(document.getElementById('water').value),
+        heating: Number(document.getElementById('heating').value),
+        services: Number(document.getElementById('services').value),
+        internet: Number(document.getElementById('internet').value),
+        insurance: Number(document.getElementById('insurance').value),
+        repairReserve: Number(document.getElementById('repairReserve').value),
+        parking: Number(document.getElementById('parking').value),
+        other: Number(document.getElementById('other').value),
+        people: Number(document.getElementById('people').value),
+        area: Number(document.getElementById('area').value),
+        netIncome: Number(document.getElementById('netIncome').value)
+      };
+    }
+
+    function validate(values) {
+      if (values.primaryCost < 0) return 'Zadejte platnou hlavní měsíční platbu za bydlení.';
+      if (values.people <= 0) return 'Počet osob v domácnosti musí být alespoň 1.';
+      if (values.area <= 0) return 'Podlahová plocha musí být větší než 0 m².';
+      return '';
+    }
+
+    function calculate(values) {
+      const utilitiesTotal =
+        values.electricity +
+        values.gas +
+        values.water +
+        values.heating +
+        values.internet;
+
+      const fixedReserveTotal =
+        values.services +
+        values.insurance +
+        values.repairReserve +
+        values.parking +
+        values.other;
+
+      const monthlyTotal = values.primaryCost + utilitiesTotal + fixedReserveTotal;
+      const yearlyTotal = monthlyTotal * 12;
+      const perPerson = monthlyTotal / values.people;
+      const perSquareMeter = monthlyTotal / values.area;
+      const incomeShare = values.netIncome > 0 ? (monthlyTotal / values.netIncome) * 100 : 0;
+
+      const items = [
+        { name: values.housingType === 'rent' ? 'Nájemné' : 'Splátka hypotéky', amount: values.primaryCost },
+        { name: 'Elektřina', amount: values.electricity },
+        { name: 'Plyn', amount: values.gas },
+        { name: 'Voda a stočné', amount: values.water },
+        { name: 'Vytápění / teplo', amount: values.heating },
+        { name: 'Služby domu / SVJ', amount: values.services },
+        { name: 'Internet a TV', amount: values.internet },
+        { name: 'Pojištění', amount: values.insurance },
+        { name: 'Rezerva na opravy', amount: values.repairReserve },
+        { name: 'Parkování / garáž', amount: values.parking },
+        { name: 'Ostatní náklady', amount: values.other }
+      ].filter(item => item.amount > 0);
+
+      return {
+        utilitiesTotal,
+        fixedReserveTotal,
+        monthlyTotal,
+        yearlyTotal,
+        perPerson,
+        perSquareMeter,
+        incomeShare,
+        items
+      };
+    }
+
+    function renderBreakdown(items, total) {
+      if (!items.length || total <= 0) {
+        outputs.breakdownBody.innerHTML = '<tr><td colspan="4">Po zadání údajů se zobrazí detailní rozpis nákladů.</td></tr>';
+        return;
+      }
+
+      outputs.breakdownBody.innerHTML = items.map(item => {
+        const share = total > 0 ? (item.amount / total) * 100 : 0;
+
+        return `
+          <tr>
+            <td>${item.name}</td>
+            <td>${formatCurrency(item.amount)}</td>
+            <td>${formatCurrency(item.amount * 12)}</td>
+            <td>${formatPercent(share)}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function render(values, result) {
+      outputs.monthlyTotal.textContent = formatCurrency(result.monthlyTotal);
+      outputs.yearlyTotal.textContent = formatCurrency(result.yearlyTotal);
+      outputs.perPerson.textContent = formatCurrency(result.perPerson);
+      outputs.perSquareMeter.textContent = formatCurrency(result.perSquareMeter, 0);
+
+      outputs.summaryPrimary.textContent = formatCurrency(values.primaryCost);
+      outputs.summaryUtilities.textContent = formatCurrency(result.utilitiesTotal);
+      outputs.summaryFixed.textContent = formatCurrency(result.fixedReserveTotal);
+      outputs.summaryPeople.textContent = formatNumber(values.people, 0);
+      outputs.summaryArea.textContent = formatNumber(values.area, 0) + ' m²';
+
+      if (values.netIncome > 0) {
+        outputs.burdenBadge.textContent = 'Podíl bydlení na příjmu: ' + formatPercent(result.incomeShare);
+
+        if (result.incomeShare <= 30) {
+          outputs.burdenBadge.className = 'badge success';
+        } else if (result.incomeShare <= 40) {
+          outputs.burdenBadge.className = 'badge warning';
+        } else {
+          outputs.burdenBadge.className = 'badge danger';
+        }
+      } else {
+        outputs.burdenBadge.textContent = 'Podíl bydlení na příjmu: nezadáno';
+        outputs.burdenBadge.className = 'badge warning';
+      }
+
+      renderBreakdown(result.items, result.monthlyTotal);
+    }
+
+    function runCalculation() {
+      const values = getValues();
+      const error = validate(values);
+
+      if (error) {
+        alert(error);
+        return;
+      }
+
+      const result = calculate(values);
+      render(values, result);
+    }
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      runCalculation();
+    });
+
+    [
+      'housingType',
+      'primaryCost',
+      'electricity',
+      'gas',
+      'water',
+      'heating',
+      'services',
+      'internet',
+      'insurance',
+      'repairReserve',
+      'parking',
+      'other',
+      'people',
+      'area',
+      'netIncome'
+    ].forEach(id => {
+      document.getElementById(id).addEventListener('input', runCalculation);
+      document.getElementById(id).addEventListener('change', runCalculation);
+    });
+
+    resetBtn.addEventListener('click', function() {
+      document.getElementById('housingType').value = 'rent';
+      document.getElementById('primaryCost').value = 18000;
+      document.getElementById('electricity').value = 1800;
+      document.getElementById('gas').value = 900;
+      document.getElementById('water').value = 900;
+      document.getElementById('heating').value = 1500;
+      document.getElementById('services').value = 2200;
+      document.getElementById('internet').value = 700;
+      document.getElementById('insurance').value = 300;
+      document.getElementById('repairReserve').value = 1500;
+      document.getElementById('parking').value = 0;
+      document.getElementById('other').value = 500;
+      document.getElementById('people').value = 2;
+      document.getElementById('area').value = 65;
+      document.getElementById('netIncome').value = 55000;
+      runCalculation();
+    });
+
+    runCalculation();
+  </script>
+</body>
+</html>
