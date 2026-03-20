@@ -1,1 +1,1161 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kalkulačka ceny rekonstrukce koupelny online zdarma | RychléVýpočty.cz</title>
+  <meta name="description" content="Spočítejte si orientační cenu rekonstrukce koupelny podle velikosti, rozsahu prací, standardu vybavení a vybraných položek. Přehledná kalkulačka zdarma online.">
+  <meta name="keywords" content="kalkulačka ceny rekonstrukce koupelny, kolik stojí rekonstrukce koupelny, cena nové koupelny, rozpočet rekonstrukce koupelny, koupelna kalkulačka">
+  <meta name="author" content="RychléVýpočty.cz">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://rychlevypocty.cz/kalkulacka-ceny-rekonstrukce-koupelny.html">
 
+  <meta property="og:title" content="Kalkulačka ceny rekonstrukce koupelny | RychléVýpočty.cz">
+  <meta property="og:description" content="Zjistěte orientační rozpočet rekonstrukce koupelny podle plochy, rozsahu prací a standardu vybavení.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rychlevypocty.cz/kalkulacka-ceny-rekonstrukce-koupelny.html">
+  <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Kalkulačka ceny rekonstrukce koupelny | RychléVýpočty.cz">
+  <meta name="twitter:description" content="Orientační výpočet ceny rekonstrukce koupelny online zdarma.">
+
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #5f6b85;
+      --primary: #2152ff;
+      --primary-dark: #183dbf;
+      --border: #dbe3f0;
+      --success: #138a4b;
+      --warning: #b66a00;
+      --danger: #b42318;
+      --shadow: 0 12px 32px rgba(20, 32, 70, 0.08);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #f7f9fd 0%, #eef3fb 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      padding: 18px 0;
+      border-bottom: 1px solid rgba(219, 227, 240, 0.8);
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+      line-height: 1;
+    }
+
+    .brand span {
+      color: var(--primary);
+    }
+
+    .topnav {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      font-size: 0.97rem;
+    }
+
+    .hero {
+      padding: 42px 0 20px;
+    }
+
+    .breadcrumbs {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .hero-copy h1 {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      margin: 0 0 16px;
+    }
+
+    .hero-copy p {
+      margin: 0 0 16px;
+      font-size: 1.06rem;
+      color: var(--muted);
+      max-width: 720px;
+    }
+
+    .hero-points {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .hero-pill {
+      background: rgba(33, 82, 255, 0.08);
+      color: var(--primary-dark);
+      border: 1px solid rgba(33, 82, 255, 0.12);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .hero-box {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-box h2 {
+      margin: 0 0 10px;
+      font-size: 1.2rem;
+    }
+
+    .hero-box p {
+      margin: 0 0 12px;
+      color: var(--muted);
+    }
+
+    .hero-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.04fr 0.96fr;
+      gap: 28px;
+      align-items: start;
+      padding: 22px 0 32px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .card-header {
+      padding: 24px 24px 10px;
+    }
+
+    .card-header h2,
+    .card-header h3 {
+      margin: 0 0 8px;
+      font-size: 1.3rem;
+      letter-spacing: -0.02em;
+    }
+
+    .card-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .card-body {
+      padding: 20px 24px 24px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field label {
+      font-weight: 700;
+      font-size: 0.96rem;
+    }
+
+    .field small {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: -2px;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      padding: 14px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      font-size: 1rem;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      outline: none;
+      border-color: rgba(33, 82, 255, 0.45);
+      box-shadow: 0 0 0 4px rgba(33, 82, 255, 0.10);
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.06s ease, background 0.15s ease, opacity 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background: #eef3ff;
+      color: var(--primary-dark);
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .result-box {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+
+    .result-label {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .result-value {
+      font-size: clamp(1.25rem, 2.4vw, 2rem);
+      line-height: 1.15;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .highlight {
+      background: linear-gradient(180deg, #eef7ff 0%, #f9fcff 100%);
+      border-color: rgba(33, 82, 255, 0.18);
+    }
+
+    .info-list {
+      display: grid;
+      gap: 12px;
+      margin: 18px 0 0;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid #edf2fa;
+    }
+
+    .info-row:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .info-row span:first-child {
+      color: var(--muted);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+
+    .badge.success {
+      background: rgba(19, 138, 75, 0.10);
+      color: var(--success);
+    }
+
+    .badge.warning {
+      background: rgba(182, 106, 0, 0.11);
+      color: var(--warning);
+    }
+
+    .badge.danger {
+      background: rgba(180, 35, 24, 0.10);
+      color: var(--danger);
+    }
+
+    .note {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1px solid #e7edf7;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 18px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 640px;
+      background: #fff;
+    }
+
+    th, td {
+      padding: 14px 14px;
+      text-align: left;
+      border-bottom: 1px solid #edf2fa;
+      font-size: 0.96rem;
+    }
+
+    th {
+      background: #f8fbff;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .content-section {
+      padding: 8px 0 8px;
+    }
+
+    .content-section h2 {
+      font-size: 1.7rem;
+      letter-spacing: -0.03em;
+      margin: 0 0 14px;
+    }
+
+    .content-section h3 {
+      font-size: 1.15rem;
+      margin: 28px 0 10px;
+    }
+
+    .content-section p {
+      color: var(--muted);
+      margin: 0 0 14px;
+    }
+
+    .content-section ul {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    .content-section li {
+      margin-bottom: 8px;
+    }
+
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .related-card {
+      display: block;
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      color: var(--text);
+      box-shadow: var(--shadow);
+    }
+
+    .related-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .related-card span {
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    footer {
+      margin-top: 40px;
+      border-top: 1px solid rgba(219, 227, 240, 0.9);
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .footer-inner {
+      padding: 24px 0 40px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .layout,
+      .related-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .container {
+        width: min(100% - 24px, 1160px);
+      }
+
+      .form-grid,
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 28px;
+      }
+
+      .card-header,
+      .card-body,
+      .hero-box {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebApplication",
+    "name":"Kalkulačka ceny rekonstrukce koupelny",
+    "url":"https://rychlevypocty.cz/kalkulacka-ceny-rekonstrukce-koupelny.html",
+    "applicationCategory":"FinanceApplication",
+    "operatingSystem":"Any",
+    "description":"Online kalkulačka pro orientační výpočet ceny rekonstrukce koupelny podle velikosti, rozsahu prací a standardu vybavení.",
+    "offers":{
+      "@type":"Offer",
+      "price":"0",
+      "priceCurrency":"CZK"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"Jak spočítat orientační cenu rekonstrukce koupelny?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Orientační cenu rekonstrukce koupelny lze odhadnout podle velikosti koupelny, rozsahu stavebních prací, standardu obkladů a sanity, potřeby nových rozvodů i dalších položek, jako je sprchový kout, vana nebo podlahové topení."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Co cenu koupelny ovlivňuje nejvíc?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Největší vliv mívají nové rozvody vody a odpadů, elektroinstalace, výběr sanity, obkladů a rozsah bouracích či stavebních prací. Významnou položkou bývá také kvalita materiálů a úroveň provedení."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Je výpočet v kalkulačce přesný?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Výpočet je orientační. Skutečná cena závisí na lokalitě, technickém stavu původní koupelny, cenách řemeslníků, kvalitě materiálů i konkrétním rozsahu prací."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="/">Rychlé<span>Výpočty</span>.cz</a>
+      <nav class="topnav" aria-label="Hlavní navigace">
+        <a href="/">Domů</a>
+        <a href="/kalkulacka-nakladu-na-rekonstrukci-bytu-domu.html">Rekonstrukce bytu a domu</a>
+        <a href="/kalkulacka-celkove-ceny-nemovitosti.html">Cena nemovitosti</a>
+        <a href="/objem-materialu-kalkulacka.html">Objem materiálu</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumbs">
+          <a href="/">RychléVýpočty.cz</a> / Kalkulačka ceny rekonstrukce koupelny
+        </div>
+
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <h1>Kalkulačka ceny rekonstrukce koupelny</h1>
+            <p>Spočítejte si orientační rozpočet nové koupelny podle velikosti, rozsahu prací, standardu vybavení a vybraných prvků. Kalkulačka pomůže rychle odhadnout, jestli půjde o základní modernizaci, střední rozpočet nebo náročnější kompletní rekonstrukci.</p>
+            <p>Výsledek ukáže celkovou cenu, cenu za m², rozpad hlavních položek i rezervu na vícepráce.</p>
+
+            <div class="hero-points">
+              <div class="hero-pill">Rozpočet koupelny</div>
+              <div class="hero-pill">Cena za m²</div>
+              <div class="hero-pill">Sanita a rozvody</div>
+              <div class="hero-pill">Rezerva na vícepráce</div>
+            </div>
+          </div>
+
+          <div class="hero-box">
+            <h2>Co kalkulačka umí</h2>
+            <p>Kombinuje základní cenu podle plochy koupelny s nejdůležitějšími položkami, které rozpočet nejvíc ovlivňují: rozvody, sanitu, standard obkladů, typ sprchování nebo vanu a další volitelné prvky.</p>
+            <p>Je vhodná hlavně pro první reálný odhad před poptáním dodavatelů nebo při porovnávání více scénářů rekonstrukce.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container layout">
+      <div class="card">
+        <div class="card-header">
+          <h2>Zadání koupelny</h2>
+          <p>Vyplňte základní parametry koupelny a vyberte důležité položky. Kalkulačka výsledek automaticky přepočítá.</p>
+        </div>
+        <div class="card-body">
+          <form id="bathroomForm">
+            <div class="form-grid">
+              <div class="field">
+                <label for="area">Plocha koupelny (m²)</label>
+                <input type="number" id="area" min="2" max="40" step="0.1" value="5.5" inputmode="decimal">
+                <small>Celková podlahová plocha koupelny.</small>
+              </div>
+
+              <div class="field">
+                <label for="scope">Rozsah rekonstrukce</label>
+                <select id="scope">
+                  <option value="light">Lehčí modernizace</option>
+                  <option value="medium" selected>Střední rekonstrukce</option>
+                  <option value="full">Kompletní rekonstrukce</option>
+                </select>
+                <small>Od kosmetických úprav po kompletní nové jádro.</small>
+              </div>
+
+              <div class="field">
+                <label for="quality">Standard materiálů</label>
+                <select id="quality">
+                  <option value="basic">Základní</option>
+                  <option value="standard" selected>Standardní</option>
+                  <option value="higher">Vyšší</option>
+                </select>
+                <small>Ovlivňuje cenu obkladů, sanity i některých prací.</small>
+              </div>
+
+              <div class="field">
+                <label for="layoutChanges">Změna dispozice / větší stavební zásah</label>
+                <select id="layoutChanges">
+                  <option value="no" selected>Ne</option>
+                  <option value="yes">Ano</option>
+                </select>
+                <small>Např. větší zásah do příček, přesuny prvků nebo nové uspořádání.</small>
+              </div>
+
+              <div class="field">
+                <label for="water">Nové rozvody vody a odpadů</label>
+                <select id="water">
+                  <option value="none">Bez větších zásahů</option>
+                  <option value="partial" selected>Částečně</option>
+                  <option value="full">Kompletně</option>
+                </select>
+                <small>Jedna z klíčových položek rozpočtu.</small>
+              </div>
+
+              <div class="field">
+                <label for="electro">Nová elektroinstalace</label>
+                <select id="electro">
+                  <option value="none">Bez větších zásahů</option>
+                  <option value="partial" selected>Částečně</option>
+                  <option value="full">Kompletně</option>
+                </select>
+                <small>Zásuvky, světla, topný žebřík, ventilátor a další prvky.</small>
+              </div>
+
+              <div class="field">
+                <label for="showerBath">Sprcha / vana</label>
+                <select id="showerBath">
+                  <option value="shower" selected>Sprchový kout</option>
+                  <option value="bath">Vana</option>
+                  <option value="both">Vana i sprcha</option>
+                </select>
+                <small>Výběr výrazně ovlivňuje celkovou cenu.</small>
+              </div>
+
+              <div class="field">
+                <label for="toilet">Toaleta v rámci rekonstrukce</label>
+                <select id="toilet">
+                  <option value="no">Ne</option>
+                  <option value="yes" selected>Ano</option>
+                </select>
+                <small>Zahrnuje WC modul nebo výměnu toalety v rámci koupelny.</small>
+              </div>
+
+              <div class="field">
+                <label for="heating">Podlahové topení / topný žebřík</label>
+                <select id="heating">
+                  <option value="none" selected>Bez navýšení</option>
+                  <option value="ladder">Topný žebřík</option>
+                  <option value="floor">Podlahové topení</option>
+                  <option value="both">Žebřík i podlahové topení</option>
+                </select>
+                <small>Volitelné prvky pro vyšší komfort.</small>
+              </div>
+
+              <div class="field">
+                <label for="furniture">Koupelnový nábytek a skříňky</label>
+                <select id="furniture">
+                  <option value="basic">Základní</option>
+                  <option value="standard" selected>Standardní</option>
+                  <option value="higher">Vyšší</option>
+                </select>
+                <small>Umyvadlová skříňka, zrcadlo, úložné prvky a doplňky.</small>
+              </div>
+
+              <div class="field">
+                <label for="reserveRate">Rezerva na vícepráce (%)</label>
+                <select id="reserveRate">
+                  <option value="5">5 %</option>
+                  <option value="10" selected>10 %</option>
+                  <option value="15">15 %</option>
+                  <option value="20">20 %</option>
+                </select>
+                <small>Doporučený polštář pro nečekané komplikace.</small>
+              </div>
+
+              <div class="field">
+                <label for="regionFactor">Cenová náročnost realizace</label>
+                <select id="regionFactor">
+                  <option value="0.95">Nižší ceny</option>
+                  <option value="1" selected>Běžná úroveň</option>
+                  <option value="1.1">Vyšší ceny</option>
+                  <option value="1.2">Výrazně vyšší ceny</option>
+                </select>
+                <small>Hrubé zohlednění lokality a cen řemesel.</small>
+              </div>
+
+              <div class="actions full">
+                <button type="submit" class="btn-primary">Spočítat cenu koupelny</button>
+                <button type="button" class="btn-secondary" id="resetBtn">Obnovit výchozí hodnoty</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>Výsledek výpočtu</h2>
+          <p>Orientační přehled nákladů na rekonstrukci koupelny podle zadaných parametrů.</p>
+        </div>
+        <div class="card-body">
+          <div class="results-grid">
+            <div class="result-box highlight">
+              <div class="result-label">Celková cena rekonstrukce koupelny</div>
+              <div class="result-value" id="totalCost">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Orientační cena za m²</div>
+              <div class="result-value" id="pricePerM2">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Rozpočet bez rezervy</div>
+              <div class="result-value" id="baseCost">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Rezerva na vícepráce</div>
+              <div class="result-value" id="reserveCost">0 Kč</div>
+            </div>
+          </div>
+
+          <div id="budgetBadge" class="badge success">Rozpočet odpovídá spíše lehčí koupelně</div>
+
+          <div class="info-list">
+            <div class="info-row">
+              <span>Plocha koupelny</span>
+              <strong id="summaryArea">0 m²</strong>
+            </div>
+            <div class="info-row">
+              <span>Rozsah rekonstrukce</span>
+              <strong id="summaryScope">–</strong>
+            </div>
+            <div class="info-row">
+              <span>Standard materiálů</span>
+              <strong id="summaryQuality">–</strong>
+            </div>
+            <div class="info-row">
+              <span>Sanita a vybavení</span>
+              <strong id="summarySanitary">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Rozvody a technické práce</span>
+              <strong id="summaryTechnical">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Podíl rezervy</span>
+              <strong id="summaryReserveShare">0 %</strong>
+            </div>
+          </div>
+
+          <div class="note">
+            Výpočet je orientační. Skutečná cena nové koupelny závisí na technickém stavu původního prostoru, kvalitě materiálů, rozsahu bourání, cenách dodavatelů i konkrétním řešení dispozice a vybavení.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="card">
+        <div class="card-header">
+          <h3>Rozpad orientační ceny koupelny</h3>
+          <p>Přehled hlavních položek, které se podílí na celkové ceně rekonstrukce koupelny.</p>
+        </div>
+        <div class="card-body">
+          <div class="table-wrap">
+            <table aria-label="Rozpad ceny rekonstrukce koupelny">
+              <thead>
+                <tr>
+                  <th>Položka</th>
+                  <th>Částka</th>
+                  <th>Podíl na rozpočtu</th>
+                </tr>
+              </thead>
+              <tbody id="breakdownBody">
+                <tr>
+                  <td colspan="3">Po zadání údajů se zobrazí přehled orientačních nákladů koupelny.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container content-section">
+      <h2>Jak kalkulačka ceny rekonstrukce koupelny funguje</h2>
+      <p>Rozpočet nové koupelny se obvykle netvoří jen podle plochy. Velkou roli hrají rozvody vody a odpadu, elektroinstalace, výběr obkladů, vany nebo sprchy, kvalita sanity i rozsah stavebních zásahů. Tato kalkulačka proto kombinuje základní cenu za m² s nejdůležitějšími položkami, které rozpočet výrazně mění.</p>
+
+      <h3>Co cenu koupelny ovlivňuje nejvíc</h3>
+      <ul>
+        <li>velikost koupelny a rozsah rekonstrukce,</li>
+        <li>nové rozvody vody, odpadů a elektroinstalace,</li>
+        <li>volba mezi sprchovým koutem a vanou,</li>
+        <li>úroveň obkladů, sanity a nábytku,</li>
+        <li>větší stavební zásahy nebo změna dispozice,</li>
+        <li>rezerva na skryté vady a vícepráce.</li>
+      </ul>
+
+      <h3>Kdy se kalkulačka hodí nejvíc</h3>
+      <p>Největší přínos má při koupi staršího bytu, plánování modernizace bydlení nebo při porovnávání více variant rekonstrukce. Pomůže rychle zjistit, jestli vás čeká spíš lehčí úprava, nebo už rozpočet na úrovni kompletní nové koupelny.</p>
+
+      <h3>Proč počítat s rezervou</h3>
+      <p>U koupelen se často objeví dodatečné práce až po zahájení rekonstrukce. Typicky jde o horší stav podkladu, staré rozvody, nečekané nerovnosti nebo potřebu dalších úprav. Právě proto je rozumné nechat si v rozpočtu bezpečnostní rezervu a nepočítat jen s ideálním scénářem.</p>
+    </section>
+
+    <section class="container content-section">
+      <h2>Související kalkulačky</h2>
+      <div class="related-grid">
+        <a class="related-card" href="/kalkulacka-nakladu-na-rekonstrukci-bytu-domu.html">
+          <strong>Kalkulačka nákladů na rekonstrukci bytu a domu</strong>
+          <span>Orientační rozpočet rekonstrukce celé nemovitosti podle plochy a rozsahu prací.</span>
+        </a>
+
+        <a class="related-card" href="/kalkulacka-celkove-ceny-nemovitosti.html">
+          <strong>Kalkulačka celkové ceny nemovitosti</strong>
+          <span>Přehled pořizovacích nákladů při koupi bytu nebo domu včetně dalších výdajů.</span>
+        </a>
+
+        <a class="related-card" href="/kalkulacka-vlastnich-zdroju-na-koupi-nemovitosti.html">
+          <strong>Kalkulačka vlastních zdrojů na koupi nemovitosti</strong>
+          <span>Zjistěte, kolik vlastních peněz potřebujete před koupí bytu nebo domu.</span>
+        </a>
+
+        <a class="related-card" href="/objem-materialu-kalkulacka.html">
+          <strong>Kalkulačka objemu materiálu</strong>
+          <span>Pomocný výpočet objemu materiálu pro stavební a rekonstrukční práce.</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      © 2026 RychléVýpočty.cz — online kalkulačky a praktické výpočty pro každodenní použití.
+    </div>
+  </footer>
+
+  <script>
+    const form = document.getElementById('bathroomForm');
+    const resetBtn = document.getElementById('resetBtn');
+
+    const outputs = {
+      totalCost: document.getElementById('totalCost'),
+      pricePerM2: document.getElementById('pricePerM2'),
+      baseCost: document.getElementById('baseCost'),
+      reserveCost: document.getElementById('reserveCost'),
+      summaryArea: document.getElementById('summaryArea'),
+      summaryScope: document.getElementById('summaryScope'),
+      summaryQuality: document.getElementById('summaryQuality'),
+      summarySanitary: document.getElementById('summarySanitary'),
+      summaryTechnical: document.getElementById('summaryTechnical'),
+      summaryReserveShare: document.getElementById('summaryReserveShare'),
+      budgetBadge: document.getElementById('budgetBadge'),
+      breakdownBody: document.getElementById('breakdownBody')
+    };
+
+    function formatCurrency(value) {
+      return new Intl.NumberFormat('cs-CZ', {
+        style: 'currency',
+        currency: 'CZK',
+        maximumFractionDigits: 0
+      }).format(value);
+    }
+
+    function formatPercent(value, digits = 1) {
+      return new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: digits
+      }).format(value) + ' %';
+    }
+
+    function getValues() {
+      return {
+        area: Number(document.getElementById('area').value),
+        scope: document.getElementById('scope').value,
+        quality: document.getElementById('quality').value,
+        layoutChanges: document.getElementById('layoutChanges').value,
+        water: document.getElementById('water').value,
+        electro: document.getElementById('electro').value,
+        showerBath: document.getElementById('showerBath').value,
+        toilet: document.getElementById('toilet').value,
+        heating: document.getElementById('heating').value,
+        furniture: document.getElementById('furniture').value,
+        reserveRate: Number(document.getElementById('reserveRate').value),
+        regionFactor: Number(document.getElementById('regionFactor').value)
+      };
+    }
+
+    function validate(values) {
+      if (!values.area || values.area <= 0) return 'Zadejte platnou plochu koupelny.';
+      if (values.area < 2) return 'Plocha koupelny je neobvykle nízká.';
+      return '';
+    }
+
+    function getBaseRate(scope) {
+      const rates = {
+        light: 18000,
+        medium: 28000,
+        full: 39000
+      };
+      return rates[scope] || 28000;
+    }
+
+    function getQualityMultiplier(quality) {
+      if (quality === 'basic') return 0.9;
+      if (quality === 'higher') return 1.18;
+      return 1;
+    }
+
+    function getLayoutCost(layoutChanges) {
+      return layoutChanges === 'yes' ? 35000 : 0;
+    }
+
+    function getWaterCost(type, area) {
+      if (type === 'partial') return area * 4500;
+      if (type === 'full') return area * 7800;
+      return 0;
+    }
+
+    function getElectroCost(type, area) {
+      if (type === 'partial') return area * 2200;
+      if (type === 'full') return area * 4200;
+      return 0;
+    }
+
+    function getSanitaryCost(type) {
+      if (type === 'bath') return 38000;
+      if (type === 'both') return 72000;
+      return 30000;
+    }
+
+    function getToiletCost(toilet) {
+      return toilet === 'yes' ? 18000 : 0;
+    }
+
+    function getHeatingCost(type, area) {
+      if (type === 'ladder') return 12000;
+      if (type === 'floor') return area * 2800;
+      if (type === 'both') return 12000 + (area * 2800);
+      return 0;
+    }
+
+    function getFurnitureCost(type) {
+      if (type === 'basic') return 12000;
+      if (type === 'higher') return 42000;
+      return 24000;
+    }
+
+    function calculate(values) {
+      const baseRate = getBaseRate(values.scope);
+      const qualityMultiplier = getQualityMultiplier(values.quality);
+
+      const coreBaseCost = values.area * baseRate * qualityMultiplier;
+      const layoutCost = getLayoutCost(values.layoutChanges);
+      const waterCost = getWaterCost(values.water, values.area);
+      const electroCost = getElectroCost(values.electro, values.area);
+      const sanitaryCost = getSanitaryCost(values.showerBath);
+      const toiletCost = getToiletCost(values.toilet);
+      const heatingCost = getHeatingCost(values.heating, values.area);
+      const furnitureCost = getFurnitureCost(values.furniture);
+
+      const technicalCost = layoutCost + waterCost + electroCost;
+      const sanitaryAndEquipment = sanitaryCost + toiletCost + heatingCost + furnitureCost;
+
+      const baseCost = (coreBaseCost + technicalCost + sanitaryAndEquipment) * values.regionFactor;
+      const reserveCost = baseCost * (values.reserveRate / 100);
+      const totalCost = baseCost + reserveCost;
+      const pricePerM2 = totalCost / values.area;
+
+      return {
+        coreBaseCost,
+        technicalCost,
+        sanitaryAndEquipment,
+        layoutCost,
+        waterCost,
+        electroCost,
+        sanitaryCost,
+        toiletCost,
+        heatingCost,
+        furnitureCost,
+        baseCost,
+        reserveCost,
+        totalCost,
+        pricePerM2
+      };
+    }
+
+    function buildBreakdown(values, result) {
+      const rows = [
+        { label: 'Základní stavební a obkladačské práce', value: result.coreBaseCost * values.regionFactor },
+        { label: 'Změna dispozice / větší stavební zásah', value: result.layoutCost * values.regionFactor },
+        { label: 'Rozvody vody a odpadů', value: result.waterCost * values.regionFactor },
+        { label: 'Elektroinstalace', value: result.electroCost * values.regionFactor },
+        { label: 'Sprcha / vana', value: result.sanitaryCost * values.regionFactor },
+        { label: 'Toaleta', value: result.toiletCost * values.regionFactor },
+        { label: 'Topení / topný žebřík', value: result.heatingCost * values.regionFactor },
+        { label: 'Koupelnový nábytek a doplňky', value: result.furnitureCost * values.regionFactor },
+        { label: 'Rezerva na vícepráce', value: result.reserveCost }
+      ];
+
+      return rows
+        .filter(row => row.value > 0)
+        .map(row => ({
+          ...row,
+          share: result.totalCost > 0 ? (row.value / result.totalCost) * 100 : 0
+        }));
+    }
+
+    function renderBreakdown(rows) {
+      if (!rows.length) {
+        outputs.breakdownBody.innerHTML = '<tr><td colspan="3">Po zadání údajů se zobrazí přehled orientačních nákladů koupelny.</td></tr>';
+        return;
+      }
+
+      outputs.breakdownBody.innerHTML = rows.map(row => `
+        <tr>
+          <td>${row.label}</td>
+          <td>${formatCurrency(row.value)}</td>
+          <td>${formatPercent(row.share)}</td>
+        </tr>
+      `).join('');
+    }
+
+    function getScopeLabel(scope) {
+      if (scope === 'light') return 'Lehčí modernizace';
+      if (scope === 'full') return 'Kompletní rekonstrukce';
+      return 'Střední rekonstrukce';
+    }
+
+    function getQualityLabel(quality) {
+      if (quality === 'basic') return 'Základní';
+      if (quality === 'higher') return 'Vyšší';
+      return 'Standardní';
+    }
+
+    function render(values, result) {
+      outputs.totalCost.textContent = formatCurrency(result.totalCost);
+      outputs.pricePerM2.textContent = formatCurrency(result.pricePerM2);
+      outputs.baseCost.textContent = formatCurrency(result.baseCost);
+      outputs.reserveCost.textContent = formatCurrency(result.reserveCost);
+
+      outputs.summaryArea.textContent = values.area.toString().replace('.', ',') + ' m²';
+      outputs.summaryScope.textContent = getScopeLabel(values.scope);
+      outputs.summaryQuality.textContent = getQualityLabel(values.quality);
+      outputs.summarySanitary.textContent = formatCurrency(result.sanitaryAndEquipment * values.regionFactor);
+      outputs.summaryTechnical.textContent = formatCurrency(result.technicalCost * values.regionFactor);
+      outputs.summaryReserveShare.textContent = formatPercent(values.reserveRate);
+
+      if (result.totalCost < 180000) {
+        outputs.budgetBadge.className = 'badge success';
+        outputs.budgetBadge.textContent = 'Rozpočet odpovídá spíše lehčí koupelně';
+      } else if (result.totalCost < 320000) {
+        outputs.budgetBadge.className = 'badge warning';
+        outputs.budgetBadge.textContent = 'Rozpočet odpovídá střední rekonstrukci koupelny';
+      } else {
+        outputs.budgetBadge.className = 'badge danger';
+        outputs.budgetBadge.textContent = 'Rozpočet odpovídá náročnější nebo vyšší koupelně';
+      }
+
+      renderBreakdown(buildBreakdown(values, result));
+    }
+
+    function runCalculation() {
+      const values = getValues();
+      const error = validate(values);
+
+      if (error) {
+        alert(error);
+        return;
+      }
+
+      const result = calculate(values);
+      render(values, result);
+    }
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      runCalculation();
+    });
+
+    ['area', 'scope', 'quality', 'layoutChanges', 'water', 'electro', 'showerBath', 'toilet', 'heating', 'furniture', 'reserveRate', 'regionFactor'].forEach(id => {
+      document.getElementById(id).addEventListener('input', runCalculation);
+      document.getElementById(id).addEventListener('change', runCalculation);
+    });
+
+    resetBtn.addEventListener('click', function() {
+      document.getElementById('area').value = 5.5;
+      document.getElementById('scope').value = 'medium';
+      document.getElementById('quality').value = 'standard';
+      document.getElementById('layoutChanges').value = 'no';
+      document.getElementById('water').value = 'partial';
+      document.getElementById('electro').value = 'partial';
+      document.getElementById('showerBath').value = 'shower';
+      document.getElementById('toilet').value = 'yes';
+      document.getElementById('heating').value = 'none';
+      document.getElementById('furniture').value = 'standard';
+      document.getElementById('reserveRate').value = '10';
+      document.getElementById('regionFactor').value = '1';
+      runCalculation();
+    });
+
+    runCalculation();
+  </script>
+</body>
+</html>
