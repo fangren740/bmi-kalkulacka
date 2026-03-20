@@ -1,1 +1,1094 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kalkulačka čistého výnosu z pronájmu online | RychléVýpočty.cz</title>
+  <meta name="description" content="Spočítejte si čistý výnos z pronájmu nemovitosti. Přehledná kalkulačka pro nájemné, neobsazenost, provozní náklady, správu, fond oprav i orientační čistý roční výnos a výnosové procento.">
+  <meta name="keywords" content="kalkulačka čistého výnosu z pronájmu, výnos z pronájmu kalkulačka, čistý výnos nemovitosti, rentabilita pronájmu, výnosnost bytu na pronájem">
+  <meta name="author" content="RychléVýpočty.cz">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://rychlevypocty.cz/kalkulacka-cisteho-vynosu-z-pronajmu.html">
 
+  <meta property="og:title" content="Kalkulačka čistého výnosu z pronájmu online | RychléVýpočty.cz">
+  <meta property="og:description" content="Rychlý výpočet čistého výnosu z pronájmu nemovitosti po započtení nákladů, neobsazenosti a správy.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rychlevypocty.cz/kalkulacka-cisteho-vynosu-z-pronajmu.html">
+  <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Kalkulačka čistého výnosu z pronájmu | RychléVýpočty.cz">
+  <meta name="twitter:description" content="Spočítejte si čistý roční výnos a výnosnost pronajímané nemovitosti.">
+
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #5f6b85;
+      --primary: #2152ff;
+      --primary-dark: #183dbf;
+      --border: #dbe3f0;
+      --success: #138a4b;
+      --warning: #b66a00;
+      --danger: #c53a2f;
+      --shadow: 0 12px 32px rgba(20, 32, 70, 0.08);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #f7f9fd 0%, #eef3fb 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      padding: 18px 0;
+      border-bottom: 1px solid rgba(219, 227, 240, 0.8);
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .brand span {
+      color: var(--primary);
+    }
+
+    .topnav {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      font-size: 0.97rem;
+    }
+
+    .hero {
+      padding: 42px 0 20px;
+    }
+
+    .breadcrumbs {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .hero-copy h1 {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      margin: 0 0 16px;
+    }
+
+    .hero-copy p {
+      margin: 0 0 16px;
+      font-size: 1.06rem;
+      color: var(--muted);
+      max-width: 720px;
+    }
+
+    .hero-points {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .hero-pill {
+      background: rgba(33, 82, 255, 0.08);
+      color: var(--primary-dark);
+      border: 1px solid rgba(33, 82, 255, 0.12);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .hero-box {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-box h2 {
+      margin: 0 0 10px;
+      font-size: 1.2rem;
+    }
+
+    .hero-box p {
+      margin: 0 0 12px;
+      color: var(--muted);
+    }
+
+    .hero-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.04fr 0.96fr;
+      gap: 28px;
+      align-items: start;
+      padding: 22px 0 32px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .card-header {
+      padding: 24px 24px 10px;
+    }
+
+    .card-header h2,
+    .card-header h3 {
+      margin: 0 0 8px;
+      font-size: 1.3rem;
+      letter-spacing: -0.02em;
+    }
+
+    .card-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .card-body {
+      padding: 20px 24px 24px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field label {
+      font-weight: 700;
+      font-size: 0.96rem;
+    }
+
+    .field small {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: -2px;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      padding: 14px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      font-size: 1rem;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      outline: none;
+      border-color: rgba(33, 82, 255, 0.45);
+      box-shadow: 0 0 0 4px rgba(33, 82, 255, 0.10);
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.06s ease, background 0.15s ease, opacity 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background: #eef3ff;
+      color: var(--primary-dark);
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .result-box {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+
+    .result-label {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .result-value {
+      font-size: clamp(1.25rem, 2.4vw, 2rem);
+      line-height: 1.15;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .highlight {
+      background: linear-gradient(180deg, #eef7ff 0%, #f9fcff 100%);
+      border-color: rgba(33, 82, 255, 0.18);
+    }
+
+    .info-list {
+      display: grid;
+      gap: 12px;
+      margin: 18px 0 0;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid #edf2fa;
+    }
+
+    .info-row:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .info-row span:first-child {
+      color: var(--muted);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+
+    .badge.success {
+      background: rgba(19, 138, 75, 0.10);
+      color: var(--success);
+    }
+
+    .badge.warning {
+      background: rgba(182, 106, 0, 0.11);
+      color: var(--warning);
+    }
+
+    .badge.danger {
+      background: rgba(197, 58, 47, 0.10);
+      color: var(--danger);
+    }
+
+    .note {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1px solid #e7edf7;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 18px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 720px;
+      background: #fff;
+    }
+
+    th, td {
+      padding: 14px 14px;
+      text-align: left;
+      border-bottom: 1px solid #edf2fa;
+      font-size: 0.96rem;
+    }
+
+    th {
+      background: #f8fbff;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .content-section {
+      padding: 8px 0 8px;
+    }
+
+    .content-section h2 {
+      font-size: 1.7rem;
+      letter-spacing: -0.03em;
+      margin: 0 0 14px;
+    }
+
+    .content-section h3 {
+      font-size: 1.15rem;
+      margin: 28px 0 10px;
+    }
+
+    .content-section p {
+      color: var(--muted);
+      margin: 0 0 14px;
+    }
+
+    .content-section ul {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    .content-section li {
+      margin-bottom: 8px;
+    }
+
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .related-card {
+      display: block;
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      color: var(--text);
+      box-shadow: var(--shadow);
+    }
+
+    .related-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .related-card span {
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    footer {
+      margin-top: 40px;
+      border-top: 1px solid rgba(219, 227, 240, 0.9);
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .footer-inner {
+      padding: 24px 0 40px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .layout,
+      .related-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .container {
+        width: min(100% - 24px, 1160px);
+      }
+
+      .form-grid,
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 28px;
+      }
+
+      .card-header,
+      .card-body,
+      .hero-box {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebApplication",
+    "name":"Kalkulačka čistého výnosu z pronájmu",
+    "url":"https://rychlevypocty.cz/kalkulacka-cisteho-vynosu-z-pronajmu.html",
+    "applicationCategory":"FinanceApplication",
+    "operatingSystem":"Any",
+    "description":"Online kalkulačka pro výpočet čistého výnosu z pronájmu nemovitosti po započtení nákladů a neobsazenosti.",
+    "offers":{
+      "@type":"Offer",
+      "price":"0",
+      "priceCurrency":"CZK"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"Co je čistý výnos z pronájmu?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Čistý výnos z pronájmu je roční příjem z nájmu po odečtení neobsazenosti a pravidelných nákladů spojených s provozem a správou nemovitosti."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Proč nestačí sledovat jen hrubé nájemné?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Protože reálný výnos snižují provozní náklady, fond oprav, správa, pojištění, údržba a období, kdy je byt prázdný nebo bez nájemníka."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Je čistý výnos z pronájmu totéž co ROI?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Ne úplně. Čistý výnos z pronájmu se zaměřuje hlavně na provozní výnosnost nemovitosti z nájmu, zatímco ROI může zahrnovat širší investiční pohled včetně růstu hodnoty majetku nebo jiných faktorů."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="/">Rychlé<span>Výpočty</span>.cz</a>
+      <nav class="topnav" aria-label="Hlavní navigace">
+        <a href="/">Domů</a>
+        <a href="/hypotecni-kalkulacka.html">Hypotéka</a>
+        <a href="/navratnost-investice-kalkulacka.html">ROI</a>
+        <a href="/mesicni-naklady-na-bydleni-kalkulacka.html">Náklady na bydlení</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumbs">
+          <a href="/">RychléVýpočty.cz</a> / Kalkulačka čistého výnosu z pronájmu
+        </div>
+
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <h1>Kalkulačka čistého výnosu z pronájmu</h1>
+            <p>Spočítejte si, kolik vám pronajímaná nemovitost skutečně vydělá po započtení neobsazenosti a běžných nákladů. Kalkulačka je vhodná pro orientační posouzení investičního bytu, domu nebo jiné nemovitosti určené k pronájmu.</p>
+            <p>Zadejte kupní cenu, měsíční nájemné a provozní náklady. Výsledkem bude přehled hrubého i čistého ročního výnosu a výnosového procenta.</p>
+
+            <div class="hero-points">
+              <div class="hero-pill">Čistý roční výnos</div>
+              <div class="hero-pill">Hrubý vs čistý výnos</div>
+              <div class="hero-pill">Neobsazenost</div>
+              <div class="hero-pill">Výnosové procento</div>
+            </div>
+          </div>
+
+          <div class="hero-box">
+            <h2>Co kalkulačka umí</h2>
+            <p>Porovná hrubé nájemné s realistickým čistým výnosem po odečtení neobsazenosti, správy, fondu oprav, pojištění, údržby a dalších zadaných nákladů.</p>
+            <p>Hodí se pro první rychlé rozhodnutí, jestli konkrétní pronajímaná nemovitost dává smysl i po započtení běžných provozních ztrát.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container layout">
+      <div class="card">
+        <div class="card-header">
+          <h2>Zadání pronájmu</h2>
+          <p>Vyplňte cenu nemovitosti, nájemné a pravidelné roční nebo měsíční náklady spojené s pronájmem.</p>
+        </div>
+        <div class="card-body">
+          <form id="rentalYieldForm">
+            <div class="form-grid">
+              <div class="field">
+                <label for="propertyPrice">Pořizovací cena nemovitosti</label>
+                <input type="number" id="propertyPrice" min="100000" step="10000" value="4900000" inputmode="decimal">
+                <small>Kupní cena investiční nemovitosti bez dalších nákladů.</small>
+              </div>
+
+              <div class="field">
+                <label for="purchaseCosts">Další pořizovací náklady</label>
+                <input type="number" id="purchaseCosts" min="0" step="10000" value="180000" inputmode="decimal">
+                <small>Např. právní služby, vybavení, drobné úpravy nebo rekonstrukce.</small>
+              </div>
+
+              <div class="field">
+                <label for="monthlyRent">Měsíční nájemné</label>
+                <input type="number" id="monthlyRent" min="0" step="100" value="22000" inputmode="decimal">
+                <small>Nájemné, které skutečně inkasujete od nájemníka.</small>
+              </div>
+
+              <div class="field">
+                <label for="vacancyRate">Neobsazenost (%)</label>
+                <input type="number" id="vacancyRate" min="0" max="100" step="0.1" value="5" inputmode="decimal">
+                <small>Orientační ztráta z měsíců bez nájemníka nebo výpadků.</small>
+              </div>
+
+              <div class="field">
+                <label for="managementMonthly">Správa pronájmu / měsíc</label>
+                <input type="number" id="managementMonthly" min="0" step="10" value="0" inputmode="decimal">
+                <small>Vyplňte, pokud využíváte správce nebo agenturu.</small>
+              </div>
+
+              <div class="field">
+                <label for="maintenanceMonthly">Údržba a opravy / měsíc</label>
+                <input type="number" id="maintenanceMonthly" min="0" step="10" value="1200" inputmode="decimal">
+                <small>Měsíční průměr běžné údržby a oprav.</small>
+              </div>
+
+              <div class="field">
+                <label for="fundRepairsMonthly">Fond oprav / měsíc</label>
+                <input type="number" id="fundRepairsMonthly" min="0" step="10" value="1800" inputmode="decimal">
+                <small>Pravidelný příspěvek do fondu oprav nebo podobných plateb.</small>
+              </div>
+
+              <div class="field">
+                <label for="insuranceMonthly">Pojištění / měsíc</label>
+                <input type="number" id="insuranceMonthly" min="0" step="10" value="250" inputmode="decimal">
+                <small>Měsíční průměr z roční pojistky.</small>
+              </div>
+
+              <div class="field">
+                <label for="propertyTaxMonthly">Daň a ostatní poplatky / měsíc</label>
+                <input type="number" id="propertyTaxMonthly" min="0" step="10" value="150" inputmode="decimal">
+                <small>Např. daň z nemovitosti rozpočítaná na měsíc.</small>
+              </div>
+
+              <div class="field">
+                <label for="otherMonthly">Ostatní náklady / měsíc</label>
+                <input type="number" id="otherMonthly" min="0" step="10" value="300" inputmode="decimal">
+                <small>Např. inzerce, administrace nebo drobné provozní náklady.</small>
+              </div>
+
+              <div class="field">
+                <label for="financingMonthly">Splátka úvěru / hypotéky / měsíc</label>
+                <input type="number" id="financingMonthly" min="0" step="50" value="0" inputmode="decimal">
+                <small>Nepovinné. Pro cashflow pohled po započtení financování.</small>
+              </div>
+
+              <div class="field">
+                <label for="yieldTarget">Cílový čistý výnos (%)</label>
+                <select id="yieldTarget">
+                  <option value="2">2 %</option>
+                  <option value="3">3 %</option>
+                  <option value="4" selected>4 %</option>
+                  <option value="5">5 %</option>
+                  <option value="6">6 %</option>
+                </select>
+                <small>Pomůže ukázat, zda se k cílové výnosnosti blížíte.</small>
+              </div>
+
+              <div class="actions full">
+                <button type="submit" class="btn-primary">Spočítat čistý výnos z pronájmu</button>
+                <button type="button" class="btn-secondary" id="resetBtn">Obnovit výchozí hodnoty</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>Výsledek výpočtu</h2>
+          <p>Souhrn výnosnosti pronájmu po započtení reálnějších provozních vlivů.</p>
+        </div>
+        <div class="card-body">
+          <div class="results-grid">
+            <div class="result-box highlight">
+              <div class="result-label">Čistý roční výnos</div>
+              <div class="result-value" id="netAnnualIncome">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Čistý výnos (%)</div>
+              <div class="result-value" id="netYieldPercent">0 %</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Hrubý roční příjem z nájmu</div>
+              <div class="result-value" id="grossAnnualRent">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Roční cashflow po financování</div>
+              <div class="result-value" id="cashflowAfterFinancing">0 Kč</div>
+            </div>
+          </div>
+
+          <div id="yieldBadge" class="badge success">Výnosnost vypadá příznivě</div>
+
+          <div class="info-list">
+            <div class="info-row">
+              <span>Celková investovaná částka</span>
+              <strong id="summaryTotalInvestment">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Roční ztráta z neobsazenosti</span>
+              <strong id="summaryVacancyLoss">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Roční provozní náklady</span>
+              <strong id="summaryOperatingCosts">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Hrubý výnos (%)</span>
+              <strong id="summaryGrossYield">0 %</strong>
+            </div>
+            <div class="info-row">
+              <span>Rozdíl proti cílovému výnosu</span>
+              <strong id="summaryYieldGap">0 %</strong>
+            </div>
+          </div>
+
+          <div class="note">
+            Výpočet je orientační. Nezahrnuje daňové dopady, mimořádné opravy, růst hodnoty nemovitosti ani změny nájemného v čase. Výsledek je vhodný hlavně pro rychlé provozní posouzení pronájmu.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="card">
+        <div class="card-header">
+          <h3>Přehled výnosu a nákladů z pronájmu</h3>
+          <p>Rozpad příjmu, neobsazenosti a pravidelných nákladů do jednoho srozumitelného přehledu.</p>
+        </div>
+        <div class="card-body">
+          <div class="table-wrap">
+            <table aria-label="Přehled výnosu z pronájmu">
+              <thead>
+                <tr>
+                  <th>Položka</th>
+                  <th>Měsíčně</th>
+                  <th>Ročně</th>
+                  <th>Poznámka</th>
+                </tr>
+              </thead>
+              <tbody id="breakdownBody">
+                <tr>
+                  <td colspan="4">Po zadání údajů se zobrazí detailní přehled výnosu a nákladů.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container content-section">
+      <h2>Jak kalkulačka čistého výnosu z pronájmu funguje</h2>
+      <p>Kalkulačka vychází z měsíčního nájemného a odečítá od něj realistické ztráty a provozní náklady. Nestačí totiž sledovat jen hrubé nájemné. V praxi se výnos snižuje o období bez nájemníka, správu, údržbu, fond oprav, pojištění nebo další pravidelné výdaje. Výsledkem je čistší pohled na to, kolik vám nemovitost skutečně vydělá.</p>
+
+      <h3>Co ve výsledku uvidíte</h3>
+      <ul>
+        <li>hrubý roční příjem z nájemného,</li>
+        <li>roční ztrátu z neobsazenosti,</li>
+        <li>roční provozní náklady,</li>
+        <li>čistý roční výnos v korunách,</li>
+        <li>čistý výnos v procentech vůči investované částce.</li>
+      </ul>
+
+      <h3>Proč je důležitá neobsazenost</h3>
+      <p>I kvalitní pronájem nemusí být obsazený nepřetržitě po celý rok. Mezi nájemníky může vzniknout krátký výpadek, může být potřeba drobná oprava nebo příprava bytu na další pronájem. Právě proto kalkulačka pracuje s neobsazeností jako s realistickou rezervou proti příliš optimistickému odhadu výnosu.</p>
+
+      <h3>Čistý výnos vs cashflow po financování</h3>
+      <p>Čistý výnos se vztahuje k provozu nemovitosti samotné. Cashflow po financování navíc ukazuje, co zbude po zaplacení splátky úvěru nebo hypotéky. To je užitečné hlavně ve chvíli, kdy nemovitost nekupujete čistě za vlastní peníze.</p>
+    </section>
+
+    <section class="container content-section">
+      <h2>Kdy tenhle tool dává největší smysl</h2>
+      <p>Hodí se při porovnávání investičních bytů, při nastavování realistického nájemného i při kontrole, zda se konkrétní pronájem vyplatí i po započtení běžných provozních nákladů. Dobře funguje jako první filtr ještě před detailnější investiční analýzou.</p>
+
+      <h3>Na co lidé často zapomínají</h3>
+      <p>Častou chybou je započítat jen kupní cenu a hrubé nájemné. Reálný čistý výnos ale snižují vedlejší pořizovací náklady, fond oprav, správa, opravy, pojištění, inzerce a také období bez nájemníka. Právě proto bývá skutečný výnos nižší než první intuitivní odhad.</p>
+
+      <h3>Jak výsledek používat</h3>
+      <p>Výsledek je vhodný hlavně pro rychlé srovnání různých scénářů. Můžete si zkusit změnit nájemné, míru neobsazenosti nebo výši nákladů a hned uvidíte, jak se mění čistá výnosnost. To je praktické při rozhodování, jestli investici dál řešit, nebo hledat lepší variantu.</p>
+    </section>
+
+    <section class="container content-section">
+      <h2>Související kalkulačky</h2>
+      <div class="related-grid">
+        <a class="related-card" href="/navratnost-investice-kalkulacka.html">
+          <strong>Kalkulačka návratnosti investice</strong>
+          <span>Širší pohled na návratnost investice a dobu návratu vložených peněz.</span>
+        </a>
+
+        <a class="related-card" href="/hypotecni-kalkulacka.html">
+          <strong>Hypoteční kalkulačka</strong>
+          <span>Výpočet splátky hypotéky, úroků a celkové ceny financování.</span>
+        </a>
+
+        <a class="related-card" href="/kalkulacka-akontace-a-ltv-hypoteky.html">
+          <strong>Kalkulačka akontace a LTV hypotéky</strong>
+          <span>Výpočet vlastních zdrojů, akontace a potřebné výše hypotéky.</span>
+        </a>
+
+        <a class="related-card" href="/mesicni-naklady-na-bydleni-kalkulacka.html">
+          <strong>Kalkulačka měsíčních nákladů na bydlení</strong>
+          <span>Přehled domácích nákladů, energií a celkového rozpočtu bydlení.</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      © 2026 RychléVýpočty.cz — online kalkulačky a praktické výpočty pro každodenní použití.
+    </div>
+  </footer>
+
+  <script>
+    const form = document.getElementById('rentalYieldForm');
+    const resetBtn = document.getElementById('resetBtn');
+
+    const outputs = {
+      netAnnualIncome: document.getElementById('netAnnualIncome'),
+      netYieldPercent: document.getElementById('netYieldPercent'),
+      grossAnnualRent: document.getElementById('grossAnnualRent'),
+      cashflowAfterFinancing: document.getElementById('cashflowAfterFinancing'),
+      summaryTotalInvestment: document.getElementById('summaryTotalInvestment'),
+      summaryVacancyLoss: document.getElementById('summaryVacancyLoss'),
+      summaryOperatingCosts: document.getElementById('summaryOperatingCosts'),
+      summaryGrossYield: document.getElementById('summaryGrossYield'),
+      summaryYieldGap: document.getElementById('summaryYieldGap'),
+      yieldBadge: document.getElementById('yieldBadge'),
+      breakdownBody: document.getElementById('breakdownBody')
+    };
+
+    function formatCurrency(value, digits = 0) {
+      return new Intl.NumberFormat('cs-CZ', {
+        style: 'currency',
+        currency: 'CZK',
+        minimumFractionDigits: digits,
+        maximumFractionDigits: digits
+      }).format(value);
+    }
+
+    function formatPercent(value, digits = 2) {
+      return new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: digits
+      }).format(value) + ' %';
+    }
+
+    function getValues() {
+      return {
+        propertyPrice: Number(document.getElementById('propertyPrice').value),
+        purchaseCosts: Number(document.getElementById('purchaseCosts').value),
+        monthlyRent: Number(document.getElementById('monthlyRent').value),
+        vacancyRate: Number(document.getElementById('vacancyRate').value),
+        managementMonthly: Number(document.getElementById('managementMonthly').value),
+        maintenanceMonthly: Number(document.getElementById('maintenanceMonthly').value),
+        fundRepairsMonthly: Number(document.getElementById('fundRepairsMonthly').value),
+        insuranceMonthly: Number(document.getElementById('insuranceMonthly').value),
+        propertyTaxMonthly: Number(document.getElementById('propertyTaxMonthly').value),
+        otherMonthly: Number(document.getElementById('otherMonthly').value),
+        financingMonthly: Number(document.getElementById('financingMonthly').value),
+        yieldTarget: Number(document.getElementById('yieldTarget').value)
+      };
+    }
+
+    function validate(values) {
+      if (!values.propertyPrice || values.propertyPrice <= 0) return 'Zadejte platnou pořizovací cenu nemovitosti.';
+      if (values.purchaseCosts < 0) return 'Další pořizovací náklady nemohou být záporné.';
+      if (values.monthlyRent < 0) return 'Měsíční nájemné nemůže být záporné.';
+      if (values.vacancyRate < 0 || values.vacancyRate > 100) return 'Neobsazenost musí být mezi 0 a 100 %.';
+      return '';
+    }
+
+    function calculate(values) {
+      const totalInvestment = values.propertyPrice + values.purchaseCosts;
+      const grossAnnualRent = values.monthlyRent * 12;
+      const vacancyLoss = grossAnnualRent * (values.vacancyRate / 100);
+      const effectiveAnnualRent = grossAnnualRent - vacancyLoss;
+
+      const operatingCostsAnnual =
+        (values.managementMonthly +
+        values.maintenanceMonthly +
+        values.fundRepairsMonthly +
+        values.insuranceMonthly +
+        values.propertyTaxMonthly +
+        values.otherMonthly) * 12;
+
+      const netAnnualIncome = effectiveAnnualRent - operatingCostsAnnual;
+      const grossYield = totalInvestment > 0 ? (grossAnnualRent / totalInvestment) * 100 : 0;
+      const netYield = totalInvestment > 0 ? (netAnnualIncome / totalInvestment) * 100 : 0;
+      const annualFinancing = values.financingMonthly * 12;
+      const cashflowAfterFinancing = netAnnualIncome - annualFinancing;
+      const yieldGap = netYield - values.yieldTarget;
+
+      return {
+        totalInvestment,
+        grossAnnualRent,
+        vacancyLoss,
+        effectiveAnnualRent,
+        operatingCostsAnnual,
+        netAnnualIncome,
+        grossYield,
+        netYield,
+        annualFinancing,
+        cashflowAfterFinancing,
+        yieldGap
+      };
+    }
+
+    function renderBreakdown(values, result) {
+      const rows = [
+        {
+          label: 'Hrubé nájemné',
+          monthly: values.monthlyRent,
+          annual: result.grossAnnualRent,
+          note: 'Plný roční příjem bez zohlednění výpadků'
+        },
+        {
+          label: 'Ztráta z neobsazenosti',
+          monthly: result.vacancyLoss / 12,
+          annual: result.vacancyLoss,
+          note: 'Odhad ztráty z prázdných měsíců nebo výpadků'
+        },
+        {
+          label: 'Efektivní příjem po neobsazenosti',
+          monthly: result.effectiveAnnualRent / 12,
+          annual: result.effectiveAnnualRent,
+          note: 'Příjem po započtení neobsazenosti'
+        },
+        {
+          label: 'Provozní náklady',
+          monthly: result.operatingCostsAnnual / 12,
+          annual: result.operatingCostsAnnual,
+          note: 'Správa, fond oprav, údržba, pojištění a další'
+        },
+        {
+          label: 'Čistý provozní výnos',
+          monthly: result.netAnnualIncome / 12,
+          annual: result.netAnnualIncome,
+          note: 'Výnos před započtením financování'
+        },
+        {
+          label: 'Financování / splátka úvěru',
+          monthly: values.financingMonthly,
+          annual: result.annualFinancing,
+          note: 'Nepovinná vrstva pro cashflow pohled'
+        },
+        {
+          label: 'Cashflow po financování',
+          monthly: result.cashflowAfterFinancing / 12,
+          annual: result.cashflowAfterFinancing,
+          note: 'Co zbývá po provozu i splátce financování'
+        }
+      ];
+
+      outputs.breakdownBody.innerHTML = rows.map(row => `
+        <tr>
+          <td>${row.label}</td>
+          <td>${formatCurrency(row.monthly)}</td>
+          <td>${formatCurrency(row.annual)}</td>
+          <td>${row.note}</td>
+        </tr>
+      `).join('');
+    }
+
+    function render(values, result) {
+      outputs.netAnnualIncome.textContent = formatCurrency(result.netAnnualIncome);
+      outputs.netYieldPercent.textContent = formatPercent(result.netYield);
+      outputs.grossAnnualRent.textContent = formatCurrency(result.grossAnnualRent);
+      outputs.cashflowAfterFinancing.textContent = formatCurrency(result.cashflowAfterFinancing);
+
+      outputs.summaryTotalInvestment.textContent = formatCurrency(result.totalInvestment);
+      outputs.summaryVacancyLoss.textContent = formatCurrency(result.vacancyLoss);
+      outputs.summaryOperatingCosts.textContent = formatCurrency(result.operatingCostsAnnual);
+      outputs.summaryGrossYield.textContent = formatPercent(result.grossYield);
+      outputs.summaryYieldGap.textContent = (result.yieldGap >= 0 ? '+' : '') + formatPercent(result.yieldGap);
+
+      if (result.netYield >= values.yieldTarget) {
+        outputs.yieldBadge.textContent = 'Výnosnost dosahuje nebo překračuje cílovou úroveň';
+        outputs.yieldBadge.className = 'badge success';
+      } else if (result.netYield >= values.yieldTarget - 1) {
+        outputs.yieldBadge.textContent = 'Výnosnost je blízko cíli, ale s menší rezervou';
+        outputs.yieldBadge.className = 'badge warning';
+      } else {
+        outputs.yieldBadge.textContent = 'Výnosnost je pod cílovou úrovní';
+        outputs.yieldBadge.className = 'badge danger';
+      }
+
+      renderBreakdown(values, result);
+    }
+
+    function runCalculation() {
+      const values = getValues();
+      const error = validate(values);
+
+      if (error) {
+        alert(error);
+        return;
+      }
+
+      const result = calculate(values);
+      render(values, result);
+    }
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      runCalculation();
+    });
+
+    [
+      'propertyPrice',
+      'purchaseCosts',
+      'monthlyRent',
+      'vacancyRate',
+      'managementMonthly',
+      'maintenanceMonthly',
+      'fundRepairsMonthly',
+      'insuranceMonthly',
+      'propertyTaxMonthly',
+      'otherMonthly',
+      'financingMonthly',
+      'yieldTarget'
+    ].forEach(id => {
+      document.getElementById(id).addEventListener('input', runCalculation);
+      document.getElementById(id).addEventListener('change', runCalculation);
+    });
+
+    resetBtn.addEventListener('click', function() {
+      document.getElementById('propertyPrice').value = 4900000;
+      document.getElementById('purchaseCosts').value = 180000;
+      document.getElementById('monthlyRent').value = 22000;
+      document.getElementById('vacancyRate').value = 5;
+      document.getElementById('managementMonthly').value = 0;
+      document.getElementById('maintenanceMonthly').value = 1200;
+      document.getElementById('fundRepairsMonthly').value = 1800;
+      document.getElementById('insuranceMonthly').value = 250;
+      document.getElementById('propertyTaxMonthly').value = 150;
+      document.getElementById('otherMonthly').value = 300;
+      document.getElementById('financingMonthly').value = 0;
+      document.getElementById('yieldTarget').value = 4;
+      runCalculation();
+    });
+
+    runCalculation();
+  </script>
+</body>
+</html>
