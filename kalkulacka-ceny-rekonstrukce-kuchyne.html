@@ -1,1 +1,1145 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kalkulačka ceny rekonstrukce kuchyně online zdarma | RychléVýpočty.cz</title>
+  <meta name="description" content="Spočítejte si orientační cenu rekonstrukce kuchyně podle velikosti, rozsahu prací, standardu kuchyňské linky, spotřebičů a technických úprav. Přehledná kalkulačka zdarma online.">
+  <meta name="keywords" content="kalkulačka ceny rekonstrukce kuchyně, kolik stojí nová kuchyň, cena rekonstrukce kuchyně, rozpočet kuchyně, kuchyň kalkulačka">
+  <meta name="author" content="RychléVýpočty.cz">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://rychlevypocty.cz/kalkulacka-ceny-rekonstrukce-kuchyne.html">
 
+  <meta property="og:title" content="Kalkulačka ceny rekonstrukce kuchyně | RychléVýpočty.cz">
+  <meta property="og:description" content="Zjistěte orientační rozpočet rekonstrukce kuchyně podle velikosti, rozsahu prací, standardu linky a spotřebičů.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rychlevypocty.cz/kalkulacka-ceny-rekonstrukce-kuchyne.html">
+  <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Kalkulačka ceny rekonstrukce kuchyně | RychléVýpočty.cz">
+  <meta name="twitter:description" content="Orientační výpočet ceny rekonstrukce kuchyně online zdarma.">
+
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #5f6b85;
+      --primary: #2152ff;
+      --primary-dark: #183dbf;
+      --border: #dbe3f0;
+      --success: #138a4b;
+      --warning: #b66a00;
+      --danger: #b42318;
+      --shadow: 0 12px 32px rgba(20, 32, 70, 0.08);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #f7f9fd 0%, #eef3fb 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      padding: 18px 0;
+      border-bottom: 1px solid rgba(219, 227, 240, 0.8);
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+      line-height: 1;
+    }
+
+    .brand span {
+      color: var(--primary);
+    }
+
+    .topnav {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      font-size: 0.97rem;
+    }
+
+    .hero {
+      padding: 42px 0 20px;
+    }
+
+    .breadcrumbs {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .hero-copy h1 {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      margin: 0 0 16px;
+    }
+
+    .hero-copy p {
+      margin: 0 0 16px;
+      font-size: 1.06rem;
+      color: var(--muted);
+      max-width: 720px;
+    }
+
+    .hero-points {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .hero-pill {
+      background: rgba(33, 82, 255, 0.08);
+      color: var(--primary-dark);
+      border: 1px solid rgba(33, 82, 255, 0.12);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .hero-box {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-box h2 {
+      margin: 0 0 10px;
+      font-size: 1.2rem;
+    }
+
+    .hero-box p {
+      margin: 0 0 12px;
+      color: var(--muted);
+    }
+
+    .hero-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.04fr 0.96fr;
+      gap: 28px;
+      align-items: start;
+      padding: 22px 0 32px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .card-header {
+      padding: 24px 24px 10px;
+    }
+
+    .card-header h2,
+    .card-header h3 {
+      margin: 0 0 8px;
+      font-size: 1.3rem;
+      letter-spacing: -0.02em;
+    }
+
+    .card-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .card-body {
+      padding: 20px 24px 24px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field label {
+      font-weight: 700;
+      font-size: 0.96rem;
+    }
+
+    .field small {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: -2px;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      padding: 14px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      font-size: 1rem;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      outline: none;
+      border-color: rgba(33, 82, 255, 0.45);
+      box-shadow: 0 0 0 4px rgba(33, 82, 255, 0.10);
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.06s ease, background 0.15s ease, opacity 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background: #eef3ff;
+      color: var(--primary-dark);
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .result-box {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+
+    .result-label {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .result-value {
+      font-size: clamp(1.25rem, 2.4vw, 2rem);
+      line-height: 1.15;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .highlight {
+      background: linear-gradient(180deg, #eef7ff 0%, #f9fcff 100%);
+      border-color: rgba(33, 82, 255, 0.18);
+    }
+
+    .info-list {
+      display: grid;
+      gap: 12px;
+      margin: 18px 0 0;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid #edf2fa;
+    }
+
+    .info-row:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .info-row span:first-child {
+      color: var(--muted);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+
+    .badge.success {
+      background: rgba(19, 138, 75, 0.10);
+      color: var(--success);
+    }
+
+    .badge.warning {
+      background: rgba(182, 106, 0, 0.11);
+      color: var(--warning);
+    }
+
+    .badge.danger {
+      background: rgba(180, 35, 24, 0.10);
+      color: var(--danger);
+    }
+
+    .note {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1px solid #e7edf7;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 18px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 640px;
+      background: #fff;
+    }
+
+    th, td {
+      padding: 14px 14px;
+      text-align: left;
+      border-bottom: 1px solid #edf2fa;
+      font-size: 0.96rem;
+    }
+
+    th {
+      background: #f8fbff;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .content-section {
+      padding: 8px 0 8px;
+    }
+
+    .content-section h2 {
+      font-size: 1.7rem;
+      letter-spacing: -0.03em;
+      margin: 0 0 14px;
+    }
+
+    .content-section h3 {
+      font-size: 1.15rem;
+      margin: 28px 0 10px;
+    }
+
+    .content-section p {
+      color: var(--muted);
+      margin: 0 0 14px;
+    }
+
+    .content-section ul {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    .content-section li {
+      margin-bottom: 8px;
+    }
+
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .related-card {
+      display: block;
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      color: var(--text);
+      box-shadow: var(--shadow);
+    }
+
+    .related-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .related-card span {
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    footer {
+      margin-top: 40px;
+      border-top: 1px solid rgba(219, 227, 240, 0.9);
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .footer-inner {
+      padding: 24px 0 40px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .layout,
+      .related-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .container {
+        width: min(100% - 24px, 1160px);
+      }
+
+      .form-grid,
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 28px;
+      }
+
+      .card-header,
+      .card-body,
+      .hero-box {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebApplication",
+    "name":"Kalkulačka ceny rekonstrukce kuchyně",
+    "url":"https://rychlevypocty.cz/kalkulacka-ceny-rekonstrukce-kuchyne.html",
+    "applicationCategory":"FinanceApplication",
+    "operatingSystem":"Any",
+    "description":"Online kalkulačka pro orientační výpočet ceny rekonstrukce kuchyně podle velikosti, rozsahu prací, kuchyňské linky, spotřebičů a technických úprav.",
+    "offers":{
+      "@type":"Offer",
+      "price":"0",
+      "priceCurrency":"CZK"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"Jak spočítat orientační cenu rekonstrukce kuchyně?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Orientační cenu rekonstrukce kuchyně lze odhadnout podle velikosti prostoru, rozsahu stavebních prací, úrovně kuchyňské linky, spotřebičů, nových rozvodů vody a elektroinstalace i dalších prvků, jako je pracovní deska nebo úprava podlah a stěn."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Co cenu nové kuchyně ovlivňuje nejvíc?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Největší vliv mívá kvalita a velikost kuchyňské linky, výběr spotřebičů, nové elektro a rozvody, pracovní deska, rozsah stavebních úprav a úroveň materiálů. Významnou část rozpočtu tvoří také montáž a řemeslné práce."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Je výpočet v kalkulačce přesný?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Výpočet je orientační. Skutečná cena závisí na lokalitě, dispozici kuchyně, kvalitě materiálů, typu spotřebičů, cenách řemeslníků i konkrétním technickém řešení."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="/">Rychlé<span>Výpočty</span>.cz</a>
+      <nav class="topnav" aria-label="Hlavní navigace">
+        <a href="/">Domů</a>
+        <a href="/kalkulacka-nakladu-na-rekonstrukci-bytu-domu.html">Rekonstrukce bytu a domu</a>
+        <a href="/kalkulacka-ceny-rekonstrukce-koupelny.html">Cena rekonstrukce koupelny</a>
+        <a href="/objem-materialu-kalkulacka.html">Objem materiálu</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumbs">
+          <a href="/">RychléVýpočty.cz</a> / Kalkulačka ceny rekonstrukce kuchyně
+        </div>
+
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <h1>Kalkulačka ceny rekonstrukce kuchyně</h1>
+            <p>Spočítejte si orientační rozpočet nové kuchyně podle velikosti, rozsahu prací, standardu kuchyňské linky, spotřebičů a technických úprav. Kalkulačka pomůže rychle odhadnout, jestli půjde o základnější modernizaci, střední rozpočet nebo náročnější kompletní kuchyň.</p>
+            <p>Výsledek ukáže celkovou cenu, cenu za běžný metr kuchyňské linky, rozpad hlavních položek i rezervu na vícepráce.</p>
+
+            <div class="hero-points">
+              <div class="hero-pill">Rozpočet kuchyně</div>
+              <div class="hero-pill">Kuchyňská linka a spotřebiče</div>
+              <div class="hero-pill">Rozvody a stavební úpravy</div>
+              <div class="hero-pill">Rezerva na vícepráce</div>
+            </div>
+          </div>
+
+          <div class="hero-box">
+            <h2>Co kalkulačka umí</h2>
+            <p>Kombinuje základní náklady na úpravu prostoru s cenou kuchyňské linky, spotřebičů a technických zásahů, které bývají pro rozpočet kuchyně nejdůležitější. Díky tomu je výsledek praktičtější než jednoduchý odhad podle plochy.</p>
+            <p>Je vhodná hlavně pro první rozpočtový odhad před poptáním kuchyňského studia nebo řemeslníků.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container layout">
+      <div class="card">
+        <div class="card-header">
+          <h2>Zadání kuchyně</h2>
+          <p>Vyplňte základní parametry kuchyně a vyberte důležité položky. Kalkulačka výsledek automaticky přepočítá.</p>
+        </div>
+        <div class="card-body">
+          <form id="kitchenForm">
+            <div class="form-grid">
+              <div class="field">
+                <label for="area">Plocha kuchyně (m²)</label>
+                <input type="number" id="area" min="4" max="60" step="0.1" value="12" inputmode="decimal">
+                <small>Celková plocha kuchyně nebo prostoru, který se upravuje.</small>
+              </div>
+
+              <div class="field">
+                <label for="lineLength">Délka kuchyňské linky (bm)</label>
+                <input type="number" id="lineLength" min="1" max="15" step="0.1" value="4.2" inputmode="decimal">
+                <small>Běžné metry kuchyňské linky včetně horních a spodních skříněk.</small>
+              </div>
+
+              <div class="field">
+                <label for="scope">Rozsah rekonstrukce</label>
+                <select id="scope">
+                  <option value="light">Lehčí modernizace</option>
+                  <option value="medium" selected>Střední rekonstrukce</option>
+                  <option value="full">Kompletní rekonstrukce</option>
+                </select>
+                <small>Od výměny linky po větší zásahy do prostoru.</small>
+              </div>
+
+              <div class="field">
+                <label for="quality">Standard kuchyňské linky</label>
+                <select id="quality">
+                  <option value="basic">Základní</option>
+                  <option value="standard" selected>Standardní</option>
+                  <option value="higher">Vyšší</option>
+                </select>
+                <small>Ovlivňuje cenu skříněk, kování, dvířek a detailů.</small>
+              </div>
+
+              <div class="field">
+                <label for="appliances">Spotřebiče</label>
+                <select id="appliances">
+                  <option value="reuse">Stávající / minimum nových</option>
+                  <option value="standard" selected>Běžná nová sestava</option>
+                  <option value="higher">Vyšší třída</option>
+                </select>
+                <small>Např. trouba, deska, digestoř, myčka, lednice.</small>
+              </div>
+
+              <div class="field">
+                <label for="worktop">Pracovní deska</label>
+                <select id="worktop">
+                  <option value="basic">Laminát základ</option>
+                  <option value="standard" selected>Lepší laminát / compact</option>
+                  <option value="higher">Kámen / vyšší řešení</option>
+                </select>
+                <small>Pracovní deska výrazně ovlivňuje cenu kuchyně.</small>
+              </div>
+
+              <div class="field">
+                <label for="water">Nové rozvody vody a odpadu</label>
+                <select id="water">
+                  <option value="none">Bez větších zásahů</option>
+                  <option value="partial" selected>Částečně</option>
+                  <option value="full">Kompletně</option>
+                </select>
+                <small>Důležité hlavně při přesunu dřezu nebo změně dispozice.</small>
+              </div>
+
+              <div class="field">
+                <label for="electro">Nová elektroinstalace</label>
+                <select id="electro">
+                  <option value="none">Bez větších zásahů</option>
+                  <option value="partial" selected>Částečně</option>
+                  <option value="full">Kompletně</option>
+                </select>
+                <small>Zásuvky, samostatné okruhy, světla a přívody ke spotřebičům.</small>
+              </div>
+
+              <div class="field">
+                <label for="floorWalls">Podlahy, omítky a malby</label>
+                <select id="floorWalls">
+                  <option value="none">Minimum úprav</option>
+                  <option value="partial" selected>Částečně</option>
+                  <option value="full">Ve větším rozsahu</option>
+                </select>
+                <small>Úpravy stěn, podlah a finálních povrchů v kuchyni.</small>
+              </div>
+
+              <div class="field">
+                <label for="layoutChanges">Změna dispozice / větší stavební zásah</label>
+                <select id="layoutChanges">
+                  <option value="no" selected>Ne</option>
+                  <option value="yes">Ano</option>
+                </select>
+                <small>Např. bourání, posuny příček nebo větší přesuny prvků.</small>
+              </div>
+
+              <div class="field">
+                <label for="reserveRate">Rezerva na vícepráce (%)</label>
+                <select id="reserveRate">
+                  <option value="5">5 %</option>
+                  <option value="10" selected>10 %</option>
+                  <option value="15">15 %</option>
+                  <option value="20">20 %</option>
+                </select>
+                <small>Doporučený polštář pro skryté vady a dodatečné práce.</small>
+              </div>
+
+              <div class="field">
+                <label for="regionFactor">Cenová náročnost realizace</label>
+                <select id="regionFactor">
+                  <option value="0.95">Nižší ceny</option>
+                  <option value="1" selected>Běžná úroveň</option>
+                  <option value="1.1">Vyšší ceny</option>
+                  <option value="1.2">Výrazně vyšší ceny</option>
+                </select>
+                <small>Hrubé zohlednění lokality a cen řemesel.</small>
+              </div>
+
+              <div class="actions full">
+                <button type="submit" class="btn-primary">Spočítat cenu kuchyně</button>
+                <button type="button" class="btn-secondary" id="resetBtn">Obnovit výchozí hodnoty</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>Výsledek výpočtu</h2>
+          <p>Orientační přehled nákladů na rekonstrukci kuchyně podle zadaných parametrů.</p>
+        </div>
+        <div class="card-body">
+          <div class="results-grid">
+            <div class="result-box highlight">
+              <div class="result-label">Celková cena rekonstrukce kuchyně</div>
+              <div class="result-value" id="totalCost">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Cena za běžný metr linky</div>
+              <div class="result-value" id="pricePerMeter">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Rozpočet bez rezervy</div>
+              <div class="result-value" id="baseCost">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Rezerva na vícepráce</div>
+              <div class="result-value" id="reserveCost">0 Kč</div>
+            </div>
+          </div>
+
+          <div id="budgetBadge" class="badge success">Rozpočet odpovídá spíše lehčí kuchyni</div>
+
+          <div class="info-list">
+            <div class="info-row">
+              <span>Plocha kuchyně</span>
+              <strong id="summaryArea">0 m²</strong>
+            </div>
+            <div class="info-row">
+              <span>Délka linky</span>
+              <strong id="summaryLength">0 bm</strong>
+            </div>
+            <div class="info-row">
+              <span>Rozsah rekonstrukce</span>
+              <strong id="summaryScope">–</strong>
+            </div>
+            <div class="info-row">
+              <span>Linka a spotřebiče</span>
+              <strong id="summaryKitchenCore">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Technické a stavební práce</span>
+              <strong id="summaryTechnical">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Podíl rezervy</span>
+              <strong id="summaryReserveShare">0 %</strong>
+            </div>
+          </div>
+
+          <div class="note">
+            Výpočet je orientační. Skutečná cena nové kuchyně závisí na dispozici prostoru, kvalitě linky a spotřebičů, rozsahu rozvodů, cenách montáže i konkrétním technickém řešení.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="card">
+        <div class="card-header">
+          <h3>Rozpad orientační ceny kuchyně</h3>
+          <p>Přehled hlavních položek, které se podílí na celkové ceně rekonstrukce kuchyně.</p>
+        </div>
+        <div class="card-body">
+          <div class="table-wrap">
+            <table aria-label="Rozpad ceny rekonstrukce kuchyně">
+              <thead>
+                <tr>
+                  <th>Položka</th>
+                  <th>Částka</th>
+                  <th>Podíl na rozpočtu</th>
+                </tr>
+              </thead>
+              <tbody id="breakdownBody">
+                <tr>
+                  <td colspan="3">Po zadání údajů se zobrazí přehled orientačních nákladů kuchyně.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container content-section">
+      <h2>Jak kalkulačka ceny rekonstrukce kuchyně funguje</h2>
+      <p>Rozpočet nové kuchyně se netýká jen samotné linky. Významnou část ceny tvoří spotřebiče, pracovní deska, nové elektro a voda, případné úpravy stěn a podlah nebo změna dispozice prostoru. Tato kalkulačka proto kombinuje náklady na kuchyňskou sestavu s technickými a stavebními zásahy, které rozpočet často výrazně posunou.</p>
+
+      <h3>Co cenu kuchyně ovlivňuje nejvíc</h3>
+      <ul>
+        <li>délka a kvalita kuchyňské linky,</li>
+        <li>výběr spotřebičů a pracovní desky,</li>
+        <li>nové rozvody vody, odpadů a elektroinstalace,</li>
+        <li>úpravy podlah, stěn a finálních povrchů,</li>
+        <li>větší stavební zásahy nebo změna dispozice,</li>
+        <li>rezerva na nečekané komplikace a vícepráce.</li>
+      </ul>
+
+      <h3>Kdy se kalkulačka hodí nejvíc</h3>
+      <p>Největší přínos má při koupi staršího bytu, plánování nové kuchyně nebo při porovnávání více variant rozpočtu před poptáním kuchyňského studia. Pomůže rychle odhadnout, jestli vás čeká spíš základnější obměna, nebo nákladnější kompletní realizace.</p>
+
+      <h3>Proč je dobré počítat s rezervou</h3>
+      <p>U kuchyní se často objeví dodatečné práce až během realizace. Může jít o horší stav rozvodů, nové zásuvkové okruhy, úpravy stěn, přesnější zaměření nebo změny detailů při montáži. Právě proto dává smysl nechat si v rozpočtu rezervu a nepočítat jen s ideálním scénářem.</p>
+    </section>
+
+    <section class="container content-section">
+      <h2>Související kalkulačky</h2>
+      <div class="related-grid">
+        <a class="related-card" href="/kalkulacka-nakladu-na-rekonstrukci-bytu-domu.html">
+          <strong>Kalkulačka nákladů na rekonstrukci bytu a domu</strong>
+          <span>Orientační rozpočet rekonstrukce celé nemovitosti podle plochy a rozsahu prací.</span>
+        </a>
+
+        <a class="related-card" href="/kalkulacka-ceny-rekonstrukce-koupelny.html">
+          <strong>Kalkulačka ceny rekonstrukce koupelny</strong>
+          <span>Orientační výpočet ceny nové koupelny podle velikosti, vybavení a rozsahu prací.</span>
+        </a>
+
+        <a class="related-card" href="/kalkulacka-celkove-ceny-nemovitosti.html">
+          <strong>Kalkulačka celkové ceny nemovitosti</strong>
+          <span>Přehled skutečných pořizovacích nákladů při koupi bytu nebo domu.</span>
+        </a>
+
+        <a class="related-card" href="/kalkulacka-vlastnich-zdroju-na-koupi-nemovitosti.html">
+          <strong>Kalkulačka vlastních zdrojů na koupi nemovitosti</strong>
+          <span>Zjistěte, kolik vlastních peněz potřebujete před koupí bytu nebo domu.</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      © 2026 RychléVýpočty.cz — online kalkulačky a praktické výpočty pro každodenní použití.
+    </div>
+  </footer>
+
+  <script>
+    const form = document.getElementById('kitchenForm');
+    const resetBtn = document.getElementById('resetBtn');
+
+    const outputs = {
+      totalCost: document.getElementById('totalCost'),
+      pricePerMeter: document.getElementById('pricePerMeter'),
+      baseCost: document.getElementById('baseCost'),
+      reserveCost: document.getElementById('reserveCost'),
+      summaryArea: document.getElementById('summaryArea'),
+      summaryLength: document.getElementById('summaryLength'),
+      summaryScope: document.getElementById('summaryScope'),
+      summaryKitchenCore: document.getElementById('summaryKitchenCore'),
+      summaryTechnical: document.getElementById('summaryTechnical'),
+      summaryReserveShare: document.getElementById('summaryReserveShare'),
+      budgetBadge: document.getElementById('budgetBadge'),
+      breakdownBody: document.getElementById('breakdownBody')
+    };
+
+    function formatCurrency(value) {
+      return new Intl.NumberFormat('cs-CZ', {
+        style: 'currency',
+        currency: 'CZK',
+        maximumFractionDigits: 0
+      }).format(value);
+    }
+
+    function formatPercent(value, digits = 1) {
+      return new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: digits
+      }).format(value) + ' %';
+    }
+
+    function getValues() {
+      return {
+        area: Number(document.getElementById('area').value),
+        lineLength: Number(document.getElementById('lineLength').value),
+        scope: document.getElementById('scope').value,
+        quality: document.getElementById('quality').value,
+        appliances: document.getElementById('appliances').value,
+        worktop: document.getElementById('worktop').value,
+        water: document.getElementById('water').value,
+        electro: document.getElementById('electro').value,
+        floorWalls: document.getElementById('floorWalls').value,
+        layoutChanges: document.getElementById('layoutChanges').value,
+        reserveRate: Number(document.getElementById('reserveRate').value),
+        regionFactor: Number(document.getElementById('regionFactor').value)
+      };
+    }
+
+    function validate(values) {
+      if (!values.area || values.area <= 0) return 'Zadejte platnou plochu kuchyně.';
+      if (!values.lineLength || values.lineLength <= 0) return 'Zadejte platnou délku kuchyňské linky.';
+      if (values.area < 4) return 'Plocha kuchyně je neobvykle nízká.';
+      return '';
+    }
+
+    function getScopeBase(scope, area) {
+      const rates = {
+        light: 3500,
+        medium: 7000,
+        full: 12000
+      };
+      return area * (rates[scope] || 7000);
+    }
+
+    function getLineRate(quality) {
+      if (quality === 'basic') return 28000;
+      if (quality === 'higher') return 62000;
+      return 42000;
+    }
+
+    function getAppliancesCost(type) {
+      if (type === 'reuse') return 15000;
+      if (type === 'higher') return 120000;
+      return 65000;
+    }
+
+    function getWorktopCost(type, length) {
+      if (type === 'basic') return length * 3500;
+      if (type === 'higher') return length * 14000;
+      return length * 7000;
+    }
+
+    function getWaterCost(type) {
+      if (type === 'partial') return 18000;
+      if (type === 'full') return 42000;
+      return 0;
+    }
+
+    function getElectroCost(type, length) {
+      if (type === 'partial') return 18000 + (length * 1800);
+      if (type === 'full') return 38000 + (length * 2800);
+      return 0;
+    }
+
+    function getFloorWallsCost(type, area) {
+      if (type === 'partial') return area * 1800;
+      if (type === 'full') return area * 4200;
+      return 0;
+    }
+
+    function getLayoutCost(type) {
+      return type === 'yes' ? 45000 : 0;
+    }
+
+    function calculate(values) {
+      const baseBuildCost = getScopeBase(values.scope, values.area);
+      const kitchenLineCost = values.lineLength * getLineRate(values.quality);
+      const appliancesCost = getAppliancesCost(values.appliances);
+      const worktopCost = getWorktopCost(values.worktop, values.lineLength);
+
+      const waterCost = getWaterCost(values.water);
+      const electroCost = getElectroCost(values.electro, values.lineLength);
+      const floorWallsCost = getFloorWallsCost(values.floorWalls, values.area);
+      const layoutCost = getLayoutCost(values.layoutChanges);
+
+      const kitchenCore = kitchenLineCost + appliancesCost + worktopCost;
+      const technicalCost = baseBuildCost + waterCost + electroCost + floorWallsCost + layoutCost;
+
+      const baseCost = (kitchenCore + technicalCost) * values.regionFactor;
+      const reserveCost = baseCost * (values.reserveRate / 100);
+      const totalCost = baseCost + reserveCost;
+      const pricePerMeter = totalCost / values.lineLength;
+
+      return {
+        baseBuildCost,
+        kitchenLineCost,
+        appliancesCost,
+        worktopCost,
+        waterCost,
+        electroCost,
+        floorWallsCost,
+        layoutCost,
+        kitchenCore,
+        technicalCost,
+        baseCost,
+        reserveCost,
+        totalCost,
+        pricePerMeter
+      };
+    }
+
+    function buildBreakdown(values, result) {
+      const rows = [
+        { label: 'Základní stavební a montážní práce', value: result.baseBuildCost * values.regionFactor },
+        { label: 'Kuchyňská linka', value: result.kitchenLineCost * values.regionFactor },
+        { label: 'Spotřebiče', value: result.appliancesCost * values.regionFactor },
+        { label: 'Pracovní deska', value: result.worktopCost * values.regionFactor },
+        { label: 'Rozvody vody a odpadu', value: result.waterCost * values.regionFactor },
+        { label: 'Elektroinstalace', value: result.electroCost * values.regionFactor },
+        { label: 'Podlahy, omítky a malby', value: result.floorWallsCost * values.regionFactor },
+        { label: 'Změna dispozice / větší stavební zásah', value: result.layoutCost * values.regionFactor },
+        { label: 'Rezerva na vícepráce', value: result.reserveCost }
+      ];
+
+      return rows
+        .filter(row => row.value > 0)
+        .map(row => ({
+          ...row,
+          share: result.totalCost > 0 ? (row.value / result.totalCost) * 100 : 0
+        }));
+    }
+
+    function renderBreakdown(rows) {
+      if (!rows.length) {
+        outputs.breakdownBody.innerHTML = '<tr><td colspan="3">Po zadání údajů se zobrazí přehled orientačních nákladů kuchyně.</td></tr>';
+        return;
+      }
+
+      outputs.breakdownBody.innerHTML = rows.map(row => `
+        <tr>
+          <td>${row.label}</td>
+          <td>${formatCurrency(row.value)}</td>
+          <td>${formatPercent(row.share)}</td>
+        </tr>
+      `).join('');
+    }
+
+    function getScopeLabel(scope) {
+      if (scope === 'light') return 'Lehčí modernizace';
+      if (scope === 'full') return 'Kompletní rekonstrukce';
+      return 'Střední rekonstrukce';
+    }
+
+    function render(values, result) {
+      outputs.totalCost.textContent = formatCurrency(result.totalCost);
+      outputs.pricePerMeter.textContent = formatCurrency(result.pricePerMeter);
+      outputs.baseCost.textContent = formatCurrency(result.baseCost);
+      outputs.reserveCost.textContent = formatCurrency(result.reserveCost);
+
+      outputs.summaryArea.textContent = values.area.toString().replace('.', ',') + ' m²';
+      outputs.summaryLength.textContent = values.lineLength.toString().replace('.', ',') + ' bm';
+      outputs.summaryScope.textContent = getScopeLabel(values.scope);
+      outputs.summaryKitchenCore.textContent = formatCurrency(result.kitchenCore * values.regionFactor);
+      outputs.summaryTechnical.textContent = formatCurrency(result.technicalCost * values.regionFactor);
+      outputs.summaryReserveShare.textContent = formatPercent(values.reserveRate);
+
+      if (result.totalCost < 220000) {
+        outputs.budgetBadge.className = 'badge success';
+        outputs.budgetBadge.textContent = 'Rozpočet odpovídá spíše lehčí kuchyni';
+      } else if (result.totalCost < 420000) {
+        outputs.budgetBadge.className = 'badge warning';
+        outputs.budgetBadge.textContent = 'Rozpočet odpovídá střední rekonstrukci kuchyně';
+      } else {
+        outputs.budgetBadge.className = 'badge danger';
+        outputs.budgetBadge.textContent = 'Rozpočet odpovídá náročnější nebo vyšší kuchyni';
+      }
+
+      renderBreakdown(buildBreakdown(values, result));
+    }
+
+    function runCalculation() {
+      const values = getValues();
+      const error = validate(values);
+
+      if (error) {
+        alert(error);
+        return;
+      }
+
+      const result = calculate(values);
+      render(values, result);
+    }
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      runCalculation();
+    });
+
+    ['area', 'lineLength', 'scope', 'quality', 'appliances', 'worktop', 'water', 'electro', 'floorWalls', 'layoutChanges', 'reserveRate', 'regionFactor'].forEach(id => {
+      document.getElementById(id).addEventListener('input', runCalculation);
+      document.getElementById(id).addEventListener('change', runCalculation);
+    });
+
+    resetBtn.addEventListener('click', function() {
+      document.getElementById('area').value = 12;
+      document.getElementById('lineLength').value = 4.2;
+      document.getElementById('scope').value = 'medium';
+      document.getElementById('quality').value = 'standard';
+      document.getElementById('appliances').value = 'standard';
+      document.getElementById('worktop').value = 'standard';
+      document.getElementById('water').value = 'partial';
+      document.getElementById('electro').value = 'partial';
+      document.getElementById('floorWalls').value = 'partial';
+      document.getElementById('layoutChanges').value = 'no';
+      document.getElementById('reserveRate').value = '10';
+      document.getElementById('regionFactor').value = '1';
+      runCalculation();
+    });
+
+    runCalculation();
+  </script>
+</body>
+</html>
