@@ -1,1 +1,1113 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kalkulačka ceny hrubé stavby domu online zdarma | RychléVýpočty.cz</title>
+  <meta name="description" content="Spočítejte si orientační cenu hrubé stavby domu podle plochy, typu domu, počtu podlaží, střechy a regionální nákladovosti. Přehledná kalkulačka zdarma online.">
+  <meta name="keywords" content="kalkulačka ceny hrubé stavby domu, kolik stojí hrubá stavba domu, cena hrubé stavby kalkulačka, rozpočet hrubé stavby domu, hrubá stavba domu cena">
+  <meta name="author" content="RychléVýpočty.cz">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://rychlevypocty.cz/kalkulacka-ceny-hrube-stavby-domu.html">
 
+  <meta property="og:title" content="Kalkulačka ceny hrubé stavby domu | RychléVýpočty.cz">
+  <meta property="og:description" content="Zjistěte orientační rozpočet hrubé stavby domu podle plochy, typu domu, střechy a dalších hlavních parametrů.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rychlevypocty.cz/kalkulacka-ceny-hrube-stavby-domu.html">
+  <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Kalkulačka ceny hrubé stavby domu | RychléVýpočty.cz">
+  <meta name="twitter:description" content="Orientační výpočet ceny hrubé stavby domu online zdarma.">
+
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #5f6b85;
+      --primary: #2152ff;
+      --primary-dark: #183dbf;
+      --border: #dbe3f0;
+      --success: #138a4b;
+      --warning: #b66a00;
+      --danger: #b42318;
+      --shadow: 0 12px 32px rgba(20, 32, 70, 0.08);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #f7f9fd 0%, #eef3fb 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      padding: 18px 0;
+      border-bottom: 1px solid rgba(219, 227, 240, 0.8);
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+      line-height: 1;
+    }
+
+    .brand span {
+      color: var(--primary);
+    }
+
+    .topnav {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      font-size: 0.97rem;
+    }
+
+    .hero {
+      padding: 42px 0 20px;
+    }
+
+    .breadcrumbs {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .hero-copy h1 {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      margin: 0 0 16px;
+    }
+
+    .hero-copy p {
+      margin: 0 0 16px;
+      font-size: 1.06rem;
+      color: var(--muted);
+      max-width: 720px;
+    }
+
+    .hero-points {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .hero-pill {
+      background: rgba(33, 82, 255, 0.08);
+      color: var(--primary-dark);
+      border: 1px solid rgba(33, 82, 255, 0.12);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .hero-box {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-box h2 {
+      margin: 0 0 10px;
+      font-size: 1.2rem;
+    }
+
+    .hero-box p {
+      margin: 0 0 12px;
+      color: var(--muted);
+    }
+
+    .hero-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.04fr 0.96fr;
+      gap: 28px;
+      align-items: start;
+      padding: 22px 0 32px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .card-header {
+      padding: 24px 24px 10px;
+    }
+
+    .card-header h2,
+    .card-header h3 {
+      margin: 0 0 8px;
+      font-size: 1.3rem;
+      letter-spacing: -0.02em;
+    }
+
+    .card-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .card-body {
+      padding: 20px 24px 24px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field label {
+      font-weight: 700;
+      font-size: 0.96rem;
+    }
+
+    .field small {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: -2px;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      padding: 14px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      font-size: 1rem;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      outline: none;
+      border-color: rgba(33, 82, 255, 0.45);
+      box-shadow: 0 0 0 4px rgba(33, 82, 255, 0.10);
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.06s ease, background 0.15s ease, opacity 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background: #eef3ff;
+      color: var(--primary-dark);
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .result-box {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+
+    .result-label {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .result-value {
+      font-size: clamp(1.25rem, 2.4vw, 2rem);
+      line-height: 1.15;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .highlight {
+      background: linear-gradient(180deg, #eef7ff 0%, #f9fcff 100%);
+      border-color: rgba(33, 82, 255, 0.18);
+    }
+
+    .info-list {
+      display: grid;
+      gap: 12px;
+      margin: 18px 0 0;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid #edf2fa;
+    }
+
+    .info-row:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .info-row span:first-child {
+      color: var(--muted);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+
+    .badge.success {
+      background: rgba(19, 138, 75, 0.10);
+      color: var(--success);
+    }
+
+    .badge.warning {
+      background: rgba(182, 106, 0, 0.11);
+      color: var(--warning);
+    }
+
+    .badge.danger {
+      background: rgba(180, 35, 24, 0.10);
+      color: var(--danger);
+    }
+
+    .note {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1px solid #e7edf7;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 18px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 640px;
+      background: #fff;
+    }
+
+    th, td {
+      padding: 14px 14px;
+      text-align: left;
+      border-bottom: 1px solid #edf2fa;
+      font-size: 0.96rem;
+    }
+
+    th {
+      background: #f8fbff;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .content-section {
+      padding: 8px 0 8px;
+    }
+
+    .content-section h2 {
+      font-size: 1.7rem;
+      letter-spacing: -0.03em;
+      margin: 0 0 14px;
+    }
+
+    .content-section h3 {
+      font-size: 1.15rem;
+      margin: 28px 0 10px;
+    }
+
+    .content-section p {
+      color: var(--muted);
+      margin: 0 0 14px;
+    }
+
+    .content-section ul {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    .content-section li {
+      margin-bottom: 8px;
+    }
+
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .related-card {
+      display: block;
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      color: var(--text);
+      box-shadow: var(--shadow);
+    }
+
+    .related-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .related-card span {
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    footer {
+      margin-top: 40px;
+      border-top: 1px solid rgba(219, 227, 240, 0.9);
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .footer-inner {
+      padding: 24px 0 40px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .layout,
+      .related-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .container {
+        width: min(100% - 24px, 1160px);
+      }
+
+      .form-grid,
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 28px;
+      }
+
+      .card-header,
+      .card-body,
+      .hero-box {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebApplication",
+    "name":"Kalkulačka ceny hrubé stavby domu",
+    "url":"https://rychlevypocty.cz/kalkulacka-ceny-hrube-stavby-domu.html",
+    "applicationCategory":"FinanceApplication",
+    "operatingSystem":"Any",
+    "description":"Online kalkulačka pro orientační výpočet ceny hrubé stavby domu podle plochy, typu domu, střechy, podlaží a regionální nákladovosti.",
+    "offers":{
+      "@type":"Offer",
+      "price":"0",
+      "priceCurrency":"CZK"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"Co se obvykle počítá do hrubé stavby domu?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Do hrubé stavby domu se obvykle zahrnují nosné konstrukce, obvodové zdivo, stropy, krov nebo konstrukce střechy, střešní krytina, základní stavební část a další hlavní konstrukční prvky. Přesný rozsah se může lišit podle dodavatele a typu stavby."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Jaký je rozdíl mezi hrubou stavbou a domem na klíč?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Hrubá stavba představuje konstrukční základ domu bez většiny finálních dokončovacích prací. Dům na klíč je oproti tomu dokončený včetně větší části finálních povrchů, instalací a vybavení."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Je výpočet v kalkulačce přesný?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Výpočet je orientační. Skutečná cena hrubé stavby závisí na projektu, technickém řešení, typu konstrukce, střeše, lokalitě, cenách řemesel a konkrétním rozsahu dodávky."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="/">Rychlé<span>Výpočty</span>.cz</a>
+      <nav class="topnav" aria-label="Hlavní navigace">
+        <a href="/">Domů</a>
+        <a href="/kalkulacka-orientacni-ceny-stavby-domu.html">Cena stavby domu</a>
+        <a href="/kalkulacka-celkove-ceny-nemovitosti.html">Cena nemovitosti</a>
+        <a href="/mesicni-naklady-na-bydleni-kalkulacka.html">Náklady na bydlení</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumbs">
+          <a href="/">RychléVýpočty.cz</a> / Kalkulačka ceny hrubé stavby domu
+        </div>
+
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <h1>Kalkulačka ceny hrubé stavby domu</h1>
+            <p>Spočítejte si orientační rozpočet hrubé stavby rodinného domu podle užitné plochy, typu domu, počtu podlaží, tvaru střechy a regionální nákladovosti. Kalkulačka pomůže rychle odhadnout, jak velkou část celkového rozpočtu spolkne samotný konstrukční základ domu.</p>
+            <p>Výsledek ukáže celkovou orientační cenu hrubé stavby, cenu za m² i rozpad hlavních konstrukčních vrstev.</p>
+
+            <div class="hero-points">
+              <div class="hero-pill">Cena hrubé stavby</div>
+              <div class="hero-pill">Cena za m²</div>
+              <div class="hero-pill">Nosná konstrukce a střecha</div>
+              <div class="hero-pill">Stavební decision tool</div>
+            </div>
+          </div>
+
+          <div class="hero-box">
+            <h2>Co kalkulačka umí</h2>
+            <p>Kombinuje základní konstrukční cenu podle plochy s nejdůležitějšími faktory, které hrubou stavbu prodražují: bungalov vs patrový dům, počet podlaží, složitost střechy, typ konstrukce a náročnost realizace.</p>
+            <p>Je vhodná hlavně pro první rozpočtový odhad před detailním naceněním dodavatele.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container layout">
+      <div class="card">
+        <div class="card-header">
+          <h2>Zadání hrubé stavby</h2>
+          <p>Vyplňte základní parametry domu a kalkulačka výsledek automaticky přepočítá.</p>
+        </div>
+        <div class="card-body">
+          <form id="roughBuildForm">
+            <div class="form-grid">
+              <div class="field">
+                <label for="usableArea">Užitná plocha domu (m²)</label>
+                <input type="number" id="usableArea" min="40" max="500" step="1" value="140" inputmode="decimal">
+                <small>Celková užitná plocha domu.</small>
+              </div>
+
+              <div class="field">
+                <label for="houseType">Typ domu</label>
+                <select id="houseType">
+                  <option value="bungalow">Bungalov</option>
+                  <option value="storey" selected>Patrový dům</option>
+                  <option value="compact">Kompaktní jednoduchý dům</option>
+                </select>
+                <small>Typ domu má významný dopad na cenu konstrukce.</small>
+              </div>
+
+              <div class="field">
+                <label for="constructionType">Typ konstrukce</label>
+                <select id="constructionType">
+                  <option value="masonry" selected>Zděná stavba</option>
+                  <option value="mixed">Kombinovaná varianta</option>
+                  <option value="premium">Náročnější konstrukční řešení</option>
+                </select>
+                <small>Hrubý vliv konstrukčního řešení na rozpočet.</small>
+              </div>
+
+              <div class="field">
+                <label for="floors">Počet podlaží</label>
+                <select id="floors">
+                  <option value="1">1 podlaží</option>
+                  <option value="2" selected>2 podlaží</option>
+                </select>
+                <small>Počet podlaží mění konstrukční i realizační náročnost.</small>
+              </div>
+
+              <div class="field">
+                <label for="roofType">Typ střechy</label>
+                <select id="roofType">
+                  <option value="simple" selected>Jednodušší střecha</option>
+                  <option value="medium">Běžná šikmá střecha</option>
+                  <option value="complex">Složitější střecha</option>
+                </select>
+                <small>Střecha je u hrubé stavby jedna z velkých položek.</small>
+              </div>
+
+              <div class="field">
+                <label for="basement">Podsklepení</label>
+                <select id="basement">
+                  <option value="none" selected>Bez sklepa</option>
+                  <option value="partial">Částečné</option>
+                  <option value="full">Plné podsklepení</option>
+                </select>
+                <small>Sklep výrazně navyšuje náklady konstrukční části.</small>
+              </div>
+
+              <div class="field">
+                <label for="openingsStandard">Velikost a náročnost otvorů</label>
+                <select id="openingsStandard">
+                  <option value="basic" selected>Běžná</option>
+                  <option value="larger">Větší prosklení</option>
+                  <option value="premium">Náročnější řešení</option>
+                </select>
+                <small>Větší otvory a složitější řešení zvyšují cenu nosných konstrukcí.</small>
+              </div>
+
+              <div class="field">
+                <label for="landComplexity">Složitost realizace na pozemku</label>
+                <select id="landComplexity">
+                  <option value="easy" selected>Běžná</option>
+                  <option value="medium">Středně náročná</option>
+                  <option value="hard">Náročnější</option>
+                </select>
+                <small>Např. svah, přístup nebo složitější podmínky na místě.</small>
+              </div>
+
+              <div class="field">
+                <label for="regionFactor">Cenová úroveň regionu</label>
+                <select id="regionFactor">
+                  <option value="0.95">Nižší ceny</option>
+                  <option value="1" selected>Běžná úroveň</option>
+                  <option value="1.1">Vyšší ceny</option>
+                  <option value="1.2">Výrazně vyšší ceny</option>
+                </select>
+                <small>Hrubé zohlednění lokality a cen stavebních prací.</small>
+              </div>
+
+              <div class="field">
+                <label for="reserveRate">Rezerva na vícepráce (%)</label>
+                <select id="reserveRate">
+                  <option value="5">5 %</option>
+                  <option value="10" selected>10 %</option>
+                  <option value="15">15 %</option>
+                  <option value="20">20 %</option>
+                </select>
+                <small>Doporučený rozpočtový polštář pro nečekané výdaje.</small>
+              </div>
+
+              <div class="actions full">
+                <button type="submit" class="btn-primary">Spočítat cenu hrubé stavby</button>
+                <button type="button" class="btn-secondary" id="resetBtn">Obnovit výchozí hodnoty</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>Výsledek výpočtu</h2>
+          <p>Orientační přehled ceny hrubé stavby podle zadaných parametrů.</p>
+        </div>
+        <div class="card-body">
+          <div class="results-grid">
+            <div class="result-box highlight">
+              <div class="result-label">Celková cena hrubé stavby</div>
+              <div class="result-value" id="totalCost">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Orientační cena za m²</div>
+              <div class="result-value" id="pricePerM2">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Rozpočet bez rezervy</div>
+              <div class="result-value" id="baseCost">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Rezerva na vícepráce</div>
+              <div class="result-value" id="reserveCost">0 Kč</div>
+            </div>
+          </div>
+
+          <div id="budgetBadge" class="badge success">Rozpočet odpovídá spíše úspornější hrubé stavbě</div>
+
+          <div class="info-list">
+            <div class="info-row">
+              <span>Užitná plocha</span>
+              <strong id="summaryArea">0 m²</strong>
+            </div>
+            <div class="info-row">
+              <span>Typ domu</span>
+              <strong id="summaryType">–</strong>
+            </div>
+            <div class="info-row">
+              <span>Typ konstrukce</span>
+              <strong id="summaryConstruction">–</strong>
+            </div>
+            <div class="info-row">
+              <span>Hlavní konstrukční část</span>
+              <strong id="summaryCore">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Střecha, sklep a komplikace</span>
+              <strong id="summaryExtras">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Podíl rezervy</span>
+              <strong id="summaryReserveShare">0 %</strong>
+            </div>
+          </div>
+
+          <div class="note">
+            Výpočet je orientační. Skutečná cena hrubé stavby závisí na projektu, technickém řešení, typu konstrukce, střeše, sklepě, pozemku, dodavatelích a aktuálních cenách práce i materiálů.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="card">
+        <div class="card-header">
+          <h3>Rozpad orientační ceny hrubé stavby</h3>
+          <p>Přehled hlavních položek, které se podílí na ceně hrubé stavby domu.</p>
+        </div>
+        <div class="card-body">
+          <div class="table-wrap">
+            <table aria-label="Rozpad orientační ceny hrubé stavby domu">
+              <thead>
+                <tr>
+                  <th>Položka</th>
+                  <th>Částka</th>
+                  <th>Podíl na rozpočtu</th>
+                </tr>
+              </thead>
+              <tbody id="breakdownBody">
+                <tr>
+                  <td colspan="3">Po zadání údajů se zobrazí přehled orientačních nákladů hrubé stavby.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container content-section">
+      <h2>Jak kalkulačka ceny hrubé stavby domu funguje</h2>
+      <p>Hrubá stavba bývá jedna z největších částí celkového rozpočtu domu. Zahrnuje hlavní konstrukční vrstvy, které tvoří základ budoucí stavby. Tato kalkulačka proto pracuje s plochou domu, typem konstrukce, počtem podlaží, střechou, sklepem a dalšími faktory, které mají na hrubou stavbu největší vliv.</p>
+
+      <h3>Co cenu hrubé stavby ovlivňuje nejvíc</h3>
+      <ul>
+        <li>užitná plocha domu a jeho kompaktnost,</li>
+        <li>bungalov vs patrový dům,</li>
+        <li>typ konstrukce a složitost nosného řešení,</li>
+        <li>tvar a náročnost střechy,</li>
+        <li>částečné nebo plné podsklepení,</li>
+        <li>náročnost realizace na pozemku a regionální ceny.</li>
+      </ul>
+
+      <h3>Kdy se kalkulačka hodí nejvíc</h3>
+      <p>Největší přínos má ve chvíli, kdy potřebujete oddělit cenu hrubé stavby od ceny kompletně dokončeného domu. Je užitečná při plánování etap výstavby, porovnávání variant domu i při rozhodování, jestli je rozpočet na konstrukční část realistický.</p>
+
+      <h3>Proč počítat s rezervou</h3>
+      <p>U hrubé stavby se mohou objevit nečekané komplikace spojené s pozemkem, technickým řešením, úpravami projektu nebo navýšením některých konstrukčních položek. Proto je rozumné počítat s rezervou a nebrat základní cenu jako konečný strop.</p>
+    </section>
+
+    <section class="container content-section">
+      <h2>Související kalkulačky</h2>
+      <div class="related-grid">
+        <a class="related-card" href="/kalkulacka-orientacni-ceny-stavby-domu.html">
+          <strong>Kalkulačka orientační ceny stavby domu</strong>
+          <span>Celkový orientační rozpočet stavby domu podle plochy, standardu a fáze dokončení.</span>
+        </a>
+
+        <a class="related-card" href="/kalkulacka-celkove-ceny-nemovitosti.html">
+          <strong>Kalkulačka celkové ceny nemovitosti</strong>
+          <span>Přehled skutečných pořizovacích nákladů při koupi nebo větší investici do bydlení.</span>
+        </a>
+
+        <a class="related-card" href="/kalkulacka-nakladu-na-rekonstrukci-bytu-domu.html">
+          <strong>Kalkulačka nákladů na rekonstrukci bytu a domu</strong>
+          <span>Orientační rozpočet rekonstrukce nemovitosti podle plochy a rozsahu prací.</span>
+        </a>
+
+        <a class="related-card" href="/mesicni-naklady-na-bydleni-kalkulacka.html">
+          <strong>Kalkulačka měsíčních nákladů na bydlení</strong>
+          <span>Přehled pravidelných výdajů domácnosti po dokončení bydlení.</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      © 2026 RychléVýpočty.cz — online kalkulačky a praktické výpočty pro každodenní použití.
+    </div>
+  </footer>
+
+  <script>
+    const form = document.getElementById('roughBuildForm');
+    const resetBtn = document.getElementById('resetBtn');
+
+    const outputs = {
+      totalCost: document.getElementById('totalCost'),
+      pricePerM2: document.getElementById('pricePerM2'),
+      baseCost: document.getElementById('baseCost'),
+      reserveCost: document.getElementById('reserveCost'),
+      summaryArea: document.getElementById('summaryArea'),
+      summaryType: document.getElementById('summaryType'),
+      summaryConstruction: document.getElementById('summaryConstruction'),
+      summaryCore: document.getElementById('summaryCore'),
+      summaryExtras: document.getElementById('summaryExtras'),
+      summaryReserveShare: document.getElementById('summaryReserveShare'),
+      budgetBadge: document.getElementById('budgetBadge'),
+      breakdownBody: document.getElementById('breakdownBody')
+    };
+
+    function formatCurrency(value) {
+      return new Intl.NumberFormat('cs-CZ', {
+        style: 'currency',
+        currency: 'CZK',
+        maximumFractionDigits: 0
+      }).format(value);
+    }
+
+    function formatPercent(value, digits = 1) {
+      return new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: digits
+      }).format(value) + ' %';
+    }
+
+    function getValues() {
+      return {
+        usableArea: Number(document.getElementById('usableArea').value),
+        houseType: document.getElementById('houseType').value,
+        constructionType: document.getElementById('constructionType').value,
+        floors: Number(document.getElementById('floors').value),
+        roofType: document.getElementById('roofType').value,
+        basement: document.getElementById('basement').value,
+        openingsStandard: document.getElementById('openingsStandard').value,
+        landComplexity: document.getElementById('landComplexity').value,
+        regionFactor: Number(document.getElementById('regionFactor').value),
+        reserveRate: Number(document.getElementById('reserveRate').value)
+      };
+    }
+
+    function validate(values) {
+      if (!values.usableArea || values.usableArea <= 0) return 'Zadejte platnou užitnou plochu domu.';
+      if (values.usableArea < 40) return 'Užitná plocha domu je neobvykle nízká.';
+      return '';
+    }
+
+    function getBaseRate(type) {
+      if (type === 'compact') return 19000;
+      if (type === 'bungalow') return 23500;
+      return 21500;
+    }
+
+    function getConstructionMultiplier(type) {
+      if (type === 'mixed') return 1.06;
+      if (type === 'premium') return 1.14;
+      return 1;
+    }
+
+    function getFloorMultiplier(floors) {
+      return floors === 2 ? 1.03 : 1;
+    }
+
+    function getRoofMultiplier(type) {
+      if (type === 'medium') return 1.07;
+      if (type === 'complex') return 1.15;
+      return 1;
+    }
+
+    function getBasementCost(type, area) {
+      if (type === 'partial') return area * 4800;
+      if (type === 'full') return area * 9800;
+      return 0;
+    }
+
+    function getOpeningsMultiplier(type) {
+      if (type === 'larger') return 1.04;
+      if (type === 'premium') return 1.09;
+      return 1;
+    }
+
+    function getLandMultiplier(type) {
+      if (type === 'medium') return 1.05;
+      if (type === 'hard') return 1.12;
+      return 1;
+    }
+
+    function calculate(values) {
+      const areaBase = values.usableArea * getBaseRate(values.houseType);
+
+      const coreMultiplier =
+        getConstructionMultiplier(values.constructionType) *
+        getFloorMultiplier(values.floors) *
+        getRoofMultiplier(values.roofType) *
+        getOpeningsMultiplier(values.openingsStandard) *
+        getLandMultiplier(values.landComplexity);
+
+      const coreCost = areaBase * coreMultiplier;
+      const basementCost = getBasementCost(values.basement, values.usableArea);
+      const preRegionCost = coreCost + basementCost;
+      const baseCost = preRegionCost * values.regionFactor;
+      const reserveCost = baseCost * (values.reserveRate / 100);
+      const totalCost = baseCost + reserveCost;
+      const pricePerM2 = totalCost / values.usableArea;
+
+      return {
+        coreCost,
+        basementCost,
+        preRegionCost,
+        baseCost,
+        reserveCost,
+        totalCost,
+        pricePerM2
+      };
+    }
+
+    function buildBreakdown(values, result) {
+      const roofShareBase = result.coreCost * 0.22;
+      const wallAndStructureBase = result.coreCost * 0.54;
+      const slabAndCeilingsBase = result.coreCost * 0.24;
+
+      const rows = [
+        { label: 'Nosné konstrukce a zdivo', value: wallAndStructureBase * values.regionFactor },
+        { label: 'Stropy a hlavní konstrukční části', value: slabAndCeilingsBase * values.regionFactor },
+        { label: 'Střešní konstrukce a krytina', value: roofShareBase * values.regionFactor },
+        { label: 'Podsklepení', value: result.basementCost * values.regionFactor },
+        { label: 'Rezerva na vícepráce', value: result.reserveCost }
+      ];
+
+      return rows
+        .filter(row => row.value > 0)
+        .map(row => ({
+          ...row,
+          share: result.totalCost > 0 ? (row.value / result.totalCost) * 100 : 0
+        }));
+    }
+
+    function renderBreakdown(rows) {
+      if (!rows.length) {
+        outputs.breakdownBody.innerHTML = '<tr><td colspan="3">Po zadání údajů se zobrazí přehled orientačních nákladů hrubé stavby.</td></tr>';
+        return;
+      }
+
+      outputs.breakdownBody.innerHTML = rows.map(row => `
+        <tr>
+          <td>${row.label}</td>
+          <td>${formatCurrency(row.value)}</td>
+          <td>${formatPercent(row.share)}</td>
+        </tr>
+      `).join('');
+    }
+
+    function getTypeLabel(type) {
+      if (type === 'bungalow') return 'Bungalov';
+      if (type === 'compact') return 'Kompaktní jednoduchý dům';
+      return 'Patrový dům';
+    }
+
+    function getConstructionLabel(type) {
+      if (type === 'mixed') return 'Kombinovaná varianta';
+      if (type === 'premium') return 'Náročnější konstrukční řešení';
+      return 'Zděná stavba';
+    }
+
+    function render(values, result) {
+      outputs.totalCost.textContent = formatCurrency(result.totalCost);
+      outputs.pricePerM2.textContent = formatCurrency(result.pricePerM2);
+      outputs.baseCost.textContent = formatCurrency(result.baseCost);
+      outputs.reserveCost.textContent = formatCurrency(result.reserveCost);
+
+      outputs.summaryArea.textContent = values.usableArea + ' m²';
+      outputs.summaryType.textContent = getTypeLabel(values.houseType);
+      outputs.summaryConstruction.textContent = getConstructionLabel(values.constructionType);
+      outputs.summaryCore.textContent = formatCurrency(result.coreCost * values.regionFactor);
+      outputs.summaryExtras.textContent = formatCurrency(result.basementCost * values.regionFactor);
+      outputs.summaryReserveShare.textContent = formatPercent(values.reserveRate);
+
+      if (result.totalCost < 3200000) {
+        outputs.budgetBadge.className = 'badge success';
+        outputs.budgetBadge.textContent = 'Rozpočet odpovídá spíše úspornější hrubé stavbě';
+      } else if (result.totalCost < 5200000) {
+        outputs.budgetBadge.className = 'badge warning';
+        outputs.budgetBadge.textContent = 'Rozpočet odpovídá střední hrubé stavbě';
+      } else {
+        outputs.budgetBadge.className = 'badge danger';
+        outputs.budgetBadge.textContent = 'Rozpočet odpovídá náročnější hrubé stavbě';
+      }
+
+      renderBreakdown(buildBreakdown(values, result));
+    }
+
+    function runCalculation() {
+      const values = getValues();
+      const error = validate(values);
+
+      if (error) {
+        alert(error);
+        return;
+      }
+
+      const result = calculate(values);
+      render(values, result);
+    }
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      runCalculation();
+    });
+
+    ['usableArea', 'houseType', 'constructionType', 'floors', 'roofType', 'basement', 'openingsStandard', 'landComplexity', 'regionFactor', 'reserveRate'].forEach(id => {
+      document.getElementById(id).addEventListener('input', runCalculation);
+      document.getElementById(id).addEventListener('change', runCalculation);
+    });
+
+    resetBtn.addEventListener('click', function() {
+      document.getElementById('usableArea').value = 140;
+      document.getElementById('houseType').value = 'storey';
+      document.getElementById('constructionType').value = 'masonry';
+      document.getElementById('floors').value = '2';
+      document.getElementById('roofType').value = 'simple';
+      document.getElementById('basement').value = 'none';
+      document.getElementById('openingsStandard').value = 'basic';
+      document.getElementById('landComplexity').value = 'easy';
+      document.getElementById('regionFactor').value = '1';
+      document.getElementById('reserveRate').value = '10';
+      runCalculation();
+    });
+
+    runCalculation();
+  </script>
+</body>
+</html>
