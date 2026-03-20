@@ -1,1 +1,1023 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kalkulačka akontace a LTV hypotéky online | RychléVýpočty.cz</title>
+  <meta name="description" content="Spočítejte si potřebnou akontaci, výši hypotéky a LTV podle ceny nemovitosti a vlastních zdrojů. Přehledná kalkulačka pro plánování financování bydlení.">
+  <meta name="keywords" content="kalkulačka akontace hypotéky, kalkulačka ltv hypotéky, vlastní zdroje hypotéka, akontace nemovitosti, kolik vlastních peněz na hypotéku, ltv kalkulačka">
+  <meta name="author" content="RychléVýpočty.cz">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://rychlevypocty.cz/kalkulacka-akontace-a-ltv-hypoteky.html">
 
+  <meta property="og:title" content="Kalkulačka akontace a LTV hypotéky online | RychléVýpočty.cz">
+  <meta property="og:description" content="Rychlý výpočet akontace, výše hypotéky a LTV podle ceny nemovitosti a vašich vlastních zdrojů.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rychlevypocty.cz/kalkulacka-akontace-a-ltv-hypoteky.html">
+  <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Kalkulačka akontace a LTV hypotéky | RychléVýpočty.cz">
+  <meta name="twitter:description" content="Spočítejte si, kolik vlastních zdrojů potřebujete na hypotéku a jaké vychází LTV.">
+
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #5f6b85;
+      --primary: #2152ff;
+      --primary-dark: #183dbf;
+      --border: #dbe3f0;
+      --success: #138a4b;
+      --warning: #b66a00;
+      --danger: #c53a2f;
+      --shadow: 0 12px 32px rgba(20, 32, 70, 0.08);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #f7f9fd 0%, #eef3fb 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      padding: 18px 0;
+      border-bottom: 1px solid rgba(219, 227, 240, 0.8);
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .brand span {
+      color: var(--primary);
+    }
+
+    .topnav {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      font-size: 0.97rem;
+    }
+
+    .hero {
+      padding: 42px 0 20px;
+    }
+
+    .breadcrumbs {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .hero-copy h1 {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      margin: 0 0 16px;
+    }
+
+    .hero-copy p {
+      margin: 0 0 16px;
+      font-size: 1.06rem;
+      color: var(--muted);
+      max-width: 720px;
+    }
+
+    .hero-points {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .hero-pill {
+      background: rgba(33, 82, 255, 0.08);
+      color: var(--primary-dark);
+      border: 1px solid rgba(33, 82, 255, 0.12);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .hero-box {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-box h2 {
+      margin: 0 0 10px;
+      font-size: 1.2rem;
+    }
+
+    .hero-box p {
+      margin: 0 0 12px;
+      color: var(--muted);
+    }
+
+    .hero-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.04fr 0.96fr;
+      gap: 28px;
+      align-items: start;
+      padding: 22px 0 32px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .card-header {
+      padding: 24px 24px 10px;
+    }
+
+    .card-header h2,
+    .card-header h3 {
+      margin: 0 0 8px;
+      font-size: 1.3rem;
+      letter-spacing: -0.02em;
+    }
+
+    .card-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .card-body {
+      padding: 20px 24px 24px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field label {
+      font-weight: 700;
+      font-size: 0.96rem;
+    }
+
+    .field small {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: -2px;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      padding: 14px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      font-size: 1rem;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      outline: none;
+      border-color: rgba(33, 82, 255, 0.45);
+      box-shadow: 0 0 0 4px rgba(33, 82, 255, 0.10);
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.06s ease, background 0.15s ease, opacity 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background: #eef3ff;
+      color: var(--primary-dark);
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .result-box {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+
+    .result-label {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .result-value {
+      font-size: clamp(1.25rem, 2.4vw, 2rem);
+      line-height: 1.15;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .highlight {
+      background: linear-gradient(180deg, #eef7ff 0%, #f9fcff 100%);
+      border-color: rgba(33, 82, 255, 0.18);
+    }
+
+    .info-list {
+      display: grid;
+      gap: 12px;
+      margin: 18px 0 0;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid #edf2fa;
+    }
+
+    .info-row:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .info-row span:first-child {
+      color: var(--muted);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+
+    .badge.success {
+      background: rgba(19, 138, 75, 0.10);
+      color: var(--success);
+    }
+
+    .badge.warning {
+      background: rgba(182, 106, 0, 0.11);
+      color: var(--warning);
+    }
+
+    .badge.danger {
+      background: rgba(197, 58, 47, 0.10);
+      color: var(--danger);
+    }
+
+    .note {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1px solid #e7edf7;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 18px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 700px;
+      background: #fff;
+    }
+
+    th, td {
+      padding: 14px 14px;
+      text-align: left;
+      border-bottom: 1px solid #edf2fa;
+      font-size: 0.96rem;
+    }
+
+    th {
+      background: #f8fbff;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .content-section {
+      padding: 8px 0 8px;
+    }
+
+    .content-section h2 {
+      font-size: 1.7rem;
+      letter-spacing: -0.03em;
+      margin: 0 0 14px;
+    }
+
+    .content-section h3 {
+      font-size: 1.15rem;
+      margin: 28px 0 10px;
+    }
+
+    .content-section p {
+      color: var(--muted);
+      margin: 0 0 14px;
+    }
+
+    .content-section ul {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    .content-section li {
+      margin-bottom: 8px;
+    }
+
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .related-card {
+      display: block;
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      color: var(--text);
+      box-shadow: var(--shadow);
+    }
+
+    .related-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .related-card span {
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    footer {
+      margin-top: 40px;
+      border-top: 1px solid rgba(219, 227, 240, 0.9);
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .footer-inner {
+      padding: 24px 0 40px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .layout,
+      .related-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .container {
+        width: min(100% - 24px, 1160px);
+      }
+
+      .form-grid,
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 28px;
+      }
+
+      .card-header,
+      .card-body,
+      .hero-box {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebApplication",
+    "name":"Kalkulačka akontace a LTV hypotéky",
+    "url":"https://rychlevypocty.cz/kalkulacka-akontace-a-ltv-hypoteky.html",
+    "applicationCategory":"FinanceApplication",
+    "operatingSystem":"Any",
+    "description":"Online kalkulačka pro výpočet akontace, vlastních zdrojů, výše hypotéky a LTV podle ceny nemovitosti.",
+    "offers":{
+      "@type":"Offer",
+      "price":"0",
+      "priceCurrency":"CZK"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"Co je akontace u hypotéky?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Akontace je část ceny nemovitosti, kterou hradíte z vlastních zdrojů. Jinak řečeno jde o rozdíl mezi cenou nemovitosti a výší hypotéky."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Co znamená LTV hypotéky?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"LTV je poměr výše hypotéky k hodnotě zastavené nemovitosti. Pokud je cena nemovitosti 5 milionů korun a hypotéka 4 miliony korun, LTV vychází 80 %."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Stačí na koupi bytu jen akontace?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Obvykle ne. Kromě akontace je vhodné počítat i s rezervou na odhad, právní služby, poplatky, stěhování, vybavení nebo případné úpravy nemovitosti."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="/">Rychlé<span>Výpočty</span>.cz</a>
+      <nav class="topnav" aria-label="Hlavní navigace">
+        <a href="/">Domů</a>
+        <a href="/hypotecni-kalkulacka.html">Hypotéka</a>
+        <a href="/mimoradna-splatka-hypoteky-kalkulacka.html">Mimořádná splátka</a>
+        <a href="/kalkulacka-pujcky.html">Půjčka</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumbs">
+          <a href="/">RychléVýpočty.cz</a> / Kalkulačka akontace a LTV hypotéky
+        </div>
+
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <h1>Kalkulačka akontace a LTV hypotéky</h1>
+            <p>Spočítejte si, kolik vlastních peněz potřebujete na koupi nemovitosti, jak vysoká by byla hypotéka a jaké vychází LTV. Kalkulačka je vhodná pro rychlé plánování financování bytu nebo domu ještě před detailním řešením splátky hypotéky.</p>
+            <p>Zadejte cenu nemovitosti, vlastní zdroje a případnou rezervu mimo akontaci. Výsledek vám okamžitě ukáže základní strukturu financování.</p>
+
+            <div class="hero-points">
+              <div class="hero-pill">Akontace</div>
+              <div class="hero-pill">Výše hypotéky</div>
+              <div class="hero-pill">LTV</div>
+              <div class="hero-pill">Vlastní zdroje</div>
+            </div>
+          </div>
+
+          <div class="hero-box">
+            <h2>Co kalkulačka umí</h2>
+            <p>Ukáže, jak velkou část ceny nemovitosti pokrýváte z vlastních peněz a jak velký úvěr by zbývalo financovat hypotékou. Současně dopočítá LTV a přidá orientační vyhodnocení.</p>
+            <p>Hodí se při první úvaze, jestli už máte dost vlastních prostředků na koupi nebo kolik ještě chybí.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container layout">
+      <div class="card">
+        <div class="card-header">
+          <h2>Zadání financování nemovitosti</h2>
+          <p>Vyplňte cenu nemovitosti, své vlastní zdroje a případnou rezervu, kterou nechcete použít do akontace.</p>
+        </div>
+        <div class="card-body">
+          <form id="ltvForm">
+            <div class="form-grid">
+              <div class="field">
+                <label for="propertyPrice">Cena nemovitosti</label>
+                <input type="number" id="propertyPrice" min="100000" step="10000" value="5500000" inputmode="decimal">
+                <small>Kupní cena bytu, domu nebo jiné financované nemovitosti.</small>
+              </div>
+
+              <div class="field">
+                <label for="ownSavings">Celkové vlastní zdroje</label>
+                <input type="number" id="ownSavings" min="0" step="10000" value="1200000" inputmode="decimal">
+                <small>Peníze, které máte připravené k použití.</small>
+              </div>
+
+              <div class="field">
+                <label for="reserveAmount">Rezerva mimo akontaci</label>
+                <input type="number" id="reserveAmount" min="0" step="10000" value="200000" inputmode="decimal">
+                <small>Část vlastních peněz, kterou si chcete ponechat bokem.</small>
+              </div>
+
+              <div class="field">
+                <label for="additionalCosts">Vedlejší náklady koupě</label>
+                <input type="number" id="additionalCosts" min="0" step="10000" value="150000" inputmode="decimal">
+                <small>Např. právní služby, odhad, vybavení nebo drobné úpravy.</small>
+              </div>
+
+              <div class="field">
+                <label for="targetLtv">Cílové LTV</label>
+                <select id="targetLtv">
+                  <option value="90">90 %</option>
+                  <option value="85">85 %</option>
+                  <option value="80" selected>80 %</option>
+                  <option value="70">70 %</option>
+                </select>
+                <small>Pomůže ukázat, kolik peněz by bylo potřeba pro zvolenou hranici.</small>
+              </div>
+
+              <div class="field">
+                <label for="monthlyIncome">Čistý měsíční příjem domácnosti</label>
+                <input type="number" id="monthlyIncome" min="0" step="1000" value="70000" inputmode="decimal">
+                <small>Nepovinné. Pro orientační přehled velikosti úvěru vůči příjmu.</small>
+              </div>
+
+              <div class="actions full">
+                <button type="submit" class="btn-primary">Spočítat akontaci a LTV</button>
+                <button type="button" class="btn-secondary" id="resetBtn">Obnovit výchozí hodnoty</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>Výsledek výpočtu</h2>
+          <p>Souhrn akontace, hypotéky a orientačního poměru financování.</p>
+        </div>
+        <div class="card-body">
+          <div class="results-grid">
+            <div class="result-box highlight">
+              <div class="result-label">Použitelná akontace</div>
+              <div class="result-value" id="usableDownPayment">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Potřebná hypotéka</div>
+              <div class="result-value" id="requiredMortgage">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">LTV</div>
+              <div class="result-value" id="ltvValue">0 %</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Chybí do cílového LTV</div>
+              <div class="result-value" id="missingForTarget">0 Kč</div>
+            </div>
+          </div>
+
+          <div id="ltvBadge" class="badge success">LTV: v příznivém pásmu</div>
+
+          <div class="info-list">
+            <div class="info-row">
+              <span>Cena nemovitosti</span>
+              <strong id="summaryPropertyPrice">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Vedlejší náklady koupě</span>
+              <strong id="summaryAdditionalCosts">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Rezerva ponechaná bokem</span>
+              <strong id="summaryReserve">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Vlastní zdroje použité na koupi</span>
+              <strong id="summaryUsedOwnSources">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Výše hypotéky vůči příjmu</span>
+              <strong id="summaryIncomeMultiple">0× měsíční příjem</strong>
+            </div>
+          </div>
+
+          <div class="note">
+            Výpočet je orientační. Skutečné podmínky hypotéky se mohou lišit podle odhadní ceny nemovitosti, bonity žadatele, věku, typu příjmu, účelu financování i konkrétních pravidel banky.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="card">
+        <div class="card-header">
+          <h3>Přehled struktury financování</h3>
+          <p>Rozpad kupní ceny a souvisejících nákladů mezi vlastní zdroje, rezervu a hypotéku.</p>
+        </div>
+        <div class="card-body">
+          <div class="table-wrap">
+            <table aria-label="Struktura financování nemovitosti">
+              <thead>
+                <tr>
+                  <th>Položka</th>
+                  <th>Částka</th>
+                  <th>Podíl</th>
+                  <th>Poznámka</th>
+                </tr>
+              </thead>
+              <tbody id="breakdownBody">
+                <tr>
+                  <td colspan="4">Po zadání údajů se zobrazí detailní přehled financování.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container content-section">
+      <h2>Jak kalkulačka akontace a LTV hypotéky funguje</h2>
+      <p>Kalkulačka počítá, jak velkou část ceny nemovitosti pokryjete z vlastních zdrojů a kolik by zbývalo financovat hypotékou. Z těchto údajů pak dopočítá LTV, tedy poměr výše hypotéky k hodnotě nemovitosti. Právě LTV patří mezi důležité ukazatele, které ovlivňují dostupnost a podmínky úvěru.</p>
+
+      <h3>Co je akontace</h3>
+      <p>Akontace je část kupní ceny, kterou nefinancujete hypotékou a hradíte ji z vlastních peněz. Jinými slovy jde o váš přímý vklad do koupě nemovitosti. Čím vyšší akontace, tím nižší hypotéka a obvykle i příznivější LTV.</p>
+
+      <h3>Co je LTV</h3>
+      <p>LTV je zkratka pro poměr výše úvěru k hodnotě nemovitosti. Pokud kupujete nemovitost za 5 500 000 Kč a hypotéka by činila 4 400 000 Kč, LTV vychází 80 %. Nižší LTV obvykle znamená nižší riziko pro banku a často i lepší úrokové podmínky.</p>
+
+      <h3>Na co při plánování nezapomenout</h3>
+      <p>Vedle samotné akontace je vhodné počítat i s rezervou na vedlejší náklady koupě a s finančním polštářem po dokončení transakce. Ne vždy je rozumné použít všechny vlastní úspory jen na snížení hypotéky.</p>
+    </section>
+
+    <section class="container content-section">
+      <h2>Kdy se tenhle tool hodí nejvíc</h2>
+      <p>Tahle kalkulačka je užitečná ve chvíli, kdy teprve zvažujete koupi nemovitosti a potřebujete vědět, jestli už máte dost vlastních prostředků. Pomůže i při porovnávání několika variant kupní ceny nebo při rozhodování, kolik peněz ponechat jako rezervu mimo akontaci.</p>
+
+      <h3>Co z výsledku snadno vyčtete</h3>
+      <ul>
+        <li>kolik peněz můžete reálně použít jako akontaci,</li>
+        <li>jak vysoká hypotéka by přibližně byla potřeba,</li>
+        <li>jestli jste poblíž cílového LTV,</li>
+        <li>kolik vlastních zdrojů ještě chybí pro zvolené pásmo financování.</li>
+      </ul>
+
+      <h3>Praktická poznámka k rezervě</h3>
+      <p>Nechat si část peněz bokem bývá rozumné. Po koupi nemovitosti často následují další výdaje na vybavení, stěhování, drobné opravy nebo nečekané náklady. Proto kalkulačka pracuje i s rezervou, kterou nechcete do koupě zapojit.</p>
+    </section>
+
+    <section class="container content-section">
+      <h2>Související kalkulačky</h2>
+      <div class="related-grid">
+        <a class="related-card" href="/hypotecni-kalkulacka.html">
+          <strong>Hypoteční kalkulačka</strong>
+          <span>Výpočet měsíční splátky, úroků a celkové ceny hypotéky.</span>
+        </a>
+
+        <a class="related-card" href="/mimoradna-splatka-hypoteky-kalkulacka.html">
+          <strong>Kalkulačka mimořádné splátky hypotéky</strong>
+          <span>Zjistěte dopad mimořádné splátky na dobu splácení a úroky.</span>
+        </a>
+
+        <a class="related-card" href="/kalkulacka-pujcky.html">
+          <strong>Kalkulačka půjčky</strong>
+          <span>Orientační výpočet měsíční splátky a celkového přeplacení.</span>
+        </a>
+
+        <a class="related-card" href="/mesicni-naklady-na-bydleni-kalkulacka.html">
+          <strong>Kalkulačka měsíčních nákladů na bydlení</strong>
+          <span>Souhrnný přehled nákladů domácnosti a bydlení.</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      © 2026 RychléVýpočty.cz — online kalkulačky a praktické výpočty pro každodenní použití.
+    </div>
+  </footer>
+
+  <script>
+    const form = document.getElementById('ltvForm');
+    const resetBtn = document.getElementById('resetBtn');
+
+    const outputs = {
+      usableDownPayment: document.getElementById('usableDownPayment'),
+      requiredMortgage: document.getElementById('requiredMortgage'),
+      ltvValue: document.getElementById('ltvValue'),
+      missingForTarget: document.getElementById('missingForTarget'),
+      summaryPropertyPrice: document.getElementById('summaryPropertyPrice'),
+      summaryAdditionalCosts: document.getElementById('summaryAdditionalCosts'),
+      summaryReserve: document.getElementById('summaryReserve'),
+      summaryUsedOwnSources: document.getElementById('summaryUsedOwnSources'),
+      summaryIncomeMultiple: document.getElementById('summaryIncomeMultiple'),
+      ltvBadge: document.getElementById('ltvBadge'),
+      breakdownBody: document.getElementById('breakdownBody')
+    };
+
+    function formatCurrency(value, digits = 0) {
+      return new Intl.NumberFormat('cs-CZ', {
+        style: 'currency',
+        currency: 'CZK',
+        minimumFractionDigits: digits,
+        maximumFractionDigits: digits
+      }).format(value);
+    }
+
+    function formatPercent(value, digits = 1) {
+      return new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: digits
+      }).format(value) + ' %';
+    }
+
+    function formatNumber(value, digits = 1) {
+      return new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: digits
+      }).format(value);
+    }
+
+    function getValues() {
+      return {
+        propertyPrice: Number(document.getElementById('propertyPrice').value),
+        ownSavings: Number(document.getElementById('ownSavings').value),
+        reserveAmount: Number(document.getElementById('reserveAmount').value),
+        additionalCosts: Number(document.getElementById('additionalCosts').value),
+        targetLtv: Number(document.getElementById('targetLtv').value),
+        monthlyIncome: Number(document.getElementById('monthlyIncome').value)
+      };
+    }
+
+    function validate(values) {
+      if (!values.propertyPrice || values.propertyPrice <= 0) return 'Zadejte platnou cenu nemovitosti.';
+      if (values.ownSavings < 0) return 'Vlastní zdroje nemohou být záporné.';
+      if (values.reserveAmount < 0) return 'Rezerva nemůže být záporná.';
+      if (values.additionalCosts < 0) return 'Vedlejší náklady nemohou být záporné.';
+      if (values.reserveAmount > values.ownSavings) return 'Rezerva nemůže být vyšší než celkové vlastní zdroje.';
+      return '';
+    }
+
+    function calculate(values) {
+      const usableSavings = Math.max(0, values.ownSavings - values.reserveAmount);
+      const fundsAfterAdditionalCosts = Math.max(0, usableSavings - values.additionalCosts);
+      const usedOwnSources = Math.min(values.propertyPrice, fundsAfterAdditionalCosts);
+      const requiredMortgage = Math.max(0, values.propertyPrice - usedOwnSources);
+      const ltv = values.propertyPrice > 0 ? (requiredMortgage / values.propertyPrice) * 100 : 0;
+
+      const targetMortgage = values.propertyPrice * (values.targetLtv / 100);
+      const requiredOwnSourcesForTarget = Math.max(0, values.propertyPrice - targetMortgage);
+      const missingForTarget = Math.max(0, requiredOwnSourcesForTarget - usedOwnSources);
+
+      const totalOwnCashNeeded = requiredOwnSourcesForTarget + values.additionalCosts + values.reserveAmount;
+      const shortageOverall = Math.max(0, totalOwnCashNeeded - values.ownSavings);
+
+      const incomeMultiple = values.monthlyIncome > 0 ? requiredMortgage / values.monthlyIncome : 0;
+
+      return {
+        usableSavings,
+        fundsAfterAdditionalCosts,
+        usedOwnSources,
+        requiredMortgage,
+        ltv,
+        requiredOwnSourcesForTarget,
+        missingForTarget,
+        totalOwnCashNeeded,
+        shortageOverall,
+        incomeMultiple
+      };
+    }
+
+    function renderBreakdown(values, result) {
+      const rows = [
+        {
+          label: 'Cena nemovitosti',
+          amount: values.propertyPrice,
+          share: 100,
+          note: 'Kupní cena financované nemovitosti'
+        },
+        {
+          label: 'Vlastní zdroje použité na koupi',
+          amount: result.usedOwnSources,
+          share: values.propertyPrice > 0 ? (result.usedOwnSources / values.propertyPrice) * 100 : 0,
+          note: 'Část vlastních peněz použitá přímo do akontace'
+        },
+        {
+          label: 'Potřebná hypotéka',
+          amount: result.requiredMortgage,
+          share: values.propertyPrice > 0 ? (result.requiredMortgage / values.propertyPrice) * 100 : 0,
+          note: 'Orientační výše úvěru'
+        },
+        {
+          label: 'Vedlejší náklady koupě',
+          amount: values.additionalCosts,
+          share: values.propertyPrice > 0 ? (values.additionalCosts / values.propertyPrice) * 100 : 0,
+          note: 'Náklady mimo samotnou kupní cenu'
+        },
+        {
+          label: 'Rezerva ponechaná bokem',
+          amount: values.reserveAmount,
+          share: values.propertyPrice > 0 ? (values.reserveAmount / values.propertyPrice) * 100 : 0,
+          note: 'Finanční polštář mimo transakci'
+        }
+      ];
+
+      outputs.breakdownBody.innerHTML = rows.map(row => `
+        <tr>
+          <td>${row.label}</td>
+          <td>${formatCurrency(row.amount)}</td>
+          <td>${formatPercent(row.share)}</td>
+          <td>${row.note}</td>
+        </tr>
+      `).join('');
+    }
+
+    function render(values, result) {
+      outputs.usableDownPayment.textContent = formatCurrency(result.usedOwnSources);
+      outputs.requiredMortgage.textContent = formatCurrency(result.requiredMortgage);
+      outputs.ltvValue.textContent = formatPercent(result.ltv);
+      outputs.missingForTarget.textContent = formatCurrency(result.missingForTarget);
+
+      outputs.summaryPropertyPrice.textContent = formatCurrency(values.propertyPrice);
+      outputs.summaryAdditionalCosts.textContent = formatCurrency(values.additionalCosts);
+      outputs.summaryReserve.textContent = formatCurrency(values.reserveAmount);
+      outputs.summaryUsedOwnSources.textContent = formatCurrency(result.usedOwnSources);
+      outputs.summaryIncomeMultiple.textContent = values.monthlyIncome > 0
+        ? formatNumber(result.incomeMultiple, 1) + '× měsíční příjem'
+        : 'nezadáno';
+
+      if (result.ltv <= 80) {
+        outputs.ltvBadge.textContent = 'LTV: v příznivém pásmu';
+        outputs.ltvBadge.className = 'badge success';
+      } else if (result.ltv <= 90) {
+        outputs.ltvBadge.textContent = 'LTV: vyšší, ale ještě běžně zvažované';
+        outputs.ltvBadge.className = 'badge warning';
+      } else {
+        outputs.ltvBadge.textContent = 'LTV: velmi vysoké';
+        outputs.ltvBadge.className = 'badge danger';
+      }
+
+      renderBreakdown(values, result);
+    }
+
+    function runCalculation() {
+      const values = getValues();
+      const error = validate(values);
+
+      if (error) {
+        alert(error);
+        return;
+      }
+
+      const result = calculate(values);
+      render(values, result);
+    }
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      runCalculation();
+    });
+
+    ['propertyPrice', 'ownSavings', 'reserveAmount', 'additionalCosts', 'targetLtv', 'monthlyIncome'].forEach(id => {
+      document.getElementById(id).addEventListener('input', runCalculation);
+      document.getElementById(id).addEventListener('change', runCalculation);
+    });
+
+    resetBtn.addEventListener('click', function() {
+      document.getElementById('propertyPrice').value = 5500000;
+      document.getElementById('ownSavings').value = 1200000;
+      document.getElementById('reserveAmount').value = 200000;
+      document.getElementById('additionalCosts').value = 150000;
+      document.getElementById('targetLtv').value = 80;
+      document.getElementById('monthlyIncome').value = 70000;
+      runCalculation();
+    });
+
+    runCalculation();
+  </script>
+</body>
+</html>
