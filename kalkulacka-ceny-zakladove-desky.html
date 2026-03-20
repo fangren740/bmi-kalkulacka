@@ -1,1 +1,1110 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kalkulačka ceny základové desky online zdarma | RychléVýpočty.cz</title>
+  <meta name="description" content="Spočítejte si orientační cenu základové desky podle zastavěné plochy, tloušťky, typu podloží, výztuže, zemních prací a regionální nákladovosti. Přehledná kalkulačka zdarma online.">
+  <meta name="keywords" content="kalkulačka ceny základové desky, kolik stojí základová deska, cena základové desky kalkulačka, rozpočet základové desky, základová deska cena">
+  <meta name="author" content="RychléVýpočty.cz">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://rychlevypocty.cz/kalkulacka-ceny-zakladove-desky.html">
 
+  <meta property="og:title" content="Kalkulačka ceny základové desky | RychléVýpočty.cz">
+  <meta property="og:description" content="Zjistěte orientační rozpočet základové desky podle plochy, tloušťky, podloží a zemních prací.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rychlevypocty.cz/kalkulacka-ceny-zakladove-desky.html">
+  <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Kalkulačka ceny základové desky | RychléVýpočty.cz">
+  <meta name="twitter:description" content="Orientační výpočet ceny základové desky online zdarma.">
+
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #5f6b85;
+      --primary: #2152ff;
+      --primary-dark: #183dbf;
+      --border: #dbe3f0;
+      --success: #138a4b;
+      --warning: #b66a00;
+      --danger: #b42318;
+      --shadow: 0 12px 32px rgba(20, 32, 70, 0.08);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #f7f9fd 0%, #eef3fb 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      padding: 18px 0;
+      border-bottom: 1px solid rgba(219, 227, 240, 0.8);
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+      line-height: 1;
+    }
+
+    .brand span {
+      color: var(--primary);
+    }
+
+    .topnav {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      font-size: 0.97rem;
+    }
+
+    .hero {
+      padding: 42px 0 20px;
+    }
+
+    .breadcrumbs {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .hero-copy h1 {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      margin: 0 0 16px;
+    }
+
+    .hero-copy p {
+      margin: 0 0 16px;
+      font-size: 1.06rem;
+      color: var(--muted);
+      max-width: 720px;
+    }
+
+    .hero-points {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .hero-pill {
+      background: rgba(33, 82, 255, 0.08);
+      color: var(--primary-dark);
+      border: 1px solid rgba(33, 82, 255, 0.12);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .hero-box {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-box h2 {
+      margin: 0 0 10px;
+      font-size: 1.2rem;
+    }
+
+    .hero-box p {
+      margin: 0 0 12px;
+      color: var(--muted);
+    }
+
+    .hero-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.04fr 0.96fr;
+      gap: 28px;
+      align-items: start;
+      padding: 22px 0 32px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .card-header {
+      padding: 24px 24px 10px;
+    }
+
+    .card-header h2,
+    .card-header h3 {
+      margin: 0 0 8px;
+      font-size: 1.3rem;
+      letter-spacing: -0.02em;
+    }
+
+    .card-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .card-body {
+      padding: 20px 24px 24px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field label {
+      font-weight: 700;
+      font-size: 0.96rem;
+    }
+
+    .field small {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: -2px;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      padding: 14px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      font-size: 1rem;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      outline: none;
+      border-color: rgba(33, 82, 255, 0.45);
+      box-shadow: 0 0 0 4px rgba(33, 82, 255, 0.10);
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.06s ease, background 0.15s ease, opacity 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background: #eef3ff;
+      color: var(--primary-dark);
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .result-box {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+
+    .result-label {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .result-value {
+      font-size: clamp(1.25rem, 2.4vw, 2rem);
+      line-height: 1.15;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .highlight {
+      background: linear-gradient(180deg, #eef7ff 0%, #f9fcff 100%);
+      border-color: rgba(33, 82, 255, 0.18);
+    }
+
+    .info-list {
+      display: grid;
+      gap: 12px;
+      margin: 18px 0 0;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid #edf2fa;
+    }
+
+    .info-row:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .info-row span:first-child {
+      color: var(--muted);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+
+    .badge.success {
+      background: rgba(19, 138, 75, 0.10);
+      color: var(--success);
+    }
+
+    .badge.warning {
+      background: rgba(182, 106, 0, 0.11);
+      color: var(--warning);
+    }
+
+    .badge.danger {
+      background: rgba(180, 35, 24, 0.10);
+      color: var(--danger);
+    }
+
+    .note {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1px solid #e7edf7;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 18px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 640px;
+      background: #fff;
+    }
+
+    th, td {
+      padding: 14px 14px;
+      text-align: left;
+      border-bottom: 1px solid #edf2fa;
+      font-size: 0.96rem;
+    }
+
+    th {
+      background: #f8fbff;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .content-section {
+      padding: 8px 0 8px;
+    }
+
+    .content-section h2 {
+      font-size: 1.7rem;
+      letter-spacing: -0.03em;
+      margin: 0 0 14px;
+    }
+
+    .content-section h3 {
+      font-size: 1.15rem;
+      margin: 28px 0 10px;
+    }
+
+    .content-section p {
+      color: var(--muted);
+      margin: 0 0 14px;
+    }
+
+    .content-section ul {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    .content-section li {
+      margin-bottom: 8px;
+    }
+
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .related-card {
+      display: block;
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      color: var(--text);
+      box-shadow: var(--shadow);
+    }
+
+    .related-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .related-card span {
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    footer {
+      margin-top: 40px;
+      border-top: 1px solid rgba(219, 227, 240, 0.9);
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .footer-inner {
+      padding: 24px 0 40px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .layout,
+      .related-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .container {
+        width: min(100% - 24px, 1160px);
+      }
+
+      .form-grid,
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 28px;
+      }
+
+      .card-header,
+      .card-body,
+      .hero-box {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebApplication",
+    "name":"Kalkulačka ceny základové desky",
+    "url":"https://rychlevypocty.cz/kalkulacka-ceny-zakladove-desky.html",
+    "applicationCategory":"FinanceApplication",
+    "operatingSystem":"Any",
+    "description":"Online kalkulačka pro orientační výpočet ceny základové desky podle plochy, tloušťky, typu podloží, výztuže a zemních prací.",
+    "offers":{
+      "@type":"Offer",
+      "price":"0",
+      "priceCurrency":"CZK"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"Co obvykle zahrnuje cena základové desky?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Do ceny základové desky se obvykle počítají zemní práce, podsypy, bednění, výztuž, betonáž, prostupy, izolace a další související konstrukční vrstvy. Přesný rozsah se může lišit podle typu stavby a dodávky."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Co cenu základové desky ovlivňuje nejvíc?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Největší vliv má zastavěná plocha, tloušťka desky, typ podloží, množství výztuže, náročnost zemních prací, přístupnost pozemku a regionální ceny materiálů i práce."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Je výpočet v kalkulačce přesný?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Výpočet je orientační. Skutečná cena základové desky závisí na projektu, geologii pozemku, statice, drenážích, izolacích, regionu a konkrétním rozsahu dodávky."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="/">Rychlé<span>Výpočty</span>.cz</a>
+      <nav class="topnav" aria-label="Hlavní navigace">
+        <a href="/">Domů</a>
+        <a href="/kalkulacka-orientacni-ceny-stavby-domu.html">Cena stavby domu</a>
+        <a href="/kalkulacka-ceny-hrube-stavby-domu.html">Hrubá stavba domu</a>
+        <a href="/objem-materialu-kalkulacka.html">Objem materiálu</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumbs">
+          <a href="/">RychléVýpočty.cz</a> / Kalkulačka ceny základové desky
+        </div>
+
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <h1>Kalkulačka ceny základové desky</h1>
+            <p>Spočítejte si orientační cenu základové desky podle zastavěné plochy, tloušťky desky, typu podloží, výztuže, zemních prací a regionální nákladovosti. Kalkulačka pomůže rychle odhadnout jednu z nejdůležitějších startovních položek stavby domu.</p>
+            <p>Výsledek ukáže celkovou cenu, cenu za m², rozpad hlavních konstrukčních částí i rezervu na vícepráce.</p>
+
+            <div class="hero-points">
+              <div class="hero-pill">Cena základové desky</div>
+              <div class="hero-pill">Cena za m²</div>
+              <div class="hero-pill">Zemní práce a výztuž</div>
+              <div class="hero-pill">Stavební decision tool</div>
+            </div>
+          </div>
+
+          <div class="hero-box">
+            <h2>Co kalkulačka umí</h2>
+            <p>Kombinuje základní cenu podle zastavěné plochy s nejdůležitějšími faktory, které základovou desku prodražují: horší podloží, silnější desku, náročnější výztuž, složitější zemní práce nebo náročnější přístup na pozemek.</p>
+            <p>Je vhodná hlavně pro první realistický odhad před přesným rozpočtem od projektanta nebo realizační firmy.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container layout">
+      <div class="card">
+        <div class="card-header">
+          <h2>Zadání základové desky</h2>
+          <p>Vyplňte základní parametry desky a kalkulačka výsledek automaticky přepočítá.</p>
+        </div>
+        <div class="card-body">
+          <form id="foundationForm">
+            <div class="form-grid">
+              <div class="field">
+                <label for="builtArea">Zastavěná plocha (m²)</label>
+                <input type="number" id="builtArea" min="40" max="400" step="1" value="120" inputmode="decimal">
+                <small>Plocha, na které bude základová deska realizována.</small>
+              </div>
+
+              <div class="field">
+                <label for="slabThickness">Tloušťka desky</label>
+                <select id="slabThickness">
+                  <option value="standard" selected>Běžná</option>
+                  <option value="thicker">Silnější</option>
+                  <option value="high">Vyšší konstrukční náročnost</option>
+                </select>
+                <small>Silnější deska obvykle zvyšuje spotřebu betonu i výztuže.</small>
+              </div>
+
+              <div class="field">
+                <label for="groundType">Typ podloží</label>
+                <select id="groundType">
+                  <option value="easy" selected>Běžné podloží</option>
+                  <option value="medium">Středně náročné</option>
+                  <option value="hard">Náročnější podmínky</option>
+                </select>
+                <small>Horší podloží může navýšit zemní práce i konstrukční řešení.</small>
+              </div>
+
+              <div class="field">
+                <label for="reinforcement">Úroveň výztuže</label>
+                <select id="reinforcement">
+                  <option value="basic">Základní</option>
+                  <option value="standard" selected>Standardní</option>
+                  <option value="higher">Vyšší</option>
+                </select>
+                <small>Orientační vliv množství a náročnosti armování.</small>
+              </div>
+
+              <div class="field">
+                <label for="earthworks">Zemní práce</label>
+                <select id="earthworks">
+                  <option value="easy" selected>Běžné</option>
+                  <option value="medium">Středně náročné</option>
+                  <option value="hard">Náročnější</option>
+                </select>
+                <small>Např. větší výkopy, odvoz zeminy nebo složitější terén.</small>
+              </div>
+
+              <div class="field">
+                <label for="insulationLevel">Izolace a podsypy</label>
+                <select id="insulationLevel">
+                  <option value="basic">Základní</option>
+                  <option value="standard" selected>Standardní</option>
+                  <option value="higher">Vyšší</option>
+                </select>
+                <small>Orientační vliv izolací, podsypů a souvisejících vrstev.</small>
+              </div>
+
+              <div class="field">
+                <label for="drainage">Drenáže / odvodnění</label>
+                <select id="drainage">
+                  <option value="no" selected>Bez výrazného navýšení</option>
+                  <option value="yes">Ano</option>
+                </select>
+                <small>Dodatečné drenáže nebo odvodnění mohou cenu znatelně zvýšit.</small>
+              </div>
+
+              <div class="field">
+                <label for="accessibility">Přístupnost pozemku</label>
+                <select id="accessibility">
+                  <option value="easy" selected>Běžná</option>
+                  <option value="medium">Středně omezená</option>
+                  <option value="hard">Horší přístup</option>
+                </select>
+                <small>Horší logistika může prodražit realizaci i dopravu materiálu.</small>
+              </div>
+
+              <div class="field">
+                <label for="regionFactor">Cenová úroveň regionu</label>
+                <select id="regionFactor">
+                  <option value="0.95">Nižší ceny</option>
+                  <option value="1" selected>Běžná úroveň</option>
+                  <option value="1.1">Vyšší ceny</option>
+                  <option value="1.2">Výrazně vyšší ceny</option>
+                </select>
+                <small>Hrubé zohlednění lokality a cen stavebních prací.</small>
+              </div>
+
+              <div class="field">
+                <label for="reserveRate">Rezerva na vícepráce (%)</label>
+                <select id="reserveRate">
+                  <option value="5">5 %</option>
+                  <option value="10" selected>10 %</option>
+                  <option value="15">15 %</option>
+                  <option value="20">20 %</option>
+                </select>
+                <small>Doporučený polštář pro skryté komplikace a navýšení.</small>
+              </div>
+
+              <div class="actions full">
+                <button type="submit" class="btn-primary">Spočítat cenu základové desky</button>
+                <button type="button" class="btn-secondary" id="resetBtn">Obnovit výchozí hodnoty</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>Výsledek výpočtu</h2>
+          <p>Orientační přehled ceny základové desky podle zadaných parametrů.</p>
+        </div>
+        <div class="card-body">
+          <div class="results-grid">
+            <div class="result-box highlight">
+              <div class="result-label">Celková cena základové desky</div>
+              <div class="result-value" id="totalCost">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Orientační cena za m²</div>
+              <div class="result-value" id="pricePerM2">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Rozpočet bez rezervy</div>
+              <div class="result-value" id="baseCost">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Rezerva na vícepráce</div>
+              <div class="result-value" id="reserveCost">0 Kč</div>
+            </div>
+          </div>
+
+          <div id="budgetBadge" class="badge success">Rozpočet odpovídá spíše běžné základové desce</div>
+
+          <div class="info-list">
+            <div class="info-row">
+              <span>Zastavěná plocha</span>
+              <strong id="summaryArea">0 m²</strong>
+            </div>
+            <div class="info-row">
+              <span>Hlavní betonová a konstrukční část</span>
+              <strong id="summaryCore">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Zemní práce a podsypy</span>
+              <strong id="summaryEarthworks">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Výztuž a technické navýšení</span>
+              <strong id="summaryTechnical">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Drenáže a logistické komplikace</span>
+              <strong id="summaryExtras">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Podíl rezervy</span>
+              <strong id="summaryReserveShare">0 %</strong>
+            </div>
+          </div>
+
+          <div class="note">
+            Výpočet je orientační. Skutečná cena základové desky závisí na projektu, geologii pozemku, statice, tloušťce konstrukce, drenážích, izolacích, logistice stavby a aktuálních cenách materiálu i práce.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="card">
+        <div class="card-header">
+          <h3>Rozpad orientační ceny základové desky</h3>
+          <p>Přehled hlavních položek, které se podílí na ceně základové desky.</p>
+        </div>
+        <div class="card-body">
+          <div class="table-wrap">
+            <table aria-label="Rozpad orientační ceny základové desky">
+              <thead>
+                <tr>
+                  <th>Položka</th>
+                  <th>Částka</th>
+                  <th>Podíl na rozpočtu</th>
+                </tr>
+              </thead>
+              <tbody id="breakdownBody">
+                <tr>
+                  <td colspan="3">Po zadání údajů se zobrazí přehled orientačních nákladů základové desky.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container content-section">
+      <h2>Jak kalkulačka ceny základové desky funguje</h2>
+      <p>Základová deska patří mezi nejdůležitější startovní položky celé stavby domu. Její cena se obvykle neurčuje jen podle plochy, ale také podle tloušťky konstrukce, typu podloží, úrovně výztuže, náročnosti zemních prací, izolací a logistiky na pozemku. Tato kalkulačka proto kombinuje základní plochu s klíčovými nákladovými faktory, které mají na rozpočet největší vliv.</p>
+
+      <h3>Co cenu základové desky ovlivňuje nejvíc</h3>
+      <ul>
+        <li>zastavěná plocha domu,</li>
+        <li>tloušťka desky a množství betonu,</li>
+        <li>typ podloží a náročnost zemních prací,</li>
+        <li>úroveň armování a technického řešení,</li>
+        <li>izolace, podsypy a drenáže,</li>
+        <li>přístupnost pozemku a regionální ceny.</li>
+      </ul>
+
+      <h3>Kdy se kalkulačka hodí nejvíc</h3>
+      <p>Největší přínos má na začátku plánování stavby, kdy potřebujete rychle odhadnout, jak velkou část rozpočtu spolkne samotný základ domu. Je vhodná při porovnávání variant, při kontrole rozpočtového rámce i jako podpůrný tool k ceně hrubé stavby a celkové ceně domu.</p>
+
+      <h3>Proč počítat s rezervou</h3>
+      <p>U základové desky se často objevují komplikace až po zahájení prací. Může jít o horší zeminu, vyšší objem výkopů, složitější drenáže, technické změny nebo navýšení některých konstrukčních vrstev. Právě proto je rozumné počítat s rezervou a nebrat základní cenu jako konečnou.</p>
+    </section>
+
+    <section class="container content-section">
+      <h2>Související kalkulačky</h2>
+      <div class="related-grid">
+        <a class="related-card" href="/kalkulacka-orientacni-ceny-stavby-domu.html">
+          <strong>Kalkulačka orientační ceny stavby domu</strong>
+          <span>Celkový orientační rozpočet stavby domu podle plochy, standardu a fáze dokončení.</span>
+        </a>
+
+        <a class="related-card" href="/kalkulacka-ceny-hrube-stavby-domu.html">
+          <strong>Kalkulačka ceny hrubé stavby domu</strong>
+          <span>Orientační cena konstrukční části domu bez většiny finálních dokončovacích prací.</span>
+        </a>
+
+        <a class="related-card" href="/objem-materialu-kalkulacka.html">
+          <strong>Kalkulačka objemu materiálu</strong>
+          <span>Pomocný výpočet objemu materiálu pro stavební a rekonstrukční práce.</span>
+        </a>
+
+        <a class="related-card" href="/kalkulacka-celkove-ceny-nemovitosti.html">
+          <strong>Kalkulačka celkové ceny nemovitosti</strong>
+          <span>Přehled skutečných pořizovacích a investičních nákladů při bydlení.</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      © 2026 RychléVýpočty.cz — online kalkulačky a praktické výpočty pro každodenní použití.
+    </div>
+  </footer>
+
+  <script>
+    const form = document.getElementById('foundationForm');
+    const resetBtn = document.getElementById('resetBtn');
+
+    const outputs = {
+      totalCost: document.getElementById('totalCost'),
+      pricePerM2: document.getElementById('pricePerM2'),
+      baseCost: document.getElementById('baseCost'),
+      reserveCost: document.getElementById('reserveCost'),
+      summaryArea: document.getElementById('summaryArea'),
+      summaryCore: document.getElementById('summaryCore'),
+      summaryEarthworks: document.getElementById('summaryEarthworks'),
+      summaryTechnical: document.getElementById('summaryTechnical'),
+      summaryExtras: document.getElementById('summaryExtras'),
+      summaryReserveShare: document.getElementById('summaryReserveShare'),
+      budgetBadge: document.getElementById('budgetBadge'),
+      breakdownBody: document.getElementById('breakdownBody')
+    };
+
+    function formatCurrency(value) {
+      return new Intl.NumberFormat('cs-CZ', {
+        style: 'currency',
+        currency: 'CZK',
+        maximumFractionDigits: 0
+      }).format(value);
+    }
+
+    function formatPercent(value, digits = 1) {
+      return new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: digits
+      }).format(value) + ' %';
+    }
+
+    function getValues() {
+      return {
+        builtArea: Number(document.getElementById('builtArea').value),
+        slabThickness: document.getElementById('slabThickness').value,
+        groundType: document.getElementById('groundType').value,
+        reinforcement: document.getElementById('reinforcement').value,
+        earthworks: document.getElementById('earthworks').value,
+        insulationLevel: document.getElementById('insulationLevel').value,
+        drainage: document.getElementById('drainage').value,
+        accessibility: document.getElementById('accessibility').value,
+        regionFactor: Number(document.getElementById('regionFactor').value),
+        reserveRate: Number(document.getElementById('reserveRate').value)
+      };
+    }
+
+    function validate(values) {
+      if (!values.builtArea || values.builtArea <= 0) return 'Zadejte platnou zastavěnou plochu.';
+      if (values.builtArea < 40) return 'Zastavěná plocha je neobvykle nízká.';
+      return '';
+    }
+
+    function getBaseRate() {
+      return 7600;
+    }
+
+    function getThicknessMultiplier(type) {
+      if (type === 'thicker') return 1.10;
+      if (type === 'high') return 1.20;
+      return 1;
+    }
+
+    function getGroundMultiplier(type) {
+      if (type === 'medium') return 1.08;
+      if (type === 'hard') return 1.18;
+      return 1;
+    }
+
+    function getReinforcementMultiplier(type) {
+      if (type === 'basic') return 0.96;
+      if (type === 'higher') return 1.12;
+      return 1;
+    }
+
+    function getEarthworksMultiplier(type) {
+      if (type === 'medium') return 1.10;
+      if (type === 'hard') return 1.22;
+      return 1;
+    }
+
+    function getInsulationMultiplier(type) {
+      if (type === 'basic') return 0.95;
+      if (type === 'higher') return 1.12;
+      return 1;
+    }
+
+    function getDrainageCost(type, area) {
+      return type === 'yes' ? area * 550 : 0;
+    }
+
+    function getAccessibilityMultiplier(type) {
+      if (type === 'medium') return 1.04;
+      if (type === 'hard') return 1.10;
+      return 1;
+    }
+
+    function calculate(values) {
+      const baseCore = values.builtArea * getBaseRate();
+
+      const concreteAndStructure =
+        baseCore *
+        getThicknessMultiplier(values.slabThickness) *
+        getGroundMultiplier(values.groundType) *
+        getAccessibilityMultiplier(values.accessibility);
+
+      const earthworksCost =
+        values.builtArea * 1100 *
+        getEarthworksMultiplier(values.earthworks) *
+        getGroundMultiplier(values.groundType);
+
+      const technicalCost =
+        values.builtArea * 950 *
+        getReinforcementMultiplier(values.reinforcement) *
+        getInsulationMultiplier(values.insulationLevel);
+
+      const drainageCost = getDrainageCost(values.drainage, values.builtArea);
+
+      const baseCost = (concreteAndStructure + earthworksCost + technicalCost + drainageCost) * values.regionFactor;
+      const reserveCost = baseCost * (values.reserveRate / 100);
+      const totalCost = baseCost + reserveCost;
+      const pricePerM2 = totalCost / values.builtArea;
+
+      return {
+        concreteAndStructure,
+        earthworksCost,
+        technicalCost,
+        drainageCost,
+        baseCost,
+        reserveCost,
+        totalCost,
+        pricePerM2
+      };
+    }
+
+    function buildBreakdown(values, result) {
+      const rows = [
+        { label: 'Betonová a konstrukční část desky', value: result.concreteAndStructure * values.regionFactor },
+        { label: 'Zemní práce a příprava podkladu', value: result.earthworksCost * values.regionFactor },
+        { label: 'Výztuž, izolace a technické vrstvy', value: result.technicalCost * values.regionFactor },
+        { label: 'Drenáže a odvodnění', value: result.drainageCost * values.regionFactor },
+        { label: 'Rezerva na vícepráce', value: result.reserveCost }
+      ];
+
+      return rows
+        .filter(row => row.value > 0)
+        .map(row => ({
+          ...row,
+          share: result.totalCost > 0 ? (row.value / result.totalCost) * 100 : 0
+        }));
+    }
+
+    function renderBreakdown(rows) {
+      if (!rows.length) {
+        outputs.breakdownBody.innerHTML = '<tr><td colspan="3">Po zadání údajů se zobrazí přehled orientačních nákladů základové desky.</td></tr>';
+        return;
+      }
+
+      outputs.breakdownBody.innerHTML = rows.map(row => `
+        <tr>
+          <td>${row.label}</td>
+          <td>${formatCurrency(row.value)}</td>
+          <td>${formatPercent(row.share)}</td>
+        </tr>
+      `).join('');
+    }
+
+    function render(values, result) {
+      outputs.totalCost.textContent = formatCurrency(result.totalCost);
+      outputs.pricePerM2.textContent = formatCurrency(result.pricePerM2);
+      outputs.baseCost.textContent = formatCurrency(result.baseCost);
+      outputs.reserveCost.textContent = formatCurrency(result.reserveCost);
+
+      outputs.summaryArea.textContent = values.builtArea + ' m²';
+      outputs.summaryCore.textContent = formatCurrency(result.concreteAndStructure * values.regionFactor);
+      outputs.summaryEarthworks.textContent = formatCurrency(result.earthworksCost * values.regionFactor);
+      outputs.summaryTechnical.textContent = formatCurrency(result.technicalCost * values.regionFactor);
+      outputs.summaryExtras.textContent = formatCurrency(result.drainageCost * values.regionFactor);
+      outputs.summaryReserveShare.textContent = formatPercent(values.reserveRate);
+
+      if (result.totalCost < 1200000) {
+        outputs.budgetBadge.className = 'badge success';
+        outputs.budgetBadge.textContent = 'Rozpočet odpovídá spíše běžné základové desce';
+      } else if (result.totalCost < 1800000) {
+        outputs.budgetBadge.className = 'badge warning';
+        outputs.budgetBadge.textContent = 'Rozpočet odpovídá středně náročné základové desce';
+      } else {
+        outputs.budgetBadge.className = 'badge danger';
+        outputs.budgetBadge.textContent = 'Rozpočet odpovídá náročnější základové desce';
+      }
+
+      renderBreakdown(buildBreakdown(values, result));
+    }
+
+    function runCalculation() {
+      const values = getValues();
+      const error = validate(values);
+
+      if (error) {
+        alert(error);
+        return;
+      }
+
+      const result = calculate(values);
+      render(values, result);
+    }
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      runCalculation();
+    });
+
+    ['builtArea', 'slabThickness', 'groundType', 'reinforcement', 'earthworks', 'insulationLevel', 'drainage', 'accessibility', 'regionFactor', 'reserveRate'].forEach(id => {
+      document.getElementById(id).addEventListener('input', runCalculation);
+      document.getElementById(id).addEventListener('change', runCalculation);
+    });
+
+    resetBtn.addEventListener('click', function() {
+      document.getElementById('builtArea').value = 120;
+      document.getElementById('slabThickness').value = 'standard';
+      document.getElementById('groundType').value = 'easy';
+      document.getElementById('reinforcement').value = 'standard';
+      document.getElementById('earthworks').value = 'easy';
+      document.getElementById('insulationLevel').value = 'standard';
+      document.getElementById('drainage').value = 'no';
+      document.getElementById('accessibility').value = 'easy';
+      document.getElementById('regionFactor').value = '1';
+      document.getElementById('reserveRate').value = '10';
+      runCalculation();
+    });
+
+    runCalculation();
+  </script>
+</body>
+</html>
