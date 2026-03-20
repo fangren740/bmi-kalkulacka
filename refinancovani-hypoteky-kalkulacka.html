@@ -1,1 +1,1047 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kalkulačka refinancování hypotéky online | RychléVýpočty.cz</title>
+  <meta name="description" content="Spočítejte si, zda se vyplatí refinancování hypotéky. Přehledná kalkulačka porovná původní a novou splátku, úrok, celkové úroky i orientační úsporu po započtení poplatků.">
+  <meta name="keywords" content="refinancování hypotéky kalkulačka, kalkulačka refinancování hypotéky, vyplatí se refinancování hypotéky, nová splátka hypotéky, úspora refinancování">
+  <meta name="author" content="RychléVýpočty.cz">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://rychlevypocty.cz/refinancovani-hypoteky-kalkulacka.html">
 
+  <meta property="og:title" content="Kalkulačka refinancování hypotéky online | RychléVýpočty.cz">
+  <meta property="og:description" content="Porovnejte stávající hypotéku s novou nabídkou a zjistěte orientační úsporu při refinancování.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rychlevypocty.cz/refinancovani-hypoteky-kalkulacka.html">
+  <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Kalkulačka refinancování hypotéky | RychléVýpočty.cz">
+  <meta name="twitter:description" content="Spočítejte si rozdíl mezi stávající a novou hypotékou včetně orientační úspory po refinancování.">
+
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #5f6b85;
+      --primary: #2152ff;
+      --primary-dark: #183dbf;
+      --border: #dbe3f0;
+      --success: #138a4b;
+      --warning: #b66a00;
+      --danger: #c53a2f;
+      --shadow: 0 12px 32px rgba(20, 32, 70, 0.08);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #f7f9fd 0%, #eef3fb 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      padding: 18px 0;
+      border-bottom: 1px solid rgba(219, 227, 240, 0.8);
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .brand span {
+      color: var(--primary);
+    }
+
+    .topnav {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      font-size: 0.97rem;
+    }
+
+    .hero {
+      padding: 42px 0 20px;
+    }
+
+    .breadcrumbs {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .hero-copy h1 {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      margin: 0 0 16px;
+    }
+
+    .hero-copy p {
+      margin: 0 0 16px;
+      font-size: 1.06rem;
+      color: var(--muted);
+      max-width: 720px;
+    }
+
+    .hero-points {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .hero-pill {
+      background: rgba(33, 82, 255, 0.08);
+      color: var(--primary-dark);
+      border: 1px solid rgba(33, 82, 255, 0.12);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .hero-box {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-box h2 {
+      margin: 0 0 10px;
+      font-size: 1.2rem;
+    }
+
+    .hero-box p {
+      margin: 0 0 12px;
+      color: var(--muted);
+    }
+
+    .hero-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.04fr 0.96fr;
+      gap: 28px;
+      align-items: start;
+      padding: 22px 0 32px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .card-header {
+      padding: 24px 24px 10px;
+    }
+
+    .card-header h2,
+    .card-header h3 {
+      margin: 0 0 8px;
+      font-size: 1.3rem;
+      letter-spacing: -0.02em;
+    }
+
+    .card-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .card-body {
+      padding: 20px 24px 24px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field label {
+      font-weight: 700;
+      font-size: 0.96rem;
+    }
+
+    .field small {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: -2px;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      padding: 14px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      font-size: 1rem;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      outline: none;
+      border-color: rgba(33, 82, 255, 0.45);
+      box-shadow: 0 0 0 4px rgba(33, 82, 255, 0.10);
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.06s ease, background 0.15s ease, opacity 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background: #eef3ff;
+      color: var(--primary-dark);
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .result-box {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+
+    .result-label {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .result-value {
+      font-size: clamp(1.25rem, 2.4vw, 2rem);
+      line-height: 1.15;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .highlight {
+      background: linear-gradient(180deg, #eef7ff 0%, #f9fcff 100%);
+      border-color: rgba(33, 82, 255, 0.18);
+    }
+
+    .info-list {
+      display: grid;
+      gap: 12px;
+      margin: 18px 0 0;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid #edf2fa;
+    }
+
+    .info-row:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .info-row span:first-child {
+      color: var(--muted);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+
+    .badge.success {
+      background: rgba(19, 138, 75, 0.10);
+      color: var(--success);
+    }
+
+    .badge.warning {
+      background: rgba(182, 106, 0, 0.11);
+      color: var(--warning);
+    }
+
+    .badge.danger {
+      background: rgba(197, 58, 47, 0.10);
+      color: var(--danger);
+    }
+
+    .note {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1px solid #e7edf7;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 18px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 720px;
+      background: #fff;
+    }
+
+    th, td {
+      padding: 14px 14px;
+      text-align: left;
+      border-bottom: 1px solid #edf2fa;
+      font-size: 0.96rem;
+    }
+
+    th {
+      background: #f8fbff;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .content-section {
+      padding: 8px 0 8px;
+    }
+
+    .content-section h2 {
+      font-size: 1.7rem;
+      letter-spacing: -0.03em;
+      margin: 0 0 14px;
+    }
+
+    .content-section h3 {
+      font-size: 1.15rem;
+      margin: 28px 0 10px;
+    }
+
+    .content-section p {
+      color: var(--muted);
+      margin: 0 0 14px;
+    }
+
+    .content-section ul {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    .content-section li {
+      margin-bottom: 8px;
+    }
+
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .related-card {
+      display: block;
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      color: var(--text);
+      box-shadow: var(--shadow);
+    }
+
+    .related-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .related-card span {
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    footer {
+      margin-top: 40px;
+      border-top: 1px solid rgba(219, 227, 240, 0.9);
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .footer-inner {
+      padding: 24px 0 40px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .layout,
+      .related-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .container {
+        width: min(100% - 24px, 1160px);
+      }
+
+      .form-grid,
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 28px;
+      }
+
+      .card-header,
+      .card-body,
+      .hero-box {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebApplication",
+    "name":"Kalkulačka refinancování hypotéky",
+    "url":"https://rychlevypocty.cz/refinancovani-hypoteky-kalkulacka.html",
+    "applicationCategory":"FinanceApplication",
+    "operatingSystem":"Any",
+    "description":"Online kalkulačka pro porovnání stávající a nové hypotéky při refinancování včetně orientační úspory.",
+    "offers":{
+      "@type":"Offer",
+      "price":"0",
+      "priceCurrency":"CZK"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"Co je refinancování hypotéky?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Refinancování hypotéky znamená nahrazení stávající hypotéky novou, obvykle s jinou úrokovou sazbou, splátkou nebo dobou splácení. Cílem bývá snížení měsíční splátky nebo celkových úroků."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Kdy se refinancování hypotéky obvykle vyplatí?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Nejčastěji tehdy, když nová sazba výrazně snižuje měsíční splátku nebo celkové úroky a zároveň poplatky spojené s refinancováním nejsou příliš vysoké."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Stačí porovnat jen měsíční splátku?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Ne. Kromě měsíční splátky je vhodné sledovat i celkové úroky do konce splácení, délku nové hypotéky, jednorázové poplatky a případný dopad na dlouhodobý rozpočet."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="/">Rychlé<span>Výpočty</span>.cz</a>
+      <nav class="topnav" aria-label="Hlavní navigace">
+        <a href="/">Domů</a>
+        <a href="/hypotecni-kalkulacka.html">Hypotéka</a>
+        <a href="/kalkulacka-akontace-a-ltv-hypoteky.html">Akontace a LTV</a>
+        <a href="/mimoradna-splatka-hypoteky-kalkulacka.html">Mimořádná splátka</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumbs">
+          <a href="/">RychléVýpočty.cz</a> / Kalkulačka refinancování hypotéky
+        </div>
+
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <h1>Kalkulačka refinancování hypotéky</h1>
+            <p>Spočítejte si, jestli by vám refinancování hypotéky mohlo přinést nižší měsíční splátku nebo celkovou úsporu na úrocích. Kalkulačka porovná stávající úvěr s novou nabídkou a započítá i orientační jednorázové náklady spojené se změnou.</p>
+            <p>Stačí zadat aktuální zůstatek hypotéky, zbývající dobu splácení, stávající sazbu a novou nabídku. Výsledek získáte okamžitě.</p>
+
+            <div class="hero-points">
+              <div class="hero-pill">Nová vs původní splátka</div>
+              <div class="hero-pill">Úspora na úrocích</div>
+              <div class="hero-pill">Dopad poplatků</div>
+              <div class="hero-pill">Celkové porovnání</div>
+            </div>
+          </div>
+
+          <div class="hero-box">
+            <h2>Co kalkulačka umí</h2>
+            <p>Porovná stávající hypotéku s novou variantou refinancování a vypočítá rozdíl v měsíční splátce, celkově zaplacených úrocích i orientační čisté úspoře po započtení poplatků.</p>
+            <p>Hodí se pro rychlé rozhodnutí, jestli má smysl novou nabídku řešit dál detailněji.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container layout">
+      <div class="card">
+        <div class="card-header">
+          <h2>Zadání stávající a nové hypotéky</h2>
+          <p>Vyplňte zbývající parametry současné hypotéky a porovnejte je s novou nabídkou refinancování.</p>
+        </div>
+        <div class="card-body">
+          <form id="refiForm">
+            <div class="form-grid">
+              <div class="field">
+                <label for="remainingPrincipal">Zbývající jistina hypotéky</label>
+                <input type="number" id="remainingPrincipal" min="100000" step="10000" value="3200000" inputmode="decimal">
+                <small>Kolik ještě zbývá doplatit na jistině.</small>
+              </div>
+
+              <div class="field">
+                <label for="remainingYears">Zbývající doba splácení (roky)</label>
+                <input type="number" id="remainingYears" min="1" max="40" step="1" value="24" inputmode="numeric">
+                <small>Doba, po kterou byste původní hypotéku ještě spláceli.</small>
+              </div>
+
+              <div class="field">
+                <label for="currentRate">Stávající úroková sazba (%)</label>
+                <input type="number" id="currentRate" min="0.1" max="25" step="0.01" value="5.69" inputmode="decimal">
+                <small>Aktuální roční úrok u současné hypotéky.</small>
+              </div>
+
+              <div class="field">
+                <label for="newRate">Nová úroková sazba (%)</label>
+                <input type="number" id="newRate" min="0.1" max="25" step="0.01" value="4.29" inputmode="decimal">
+                <small>Nabídnutá sazba při refinancování.</small>
+              </div>
+
+              <div class="field">
+                <label for="newYears">Nová doba splácení po refinancování (roky)</label>
+                <input type="number" id="newYears" min="1" max="40" step="1" value="24" inputmode="numeric">
+                <small>Může být stejná nebo delší či kratší než původní.</small>
+              </div>
+
+              <div class="field">
+                <label for="refiFees">Jednorázové náklady refinancování</label>
+                <input type="number" id="refiFees" min="0" step="1000" value="15000" inputmode="decimal">
+                <small>Např. poplatky, odhad, právní nebo administrativní náklady.</small>
+              </div>
+
+              <div class="field">
+                <label for="monthlyFeeCurrent">Měsíční poplatky u stávající hypotéky</label>
+                <input type="number" id="monthlyFeeCurrent" min="0" step="1" value="0" inputmode="decimal">
+                <small>Pokud nějaké pravidelné poplatky platíte.</small>
+              </div>
+
+              <div class="field">
+                <label for="monthlyFeeNew">Měsíční poplatky u nové hypotéky</label>
+                <input type="number" id="monthlyFeeNew" min="0" step="1" value="0" inputmode="decimal">
+                <small>Např. vedení účtu nebo související služby.</small>
+              </div>
+
+              <div class="field full">
+                <label for="incomeShare">Max. doporučený podíl splátky na čistém příjmu (%)</label>
+                <select id="incomeShare">
+                  <option value="30">30 %</option>
+                  <option value="35">35 %</option>
+                  <option value="40" selected>40 %</option>
+                  <option value="45">45 %</option>
+                  <option value="50">50 %</option>
+                </select>
+                <small>Jen pro orientační výpočet potřebného čistého příjmu u nové splátky.</small>
+              </div>
+
+              <div class="actions full">
+                <button type="submit" class="btn-primary">Porovnat refinancování</button>
+                <button type="button" class="btn-secondary" id="resetBtn">Obnovit výchozí hodnoty</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>Výsledek porovnání</h2>
+          <p>Orientační srovnání stávající hypotéky a nové varianty refinancování.</p>
+        </div>
+        <div class="card-body">
+          <div class="results-grid">
+            <div class="result-box highlight">
+              <div class="result-label">Nová měsíční splátka</div>
+              <div class="result-value" id="newMonthlyPayment">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Rozdíl proti stávající splátce</div>
+              <div class="result-value" id="monthlyDifference">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Čistá orientační úspora</div>
+              <div class="result-value" id="netSaving">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Úspora / navýšení na úrocích</div>
+              <div class="result-value" id="interestSaving">0 Kč</div>
+            </div>
+          </div>
+
+          <div id="resultBadge" class="badge success">Refinancování vypadá příznivě</div>
+
+          <div class="info-list">
+            <div class="info-row">
+              <span>Stávající měsíční splátka</span>
+              <strong id="currentMonthlyPayment">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Celkové úroky do konce původní hypotéky</span>
+              <strong id="currentTotalInterest">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Celkové úroky u nové hypotéky</span>
+              <strong id="newTotalInterest">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Celkem včetně poplatků refinancování</span>
+              <strong id="newTotalWithFees">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Orientační potřebný čistý příjem pro novou splátku</span>
+              <strong id="neededIncome">0 Kč</strong>
+            </div>
+          </div>
+
+          <div class="note">
+            Výpočet je orientační. Skutečný přínos refinancování může ovlivnit datum fixace, podmínky banky, pojištění, doplňkové produkty, sankce mimo výročí fixace i konkrétní způsob schválení úvěru.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="card">
+        <div class="card-header">
+          <h3>Detailní přehled porovnání</h3>
+          <p>Přímé srovnání stávající hypotéky a nové nabídky refinancování.</p>
+        </div>
+        <div class="card-body">
+          <div class="table-wrap">
+            <table aria-label="Porovnání refinancování hypotéky">
+              <thead>
+                <tr>
+                  <th>Položka</th>
+                  <th>Stávající hypotéka</th>
+                  <th>Nová hypotéka</th>
+                </tr>
+              </thead>
+              <tbody id="comparisonBody">
+                <tr>
+                  <td colspan="3">Po zadání údajů se zobrazí detailní porovnání.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container content-section">
+      <h2>Jak kalkulačka refinancování hypotéky funguje</h2>
+      <p>Kalkulačka porovnává dvě varianty: vaši stávající hypotéku a novou nabídku refinancování. U obou scénářů spočítá anuitní měsíční splátku, celkové úroky do konce splácení a dopočítá také jednorázové nebo měsíční poplatky. Díky tomu získáte přehled, jestli je hlavním přínosem nižší měsíční splátka, nižší celkové úroky, nebo naopak refinancování při zadaných parametrech nedává smysl.</p>
+
+      <h3>Co ve výsledku uvidíte</h3>
+      <ul>
+        <li>stávající a novou měsíční splátku,</li>
+        <li>rozdíl mezi původní a novou splátkou,</li>
+        <li>porovnání celkových úroků do konce splácení,</li>
+        <li>orientační čistou úsporu po započtení poplatků,</li>
+        <li>odhad potřebného čistého příjmu pro novou splátku.</li>
+      </ul>
+
+      <h3>Proč nestačí sledovat jen nižší splátku</h3>
+      <p>Nižší měsíční splátka ještě sama o sobě neznamená výhodnější refinancování. Pokud by se například prodloužila doba splácení, může být měsíční zatížení nižší, ale celkově na úrocích zaplatíte více. Proto je důležité sledovat nejen splátku, ale i celkové úroky a poplatky spojené se změnou hypotéky.</p>
+
+      <h3>Kdy bývá refinancování zajímavé</h3>
+      <p>Nejčastěji ve chvíli, kdy nová sazba přináší citelné snížení splátky nebo celkových úroků a jednorázové náklady refinancování nejsou vysoké. Význam má i to, jestli refinancování probíhá v období konce fixace, kdy bývají změny jednodušší.</p>
+    </section>
+
+    <section class="container content-section">
+      <h2>Na co myslet při rozhodování o refinancování</h2>
+      <p>Při rozhodování je dobré vedle samotné úrokové sazby sledovat také délku nové fixace, podmínky mimořádných splátek, povinné doplňkové produkty, administrativní náklady a to, jestli se nová hypotéka neprodlužuje zbytečně příliš. Praktický smysl refinancování je ideálně kombinace rozumné splátky a nižších celkových nákladů.</p>
+
+      <h3>Typické situace, kdy dává výpočet smysl</h3>
+      <ul>
+        <li>končí vám fixace a dostali jste novou nabídku banky,</li>
+        <li>porovnáváte nabídku své banky s konkurencí,</li>
+        <li>chcete snížit měsíční splátku kvůli rozpočtu domácnosti,</li>
+        <li>uvažujete o změně délky splácení spolu s refinancováním.</li>
+      </ul>
+
+      <h3>Co si připravit pro přesnější porovnání</h3>
+      <p>Nejlepší je znát aktuální zůstatek jistiny, přesnou zbývající dobu splácení, sazbu stávající hypotéky a konkrétní novou nabídku. Čím přesnější vstupy zadáte, tím užitečnější orientační výsledek získáte.</p>
+    </section>
+
+    <section class="container content-section">
+      <h2>Související kalkulačky</h2>
+      <div class="related-grid">
+        <a class="related-card" href="/hypotecni-kalkulacka.html">
+          <strong>Hypoteční kalkulačka</strong>
+          <span>Výpočet splátky hypotéky, úroků a LTV.</span>
+        </a>
+
+        <a class="related-card" href="/mimoradna-splatka-hypoteky-kalkulacka.html">
+          <strong>Kalkulačka mimořádné splátky hypotéky</strong>
+          <span>Zjistěte, jak mimořádná splátka změní dobu splácení a úroky.</span>
+        </a>
+
+        <a class="related-card" href="/kalkulacka-akontace-a-ltv-hypoteky.html">
+          <strong>Kalkulačka akontace a LTV hypotéky</strong>
+          <span>Výpočet vlastních zdrojů, akontace a potřebné hypotéky.</span>
+        </a>
+
+        <a class="related-card" href="/mesicni-naklady-na-bydleni-kalkulacka.html">
+          <strong>Kalkulačka měsíčních nákladů na bydlení</strong>
+          <span>Souhrnný pohled na rozpočet domácnosti a bydlení.</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      © 2026 RychléVýpočty.cz — online kalkulačky a praktické výpočty pro každodenní použití.
+    </div>
+  </footer>
+
+  <script>
+    const form = document.getElementById('refiForm');
+    const resetBtn = document.getElementById('resetBtn');
+
+    const outputs = {
+      newMonthlyPayment: document.getElementById('newMonthlyPayment'),
+      monthlyDifference: document.getElementById('monthlyDifference'),
+      netSaving: document.getElementById('netSaving'),
+      interestSaving: document.getElementById('interestSaving'),
+      currentMonthlyPayment: document.getElementById('currentMonthlyPayment'),
+      currentTotalInterest: document.getElementById('currentTotalInterest'),
+      newTotalInterest: document.getElementById('newTotalInterest'),
+      newTotalWithFees: document.getElementById('newTotalWithFees'),
+      neededIncome: document.getElementById('neededIncome'),
+      resultBadge: document.getElementById('resultBadge'),
+      comparisonBody: document.getElementById('comparisonBody')
+    };
+
+    function formatCurrency(value, digits = 0) {
+      return new Intl.NumberFormat('cs-CZ', {
+        style: 'currency',
+        currency: 'CZK',
+        minimumFractionDigits: digits,
+        maximumFractionDigits: digits
+      }).format(value);
+    }
+
+    function formatPercent(value, digits = 2) {
+      return new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: digits
+      }).format(value) + ' %';
+    }
+
+    function getValues() {
+      return {
+        remainingPrincipal: Number(document.getElementById('remainingPrincipal').value),
+        remainingYears: Number(document.getElementById('remainingYears').value),
+        currentRate: Number(document.getElementById('currentRate').value),
+        newRate: Number(document.getElementById('newRate').value),
+        newYears: Number(document.getElementById('newYears').value),
+        refiFees: Number(document.getElementById('refiFees').value),
+        monthlyFeeCurrent: Number(document.getElementById('monthlyFeeCurrent').value),
+        monthlyFeeNew: Number(document.getElementById('monthlyFeeNew').value),
+        incomeShare: Number(document.getElementById('incomeShare').value)
+      };
+    }
+
+    function validate(values) {
+      if (!values.remainingPrincipal || values.remainingPrincipal <= 0) return 'Zadejte platný zbývající zůstatek hypotéky.';
+      if (!values.remainingYears || values.remainingYears <= 0) return 'Zadejte platnou zbývající dobu splácení.';
+      if (!values.currentRate || values.currentRate <= 0) return 'Zadejte platnou stávající sazbu.';
+      if (!values.newRate || values.newRate <= 0) return 'Zadejte platnou novou sazbu.';
+      if (!values.newYears || values.newYears <= 0) return 'Zadejte platnou novou dobu splácení.';
+      if (values.refiFees < 0 || values.monthlyFeeCurrent < 0 || values.monthlyFeeNew < 0) return 'Poplatky nemohou být záporné.';
+      return '';
+    }
+
+    function calculateAnnuity(principal, annualRate, years) {
+      const months = years * 12;
+      const monthlyRate = annualRate / 100 / 12;
+
+      let monthlyPayment = 0;
+      if (monthlyRate === 0) {
+        monthlyPayment = principal / months;
+      } else {
+        monthlyPayment = principal * (monthlyRate * Math.pow(1 + monthlyRate, months)) / (Math.pow(1 + monthlyRate, months) - 1);
+      }
+
+      const totalPaid = monthlyPayment * months;
+      const totalInterest = totalPaid - principal;
+
+      return {
+        months,
+        monthlyPayment,
+        totalPaid,
+        totalInterest
+      };
+    }
+
+    function renderComparison(values, currentResult, newResult, totals) {
+      outputs.comparisonBody.innerHTML = `
+        <tr>
+          <td>Měsíční splátka bez poplatků</td>
+          <td>${formatCurrency(currentResult.monthlyPayment)}</td>
+          <td>${formatCurrency(newResult.monthlyPayment)}</td>
+        </tr>
+        <tr>
+          <td>Měsíční splátka včetně poplatků</td>
+          <td>${formatCurrency(currentResult.monthlyPayment + values.monthlyFeeCurrent)}</td>
+          <td>${formatCurrency(newResult.monthlyPayment + values.monthlyFeeNew)}</td>
+        </tr>
+        <tr>
+          <td>Doba splácení</td>
+          <td>${values.remainingYears} let</td>
+          <td>${values.newYears} let</td>
+        </tr>
+        <tr>
+          <td>Roční úroková sazba</td>
+          <td>${formatPercent(values.currentRate)}</td>
+          <td>${formatPercent(values.newRate)}</td>
+        </tr>
+        <tr>
+          <td>Celkové úroky</td>
+          <td>${formatCurrency(currentResult.totalInterest)}</td>
+          <td>${formatCurrency(newResult.totalInterest)}</td>
+        </tr>
+        <tr>
+          <td>Celkem zaplaceno včetně poplatků</td>
+          <td>${formatCurrency(totals.currentTotalWithFees)}</td>
+          <td>${formatCurrency(totals.newTotalWithFees)}</td>
+        </tr>
+      `;
+    }
+
+    function runCalculation() {
+      const values = getValues();
+      const error = validate(values);
+
+      if (error) {
+        alert(error);
+        return;
+      }
+
+      const currentResult = calculateAnnuity(values.remainingPrincipal, values.currentRate, values.remainingYears);
+      const newResult = calculateAnnuity(values.remainingPrincipal, values.newRate, values.newYears);
+
+      const currentTotalWithFees = currentResult.totalPaid + (values.monthlyFeeCurrent * currentResult.months);
+      const newTotalWithFees = newResult.totalPaid + (values.monthlyFeeNew * newResult.months) + values.refiFees;
+
+      const monthlyDifference = (currentResult.monthlyPayment + values.monthlyFeeCurrent) - (newResult.monthlyPayment + values.monthlyFeeNew);
+      const interestSaving = currentResult.totalInterest - newResult.totalInterest;
+      const netSaving = currentTotalWithFees - newTotalWithFees;
+      const neededIncome = (newResult.monthlyPayment + values.monthlyFeeNew) / (values.incomeShare / 100);
+
+      outputs.newMonthlyPayment.textContent = formatCurrency(newResult.monthlyPayment + values.monthlyFeeNew);
+      outputs.monthlyDifference.textContent = (monthlyDifference >= 0 ? '' : '-') + formatCurrency(Math.abs(monthlyDifference));
+      outputs.netSaving.textContent = (netSaving >= 0 ? '' : '-') + formatCurrency(Math.abs(netSaving));
+      outputs.interestSaving.textContent = (interestSaving >= 0 ? '' : '-') + formatCurrency(Math.abs(interestSaving));
+
+      outputs.currentMonthlyPayment.textContent = formatCurrency(currentResult.monthlyPayment + values.monthlyFeeCurrent);
+      outputs.currentTotalInterest.textContent = formatCurrency(currentResult.totalInterest);
+      outputs.newTotalInterest.textContent = formatCurrency(newResult.totalInterest);
+      outputs.newTotalWithFees.textContent = formatCurrency(newTotalWithFees);
+      outputs.neededIncome.textContent = formatCurrency(neededIncome);
+
+      if (netSaving > 50000) {
+        outputs.resultBadge.textContent = 'Refinancování vypadá příznivě';
+        outputs.resultBadge.className = 'badge success';
+      } else if (netSaving >= 0) {
+        outputs.resultBadge.textContent = 'Refinancování může dávat smysl, ale rozdíl je menší';
+        outputs.resultBadge.className = 'badge warning';
+      } else {
+        outputs.resultBadge.textContent = 'Refinancování při zadaných parametrech nevypadá výhodně';
+        outputs.resultBadge.className = 'badge danger';
+      }
+
+      renderComparison(values, currentResult, newResult, {
+        currentTotalWithFees,
+        newTotalWithFees
+      });
+    }
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      runCalculation();
+    });
+
+    [
+      'remainingPrincipal',
+      'remainingYears',
+      'currentRate',
+      'newRate',
+      'newYears',
+      'refiFees',
+      'monthlyFeeCurrent',
+      'monthlyFeeNew',
+      'incomeShare'
+    ].forEach(id => {
+      document.getElementById(id).addEventListener('input', runCalculation);
+      document.getElementById(id).addEventListener('change', runCalculation);
+    });
+
+    resetBtn.addEventListener('click', function() {
+      document.getElementById('remainingPrincipal').value = 3200000;
+      document.getElementById('remainingYears').value = 24;
+      document.getElementById('currentRate').value = 5.69;
+      document.getElementById('newRate').value = 4.29;
+      document.getElementById('newYears').value = 24;
+      document.getElementById('refiFees').value = 15000;
+      document.getElementById('monthlyFeeCurrent').value = 0;
+      document.getElementById('monthlyFeeNew').value = 0;
+      document.getElementById('incomeShare').value = 40;
+      runCalculation();
+    });
+
+    runCalculation();
+  </script>
+</body>
+</html>
