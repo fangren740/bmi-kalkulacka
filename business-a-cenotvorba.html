@@ -1,1 +1,911 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Business a cenotvorba | Online kalkulačky pro marži, cenu a zisk | RychléVýpočty.cz</title>
+  <meta name="description" content="Přehled online kalkulaček pro business a cenotvorbu. Marže a přirážka, minimální prodejní cena, obrat pro cílový zisk, potřebná rezerva podnikání, bod zvratu, provize, slevy a zdražení nebo zlevnění.">
+  <meta name="keywords" content="business a cenotvorba, marže kalkulačka, přirážka kalkulačka, minimální prodejní cena, obrat pro cílový zisk, rezerva podnikání, bod zvratu, kalkulačka provize, kalkulačka slevy">
+  <meta name="author" content="RychléVýpočty.cz">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://rychlevypocty.cz/business-a-cenotvorba.html">
 
+  <meta property="og:title" content="Business a cenotvorba | Online kalkulačky | RychléVýpočty.cz">
+  <meta property="og:description" content="Přehled kalkulaček pro marži, cenu, ziskovost, slevy, bod zvratu a podnikatelské rozhodování.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rychlevypocty.cz/business-a-cenotvorba.html">
+  <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Business a cenotvorba | RychléVýpočty.cz">
+  <meta name="twitter:description" content="Online kalkulačky pro podnikání, cenotvorbu, marži, zisk, provize a slevy.">
+
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <link rel="shortcut icon" href="/favicon.png">
+
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #5f6b85;
+      --primary: #2152ff;
+      --primary-dark: #183dbf;
+      --border: #dbe3f0;
+      --shadow: 0 12px 32px rgba(20, 32, 70, 0.08);
+      --shadow-soft: 0 10px 24px rgba(20, 32, 70, 0.06);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #f7f9fd 0%, #eef3fb 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      padding: 18px 0;
+      border-bottom: 1px solid rgba(219, 227, 240, 0.8);
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+    }
+
+    .brand span {
+      color: var(--primary);
+    }
+
+    .topnav {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      font-size: 0.97rem;
+    }
+
+    .topnav a {
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .topnav a:hover {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    .hero {
+      padding: 42px 0 20px;
+    }
+
+    .breadcrumbs {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .hero-copy h1 {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      margin: 0 0 16px;
+    }
+
+    .hero-copy p {
+      margin: 0 0 16px;
+      font-size: 1.06rem;
+      color: var(--muted);
+      max-width: 720px;
+    }
+
+    .hero-points {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .hero-pill {
+      background: rgba(33, 82, 255, 0.08);
+      color: var(--primary-dark);
+      border: 1px solid rgba(33, 82, 255, 0.12);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .hero-box {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-box h2 {
+      margin: 0 0 10px;
+      font-size: 1.2rem;
+    }
+
+    .hero-box p {
+      margin: 0 0 14px;
+      color: var(--muted);
+    }
+
+    .hero-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .stat {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      background: #fff;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 1.35rem;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      margin-bottom: 6px;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .section {
+      padding: 18px 0;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 20px;
+      margin-bottom: 18px;
+    }
+
+    .section-head h2 {
+      margin: 0 0 8px;
+      font-size: 1.85rem;
+      letter-spacing: -0.03em;
+    }
+
+    .section-head p {
+      margin: 0;
+      color: var(--muted);
+      max-width: 820px;
+    }
+
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .tool-card {
+      display: block;
+      background: linear-gradient(180deg, #ffffff 0%, #f9fbff 100%);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 22px;
+      box-shadow: var(--shadow-soft);
+      transition: transform 0.12s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .tool-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(33, 82, 255, 0.24);
+      box-shadow: 0 18px 40px rgba(20, 32, 70, 0.10);
+      text-decoration: none;
+    }
+
+    .tool-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .tool-tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 7px 11px;
+      border-radius: 999px;
+      background: #f3f7ff;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    .tool-icon {
+      min-width: 44px;
+      height: 44px;
+      padding: 0 10px;
+      border-radius: 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(33, 82, 255, 0.08);
+      color: var(--primary-dark);
+      font-weight: 800;
+      font-size: 0.84rem;
+      letter-spacing: -0.02em;
+    }
+
+    .tool-card h3 {
+      margin: 0 0 10px;
+      font-size: 1.22rem;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      color: var(--text);
+    }
+
+    .tool-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.97rem;
+    }
+
+    .entry-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .entry-card {
+      display: block;
+      background: linear-gradient(180deg, #ffffff 0%, #f9fbff 100%);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 22px;
+      box-shadow: var(--shadow-soft);
+      color: var(--text);
+      text-decoration: none;
+      transition: transform 0.12s ease, border-color 0.15s ease;
+    }
+
+    .entry-card:hover {
+      text-decoration: none;
+      border-color: rgba(33, 82, 255, 0.22);
+      transform: translateY(-2px);
+    }
+
+    .entry-card strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 1.04rem;
+      letter-spacing: -0.02em;
+    }
+
+    .entry-card span {
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .list-card {
+      background: linear-gradient(180deg, #ffffff 0%, #f9fbff 100%);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .subgroup {
+      margin-bottom: 22px;
+    }
+
+    .subgroup:last-child {
+      margin-bottom: 0;
+    }
+
+    .subgroup h3 {
+      margin: 0 0 12px;
+      font-size: 1.15rem;
+      letter-spacing: -0.02em;
+    }
+
+    .tool-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .tool-row {
+      display: block;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: #fff;
+      padding: 16px 18px;
+      transition: border-color 0.15s ease, transform 0.12s ease, box-shadow 0.15s ease;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .tool-row:hover {
+      text-decoration: none;
+      transform: translateY(-1px);
+      border-color: rgba(33, 82, 255, 0.22);
+      box-shadow: 0 12px 24px rgba(20, 32, 70, 0.06);
+    }
+
+    .tool-row-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: start;
+      margin-bottom: 6px;
+    }
+
+    .tool-row-title {
+      font-weight: 800;
+      font-size: 1rem;
+      letter-spacing: -0.01em;
+      color: var(--text);
+    }
+
+    .tool-row-tag {
+      flex-shrink: 0;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #f3f7ff;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+
+    .tool-row-desc {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .related-card {
+      display: block;
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      color: var(--text);
+      box-shadow: var(--shadow-soft);
+      text-decoration: none;
+    }
+
+    .related-card:hover {
+      text-decoration: none;
+      border-color: rgba(33, 82, 255, 0.22);
+    }
+
+    .related-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .related-card span {
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    .content-section {
+      padding: 8px 0 8px;
+    }
+
+    .content-section h2 {
+      font-size: 1.7rem;
+      letter-spacing: -0.03em;
+      margin: 0 0 14px;
+    }
+
+    .content-section h3 {
+      font-size: 1.15rem;
+      margin: 28px 0 10px;
+    }
+
+    .content-section p {
+      color: var(--muted);
+      margin: 0 0 14px;
+    }
+
+    .faq-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .faq-card {
+      background: linear-gradient(180deg, #ffffff 0%, #f9fbff 100%);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .faq-card h3 {
+      margin: 0 0 10px;
+      font-size: 1.12rem;
+      letter-spacing: -0.02em;
+    }
+
+    .faq-card p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    footer {
+      margin-top: 40px;
+      border-top: 1px solid rgba(219, 227, 240, 0.9);
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .footer-inner {
+      padding: 24px 0 40px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .tools-grid,
+      .entry-grid,
+      .related-grid,
+      .faq-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .section-head {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .container {
+        width: min(100% - 24px, 1160px);
+      }
+
+      .topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .hero-box,
+      .list-card,
+      .faq-card {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .tool-row-top {
+        flex-direction: column;
+      }
+
+      .hero-stats {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"CollectionPage",
+    "name":"Business a cenotvorba",
+    "url":"https://rychlevypocty.cz/business-a-cenotvorba.html",
+    "description":"Přehled kalkulaček pro marži, cenu, ziskovost, slevy a podnikatelské rozhodování."
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"BreadcrumbList",
+    "itemListElement":[
+      {
+        "@type":"ListItem",
+        "position":1,
+        "name":"RychléVýpočty.cz",
+        "item":"https://rychlevypocty.cz/"
+      },
+      {
+        "@type":"ListItem",
+        "position":2,
+        "name":"Všechny kalkulačky",
+        "item":"https://rychlevypocty.cz/kalkulacky.html"
+      },
+      {
+        "@type":"ListItem",
+        "position":3,
+        "name":"Business a cenotvorba",
+        "item":"https://rychlevypocty.cz/business-a-cenotvorba.html"
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="/">Rychlé<span>Výpočty</span>.cz</a>
+      <nav class="topnav" aria-label="Hlavní navigace">
+        <a href="/">Domů</a>
+        <a href="/kalkulacky.html">Všechny kalkulačky</a>
+        <a href="/business-a-cenotvorba.html">Business a cenotvorba</a>
+        <a href="/#podle-situace">Podle situace</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumbs">
+          <a href="/">RychléVýpočty.cz</a> / <a href="/kalkulacky.html">Všechny kalkulačky</a> / Business a cenotvorba
+        </div>
+
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <h1>Business a cenotvorba – online kalkulačky pro marži, cenu, obrat a zisk</h1>
+            <p>Na této stránce najdete kalkulačky pro marži a přirážku, minimální prodejní cenu, obrat pro cílový zisk, potřebnou rezervu podnikání, bod zvratu, provizi, slevy i zdražení nebo zlevnění.</p>
+            <p>Kategorie funguje jako přehledný rozcestník pro situace, kdy řešíte cenu produktu nebo služby, ziskovost, slevy, provize, podnikatelské plánování nebo širší orientaci v tom, co dává ekonomický smysl.</p>
+
+            <div class="hero-points">
+              <div class="hero-pill">Marže a přirážka</div>
+              <div class="hero-pill">Cena a slevy</div>
+              <div class="hero-pill">Zisk a obrat</div>
+              <div class="hero-pill">Podnikatelské plánování</div>
+            </div>
+          </div>
+
+          <div class="hero-box">
+            <h2>Co v kategorii najdete</h2>
+            <p>Tento cluster spojuje nejsilnější nástroje pro podnikání, cenotvorbu a ekonomické rozhodování. Vedle výpočtu marže a ceny tu najdete i kalkulačky pro bod zvratu, cílový zisk, rezervu podnikání, provize nebo práci se slevami.</p>
+
+            <div class="hero-stats">
+              <div class="stat">
+                <strong>8</strong>
+                <span>nástrojů</span>
+              </div>
+              <div class="stat">
+                <strong>Cena</strong>
+                <span>a ziskovost</span>
+              </div>
+              <div class="stat">
+                <strong>Decision</strong>
+                <span>tools pro podnikání</span>
+              </div>
+              <div class="stat">
+                <strong>0 Kč</strong>
+                <span>vše zdarma online</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="top-nastroje">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h2>Top nástroje v kategorii</h2>
+            <p>Nejdůležitější vstupy pro cenotvorbu, ziskovost a podnikatelské rozhodování.</p>
+          </div>
+        </div>
+
+        <div class="tools-grid">
+          <a class="tool-card" href="/kalkulacka-marze-a-prirazky.html">
+            <div class="tool-top">
+              <span class="tool-tag">Cenotvorba</span>
+              <span class="tool-icon">MAR</span>
+            </div>
+            <h3>Kalkulačka marže a přirážky</h3>
+            <p>Rychlé rozlišení marže a přirážky při tvorbě prodejní ceny.</p>
+          </a>
+
+          <a class="tool-card" href="/minimalni-prodejni-cena-kalkulacka.html">
+            <div class="tool-top">
+              <span class="tool-tag">Cenotvorba</span>
+              <span class="tool-icon">MIN</span>
+            </div>
+            <h3>Kalkulačka minimální prodejní ceny</h3>
+            <p>Spočítejte minimální cenu, pod kterou už prodej nedává smysl.</p>
+          </a>
+
+          <a class="tool-card" href="/bod-zvratu-kalkulacka.html">
+            <div class="tool-top">
+              <span class="tool-tag">Zisk</span>
+              <span class="tool-icon">BOD</span>
+            </div>
+            <h3>Bod zvratu kalkulačka</h3>
+            <p>Kolik kusů nebo jaký obrat je potřeba k pokrytí fixních nákladů.</p>
+          </a>
+
+          <a class="tool-card" href="/obrat-pro-cilovy-zisk-kalkulacka.html">
+            <div class="tool-top">
+              <span class="tool-tag">Zisk</span>
+              <span class="tool-icon">OBR</span>
+            </div>
+            <h3>Kalkulačka obratu pro cílový zisk</h3>
+            <p>Jaký obrat potřebujete pro dosažení konkrétního zisku.</p>
+          </a>
+
+          <a class="tool-card" href="/kalkulacka-provize.html">
+            <div class="tool-top">
+              <span class="tool-tag">Odměna</span>
+              <span class="tool-icon">PRO</span>
+            </div>
+            <h3>Kalkulačka provize</h3>
+            <p>Výpočet provize z prodeje nebo z celkového obratu.</p>
+          </a>
+
+          <a class="tool-card" href="/kalkulacka-slevy.html">
+            <div class="tool-top">
+              <span class="tool-tag">Cena</span>
+              <span class="tool-icon">SLV</span>
+            </div>
+            <h3>Kalkulačka slevy</h3>
+            <p>Výpočet nové ceny po slevě a procentuální úspory.</p>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="rychle-vstupy">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h2>Rychlé vstupy podle potřeby</h2>
+            <p>Pokud nehledáte konkrétní název kalkulačky, začněte přes situaci, kterou právě řešíte.</p>
+          </div>
+        </div>
+
+        <div class="entry-grid">
+          <a class="entry-card" href="/kalkulacka-marze-a-prirazky.html">
+            <strong>Chci spočítat marži nebo přirážku</strong>
+            <span>Rychlá orientace v tom, jak nastavit cenu a zisk.</span>
+          </a>
+
+          <a class="entry-card" href="/minimalni-prodejni-cena-kalkulacka.html">
+            <strong>Chci zjistit minimální prodejní cenu</strong>
+            <span>Kolik musí produkt nebo služba stát, aby to dávalo smysl.</span>
+          </a>
+
+          <a class="entry-card" href="/bod-zvratu-kalkulacka.html">
+            <strong>Chci zjistit bod zvratu</strong>
+            <span>Kolik musím prodat, aby se pokryly fixní náklady.</span>
+          </a>
+
+          <a class="entry-card" href="/obrat-pro-cilovy-zisk-kalkulacka.html">
+            <strong>Chci spočítat obrat pro cílový zisk</strong>
+            <span>Kolik obratu je potřeba pro dosažení plánovaného výsledku.</span>
+          </a>
+
+          <a class="entry-card" href="/kalkulacka-provize.html">
+            <strong>Chci spočítat provizi nebo odměnu</strong>
+            <span>Užitečné pro obchod, prodej i spolupráci na výkon.</span>
+          </a>
+
+          <a class="entry-card" href="/kalkulacka-slevy.html">
+            <strong>Chci řešit slevy nebo změnu ceny</strong>
+            <span>Sleva, zdražení nebo zlevnění pro rychlou cenovou orientaci.</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="vsechny-nastroje">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h2>Všechny kalkulačky v kategorii</h2>
+            <p>Kompletní přehled nástrojů rozdělený do menších logických skupin pro lepší orientaci.</p>
+          </div>
+        </div>
+
+        <div class="list-card">
+          <div class="subgroup">
+            <h3>Cenotvorba a cena</h3>
+            <div class="tool-list">
+              <a class="tool-row" href="/kalkulacka-marze-a-prirazky.html">
+                <div class="tool-row-top">
+                  <div class="tool-row-title">Kalkulačka marže a přirážky</div>
+                  <div class="tool-row-tag">Cenotvorba</div>
+                </div>
+                <div class="tool-row-desc">Rychlé rozlišení marže a přirážky při tvorbě prodejní ceny.</div>
+              </a>
+
+              <a class="tool-row" href="/minimalni-prodejni-cena-kalkulacka.html">
+                <div class="tool-row-top">
+                  <div class="tool-row-title">Kalkulačka minimální prodejní ceny</div>
+                  <div class="tool-row-tag">Cenotvorba</div>
+                </div>
+                <div class="tool-row-desc">Spočítejte minimální cenu, pod kterou už prodej nedává smysl.</div>
+              </a>
+
+              <a class="tool-row" href="/kalkulacka-slevy.html">
+                <div class="tool-row-top">
+                  <div class="tool-row-title">Kalkulačka slevy</div>
+                  <div class="tool-row-tag">Cena</div>
+                </div>
+                <div class="tool-row-desc">Výpočet nové ceny po slevě a procentuální úspory.</div>
+              </a>
+
+              <a class="tool-row" href="/zdrazeni-a-zlevneni-kalkulacka.html">
+                <div class="tool-row-top">
+                  <div class="tool-row-title">Kalkulačka zdražení a zlevnění</div>
+                  <div class="tool-row-tag">Cena</div>
+                </div>
+                <div class="tool-row-desc">Procentuální změna ceny směrem nahoru nebo dolů.</div>
+              </a>
+            </div>
+          </div>
+
+          <div class="subgroup">
+            <h3>Zisk, obrat a plánování</h3>
+            <div class="tool-list">
+              <a class="tool-row" href="/bod-zvratu-kalkulacka.html">
+                <div class="tool-row-top">
+                  <div class="tool-row-title">Bod zvratu kalkulačka</div>
+                  <div class="tool-row-tag">Zisk</div>
+                </div>
+                <div class="tool-row-desc">Kolik kusů nebo jaký obrat je potřeba k pokrytí fixních nákladů.</div>
+              </a>
+
+              <a class="tool-row" href="/obrat-pro-cilovy-zisk-kalkulacka.html">
+                <div class="tool-row-top">
+                  <div class="tool-row-title">Kalkulačka obratu pro cílový zisk</div>
+                  <div class="tool-row-tag">Zisk</div>
+                </div>
+                <div class="tool-row-desc">Jaký obrat potřebujete pro dosažení konkrétního zisku.</div>
+              </a>
+
+              <a class="tool-row" href="/kalkulacka-potrebne-rezervy-podnikani.html">
+                <div class="tool-row-top">
+                  <div class="tool-row-title">Kalkulačka potřebné rezervy podnikání</div>
+                  <div class="tool-row-tag">Plánování</div>
+                </div>
+                <div class="tool-row-desc">Kolik rezervy dává smysl držet pro bezpečnější fungování podnikání.</div>
+              </a>
+            </div>
+          </div>
+
+          <div class="subgroup">
+            <h3>Provize a odměny</h3>
+            <div class="tool-list">
+              <a class="tool-row" href="/kalkulacka-provize.html">
+                <div class="tool-row-top">
+                  <div class="tool-row-title">Kalkulačka provize</div>
+                  <div class="tool-row-tag">Odměna</div>
+                </div>
+                <div class="tool-row-desc">Výpočet provize z prodeje nebo z celkového obratu.</div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container content-section">
+      <h2>Související oblasti</h2>
+      <div class="related-grid">
+        <a class="related-card" href="/finance-a-hypoteky.html">
+          <strong>Finance a hypotéky</strong>
+          <span>Užitečné při řešení širší finanční reality podnikání, investic a cashflow.</span>
+        </a>
+
+        <a class="related-card" href="/mzdy-a-prace.html">
+          <strong>Mzdy a práce</strong>
+          <span>Navazuje hlavně na náklady práce, odměňování a širší ekonomiku podnikání.</span>
+        </a>
+
+        <a class="related-card" href="/auto-a-provoz.html">
+          <strong>Auto a provoz</strong>
+          <span>Hodí se při kalkulaci ceny za km, provozních nákladů nebo firemních vozidel.</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="container content-section">
+      <h2>Kdy se kalkulačky businessu a cenotvorby nejvíc hodí</h2>
+      <p>Tato kategorie se hodí hlavně tehdy, když řešíte cenu produktu nebo služby, ziskovost, obrat, slevy, provize nebo širší podnikatelské plánování. Silná je pro živnostníky, menší firmy, obchodníky i každého, kdo potřebuje rychle ověřit ekonomickou logiku ceny.</p>
+
+      <h3>Jak mezi sebou jednotlivé nástroje souvisí</h3>
+      <p>Typická cesta uživatele často nezačíná i nekončí jedním výpočtem. U cenotvorby dává smysl navázat z marže a přirážky na minimální prodejní cenu. U plánování pak navazuje bod zvratu, obrat pro cílový zisk a potřebná rezerva podnikání. U práce s obchodem nebo výkonem zase navazuje provize a cenové změny přes slevy nebo zdražení.</p>
+
+      <h3>Pro koho je tato sekce užitečná</h3>
+      <p>Kategorie je vhodná pro podnikatele, freelancery, obchodníky, menší firmy i každého, kdo potřebuje lépe rozumět ceně, zisku a ekonomice svého fungování. Díky kombinaci cenových a plánovacích výpočtů funguje jako praktický business hub, ne jen jako izolovaný seznam jednotlivých kalkulaček.</p>
+    </section>
+
+    <section class="container content-section">
+      <h2>Časté otázky</h2>
+      <div class="faq-grid">
+        <div class="faq-card">
+          <h3>Jaký je rozdíl mezi marží a přirážkou?</h3>
+          <p>Marže vyjadřuje podíl zisku z prodejní ceny, zatímco přirážka se počítá z nákladové ceny. Kalkulačka pomáhá obě hodnoty rychle rozlišit a správně používat.</p>
+        </div>
+
+        <div class="faq-card">
+          <h3>Kdy se hodí kalkulačka minimální prodejní ceny?</h3>
+          <p>Hlavně tehdy, když chcete zjistit, pod jakou cenu už pro vás prodej produktu nebo služby ekonomicky nedává smysl.</p>
+        </div>
+
+        <div class="faq-card">
+          <h3>Co mi řekne bod zvratu?</h3>
+          <p>Ukáže, kolik musíte prodat nebo jaký obrat potřebujete, aby se pokryly fixní náklady a podnikání se dostalo alespoň na nulu.</p>
+        </div>
+
+        <div class="faq-card">
+          <h3>Proč jsou v této kategorii i slevy a provize?</h3>
+          <p>Protože cluster není jen o “základní ceně”, ale o širší cenotvorbě, výkonu, obchodě a ekonomickém rozhodování v praxi.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      © 2026 RychléVýpočty.cz — online kalkulačky a praktické výpočty pro každodenní použití.
+    </div>
+  </footer>
+</body>
+</html>
