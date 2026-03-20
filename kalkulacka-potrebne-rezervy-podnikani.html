@@ -1,1 +1,732 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kalkulačka potřebné rezervy pro podnikání online | RychléVýpočty.cz</title>
+  <meta name="description" content="Spočítejte si doporučenou finanční rezervu pro podnikání. Přehledná kalkulačka pro OSVČ, freelancery i malé firmy podle fixních nákladů, osobních výdajů, sezónnosti a výpadku příjmů.">
+  <meta name="keywords" content="kalkulačka rezervy podnikání, finanční rezerva pro podnikání, rezerva osvč, podnikatelská rezerva, kolik mít rezervu podnikání, rezerva freelancer">
+  <meta name="author" content="RychléVýpočty.cz">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://rychlevypocty.cz/kalkulacka-potrebne-rezervy-podnikani.html">
 
+  <meta property="og:title" content="Kalkulačka potřebné rezervy pro podnikání online | RychléVýpočty.cz">
+  <meta property="og:description" content="Rychlý výpočet doporučené podnikatelské rezervy podle fixních nákladů, osobních výdajů a délky výpadku příjmů.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rychlevypocty.cz/kalkulacka-potrebne-rezervy-podnikani.html">
+  <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Kalkulačka potřebné rezervy pro podnikání | RychléVýpočty.cz">
+  <meta name="twitter:description" content="Spočítejte si doporučenou finanční rezervu pro OSVČ, freelancera nebo malé podnikání.">
+
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #5f6b85;
+      --primary: #2152ff;
+      --primary-dark: #183dbf;
+      --border: #dbe3f0;
+      --success: #138a4b;
+      --warning: #b66a00;
+      --danger: #c53a2f;
+      --shadow: 0 12px 32px rgba(20, 32, 70, 0.08);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #f7f9fd 0%, #eef3fb 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      padding: 18px 0;
+      border-bottom: 1px solid rgba(219, 227, 240, 0.8);
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .brand span {
+      color: var(--primary);
+    }
+
+    .topnav {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      font-size: 0.97rem;
+    }
+
+    .hero {
+      padding: 42px 0 20px;
+    }
+
+    .breadcrumbs {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .hero-copy h1 {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      margin: 0 0 16px;
+    }
+
+    .hero-copy p {
+      margin: 0 0 16px;
+      font-size: 1.06rem;
+      color: var(--muted);
+      max-width: 720px;
+    }
+
+    .hero-points {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .hero-pill {
+      background: rgba(33, 82, 255, 0.08);
+      color: var(--primary-dark);
+      border: 1px solid rgba(33, 82, 255, 0.12);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .hero-box {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-box h2 {
+      margin: 0 0 10px;
+      font-size: 1.2rem;
+    }
+
+    .hero-box p {
+      margin: 0 0 12px;
+      color: var(--muted);
+    }
+
+    .hero-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.04fr 0.96fr;
+      gap: 28px;
+      align-items: start;
+      padding: 22px 0 32px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .card-header {
+      padding: 24px 24px 10px;
+    }
+
+    .card-header h2,
+    .card-header h3 {
+      margin: 0 0 8px;
+      font-size: 1.3rem;
+      letter-spacing: -0.02em;
+    }
+
+    .card-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .card-body {
+      padding: 20px 24px 24px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field label {
+      font-weight: 700;
+      font-size: 0.96rem;
+    }
+
+    .field small {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: -2px;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      padding: 14px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      font-size: 1rem;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      outline: none;
+      border-color: rgba(33, 82, 255, 0.45);
+      box-shadow: 0 0 0 4px rgba(33, 82, 255, 0.10);
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.06s ease, background 0.15s ease, opacity 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background: #eef3ff;
+      color: var(--primary-dark);
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .result-box {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+
+    .result-label {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .result-value {
+      font-size: clamp(1.25rem, 2.4vw, 2rem);
+      line-height: 1.15;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .highlight {
+      background: linear-gradient(180deg, #eef7ff 0%, #f9fcff 100%);
+      border-color: rgba(33, 82, 255, 0.18);
+    }
+
+    .info-list {
+      display: grid;
+      gap: 12px;
+      margin: 18px 0 0;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid #edf2fa;
+    }
+
+    .info-row:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .info-row span:first-child {
+      color: var(--muted);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+
+    .badge.success {
+      background: rgba(19, 138, 75, 0.10);
+      color: var(--success);
+    }
+
+    .badge.warning {
+      background: rgba(182, 106, 0, 0.11);
+      color: var(--warning);
+    }
+
+    .badge.danger {
+      background: rgba(197, 58, 47, 0.10);
+      color: var(--danger);
+    }
+
+    .note {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1px solid #e7edf7;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 18px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 720px;
+      background: #fff;
+    }
+
+    th, td {
+      padding: 14px 14px;
+      text-align: left;
+      border-bottom: 1px solid #edf2fa;
+      font-size: 0.96rem;
+    }
+
+    th {
+      background: #f8fbff;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .content-section {
+      padding: 8px 0 8px;
+    }
+
+    .content-section h2 {
+      font-size: 1.7rem;
+      letter-spacing: -0.03em;
+      margin: 0 0 14px;
+    }
+
+    .content-section h3 {
+      font-size: 1.15rem;
+      margin: 28px 0 10px;
+    }
+
+    .content-section p {
+      color: var(--muted);
+      margin: 0 0 14px;
+    }
+
+    .content-section ul {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    .content-section li {
+      margin-bottom: 8px;
+    }
+
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .related-card {
+      display: block;
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      color: var(--text);
+      box-shadow: var(--shadow);
+    }
+
+    .related-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .related-card span {
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    footer {
+      margin-top: 40px;
+      border-top: 1px solid rgba(219, 227, 240, 0.9);
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .footer-inner {
+      padding: 24px 0 40px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .layout,
+      .related-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .container {
+        width: min(100% - 24px, 1160px);
+      }
+
+      .form-grid,
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 28px;
+      }
+
+      .card-header,
+      .card-body,
+      .hero-box {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebApplication",
+    "name":"Kalkulačka potřebné rezervy pro podnikání",
+    "url":"https://rychlevypocty.cz/kalkulacka-potrebne-rezervy-podnikani.html",
+    "applicationCategory":"FinanceApplication",
+    "operatingSystem":"Any",
+    "description":"Online kalkulačka pro výpočet doporučené finanční rezervy pro OSVČ, freelancery a malé podnikání.",
+    "offers":{
+      "@type":"Offer",
+      "price":"0",
+      "priceCurrency":"CZK"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"Proč je rezerva pro podnikání důležitá?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Podnikání často nemá zcela stabilní příjmy. Rezerva pomáhá překlenout období slabších zakázek, výpadku klientů, sezónnosti nebo nečekaných výdajů bez zbytečného tlaku na cashflow."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Co by měla podnikatelská rezerva pokrýt?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Typicky by měla pokrýt fixní podnikatelské náklady, osobní životní výdaje a rezervu na mimořádné nebo nepravidelné výdaje po dobu několika měsíců."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Je jiná rezerva pro OSVČ a jiná pro firmu?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Ano, princip je podobný, ale struktura nákladů se liší. U OSVČ bývá důležité propojit podnikatelské a osobní výdaje, zatímco u firmy je větší důraz na provozní náklady, mzdy, služby a cashflow závazky."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="/">Rychlé<span>Výpočty</span>.cz</a>
+      <nav class="topnav" aria-label="Hlavní navigace">
+        <a href="/">Domů</a>
+        <a href="/bod-zvratu-kalkulacka.html">Bod zvratu</a>
+        <a href="/obrat-pro-cilovy-zisk-kalkulacka.html">Obrat pro cílový zisk</a>
+        <a href="/minimalni-prodejni-cena-kalkulacka.html">Minimální prodejní cena</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumbs">
+          <a href="/">RychléVýpočty.cz</a> / Kalkulačka potřebné rezervy pro podnikání
+        </div>
+
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <h1>Kalkulačka potřebné rezervy pro podnikání</h1>
+            <p>Spočítejte si, jak velkou finanční rezervu dává smysl držet pro podnikání. Kalkulačka je vhodná pro OSVČ, freelancery i malé firmy, které chtějí lépe zvládnout výpadek příjmů, sezónní slabší období nebo nečekané výdaje bez zbytečného stresu.</p>
+            <p>Zadejte své fixní podnikatelské náklady, osobní výdaje a počet měsíců, po které má rezerva firmu nebo živnost podržet. Výsledek získáte okamžitě.</p>
+
+            <div class="hero-points">
+              <div class="hero-pill">Doporučená rezerva</div>
+              <div class="hero-pill">Fixní náklady</div>
+              <div class="hero-pill">Osobní výdaje</div>
+              <div class="hero-pill">Výpadek příjmů</div>
+            </div>
+          </div>
+
+          <div class="hero-box">
+            <h2>Co kalkulačka umí</h2>
+            <p>Ukáže doporučenou velikost rezervy podle vaší měsíční nákladové základny a zvoleného bezpečnostního horizontu. Přidává i rychlý pohled na to, jestli vaše současná rezerva stačí.</p>
+            <p>Hodí se při plánování podnikání, stabilizaci cashflow i při rozhodování, kolik peněz ještě nechat bokem místo investování nebo utrácení.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container layout">
+      <div class="card">
+        <div class="card-header">
+          <h2>Zadání rezervy pro podnikání</h2>
+          <p>Vyplňte měsíční náklady a zvolte, na kolik měsíců má rezerva pokrýt výpadek nebo slabší období.</p>
+        </div>
+        <div class="card-body">
+          <form id="reserveForm">
+            <div class="form-grid">
+              <div class="field">
+                <label for="businessFixedCosts">Fixní podnikatelské náklady / měsíc</label>
+                <input type="number" id="businessFixedCosts" min="0" step="100" value="22000" inputmode="decimal">
+                <small>Např. nájem, software, účetní, telefon, služby, leasing, zaměstnanci.</small>
+              </div>
+
+              <div class="field">
+                <label for="personalExpenses">Osobní životní výdaje / měsíc</label>
+                <input type="number" id="personalExpenses" min="0" step="100" value="32000" inputmode="decimal">
+                <small>Kolik potřebujete měsíčně na běžné soukromé fungování.</small>
+              </div>
+
+              <div class="field">
+                <label for="taxAndInsuranceReserve">Daňová a odvodová rezerva / měsíc</label>
+                <input type="number" id="taxAndInsuranceReserve" min="0" step="100" value="12000" inputmode="decimal">
+                <small>Rezerva na daň, sociální a zdravotní nebo další pravidelné odvody.</small>
+              </div>
+
+              <div class="field">
+                <label for="unexpectedCosts">Nečekané a nepravidelné výdaje / měsíc</label>
+                <input type="number" id="unexpectedCosts" min="0" step="100" value="5000" inputmode="decimal">
+                <small>Průměr pro vybavení, servis, reklamace nebo mimořádné výdaje.</small>
+              </div>
+
+              <div class="field">
+                <label for="monthsCoverage">Kolik měsíců má rezerva pokrýt</label>
+                <select id="monthsCoverage">
+                  <option value="3">3 měsíce</option>
+                  <option value="4">4 měsíce</option>
+                  <option value="6" selected>6 měsíců</option>
+                  <option value="9">9 měsíců</option>
+                  <option value="12">12 měsíců</option>
+                </select>
+                <small>Bezpečnostní horizont pro výpadek příjmů nebo slabší období.</small>
+              </div>
+
+              <div class="field">
+                <label for="seasonalityRisk">Rizikovost / sezónnost příjmů</label>
+                <select id="seasonalityRisk">
+                  <option value="1">Nízká</option>
+                  <option value="1.15" selected>Střední</option>
+                  <option value="1.3">Vyšší</option>
+                  <option value="1.5">Vysoká</option>
+                </select>
+                <small>Vyšší riziko zvyšuje doporučenou rezervu.</small>
+              </div>
+
+              <div class="field">
+                <label for="currentReserve">Současná finanční rezerva</label>
+                <input type="number" id="currentReserve" min="0" step="1000" value="180000" inputmode="decimal">
+                <small>Kolik máte aktuálně k dispozici jako volnou rezervu.</small>
+              </div>
+
+              <div class="field">
+                <label for="monthlySavingCapacity">Kolik dokážete odkládat / měsíc</label>
+                <input type="number" id="monthlySavingCapacity" min="0" step="100" value="10000" inputmode="decimal">
+                <small>Pro orientační odhad, za jak dlouho rezervu doplníte.</small>
+              </div>
+
+              <div class="actions full">
+                <button type="submit" class="btn-primary">Spočítat potřebnou rezervu</button>
+                <button type="button" class="btn-secondary" id="resetBtn">Obnovit výchozí hodnoty</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>Výsledek výpočtu</h2>
+          <p>Souhrn doporučené rezervy a porovnání s aktuální situací.</p>
+        </div>
+        <div class="card-body">
+          <div class="results-grid">
+            <div class="result-box highlight">
+              <div class="result-label">Doporučená rezerva</div>
+              <div class="result-value" id="recommendedReserve">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Minimální základ rezervy</div>
+              <div class="result-value" id="baseReserve">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Chybí do cílové rezervy</div>
+              <div class="result-value" id="reserveGap">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Odhad doplnění rezervy</div>
+              <div class="result-value" id="monthsToBuild">0 měsíců</div>
+            </div>
+          </div>
+
+          <div id="reserveBadge" class="badge success">Rezerva vypadá dostatečně</div>
+
+          <div class="info-list">
+            <div class="info-row">
+              <span>Měsíční nákladová základna</span>
+              <strong id="monthlyBurn">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Zvolený horizont krytí</span>
+              <strong id="summaryCoverage">0 měsíců</strong>
+            </div>
+            <div class="info-row">
+              <span>
