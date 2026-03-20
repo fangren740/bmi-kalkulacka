@@ -1,1 +1,979 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kalkulačka celkové ceny nemovitosti online zdarma | RychléVýpočty.cz</title>
+  <meta name="description" content="Spočítejte si celkové náklady na koupi nemovitosti včetně provize realitní kanceláře, právních služeb, poplatků, rekonstrukce, vybavení a rezervy. Přehledná kalkulačka zdarma online.">
+  <meta name="keywords" content="kalkulačka celkové ceny nemovitosti, koupě bytu náklady, koupě domu náklady, kalkulačka koupě nemovitosti, pořizovací náklady nemovitosti">
+  <meta name="author" content="RychléVýpočty.cz">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://rychlevypocty.cz/kalkulacka-celkove-ceny-nemovitosti.html">
 
+  <meta property="og:title" content="Kalkulačka celkové ceny nemovitosti online zdarma | RychléVýpočty.cz">
+  <meta property="og:description" content="Spočítejte si skutečné náklady na koupi bytu nebo domu včetně provize, poplatků, rekonstrukce, vybavení a rezervy.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rychlevypocty.cz/kalkulacka-celkove-ceny-nemovitosti.html">
+  <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Kalkulačka celkové ceny nemovitosti online zdarma | RychléVýpočty.cz">
+  <meta name="twitter:description" content="Přehledný výpočet celkových nákladů na koupi nemovitosti včetně vedlejších výdajů.">
+
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #5f6b85;
+      --primary: #2152ff;
+      --primary-dark: #183dbf;
+      --border: #dbe3f0;
+      --success: #138a4b;
+      --warning: #b66a00;
+      --shadow: 0 12px 32px rgba(20, 32, 70, 0.08);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #f7f9fd 0%, #eef3fb 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      padding: 18px 0;
+      border-bottom: 1px solid rgba(219, 227, 240, 0.8);
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+      line-height: 1;
+    }
+
+    .brand span {
+      color: var(--primary);
+    }
+
+    .topnav {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      font-size: 0.97rem;
+    }
+
+    .hero {
+      padding: 42px 0 20px;
+    }
+
+    .breadcrumbs {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .hero-copy h1 {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      margin: 0 0 16px;
+    }
+
+    .hero-copy p {
+      margin: 0 0 16px;
+      font-size: 1.06rem;
+      color: var(--muted);
+      max-width: 720px;
+    }
+
+    .hero-points {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .hero-pill {
+      background: rgba(33, 82, 255, 0.08);
+      color: var(--primary-dark);
+      border: 1px solid rgba(33, 82, 255, 0.12);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .hero-box {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-box h2 {
+      margin: 0 0 10px;
+      font-size: 1.2rem;
+    }
+
+    .hero-box p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.04fr 0.96fr;
+      gap: 28px;
+      align-items: start;
+      padding: 22px 0 32px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .card-header {
+      padding: 24px 24px 10px;
+    }
+
+    .card-header h2,
+    .card-header h3 {
+      margin: 0 0 8px;
+      font-size: 1.3rem;
+      letter-spacing: -0.02em;
+    }
+
+    .card-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .card-body {
+      padding: 20px 24px 24px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field label {
+      font-weight: 700;
+      font-size: 0.96rem;
+    }
+
+    .field small {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: -2px;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      padding: 14px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      font-size: 1rem;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      outline: none;
+      border-color: rgba(33, 82, 255, 0.45);
+      box-shadow: 0 0 0 4px rgba(33, 82, 255, 0.10);
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.06s ease, background 0.15s ease, opacity 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background: #eef3ff;
+      color: var(--primary-dark);
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .result-box {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+
+    .result-label {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .result-value {
+      font-size: clamp(1.25rem, 2.4vw, 2rem);
+      line-height: 1.15;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .highlight {
+      background: linear-gradient(180deg, #eef7ff 0%, #f9fcff 100%);
+      border-color: rgba(33, 82, 255, 0.18);
+    }
+
+    .info-list {
+      display: grid;
+      gap: 12px;
+      margin: 18px 0 0;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid #edf2fa;
+    }
+
+    .info-row:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .info-row span:first-child {
+      color: var(--muted);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+
+    .badge.success {
+      background: rgba(19, 138, 75, 0.10);
+      color: var(--success);
+    }
+
+    .badge.warning {
+      background: rgba(182, 106, 0, 0.11);
+      color: var(--warning);
+    }
+
+    .note {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1px solid #e7edf7;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 18px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 640px;
+      background: #fff;
+    }
+
+    th, td {
+      padding: 14px 14px;
+      text-align: left;
+      border-bottom: 1px solid #edf2fa;
+      font-size: 0.96rem;
+    }
+
+    th {
+      background: #f8fbff;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .content-section {
+      padding: 8px 0 8px;
+    }
+
+    .content-section h2 {
+      font-size: 1.7rem;
+      letter-spacing: -0.03em;
+      margin: 0 0 14px;
+    }
+
+    .content-section h3 {
+      font-size: 1.15rem;
+      margin: 28px 0 10px;
+    }
+
+    .content-section p {
+      color: var(--muted);
+      margin: 0 0 14px;
+    }
+
+    .content-section ul {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    .content-section li {
+      margin-bottom: 8px;
+    }
+
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .related-card {
+      display: block;
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      color: var(--text);
+      box-shadow: var(--shadow);
+    }
+
+    .related-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .related-card span {
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    footer {
+      margin-top: 40px;
+      border-top: 1px solid rgba(219, 227, 240, 0.9);
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .footer-inner {
+      padding: 24px 0 40px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .layout,
+      .related-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .container {
+        width: min(100% - 24px, 1160px);
+      }
+
+      .form-grid,
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 28px;
+      }
+
+      .card-header,
+      .card-body,
+      .hero-box {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebApplication",
+    "name":"Kalkulačka celkové ceny nemovitosti",
+    "url":"https://rychlevypocty.cz/kalkulacka-celkove-ceny-nemovitosti.html",
+    "applicationCategory":"FinanceApplication",
+    "operatingSystem":"Any",
+    "description":"Online kalkulačka pro výpočet celkových nákladů na koupi nemovitosti včetně vedlejších výdajů, rekonstrukce, vybavení a rezervy.",
+    "offers":{
+      "@type":"Offer",
+      "price":"0",
+      "priceCurrency":"CZK"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"Co zahrnuje celková cena nemovitosti?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Celková cena nemovitosti obvykle nezahrnuje jen kupní cenu. Patří sem také provize realitní kanceláře, právní služby, správní poplatky, případná rekonstrukce, vybavení a doporučená finanční rezerva po koupi."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Proč nestačí sledovat jen kupní cenu bytu nebo domu?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Kupní cena je pouze základ. Reálné náklady bývají vyšší kvůli vedlejším výdajům spojeným s převodem, úpravami nemovitosti a vybavením. Právě proto dává smysl počítat celkové pořizovací náklady."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Je výpočet v kalkulačce přesný?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Kalkulačka poskytuje orientační odhad podle zadaných hodnot. Skutečné náklady se mohou lišit podle konkrétní nemovitosti, rozsahu rekonstrukce, výše právních služeb nebo podmínek realitní kanceláře."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="/">Rychlé<span>Výpočty</span>.cz</a>
+      <nav class="topnav" aria-label="Hlavní navigace">
+        <a href="/">Domů</a>
+        <a href="/hypotecni-kalkulacka.html">Hypotéka</a>
+        <a href="/porovnani-najem-vs-hypoteka-kalkulacka.html">Nájem vs hypotéka</a>
+        <a href="/mesicni-naklady-na-bydleni-kalkulacka.html">Náklady na bydlení</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumbs">
+          <a href="/">RychléVýpočty.cz</a> / Kalkulačka celkové ceny nemovitosti
+        </div>
+
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <h1>Kalkulačka celkové ceny nemovitosti</h1>
+            <p>Spočítejte si skutečné pořizovací náklady na koupi bytu nebo domu. Kalkulačka zahrnuje nejen kupní cenu, ale i provizi realitní kanceláře, právní služby, správní poplatky, rekonstrukci, vybavení a finanční rezervu.</p>
+            <p>Je vhodná pro rychlé porovnání scénářů, plánování vlastních zdrojů i lepší představu o tom, kolik vás koupě nemovitosti skutečně bude stát.</p>
+
+            <div class="hero-points">
+              <div class="hero-pill">Kupní cena</div>
+              <div class="hero-pill">Provize a poplatky</div>
+              <div class="hero-pill">Rekonstrukce a vybavení</div>
+              <div class="hero-pill">Celkové pořizovací náklady</div>
+            </div>
+          </div>
+
+          <div class="hero-box">
+            <h2>Co kalkulačka umí</h2>
+            <p>Sečte všechny hlavní jednorázové náklady spojené s koupí nemovitosti a ukáže, jak velkou část tvoří vedlejší výdaje. Výsledek pomůže při rozhodování, zda je vybraná nemovitost finančně realistická.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container layout">
+      <div class="card">
+        <div class="card-header">
+          <h2>Zadání pořizovacích nákladů</h2>
+          <p>Vyplňte kupní cenu a další související výdaje. Kalkulačka výsledek automaticky přepočítá.</p>
+        </div>
+        <div class="card-body">
+          <form id="propertyCostForm">
+            <div class="form-grid">
+              <div class="field">
+                <label for="propertyPrice">Kupní cena nemovitosti</label>
+                <input type="number" id="propertyPrice" min="100000" step="10000" value="5000000" inputmode="decimal">
+                <small>Základní cena bytu nebo domu.</small>
+              </div>
+
+              <div class="field">
+                <label for="commissionRate">Provize realitní kanceláře (%)</label>
+                <input type="number" id="commissionRate" min="0" max="20" step="0.1" value="3" inputmode="decimal">
+                <small>Zadejte procentní výši provize, pokud je relevantní.</small>
+              </div>
+
+              <div class="field">
+                <label for="legalServices">Právní služby</label>
+                <input type="number" id="legalServices" min="0" step="1000" value="30000" inputmode="decimal">
+                <small>Např. advokát, úschova nebo smluvní servis.</small>
+              </div>
+
+              <div class="field">
+                <label for="adminFees">Katastr a správní poplatky</label>
+                <input type="number" id="adminFees" min="0" step="100" value="5000" inputmode="decimal">
+                <small>Např. návrh na vklad a další správní výdaje.</small>
+              </div>
+
+              <div class="field">
+                <label for="renovation">Rekonstrukce a opravy</label>
+                <input type="number" id="renovation" min="0" step="10000" value="200000" inputmode="decimal">
+                <small>Odhad počátečních úprav po převzetí nemovitosti.</small>
+              </div>
+
+              <div class="field">
+                <label for="equipment">Vybavení a zařízení</label>
+                <input type="number" id="equipment" min="0" step="10000" value="150000" inputmode="decimal">
+                <small>Nábytek, spotřebiče a další vybavení.</small>
+              </div>
+
+              <div class="field">
+                <label for="movingCosts">Stěhování a drobné jednorázové náklady</label>
+                <input type="number" id="movingCosts" min="0" step="1000" value="20000" inputmode="decimal">
+                <small>Např. doprava, úklid, drobné opravy nebo přepisy služeb.</small>
+              </div>
+
+              <div class="field">
+                <label for="reserve">Finanční rezerva po koupi</label>
+                <input type="number" id="reserve" min="0" step="10000" value="100000" inputmode="decimal">
+                <small>Doporučená rezerva pro nečekané výdaje po nastěhování.</small>
+              </div>
+
+              <div class="actions full">
+                <button type="submit" class="btn-primary">Spočítat celkovou cenu</button>
+                <button type="button" class="btn-secondary" id="resetBtn">Obnovit výchozí hodnoty</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>Výsledek výpočtu</h2>
+          <p>Přehled skutečných pořizovacích nákladů podle zadaných hodnot.</p>
+        </div>
+        <div class="card-body">
+          <div class="results-grid">
+            <div class="result-box highlight">
+              <div class="result-label">Celková cena nemovitosti</div>
+              <div class="result-value" id="totalCost">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Vedlejší náklady celkem</div>
+              <div class="result-value" id="additionalCosts">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Provize RK</div>
+              <div class="result-value" id="commissionValue">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Podíl vedlejších nákladů</div>
+              <div class="result-value" id="additionalShare">0 %</div>
+            </div>
+          </div>
+
+          <div id="costBadge" class="badge success">Vedlejší náklady jsou v běžném rozsahu</div>
+
+          <div class="info-list">
+            <div class="info-row">
+              <span>Kupní cena</span>
+              <strong id="summaryPrice">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Právní služby a poplatky</span>
+              <strong id="summaryLegalFees">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Rekonstrukce a vybavení</span>
+              <strong id="summaryUpgrade">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Stěhování a drobné výdaje</span>
+              <strong id="summaryMoving">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Finanční rezerva</span>
+              <strong id="summaryReserve">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Odhad vlastních jednorázových nákladů mimo kupní cenu</span>
+              <strong id="summaryOutsidePrice">0 Kč</strong>
+            </div>
+          </div>
+
+          <div class="note">
+            Výpočet je orientační. Skutečné pořizovací náklady se mohou lišit podle typu nemovitosti, regionu, rozsahu oprav, podmínek realitní kanceláře i konkrétních právních služeb.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="card">
+        <div class="card-header">
+          <h3>Rozpad pořizovacích nákladů</h3>
+          <p>Přehled jednotlivých položek, které se promítají do celkové ceny koupě nemovitosti.</p>
+        </div>
+        <div class="card-body">
+          <div class="table-wrap">
+            <table aria-label="Rozpad pořizovacích nákladů nemovitosti">
+              <thead>
+                <tr>
+                  <th>Položka</th>
+                  <th>Částka</th>
+                  <th>Podíl na celku</th>
+                </tr>
+              </thead>
+              <tbody id="breakdownBody">
+                <tr>
+                  <td colspan="3">Po zadání údajů se zobrazí přehled pořizovacích nákladů.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container content-section">
+      <h2>Jak kalkulačka celkové ceny nemovitosti funguje</h2>
+      <p>Při koupi bytu nebo domu obvykle nestačí sledovat pouze samotnou kupní cenu. Do skutečných pořizovacích nákladů často vstupuje i provize realitní kanceláře, právní servis, poplatky za převod, počáteční opravy, vybavení a doporučená finanční rezerva. Tato kalkulačka všechny tyto položky sečte do jednoho přehledu.</p>
+
+      <h3>Co ve výsledku uvidíte</h3>
+      <ul>
+        <li>celkovou cenu koupě nemovitosti včetně vedlejších nákladů,</li>
+        <li>výši vedlejších nákladů mimo samotnou kupní cenu,</li>
+        <li>podíl těchto nákladů na celkovém rozpočtu,</li>
+        <li>rozpad jednotlivých položek v přehledné tabulce.</li>
+      </ul>
+
+      <h3>Proč je dobré počítat i vedlejší náklady</h3>
+      <p>Mnoho kupujících se soustředí hlavně na cenu nemovitosti a hypotéku, ale právě vedlejší náklady mohou výrazně ovlivnit potřebné vlastní zdroje. Pokud je byt nebo dům levnější, ale vyžaduje rozsáhlou rekonstrukci, může být ve výsledku dražší než původně dražší, ale připravená varianta.</p>
+
+      <h3>Kdy se kalkulačka hodí nejvíc</h3>
+      <p>Největší přínos má při porovnávání více nemovitostí, při plánování vlastních úspor před koupí nebo při rozhodování, zda je konkrétní nabídka dlouhodobě finančně zvládnutelná. Dobře se doplňuje s hypoteční kalkulačkou a s kalkulačkou akontace a LTV.</p>
+    </section>
+
+    <section class="container content-section">
+      <h2>Související kalkulačky</h2>
+      <div class="related-grid">
+        <a class="related-card" href="/hypotecni-kalkulacka.html">
+          <strong>Hypoteční kalkulačka</strong>
+          <span>Spočítejte si orientační měsíční splátku hypotéky a celkové úroky.</span>
+        </a>
+
+        <a class="related-card" href="/kalkulacka-akontace-a-ltv-hypoteky.html">
+          <strong>Kalkulačka akontace a LTV hypotéky</strong>
+          <span>Ověřte si, kolik vlastních prostředků potřebujete pro financování koupě.</span>
+        </a>
+
+        <a class="related-card" href="/porovnani-najem-vs-hypoteka-kalkulacka.html">
+          <strong>Porovnání nájem vs hypotéka</strong>
+          <span>Srovnejte nájemní bydlení s pořízením vlastního bytu nebo domu.</span>
+        </a>
+
+        <a class="related-card" href="/mesicni-naklady-na-bydleni-kalkulacka.html">
+          <strong>Kalkulačka měsíčních nákladů na bydlení</strong>
+          <span>Získejte přehled o pravidelných výdajích domácnosti po pořízení nemovitosti.</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      © 2026 RychléVýpočty.cz — online kalkulačky a praktické výpočty pro každodenní použití.
+    </div>
+  </footer>
+
+  <script>
+    const form = document.getElementById('propertyCostForm');
+    const resetBtn = document.getElementById('resetBtn');
+
+    const outputs = {
+      totalCost: document.getElementById('totalCost'),
+      additionalCosts: document.getElementById('additionalCosts'),
+      commissionValue: document.getElementById('commissionValue'),
+      additionalShare: document.getElementById('additionalShare'),
+      summaryPrice: document.getElementById('summaryPrice'),
+      summaryLegalFees: document.getElementById('summaryLegalFees'),
+      summaryUpgrade: document.getElementById('summaryUpgrade'),
+      summaryMoving: document.getElementById('summaryMoving'),
+      summaryReserve: document.getElementById('summaryReserve'),
+      summaryOutsidePrice: document.getElementById('summaryOutsidePrice'),
+      costBadge: document.getElementById('costBadge'),
+      breakdownBody: document.getElementById('breakdownBody')
+    };
+
+    function formatCurrency(value) {
+      return new Intl.NumberFormat('cs-CZ', {
+        style: 'currency',
+        currency: 'CZK',
+        maximumFractionDigits: 0
+      }).format(value);
+    }
+
+    function formatPercent(value, digits = 1) {
+      return new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: digits
+      }).format(value) + ' %';
+    }
+
+    function getValues() {
+      return {
+        propertyPrice: Number(document.getElementById('propertyPrice').value),
+        commissionRate: Number(document.getElementById('commissionRate').value),
+        legalServices: Number(document.getElementById('legalServices').value),
+        adminFees: Number(document.getElementById('adminFees').value),
+        renovation: Number(document.getElementById('renovation').value),
+        equipment: Number(document.getElementById('equipment').value),
+        movingCosts: Number(document.getElementById('movingCosts').value),
+        reserve: Number(document.getElementById('reserve').value)
+      };
+    }
+
+    function validate(values) {
+      if (!values.propertyPrice || values.propertyPrice <= 0) return 'Zadejte platnou kupní cenu nemovitosti.';
+      if (values.commissionRate < 0) return 'Provize realitní kanceláře nemůže být záporná.';
+      if (values.legalServices < 0 || values.adminFees < 0 || values.renovation < 0 || values.equipment < 0 || values.movingCosts < 0 || values.reserve < 0) {
+        return 'Vedlejší náklady nemohou být záporné.';
+      }
+      return '';
+    }
+
+    function calculate(values) {
+      const commissionValue = values.propertyPrice * (values.commissionRate / 100);
+      const legalFees = values.legalServices + values.adminFees;
+      const upgradeCosts = values.renovation + values.equipment;
+      const additionalCosts = commissionValue + legalFees + upgradeCosts + values.movingCosts + values.reserve;
+      const totalCost = values.propertyPrice + additionalCosts;
+      const additionalShare = totalCost > 0 ? (additionalCosts / totalCost) * 100 : 0;
+
+      return {
+        commissionValue,
+        legalFees,
+        upgradeCosts,
+        additionalCosts,
+        totalCost,
+        additionalShare
+      };
+    }
+
+    function buildBreakdown(values, result) {
+      const items = [
+        { label: 'Kupní cena nemovitosti', value: values.propertyPrice },
+        { label: 'Provize realitní kanceláře', value: result.commissionValue },
+        { label: 'Právní služby', value: values.legalServices },
+        { label: 'Katastr a správní poplatky', value: values.adminFees },
+        { label: 'Rekonstrukce a opravy', value: values.renovation },
+        { label: 'Vybavení a zařízení', value: values.equipment },
+        { label: 'Stěhování a drobné náklady', value: values.movingCosts },
+        { label: 'Finanční rezerva', value: values.reserve }
+      ];
+
+      return items.map(item => ({
+        ...item,
+        share: result.totalCost > 0 ? (item.value / result.totalCost) * 100 : 0
+      }));
+    }
+
+    function renderBreakdown(rows) {
+      outputs.breakdownBody.innerHTML = rows.map(row => `
+        <tr>
+          <td>${row.label}</td>
+          <td>${formatCurrency(row.value)}</td>
+          <td>${formatPercent(row.share)}</td>
+        </tr>
+      `).join('');
+    }
+
+    function render(values, result) {
+      outputs.totalCost.textContent = formatCurrency(result.totalCost);
+      outputs.additionalCosts.textContent = formatCurrency(result.additionalCosts);
+      outputs.commissionValue.textContent = formatCurrency(result.commissionValue);
+      outputs.additionalShare.textContent = formatPercent(result.additionalShare);
+
+      outputs.summaryPrice.textContent = formatCurrency(values.propertyPrice);
+      outputs.summaryLegalFees.textContent = formatCurrency(result.legalFees);
+      outputs.summaryUpgrade.textContent = formatCurrency(result.upgradeCosts);
+      outputs.summaryMoving.textContent = formatCurrency(values.movingCosts);
+      outputs.summaryReserve.textContent = formatCurrency(values.reserve);
+      outputs.summaryOutsidePrice.textContent = formatCurrency(result.additionalCosts);
+
+      if (result.additionalShare <= 10) {
+        outputs.costBadge.className = 'badge success';
+        outputs.costBadge.textContent = 'Vedlejší náklady jsou v nižším rozsahu';
+      } else if (result.additionalShare <= 20) {
+        outputs.costBadge.className = 'badge success';
+        outputs.costBadge.textContent = 'Vedlejší náklady jsou v běžném rozsahu';
+      } else {
+        outputs.costBadge.className = 'badge warning';
+        outputs.costBadge.textContent = 'Vedlejší náklady tvoří výraznou část rozpočtu';
+      }
+
+      renderBreakdown(buildBreakdown(values, result));
+    }
+
+    function runCalculation() {
+      const values = getValues();
+      const error = validate(values);
+
+      if (error) {
+        alert(error);
+        return;
+      }
+
+      const result = calculate(values);
+      render(values, result);
+    }
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      runCalculation();
+    });
+
+    ['propertyPrice', 'commissionRate', 'legalServices', 'adminFees', 'renovation', 'equipment', 'movingCosts', 'reserve'].forEach(id => {
+      document.getElementById(id).addEventListener('input', runCalculation);
+      document.getElementById(id).addEventListener('change', runCalculation);
+    });
+
+    resetBtn.addEventListener('click', function() {
+      document.getElementById('propertyPrice').value = 5000000;
+      document.getElementById('commissionRate').value = 3;
+      document.getElementById('legalServices').value = 30000;
+      document.getElementById('adminFees').value = 5000;
+      document.getElementById('renovation').value = 200000;
+      document.getElementById('equipment').value = 150000;
+      document.getElementById('movingCosts').value = 20000;
+      document.getElementById('reserve').value = 100000;
+      runCalculation();
+    });
+
+    runCalculation();
+  </script>
+</body>
+</html>
