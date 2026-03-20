@@ -1,1 +1,1138 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kalkulačka celkové ceny vlastnictví auta online | RychléVýpočty.cz</title>
+  <meta name="description" content="Spočítejte si celkovou cenu vlastnictví auta za 3, 5 nebo 7 let. Přehledná kalkulačka zahrnuje kupní cenu, financování, palivo, servis, pojištění, amortizaci i orientační prodejní cenu vozu.">
+  <meta name="keywords" content="kalkulačka celkové ceny vlastnictví auta, celkové náklady na auto, kolik stojí auto za 5 let, total cost of ownership auto, tco auto kalkulačka">
+  <meta name="author" content="RychléVýpočty.cz">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://rychlevypocty.cz/kalkulacka-celkove-ceny-vlastnictvi-auta.html">
 
+  <meta property="og:title" content="Kalkulačka celkové ceny vlastnictví auta online | RychléVýpočty.cz">
+  <meta property="og:description" content="Rychlý výpočet celkové ceny vlastnictví auta včetně paliva, servisu, pojištění, financování a ztráty hodnoty.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rychlevypocty.cz/kalkulacka-celkove-ceny-vlastnictvi-auta.html">
+  <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Kalkulačka celkové ceny vlastnictví auta | RychléVýpočty.cz">
+  <meta name="twitter:description" content="Spočítejte si, kolik vás auto opravdu stojí za celé období vlastnictví.">
+
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #5f6b85;
+      --primary: #2152ff;
+      --primary-dark: #183dbf;
+      --border: #dbe3f0;
+      --success: #138a4b;
+      --warning: #b66a00;
+      --danger: #c53a2f;
+      --shadow: 0 12px 32px rgba(20, 32, 70, 0.08);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #f7f9fd 0%, #eef3fb 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      padding: 18px 0;
+      border-bottom: 1px solid rgba(219, 227, 240, 0.8);
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .brand span {
+      color: var(--primary);
+    }
+
+    .topnav {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      font-size: 0.97rem;
+    }
+
+    .hero {
+      padding: 42px 0 20px;
+    }
+
+    .breadcrumbs {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .hero-copy h1 {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      margin: 0 0 16px;
+    }
+
+    .hero-copy p {
+      margin: 0 0 16px;
+      font-size: 1.06rem;
+      color: var(--muted);
+      max-width: 720px;
+    }
+
+    .hero-points {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .hero-pill {
+      background: rgba(33, 82, 255, 0.08);
+      color: var(--primary-dark);
+      border: 1px solid rgba(33, 82, 255, 0.12);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .hero-box {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-box h2 {
+      margin: 0 0 10px;
+      font-size: 1.2rem;
+    }
+
+    .hero-box p {
+      margin: 0 0 12px;
+      color: var(--muted);
+    }
+
+    .hero-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.04fr 0.96fr;
+      gap: 28px;
+      align-items: start;
+      padding: 22px 0 32px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .card-header {
+      padding: 24px 24px 10px;
+    }
+
+    .card-header h2,
+    .card-header h3 {
+      margin: 0 0 8px;
+      font-size: 1.3rem;
+      letter-spacing: -0.02em;
+    }
+
+    .card-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .card-body {
+      padding: 20px 24px 24px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field label {
+      font-weight: 700;
+      font-size: 0.96rem;
+    }
+
+    .field small {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: -2px;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      padding: 14px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      font-size: 1rem;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      outline: none;
+      border-color: rgba(33, 82, 255, 0.45);
+      box-shadow: 0 0 0 4px rgba(33, 82, 255, 0.10);
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    .section-divider {
+      grid-column: 1 / -1;
+      margin: 4px 0 0;
+      padding-top: 8px;
+      border-top: 1px solid #edf2fa;
+      color: var(--text);
+      font-size: 1rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.06s ease, background 0.15s ease, opacity 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background: #eef3ff;
+      color: var(--primary-dark);
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .result-box {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+
+    .result-label {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .result-value {
+      font-size: clamp(1.2rem, 2.4vw, 2rem);
+      line-height: 1.15;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .highlight {
+      background: linear-gradient(180deg, #eef7ff 0%, #f9fcff 100%);
+      border-color: rgba(33, 82, 255, 0.18);
+    }
+
+    .info-list {
+      display: grid;
+      gap: 12px;
+      margin: 18px 0 0;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid #edf2fa;
+    }
+
+    .info-row:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .info-row span:first-child {
+      color: var(--muted);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+
+    .badge.success {
+      background: rgba(19, 138, 75, 0.10);
+      color: var(--success);
+    }
+
+    .badge.warning {
+      background: rgba(182, 106, 0, 0.11);
+      color: var(--warning);
+    }
+
+    .badge.danger {
+      background: rgba(197, 58, 47, 0.10);
+      color: var(--danger);
+    }
+
+    .note {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1px solid #e7edf7;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 18px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 760px;
+      background: #fff;
+    }
+
+    th, td {
+      padding: 14px 14px;
+      text-align: left;
+      border-bottom: 1px solid #edf2fa;
+      font-size: 0.96rem;
+    }
+
+    th {
+      background: #f8fbff;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .content-section {
+      padding: 8px 0 8px;
+    }
+
+    .content-section h2 {
+      font-size: 1.7rem;
+      letter-spacing: -0.03em;
+      margin: 0 0 14px;
+    }
+
+    .content-section h3 {
+      font-size: 1.15rem;
+      margin: 28px 0 10px;
+    }
+
+    .content-section p {
+      color: var(--muted);
+      margin: 0 0 14px;
+    }
+
+    .content-section ul {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    .content-section li {
+      margin-bottom: 8px;
+    }
+
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .related-card {
+      display: block;
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      color: var(--text);
+      box-shadow: var(--shadow);
+    }
+
+    .related-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .related-card span {
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    footer {
+      margin-top: 40px;
+      border-top: 1px solid rgba(219, 227, 240, 0.9);
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .footer-inner {
+      padding: 24px 0 40px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .layout,
+      .related-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .container {
+        width: min(100% - 24px, 1160px);
+      }
+
+      .form-grid,
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 28px;
+      }
+
+      .card-header,
+      .card-body,
+      .hero-box {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebApplication",
+    "name":"Kalkulačka celkové ceny vlastnictví auta",
+    "url":"https://rychlevypocty.cz/kalkulacka-celkove-ceny-vlastnictvi-auta.html",
+    "applicationCategory":"FinanceApplication",
+    "operatingSystem":"Any",
+    "description":"Online kalkulačka pro výpočet celkové ceny vlastnictví auta včetně paliva, servisu, pojištění, financování a ztráty hodnoty vozu.",
+    "offers":{
+      "@type":"Offer",
+      "price":"0",
+      "priceCurrency":"CZK"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"Co je celková cena vlastnictví auta?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Celková cena vlastnictví auta vyjadřuje, kolik vás vůz stojí za celé období používání. Zahrnuje nejen kupní cenu nebo splátky, ale také palivo, servis, pojištění, pneumatiky, poplatky a ztrátu hodnoty auta."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Proč nestačí sledovat jen měsíční splátku auta?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Měsíční splátka ukazuje jen jednu část nákladů. Reálné vlastnictví auta výrazně ovlivňuje i palivo, servis, pojištění, parkování a hlavně amortizace neboli pokles hodnoty vozu."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Je nejdražší položkou vždy palivo?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Ne. U mnoha aut tvoří velkou část celkových nákladů právě ztráta hodnoty, financování nebo pojištění. Palivo může být důležité, ale často není jedinou nebo největší položkou."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="/">Rychlé<span>Výpočty</span>.cz</a>
+      <nav class="topnav" aria-label="Hlavní navigace">
+        <a href="/">Domů</a>
+        <a href="/naklady-na-provoz-auta-kalkulacka.html">Provoz auta</a>
+        <a href="/kalkulacka-splatky-auta.html">Splátka auta</a>
+        <a href="/amortizace-auta-kalkulacka.html">Amortizace auta</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumbs">
+          <a href="/">RychléVýpočty.cz</a> / Kalkulačka celkové ceny vlastnictví auta
+        </div>
+
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <h1>Kalkulačka celkové ceny vlastnictví auta</h1>
+            <p>Spočítejte si, kolik vás auto opravdu stojí za celé období vlastnictví. Kalkulačka zahrnuje kupní cenu nebo financování, palivo, servis, pojištění, pneumatiky, parkování, poplatky i orientační prodejní cenu vozu po několika letech.</p>
+            <p>Výsledkem je přehledný souhrn celkových nákladů, ceny za měsíc i ceny za kilometr. Právě tohle je praktický pohled, který pomáhá při rozhodování, jak drahé auto si můžete realisticky dovolit.</p>
+
+            <div class="hero-points">
+              <div class="hero-pill">Celkové náklady</div>
+              <div class="hero-pill">Cena za měsíc</div>
+              <div class="hero-pill">Cena za kilometr</div>
+              <div class="hero-pill">Prodejní cena auta</div>
+            </div>
+          </div>
+
+          <div class="hero-box">
+            <h2>Co kalkulačka umí</h2>
+            <p>Sečte všechny hlavní náklady spojené s autem za celé období vlastnictví a odečte od nich orientační prodejní cenu vozu. Díky tomu uvidíte skutečný finanční dopad vlastnictví, ne jen jednu dílčí položku.</p>
+            <p>Hodí se při porovnání různých aut, financování i při úvaze, jestli se dražší vůz dlouhodobě vyplatí.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container layout">
+      <div class="card">
+        <div class="card-header">
+          <h2>Zadání celkové ceny vlastnictví</h2>
+          <p>Vyplňte cenu auta, nájezd, náklady provozu a předpokládanou prodejní cenu po zvoleném období.</p>
+        </div>
+        <div class="card-body">
+          <form id="ownershipForm">
+            <div class="form-grid">
+              <div class="section-divider">Pořízení a období vlastnictví</div>
+
+              <div class="field">
+                <label for="carPrice">Kupní cena auta</label>
+                <input type="number" id="carPrice" min="50000" step="10000" value="720000" inputmode="decimal">
+                <small>Pořizovací cena vozu při koupi.</small>
+              </div>
+
+              <div class="field">
+                <label for="ownershipYears">Období vlastnictví</label>
+                <select id="ownershipYears">
+                  <option value="3">3 roky</option>
+                  <option value="5" selected>5 let</option>
+                  <option value="7">7 let</option>
+                </select>
+                <small>Za jak dlouhé období chcete auto posoudit.</small>
+              </div>
+
+              <div class="field">
+                <label for="annualKm">Roční nájezd (km)</label>
+                <input type="number" id="annualKm" min="1" step="100" value="18000" inputmode="decimal">
+                <small>Kolik kilometrů ročně přibližně najedete.</small>
+              </div>
+
+              <div class="field">
+                <label for="resalePrice">Odhad prodejní ceny po období</label>
+                <input type="number" id="resalePrice" min="0" step="10000" value="330000" inputmode="decimal">
+                <small>Kolik by šlo auto orientačně prodat po zvoleném období.</small>
+              </div>
+
+              <div class="section-divider">Financování</div>
+
+              <div class="field">
+                <label for="downPayment">Akontace / vlastní peníze</label>
+                <input type="number" id="downPayment" min="0" step="10000" value="200000" inputmode="decimal">
+                <small>Kolik zaplatíte hned při pořízení.</small>
+              </div>
+
+              <div class="field">
+                <label for="monthlyLoanPayment">Splátka financování / měsíc</label>
+                <input type="number" id="monthlyLoanPayment" min="0" step="100" value="9500" inputmode="decimal">
+                <small>Vyplňte, pokud auto splácíte nebo leasingujete.</small>
+              </div>
+
+              <div class="section-divider">Provoz a pravidelné náklady</div>
+
+              <div class="field">
+                <label for="fuelConsumption">Spotřeba (l / 100 km)</label>
+                <input type="number" id="fuelConsumption" min="0.1" step="0.1" value="6.7" inputmode="decimal">
+                <small>Průměrná reálná spotřeba auta.</small>
+              </div>
+
+              <div class="field">
+                <label for="fuelPrice">Cena paliva (Kč / l)</label>
+                <input type="number" id="fuelPrice" min="0.1" step="0.1" value="38.50" inputmode="decimal">
+                <small>Průměrná cena benzínu nebo nafty.</small>
+              </div>
+
+              <div class="field">
+                <label for="insuranceMonthly">Pojištění / měsíc</label>
+                <input type="number" id="insuranceMonthly" min="0" step="10" value="1800" inputmode="decimal">
+                <small>Povinné ručení a případně havarijní pojištění.</small>
+              </div>
+
+              <div class="field">
+                <label for="serviceMonthly">Servis a údržba / měsíc</label>
+                <input type="number" id="serviceMonthly" min="0" step="10" value="1400" inputmode="decimal">
+                <small>Průměr běžného servisu, olejů a údržby.</small>
+              </div>
+
+              <div class="field">
+                <label for="tiresMonthly">Pneumatiky / měsíc</label>
+                <input type="number" id="tiresMonthly" min="0" step="10" value="450" inputmode="decimal">
+                <small>Rozpočítané náklady na letní a zimní sady.</small>
+              </div>
+
+              <div class="field">
+                <label for="parkingMonthly">Parkování / garáž / měsíc</label>
+                <input type="number" id="parkingMonthly" min="0" step="10" value="900" inputmode="decimal">
+                <small>Pravidelné měsíční náklady na parkování.</small>
+              </div>
+
+              <div class="field">
+                <label for="feesMonthly">Dálniční známka a poplatky / měsíc</label>
+                <input type="number" id="feesMonthly" min="0" step="10" value="220" inputmode="decimal">
+                <small>Rozpočítané poplatky za dálniční známku a podobné výdaje.</small>
+              </div>
+
+              <div class="field">
+                <label for="otherMonthly">Ostatní náklady / měsíc</label>
+                <input type="number" id="otherMonthly" min="0" step="10" value="300" inputmode="decimal">
+                <small>Např. mytí, kosmetika, drobné příslušenství nebo další výdaje.</small>
+              </div>
+
+              <div class="field">
+                <label for="incomeShare">Max. podíl auta na čistém příjmu (%)</label>
+                <select id="incomeShare">
+                  <option value="10">10 %</option>
+                  <option value="15" selected>15 %</option>
+                  <option value="20">20 %</option>
+                  <option value="25">25 %</option>
+                  <option value="30">30 %</option>
+                </select>
+                <small>Pro orientační odhad potřebného čistého příjmu.</small>
+              </div>
+
+              <div class="actions full">
+                <button type="submit" class="btn-primary">Spočítat celkovou cenu vlastnictví</button>
+                <button type="button" class="btn-secondary" id="resetBtn">Obnovit výchozí hodnoty</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>Výsledek výpočtu</h2>
+          <p>Souhrn skutečných nákladů auta za celé zvolené období vlastnictví.</p>
+        </div>
+        <div class="card-body">
+          <div class="results-grid">
+            <div class="result-box highlight">
+              <div class="result-label">Celkové náklady vlastnictví</div>
+              <div class="result-value" id="totalOwnershipCost">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Průměr za měsíc</div>
+              <div class="result-value" id="monthlyAverage">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Cena za kilometr</div>
+              <div class="result-value" id="costPerKm">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Ztráta hodnoty auta</div>
+              <div class="result-value" id="depreciationCost">0 Kč</div>
+            </div>
+          </div>
+
+          <div id="ownershipBadge" class="badge success">Celková cena vlastnictví je pod kontrolou</div>
+
+          <div class="info-list">
+            <div class="info-row">
+              <span>Celkem za palivo</span>
+              <strong id="fuelTotal">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Celkem za provozní náklady</span>
+              <strong id="operatingTotal">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Celkem za financování</span>
+              <strong id="financingTotal">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Celkový nájezd za období</span>
+              <strong id="totalKm">0 km</strong>
+            </div>
+            <div class="info-row">
+              <span>Orientační potřebný čistý příjem</span>
+              <strong id="neededIncome">0 Kč</strong>
+            </div>
+          </div>
+
+          <div class="note" id="resultNote">
+            Výpočet je orientační. Skutečné náklady mohou ovlivnit větší opravy, odlišný vývoj cen paliva, jiná prodejní cena auta nebo změny ročního nájezdu.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="card">
+        <div class="card-header">
+          <h3>Rozpad celkové ceny vlastnictví auta</h3>
+          <p>Přehled nejdůležitějších nákladových položek za celé zvolené období.</p>
+        </div>
+        <div class="card-body">
+          <div class="table-wrap">
+            <table aria-label="Rozpad celkové ceny vlastnictví auta">
+              <thead>
+                <tr>
+                  <th>Položka</th>
+                  <th>Za měsíc</th>
+                  <th>Za celé období</th>
+                  <th>Podíl na celku</th>
+                </tr>
+              </thead>
+              <tbody id="breakdownBody">
+                <tr>
+                  <td colspan="4">Po zadání údajů se zobrazí detailní rozpis celkové ceny vlastnictví.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container content-section">
+      <h2>Jak kalkulačka celkové ceny vlastnictví auta funguje</h2>
+      <p>Kalkulačka počítá celkové náklady auta za celé období vlastnictví. Neřeší jen jednu dílčí položku, ale dívá se na auto jako na celek. Zahrnuje pořizovací cenu nebo financování, palivo, pojištění, servis, pneumatiky, parkování, poplatky i ztrátu hodnoty vozu. Na konci od celkových výdajů odečte orientační prodejní cenu auta, takže získáte realističtější pohled na to, kolik vás auto skutečně stojí.</p>
+
+      <h3>Co se do výsledku započítává</h3>
+      <ul>
+        <li>pořizovací cena vozu a případná akontace,</li>
+        <li>splátky financování nebo leasingu,</li>
+        <li>palivo podle nájezdu, spotřeby a ceny,</li>
+        <li>pojištění, servis, pneumatiky a další provozní výdaje,</li>
+        <li>poplatky za parkování nebo dálniční známku,</li>
+        <li>odhad prodejní ceny po skončení vlastnictví.</li>
+      </ul>
+
+      <h3>Proč je důležitá ztráta hodnoty auta</h3>
+      <p>Pokles hodnoty bývá u mnoha aut jedna z největších nákladových položek. Často je vyšší než roční výdaje za servis a někdy i vyšší než samotné palivo. Právě proto dává smysl dívat se na auto nejen přes měsíční splátku nebo provoz, ale přes celkovou cenu vlastnictví.</p>
+
+      <h3>K čemu je dobrá cena za kilometr</h3>
+      <p>Cena za kilometr pomáhá srovnávat různá auta mezi sebou a dává praktický smysl při rozhodování, jestli konkrétní vůz odpovídá vašemu ročnímu nájezdu a rozpočtu. Je to jeden z nejpřehlednějších ukazatelů reálné nákladovosti auta.</p>
+    </section>
+
+    <section class="container content-section">
+      <h2>Kdy tenhle tool dává největší smysl</h2>
+      <p>Tahle kalkulačka je ideální ve chvíli, kdy porovnáváte několik aut, řešíte dražší vůz proti levnějšímu, rozhodujete mezi hotovostí a financováním nebo si chcete ověřit, jestli je provoz konkrétního auta dlouhodobě ještě rozumný. Dobře funguje i při úvaze, zda se vyplatí auto držet déle, nebo ho dříve prodat.</p>
+
+      <h3>Na co lidé často zapomínají</h3>
+      <p>Nejčastější chybou je soustředit se jen na kupní cenu nebo měsíční splátku. Reálný dopad na rozpočet ale velmi často tvoří kombinace paliva, pojištění, servisu a hlavně ztráty hodnoty. Právě proto je souhrnný pohled mnohem užitečnější než jednotlivé izolované výpočty.</p>
+
+      <h3>Jak výsledek používat v praxi</h3>
+      <p>Největší hodnotu má tenhle tool při srovnání scénářů. Zkuste si změnit roční nájezd, odhad prodejní ceny nebo výši financování a uvidíte, které auto vychází dlouhodobě lépe. To je přesně vrstva rozhodování, která v běžných inzerátech nebo nabídkách financování chybí.</p>
+    </section>
+
+    <section class="container content-section">
+      <h2>Související kalkulačky</h2>
+      <div class="related-grid">
+        <a class="related-card" href="/naklady-na-provoz-auta-kalkulacka.html">
+          <strong>Kalkulačka nákladů na provoz auta</strong>
+          <span>Souhrnný výpočet paliva, servisu, pojištění a dalších provozních nákladů.</span>
+        </a>
+
+        <a class="related-card" href="/kalkulacka-splatky-auta.html">
+          <strong>Kalkulačka splátky auta</strong>
+          <span>Výpočet měsíční splátky, akontace a celkového přeplacení vozu.</span>
+        </a>
+
+        <a class="related-card" href="/amortizace-auta-kalkulacka.html">
+          <strong>Kalkulačka amortizace auta</strong>
+          <span>Odhad ztráty hodnoty auta za čas a ujeté kilometry.</span>
+        </a>
+
+        <a class="related-card" href="/cena-za-km-kalkulacka.html">
+          <strong>Kalkulačka ceny za km</strong>
+          <span>Rychlý přepočet nákladů auta na jeden kilometr jízdy.</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      © 2026 RychléVýpočty.cz — online kalkulačky a praktické výpočty pro každodenní použití.
+    </div>
+  </footer>
+
+  <script>
+    const form = document.getElementById('ownershipForm');
+    const resetBtn = document.getElementById('resetBtn');
+
+    const outputs = {
+      totalOwnershipCost: document.getElementById('totalOwnershipCost'),
+      monthlyAverage: document.getElementById('monthlyAverage'),
+      costPerKm: document.getElementById('costPerKm'),
+      depreciationCost: document.getElementById('depreciationCost'),
+      fuelTotal: document.getElementById('fuelTotal'),
+      operatingTotal: document.getElementById('operatingTotal'),
+      financingTotal: document.getElementById('financingTotal'),
+      totalKm: document.getElementById('totalKm'),
+      neededIncome: document.getElementById('neededIncome'),
+      ownershipBadge: document.getElementById('ownershipBadge'),
+      resultNote: document.getElementById('resultNote'),
+      breakdownBody: document.getElementById('breakdownBody')
+    };
+
+    function formatCurrency(value, digits = 0) {
+      return new Intl.NumberFormat('cs-CZ', {
+        style: 'currency',
+        currency: 'CZK',
+        minimumFractionDigits: digits,
+        maximumFractionDigits: digits
+      }).format(value);
+    }
+
+    function formatPercent(value, digits = 1) {
+      return new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: digits
+      }).format(value) + ' %';
+    }
+
+    function formatNumber(value, digits = 0) {
+      return new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: digits
+      }).format(value);
+    }
+
+    function getValues() {
+      return {
+        carPrice: Number(document.getElementById('carPrice').value),
+        ownershipYears: Number(document.getElementById('ownershipYears').value),
+        annualKm: Number(document.getElementById('annualKm').value),
+        resalePrice: Number(document.getElementById('resalePrice').value),
+        downPayment: Number(document.getElementById('downPayment').value),
+        monthlyLoanPayment: Number(document.getElementById('monthlyLoanPayment').value),
+        fuelConsumption: Number(document.getElementById('fuelConsumption').value),
+        fuelPrice: Number(document.getElementById('fuelPrice').value),
+        insuranceMonthly: Number(document.getElementById('insuranceMonthly').value),
+        serviceMonthly: Number(document.getElementById('serviceMonthly').value),
+        tiresMonthly: Number(document.getElementById('tiresMonthly').value),
+        parkingMonthly: Number(document.getElementById('parkingMonthly').value),
+        feesMonthly: Number(document.getElementById('feesMonthly').value),
+        otherMonthly: Number(document.getElementById('otherMonthly').value),
+        incomeShare: Number(document.getElementById('incomeShare').value)
+      };
+    }
+
+    function validate(values) {
+      if (!values.carPrice || values.carPrice <= 0) return 'Zadejte platnou kupní cenu auta.';
+      if (!values.ownershipYears || values.ownershipYears <= 0) return 'Zvolte platné období vlastnictví.';
+      if (!values.annualKm || values.annualKm <= 0) return 'Zadejte platný roční nájezd.';
+      if (values.resalePrice < 0) return 'Prodejní cena nemůže být záporná.';
+      if (values.downPayment < 0) return 'Akontace nemůže být záporná.';
+      if (values.downPayment > values.carPrice) return 'Akontace nemůže být vyšší než kupní cena auta.';
+      if (values.monthlyLoanPayment < 0) return 'Splátka financování nemůže být záporná.';
+      if (!values.fuelConsumption || values.fuelConsumption <= 0) return 'Zadejte platnou spotřebu.';
+      if (!values.fuelPrice || values.fuelPrice <= 0) return 'Zadejte platnou cenu paliva.';
+      if (values.resalePrice > values.carPrice * 1.2) return 'Prodejní cena po období je neobvykle vysoká.';
+      return '';
+    }
+
+    function calculate(values) {
+      const months = values.ownershipYears * 12;
+      const totalKm = values.annualKm * values.ownershipYears;
+
+      const fuelTotal = (totalKm / 100) * values.fuelConsumption * values.fuelPrice;
+
+      const insuranceTotal = values.insuranceMonthly * months;
+      const serviceTotal = values.serviceMonthly * months;
+      const tiresTotal = values.tiresMonthly * months;
+      const parkingTotal = values.parkingMonthly * months;
+      const feesTotal = values.feesMonthly * months;
+      const otherTotal = values.otherMonthly * months;
+      const financingTotal = values.monthlyLoanPayment * months;
+
+      const operatingTotal = insuranceTotal + serviceTotal + tiresTotal + parkingTotal + feesTotal + otherTotal;
+      const depreciationCost = values.carPrice - values.resalePrice;
+
+      const cashOut = values.downPayment + financingTotal + fuelTotal + operatingTotal;
+      const totalOwnershipCost = cashOut + depreciationCost;
+      const monthlyAverage = totalOwnershipCost / months;
+      const costPerKm = totalOwnershipCost / totalKm;
+      const neededIncome = monthlyAverage / (values.incomeShare / 100);
+
+      const items = [
+        { name: 'Ztráta hodnoty auta', monthly: depreciationCost / months, total: depreciationCost },
+        { name: 'Palivo', monthly: fuelTotal / months, total: fuelTotal },
+        { name: 'Financování / splátky', monthly: values.monthlyLoanPayment, total: financingTotal },
+        { name: 'Pojištění', monthly: values.insuranceMonthly, total: insuranceTotal },
+        { name: 'Servis a údržba', monthly: values.serviceMonthly, total: serviceTotal },
+        { name: 'Pneumatiky', monthly: values.tiresMonthly, total: tiresTotal },
+        { name: 'Parkování / garáž', monthly: values.parkingMonthly, total: parkingTotal },
+        { name: 'Dálniční známka a poplatky', monthly: values.feesMonthly, total: feesTotal },
+        { name: 'Ostatní náklady', monthly: values.otherMonthly, total: otherTotal }
+      ].filter(item => item.total > 0);
+
+      return {
+        months,
+        totalKm,
+        fuelTotal,
+        operatingTotal,
+        financingTotal,
+        depreciationCost,
+        totalOwnershipCost,
+        monthlyAverage,
+        costPerKm,
+        neededIncome,
+        items
+      };
+    }
+
+    function renderBreakdown(result) {
+      if (!result.items.length || result.totalOwnershipCost <= 0) {
+        outputs.breakdownBody.innerHTML = '<tr><td colspan="4">Po zadání údajů se zobrazí detailní rozpis celkové ceny vlastnictví.</td></tr>';
+        return;
+      }
+
+      outputs.breakdownBody.innerHTML = result.items.map(item => {
+        const share = (item.total / result.totalOwnershipCost) * 100;
+
+        return `
+          <tr>
+            <td>${item.name}</td>
+            <td>${formatCurrency(item.monthly)}</td>
+            <td>${formatCurrency(item.total)}</td>
+            <td>${formatPercent(share)}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function render(values, result) {
+      outputs.totalOwnershipCost.textContent = formatCurrency(result.totalOwnershipCost);
+      outputs.monthlyAverage.textContent = formatCurrency(result.monthlyAverage);
+      outputs.costPerKm.textContent = formatCurrency(result.costPerKm, 2);
+      outputs.depreciationCost.textContent = formatCurrency(result.depreciationCost);
+
+      outputs.fuelTotal.textContent = formatCurrency(result.fuelTotal);
+      outputs.operatingTotal.textContent = formatCurrency(result.operatingTotal);
+      outputs.financingTotal.textContent = formatCurrency(result.financingTotal);
+      outputs.totalKm.textContent = formatNumber(result.totalKm) + ' km';
+      outputs.neededIncome.textContent = formatCurrency(result.neededIncome);
+
+      if (result.monthlyAverage <= 9000) {
+        outputs.ownershipBadge.textContent = 'Celková cena vlastnictví je pod kontrolou';
+        outputs.ownershipBadge.className = 'badge success';
+        outputs.resultNote.textContent = 'Při zadaných údajích vychází celková cena vlastnictví auta na relativně zvládnutelné úrovni. Přesto má smysl sledovat hlavně ztrátu hodnoty a budoucí prodejní cenu vozu.';
+      } else if (result.monthlyAverage <= 15000) {
+        outputs.ownershipBadge.textContent = 'Auto je už výraznější položka rozpočtu';
+        outputs.ownershipBadge.className = 'badge warning';
+        outputs.resultNote.textContent = 'Celková cena vlastnictví už tvoří poměrně významnou rozpočtovou položku. Vyplatí se sledovat, jestli dražší auto odpovídá vašemu nájezdu a reálnému využití.';
+      } else {
+        outputs.ownershipBadge.textContent = 'Celková cena vlastnictví je vysoká';
+        outputs.ownershipBadge.className = 'badge danger';
+        outputs.resultNote.textContent = 'Při zadaných parametrech vychází vlastnictví auta poměrně draze. Největší smysl má zkontrolovat hlavně financování, ztrátu hodnoty a to, zda vůz není zbytečně drahý vzhledem k vašemu nájezdu.';
+      }
+
+      renderBreakdown(result);
+    }
+
+    function runCalculation() {
+      const values = getValues();
+      const error = validate(values);
+
+      if (error) {
+        alert(error);
+        return;
+      }
+
+      const result = calculate(values);
+      render(values, result);
+    }
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      runCalculation();
+    });
+
+    [
+      'carPrice',
+      'ownershipYears',
+      'annualKm',
+      'resalePrice',
+      'downPayment',
+      'monthlyLoanPayment',
+      'fuelConsumption',
+      'fuelPrice',
+      'insuranceMonthly',
+      'serviceMonthly',
+      'tiresMonthly',
+      'parkingMonthly',
+      'feesMonthly',
+      'otherMonthly',
+      'incomeShare'
+    ].forEach(id => {
+      document.getElementById(id).addEventListener('input', runCalculation);
+      document.getElementById(id).addEventListener('change', runCalculation);
+    });
+
+    resetBtn.addEventListener('click', function() {
+      document.getElementById('carPrice').value = 720000;
+      document.getElementById('ownershipYears').value = 5;
+      document.getElementById('annualKm').value = 18000;
+      document.getElementById('resalePrice').value = 330000;
+      document.getElementById('downPayment').value = 200000;
+      document.getElementById('monthlyLoanPayment').value = 9500;
+      document.getElementById('fuelConsumption').value = 6.7;
+      document.getElementById('fuelPrice').value = 38.50;
+      document.getElementById('insuranceMonthly').value = 1800;
+      document.getElementById('serviceMonthly').value = 1400;
+      document.getElementById('tiresMonthly').value = 450;
+      document.getElementById('parkingMonthly').value = 900;
+      document.getElementById('feesMonthly').value = 220;
+      document.getElementById('otherMonthly').value = 300;
+      document.getElementById('incomeShare').value = 15;
+      runCalculation();
+    });
+
+    runCalculation();
+  </script>
+</body>
+</html>
