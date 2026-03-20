@@ -1,1 +1,1028 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Porovnání vytápění kalkulačka online | RychléVýpočty.cz</title>
+  <meta name="description" content="Porovnejte roční náklady na vytápění podle typu zdroje. Kalkulačka porovnání vytápění pro elektřinu, plyn, tepelné čerpadlo, pelety i dřevo ukáže roční náklad, cenu za kWh tepla i orientační pořadí variant.">
+  <meta name="keywords" content="porovnání vytápění kalkulačka, kalkulačka vytápění, náklady na vytápění porovnání, tepelné čerpadlo vs plyn, elektřina vs plyn vytápění, cena vytápění">
+  <meta name="author" content="RychléVýpočty.cz">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://rychlevypocty.cz/porovnani-vytapeni-kalkulacka.html">
 
+  <meta property="og:title" content="Porovnání vytápění kalkulačka online | RychléVýpočty.cz">
+  <meta property="og:description" content="Rychlé porovnání ročních nákladů na vytápění pro plyn, elektřinu, tepelné čerpadlo, pelety i dřevo.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rychlevypocty.cz/porovnani-vytapeni-kalkulacka.html">
+  <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Porovnání vytápění kalkulačka | RychléVýpočty.cz">
+  <meta name="twitter:description" content="Porovnejte cenu vytápění podle zdroje energie a zjistěte orientačně nejlevnější variantu.">
+
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #5f6b85;
+      --primary: #2152ff;
+      --primary-dark: #183dbf;
+      --border: #dbe3f0;
+      --success: #138a4b;
+      --warning: #b66a00;
+      --shadow: 0 12px 32px rgba(20, 32, 70, 0.08);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #f7f9fd 0%, #eef3fb 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      padding: 18px 0;
+      border-bottom: 1px solid rgba(219, 227, 240, 0.8);
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .brand span {
+      color: var(--primary);
+    }
+
+    .topnav {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      font-size: 0.97rem;
+    }
+
+    .hero {
+      padding: 42px 0 20px;
+    }
+
+    .breadcrumbs {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .hero-copy h1 {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      margin: 0 0 16px;
+    }
+
+    .hero-copy p {
+      margin: 0 0 16px;
+      font-size: 1.06rem;
+      color: var(--muted);
+      max-width: 720px;
+    }
+
+    .hero-points {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .hero-pill {
+      background: rgba(33, 82, 255, 0.08);
+      color: var(--primary-dark);
+      border: 1px solid rgba(33, 82, 255, 0.12);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .hero-box {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-box h2 {
+      margin: 0 0 10px;
+      font-size: 1.2rem;
+    }
+
+    .hero-box p {
+      margin: 0 0 10px;
+      color: var(--muted);
+    }
+
+    .hero-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.04fr 0.96fr;
+      gap: 28px;
+      align-items: start;
+      padding: 22px 0 32px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .card-header {
+      padding: 24px 24px 10px;
+    }
+
+    .card-header h2,
+    .card-header h3 {
+      margin: 0 0 8px;
+      font-size: 1.3rem;
+      letter-spacing: -0.02em;
+    }
+
+    .card-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .card-body {
+      padding: 20px 24px 24px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field label {
+      font-weight: 700;
+      font-size: 0.96rem;
+    }
+
+    .field small {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: -2px;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      padding: 14px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      font-size: 1rem;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      outline: none;
+      border-color: rgba(33, 82, 255, 0.45);
+      box-shadow: 0 0 0 4px rgba(33, 82, 255, 0.10);
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.06s ease, background 0.15s ease, opacity 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background: #eef3ff;
+      color: var(--primary-dark);
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .result-box {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+
+    .result-label {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .result-value {
+      font-size: clamp(1.25rem, 2.4vw, 2rem);
+      line-height: 1.15;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .highlight {
+      background: linear-gradient(180deg, #eef7ff 0%, #f9fcff 100%);
+      border-color: rgba(33, 82, 255, 0.18);
+    }
+
+    .info-list {
+      display: grid;
+      gap: 12px;
+      margin: 18px 0 0;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid #edf2fa;
+    }
+
+    .info-row:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .info-row span:first-child {
+      color: var(--muted);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+
+    .badge.success {
+      background: rgba(19, 138, 75, 0.10);
+      color: var(--success);
+    }
+
+    .badge.warning {
+      background: rgba(182, 106, 0, 0.11);
+      color: var(--warning);
+    }
+
+    .note {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1px solid #e7edf7;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 18px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 760px;
+      background: #fff;
+    }
+
+    th, td {
+      padding: 14px 14px;
+      text-align: left;
+      border-bottom: 1px solid #edf2fa;
+      font-size: 0.96rem;
+    }
+
+    th {
+      background: #f8fbff;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .row-best td:first-child {
+      color: var(--success);
+      font-weight: 800;
+    }
+
+    .content-section {
+      padding: 8px 0 8px;
+    }
+
+    .content-section h2 {
+      font-size: 1.7rem;
+      letter-spacing: -0.03em;
+      margin: 0 0 14px;
+    }
+
+    .content-section h3 {
+      font-size: 1.15rem;
+      margin: 28px 0 10px;
+    }
+
+    .content-section p {
+      color: var(--muted);
+      margin: 0 0 14px;
+    }
+
+    .content-section ul {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    .content-section li {
+      margin-bottom: 8px;
+    }
+
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .related-card {
+      display: block;
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      color: var(--text);
+      box-shadow: var(--shadow);
+    }
+
+    .related-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .related-card span {
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    footer {
+      margin-top: 40px;
+      border-top: 1px solid rgba(219, 227, 240, 0.9);
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .footer-inner {
+      padding: 24px 0 40px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .layout,
+      .related-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .container {
+        width: min(100% - 24px, 1160px);
+      }
+
+      .form-grid,
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 28px;
+      }
+
+      .card-header,
+      .card-body,
+      .hero-box {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebApplication",
+    "name":"Porovnání vytápění kalkulačka",
+    "url":"https://rychlevypocty.cz/porovnani-vytapeni-kalkulacka.html",
+    "applicationCategory":"UtilitiesApplication",
+    "operatingSystem":"Any",
+    "description":"Online kalkulačka pro porovnání ročních nákladů na vytápění podle typu zdroje energie.",
+    "offers":{
+      "@type":"Offer",
+      "price":"0",
+      "priceCurrency":"CZK"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"Jak kalkulačka porovnání vytápění funguje?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Kalkulačka vychází z roční potřeby tepla objektu a z ceny jednotlivých energií nebo paliv. U tepelného čerpadla zohledňuje také topný faktor COP, tedy kolik tepla zařízení vyrobí z jedné kWh elektřiny."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Co znamená COP u tepelného čerpadla?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"COP je topný faktor, který ukazuje poměr mezi spotřebovanou elektřinou a vyrobeným teplem. Například COP 3 znamená, že z 1 kWh elektřiny získáte přibližně 3 kWh tepla."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Je nejnižší roční náklad automaticky nejlepší volba?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Ne vždy. Vedle provozních nákladů je vhodné sledovat také pořizovací cenu systému, nároky na údržbu, dostupnost paliva, komfort obsluhy, prostorové nároky i vhodnost pro konkrétní typ domu nebo bytu."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="/">Rychlé<span>Výpočty</span>.cz</a>
+      <nav class="topnav" aria-label="Hlavní navigace">
+        <a href="/">Domů</a>
+        <a href="/naklady-na-vytapeni-kalkulacka.html">Náklady na vytápění</a>
+        <a href="/spotreba-plynu-kalkulacka.html">Spotřeba plynu</a>
+        <a href="/spotreba-elektriny-kalkulacka.html">Spotřeba elektřiny</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumbs">
+          <a href="/">RychléVýpočty.cz</a> / Porovnání vytápění kalkulačka
+        </div>
+
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <h1>Porovnání vytápění kalkulačka</h1>
+            <p>Porovnejte si orientační roční náklady na vytápění podle typu zdroje. Kalkulačka vám pomůže rychle srovnat elektřinu, plyn, tepelné čerpadlo, pelety i dřevo a ukáže, jaký je rozdíl v ceně za rok i v přepočtu na jednu kWh dodaného tepla.</p>
+            <p>Stačí zadat roční potřebu tepla a ceny jednotlivých variant. Výsledkem je přehledné pořadí zdrojů podle provozního nákladu.</p>
+
+            <div class="hero-points">
+              <div class="hero-pill">Roční náklady</div>
+              <div class="hero-pill">Cena za kWh tepla</div>
+              <div class="hero-pill">Porovnání variant</div>
+              <div class="hero-pill">Tepelné čerpadlo vs plyn</div>
+            </div>
+          </div>
+
+          <div class="hero-box">
+            <h2>Co kalkulačka umí</h2>
+            <p>Vypočítá orientační roční provozní náklady podle zadané potřeby tepla a cen energie. U tepelného čerpadla navíc pracuje s topným faktorem COP.</p>
+            <p>Výsledky jsou vhodné pro rychlé porovnání scénářů, ne jako finální technický návrh vytápění.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container layout">
+      <div class="card">
+        <div class="card-header">
+          <h2>Zadání porovnání</h2>
+          <p>Zadejte roční potřebu tepla a orientační ceny jednotlivých zdrojů nebo paliv.</p>
+        </div>
+        <div class="card-body">
+          <form id="heatingForm">
+            <div class="form-grid">
+              <div class="field full">
+                <label for="annualHeatNeed">Roční potřeba tepla (kWh)</label>
+                <input type="number" id="annualHeatNeed" min="1000" step="100" value="18000" inputmode="decimal">
+                <small>Orientační množství tepla, které objekt za rok potřebuje na vytápění.</small>
+              </div>
+
+              <div class="field">
+                <label for="electricityPrice">Cena elektřiny (Kč/kWh)</label>
+                <input type="number" id="electricityPrice" min="0.1" step="0.01" value="6.20" inputmode="decimal">
+                <small>Pro přímotopy nebo elektrokotel.</small>
+              </div>
+
+              <div class="field">
+                <label for="gasPrice">Cena plynu (Kč/kWh)</label>
+                <input type="number" id="gasPrice" min="0.1" step="0.01" value="2.35" inputmode="decimal">
+                <small>Orientační cena dodaného tepla z plynu.</small>
+              </div>
+
+              <div class="field">
+                <label for="woodPrice">Cena dřeva (Kč/kWh)</label>
+                <input type="number" id="woodPrice" min="0.1" step="0.01" value="1.45" inputmode="decimal">
+                <small>Odhad podle kvality paliva a účinnosti spalování.</small>
+              </div>
+
+              <div class="field">
+                <label for="pelletsPrice">Cena pelet (Kč/kWh)</label>
+                <input type="number" id="pelletsPrice" min="0.1" step="0.01" value="1.85" inputmode="decimal">
+                <small>Orientační přepočet na dodané teplo.</small>
+              </div>
+
+              <div class="field">
+                <label for="heatPumpElectricityPrice">Cena elektřiny pro tepelné čerpadlo (Kč/kWh)</label>
+                <input type="number" id="heatPumpElectricityPrice" min="0.1" step="0.01" value="6.20" inputmode="decimal">
+                <small>Může být shodná s běžnou cenou elektřiny.</small>
+              </div>
+
+              <div class="field">
+                <label for="cop">COP tepelného čerpadla</label>
+                <input type="number" id="cop" min="1.1" step="0.1" value="3.2" inputmode="decimal">
+                <small>Topný faktor. Vyšší COP znamená nižší provozní náklady.</small>
+              </div>
+
+              <div class="field">
+                <label for="showCount">Počet zobrazovaných variant</label>
+                <select id="showCount">
+                  <option value="5" selected>5 variant</option>
+                  <option value="4">4 varianty</option>
+                  <option value="3">3 varianty</option>
+                </select>
+                <small>Pro rychlejší přehled můžete omezit počet řádků.</small>
+              </div>
+
+              <div class="actions full">
+                <button type="submit" class="btn-primary">Porovnat vytápění</button>
+                <button type="button" class="btn-secondary" id="resetBtn">Obnovit výchozí hodnoty</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>Výsledek porovnání</h2>
+          <p>Orientační srovnání provozních nákladů podle zadané roční potřeby tepla.</p>
+        </div>
+        <div class="card-body">
+          <div class="results-grid">
+            <div class="result-box highlight">
+              <div class="result-label">Nejlevnější varianta</div>
+              <div class="result-value" id="bestOption">—</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Roční náklad nejlepší varianty</div>
+              <div class="result-value" id="bestAnnualCost">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Nejdražší varianta</div>
+              <div class="result-value" id="worstOption">—</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Rozdíl nejlepší vs nejdražší</div>
+              <div class="result-value" id="costDifference">0 Kč</div>
+            </div>
+          </div>
+
+          <div id="comparisonBadge" class="badge success">Porovnání připraveno</div>
+
+          <div class="info-list">
+            <div class="info-row">
+              <span>Roční potřeba tepla</span>
+              <strong id="summaryNeed">0 kWh</strong>
+            </div>
+            <div class="info-row">
+              <span>Orientační cena 1 kWh u nejlepší varianty</span>
+              <strong id="summaryBestPerKwh">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Roční úspora proti nejdražší variantě</span>
+              <strong id="summarySaving">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Měsíční rozdíl nejlepší vs nejdražší</span>
+              <strong id="summaryMonthlyDifference">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>COP tepelného čerpadla</span>
+              <strong id="summaryCop">0</strong>
+            </div>
+          </div>
+
+          <div class="note">
+            Výpočet je orientační. Nezahrnuje pořizovací cenu technologie, servis, revize, životnost systému, akumulaci, komfort obsluhy ani konkrétní technické podmínky objektu.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="card">
+        <div class="card-header">
+          <h3>Detailní porovnání zdrojů vytápění</h3>
+          <p>Přehled variant seřazených podle ročního provozního nákladu.</p>
+        </div>
+        <div class="card-body">
+          <div class="table-wrap">
+            <table aria-label="Porovnání nákladů na vytápění">
+              <thead>
+                <tr>
+                  <th>Pořadí</th>
+                  <th>Zdroj vytápění</th>
+                  <th>Roční náklad</th>
+                  <th>Měsíční průměr</th>
+                  <th>Cena za kWh tepla</th>
+                  <th>Rozdíl proti nejlevnější variantě</th>
+                </tr>
+              </thead>
+              <tbody id="comparisonTableBody">
+                <tr>
+                  <td colspan="6">Po zadání údajů se zobrazí porovnání jednotlivých variant.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container content-section">
+      <h2>Jak kalkulačka porovnání vytápění funguje</h2>
+      <p>Kalkulačka vychází z roční potřeby tepla objektu a z ceny jednotlivých zdrojů nebo paliv. U každé varianty spočítá orientační roční náklad a přepočítá ho také na cenu za jednu kWh dodaného tepla. Díky tomu můžete v jednom přehledu porovnat, jak si stojí elektřina, plyn, pelety, dřevo i tepelné čerpadlo.</p>
+
+      <h3>Co výsledek ukazuje</h3>
+      <ul>
+        <li>nejlevnější a nejdražší variantu podle provozního nákladu,</li>
+        <li>roční i měsíční orientační náklad,</li>
+        <li>cenu za jednu kWh dodaného tepla,</li>
+        <li>rozdíl proti nejlevnější variantě.</li>
+      </ul>
+
+      <h3>Co znamená COP u tepelného čerpadla</h3>
+      <p>COP vyjadřuje, kolik tepla tepelné čerpadlo vyrobí z jedné kWh elektřiny. Pokud je COP 3,2, znamená to, že z 1 kWh elektřiny získáte přibližně 3,2 kWh tepla. Právě proto může mít tepelné čerpadlo výrazně nižší provozní náklady než přímotopné vytápění.</p>
+
+      <h3>Na co si dát pozor při interpretaci výsledku</h3>
+      <p>Nejnižší provozní náklad ještě neznamená automaticky nejlepší volbu. Důležitá je také pořizovací cena systému, potřebné stavební úpravy, nároky na servis, dostupnost paliva, skladování, hlučnost, komfort obsluhy i vhodnost pro konkrétní typ domu nebo bytu.</p>
+    </section>
+
+    <section class="container content-section">
+      <h2>Kdy se porovnání vytápění hodí</h2>
+      <p>Tahle kalkulačka je užitečná při rekonstrukci domu, výběru nového zdroje tepla, změně dodavatele energií nebo při úvaze, jestli se vyplatí přechod z plynu na tepelné čerpadlo. Dobře funguje i jako rychlá orientace před detailnějším technickým návrhem.</p>
+
+      <h3>Typické využití</h3>
+      <ul>
+        <li>porovnání plyn vs tepelné čerpadlo,</li>
+        <li>porovnání elektřina vs pelety,</li>
+        <li>orientační kontrola provozních nákladů domu,</li>
+        <li>odhad úspory při změně způsobu vytápění.</li>
+      </ul>
+
+      <h3>Co si připravit pro přesnější výpočet</h3>
+      <p>Čím přesněji znáte roční potřebu tepla a skutečné ceny energie, tím užitečnější bude výsledek. Pokud už máte vyúčtování nebo energetický štítek, vyplatí se vycházet právě z těchto dat. U tepelného čerpadla je dobré pracovat s realistickým COP, ne s ideální laboratorní hodnotou.</p>
+    </section>
+
+    <section class="container content-section">
+      <h2>Související kalkulačky</h2>
+      <div class="related-grid">
+        <a class="related-card" href="/naklady-na-vytapeni-kalkulacka.html">
+          <strong>Kalkulačka nákladů na vytápění</strong>
+          <span>Samostatný výpočet orientačních nákladů na topení.</span>
+        </a>
+
+        <a class="related-card" href="/spotreba-plynu-kalkulacka.html">
+          <strong>Kalkulačka spotřeby plynu</strong>
+          <span>Odhad spotřeby plynu a souvisejících nákladů.</span>
+        </a>
+
+        <a class="related-card" href="/spotreba-elektriny-kalkulacka.html">
+          <strong>Kalkulačka spotřeby elektřiny</strong>
+          <span>Výpočet spotřeby a ceny provozu elektrospotřebičů.</span>
+        </a>
+
+        <a class="related-card" href="/navratnost-fotovoltaiky-kalkulacka.html">
+          <strong>Kalkulačka návratnosti fotovoltaiky</strong>
+          <span>Orientační výpočet návratnosti domácí fotovoltaiky.</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      © 2026 RychléVýpočty.cz — online kalkulačky a praktické výpočty pro každodenní použití.
+    </div>
+  </footer>
+
+  <script>
+    const form = document.getElementById('heatingForm');
+    const resetBtn = document.getElementById('resetBtn');
+
+    const outputs = {
+      bestOption: document.getElementById('bestOption'),
+      bestAnnualCost: document.getElementById('bestAnnualCost'),
+      worstOption: document.getElementById('worstOption'),
+      costDifference: document.getElementById('costDifference'),
+      summaryNeed: document.getElementById('summaryNeed'),
+      summaryBestPerKwh: document.getElementById('summaryBestPerKwh'),
+      summarySaving: document.getElementById('summarySaving'),
+      summaryMonthlyDifference: document.getElementById('summaryMonthlyDifference'),
+      summaryCop: document.getElementById('summaryCop'),
+      comparisonBadge: document.getElementById('comparisonBadge'),
+      comparisonTableBody: document.getElementById('comparisonTableBody')
+    };
+
+    function formatCurrency(value, digits = 0) {
+      return new Intl.NumberFormat('cs-CZ', {
+        style: 'currency',
+        currency: 'CZK',
+        minimumFractionDigits: digits,
+        maximumFractionDigits: digits
+      }).format(value);
+    }
+
+    function formatNumber(value, digits = 0) {
+      return new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: digits
+      }).format(value);
+    }
+
+    function getValues() {
+      return {
+        annualHeatNeed: Number(document.getElementById('annualHeatNeed').value),
+        electricityPrice: Number(document.getElementById('electricityPrice').value),
+        gasPrice: Number(document.getElementById('gasPrice').value),
+        woodPrice: Number(document.getElementById('woodPrice').value),
+        pelletsPrice: Number(document.getElementById('pelletsPrice').value),
+        heatPumpElectricityPrice: Number(document.getElementById('heatPumpElectricityPrice').value),
+        cop: Number(document.getElementById('cop').value),
+        showCount: Number(document.getElementById('showCount').value)
+      };
+    }
+
+    function validate(values) {
+      if (!values.annualHeatNeed || values.annualHeatNeed <= 0) return 'Zadejte platnou roční potřebu tepla.';
+      if (!values.electricityPrice || values.electricityPrice <= 0) return 'Zadejte platnou cenu elektřiny.';
+      if (!values.gasPrice || values.gasPrice <= 0) return 'Zadejte platnou cenu plynu.';
+      if (!values.woodPrice || values.woodPrice <= 0) return 'Zadejte platnou cenu dřeva.';
+      if (!values.pelletsPrice || values.pelletsPrice <= 0) return 'Zadejte platnou cenu pelet.';
+      if (!values.heatPumpElectricityPrice || values.heatPumpElectricityPrice <= 0) return 'Zadejte platnou cenu elektřiny pro tepelné čerpadlo.';
+      if (!values.cop || values.cop <= 1) return 'COP tepelného čerpadla musí být větší než 1.';
+      return '';
+    }
+
+    function calculate(values) {
+      const variants = [
+        {
+          name: 'Tepelné čerpadlo',
+          annualCost: (values.annualHeatNeed / values.cop) * values.heatPumpElectricityPrice,
+          costPerKwhHeat: values.heatPumpElectricityPrice / values.cop
+        },
+        {
+          name: 'Plyn',
+          annualCost: values.annualHeatNeed * values.gasPrice,
+          costPerKwhHeat: values.gasPrice
+        },
+        {
+          name: 'Dřevo',
+          annualCost: values.annualHeatNeed * values.woodPrice,
+          costPerKwhHeat: values.woodPrice
+        },
+        {
+          name: 'Pelety',
+          annualCost: values.annualHeatNeed * values.pelletsPrice,
+          costPerKwhHeat: values.pelletsPrice
+        },
+        {
+          name: 'Elektřina',
+          annualCost: values.annualHeatNeed * values.electricityPrice,
+          costPerKwhHeat: values.electricityPrice
+        }
+      ];
+
+      variants.sort((a, b) => a.annualCost - b.annualCost);
+
+      return variants;
+    }
+
+    function renderTable(variants, showCount) {
+      const visible = variants.slice(0, showCount);
+      const cheapest = variants[0];
+
+      outputs.comparisonTableBody.innerHTML = visible.map((variant, index) => {
+        const diff = variant.annualCost - cheapest.annualCost;
+        const rowClass = index === 0 ? 'row-best' : '';
+
+        return `
+          <tr class="${rowClass}">
+            <td>${index + 1}.</td>
+            <td>${variant.name}</td>
+            <td>${formatCurrency(variant.annualCost)}</td>
+            <td>${formatCurrency(variant.annualCost / 12)}</td>
+            <td>${formatCurrency(variant.costPerKwhHeat, 2)}</td>
+            <td>${index === 0 ? '—' : formatCurrency(diff)}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function render(values, variants) {
+      const best = variants[0];
+      const worst = variants[variants.length - 1];
+      const difference = worst.annualCost - best.annualCost;
+
+      outputs.bestOption.textContent = best.name;
+      outputs.bestAnnualCost.textContent = formatCurrency(best.annualCost);
+      outputs.worstOption.textContent = worst.name;
+      outputs.costDifference.textContent = formatCurrency(difference);
+
+      outputs.summaryNeed.textContent = formatNumber(values.annualHeatNeed) + ' kWh';
+      outputs.summaryBestPerKwh.textContent = formatCurrency(best.costPerKwhHeat, 2);
+      outputs.summarySaving.textContent = formatCurrency(difference);
+      outputs.summaryMonthlyDifference.textContent = formatCurrency(difference / 12);
+      outputs.summaryCop.textContent = formatNumber(values.cop, 1);
+
+      if (difference <= values.annualHeatNeed * 0.5) {
+        outputs.comparisonBadge.textContent = 'Rozdíly mezi variantami jsou spíše menší';
+        outputs.comparisonBadge.className = 'badge warning';
+      } else {
+        outputs.comparisonBadge.textContent = 'Rozdíl mezi nejlepší a nejdražší variantou je výrazný';
+        outputs.comparisonBadge.className = 'badge success';
+      }
+
+      renderTable(variants, values.showCount);
+    }
+
+    function runCalculation() {
+      const values = getValues();
+      const error = validate(values);
+
+      if (error) {
+        alert(error);
+        return;
+      }
+
+      const variants = calculate(values);
+      render(values, variants);
+    }
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      runCalculation();
+    });
+
+    [
+      'annualHeatNeed',
+      'electricityPrice',
+      'gasPrice',
+      'woodPrice',
+      'pelletsPrice',
+      'heatPumpElectricityPrice',
+      'cop',
+      'showCount'
+    ].forEach(id => {
+      document.getElementById(id).addEventListener('input', runCalculation);
+      document.getElementById(id).addEventListener('change', runCalculation);
+    });
+
+    resetBtn.addEventListener('click', function() {
+      document.getElementById('annualHeatNeed').value = 18000;
+      document.getElementById('electricityPrice').value = 6.20;
+      document.getElementById('gasPrice').value = 2.35;
+      document.getElementById('woodPrice').value = 1.45;
+      document.getElementById('pelletsPrice').value = 1.85;
+      document.getElementById('heatPumpElectricityPrice').value = 6.20;
+      document.getElementById('cop').value = 3.2;
+      document.getElementById('showCount').value = 5;
+      runCalculation();
+    });
+
+    runCalculation();
+  </script>
+</body>
+</html>
