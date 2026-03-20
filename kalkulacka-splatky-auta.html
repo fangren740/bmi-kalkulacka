@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kalkulačka splátky auta online | RychléVýpočty.cz</title>
+  <meta name="description" content="Spočítejte si měsíční splátku auta, akontaci, celkové přeplacení i orientační cenu financování. Přehledná kalkulačka pro auto na úvěr nebo financování vozu.">
+  <meta name="keywords" content="kalkulačka splátky auta, splátka auta kalkulačka, financování auta, úvěr na auto kalkulačka, akontace auto, koupě auta na splátky">
+  <meta name="author" content="RychléVýpočty.cz">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://rychlevypocty.cz/kalkulacka-splatky-auta.html">
+
+  <meta property="og:title" content="Kalkulačka splátky auta online | RychléVýpočty.cz">
+  <meta property="og:description" content="Rychlý výpočet splátky auta, akontace, přeplacení a celkové ceny financování vozu.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rychlevypocty.cz/kalkulacka-splatky-auta.html">
+  <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Kalkulačka splátky auta | RychléVýpočty.cz">
+  <meta name="twitter:description" content="Spočítejte si měsíční splátku auta a celkové náklady na financování vozu.">
+
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #5f6b85;
+      --primary: #2152ff;
+      --primary-dark: #183dbf;
+      --border: #dbe3f0;
+      --success: #138a4b;
+      --warning: #b66a00;
+      --danger: #c53a2f;
+      --shadow: 0 12px 32px rgba(20, 32, 70, 0.08);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #f7f9fd 0%, #eef3fb 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      padding: 18px 0;
+      border-bottom: 1px solid rgba(219, 227, 240, 0.8);
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .brand span {
+      color: var(--primary);
+    }
+
+    .topnav {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      font-size: 0.97rem;
+    }
+
+    .hero {
+      padding: 42px 0 20px;
+    }
+
+    .breadcrumbs {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .hero-copy h1 {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      margin: 0 0 16px;
+    }
+
+    .hero-copy p {
+      margin: 0 0 16px;
+      font-size: 1.06rem;
+      color: var(--muted);
+      max-width: 720px;
+    }
+
+    .hero-points {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .hero-pill {
+      background: rgba(33, 82, 255, 0.08);
+      color: var(--primary-dark);
+      border: 1px solid rgba(33, 82, 255, 0.12);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .hero-box {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-box h2 {
+      margin: 0 0 10px;
+      font-size: 1.2rem;
+    }
+
+    .hero-box p {
+      margin: 0 0 12px;
+      color: var(--muted);
+    }
+
+    .hero-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.04fr 0.96fr;
+      gap: 28px;
+      align-items: start;
+      padding: 22px 0 32px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .card-header {
+      padding: 24px 24px 10px;
+    }
+
+    .card-header h2,
+    .card-header h3 {
+      margin: 0 0 8px;
+      font-size: 1.3rem;
+      letter-spacing: -0.02em;
+    }
+
+    .card-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .card-body {
+      padding: 20px 24px 24px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field label {
+      font-weight: 700;
+      font-size: 0.96rem;
+    }
+
+    .field small {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: -2px;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      padding: 14px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      font-size: 1rem;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      outline: none;
+      border-color: rgba(33, 82, 255, 0.45);
+      box-shadow: 0 0 0 4px rgba(33, 82, 255, 0.10);
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.06s ease, background 0.15s ease, opacity 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background: #eef3ff;
+      color: var(--primary-dark);
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .result-box {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+
+    .result-label {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .result-value {
+      font-size: clamp(1.25rem, 2.4vw, 2rem);
+      line-height: 1.15;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .highlight {
+      background: linear-gradient(180deg, #eef7ff 0%, #f9fcff 100%);
+      border-color: rgba(33, 82, 255, 0.18);
+    }
+
+    .info-list {
+      display: grid;
+      gap: 12px;
+      margin: 18px 0 0;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid #edf2fa;
+    }
+
+    .info-row:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .info-row span:first-child {
+      color: var(--muted);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+
+    .badge.success {
+      background: rgba(19, 138, 75, 0.10);
+      color: var(--success);
+    }
+
+    .badge.warning {
+      background: rgba(182, 106, 0, 0.11);
+      color: var(--warning);
+    }
+
+    .badge.danger {
+      background: rgba(197, 58, 47, 0.10);
+      color: var(--danger);
+    }
+
+    .note {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1px solid #e7edf7;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 18px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 720px;
+      background: #fff;
+    }
+
+    th, td {
+      padding: 14px 14px;
+      text-align: left;
+      border-bottom: 1px solid #edf2fa;
+      font-size: 0.96rem;
+    }
+
+    th {
+      background: #f8fbff;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .content-section {
+      padding: 8px 0 8px;
+    }
+
+    .content-section h2 {
+      font-size: 1.7rem;
+      letter-spacing: -0.03em;
+      margin: 0 0 14px;
+    }
+
+    .content-section h3 {
+      font-size: 1.15rem;
+      margin: 28px 0 10px;
+    }
+
+    .content-section p {
+      color: var(--muted);
+      margin: 0 0 14px;
+    }
+
+    .content-section ul {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    .content-section li {
+      margin-bottom: 8px;
+    }
+
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .related-card {
+      display: block;
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      color: var(--text);
+      box-shadow: var(--shadow);
+    }
+
+    .related-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .related-card span {
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    footer {
+      margin-top: 40px;
+      border-top: 1px solid rgba(219, 227, 240, 0.9);
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .footer-inner {
+      padding: 24px 0 40px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .layout,
+      .related-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .container {
+        width: min(100% - 24px, 1160px);
+      }
+
+      .form-grid,
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 28px;
+      }
+
+      .card-header,
+      .card-body,
+      .hero-box {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebApplication",
+    "name":"Kalkulačka splátky auta",
+    "url":"https://rychlevypocty.cz/kalkulacka-splatky-auta.html",
+    "applicationCategory":"FinanceApplication",
+    "operatingSystem":"Any",
+    "description":"Online kalkulačka pro výpočet měsíční splátky auta, akontace, celkového přeplacení a ceny financování vozu.",
+    "offers":{
+      "@type":"Offer",
+      "price":"0",
+      "priceCurrency":"CZK"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"Jak se počítá splátka auta?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Splátka auta se obvykle počítá jako anuitní měsíční splátka podle výše financované částky, úrokové sazby a doby splácení. Do celkových nákladů mohou vstupovat i poplatky a akontace."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Co je akontace při financování auta?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Akontace je část ceny vozu, kterou zaplatíte předem z vlastních peněz. Čím vyšší akontace, tím nižší bývá financovaná částka i měsíční splátka."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Je nižší měsíční splátka vždy výhodnější?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Ne vždy. Nižší splátka může být výsledkem delší doby splácení, což může zvýšit celkové přeplacení. Proto je vhodné sledovat i celkovou částku zaplacenou navíc."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="/">Rychlé<span>Výpočty</span>.cz</a>
+      <nav class="topnav" aria-label="Hlavní navigace">
+        <a href="/">Domů</a>
+        <a href="/leasing-kalkulacka.html">Leasing</a>
+        <a href="/kalkulacka-pujcky.html">Půjčka</a>
+        <a href="/naklady-na-provoz-auta-kalkulacka.html">Náklady na provoz auta</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumbs">
+          <a href="/">RychléVýpočty.cz</a> / Kalkulačka splátky auta
+        </div>
+
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <h1>Kalkulačka splátky auta</h1>
+            <p>Spočítejte si orientační měsíční splátku auta, výši akontace, celkové přeplacení i celkovou cenu financování. Kalkulačka je vhodná pro rychlé porovnání různých scénářů při koupi vozu na úvěr nebo obdobné financování.</p>
+            <p>Zadejte cenu auta, akontaci, úrokovou sazbu a dobu splácení. Výsledek získáte okamžitě v přehledné podobě.</p>
+
+            <div class="hero-points">
+              <div class="hero-pill">Měsíční splátka</div>
+              <div class="hero-pill">Akontace</div>
+              <div class="hero-pill">Přeplacení</div>
+              <div class="hero-pill">Cena financování</div>
+            </div>
+          </div>
+
+          <div class="hero-box">
+            <h2>Co kalkulačka umí</h2>
+            <p>Ukáže, kolik budete přibližně splácet každý měsíc, kolik zaplatíte celkem a jaký dopad má výše akontace nebo délka splácení na rozpočet.</p>
+            <p>Hodí se při porovnávání nabídek financování i při rozhodování, jak drahé auto je ještě rozumné.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container layout">
+      <div class="card">
+        <div class="card-header">
+          <h2>Zadání financování auta</h2>
+          <p>Vyplňte základní parametry vozu a financování. Kalkulačka výsledek automaticky přepočítá.</p>
+        </div>
+        <div class="card-body">
+          <form id="carLoanForm">
+            <div class="form-grid">
+              <div class="field">
+                <label for="carPrice">Cena auta</label>
+                <input type="number" id="carPrice" min="50000" step="10000" value="650000" inputmode="decimal">
+                <small>Pořizovací cena financovaného vozu.</small>
+              </div>
+
+              <div class="field">
+                <label for="downPayment">Akontace</label>
+                <input type="number" id="downPayment" min="0" step="10000" value="130000" inputmode="decimal">
+                <small>Částka, kterou zaplatíte předem z vlastních peněz.</small>
+              </div>
+
+              <div class="field">
+                <label for="interestRate">Roční úroková sazba (%)</label>
+                <input type="number" id="interestRate" min="0.1" max="30" step="0.01" value="6.49" inputmode="decimal">
+                <small>Orientační nominální roční úrok.</small>
+              </div>
+
+              <div class="field">
+                <label for="years">Doba splácení (roky)</label>
+                <input type="number" id="years" min="1" max="10" step="1" value="5" inputmode="numeric">
+                <small>Celková délka financování auta.</small>
+              </div>
+
+              <div class="field">
+                <label for="monthlyFee">Měsíční poplatky</label>
+                <input type="number" id="monthlyFee" min="0" step="1" value="0" inputmode="decimal">
+                <small>Např. vedení účtu nebo související poplatek.</small>
+              </div>
+
+              <div class="field">
+                <label for="insuranceMonthly">Pojištění spojené s financováním / měsíc</label>
+                <input type="number" id="insuranceMonthly" min="0" step="1" value="0" inputmode="decimal">
+                <small>Např. pojištění schopnosti splácet, pokud ho chcete započítat.</small>
+              </div>
+
+              <div class="field">
+                <label for="incomeShare">Max. podíl splátky na čistém příjmu (%)</label>
+                <select id="incomeShare">
+                  <option value="20">20 %</option>
+                  <option value="25">25 %</option>
+                  <option value="30" selected>30 %</option>
+                  <option value="35">35 %</option>
+                  <option value="40">40 %</option>
+                </select>
+                <small>Pro orientační odhad potřebného čistého příjmu.</small>
+              </div>
+
+              <div class="field">
+                <label for="balloonPayment">Závěrečná doplatková částka</label>
+                <input type="number" id="balloonPayment" min="0" step="10000" value="0" inputmode="decimal">
+                <small>Nepovinné. Pokud počítáte s poslední vyšší doplatkovou splátkou.</small>
+              </div>
+
+              <div class="actions full">
+                <button type="submit" class="btn-primary">Spočítat splátku auta</button>
+                <button type="button" class="btn-secondary" id="resetBtn">Obnovit výchozí hodnoty</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>Výsledek výpočtu</h2>
+          <p>Orientační přehled financování auta podle zadaných parametrů.</p>
+        </div>
+        <div class="card-body">
+          <div class="results-grid">
+            <div class="result-box highlight">
+              <div class="result-label">Měsíční splátka</div>
+              <div class="result-value" id="monthlyPayment">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Splátka včetně poplatků</div>
+              <div class="result-value" id="monthlyWithFees">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Celkem zaplatíte</div>
+              <div class="result-value" id="totalPaid">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Celkové přeplacení</div>
+              <div class="result-value" id="totalOverpayment">0 Kč</div>
+            </div>
+          </div>
+
+          <div id="financingBadge" class="badge success">Financování působí vyváženě</div>
+
+          <div class="info-list">
+            <div class="info-row">
+              <span>Financovaná částka</span>
+              <strong id="summaryLoanAmount">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Akontace v % ceny auta</span>
+              <strong id="summaryDownPaymentPercent">0 %</strong>
+            </div>
+            <div class="info-row">
+              <span>Počet splátek</span>
+              <strong id="summaryInstallments">0</strong>
+            </div>
+            <div class="info-row">
+              <span>Závěrečná doplatková částka</span>
+              <strong id="summaryBalloon">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Orientační čistý příjem pro splátku</span>
+              <strong id="neededIncome">0 Kč</strong>
+            </div>
+          </div>
+
+          <div class="note">
+            Výpočet je orientační. Skutečné podmínky financování auta se mohou lišit podle typu úvěru, bonity žadatele, akontace, doplňkových služeb, pojištění i konkrétní nabídky financující společnosti.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="card">
+        <div class="card-header">
+          <h3>Přehled splácení auta</h3>
+          <p>Ukázka začátku a konce splácení při anuitním financování vozu.</p>
+        </div>
+        <div class="card-body">
+          <div class="table-wrap">
+            <table aria-label="Přehled splácení auta">
+              <thead>
+                <tr>
+                  <th>Splátka</th>
+                  <th>Měsíční platba</th>
+                  <th>Z toho úrok</th>
+                  <th>Z toho jistina</th>
+                  <th>Zbývá doplatit</th>
+                </tr>
+              </thead>
+              <tbody id="scheduleBody">
+                <tr>
+                  <td colspan="5">Po zadání údajů se zobrazí orientační přehled splátek.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container content-section">
+      <h2>Jak kalkulačka splátky auta funguje</h2>
+      <p>Kalkulačka počítá orientační anuitní splácení auta. To znamená, že při běžném financování vychází po většinu doby stejná měsíční splátka a postupně se mění poměr mezi úrokem a splácenou jistinou. Výpočet zároveň zohledňuje akontaci, měsíční poplatky a případnou závěrečnou doplatkovou částku.</p>
+
+      <h3>Co ve výsledku uvidíte</h3>
+      <ul>
+        <li>měsíční splátku bez poplatků,</li>
+        <li>měsíční zatížení včetně poplatků a pojištění,</li>
+        <li>celkovou částku, kterou za auto zaplatíte,</li>
+        <li>celkové přeplacení oproti pořizovací ceně financované části,</li>
+        <li>orientační potřebný čistý příjem pro danou splátku.</li>
+      </ul>
+
+      <h3>Proč je důležitá akontace</h3>
+      <p>Vyšší akontace obvykle znamená nižší financovanou částku, nižší měsíční splátku a menší celkové přeplacení. Na druhou stranu je potřeba zvažovat i to, jakou část hotovosti chcete při koupi auta ponechat jako rezervu.</p>
+
+      <h3>Na co si dát pozor při delší době splácení</h3>
+      <p>Delší splácení může snížit měsíční splátku, ale zároveň zvýšit celkové přeplacení. U auta dává smysl myslet i na to, že vůz během času ztrácí hodnotu, takže příliš dlouhé financování nemusí být vždy ideální.</p>
+    </section>
+
+    <section class="container content-section">
+      <h2>Kdy se tahle kalkulačka hodí nejvíc</h2>
+      <p>Hodí se při výběru nového i ojetého auta, při porovnávání několika nabídek financování i ve chvíli, kdy chcete vědět, jestli je konkrétní auto vzhledem k rozpočtu ještě rozumné. Je užitečná i pro rychlé srovnání různých akontací nebo délek splácení.</p>
+
+      <h3>Co je dobré sledovat vedle samotné splátky</h3>
+      <p>Samotná měsíční splátka nestačí. Důležité je sledovat i celkové přeplacení, dopad pojištění, případné měsíční poplatky a to, jak financování auta zapadne do celkových nákladů domácnosti nebo provozu vozu.</p>
+
+      <h3>Jak výsledek používat v praxi</h3>
+      <p>Nejlepší je porovnat několik variant vedle sebe. Změňte akontaci, délku splácení nebo úrokovou sazbu a sledujte, jak rychle se mění měsíční zatížení i celková cena financování. Právě to pomáhá najít rozumný kompromis mezi splátkou a přeplacením.</p>
+    </section>
+
+    <section class="container content-section">
+      <h2>Související kalkulačky</h2>
+      <div class="related-grid">
+        <a class="related-card" href="/leasing-kalkulacka.html">
+          <strong>Kalkulačka leasingu</strong>
+          <span>Porovnání splátek a celkových nákladů leasingového financování.</span>
+        </a>
+
+        <a class="related-card" href="/kalkulacka-pujcky.html">
+          <strong>Kalkulačka půjčky</strong>
+          <span>Obecný výpočet měsíční splátky, úroků a přeplacení úvěru.</span>
+        </a>
+
+        <a class="related-card" href="/naklady-na-provoz-auta-kalkulacka.html">
+          <strong>Kalkulačka nákladů na provoz auta</strong>
+          <span>Souhrnný pohled na palivo, servis, pojištění i amortizaci auta.</span>
+        </a>
+
+        <a class="related-card" href="/amortizace-auta-kalkulacka.html">
+          <strong>Kalkulačka amortizace auta</strong>
+          <span>Odhad ztráty hodnoty vozu v čase i na kilometr.</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      © 2026 RychléVýpočty.cz — online kalkulačky a praktické výpočty pro každodenní použití.
+    </div>
+  </footer>
+
+  <script>
+    const form = document.getElementById('carLoanForm');
+    const resetBtn = document.getElementById('resetBtn');
+
+    const outputs = {
+      monthlyPayment: document.getElementById('monthlyPayment'),
+      monthlyWithFees: document.getElementById('monthlyWithFees'),
+      totalPaid: document.getElementById('totalPaid'),
+      totalOverpayment: document.getElementById('totalOverpayment'),
+      summaryLoanAmount: document.getElementById('summaryLoanAmount'),
+      summaryDownPaymentPercent: document.getElementById('summaryDownPaymentPercent'),
+      summaryInstallments: document.getElementById('summaryInstallments'),
+      summaryBalloon: document.getElementById('summaryBalloon'),
+      neededIncome: document.getElementById('neededIncome'),
+      financingBadge: document.getElementById('financingBadge'),
+      scheduleBody: document.getElementById('scheduleBody')
+    };
+
+    function formatCurrency(value, digits = 0) {
+      return new Intl.NumberFormat('cs-CZ', {
+        style: 'currency',
+        currency: 'CZK',
+        minimumFractionDigits: digits,
+        maximumFractionDigits: digits
+      }).format(value);
+    }
+
+    function formatPercent(value, digits = 1) {
+      return new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: digits
+      }).format(value) + ' %';
+    }
+
+    function getValues() {
+      return {
+        carPrice: Number(document.getElementById('carPrice').value),
+        downPayment: Number(document.getElementById('downPayment').value),
+        interestRate: Number(document.getElementById('interestRate').value),
+        years: Number(document.getElementById('years').value),
+        monthlyFee: Number(document.getElementById('monthlyFee').value),
+        insuranceMonthly: Number(document.getElementById('insuranceMonthly').value),
+        incomeShare: Number(document.getElementById('incomeShare').value),
+        balloonPayment: Number(document.getElementById('balloonPayment').value)
+      };
+    }
+
+    function validate(values) {
+      if (!values.carPrice || values.carPrice <= 0) return 'Zadejte platnou cenu auta.';
+      if (values.downPayment < 0) return 'Akontace nemůže být záporná.';
+      if (values.downPayment >= values.carPrice) return 'Akontace musí být nižší než cena auta.';
+      if (!values.interestRate || values.interestRate <= 0) return 'Zadejte platnou úrokovou sazbu.';
+      if (!values.years || values.years <= 0) return 'Zadejte platnou dobu splácení.';
+      if (values.balloonPayment < 0) return 'Závěrečná doplatková částka nemůže být záporná.';
+      if (values.balloonPayment >= (values.carPrice - values.downPayment)) return 'Závěrečná doplatková částka je příliš vysoká vůči financované částce.';
+      return '';
+    }
+
+    function calculateLoan(values) {
+      const loanAmount = values.carPrice - values.downPayment;
+      const financedWithoutBalloon = loanAmount - values.balloonPayment;
+      const months = values.years * 12;
+      const monthlyRate = values.interestRate / 100 / 12;
+
+      let monthlyPayment = 0;
+
+      if (monthlyRate === 0) {
+        monthlyPayment = financedWithoutBalloon / months;
+      } else {
+        const pvBalloon = values.balloonPayment / Math.pow(1 + monthlyRate, months);
+        const effectivePrincipal = loanAmount - pvBalloon;
+
+        monthlyPayment = effectivePrincipal * (monthlyRate * Math.pow(1 + monthlyRate, months)) / (Math.pow(1 + monthlyRate, months) - 1);
+      }
+
+      const totalInstallments = monthlyPayment * months;
+      const totalPaid = values.downPayment + totalInstallments + values.balloonPayment + ((values.monthlyFee + values.insuranceMonthly) * months);
+      const totalOverpayment = totalPaid - values.carPrice;
+      const monthlyWithFees = monthlyPayment + values.monthlyFee + values.insuranceMonthly;
+      const neededIncome = monthlyWithFees / (values.incomeShare / 100);
+      const downPaymentPercent = (values.downPayment / values.carPrice) * 100;
+
+      return {
+        loanAmount,
+        months,
+        monthlyPayment,
+        monthlyWithFees,
+        totalPaid,
+        totalOverpayment,
+        neededIncome,
+        downPaymentPercent
+      };
+    }
+
+    function buildSchedule(values, monthlyPayment, months) {
+      const monthlyRate = values.interestRate / 100 / 12;
+      let balance = values.carPrice - values.downPayment;
+      const rows = [];
+
+      for (let i = 1; i <= months; i++) {
+        const interestPart = monthlyRate === 0 ? 0 : balance * monthlyRate;
+        const principalPart = monthlyPayment - interestPart;
+        balance = Math.max(0, balance - principalPart);
+
+        rows.push({
+          month: i,
+          payment: monthlyPayment,
+          interest: interestPart,
+          principal: principalPart,
+          balance: balance
+        });
+      }
+
+      if (values.balloonPayment > 0 && rows.length) {
+        rows[rows.length - 1].balance = values.balloonPayment;
+      }
+
+      const preview = [];
+      const firstPart = rows.slice(0, 4);
+      const lastPart = rows.slice(-4);
+
+      firstPart.forEach(r => preview.push(r));
+      if (rows.length > 8) {
+        preview.push({ separator: true });
+      }
+      lastPart.forEach(r => preview.push(r));
+
+      if (values.balloonPayment > 0) {
+        preview.push({
+          balloon: true,
+          month: months,
+          payment: values.balloonPayment
+        });
+      }
+
+      return preview;
+    }
+
+    function renderSchedule(schedule) {
+      if (!schedule.length) {
+        outputs.scheduleBody.innerHTML = '<tr><td colspan="5">Po zadání údajů se zobrazí orientační přehled splátek.</td></tr>';
+        return;
+      }
+
+      outputs.scheduleBody.innerHTML = schedule.map(row => {
+        if (row.separator) {
+          return '<tr><td colspan="5">…</td></tr>';
+        }
+
+        if (row.balloon) {
+          return `
+            <tr>
+              <td>${row.month}. / doplatek</td>
+              <td>${formatCurrency(row.payment)}</td>
+              <td>—</td>
+              <td>—</td>
+              <td>0 Kč</td>
+            </tr>
+          `;
+        }
+
+        return `
+          <tr>
+            <td>${row.month}.</td>
+            <td>${formatCurrency(row.payment)}</td>
+            <td>${formatCurrency(row.interest)}</td>
+            <td>${formatCurrency(row.principal)}</td>
+            <td>${formatCurrency(row.balance)}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function render(values, result) {
+      outputs.monthlyPayment.textContent = formatCurrency(result.monthlyPayment);
+      outputs.monthlyWithFees.textContent = formatCurrency(result.monthlyWithFees);
+      outputs.totalPaid.textContent = formatCurrency(result.totalPaid);
+      outputs.totalOverpayment.textContent = formatCurrency(result.totalOverpayment);
+      outputs.summaryLoanAmount.textContent = formatCurrency(result.loanAmount);
+      outputs.summaryDownPaymentPercent.textContent = formatPercent(result.downPaymentPercent);
+      outputs.summaryInstallments.textContent = result.months.toString();
+      outputs.summaryBalloon.textContent = formatCurrency(values.balloonPayment);
+      outputs.neededIncome.textContent = formatCurrency(result.neededIncome);
+
+      if (result.totalOverpayment <= result.loanAmount * 0.18) {
+        outputs.financingBadge.textContent = 'Financování působí vyváženě';
+        outputs.financingBadge.className = 'badge success';
+      } else if (result.totalOverpayment <= result.loanAmount * 0.35) {
+        outputs.financingBadge.textContent = 'Financování je použitelné, ale sledujte přeplacení';
+        outputs.financingBadge.className = 'badge warning';
+      } else {
+        outputs.financingBadge.textContent = 'Přeplacení je už poměrně vysoké';
+        outputs.financingBadge.className = 'badge danger';
+      }
+
+      const schedule = buildSchedule(values, result.monthlyPayment, result.months);
+      renderSchedule(schedule);
+    }
+
+    function runCalculation() {
+      const values = getValues();
+      const error = validate(values);
+
+      if (error) {
+        alert(error);
+        return;
+      }
+
+      const result = calculateLoan(values);
+      render(values, result);
+    }
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      runCalculation();
+    });
+
+    ['carPrice', 'downPayment', 'interestRate', 'years', 'monthlyFee', 'insuranceMonthly', 'incomeShare', 'balloonPayment'].forEach(id => {
+      document.getElementById(id).addEventListener('input', runCalculation);
+      document.getElementById(id).addEventListener('change', runCalculation);
+    });
+
+    resetBtn.addEventListener('click', function() {
+      document.getElementById('carPrice').value = 650000;
+      document.getElementById('downPayment').value = 130000;
+      document.getElementById('interestRate').value = 6.49;
+      document.getElementById('years').value = 5;
+      document.getElementById('monthlyFee').value = 0;
+      document.getElementById('insuranceMonthly').value = 0;
+      document.getElementById('incomeShare').value = 30;
+      document.getElementById('balloonPayment').value = 0;
+      runCalculation();
+    });
+
+    runCalculation();
+  </script>
+</body>
+</html>
