@@ -1,21 +1,8 @@
 <!doctype html>
 <html lang="cs">
 <head>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('consent', 'default', {
-    'ad_storage': 'denied',
-    'analytics_storage': 'denied'
-  });
-</script>
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-E9QVPMKPSV"></script>
-<script>
-  gtag('js', new Date());
-  gtag('config', 'G-E9QVPMKPSV', {
-    'anonymize_ip': true
-  });
-</script>
+
+
 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -1061,6 +1048,23 @@
   </script>
 
   
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('consent', 'default', {
+    'ad_storage': 'denied',
+    'analytics_storage': 'denied',
+    'ad_user_data': 'denied',
+    'ad_personalization': 'denied'
+  });
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-E9QVPMKPSV"></script>
+<script>
+  gtag('js', new Date());
+  gtag('config', 'G-E9QVPMKPSV', {
+    'anonymize_ip': true
+  });
+</script>
 </head>
 <body>
 
@@ -1709,33 +1713,56 @@
     </div>
   </footer>
 
-<div id="cookie-banner" style="position:fixed;bottom:20px;left:20px;right:20px;background:#fff;border:1px solid #dbe3f0;border-radius:16px;padding:16px;box-shadow:0 10px 30px rgba(0,0,0,0.1);z-index:9999;display:none;">
-<p style="margin:0 0 10px;font-size:14px;">Používáme cookies pro analytiku a zlepšení webu.</p>
-<button onclick="acceptCookies()" style="margin-right:10px;">Přijmout</button>
-<button onclick="rejectCookies()">Odmítnout</button>
+<div id="cookie-banner" style="position:fixed;left:16px;right:16px;bottom:16px;max-width:720px;margin:0 auto;background:#ffffff;border:1px solid #dbe3f0;border-radius:18px;padding:16px 16px 14px;box-shadow:0 18px 40px rgba(20,32,70,0.16);z-index:9999;display:none;">
+  <div style="font-weight:800;font-size:1rem;color:#172033;margin:0 0 6px;">Cookies a měření návštěvnosti</div>
+  <p style="margin:0 0 12px;color:#5f6b85;font-size:0.95rem;line-height:1.55;">Používáme cookies pro měření návštěvnosti a zlepšování webu. Volbu můžete kdykoli změnit. Více najdete na stránce <a href="/ochrana-osobnich-udaju.html" style="color:#2152ff;">Ochrana osobních údajů</a>.</p>
+  <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;">
+    <button type="button" onclick="acceptCookies()" style="border:0;border-radius:12px;padding:12px 16px;background:#2152ff;color:#fff;font-weight:700;cursor:pointer;">Přijmout</button>
+    <button type="button" onclick="rejectCookies()" style="border:1px solid #dbe3f0;border-radius:12px;padding:12px 16px;background:#fff;color:#172033;font-weight:700;cursor:pointer;">Odmítnout</button>
+    <button type="button" onclick="resetCookieConsent()" style="border:1px solid #dbe3f0;border-radius:12px;padding:12px 16px;background:#f8fbff;color:#172033;font-weight:700;cursor:pointer;">Nastavení cookies</button>
+  </div>
 </div>
 <script>
 function setConsent(value){
-  gtag('consent','update',{'analytics_storage':value,'ad_storage':value});
+  gtag('consent','update',{
+    'analytics_storage': value,
+    'ad_storage': value,
+    'ad_user_data': value,
+    'ad_personalization': value
+  });
+}
+function hideCookieBanner(){
+  var el = document.getElementById('cookie-banner');
+  if (el) el.style.display = 'none';
+}
+function showCookieBanner(){
+  var el = document.getElementById('cookie-banner');
+  if (el) el.style.display = 'block';
 }
 function acceptCookies(){
   localStorage.setItem('cookie_consent','accepted');
   setConsent('granted');
-  document.getElementById('cookie-banner').style.display='none';
+  hideCookieBanner();
 }
 function rejectCookies(){
   localStorage.setItem('cookie_consent','rejected');
   setConsent('denied');
-  document.getElementById('cookie-banner').style.display='none';
+  hideCookieBanner();
+}
+function resetCookieConsent(){
+  localStorage.removeItem('cookie_consent');
+  showCookieBanner();
 }
 window.addEventListener('load',function(){
-  const c=localStorage.getItem('cookie_consent');
-  if(!c){
-    document.getElementById('cookie-banner').style.display='block';
-  }else if(c==='accepted'){
+  var consent = localStorage.getItem('cookie_consent');
+  if (consent === 'accepted') {
     setConsent('granted');
-  }else{
+    hideCookieBanner();
+  } else if (consent === 'rejected') {
     setConsent('denied');
+    hideCookieBanner();
+  } else {
+    showCookieBanner();
   }
 });
 </script>
