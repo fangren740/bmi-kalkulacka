@@ -3,22 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kalkulačka cashflow z pronájmu online zdarma | RychléVýpočty.cz</title>
-  <meta name="description" content="Spočítejte si měsíční a roční cashflow z pronájmu bytu nebo domu. Kalkulačka zahrnuje nájem, hypotéku, fond oprav, pojištění, správu, neobsazenost, údržbu i rezervu.">
-  <meta name="keywords" content="kalkulačka cashflow z pronájmu, pronájem bytu cashflow, měsíční cashflow pronájem, investiční byt kalkulačka, cashflow nemovitosti">
+  <title>Cashflow z pronájmu kalkulačka online | Je investiční byt měsíčně v plusu? | RychléVýpočty.cz</title>
+  <meta name="description" content="Spočítejte si měsíční a roční cashflow z pronájmu po započtení hypotéky, neobsazenosti, fondu oprav, pojištění, správy a rezervy. Zjistěte, jestli je investiční byt opravdu měsíčně v plusu.">
+  <meta name="keywords" content="kalkulačka cashflow z pronájmu, pronájem bytu cashflow, měsíční cashflow pronájem, investiční byt kalkulačka, cashflow nemovitosti, investiční byt měsíčně v plusu">
   <meta name="author" content="RychléVýpočty.cz">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://rychlevypocty.cz/kalkulacka-cashflow-z-pronajmu.html">
 
-  <meta property="og:title" content="Kalkulačka cashflow z pronájmu | RychléVýpočty.cz">
+  <meta property="og:title" content="Cashflow z pronájmu kalkulačka | RychléVýpočty.cz">
   <meta property="og:description" content="Zjistěte, jestli je váš pronájem měsíčně v plusu, na nule nebo ve ztrátě. Přehledný výpočet cashflow investičního bytu nebo domu.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://rychlevypocty.cz/kalkulacka-cashflow-z-pronajmu.html">
   <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg">
 
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Kalkulačka cashflow z pronájmu | RychléVýpočty.cz">
-  <meta name="twitter:description" content="Orientační výpočet měsíčního a ročního cashflow z pronájmu nemovitosti.">
+  <meta name="twitter:title" content="Cashflow z pronájmu kalkulačka | RychléVýpočty.cz">
+  <meta name="twitter:description" content="Orientační výpočet měsíčního a ročního cashflow z pronájmu nemovitosti po započtení nákladů a financování.">
 
   <style>
     :root {
@@ -28,21 +28,20 @@
       --muted: #5f6b85;
       --primary: #2152ff;
       --primary-dark: #183dbf;
+      --primary-soft: rgba(33, 82, 255, 0.08);
       --border: #dbe3f0;
       --success: #138a4b;
+      --success-bg: rgba(19, 138, 75, 0.10);
       --warning: #b66a00;
+      --warning-bg: rgba(182, 106, 0, 0.11);
       --danger: #b42318;
+      --danger-bg: rgba(180, 35, 24, 0.10);
       --shadow: 0 12px 32px rgba(20, 32, 70, 0.08);
       --radius: 18px;
     }
 
-    * {
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
 
     body {
       margin: 0;
@@ -69,11 +68,11 @@
     .topbar {
       padding: 18px 0;
       border-bottom: 1px solid rgba(219, 227, 240, 0.8);
-      background: rgba(255, 255, 255, 0.8);
+      background: rgba(255, 255, 255, 0.82);
       backdrop-filter: blur(10px);
       position: sticky;
       top: 0;
-      z-index: 20;
+      z-index: 30;
     }
 
     .topbar-inner {
@@ -105,7 +104,7 @@
     }
 
     .hero {
-      padding: 42px 0 20px;
+      padding: 42px 0 22px;
     }
 
     .breadcrumbs {
@@ -122,17 +121,17 @@
     }
 
     .hero-copy h1 {
-      font-size: clamp(2rem, 4vw, 3.2rem);
-      line-height: 1.08;
-      letter-spacing: -0.03em;
+      font-size: clamp(2.05rem, 4vw, 3.35rem);
+      line-height: 1.05;
+      letter-spacing: -0.035em;
       margin: 0 0 16px;
     }
 
     .hero-copy p {
-      margin: 0 0 16px;
+      margin: 0 0 14px;
       font-size: 1.06rem;
       color: var(--muted);
-      max-width: 720px;
+      max-width: 760px;
     }
 
     .hero-points {
@@ -143,26 +142,43 @@
     }
 
     .hero-pill {
-      background: rgba(33, 82, 255, 0.08);
+      background: var(--primary-soft);
       color: var(--primary-dark);
       border: 1px solid rgba(33, 82, 255, 0.12);
       padding: 10px 14px;
       border-radius: 999px;
       font-size: 0.95rem;
-      font-weight: 600;
+      font-weight: 700;
     }
 
-    .hero-box {
-      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    .hero-side {
+      display: grid;
+      gap: 16px;
+    }
+
+    .hero-box,
+    .card,
+    .step-card,
+    .related-card,
+    .cta-panel,
+    .note-box,
+    .faq-item {
+      background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 24px;
-      padding: 24px;
+      border-radius: var(--radius);
       box-shadow: var(--shadow);
     }
 
-    .hero-box h2 {
+    .hero-box {
+      padding: 24px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+
+    .hero-box h2,
+    .hero-box h3 {
       margin: 0 0 10px;
-      font-size: 1.2rem;
+      font-size: 1.18rem;
+      letter-spacing: -0.02em;
     }
 
     .hero-box p {
@@ -174,19 +190,58 @@
       margin-bottom: 0;
     }
 
+    .quick-list {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+    }
+
+    .quick-list li {
+      margin-bottom: 8px;
+    }
+
+    .cta-inline {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .cta-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 11px 14px;
+      border-radius: 12px;
+      font-weight: 700;
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .cta-link.primary {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+    }
+
+    .cta-link.primary:hover {
+      background: var(--primary-dark);
+      text-decoration: none;
+    }
+
+    .cta-link:hover {
+      text-decoration: none;
+      border-color: rgba(33, 82, 255, 0.28);
+    }
+
     .layout {
       display: grid;
       grid-template-columns: 1.04fr 0.96fr;
       gap: 28px;
       align-items: start;
-      padding: 22px 0 32px;
-    }
-
-    .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
+      padding: 18px 0 20px;
     }
 
     .card-header {
@@ -305,6 +360,11 @@
       background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
     }
 
+    .result-box.highlight {
+      background: linear-gradient(180deg, #eef7ff 0%, #f9fcff 100%);
+      border-color: rgba(33, 82, 255, 0.18);
+    }
+
     .result-label {
       font-size: 0.9rem;
       color: var(--muted);
@@ -312,15 +372,55 @@
     }
 
     .result-value {
-      font-size: clamp(1.25rem, 2.4vw, 2rem);
-      line-height: 1.15;
+      font-size: clamp(1.2rem, 2.4vw, 2rem);
+      line-height: 1.12;
       font-weight: 800;
       letter-spacing: -0.03em;
     }
 
-    .highlight {
-      background: linear-gradient(180deg, #eef7ff 0%, #f9fcff 100%);
-      border-color: rgba(33, 82, 255, 0.18);
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-top: 4px;
+    }
+
+    .badge.success {
+      background: var(--success-bg);
+      color: var(--success);
+    }
+
+    .badge.warning {
+      background: var(--warning-bg);
+      color: var(--warning);
+    }
+
+    .badge.danger {
+      background: var(--danger-bg);
+      color: var(--danger);
+    }
+
+    .summary-copy {
+      margin-top: 18px;
+      padding: 16px 18px;
+      border-radius: 14px;
+      border: 1px solid #e7edf7;
+      background: #f8fafc;
+    }
+
+    .summary-copy strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .summary-copy p {
+      margin: 0;
+      color: var(--muted);
     }
 
     .info-list {
@@ -346,40 +446,29 @@
       color: var(--muted);
     }
 
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 12px;
-      border-radius: 999px;
-      font-size: 0.88rem;
-      font-weight: 700;
-      margin-top: 10px;
-    }
-
-    .badge.success {
-      background: rgba(19, 138, 75, 0.10);
-      color: var(--success);
-    }
-
-    .badge.warning {
-      background: rgba(182, 106, 0, 0.11);
-      color: var(--warning);
-    }
-
-    .badge.danger {
-      background: rgba(180, 35, 24, 0.10);
-      color: var(--danger);
-    }
-
-    .note {
+    .decision-panel {
       margin-top: 18px;
-      padding: 14px 16px;
-      border-radius: 14px;
-      background: #f8fafc;
-      border: 1px solid #e7edf7;
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #ffffff 0%, #f7fbff 100%);
+    }
+
+    .decision-panel h3 {
+      margin: 0 0 8px;
+      font-size: 1.04rem;
+      letter-spacing: -0.02em;
+    }
+
+    .decision-panel p {
+      margin: 0 0 12px;
       color: var(--muted);
-      font-size: 0.95rem;
+    }
+
+    .decision-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
     }
 
     .table-wrap {
@@ -387,12 +476,13 @@
       margin-top: 18px;
       border: 1px solid var(--border);
       border-radius: 14px;
+      background: #fff;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      min-width: 640px;
+      min-width: 720px;
       background: #fff;
     }
 
@@ -401,6 +491,7 @@
       text-align: left;
       border-bottom: 1px solid #edf2fa;
       font-size: 0.96rem;
+      vertical-align: top;
     }
 
     th {
@@ -413,51 +504,129 @@
       border-bottom: 0;
     }
 
-    .content-section {
-      padding: 8px 0 8px;
+    .section {
+      padding: 10px 0;
     }
 
-    .content-section h2 {
-      font-size: 1.7rem;
+    .section h2 {
+      font-size: 1.75rem;
       letter-spacing: -0.03em;
       margin: 0 0 14px;
     }
 
-    .content-section h3 {
+    .section h3 {
       font-size: 1.15rem;
-      margin: 28px 0 10px;
+      margin: 26px 0 10px;
     }
 
-    .content-section p {
+    .section p {
       color: var(--muted);
       margin: 0 0 14px;
     }
 
-    .content-section ul {
+    .section ul {
       margin: 0;
       padding-left: 20px;
       color: var(--muted);
     }
 
-    .content-section li {
+    .section li {
       margin-bottom: 8px;
     }
 
-    .related-grid {
+    .steps-grid,
+    .related-grid,
+    .cta-grid,
+    .faq {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
       gap: 16px;
+    }
+
+    .steps-grid {
+      grid-template-columns: repeat(3, 1fr);
+      margin-top: 18px;
+    }
+
+    .step-card {
+      padding: 20px;
+      background: linear-gradient(180deg, #ffffff 0%, #f9fbff 100%);
+    }
+
+    .step-number {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--primary-soft);
+      color: var(--primary-dark);
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .step-card h3 {
+      margin: 0 0 8px;
+      font-size: 1.05rem;
+    }
+
+    .step-card p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .cta-panel {
+      margin-top: 8px;
+      padding: 24px;
+      background: linear-gradient(180deg, #ffffff 0%, #f5f9ff 100%);
+    }
+
+    .cta-panel h2 {
+      margin: 0 0 10px;
+      font-size: 1.45rem;
+      letter-spacing: -0.03em;
+    }
+
+    .cta-panel p {
+      margin: 0 0 16px;
+      color: var(--muted);
+    }
+
+    .cta-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .note-box {
+      padding: 18px;
+      margin-top: 16px;
+      background: #fbfcfe;
+    }
+
+    .note-box h3 {
+      margin: 0 0 8px;
+      font-size: 1.02rem;
+    }
+
+    .note-box p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .related-grid {
+      grid-template-columns: repeat(4, 1fr);
       margin-top: 18px;
     }
 
     .related-card {
       display: block;
       padding: 18px;
-      border-radius: 16px;
-      border: 1px solid var(--border);
-      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
       color: var(--text);
-      box-shadow: var(--shadow);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+
+    .related-card:hover {
+      text-decoration: none;
+      border-color: rgba(33, 82, 255, 0.25);
     }
 
     .related-card strong {
@@ -469,6 +638,25 @@
     .related-card span {
       color: var(--muted);
       font-size: 0.93rem;
+    }
+
+    .faq {
+      margin-top: 18px;
+    }
+
+    .faq-item {
+      padding: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #fafcff 100%);
+    }
+
+    .faq-item h3 {
+      margin: 0 0 8px;
+      font-size: 1.02rem;
+    }
+
+    .faq-item p {
+      margin: 0;
+      color: var(--muted);
     }
 
     footer {
@@ -486,7 +674,9 @@
     @media (max-width: 980px) {
       .hero-grid,
       .layout,
-      .related-grid {
+      .steps-grid,
+      .related-grid,
+      .cta-grid {
         grid-template-columns: 1fr;
       }
     }
@@ -507,7 +697,11 @@
 
       .card-header,
       .card-body,
-      .hero-box {
+      .hero-box,
+      .step-card,
+      .cta-panel,
+      .note-box,
+      .faq-item {
         padding-left: 18px;
         padding-right: 18px;
       }
@@ -515,6 +709,11 @@
       .topbar-inner {
         align-items: flex-start;
         flex-direction: column;
+      }
+
+      .info-row {
+        flex-direction: column;
+        align-items: flex-start;
       }
     }
   </style>
@@ -533,6 +732,33 @@
       "price":"0",
       "priceCurrency":"CZK"
     }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"BreadcrumbList",
+    "itemListElement":[
+      {
+        "@type":"ListItem",
+        "position":1,
+        "name":"RychléVýpočty.cz",
+        "item":"https://rychlevypocty.cz/"
+      },
+      {
+        "@type":"ListItem",
+        "position":2,
+        "name":"Pronájem a investiční bydlení",
+        "item":"https://rychlevypocty.cz/pronajem-a-investicni-bydleni.html"
+      },
+      {
+        "@type":"ListItem",
+        "position":3,
+        "name":"Kalkulačka cashflow z pronájmu",
+        "item":"https://rychlevypocty.cz/kalkulacka-cashflow-z-pronajmu.html"
+      }
+    ]
   }
   </script>
 
@@ -564,19 +790,27 @@
           "@type":"Answer",
           "text":"Protože pronájem nebývá každý měsíc ideálně obsazený a v praxi se objevují opravy, údržba nebo výpadky plateb. Bez těchto položek by výpočet vypadal příliš optimisticky."
         }
+      },
+      {
+        "@type":"Question",
+        "name":"Co udělat po výpočtu cashflow?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Pokud je cashflow zajímavé, další krok je potvrdit nákladovou realitu investičního bytu a následně řešit financování. Pokud je cashflow slabé nebo záporné, často je potřeba nejdřív rozebrat náklady."
+        }
       }
     ]
   }
   </script>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-E9QVPMKPSV"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-E9QVPMKPSV');
-</script>
 
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-E9QVPMKPSV"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-E9QVPMKPSV');
+  </script>
 </head>
 <body>
   <header class="topbar">
@@ -584,9 +818,9 @@
       <a class="brand" href="/">Rychlé<span>Výpočty</span>.cz</a>
       <nav class="topnav" aria-label="Hlavní navigace">
         <a href="/">Domů</a>
+        <a href="/pronajem-a-investicni-bydleni.html">Pronájem a investiční bydlení</a>
         <a href="/kalkulacka-cisteho-vynosu-z-pronajmu.html">Čistý výnos z pronájmu</a>
-        <a href="/hypotecni-kalkulacka.html">Hypotéka</a>
-        <a href="/mesicni-naklady-na-bydleni-kalkulacka.html">Náklady na bydlení</a>
+        <a href="/finance-a-hypoteky.html">Finance a hypotéky</a>
       </nav>
     </div>
   </header>
@@ -595,37 +829,52 @@
     <section class="hero">
       <div class="container">
         <div class="breadcrumbs">
-          <a href="/">RychléVýpočty.cz</a> / Kalkulačka cashflow z pronájmu
+          <a href="/">RychléVýpočty.cz</a> / <a href="/pronajem-a-investicni-bydleni.html">Pronájem a investiční bydlení</a> / Cashflow z pronájmu
         </div>
 
         <div class="hero-grid">
           <div class="hero-copy">
-            <h1>Kalkulačka cashflow z pronájmu</h1>
-            <p>Spočítejte si, jestli je váš investiční byt nebo dům měsíčně v plusu, na nule nebo ve ztrátě. Kalkulačka zohledňuje nájemné, hypotéku, fond oprav, pojištění, správu, údržbu, neobsazenost i rezervu na opravy.</p>
-            <p>Výsledek pomůže při rozhodování, zda pronájem dává smysl z pohledu měsíčního cashflow, nejen podle procentního výnosu.</p>
+            <h1>Je ten investiční byt opravdu měsíčně v plusu?</h1>
+            <p>Tahle <strong>kalkulačka cashflow z pronájmu</strong> vám ukáže, co z pronajímané nemovitosti opravdu zůstane každý měsíc po započtení hypotéky, neobsazenosti, fondu oprav, pojištění, správy a rezervy na opravy.</p>
+            <p>Tohle je <strong>provozní realita investice</strong>. Zatímco čistý výnos odpovídá na otázku „vypadá to zajímavě?“, cashflow odpovídá na otázku <strong>„bude ten byt každý měsíc vydělávat, nebo ho budu dotovat?“</strong></p>
 
             <div class="hero-points">
               <div class="hero-pill">Měsíční cashflow</div>
               <div class="hero-pill">Roční cashflow</div>
-              <div class="hero-pill">Neobsazenost a rezerva</div>
-              <div class="hero-pill">Investiční bydlení</div>
+              <div class="hero-pill">Hypotéka a náklady</div>
+              <div class="hero-pill">Další krok podle výsledku</div>
             </div>
           </div>
 
-          <div class="hero-box">
-            <h2>Co kalkulačka umí</h2>
-            <p>Ukáže rozdíl mezi hrubým nájemným a reálným provozním výsledkem po započtení hlavních pravidelných nákladů. Díky tomu rychle uvidíte, jestli pronájem skutečně generuje peníze, nebo jen vypadá dobře na papíře.</p>
-            <p>Je to praktický decision tool pro investiční byt i financovaný pronájem.</p>
+          <div class="hero-side">
+            <div class="hero-box">
+              <h2>Co si tady ověříte</h2>
+              <ul class="quick-list">
+                <li>kolik peněz zbude každý měsíc po zaplacení všech hlavních položek,</li>
+                <li>jak silně cashflow sráží neobsazenost nebo financování,</li>
+                <li>jestli je investice v plusu jen těsně, nebo s rezervou,</li>
+                <li>zda má smysl rozebrat náklady nebo navázat financováním.</li>
+              </ul>
+            </div>
+
+            <div class="hero-box">
+              <h3>Jak na to navázat</h3>
+              <p>Pokud je cashflow slabé nebo záporné, často dává smysl jít na <a href="/kalkulacka-mesicnich-nakladu-investicniho-bytu.html">měsíční náklady investičního bytu</a>. Pokud je naopak cashflow v pohodě, další logický krok je řešit <a href="/finance-a-hypoteky.html">financování investice</a>.</p>
+              <div class="cta-inline">
+                <a class="cta-link primary" href="#kalkulacka">Spočítat cashflow</a>
+                <a class="cta-link" href="/kalkulacka-mesicnich-nakladu-investicniho-bytu.html">Rozebrat náklady</a>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="container layout">
+    <section class="container layout" id="kalkulacka">
       <div class="card">
         <div class="card-header">
           <h2>Zadání pronájmu</h2>
-          <p>Vyplňte nájemné a hlavní náklady spojené s investiční nemovitostí. Kalkulačka výsledek automaticky přepočítá.</p>
+          <p>Vyplňte nájemné a hlavní měsíční náklady spojené s investiční nemovitostí. Výsledek vám ukáže, jestli je pronájem měsíčně zdravý, hraniční, nebo v mínusu.</p>
         </div>
         <div class="card-body">
           <form id="cashflowForm">
@@ -669,7 +918,7 @@
               <div class="field">
                 <label for="management">Správa pronájmu / realitní správa</label>
                 <input type="number" id="management" min="0" step="100" value="0" inputmode="decimal">
-                <small>Externí správa, výběr nájemníků nebo administrace.</small>
+                <small>Externí správa, výběr nájemníků nebo administrativa.</small>
               </div>
 
               <div class="field">
@@ -712,8 +961,8 @@
 
       <div class="card">
         <div class="card-header">
-          <h2>Výsledek výpočtu</h2>
-          <p>Přehled měsíčního a ročního cashflow po započtení hlavních nákladů pronájmu.</p>
+          <h2>Výsledek a další krok</h2>
+          <p>Nejde jen o to, jestli jste v plusu. Důležité je, jak moc je výsledek citlivý na náklady, neobsazenost a financování.</p>
         </div>
         <div class="card-body">
           <div class="results-grid">
@@ -739,6 +988,11 @@
           </div>
 
           <div id="cashflowBadge" class="badge success">Pronájem je měsíčně v plusu</div>
+
+          <div class="summary-copy">
+            <strong id="decisionHeadline">Pronájem vypadá měsíčně zdravě.</strong>
+            <p id="decisionText">Pokud po započtení hlavních nákladů zůstává rozumné plus, investice stojí za další prověření. Teď je důležité ověřit, zda výsledek není postavený na podceněných nákladech nebo příliš optimistických předpokladech.</p>
+          </div>
 
           <div class="info-list">
             <div class="info-row">
@@ -767,18 +1021,23 @@
             </div>
           </div>
 
-          <div class="note">
-            Výpočet je orientační. Reálné cashflow může ovlivnit délka neobsazenosti, kvalita nájemníků, mimořádné opravy, daňové nastavení i vývoj splátky hypotéky. Kalkulačka slouží hlavně pro rychlé porovnání scénářů.
+          <div class="decision-panel">
+            <h3>Doporučený další krok</h3>
+            <p id="nextStepText">Pokud je cashflow slabé nebo záporné, často dává největší smysl rozebrat náklady investičního bytu. Pokud je naopak v pohodě, navazuje financování investice a hypotéka.</p>
+            <div class="decision-actions">
+              <a class="cta-link primary" id="primaryNextStep" href="/kalkulacka-mesicnich-nakladu-investicniho-bytu.html">Rozebrat náklady investičního bytu</a>
+              <a class="cta-link" href="/finance-a-hypoteky.html">Řešit financování investice</a>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="container">
+    <section class="container section">
       <div class="card">
         <div class="card-header">
           <h3>Rozpad měsíčního cashflow</h3>
-          <p>Přehled hlavních položek, které se podílí na skutečném výsledku pronájmu.</p>
+          <p>Přehled hlavních položek, které rozhodují o skutečném měsíčním výsledku pronájmu. Tady nejlépe uvidíte, co vás stahuje dolů.</p>
         </div>
         <div class="card-body">
           <div class="table-wrap">
@@ -797,50 +1056,145 @@
               </tbody>
             </table>
           </div>
+
+          <div class="note-box">
+            <h3>Důležité</h3>
+            <p>Výpočet je orientační. Reálné cashflow může ovlivnit délka neobsazenosti, kvalita nájemníků, mimořádné opravy, daňové nastavení i vývoj splátky hypotéky. Smyslem této stránky je hlavně rychle odpovědět na otázku: <strong>je investice měsíčně zdravá, nebo už je příliš napjatá?</strong></p>
+          </div>
         </div>
       </div>
     </section>
 
-    <section class="container content-section">
-      <h2>Jak kalkulačka cashflow z pronájmu funguje</h2>
-      <p>U investičního bytu nestačí sledovat jen výši nájemného. Reálný měsíční výsledek ovlivňuje hypotéka, fond oprav, pojištění, správa, rezerva na opravy i období bez nájemníka. Tato kalkulačka proto počítá efektivní nájem po neobsazenosti a proti němu staví všechny hlavní náklady vlastníka.</p>
+    <section class="container section">
+      <h2>Jak tenhle výsledek správně číst</h2>
+      <p>Cashflow je provozní realita investice. Neřeší primárně návratnost v procentech, ale to, jestli bude nemovitost každý měsíc generovat přebytek, nebo si naopak vyžádá doplácení z vaší kapsy.</p>
+      <p>Právě proto tato stránka navazuje až po <a href="/kalkulacka-cisteho-vynosu-z-pronajmu.html">čistém výnosu z pronájmu</a>. Výnos vám řekne, jestli investice vypadá zajímavě. Cashflow vám ukáže, jak bolestivá nebo pohodlná bude v běžném měsíčním provozu.</p>
 
-      <h3>Co ve výsledku uvidíte</h3>
-      <ul>
-        <li>měsíční cashflow po započtení hlavních nákladů,</li>
-        <li>roční cashflow v orientačním přepočtu,</li>
-        <li>efektivní nájem po odečtení neobsazenosti,</li>
-        <li>rozpad pravidelných i jednorázových výdajů.</li>
-      </ul>
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-number">1</div>
+          <h3>Ověřte měsíční realitu</h3>
+          <p>Zjistíte, jestli byt po všech hlavních položkách každý měsíc vydělává, nebo spíš jen přežívá.</p>
+        </div>
 
-      <h3>Proč cashflow nestačí zaměňovat za výnos</h3>
-      <p>Výnos z pronájmu řeší návratnost investice v procentech. Cashflow ale ukazuje praktickou otázku: kolik peněz vám nemovitost každý měsíc přináší nebo bere. U financovaného pronájmu je právě cashflow často důležitější než samotný hrubý výnos.</p>
+        <div class="step-card">
+          <div class="step-number">2</div>
+          <h3>Rozebrat, co výsledek ničí</h3>
+          <p>Pokud cashflow nevychází, další logický krok je rozklad nákladů investičního bytu.</p>
+        </div>
 
-      <h3>Kdy má tento tool největší hodnotu</h3>
-      <p>Hodí se při rozhodování o koupi investiční nemovitosti, při porovnání více bytů, při nastavování nájemného i při ověření, jestli financovaný pronájem měsíčně dává smysl. Výborně se doplňuje s kalkulačkou čistého výnosu z pronájmu a s housing clusterem kolem hypotéky a celkových nákladů nemovitosti.</p>
+        <div class="step-card">
+          <div class="step-number">3</div>
+          <h3>Teprve potom řešte financování</h3>
+          <p>Když cashflow stále obstojí, navazuje financování investice a hypotéka.</p>
+        </div>
+      </div>
     </section>
 
-    <section class="container content-section">
-      <h2>Související kalkulačky</h2>
+    <section class="container section">
+      <h2>Kdy cashflow vypadá dobře a kdy už je rizikové</h2>
+      <h3>Kdy je výsledek zdravý</h3>
+      <ul>
+        <li>po započtení neobsazenosti a rezervy zůstává rozumné měsíční plus,</li>
+        <li>výsledek se nerozpadne při drobném zhoršení nákladů,</li>
+        <li>hypotéka není tak vysoká, že spolkne téměř všechen nájem,</li>
+        <li>investice vás každý měsíc netlačí do doplácení.</li>
+      </ul>
+
+      <h3>Kdy už je potřeba zpozornět</h3>
+      <ul>
+        <li>cashflow je těsně nad nulou a nemá skoro žádný polštář,</li>
+        <li>výpadek nájemníka nebo vyšší oprava by výsledek okamžitě převrátila do mínusu,</li>
+        <li>bezpečnostní buffer výrazně odhalí křehkost celé investice,</li>
+        <li>investice vypadá dobře jen bez realistické rezervy na údržbu.</li>
+      </ul>
+
+      <h3>Nejčastější chyba</h3>
+      <p>Častá chyba je zaměnit hezké nájemné za zdravé cashflow. U financovaného pronájmu bývá realita mnohem těsnější, než vypadá na první pohled. Proto je dobré započítat neobsazenost, opravy a vlastní rezervu hned na začátku, ne až ve chvíli, kdy nastane problém.</p>
+    </section>
+
+    <section class="container">
+      <div class="cta-panel">
+        <h2>Vyšlo cashflow slabě? Rozebrat náklady je další správný krok.</h2>
+        <p>Když je pronájem těsně nad nulou nebo v mínusu, bývá největší hodnota v rozkladu nákladů. Když je naopak cashflow zdravé, dává smysl navázat financováním investice a hypotékou.</p>
+        <div class="cta-grid">
+          <a class="related-card" href="/kalkulacka-mesicnich-nakladu-investicniho-bytu.html">
+            <strong>Rozebrat náklady investičního bytu</strong>
+            <span>Nejpřirozenější další krok, když chcete pochopit, co cashflow ničí.</span>
+          </a>
+
+          <a class="related-card" href="/finance-a-hypoteky.html">
+            <strong>Řešit financování investice</strong>
+            <span>Další vrstva rozhodnutí pro hypotéku, akontaci a strukturu financování.</span>
+          </a>
+
+          <a class="related-card" href="/kalkulacka-cisteho-vynosu-z-pronajmu.html">
+            <strong>Vrátit se na čistý výnos z pronájmu</strong>
+            <span>Užitečné, pokud si chcete potvrdit i procentuální pohled na investici.</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="container section">
+      <h2>Jak tato stránka zapadá do investičního clusteru</h2>
+      <p>Cashflow z pronájmu je druhá klíčová money page investičního clusteru. Navazuje na <a href="/kalkulacka-cisteho-vynosu-z-pronajmu.html">čistý výnos z pronájmu</a> a posouvá rozhodování z teorie do měsíční reality. Tady už nejde jen o atraktivitu investice, ale o její udržitelnost.</p>
+
+      <h3>Kam uživatele posunout dál</h3>
+      <ul>
+        <li>na <a href="/kalkulacka-mesicnich-nakladu-investicniho-bytu.html">měsíční náklady investičního bytu</a>, když chce rozebrat, co výsledek kazí,</li>
+        <li>na <a href="/finance-a-hypoteky.html">Finance a hypotéky</a>, když řeší další vrstvu financování,</li>
+        <li>na <a href="/hypotecni-kalkulacka.html">hypoteční kalkulačku</a>, když potřebuje přepočítat splátku,</li>
+        <li>na <a href="/pronajem-a-investicni-bydleni.html">hub investičního bydlení</a>, když chce vidět celý decision flow.</li>
+      </ul>
+    </section>
+
+    <section class="container section">
+      <h2>Časté otázky</h2>
+      <div class="faq">
+        <div class="faq-item">
+          <h3>Co znamená cashflow z pronájmu?</h3>
+          <p>Cashflow z pronájmu je rozdíl mezi příjmy z nájmu a reálnými měsíčními náklady spojenými s nemovitostí. Může být kladné, nulové nebo záporné.</p>
+        </div>
+
+        <div class="faq-item">
+          <h3>Jaký je rozdíl mezi cashflow a výnosem z pronájmu?</h3>
+          <p>Výnos řeší návratnost investice v procentech. Cashflow ukazuje praktickou měsíční realitu, tedy kolik peněz vám po zaplacení všech běžných nákladů skutečně zbývá nebo chybí.</p>
+        </div>
+
+        <div class="faq-item">
+          <h3>Proč počítat i neobsazenost a rezervu na opravy?</h3>
+          <p>Protože pronájem nebývá každý měsíc ideálně obsazený a v praxi se objevují opravy, údržba nebo výpadky plateb. Bez těchto položek by výpočet vypadal příliš optimisticky.</p>
+        </div>
+
+        <div class="faq-item">
+          <h3>Co udělat po výpočtu cashflow?</h3>
+          <p>Pokud je cashflow slabé nebo záporné, další správný krok je přejít na <a href="/kalkulacka-mesicnich-nakladu-investicniho-bytu.html">měsíční náklady investičního bytu</a>. Pokud je naopak zdravé, má smysl řešit <a href="/finance-a-hypoteky.html">financování investice</a>.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="container section">
+      <h2>Související kalkulačky a další krok</h2>
       <div class="related-grid">
+        <a class="related-card" href="/kalkulacka-mesicnich-nakladu-investicniho-bytu.html">
+          <strong>Měsíční náklady investičního bytu</strong>
+          <span>Nejpřirozenější další krok po cashflow, hlavně když chcete diagnostikovat problém.</span>
+        </a>
+
         <a class="related-card" href="/kalkulacka-cisteho-vynosu-z-pronajmu.html">
-          <strong>Kalkulačka čistého výnosu z pronájmu</strong>
-          <span>Výpočet čistého ročního výnosu z pronájmu po započtení nákladů a neobsazenosti.</span>
+          <strong>Čistý výnos z pronájmu</strong>
+          <span>Vrátit se na vstupní investiční filtr a porovnat i procentuální pohled.</span>
         </a>
 
-        <a class="related-card" href="/hypotecni-kalkulacka.html">
-          <strong>Hypoteční kalkulačka</strong>
-          <span>Spočítejte si orientační měsíční splátku hypotéky a celkové úroky.</span>
+        <a class="related-card" href="/finance-a-hypoteky.html">
+          <strong>Finance a hypotéky</strong>
+          <span>Další krok pro akontaci, hypotéku a širší strukturu financování investice.</span>
         </a>
 
-        <a class="related-card" href="/kalkulacka-celkove-ceny-nemovitosti.html">
-          <strong>Kalkulačka celkové ceny nemovitosti</strong>
-          <span>Přehled skutečných pořizovacích nákladů při koupi bytu nebo domu.</span>
-        </a>
-
-        <a class="related-card" href="/mesicni-naklady-na-bydleni-kalkulacka.html">
-          <strong>Kalkulačka měsíčních nákladů na bydlení</strong>
-          <span>Získejte přehled pravidelných výdajů domácnosti a nemovitosti.</span>
+        <a class="related-card" href="/pronajem-a-investicni-bydleni.html">
+          <strong>Pronájem a investiční bydlení</strong>
+          <span>Vrátit se na hlavní rozcestník investičního clusteru.</span>
         </a>
       </div>
     </section>
@@ -868,7 +1222,11 @@
       summaryAnnualCosts: document.getElementById('summaryAnnualCosts'),
       summaryBuffer: document.getElementById('summaryBuffer'),
       cashflowBadge: document.getElementById('cashflowBadge'),
-      breakdownBody: document.getElementById('breakdownBody')
+      breakdownBody: document.getElementById('breakdownBody'),
+      decisionHeadline: document.getElementById('decisionHeadline'),
+      decisionText: document.getElementById('decisionText'),
+      nextStepText: document.getElementById('nextStepText'),
+      primaryNextStep: document.getElementById('primaryNextStep')
     };
 
     function formatCurrency(value) {
@@ -905,7 +1263,15 @@
       if (values.monthlyRent < 0) return 'Nájemné nemůže být záporné.';
       if (values.monthlyRent === 0) return 'Zadejte měsíční nájemné.';
       if (values.vacancyRate < 0 || values.vacancyRate > 100) return 'Zadejte platnou neobsazenost.';
-      if (values.mortgagePayment < 0 || values.repairFund < 0 || values.insurance < 0 || values.management < 0 || values.maintenanceReserve < 0 || values.propertyTaxReserve < 0 || values.oneOffAnnualCosts < 0) {
+      if (
+        values.mortgagePayment < 0 ||
+        values.repairFund < 0 ||
+        values.insurance < 0 ||
+        values.management < 0 ||
+        values.maintenanceReserve < 0 ||
+        values.propertyTaxReserve < 0 ||
+        values.oneOffAnnualCosts < 0
+      ) {
         return 'Nákladové položky nemohou být záporné.';
       }
       return '';
@@ -972,6 +1338,42 @@
       `).join('');
     }
 
+    function getDecision(result) {
+      if (result.monthlyCashflow > 3000) {
+        return {
+          badgeText: 'Pronájem je měsíčně v solidním plusu',
+          badgeClass: 'badge success',
+          headline: 'Pronájem vypadá měsíčně zdravě.',
+          text: 'Po započtení hlavních nákladů a rezervy stále zůstává rozumné plus. To je dobré znamení, ale pořád dává smysl potvrdit, že nákladová realita není podstřelená.',
+          nextStep: 'Další logický krok je potvrdit nákladovou strukturu investičního bytu a pak řešit financování investice.',
+          ctaHref: '/kalkulacka-mesicnich-nakladu-investicniho-bytu.html',
+          ctaText: 'Rozebrat náklady investičního bytu'
+        };
+      }
+
+      if (result.monthlyCashflow >= 0) {
+        return {
+          badgeText: 'Pronájem je v plusu, ale s menším polštářem',
+          badgeClass: 'badge warning',
+          headline: 'Výsledek je použitelný, ale křehčí.',
+          text: 'Investice může fungovat, ale už je citlivější na výpadek nájemníka, vyšší opravu nebo nepřesně odhadnuté náklady. Tady má smysl být opatrný a rozebrat detaily.',
+          nextStep: 'Nejdřív rozebrat náklady investičního bytu, teprve potom řešit financování nebo další expanzi.',
+          ctaHref: '/kalkulacka-mesicnich-nakladu-investicniho-bytu.html',
+          ctaText: 'Prověřit náklady investičního bytu'
+        };
+      }
+
+      return {
+        badgeText: 'Pronájem je měsíčně v záporném cashflow',
+        badgeClass: 'badge danger',
+        headline: 'Tady už investici pravděpodobně dotujete.',
+        text: 'Záporné cashflow neznamená automaticky konec, ale je to jasný signál k hlubší kontrole. Nejčastěji je problém ve vysokém financování, nízkém nájmu nebo podceněných nákladech.',
+        nextStep: 'Nejdřív rozebrat náklady investičního bytu a pak zvážit financování nebo přehodnocení investice.',
+        ctaHref: '/kalkulacka-mesicnich-nakladu-investicniho-bytu.html',
+        ctaText: 'Najít problém v nákladech'
+      };
+    }
+
     function render(values, result) {
       outputs.monthlyCashflow.textContent = formatCurrency(result.monthlyCashflow);
       outputs.yearlyCashflow.textContent = formatCurrency(result.yearlyCashflow);
@@ -985,16 +1387,14 @@
       outputs.summaryAnnualCosts.textContent = formatCurrency(result.monthlyAnnualCosts);
       outputs.summaryBuffer.textContent = formatCurrency(result.bufferCost);
 
-      if (result.monthlyCashflow > 3000) {
-        outputs.cashflowBadge.className = 'badge success';
-        outputs.cashflowBadge.textContent = 'Pronájem je měsíčně v solidním plusu';
-      } else if (result.monthlyCashflow >= 0) {
-        outputs.cashflowBadge.className = 'badge warning';
-        outputs.cashflowBadge.textContent = 'Pronájem je v plusu, ale s menším polštářem';
-      } else {
-        outputs.cashflowBadge.className = 'badge danger';
-        outputs.cashflowBadge.textContent = 'Pronájem je měsíčně v záporném cashflow';
-      }
+      const decision = getDecision(result);
+      outputs.cashflowBadge.textContent = decision.badgeText;
+      outputs.cashflowBadge.className = decision.badgeClass;
+      outputs.decisionHeadline.textContent = decision.headline;
+      outputs.decisionText.textContent = decision.text;
+      outputs.nextStepText.textContent = decision.nextStep;
+      outputs.primaryNextStep.textContent = decision.ctaText;
+      outputs.primaryNextStep.href = decision.ctaHref;
 
       renderBreakdown(buildBreakdown(values, result));
     }
