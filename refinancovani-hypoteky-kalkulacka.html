@@ -3,22 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kalkulačka refinancování hypotéky online | RychléVýpočty.cz</title>
-  <meta name="description" content="Spočítejte si, zda se vyplatí refinancování hypotéky. Přehledná kalkulačka porovná původní a novou splátku, úrok, celkové úroky i orientační úsporu po započtení poplatků.">
-  <meta name="keywords" content="refinancování hypotéky kalkulačka, kalkulačka refinancování hypotéky, vyplatí se refinancování hypotéky, nová splátka hypotéky, úspora refinancování">
+  <title>Refinancování hypotéky kalkulačka online | Vyplatí se nová nabídka? | RychléVýpočty.cz</title>
+  <meta name="description" content="Spočítejte si, jestli se refinancování hypotéky vyplatí. Porovnejte stávající a novou splátku, celkové úroky, poplatky a čistou orientační úsporu.">
+  <meta name="keywords" content="refinancování hypotéky kalkulačka, vyplatí se refinancování hypotéky, nová splátka hypotéky, úspora refinancování, porovnání hypotéky, nová nabídka hypotéky">
   <meta name="author" content="RychléVýpočty.cz">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://rychlevypocty.cz/refinancovani-hypoteky-kalkulacka.html">
 
-  <meta property="og:title" content="Kalkulačka refinancování hypotéky online | RychléVýpočty.cz">
-  <meta property="og:description" content="Porovnejte stávající hypotéku s novou nabídkou a zjistěte orientační úsporu při refinancování.">
+  <meta property="og:title" content="Refinancování hypotéky kalkulačka online | RychléVýpočty.cz">
+  <meta property="og:description" content="Porovnejte stávající hypotéku s novou nabídkou a zjistěte, jestli refinancování přinese nižší splátku nebo skutečnou úsporu.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://rychlevypocty.cz/refinancovani-hypoteky-kalkulacka.html">
   <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg">
 
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Kalkulačka refinancování hypotéky | RychléVýpočty.cz">
-  <meta name="twitter:description" content="Spočítejte si rozdíl mezi stávající a novou hypotékou včetně orientační úspory po refinancování.">
+  <meta name="twitter:title" content="Refinancování hypotéky kalkulačka | RychléVýpočty.cz">
+  <meta name="twitter:description" content="Zjistěte, zda nová nabídka hypotéky dává smysl po započtení splátky, úroků i poplatků.">
 
   <style>
     :root {
@@ -28,10 +28,14 @@
       --muted: #5f6b85;
       --primary: #2152ff;
       --primary-dark: #183dbf;
+      --primary-soft: rgba(33, 82, 255, 0.08);
       --border: #dbe3f0;
       --success: #138a4b;
+      --success-bg: rgba(19, 138, 75, 0.10);
       --warning: #b66a00;
+      --warning-bg: rgba(182, 106, 0, 0.11);
       --danger: #c53a2f;
+      --danger-bg: rgba(197, 58, 47, 0.10);
       --shadow: 0 12px 32px rgba(20, 32, 70, 0.08);
       --radius: 18px;
     }
@@ -69,11 +73,11 @@
     .topbar {
       padding: 18px 0;
       border-bottom: 1px solid rgba(219, 227, 240, 0.8);
-      background: rgba(255, 255, 255, 0.8);
+      background: rgba(255, 255, 255, 0.82);
       backdrop-filter: blur(10px);
       position: sticky;
       top: 0;
-      z-index: 20;
+      z-index: 30;
     }
 
     .topbar-inner {
@@ -105,7 +109,7 @@
     }
 
     .hero {
-      padding: 42px 0 20px;
+      padding: 42px 0 22px;
     }
 
     .breadcrumbs {
@@ -122,17 +126,17 @@
     }
 
     .hero-copy h1 {
-      font-size: clamp(2rem, 4vw, 3.2rem);
-      line-height: 1.08;
-      letter-spacing: -0.03em;
+      font-size: clamp(2.05rem, 4vw, 3.35rem);
+      line-height: 1.05;
+      letter-spacing: -0.035em;
       margin: 0 0 16px;
     }
 
     .hero-copy p {
-      margin: 0 0 16px;
+      margin: 0 0 14px;
       font-size: 1.06rem;
       color: var(--muted);
-      max-width: 720px;
+      max-width: 760px;
     }
 
     .hero-points {
@@ -143,26 +147,43 @@
     }
 
     .hero-pill {
-      background: rgba(33, 82, 255, 0.08);
+      background: var(--primary-soft);
       color: var(--primary-dark);
       border: 1px solid rgba(33, 82, 255, 0.12);
       padding: 10px 14px;
       border-radius: 999px;
       font-size: 0.95rem;
-      font-weight: 600;
+      font-weight: 700;
     }
 
-    .hero-box {
-      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    .hero-side {
+      display: grid;
+      gap: 16px;
+    }
+
+    .hero-box,
+    .card,
+    .step-card,
+    .related-card,
+    .cta-panel,
+    .note-box,
+    .faq-item {
+      background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 24px;
-      padding: 24px;
+      border-radius: var(--radius);
       box-shadow: var(--shadow);
     }
 
-    .hero-box h2 {
+    .hero-box {
+      padding: 24px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+
+    .hero-box h2,
+    .hero-box h3 {
       margin: 0 0 10px;
-      font-size: 1.2rem;
+      font-size: 1.18rem;
+      letter-spacing: -0.02em;
     }
 
     .hero-box p {
@@ -174,19 +195,58 @@
       margin-bottom: 0;
     }
 
+    .quick-list {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+    }
+
+    .quick-list li {
+      margin-bottom: 8px;
+    }
+
+    .cta-inline {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .cta-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 11px 14px;
+      border-radius: 12px;
+      font-weight: 700;
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .cta-link.primary {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+    }
+
+    .cta-link.primary:hover {
+      background: var(--primary-dark);
+      text-decoration: none;
+    }
+
+    .cta-link:hover {
+      text-decoration: none;
+      border-color: rgba(33, 82, 255, 0.28);
+    }
+
     .layout {
       display: grid;
       grid-template-columns: 1.04fr 0.96fr;
       gap: 28px;
       align-items: start;
-      padding: 22px 0 32px;
-    }
-
-    .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
+      padding: 18px 0 20px;
     }
 
     .card-header {
@@ -305,6 +365,11 @@
       background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
     }
 
+    .result-box.highlight {
+      background: linear-gradient(180deg, #eef7ff 0%, #f9fcff 100%);
+      border-color: rgba(33, 82, 255, 0.18);
+    }
+
     .result-label {
       font-size: 0.9rem;
       color: var(--muted);
@@ -312,15 +377,55 @@
     }
 
     .result-value {
-      font-size: clamp(1.25rem, 2.4vw, 2rem);
-      line-height: 1.15;
+      font-size: clamp(1.2rem, 2.4vw, 2rem);
+      line-height: 1.12;
       font-weight: 800;
       letter-spacing: -0.03em;
     }
 
-    .highlight {
-      background: linear-gradient(180deg, #eef7ff 0%, #f9fcff 100%);
-      border-color: rgba(33, 82, 255, 0.18);
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-top: 4px;
+    }
+
+    .badge.success {
+      background: var(--success-bg);
+      color: var(--success);
+    }
+
+    .badge.warning {
+      background: var(--warning-bg);
+      color: var(--warning);
+    }
+
+    .badge.danger {
+      background: var(--danger-bg);
+      color: var(--danger);
+    }
+
+    .summary-copy {
+      margin-top: 18px;
+      padding: 16px 18px;
+      border-radius: 14px;
+      border: 1px solid #e7edf7;
+      background: #f8fafc;
+    }
+
+    .summary-copy strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .summary-copy p {
+      margin: 0;
+      color: var(--muted);
     }
 
     .info-list {
@@ -346,40 +451,29 @@
       color: var(--muted);
     }
 
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 12px;
-      border-radius: 999px;
-      font-size: 0.88rem;
-      font-weight: 700;
-      margin-top: 10px;
-    }
-
-    .badge.success {
-      background: rgba(19, 138, 75, 0.10);
-      color: var(--success);
-    }
-
-    .badge.warning {
-      background: rgba(182, 106, 0, 0.11);
-      color: var(--warning);
-    }
-
-    .badge.danger {
-      background: rgba(197, 58, 47, 0.10);
-      color: var(--danger);
-    }
-
-    .note {
+    .decision-panel {
       margin-top: 18px;
-      padding: 14px 16px;
-      border-radius: 14px;
-      background: #f8fafc;
-      border: 1px solid #e7edf7;
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #ffffff 0%, #f7fbff 100%);
+    }
+
+    .decision-panel h3 {
+      margin: 0 0 8px;
+      font-size: 1.04rem;
+      letter-spacing: -0.02em;
+    }
+
+    .decision-panel p {
+      margin: 0 0 12px;
       color: var(--muted);
-      font-size: 0.95rem;
+    }
+
+    .decision-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
     }
 
     .table-wrap {
@@ -387,12 +481,13 @@
       margin-top: 18px;
       border: 1px solid var(--border);
       border-radius: 14px;
+      background: #fff;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      min-width: 720px;
+      min-width: 760px;
       background: #fff;
     }
 
@@ -401,6 +496,7 @@
       text-align: left;
       border-bottom: 1px solid #edf2fa;
       font-size: 0.96rem;
+      vertical-align: top;
     }
 
     th {
@@ -413,51 +509,129 @@
       border-bottom: 0;
     }
 
-    .content-section {
-      padding: 8px 0 8px;
+    .section {
+      padding: 10px 0;
     }
 
-    .content-section h2 {
-      font-size: 1.7rem;
+    .section h2 {
+      font-size: 1.75rem;
       letter-spacing: -0.03em;
       margin: 0 0 14px;
     }
 
-    .content-section h3 {
+    .section h3 {
       font-size: 1.15rem;
-      margin: 28px 0 10px;
+      margin: 26px 0 10px;
     }
 
-    .content-section p {
+    .section p {
       color: var(--muted);
       margin: 0 0 14px;
     }
 
-    .content-section ul {
+    .section ul {
       margin: 0;
       padding-left: 20px;
       color: var(--muted);
     }
 
-    .content-section li {
+    .section li {
       margin-bottom: 8px;
     }
 
-    .related-grid {
+    .steps-grid,
+    .related-grid,
+    .cta-grid,
+    .faq {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
       gap: 16px;
+    }
+
+    .steps-grid {
+      grid-template-columns: repeat(3, 1fr);
+      margin-top: 18px;
+    }
+
+    .step-card {
+      padding: 20px;
+      background: linear-gradient(180deg, #ffffff 0%, #f9fbff 100%);
+    }
+
+    .step-number {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--primary-soft);
+      color: var(--primary-dark);
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .step-card h3 {
+      margin: 0 0 8px;
+      font-size: 1.05rem;
+    }
+
+    .step-card p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .cta-panel {
+      margin-top: 8px;
+      padding: 24px;
+      background: linear-gradient(180deg, #ffffff 0%, #f5f9ff 100%);
+    }
+
+    .cta-panel h2 {
+      margin: 0 0 10px;
+      font-size: 1.45rem;
+      letter-spacing: -0.03em;
+    }
+
+    .cta-panel p {
+      margin: 0 0 16px;
+      color: var(--muted);
+    }
+
+    .cta-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .note-box {
+      padding: 18px;
+      margin-top: 16px;
+      background: #fbfcfe;
+    }
+
+    .note-box h3 {
+      margin: 0 0 8px;
+      font-size: 1.02rem;
+    }
+
+    .note-box p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .related-grid {
+      grid-template-columns: repeat(4, 1fr);
       margin-top: 18px;
     }
 
     .related-card {
       display: block;
       padding: 18px;
-      border-radius: 16px;
-      border: 1px solid var(--border);
-      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
       color: var(--text);
-      box-shadow: var(--shadow);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+
+    .related-card:hover {
+      text-decoration: none;
+      border-color: rgba(33, 82, 255, 0.25);
     }
 
     .related-card strong {
@@ -469,6 +643,25 @@
     .related-card span {
       color: var(--muted);
       font-size: 0.93rem;
+    }
+
+    .faq {
+      margin-top: 18px;
+    }
+
+    .faq-item {
+      padding: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #fafcff 100%);
+    }
+
+    .faq-item h3 {
+      margin: 0 0 8px;
+      font-size: 1.02rem;
+    }
+
+    .faq-item p {
+      margin: 0;
+      color: var(--muted);
     }
 
     footer {
@@ -486,7 +679,9 @@
     @media (max-width: 980px) {
       .hero-grid,
       .layout,
-      .related-grid {
+      .steps-grid,
+      .related-grid,
+      .cta-grid {
         grid-template-columns: 1fr;
       }
     }
@@ -507,7 +702,11 @@
 
       .card-header,
       .card-body,
-      .hero-box {
+      .hero-box,
+      .step-card,
+      .cta-panel,
+      .note-box,
+      .faq-item {
         padding-left: 18px;
         padding-right: 18px;
       }
@@ -516,6 +715,11 @@
         align-items: flex-start;
         flex-direction: column;
       }
+
+      .info-row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
     }
   </style>
 
@@ -523,11 +727,11 @@
   {
     "@context":"https://schema.org",
     "@type":"WebApplication",
-    "name":"Kalkulačka refinancování hypotéky",
+    "name":"Refinancování hypotéky kalkulačka",
     "url":"https://rychlevypocty.cz/refinancovani-hypoteky-kalkulacka.html",
     "applicationCategory":"FinanceApplication",
     "operatingSystem":"Any",
-    "description":"Online kalkulačka pro porovnání stávající a nové hypotéky při refinancování včetně orientační úspory.",
+    "description":"Online kalkulačka pro porovnání stávající hypotéky a nové nabídky refinancování včetně měsíční splátky, úroků, poplatků a orientační čisté úspory.",
     "offers":{
       "@type":"Offer",
       "price":"0",
@@ -539,44 +743,79 @@
   <script type="application/ld+json">
   {
     "@context":"https://schema.org",
+    "@type":"BreadcrumbList",
+    "itemListElement":[
+      {
+        "@type":"ListItem",
+        "position":1,
+        "name":"RychléVýpočty.cz",
+        "item":"https://rychlevypocty.cz/"
+      },
+      {
+        "@type":"ListItem",
+        "position":2,
+        "name":"Finance a hypotéky",
+        "item":"https://rychlevypocty.cz/finance-a-hypoteky.html"
+      },
+      {
+        "@type":"ListItem",
+        "position":3,
+        "name":"Refinancování hypotéky kalkulačka",
+        "item":"https://rychlevypocty.cz/refinancovani-hypoteky-kalkulacka.html"
+      }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
     "@type":"FAQPage",
     "mainEntity":[
       {
         "@type":"Question",
-        "name":"Co je refinancování hypotéky?",
+        "name":"Kdy se refinancování hypotéky vyplatí?",
         "acceptedAnswer":{
           "@type":"Answer",
-          "text":"Refinancování hypotéky znamená nahrazení stávající hypotéky novou, obvykle s jinou úrokovou sazbou, splátkou nebo dobou splácení. Cílem bývá snížení měsíční splátky nebo celkových úroků."
+          "text":"Refinancování dává smysl hlavně tehdy, když nová nabídka přinese nižší splátku nebo nižší celkové náklady a zároveň rozdíl nesmažou poplatky nebo nevýhodně delší splácení."
         }
       },
       {
         "@type":"Question",
-        "name":"Kdy se refinancování hypotéky obvykle vyplatí?",
+        "name":"Stačí sledovat jen nižší měsíční splátku?",
         "acceptedAnswer":{
           "@type":"Answer",
-          "text":"Nejčastěji tehdy, když nová sazba výrazně snižuje měsíční splátku nebo celkové úroky a zároveň poplatky spojené s refinancováním nejsou příliš vysoké."
+          "text":"Ne. Nižší splátka může vzniknout i prodloužením splácení. Proto je důležité porovnat i celkové úroky, délku nové hypotéky a jednorázové náklady refinancování."
         }
       },
       {
         "@type":"Question",
-        "name":"Stačí porovnat jen měsíční splátku?",
+        "name":"Co je nejdůležitější vstup do kalkulačky refinancování?",
         "acceptedAnswer":{
           "@type":"Answer",
-          "text":"Ne. Kromě měsíční splátky je vhodné sledovat i celkové úroky do konce splácení, délku nové hypotéky, jednorázové poplatky a případný dopad na dlouhodobý rozpočet."
+          "text":"Základ je zbývající jistina, stávající sazba, nová nabídka, zbývající doba splácení a náklady spojené s refinancováním. Bez těchto údajů nejde rozhodnutí dobře posoudit."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Jaký je další krok po tomto výpočtu?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Pokud refinancování vychází zajímavě, další krok je porovnat si novou hypotéku detailněji a ověřit konkrétní parametry nabídky. Hodí se i hypoteční kalkulačka nebo kalkulačka mimořádné splátky hypotéky."
         }
       }
     ]
   }
   </script>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-E9QVPMKPSV"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-E9QVPMKPSV');
-</script>
 
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-E9QVPMKPSV"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-E9QVPMKPSV');
+  </script>
 </head>
 <body>
   <header class="topbar">
@@ -584,9 +823,9 @@
       <a class="brand" href="/">Rychlé<span>Výpočty</span>.cz</a>
       <nav class="topnav" aria-label="Hlavní navigace">
         <a href="/">Domů</a>
-        <a href="/hypotecni-kalkulacka.html">Hypotéka</a>
+        <a href="/finance-a-hypoteky.html">Finance a hypotéky</a>
+        <a href="/hypotecni-kalkulacka.html">Hypoteční kalkulačka</a>
         <a href="/kalkulacka-akontace-a-ltv-hypoteky.html">Akontace a LTV</a>
-        <a href="/mimoradna-splatka-hypoteky-kalkulacka.html">Mimořádná splátka</a>
       </nav>
     </div>
   </header>
@@ -595,37 +834,52 @@
     <section class="hero">
       <div class="container">
         <div class="breadcrumbs">
-          <a href="/">RychléVýpočty.cz</a> / Kalkulačka refinancování hypotéky
+          <a href="/">RychléVýpočty.cz</a> / <a href="/finance-a-hypoteky.html">Finance a hypotéky</a> / Refinancování hypotéky
         </div>
 
         <div class="hero-grid">
           <div class="hero-copy">
-            <h1>Kalkulačka refinancování hypotéky</h1>
-            <p>Spočítejte si, jestli by vám refinancování hypotéky mohlo přinést nižší měsíční splátku nebo celkovou úsporu na úrocích. Kalkulačka porovná stávající úvěr s novou nabídkou a započítá i orientační jednorázové náklady spojené se změnou.</p>
-            <p>Stačí zadat aktuální zůstatek hypotéky, zbývající dobu splácení, stávající sazbu a novou nabídku. Výsledek získáte okamžitě.</p>
+            <h1>Vyplatí se vám refinancování hypotéky?</h1>
+            <p>Tahle <strong>kalkulačka refinancování hypotéky</strong> vám rychle ukáže, jestli nová nabídka znamená jen hezčí sazbu na papíře, nebo reálnou úsporu v měsíční splátce a celkových nákladech.</p>
+            <p>Cíl není jen spočítat číslo. Cíl je rozhodnout, <strong>jestli má smysl novou nabídku řešit dál, nebo jestli refinancování při vašich parametrech zatím nepřináší dost velký rozdíl</strong>.</p>
 
             <div class="hero-points">
-              <div class="hero-pill">Nová vs původní splátka</div>
-              <div class="hero-pill">Úspora na úrocích</div>
-              <div class="hero-pill">Dopad poplatků</div>
-              <div class="hero-pill">Celkové porovnání</div>
+              <div class="hero-pill">Stará vs nová splátka</div>
+              <div class="hero-pill">Úroky do konce splácení</div>
+              <div class="hero-pill">Poplatky refinancování</div>
+              <div class="hero-pill">Jasný další krok</div>
             </div>
           </div>
 
-          <div class="hero-box">
-            <h2>Co kalkulačka umí</h2>
-            <p>Porovná stávající hypotéku s novou variantou refinancování a vypočítá rozdíl v měsíční splátce, celkově zaplacených úrocích i orientační čisté úspoře po započtení poplatků.</p>
-            <p>Hodí se pro rychlé rozhodnutí, jestli má smysl novou nabídku řešit dál detailněji.</p>
+          <div class="hero-side">
+            <div class="hero-box">
+              <h2>Co si tady ověříte</h2>
+              <ul class="quick-list">
+                <li>o kolik by se změnila měsíční splátka,</li>
+                <li>jestli nová nabídka snižuje celkové úroky,</li>
+                <li>jak moc výsledkem hýbou poplatky,</li>
+                <li>zda refinancování dává smysl řešit detailněji.</li>
+              </ul>
+            </div>
+
+            <div class="hero-box">
+              <h3>Typický decision flow</h3>
+              <p>Nejdřív si ověříte, zda nová nabídka opravdu šetří peníze. Potom má smysl navázat na <a href="/hypotecni-kalkulacka.html">hypoteční kalkulačku</a> nebo si přepočítat dopad přes <a href="/mimoradna-splatka-hypoteky-kalkulacka.html">mimořádnou splátku hypotéky</a>.</p>
+              <div class="cta-inline">
+                <a class="cta-link primary" href="#kalkulacka">Spočítat refinancování</a>
+                <a class="cta-link" href="/hypotecni-kalkulacka.html">Porovnat detail hypotéky</a>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="container layout">
+    <section class="container layout" id="kalkulacka">
       <div class="card">
         <div class="card-header">
           <h2>Zadání stávající a nové hypotéky</h2>
-          <p>Vyplňte zbývající parametry současné hypotéky a porovnejte je s novou nabídkou refinancování.</p>
+          <p>Vyplňte zbývající jistinu, parametry současné hypotéky a novou nabídku. Výsledek vám ukáže, jestli refinancování přináší reálný přínos, nebo jen nižší splátku za cenu jiného kompromisu.</p>
         </div>
         <div class="card-body">
           <form id="refiForm">
@@ -639,13 +893,13 @@
               <div class="field">
                 <label for="remainingYears">Zbývající doba splácení (roky)</label>
                 <input type="number" id="remainingYears" min="1" max="40" step="1" value="24" inputmode="numeric">
-                <small>Doba, po kterou byste původní hypotéku ještě spláceli.</small>
+                <small>Jak dlouho byste ještě spláceli stávající hypotéku.</small>
               </div>
 
               <div class="field">
                 <label for="currentRate">Stávající úroková sazba (%)</label>
                 <input type="number" id="currentRate" min="0.1" max="25" step="0.01" value="5.69" inputmode="decimal">
-                <small>Aktuální roční úrok u současné hypotéky.</small>
+                <small>Aktuální roční sazba současné hypotéky.</small>
               </div>
 
               <div class="field">
@@ -657,25 +911,25 @@
               <div class="field">
                 <label for="newYears">Nová doba splácení po refinancování (roky)</label>
                 <input type="number" id="newYears" min="1" max="40" step="1" value="24" inputmode="numeric">
-                <small>Může být stejná nebo delší či kratší než původní.</small>
+                <small>Může být stejná, kratší i delší než dnes.</small>
               </div>
 
               <div class="field">
                 <label for="refiFees">Jednorázové náklady refinancování</label>
                 <input type="number" id="refiFees" min="0" step="1000" value="15000" inputmode="decimal">
-                <small>Např. poplatky, odhad, právní nebo administrativní náklady.</small>
+                <small>Např. odhad, administrativa, právní servis nebo další poplatky.</small>
               </div>
 
               <div class="field">
                 <label for="monthlyFeeCurrent">Měsíční poplatky u stávající hypotéky</label>
                 <input type="number" id="monthlyFeeCurrent" min="0" step="1" value="0" inputmode="decimal">
-                <small>Pokud nějaké pravidelné poplatky platíte.</small>
+                <small>Zadejte pravidelné poplatky, pokud je platíte.</small>
               </div>
 
               <div class="field">
                 <label for="monthlyFeeNew">Měsíční poplatky u nové hypotéky</label>
                 <input type="number" id="monthlyFeeNew" min="0" step="1" value="0" inputmode="decimal">
-                <small>Např. vedení účtu nebo související služby.</small>
+                <small>Např. účet, služby nebo jiné doprovodné náklady.</small>
               </div>
 
               <div class="field full">
@@ -687,7 +941,7 @@
                   <option value="45">45 %</option>
                   <option value="50">50 %</option>
                 </select>
-                <small>Jen pro orientační výpočet potřebného čistého příjmu u nové splátky.</small>
+                <small>Jen orientačně. Pomůže ukázat, jaký čistý příjem odpovídá nové splátce.</small>
               </div>
 
               <div class="actions full">
@@ -701,8 +955,8 @@
 
       <div class="card">
         <div class="card-header">
-          <h2>Výsledek porovnání</h2>
-          <p>Orientační srovnání stávající hypotéky a nové varianty refinancování.</p>
+          <h2>Výsledek a rozhodnutí</h2>
+          <p>Nejde jen o novou sazbu. Důležité je, jestli refinancování zlepšuje i reálný výsledek po započtení času a nákladů.</p>
         </div>
         <div class="card-body">
           <div class="results-grid">
@@ -729,6 +983,11 @@
 
           <div id="resultBadge" class="badge success">Refinancování vypadá příznivě</div>
 
+          <div class="summary-copy">
+            <strong id="decisionHeadline">Nová nabídka vypadá jako smysluplný krok.</strong>
+            <p id="decisionText">Pokud refinancování snižuje splátku i celkové náklady a rozdíl nesmažou poplatky, má smysl řešit detaily nabídky a konkrétní podmínky nové banky.</p>
+          </div>
+
           <div class="info-list">
             <div class="info-row">
               <span>Stávající měsíční splátka</span>
@@ -743,7 +1002,7 @@
               <strong id="newTotalInterest">0 Kč</strong>
             </div>
             <div class="info-row">
-              <span>Celkem včetně poplatků refinancování</span>
+              <span>Celkem u nové varianty včetně poplatků</span>
               <strong id="newTotalWithFees">0 Kč</strong>
             </div>
             <div class="info-row">
@@ -752,18 +1011,23 @@
             </div>
           </div>
 
-          <div class="note">
-            Výpočet je orientační. Skutečný přínos refinancování může ovlivnit datum fixace, podmínky banky, pojištění, doplňkové produkty, sankce mimo výročí fixace i konkrétní způsob schválení úvěru.
+          <div class="decision-panel">
+            <h3>Doporučený další krok</h3>
+            <p id="nextStepText">Pokud refinancování vypadá zajímavě, navazující krok je detailně porovnat parametry nové hypotéky a ověřit, zda nejde jen o nižší splátku vykoupenou delší dobou splácení.</p>
+            <div class="decision-actions">
+              <a class="cta-link primary" id="primaryNextStep" href="/hypotecni-kalkulacka.html">Pokračovat na hypoteční kalkulačku</a>
+              <a class="cta-link" href="/mimoradna-splatka-hypoteky-kalkulacka.html">Porovnat s mimořádnou splátkou</a>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="container">
+    <section class="container section">
       <div class="card">
         <div class="card-header">
           <h3>Detailní přehled porovnání</h3>
-          <p>Přímé srovnání stávající hypotéky a nové nabídky refinancování.</p>
+          <p>Přímé srovnání stávající hypotéky a nové varianty refinancování, abyste viděli nejen splátku, ale i skutečný dopad do budoucna.</p>
         </div>
         <div class="card-body">
           <div class="table-wrap">
@@ -782,67 +1046,145 @@
               </tbody>
             </table>
           </div>
+
+          <div class="note-box">
+            <h3>Důležité</h3>
+            <p>Výpočet je orientační. V reálném rozhodování může hrát roli i datum fixace, podmínky předčasného splacení, povinné doplňkové produkty nebo celková strategie, zda raději refinancovat, nebo poslat mimořádnou splátku.</p>
+          </div>
         </div>
       </div>
     </section>
 
-    <section class="container content-section">
-      <h2>Jak kalkulačka refinancování hypotéky funguje</h2>
-      <p>Kalkulačka porovnává dvě varianty: vaši stávající hypotéku a novou nabídku refinancování. U obou scénářů spočítá anuitní měsíční splátku, celkové úroky do konce splácení a dopočítá také jednorázové nebo měsíční poplatky. Díky tomu získáte přehled, jestli je hlavním přínosem nižší měsíční splátka, nižší celkové úroky, nebo naopak refinancování při zadaných parametrech nedává smysl.</p>
+    <section class="container section">
+      <h2>Jak číst výsledek refinancování správně</h2>
+      <p>Nejčastější chyba je soustředit se jen na nižší měsíční splátku. Ta sama o sobě ještě neznamená lepší hypotéku. Nižší splátka může být vykoupená delší dobou splácení, vyššími poplatky nebo menší skutečnou úsporou, než na první pohled vypadá.</p>
+      <p>Proto tahle stránka neukazuje jen splátku, ale i <strong>celkové úroky</strong>, <strong>čistou orientační úsporu</strong> a doporučený další krok. Přesně to je rozdíl mezi pouhým výpočtem a skutečným rozhodovacím nástrojem.</p>
 
-      <h3>Co ve výsledku uvidíte</h3>
-      <ul>
-        <li>stávající a novou měsíční splátku,</li>
-        <li>rozdíl mezi původní a novou splátkou,</li>
-        <li>porovnání celkových úroků do konce splácení,</li>
-        <li>orientační čistou úsporu po započtení poplatků,</li>
-        <li>odhad potřebného čistého příjmu pro novou splátku.</li>
-      </ul>
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-number">1</div>
+          <h3>Porovnejte novou splátku</h3>
+          <p>Zjistíte, jestli refinancování uleví měsíčnímu rozpočtu, nebo je rozdíl spíš kosmetický.</p>
+        </div>
 
-      <h3>Proč nestačí sledovat jen nižší splátku</h3>
-      <p>Nižší měsíční splátka ještě sama o sobě neznamená výhodnější refinancování. Pokud by se například prodloužila doba splácení, může být měsíční zatížení nižší, ale celkově na úrocích zaplatíte více. Proto je důležité sledovat nejen splátku, ale i celkové úroky a poplatky spojené se změnou hypotéky.</p>
+        <div class="step-card">
+          <div class="step-number">2</div>
+          <h3>Podívejte se na celkové náklady</h3>
+          <p>Důležitější než samotná splátka bývá to, kolik zaplatíte na úrocích a poplatcích do konce splácení.</p>
+        </div>
 
+        <div class="step-card">
+          <div class="step-number">3</div>
+          <h3>Zvolte další směr</h3>
+          <p>Buď má smysl řešit refinancování dál, nebo je lepší přepočítat hypotéku detailněji či zvážit mimořádnou splátku.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="container section">
+      <h2>Kdy refinancování dává smysl a kdy už méně</h2>
       <h3>Kdy bývá refinancování zajímavé</h3>
-      <p>Nejčastěji ve chvíli, kdy nová sazba přináší citelné snížení splátky nebo celkových úroků a jednorázové náklady refinancování nejsou vysoké. Význam má i to, jestli refinancování probíhá v období konce fixace, kdy bývají změny jednodušší.</p>
-    </section>
-
-    <section class="container content-section">
-      <h2>Na co myslet při rozhodování o refinancování</h2>
-      <p>Při rozhodování je dobré vedle samotné úrokové sazby sledovat také délku nové fixace, podmínky mimořádných splátek, povinné doplňkové produkty, administrativní náklady a to, jestli se nová hypotéka neprodlužuje zbytečně příliš. Praktický smysl refinancování je ideálně kombinace rozumné splátky a nižších celkových nákladů.</p>
-
-      <h3>Typické situace, kdy dává výpočet smysl</h3>
       <ul>
-        <li>končí vám fixace a dostali jste novou nabídku banky,</li>
-        <li>porovnáváte nabídku své banky s konkurencí,</li>
-        <li>chcete snížit měsíční splátku kvůli rozpočtu domácnosti,</li>
-        <li>uvažujete o změně délky splácení spolu s refinancováním.</li>
+        <li>nová sazba přináší skutečně nižší měsíční splátku,</li>
+        <li>celkové úroky do konce splácení klesají,</li>
+        <li>poplatky refinancování nesmažou hlavní přínos,</li>
+        <li>nová hypotéka nevypadá lépe jen díky zbytečně dlouhému splácení.</li>
       </ul>
 
-      <h3>Co si připravit pro přesnější porovnání</h3>
-      <p>Nejlepší je znát aktuální zůstatek jistiny, přesnou zbývající dobu splácení, sazbu stávající hypotéky a konkrétní novou nabídku. Čím přesnější vstupy zadáte, tím užitečnější orientační výsledek získáte.</p>
+      <h3>Kdy je lepší brzdit</h3>
+      <ul>
+        <li>rozdíl ve splátce je malý a čistá úspora nevýrazná,</li>
+        <li>nová nabídka vypadá dobře jen kvůli prodloužení doby splácení,</li>
+        <li>poplatky nebo doplňkové produkty spolknou většinu přínosu,</li>
+        <li>výsledek zlepšuje cashflow jen krátkodobě, ale dlouhodobě prodražuje hypotéku.</li>
+      </ul>
+
+      <h3>Praktická poznámka</h3>
+      <p>V reálu často nejde jen o otázku „nižší sazba ano nebo ne“. Rozhodnutí bývá mezi několika cestami: refinancovat, zůstat u stávající banky, upravit dobu splácení, nebo využít <a href="/mimoradna-splatka-hypoteky-kalkulacka.html">mimořádnou splátku hypotéky</a>. Tahle kalkulačka vám má pomoci určit, jestli refinancování vůbec patří mezi favority.</p>
     </section>
 
-    <section class="container content-section">
-      <h2>Související kalkulačky</h2>
+    <section class="container">
+      <div class="cta-panel">
+        <h2>Vyšlo refinancování zajímavě? Ověřte si další scénáře.</h2>
+        <p>Jakmile víte, že nová nabídka může dávat smysl, další krok je porovnat detail hypotéky nebo zjistit, jestli podobný efekt nepřinese mimořádná splátka. Tím z refinancování uděláte skutečné rozhodnutí, ne jen první odhad.</p>
+        <div class="cta-grid">
+          <a class="related-card" href="/hypotecni-kalkulacka.html">
+            <strong>Pokračovat na hypoteční kalkulačku</strong>
+            <span>Porovnejte novou nabídku detailněji: splátka, úroky a dlouhodobý dopad.</span>
+          </a>
+
+          <a class="related-card" href="/mimoradna-splatka-hypoteky-kalkulacka.html">
+            <strong>Porovnat s mimořádnou splátkou</strong>
+            <span>Možná zjistíte, že podobný efekt přinese jednorázové snížení jistiny.</span>
+          </a>
+
+          <a class="related-card" href="/mesicni-naklady-na-bydleni-kalkulacka.html">
+            <strong>Zkontrolovat rozpočet bydlení</strong>
+            <span>Ověřte si, jak nová splátka zapadá do celkových měsíčních nákladů domácnosti.</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="container section">
+      <h2>Jak refinancování zapadá do širšího rozhodnutí o hypotéce</h2>
+      <p>Refinancování je typicky middle-of-funnel nebo bottom-of-funnel stránka. Uživatel už hypotéku má, přišla mu nová nabídka a potřebuje rychle vyhodnotit, jestli má cenu jít dál. Proto je důležité, aby stránka nefungovala jen jako kalkulačka, ale i jako rozcestník na další logické kroky.</p>
+
+      <h3>Kam uživatele přirozeně posunout dál</h3>
+      <ul>
+        <li>na <a href="/hypotecni-kalkulacka.html">hypoteční kalkulačku</a>, když chce porovnat detail nové nabídky,</li>
+        <li>na <a href="/mimoradna-splatka-hypoteky-kalkulacka.html">kalkulačku mimořádné splátky</a>, když zvažuje alternativu k refinancování,</li>
+        <li>na <a href="/mesicni-naklady-na-bydleni-kalkulacka.html">měsíční náklady na bydlení</a>, když řeší dopad do rozpočtu,</li>
+        <li>na <a href="/kalkulacka-akontace-a-ltv-hypoteky.html">akontaci a LTV</a>, pokud zároveň zvažuje novou koupi nebo změnu nemovitosti.</li>
+      </ul>
+    </section>
+
+    <section class="container section">
+      <h2>Časté otázky</h2>
+      <div class="faq">
+        <div class="faq-item">
+          <h3>Stačí, že je nová sazba nižší?</h3>
+          <p>Nestačí. Rozhoduje i délka nové hypotéky, celkové úroky, měsíční poplatky a jednorázové náklady refinancování. Nižší sazba nemusí automaticky znamenat lepší výsledek.</p>
+        </div>
+
+        <div class="faq-item">
+          <h3>Co když mi refinancování sníží splátku, ale zvýší celkové náklady?</h3>
+          <p>Pak nejde o jednoznačně výhodnou variantu. Může to dávat smysl kvůli cashflow, ale je fér si přiznat, že dlouhodobě přeplatíte víc. Právě proto je důležité sledovat čistou úsporu i celkové úroky.</p>
+        </div>
+
+        <div class="faq-item">
+          <h3>Jaký další krok má smysl po tomto výpočtu?</h3>
+          <p>Pokud refinancování vychází zajímavě, pokračujte na <a href="/hypotecni-kalkulacka.html">hypoteční kalkulačku</a> a ověřte detail nabídky. Pokud si nejste jistí, přepočítejte i <a href="/mimoradna-splatka-hypoteky-kalkulacka.html">mimořádnou splátku hypotéky</a> jako alternativní řešení.</p>
+        </div>
+
+        <div class="faq-item">
+          <h3>Může být refinancování výhodné i při delší době splácení?</h3>
+          <p>Ano, ale je potřeba si přiznat, co tím kupujete. Delší splácení může výrazně pomoct měsíčnímu rozpočtu, ale ne vždy přinese nejlepší dlouhodobý finanční výsledek.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="container section">
+      <h2>Související kalkulačky a další krok</h2>
       <div class="related-grid">
         <a class="related-card" href="/hypotecni-kalkulacka.html">
           <strong>Hypoteční kalkulačka</strong>
-          <span>Výpočet splátky hypotéky, úroků a LTV.</span>
+          <span>Další logický krok po refinancování: detail splátky, úroků a celkového přeplacení.</span>
         </a>
 
         <a class="related-card" href="/mimoradna-splatka-hypoteky-kalkulacka.html">
-          <strong>Kalkulačka mimořádné splátky hypotéky</strong>
-          <span>Zjistěte, jak mimořádná splátka změní dobu splácení a úroky.</span>
+          <strong>Mimořádná splátka hypotéky</strong>
+          <span>Porovnejte, jestli podobný efekt nepřinese jednorázové snížení jistiny.</span>
         </a>
 
         <a class="related-card" href="/kalkulacka-akontace-a-ltv-hypoteky.html">
-          <strong>Kalkulačka akontace a LTV hypotéky</strong>
-          <span>Výpočet vlastních zdrojů, akontace a potřebné hypotéky.</span>
+          <strong>Akontace a LTV hypotéky</strong>
+          <span>Hodí se, pokud řešíte i novou koupi, vlastní zdroje nebo změnu financování.</span>
         </a>
 
-        <a class="related-card" href="/mesicni-naklady-na-bydleni-kalkulacka.html">
-          <strong>Kalkulačka měsíčních nákladů na bydlení</strong>
-          <span>Souhrnný pohled na rozpočet domácnosti a bydlení.</span>
+        <a class="related-card" href="/kalkulacka-najem-vs-hypoteka.html">
+          <strong>Nájem vs hypotéka</strong>
+          <span>Širší rozhodovací pohled, pokud přemýšlíte i o změně bydlení nebo nové koupi.</span>
         </a>
       </div>
     </section>
@@ -850,7 +1192,7 @@
 
   <footer>
     <div class="container footer-inner">
-      © 2026 RychléVýpočty.cz — online kalkulačky a praktické výpočty pro každodenní použití.
+      © 2026 RychléVýpočty.cz — online kalkulačky a praktické výpočty pro finance, hypotéky a každodenní rozhodování.
     </div>
   </footer>
 
@@ -869,7 +1211,11 @@
       newTotalWithFees: document.getElementById('newTotalWithFees'),
       neededIncome: document.getElementById('neededIncome'),
       resultBadge: document.getElementById('resultBadge'),
-      comparisonBody: document.getElementById('comparisonBody')
+      comparisonBody: document.getElementById('comparisonBody'),
+      decisionHeadline: document.getElementById('decisionHeadline'),
+      decisionText: document.getElementById('decisionText'),
+      nextStepText: document.getElementById('nextStepText'),
+      primaryNextStep: document.getElementById('primaryNextStep')
     };
 
     function formatCurrency(value, digits = 0) {
@@ -931,6 +1277,42 @@
         monthlyPayment,
         totalPaid,
         totalInterest
+      };
+    }
+
+    function getDecision(netSaving, monthlyDifference, interestSaving, values) {
+      if (netSaving > 50000 && monthlyDifference > 0 && interestSaving >= 0) {
+        return {
+          badgeText: 'Refinancování vypadá příznivě',
+          badgeClass: 'badge success',
+          headline: 'Nová nabídka vypadá jako smysluplný krok.',
+          text: 'Podle zadaných parametrů refinancování snižuje měsíční splátku a zároveň dává slušnou orientační úsporu i po započtení poplatků.',
+          nextStep: 'Teď dává smysl porovnat novou hypotéku detailněji a ověřit konkrétní podmínky nabídky.',
+          ctaHref: '/hypotecni-kalkulacka.html',
+          ctaText: 'Pokračovat na hypoteční kalkulačku'
+        };
+      }
+
+      if (netSaving >= 0) {
+        return {
+          badgeText: 'Refinancování může dávat smysl, ale rozdíl je menší',
+          badgeClass: 'badge warning',
+          headline: 'Výsledek není špatný, ale chce druhý pohled.',
+          text: 'Refinancování může pomoct, ale rozdíl není natolik výrazný, aby stačilo rozhodnout jen podle první kalkulace. Je dobré ověřit, zda výsledek nevzniká hlavně delší dobou splácení.',
+          nextStep: 'Porovnejte detail nové hypotéky a zároveň si přepočítejte alternativu v podobě mimořádné splátky.',
+          ctaHref: '/mimoradna-splatka-hypoteky-kalkulacka.html',
+          ctaText: 'Porovnat s mimořádnou splátkou'
+        };
+      }
+
+      return {
+        badgeText: 'Refinancování při zadaných parametrech nevypadá výhodně',
+        badgeClass: 'badge danger',
+        headline: 'Tady zatím refinancování nevypadá jako nejlepší tah.',
+        text: 'Po započtení úroků, doby splácení a poplatků refinancování nepřináší přesvědčivý přínos. Vyplatí se hledat jinou nabídku nebo zkusit jinou strategii.',
+        nextStep: 'Dobrý další krok je přepočítat detail hypotéky nebo zjistit, zda větší efekt nepřinese mimořádná splátka.',
+        ctaHref: '/hypotecni-kalkulacka.html',
+        ctaText: 'Zkontrolovat detail hypotéky'
       };
     }
 
@@ -1000,16 +1382,14 @@
       outputs.newTotalWithFees.textContent = formatCurrency(newTotalWithFees);
       outputs.neededIncome.textContent = formatCurrency(neededIncome);
 
-      if (netSaving > 50000) {
-        outputs.resultBadge.textContent = 'Refinancování vypadá příznivě';
-        outputs.resultBadge.className = 'badge success';
-      } else if (netSaving >= 0) {
-        outputs.resultBadge.textContent = 'Refinancování může dávat smysl, ale rozdíl je menší';
-        outputs.resultBadge.className = 'badge warning';
-      } else {
-        outputs.resultBadge.textContent = 'Refinancování při zadaných parametrech nevypadá výhodně';
-        outputs.resultBadge.className = 'badge danger';
-      }
+      const decision = getDecision(netSaving, monthlyDifference, interestSaving, values);
+      outputs.resultBadge.textContent = decision.badgeText;
+      outputs.resultBadge.className = decision.badgeClass;
+      outputs.decisionHeadline.textContent = decision.headline;
+      outputs.decisionText.textContent = decision.text;
+      outputs.nextStepText.textContent = decision.nextStep;
+      outputs.primaryNextStep.textContent = decision.ctaText;
+      outputs.primaryNextStep.href = decision.ctaHref;
 
       renderComparison(values, currentResult, newResult, {
         currentTotalWithFees,
