@@ -1,1 +1,514 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <title>Ochrana osobních údajů | RychléVýpočty.cz</title>
+  <meta name="description" content="Informace o ochraně osobních údajů na webu RychléVýpočty.cz, používání analytických nástrojů, cookies a kontaktních údajů.">
+  <meta name="robots" content="index,follow">
+  <link rel="canonical" href="https://rychlevypocty.cz/ochrana-osobnich-udaju.html">
+
+  <meta property="og:title" content="Ochrana osobních údajů | RychléVýpočty.cz">
+  <meta property="og:description" content="Informace o ochraně osobních údajů, cookies a analytice na webu RychléVýpočty.cz.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rychlevypocty.cz/ochrana-osobnich-udaju.html">
+  <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Ochrana osobních údajů | RychléVýpočty.cz">
+  <meta name="twitter:description" content="Informace o ochraně osobních údajů a cookies na webu RychléVýpočty.cz.">
+
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <link rel="shortcut icon" href="/favicon.png">
+
+  <style>
+    :root {
+      --text: #172033;
+      --muted: #5f6b85;
+      --primary: #2152ff;
+      --primary-dark: #183dbf;
+      --border: #dbe3f0;
+      --shadow: 0 12px 32px rgba(20, 32, 70, 0.08);
+      --shadow-soft: 0 10px 24px rgba(20, 32, 70, 0.06);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      color: var(--text);
+      background: linear-gradient(180deg, #f7f9fd 0%, #eef3fb 100%);
+      line-height: 1.68;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      width: min(980px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(255, 255, 255, 0.84);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(219, 227, 240, 0.9);
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 18px 0;
+    }
+
+    .brand {
+      display: inline-block;
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+      line-height: 1;
+    }
+
+    .brand span {
+      color: var(--primary);
+    }
+
+    .topnav {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      align-items: center;
+      font-size: 0.97rem;
+    }
+
+    .topnav a {
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .topnav a:hover {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    .hero {
+      padding: 44px 0 18px;
+    }
+
+    .hero-card {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      border: 1px solid var(--border);
+      border-radius: 30px;
+      padding: 34px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 14px;
+      border-radius: 999px;
+      background: rgba(33, 82, 255, 0.08);
+      color: var(--primary-dark);
+      border: 1px solid rgba(33, 82, 255, 0.12);
+      font-size: 0.92rem;
+      font-weight: 700;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      margin: 0 0 14px;
+      font-size: clamp(2.2rem, 5vw, 3.5rem);
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+    }
+
+    .hero-card p {
+      margin: 0 0 12px;
+      color: var(--muted);
+      font-size: 1.03rem;
+      max-width: 780px;
+    }
+
+    .section {
+      padding: 18px 0;
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1.08fr 0.92fr;
+      gap: 18px;
+    }
+
+    .stack {
+      display: grid;
+      gap: 18px;
+    }
+
+    .card {
+      background: linear-gradient(180deg, #ffffff 0%, #f9fbff 100%);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 26px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .card h2,
+    .card h3 {
+      margin: 0 0 12px;
+      letter-spacing: -0.03em;
+    }
+
+    .card p {
+      margin: 0 0 14px;
+      color: var(--muted);
+    }
+
+    .card p:last-child {
+      margin-bottom: 0;
+    }
+
+    .info-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .info-item {
+      padding: 14px 16px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: #fbfdff;
+      color: var(--text);
+      font-size: 0.96rem;
+    }
+
+    .info-item strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 0.98rem;
+      letter-spacing: -0.01em;
+    }
+
+    .links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .link-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: #f4f8ff;
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 0.92rem;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .link-pill:hover {
+      background: #edf4ff;
+      text-decoration: none;
+    }
+
+    .footer {
+      margin-top: 34px;
+      border-top: 1px solid rgba(219, 227, 240, 0.9);
+      background: rgba(255, 255, 255, 0.78);
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr 0.8fr;
+      gap: 28px;
+      padding: 30px 0 18px;
+    }
+
+    .footer-brand strong {
+      display: inline-block;
+      font-size: 1.08rem;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+
+    .footer-brand p,
+    .footer-col p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .footer-col h3 {
+      margin: 0 0 10px;
+      font-size: 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .footer-links {
+      display: grid;
+      gap: 10px;
+    }
+
+    .footer-links a {
+      color: var(--muted);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .footer-links a:hover {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    .footer-bottom {
+      padding: 16px 0 32px;
+      color: var(--muted);
+      font-size: 0.92rem;
+      border-top: 1px solid rgba(219, 227, 240, 0.9);
+    }
+
+    .footer-bottom p {
+      margin: 0 0 8px;
+    }
+
+    .footer-bottom p:last-child {
+      margin-bottom: 0;
+    }
+
+    @media (max-width: 900px) {
+      .content-grid,
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .container {
+        width: min(100% - 24px, 980px);
+      }
+
+      .topbar-inner {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .hero-card,
+      .card {
+        padding: 20px;
+        border-radius: 20px;
+      }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebPage",
+    "name":"Ochrana osobních údajů | RychléVýpočty.cz",
+    "url":"https://rychlevypocty.cz/ochrana-osobnich-udaju.html",
+    "description":"Informace o ochraně osobních údajů, cookies a analytických nástrojích na webu RychléVýpočty.cz."
+  }
+  </script>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="/">Rychlé<span>Výpočty</span>.cz</a>
+
+      <nav class="topnav" aria-label="Hlavní navigace">
+        <a href="/">Domů</a>
+        <a href="/kalkulacky.html">Všechny kalkulačky</a>
+        <a href="/o-nas.html">O nás</a>
+        <a href="/kontakt.html">Kontakt</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="hero-card">
+          <div class="hero-badge">Soukromí a používání dat</div>
+          <h1>Ochrana osobních údajů</h1>
+          <p>
+            Na této stránce najdete základní informace o tom, jak web RychléVýpočty.cz pracuje
+            s osobními údaji, analytikou a technickými daty souvisejícími s provozem webu.
+          </p>
+          <p>
+            Cílem je srozumitelně popsat, jaká data mohou být při používání webu zpracována a za jakým účelem.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container content-grid">
+        <div class="stack">
+          <div class="card">
+            <h2>Jaká data mohou být zpracována</h2>
+            <p>
+              Při běžném používání webu může docházet ke zpracování technických údajů, které jsou běžnou součástí
+              provozu internetových stránek. Může jít například o IP adresu, informace o zařízení, typu prohlížeče,
+              navštívených stránkách nebo přibližných statistikách používání webu.
+            </p>
+            <p>
+              Pokud uživatel kontaktuje provozovatele webu e-mailem, může být zpracována také e-mailová adresa
+              a obsah zprávy, a to za účelem vyřízení dotazu nebo zpětné vazby.
+            </p>
+          </div>
+
+          <div class="card">
+            <h2>Za jakým účelem jsou data používána</h2>
+            <p>
+              Data mohou být používána zejména pro zajištění technického provozu webu, měření návštěvnosti,
+              zlepšování obsahu, odhalování chyb a bezpečnější fungování stránek.
+            </p>
+            <p>
+              Pokud uživatel pošle zprávu přes e-mail, údaje jsou používány pouze pro komunikaci související
+              s daným dotazem, připomínkou nebo nahlášením problému.
+            </p>
+          </div>
+
+          <div class="card">
+            <h2>Analytické nástroje a cookies</h2>
+            <p>
+              Web může používat analytické a měřicí nástroje, které pomáhají pochopit, jak návštěvníci web používají,
+              které stránky jsou nejvíce navštěvované a kde je možné web zlepšit.
+            </p>
+            <p>
+              Tyto nástroje mohou pracovat s cookies nebo podobnými technologiemi. Cookies jsou malé datové soubory,
+              které si web ukládá v prohlížeči uživatele pro zajištění funkčnosti, statistiky nebo měření výkonu webu.
+            </p>
+          </div>
+
+          <div class="card">
+            <h2>Kontaktní komunikace</h2>
+            <p>
+              Pokud uživatel kontaktuje provozovatele webu e-mailem, zpracovávají se pouze údaje potřebné
+              pro vyřízení zprávy. Typicky jde o e-mailovou adresu a obsah komunikace.
+            </p>
+            <p>
+              Tyto údaje nejsou používány k jiným účelům, než je odpověď na dotaz, řešení chyby nebo navazující komunikace.
+            </p>
+          </div>
+        </div>
+
+        <div class="stack">
+          <div class="card">
+            <h3>Jaká data typicky spadají do zpracování</h3>
+            <div class="info-list">
+              <div class="info-item">
+                <strong>Technická data o návštěvě</strong>
+                Například typ zařízení, prohlížeč, navštívená stránka nebo přibližná statistika používání webu.
+              </div>
+              <div class="info-item">
+                <strong>Cookies</strong>
+                Slouží pro fungování webu, měření návštěvnosti a případné zlepšování uživatelského zážitku.
+              </div>
+              <div class="info-item">
+                <strong>Kontaktní údaje ze zprávy</strong>
+                Pokud uživatel pošle e-mail, může být zpracována jeho adresa a obsah zprávy.
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Práva uživatele</h3>
+            <p>
+              Uživatel může požádat o informace týkající se zpracování svých osobních údajů, případně požadovat
+              opravu, omezení nebo výmaz údajů, pokud je to podle povahy zpracování relevantní.
+            </p>
+            <p>
+              V případě dotazů ohledně ochrany osobních údajů je možné použít stránku <a href="/kontakt.html">Kontakt</a>.
+            </p>
+          </div>
+
+          <div class="card">
+            <h3>Třetí strany</h3>
+            <p>
+              Pokud web používá externí analytické, reklamní nebo technické nástroje třetích stran, může v nezbytném rozsahu
+              docházet ke zpracování technických údajů i prostřednictvím těchto služeb.
+            </p>
+            <p>
+              Typicky jde o běžné služby pro měření návštěvnosti, výkonu webu nebo budoucí reklamní monetizaci.
+            </p>
+          </div>
+
+          <div class="card">
+            <h3>Související stránky</h3>
+            <div class="links">
+              <a class="link-pill" href="/o-nas.html">O nás</a>
+              <a class="link-pill" href="/kontakt.html">Kontakt</a>
+              <a class="link-pill" href="/podminky-pouziti.html">Podmínky použití</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <strong>RychléVýpočty.cz</strong>
+          <p>
+            Online kalkulačky a praktické nástroje zdarma pro finance, bydlení, hypotéky, pronájem,
+            investiční rozhodování, mzdy, podnikání, energie, auto, rekonstrukce a další situace.
+          </p>
+        </div>
+
+        <div class="footer-col">
+          <h3>Hlavní sekce</h3>
+          <div class="footer-links">
+            <a href="/kalkulacky.html">Všechny kalkulačky</a>
+            <a href="/finance-a-hypoteky.html">Finance a hypotéky</a>
+            <a href="/pronajem-a-investicni-bydleni.html">Pronájem a investiční bydlení</a>
+            <a href="/stavba-domu.html">Stavba domu</a>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h3>Informace</h3>
+          <div class="footer-links">
+            <a href="/o-nas.html">O nás</a>
+            <a href="/kontakt.html">Kontakt</a>
+            <a href="/ochrana-osobnich-udaju.html">Ochrana osobních údajů</a>
+            <a href="/podminky-pouziti.html">Podmínky použití</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>© RychléVýpočty.cz – online kalkulačky a praktické nástroje zdarma</p>
+        <p>Web může využívat analytické a technické nástroje pro měření návštěvnosti a zlepšování obsahu.</p>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
