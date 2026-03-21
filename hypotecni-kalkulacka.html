@@ -3,22 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hypoteční kalkulačka online zdarma | RychléVýpočty.cz</title>
-  <meta name="description" content="Spočítejte si měsíční splátku hypotéky, celkem zaplacenou částku, úroky, LTV i orientační požadovaný příjem. Přehledná hypoteční kalkulačka zdarma online.">
+  <title>Hypoteční kalkulačka – splátka, úroky, LTV a orientační příjem | RychléVýpočty.cz</title>
+  <meta name="description" content="Spočítejte si orientační měsíční splátku hypotéky, celkem zaplacenou částku, úroky, LTV i orientační potřebný čistý příjem. Přehledná hypoteční kalkulačka zdarma online.">
   <meta name="keywords" content="hypoteční kalkulačka, kalkulačka hypotéky, splátka hypotéky, výpočet hypotéky, LTV hypotéky, úrok hypotéka">
   <meta name="author" content="RychléVýpočty.cz">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://rychlevypocty.cz/hypotecni-kalkulacka.html">
 
-  <meta property="og:title" content="Hypoteční kalkulačka online zdarma | RychléVýpočty.cz">
-  <meta property="og:description" content="Spočítejte si měsíční splátku hypotéky, celkem zaplacenou částku, úroky, LTV i orientační požadovaný příjem.">
+  <meta property="og:title" content="Hypoteční kalkulačka – splátka, úroky, LTV a orientační příjem | RychléVýpočty.cz">
+  <meta property="og:description" content="Spočítejte si měsíční splátku hypotéky, celkově zaplacenou částku, úroky, LTV i orientační potřebný příjem.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://rychlevypocty.cz/hypotecni-kalkulacka.html">
   <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg">
 
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Hypoteční kalkulačka online zdarma | RychléVýpočty.cz">
-  <meta name="twitter:description" content="Přehledný výpočet hypotéky včetně měsíční splátky, úroků a LTV.">
+  <meta name="twitter:title" content="Hypoteční kalkulačka – splátka, úroky, LTV a orientační příjem | RychléVýpočty.cz">
+  <meta name="twitter:description" content="Přehledný výpočet hypotéky včetně měsíční splátky, úroků, LTV a orientačního potřebného příjmu.">
 
   <style>
     :root {
@@ -31,6 +31,10 @@
       --border: #dbe3f0;
       --success: #138a4b;
       --warning: #b66a00;
+      --danger: #b42318;
+      --danger-bg: rgba(180, 35, 24, 0.08);
+      --success-bg: rgba(19, 138, 75, 0.10);
+      --warning-bg: rgba(182, 106, 0, 0.11);
       --shadow: 0 12px 32px rgba(20, 32, 70, 0.08);
       --radius: 18px;
     }
@@ -68,7 +72,7 @@
     .topbar {
       padding: 18px 0;
       border-bottom: 1px solid rgba(219, 227, 240, 0.8);
-      background: rgba(255, 255, 255, 0.8);
+      background: rgba(255, 255, 255, 0.86);
       backdrop-filter: blur(10px);
       position: sticky;
       top: 0;
@@ -113,7 +117,7 @@
 
     .hero-grid {
       display: grid;
-      grid-template-columns: 1.15fr 0.85fr;
+      grid-template-columns: 1.2fr 0.8fr;
       gap: 28px;
       align-items: start;
     }
@@ -129,7 +133,7 @@
       margin: 0 0 16px;
       font-size: 1.06rem;
       color: var(--muted);
-      max-width: 720px;
+      max-width: 760px;
     }
 
     .hero-points {
@@ -160,11 +164,22 @@
     .hero-box h2 {
       margin: 0 0 10px;
       font-size: 1.2rem;
+      letter-spacing: -0.02em;
     }
 
     .hero-box p {
-      margin: 0;
+      margin: 0 0 14px;
       color: var(--muted);
+    }
+
+    .hero-box ul {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+    }
+
+    .hero-box li {
+      margin-bottom: 6px;
     }
 
     .layout {
@@ -172,7 +187,7 @@
       grid-template-columns: 1.04fr 0.96fr;
       gap: 28px;
       align-items: start;
-      padding: 22px 0 32px;
+      padding: 22px 0 22px;
     }
 
     .card {
@@ -256,7 +271,8 @@
       margin-top: 24px;
     }
 
-    button {
+    button,
+    .button-link {
       border: 0;
       border-radius: 12px;
       padding: 14px 18px;
@@ -264,10 +280,16 @@
       font-weight: 700;
       cursor: pointer;
       transition: transform 0.06s ease, background 0.15s ease, opacity 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
     }
 
-    button:hover {
+    button:hover,
+    .button-link:hover {
       transform: translateY(-1px);
+      text-decoration: none;
     }
 
     .btn-primary {
@@ -282,6 +304,12 @@
     .btn-secondary {
       background: #eef3ff;
       color: var(--primary-dark);
+    }
+
+    .btn-ghost {
+      background: #fff;
+      color: var(--primary-dark);
+      border: 1px solid rgba(33, 82, 255, 0.16);
     }
 
     .results-grid {
@@ -370,6 +398,81 @@
       font-size: 0.95rem;
     }
 
+    .decision-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 24px;
+    }
+
+    .decision-box {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      padding: 18px;
+    }
+
+    .decision-box h3 {
+      margin: 0 0 8px;
+      font-size: 1.05rem;
+      letter-spacing: -0.02em;
+    }
+
+    .decision-box p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+
+    .decision-status {
+      display: inline-block;
+      margin-bottom: 10px;
+      padding: 7px 11px;
+      border-radius: 999px;
+      font-size: 0.84rem;
+      font-weight: 800;
+    }
+
+    .decision-status.safe {
+      color: var(--success);
+      background: var(--success-bg);
+    }
+
+    .decision-status.caution {
+      color: var(--warning);
+      background: var(--warning-bg);
+    }
+
+    .decision-status.risk {
+      color: var(--danger);
+      background: var(--danger-bg);
+    }
+
+    .cta-panel {
+      margin-top: 24px;
+      padding: 20px;
+      border-radius: 18px;
+      border: 1px solid rgba(33, 82, 255, 0.14);
+      background: linear-gradient(180deg, #eef4ff 0%, #f8fbff 100%);
+    }
+
+    .cta-panel h3 {
+      margin: 0 0 8px;
+      font-size: 1.12rem;
+      letter-spacing: -0.02em;
+    }
+
+    .cta-panel p {
+      margin: 0 0 14px;
+      color: var(--muted);
+    }
+
+    .cta-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
     .table-wrap {
       overflow-x: auto;
       margin-top: 18px;
@@ -401,43 +504,68 @@
       border-bottom: 0;
     }
 
-    .content-section {
-      padding: 8px 0 8px;
+    .section {
+      padding: 10px 0;
     }
 
-    .content-section h2 {
+    .section-title {
       font-size: 1.7rem;
       letter-spacing: -0.03em;
       margin: 0 0 14px;
     }
 
-    .content-section h3 {
-      font-size: 1.15rem;
-      margin: 28px 0 10px;
+    .section-intro {
+      color: var(--muted);
+      margin: 0 0 22px;
+      max-width: 860px;
     }
 
-    .content-section p {
+    .content-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 24px;
+    }
+
+    .content-card + .content-card {
+      margin-top: 20px;
+    }
+
+    .content-card h2 {
+      font-size: 1.45rem;
+      letter-spacing: -0.03em;
+      margin: 0 0 14px;
+    }
+
+    .content-card h3 {
+      font-size: 1.12rem;
+      margin: 26px 0 10px;
+    }
+
+    .content-card p {
       color: var(--muted);
       margin: 0 0 14px;
     }
 
-    .content-section ul {
+    .content-card ul {
       margin: 0;
       padding-left: 20px;
       color: var(--muted);
     }
 
-    .content-section li {
+    .content-card li {
       margin-bottom: 8px;
     }
 
-    .related-grid {
+    .next-steps-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: 16px;
       margin-top: 18px;
     }
 
+    .step-card,
     .related-card {
       display: block;
       padding: 18px;
@@ -448,15 +576,43 @@
       box-shadow: var(--shadow);
     }
 
+    .step-card strong,
     .related-card strong {
       display: block;
       margin-bottom: 6px;
       font-size: 1rem;
     }
 
+    .step-card span,
     .related-card span {
       color: var(--muted);
       font-size: 0.93rem;
+    }
+
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .cluster-box {
+      margin-top: 18px;
+      padding: 20px;
+      border-radius: 18px;
+      border: 1px solid rgba(33, 82, 255, 0.14);
+      background: linear-gradient(180deg, #ffffff 0%, #f6f9ff 100%);
+    }
+
+    .cluster-box h3 {
+      margin: 0 0 8px;
+      font-size: 1.12rem;
+      letter-spacing: -0.02em;
+    }
+
+    .cluster-box p {
+      margin: 0 0 14px;
+      color: var(--muted);
     }
 
     footer {
@@ -474,7 +630,9 @@
     @media (max-width: 980px) {
       .hero-grid,
       .layout,
-      .related-grid {
+      .related-grid,
+      .next-steps-grid,
+      .decision-grid {
         grid-template-columns: 1fr;
       }
     }
@@ -495,7 +653,8 @@
 
       .card-header,
       .card-body,
-      .hero-box {
+      .hero-box,
+      .content-card {
         padding-left: 18px;
         padding-right: 18px;
       }
@@ -515,7 +674,7 @@
     "url":"https://rychlevypocty.cz/hypotecni-kalkulacka.html",
     "applicationCategory":"FinanceApplication",
     "operatingSystem":"Any",
-    "description":"Online hypoteční kalkulačka pro výpočet měsíční splátky, celkově zaplacené částky, úroků a LTV.",
+    "description":"Online hypoteční kalkulačka pro výpočet měsíční splátky, celkově zaplacené částky, úroků, LTV a orientačního potřebného příjmu.",
     "offers":{
       "@type":"Offer",
       "price":"0",
@@ -556,15 +715,15 @@
     ]
   }
   </script>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-E9QVPMKPSV"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-E9QVPMKPSV');
-</script>
 
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-E9QVPMKPSV"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-E9QVPMKPSV');
+  </script>
 </head>
 <body>
   <header class="topbar">
@@ -572,9 +731,9 @@
       <a class="brand" href="/">Rychlé<span>Výpočty</span>.cz</a>
       <nav class="topnav" aria-label="Hlavní navigace">
         <a href="/">Domů</a>
-        <a href="/kalkulacka-slozeneho-uroku.html">Složený úrok</a>
+        <a href="/kalkulacky.html">Všechny kalkulačky</a>
+        <a href="/finance-a-hypoteky.html">Finance a hypotéky</a>
         <a href="/cista-mzda-kalkulacka.html">Čistá mzda</a>
-        <a href="/dph-kalkulacka.html">DPH kalkulačka</a>
       </nav>
     </div>
   </header>
@@ -583,14 +742,14 @@
     <section class="hero">
       <div class="container">
         <div class="breadcrumbs">
-          <a href="/">RychléVýpočty.cz</a> / Hypoteční kalkulačka
+          <a href="/">RychléVýpočty.cz</a> / <a href="/finance-a-hypoteky.html">Finance a hypotéky</a> / Hypoteční kalkulačka
         </div>
 
         <div class="hero-grid">
           <div class="hero-copy">
             <h1>Hypoteční kalkulačka</h1>
-            <p>Spočítejte si orientační měsíční splátku hypotéky, celkově zaplacenou částku, výši úroků i poměr úvěru k hodnotě nemovitosti. Kalkulačka je vhodná pro rychlé porovnání různých scénářů financování bydlení.</p>
-            <p>Zadejte výši hypotéky, cenu nemovitosti, úrokovou sazbu a dobu splácení. Výsledek získáte okamžitě.</p>
+            <p>Spočítejte si orientační měsíční splátku hypotéky, celkově zaplacenou částku, výši úroků, LTV i orientační potřebný čistý příjem. Kalkulačka je vhodná pro rychlé porovnání různých scénářů financování bydlení.</p>
+            <p>Zadejte výši hypotéky, cenu nemovitosti, úrokovou sazbu a dobu splácení. Výsledek získáte okamžitě a uvidíte i stručnou interpretaci, co čísla znamenají v praxi.</p>
 
             <div class="hero-points">
               <div class="hero-pill">Měsíční splátka</div>
@@ -600,10 +759,16 @@
             </div>
           </div>
 
-          <div class="hero-box">
+          <aside class="hero-box">
             <h2>Co kalkulačka umí</h2>
-            <p>Počítá standardní anuitní splácení, zobrazí souhrn hlavních parametrů úvěru a doplní orientační přehled prvních a posledních splátek. Výsledek je vhodný pro plánování i rychlé porovnání nabídek.</p>
-          </div>
+            <p>Počítá standardní anuitní splácení a zobrazí přehled hlavních parametrů hypotéky pro rychlé rozhodování.</p>
+            <ul>
+              <li>měsíční splátku bez poplatků i s poplatky,</li>
+              <li>celkové přeplacení a celkové úroky,</li>
+              <li>LTV podle ceny nemovitosti,</li>
+              <li>orientační čistý příjem potřebný pro splácení.</li>
+            </ul>
+          </aside>
         </div>
       </div>
     </section>
@@ -632,7 +797,7 @@
               <div class="field">
                 <label for="interestRate">Roční úroková sazba (%)</label>
                 <input type="number" id="interestRate" min="0.1" max="25" step="0.01" value="4.89" inputmode="decimal">
-                <small>Nominalní roční úrok.</small>
+                <small>Nominální roční úrok.</small>
               </div>
 
               <div class="field">
@@ -644,7 +809,7 @@
               <div class="field">
                 <label for="monthlyFee">Měsíční poplatky</label>
                 <input type="number" id="monthlyFee" min="0" step="1" value="0" inputmode="decimal">
-                <small>Např. vedení účtu nebo související poplatky.</small>
+                <small>Např. vedení účtu nebo jiné pravidelné náklady spojené s úvěrem.</small>
               </div>
 
               <div class="field">
@@ -723,11 +888,33 @@
           <div class="note">
             Výpočet je orientační. Skutečná nabídka banky se může lišit podle bonity, fixace, pojištění schopnosti splácet, věku žadatele a dalších parametrů.
           </div>
+
+          <div class="decision-grid">
+            <div class="decision-box">
+              <div id="affordabilityStatus" class="decision-status caution">Na hraně</div>
+              <h3>Jak náročná je tato splátka</h3>
+              <p id="affordabilityText">Podle zadaného poměru příjmu a splátky uvidíte orientační náročnost splácení pro běžný domácí rozpočet.</p>
+            </div>
+
+            <div class="decision-box">
+              <h3>Co z výsledku plyne</h3>
+              <p id="decisionSummary">Výsledek vám ukazuje nejen měsíční splátku, ale i celkové přeplacení a potřebný příjem. To je důležité pro srovnání více variant hypotéky.</p>
+            </div>
+          </div>
+
+          <div class="cta-panel">
+            <h3>Co řešit jako další krok</h3>
+            <p>Nezůstávejte jen u jedné splátky. Pro lepší rozhodnutí porovnejte i další kalkulačky a související finanční scénáře.</p>
+            <div class="cta-actions">
+              <a class="button-link btn-primary" href="/finance-a-hypoteky.html">Zobrazit finance a hypotéky</a>
+              <a class="button-link btn-ghost" href="/kalkulacky.html">Projít všechny kalkulačky</a>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
-    <section class="container">
+    <section class="container section">
       <div class="card">
         <div class="card-header">
           <h3>Přehled splátek</h3>
@@ -756,48 +943,83 @@
       </div>
     </section>
 
-    <section class="container content-section">
-      <h2>Jak hypoteční kalkulačka funguje</h2>
-      <p>Hypoteční kalkulačka počítá anuitní splácení. To znamená, že vaše měsíční splátka zůstává po celou dobu splácení stejná, pokud se nezmění úroková sazba. Na začátku splácení tvoří větší část splátky úrok, zatímco ke konci roste podíl splácené jistiny.</p>
+    <section class="container section">
+      <h2 class="section-title">Jak hypoteční kalkulačka funguje</h2>
+      <p class="section-intro">Tato stránka už není jen výpočet měsíční splátky. Cílem je pomoct vám rychle pochopit, jak nákladná hypotéka je, jaké LTV vychází a jaký příjem budete pravděpodobně potřebovat.</p>
 
-      <h3>Co ve výsledku uvidíte</h3>
-      <ul>
-        <li>měsíční splátku bez poplatků,</li>
-        <li>měsíční zatížení včetně zadaných poplatků,</li>
-        <li>celkovou částku, kterou za hypotéku zaplatíte,</li>
-        <li>celkové úroky za celou dobu splácení,</li>
-        <li>orientační LTV a potřebný čistý příjem.</li>
-      </ul>
+      <div class="content-card">
+        <h2>Co ve výsledku uvidíte</h2>
+        <ul>
+          <li>měsíční splátku bez poplatků,</li>
+          <li>měsíční zatížení včetně zadaných poplatků,</li>
+          <li>celkovou částku, kterou za hypotéku zaplatíte,</li>
+          <li>celkové úroky za celou dobu splácení,</li>
+          <li>orientační LTV a potřebný čistý příjem.</li>
+        </ul>
 
-      <h3>Co je LTV</h3>
-      <p>LTV je poměr mezi výší hypotéky a hodnotou nemovitosti. Pokud je cena nemovitosti 5 000 000 Kč a hypotéka 4 000 000 Kč, LTV vychází na 80 %. Tento údaj je důležitý, protože vyšší LTV obvykle znamená přísnější podmínky nebo méně výhodnou sazbu.</p>
+        <h3>Jak číst měsíční splátku</h3>
+        <p>Měsíční splátka je nejviditelnější číslo, ale sama o sobě nestačí. Důležité je sledovat i to, kolik za hypotéku přeplatíte celkem a jak velkou část vašeho měsíčního rozpočtu splátka zabere.</p>
 
-      <h3>Na co myslet při porovnání hypoték</h3>
-      <p>Samotná měsíční splátka nestačí. Při rozhodování je dobré sledovat také délku fixace, případné poplatky, možnost mimořádných splátek, celkové přeplacení a dopad splátky na váš měsíční rozpočet. Právě proto kalkulačka zobrazuje i orientační požadovaný příjem.</p>
-    </section>
+        <h3>Co je LTV</h3>
+        <p>LTV je poměr mezi výší hypotéky a hodnotou nemovitosti. Pokud je cena nemovitosti 5 000 000 Kč a hypotéka 4 000 000 Kč, LTV vychází na 80 %. Vyšší LTV obvykle znamená přísnější podmínky nebo méně výhodnou sazbu.</p>
 
-    <section class="container content-section">
-      <h2>Související kalkulačky</h2>
-      <div class="related-grid">
-        <a class="related-card" href="/kalkulacka-slozeneho-uroku.html">
-          <strong>Kalkulačka složeného úroku</strong>
-          <span>Výpočet růstu úspor a investic v čase.</span>
-        </a>
+        <h3>Na co myslet při porovnání hypoték</h3>
+        <p>Samotná měsíční splátka nestačí. Při rozhodování je dobré sledovat délku fixace, případné poplatky, možnost mimořádných splátek, celkové přeplacení a dopad splátky na váš měsíční rozpočet.</p>
+      </div>
 
-        <a class="related-card" href="/procenta-kalkulacka.html">
-          <strong>Procenta kalkulačka</strong>
-          <span>Rychlé výpočty procent, navýšení i slev.</span>
-        </a>
+      <div class="content-card">
+        <h2>Co řešit dál po výpočtu hypotéky</h2>
+        <p>Správný další krok není jít na náhodnou kalkulačku. Po hypotéce obvykle dává smysl pokračovat v tématu financování, rozpočtu domácnosti nebo v porovnání dalších variant.</p>
 
-        <a class="related-card" href="/cista-mzda-kalkulacka.html">
-          <strong>Čistá mzda kalkulačka</strong>
-          <span>Spočet čistou mzdu a porovnejte ji se splátkou.</span>
-        </a>
+        <div class="next-steps-grid">
+          <a class="step-card" href="/finance-a-hypoteky.html">
+            <strong>Finance a hypotéky</strong>
+            <span>Hlavní rozcestník pro hypotéky, financování bydlení a související výpočty.</span>
+          </a>
 
-        <a class="related-card" href="/dph-kalkulacka.html">
-          <strong>DPH kalkulačka</strong>
-          <span>Výpočet ceny s DPH i bez DPH.</span>
-        </a>
+          <a class="step-card" href="/cista-mzda-kalkulacka.html">
+            <strong>Čistá mzda kalkulačka</strong>
+            <span>Porovnejte svou čistou mzdu s orientační potřebnou výší příjmu pro splácení.</span>
+          </a>
+
+          <a class="step-card" href="/kalkulacky.html">
+            <strong>Všechny kalkulačky</strong>
+            <span>Projděte další nástroje a navazující výpočty podle vaší životní situace.</span>
+          </a>
+        </div>
+
+        <div class="cluster-box">
+          <h3>Patříte do clusteru Finance a hypotéky</h3>
+          <p>Tahle stránka by neměla fungovat izolovaně. Je součástí širší oblasti financování bydlení a osobních financí. Proto je důležité, aby vedla dál do správného tematického hubu.</p>
+          <a class="button-link btn-primary" href="/finance-a-hypoteky.html">Přejít do Finance a hypotéky</a>
+        </div>
+      </div>
+
+      <div class="content-card">
+        <h2>Související kalkulačky</h2>
+        <p>Toto jsou doplňkové nástroje, které se k hypotéce hodí. Nejsou to hlavní další kroky, ale mohou pomoct při širším finančním rozhodování.</p>
+
+        <div class="related-grid">
+          <a class="related-card" href="/cista-mzda-kalkulacka.html">
+            <strong>Čistá mzda kalkulačka</strong>
+            <span>Spočítejte si čistou mzdu a porovnejte ji s orientační potřebnou splátkou.</span>
+          </a>
+
+          <a class="related-card" href="/kalkulacka-slozeneho-uroku.html">
+            <strong>Kalkulačka složeného úroku</strong>
+            <span>Hodí se pro porovnání hypotéky s dlouhodobým spořením nebo investičním scénářem.</span>
+          </a>
+
+          <a class="related-card" href="/procenta-kalkulacka.html">
+            <strong>Procenta kalkulačka</strong>
+            <span>Vhodná pro rychlé dopočty navýšení, slev nebo podílů při finančním plánování.</span>
+          </a>
+
+          <a class="related-card" href="/dph-kalkulacka.html">
+            <strong>DPH kalkulačka</strong>
+            <span>Užitečná spíše doplňkově, pokud řešíte ceny služeb nebo rekonstrukce s DPH.</span>
+          </a>
+        </div>
       </div>
     </section>
   </main>
@@ -823,7 +1045,10 @@
       summaryInstallments: document.getElementById('summaryInstallments'),
       neededIncome: document.getElementById('neededIncome'),
       ltvBadge: document.getElementById('ltvBadge'),
-      scheduleBody: document.getElementById('scheduleBody')
+      scheduleBody: document.getElementById('scheduleBody'),
+      affordabilityStatus: document.getElementById('affordabilityStatus'),
+      affordabilityText: document.getElementById('affordabilityText'),
+      decisionSummary: document.getElementById('decisionSummary')
     };
 
     function formatCurrency(value) {
@@ -872,9 +1097,12 @@
         monthlyPayment = values.loanAmount * (monthlyRate * Math.pow(1 + monthlyRate, months)) / (Math.pow(1 + monthlyRate, months) - 1);
       }
 
-      const totalPaid = monthlyPayment * months;
-      const totalInterest = totalPaid - values.loanAmount;
+      const totalPaidWithoutFees = monthlyPayment * months;
+      const totalInterestWithoutFees = totalPaidWithoutFees - values.loanAmount;
       const monthlyWithFees = monthlyPayment + values.monthlyFee;
+      const totalFees = values.monthlyFee * months;
+      const totalPaid = totalPaidWithoutFees + totalFees;
+      const totalInterest = totalInterestWithoutFees + totalFees;
       const ltv = (values.loanAmount / values.propertyValue) * 100;
       const neededIncome = monthlyWithFees / (values.incomeShare / 100);
 
@@ -944,11 +1172,37 @@
       }).join('');
     }
 
+    function getAffordabilityMessage(monthlyWithFees, neededIncome, ltv) {
+      let statusClass = 'caution';
+      let statusLabel = 'Na hraně';
+      let statusText = 'Splátka může být zvládnutelná, ale je dobré počítat i s rezervou na ostatní náklady domácnosti.';
+      let summaryText = 'Dává smysl porovnat více scénářů – nižší sazbu, delší splatnost nebo menší výši úvěru. Sledujte nejen splátku, ale i celkové přeplacení.';
+
+      if (neededIncome <= 35000 && ltv <= 80) {
+        statusClass = 'safe';
+        statusLabel = 'Spíše bezpečné';
+        statusText = 'Při těchto hodnotách působí splátka relativně rozumně, pokud máte stabilní příjem a rezervu na nečekané výdaje.';
+        summaryText = 'Výsledek vypadá relativně zdravě. Další krok je porovnat alternativní varianty a zkontrolovat, jak se změní splátka při jiné sazbě nebo době splácení.';
+      } else if (neededIncome > 60000 || ltv > 90) {
+        statusClass = 'risk';
+        statusLabel = 'Rizikovější varianta';
+        statusText = 'Vyšší potřebný příjem nebo vysoké LTV naznačují větší tlak na rozpočet i horší podmínky úvěru.';
+        summaryText = 'Tento scénář už je výrazně citlivější na změnu sazby, výpadek příjmu nebo jiné výdaje. Vyplatí se přepočítat nižší úvěr, delší splatnost nebo vyšší vlastní zdroje.';
+      }
+
+      return {
+        statusClass,
+        statusLabel,
+        statusText,
+        summaryText
+      };
+    }
+
     function render(values, result) {
       outputs.monthlyPayment.textContent = formatCurrency(result.monthlyPayment);
       outputs.monthlyWithFees.textContent = formatCurrency(result.monthlyWithFees);
-      outputs.totalPaid.textContent = formatCurrency(result.totalPaid + (values.monthlyFee * result.months));
-      outputs.totalInterest.textContent = formatCurrency(result.totalInterest + (values.monthlyFee * result.months));
+      outputs.totalPaid.textContent = formatCurrency(result.totalPaid);
+      outputs.totalInterest.textContent = formatCurrency(result.totalInterest);
       outputs.summaryLoan.textContent = formatCurrency(values.loanAmount);
       outputs.summaryYears.textContent = values.years + (values.years === 1 ? ' rok' : (values.years >= 2 && values.years <= 4 ? ' roky' : ' let'));
       outputs.summaryRate.textContent = formatPercent(values.interestRate);
@@ -963,6 +1217,12 @@
       } else {
         outputs.ltvBadge.className = 'badge warning';
       }
+
+      const affordability = getAffordabilityMessage(result.monthlyWithFees, result.neededIncome, ltvRounded);
+      outputs.affordabilityStatus.textContent = affordability.statusLabel;
+      outputs.affordabilityStatus.className = 'decision-status ' + affordability.statusClass;
+      outputs.affordabilityText.textContent = affordability.statusText;
+      outputs.decisionSummary.textContent = affordability.summaryText;
 
       const schedule = buildSchedule(values, result.monthlyPayment, result.months);
       renderSchedule(schedule);
