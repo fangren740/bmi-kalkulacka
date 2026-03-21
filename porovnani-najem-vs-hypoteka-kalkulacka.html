@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Porovnání nájem vs hypotéka kalkulačka online | RychléVýpočty.cz</title>
-  <meta name="description" content="Porovnejte, zda pro vás aktuálně vychází lépe nájem nebo hypotéka. Přehledná kalkulačka porovná měsíční zatížení, vlastní zdroje, náklady vlastního bydlení i orientační rozdíl po letech.">
+  <title>Porovnání nájem vs hypotéka kalkulačka – měsíční náklady a rozdíl po letech | RychléVýpočty.cz</title>
+  <meta name="description" content="Porovnejte, zda pro vás aktuálně vychází lépe nájem nebo hypotéka. Kalkulačka porovná měsíční zatížení, vlastní zdroje, náklady vlastního bydlení i orientační rozdíl po letech.">
   <meta name="keywords" content="nájem vs hypotéka kalkulačka, porovnání nájmu a hypotéky, vyplatí se nájem nebo hypotéka, hypotéka vs nájem, kalkulačka bydlení">
   <meta name="author" content="RychléVýpočty.cz">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://rychlevypocty.cz/porovnani-najem-vs-hypoteka-kalkulacka.html">
 
-  <meta property="og:title" content="Porovnání nájem vs hypotéka kalkulačka online | RychléVýpočty.cz">
+  <meta property="og:title" content="Porovnání nájem vs hypotéka kalkulačka – měsíční náklady a rozdíl po letech | RychléVýpočty.cz">
   <meta property="og:description" content="Spočítejte si, jestli pro vás aktuálně vychází lépe nájem nebo hypotéka.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://rychlevypocty.cz/porovnani-najem-vs-hypoteka-kalkulacka.html">
@@ -32,6 +32,9 @@
       --success: #138a4b;
       --warning: #b66a00;
       --danger: #c53a2f;
+      --success-bg: rgba(19, 138, 75, 0.10);
+      --warning-bg: rgba(182, 106, 0, 0.11);
+      --danger-bg: rgba(197, 58, 47, 0.10);
       --shadow: 0 12px 32px rgba(20, 32, 70, 0.08);
       --radius: 18px;
     }
@@ -69,7 +72,7 @@
     .topbar {
       padding: 18px 0;
       border-bottom: 1px solid rgba(219, 227, 240, 0.8);
-      background: rgba(255, 255, 255, 0.8);
+      background: rgba(255, 255, 255, 0.82);
       backdrop-filter: blur(10px);
       position: sticky;
       top: 0;
@@ -102,6 +105,16 @@
       flex-wrap: wrap;
       justify-content: flex-end;
       font-size: 0.97rem;
+    }
+
+    .topnav a {
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .topnav a:hover {
+      color: var(--primary);
+      text-decoration: none;
     }
 
     .hero {
@@ -163,6 +176,7 @@
     .hero-box h2 {
       margin: 0 0 10px;
       font-size: 1.2rem;
+      letter-spacing: -0.02em;
     }
 
     .hero-box p {
@@ -179,7 +193,7 @@
       grid-template-columns: 1.04fr 0.96fr;
       gap: 28px;
       align-items: start;
-      padding: 22px 0 32px;
+      padding: 22px 0 24px;
     }
 
     .card {
@@ -274,7 +288,8 @@
       margin-top: 24px;
     }
 
-    button {
+    button,
+    .button-link {
       border: 0;
       border-radius: 12px;
       padding: 14px 18px;
@@ -282,10 +297,16 @@
       font-weight: 700;
       cursor: pointer;
       transition: transform 0.06s ease, background 0.15s ease, opacity 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
     }
 
-    button:hover {
+    button:hover,
+    .button-link:hover {
       transform: translateY(-1px);
+      text-decoration: none;
     }
 
     .btn-primary {
@@ -300,6 +321,12 @@
     .btn-secondary {
       background: #eef3ff;
       color: var(--primary-dark);
+    }
+
+    .btn-ghost {
+      background: #fff;
+      color: var(--primary-dark);
+      border: 1px solid rgba(33, 82, 255, 0.16);
     }
 
     .results-grid {
@@ -369,17 +396,17 @@
     }
 
     .badge.success {
-      background: rgba(19, 138, 75, 0.10);
+      background: var(--success-bg);
       color: var(--success);
     }
 
     .badge.warning {
-      background: rgba(182, 106, 0, 0.11);
+      background: var(--warning-bg);
       color: var(--warning);
     }
 
     .badge.danger {
-      background: rgba(197, 58, 47, 0.10);
+      background: var(--danger-bg);
       color: var(--danger);
     }
 
@@ -391,6 +418,81 @@
       border: 1px solid #e7edf7;
       color: var(--muted);
       font-size: 0.95rem;
+    }
+
+    .decision-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 24px;
+    }
+
+    .decision-box {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      padding: 18px;
+    }
+
+    .decision-box h3 {
+      margin: 0 0 8px;
+      font-size: 1.05rem;
+      letter-spacing: -0.02em;
+    }
+
+    .decision-box p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+
+    .decision-status {
+      display: inline-block;
+      margin-bottom: 10px;
+      padding: 7px 11px;
+      border-radius: 999px;
+      font-size: 0.84rem;
+      font-weight: 800;
+    }
+
+    .decision-status.safe {
+      color: var(--success);
+      background: var(--success-bg);
+    }
+
+    .decision-status.caution {
+      color: var(--warning);
+      background: var(--warning-bg);
+    }
+
+    .decision-status.risk {
+      color: var(--danger);
+      background: var(--danger-bg);
+    }
+
+    .cta-panel {
+      margin-top: 24px;
+      padding: 20px;
+      border-radius: 18px;
+      border: 1px solid rgba(33, 82, 255, 0.14);
+      background: linear-gradient(180deg, #eef4ff 0%, #f8fbff 100%);
+    }
+
+    .cta-panel h3 {
+      margin: 0 0 8px;
+      font-size: 1.12rem;
+      letter-spacing: -0.02em;
+    }
+
+    .cta-panel p {
+      margin: 0 0 14px;
+      color: var(--muted);
+    }
+
+    .cta-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
     }
 
     .table-wrap {
@@ -424,43 +526,68 @@
       border-bottom: 0;
     }
 
-    .content-section {
-      padding: 8px 0 8px;
+    .section {
+      padding: 10px 0;
     }
 
-    .content-section h2 {
+    .section-title {
       font-size: 1.7rem;
       letter-spacing: -0.03em;
       margin: 0 0 14px;
     }
 
-    .content-section h3 {
-      font-size: 1.15rem;
-      margin: 28px 0 10px;
+    .section-intro {
+      color: var(--muted);
+      margin: 0 0 22px;
+      max-width: 860px;
     }
 
-    .content-section p {
+    .content-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 24px;
+    }
+
+    .content-card + .content-card {
+      margin-top: 20px;
+    }
+
+    .content-card h2 {
+      font-size: 1.45rem;
+      letter-spacing: -0.03em;
+      margin: 0 0 14px;
+    }
+
+    .content-card h3 {
+      font-size: 1.12rem;
+      margin: 26px 0 10px;
+    }
+
+    .content-card p {
       color: var(--muted);
       margin: 0 0 14px;
     }
 
-    .content-section ul {
+    .content-card ul {
       margin: 0;
       padding-left: 20px;
       color: var(--muted);
     }
 
-    .content-section li {
+    .content-card li {
       margin-bottom: 8px;
     }
 
-    .related-grid {
+    .next-steps-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: 16px;
       margin-top: 18px;
     }
 
+    .step-card,
     .related-card {
       display: block;
       padding: 18px;
@@ -471,15 +598,43 @@
       box-shadow: var(--shadow);
     }
 
+    .step-card strong,
     .related-card strong {
       display: block;
       margin-bottom: 6px;
       font-size: 1rem;
     }
 
+    .step-card span,
     .related-card span {
       color: var(--muted);
       font-size: 0.93rem;
+    }
+
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .next-box {
+      margin-top: 18px;
+      padding: 20px;
+      border-radius: 18px;
+      border: 1px solid rgba(33, 82, 255, 0.14);
+      background: linear-gradient(180deg, #ffffff 0%, #f6f9ff 100%);
+    }
+
+    .next-box h3 {
+      margin: 0 0 8px;
+      font-size: 1.12rem;
+      letter-spacing: -0.02em;
+    }
+
+    .next-box p {
+      margin: 0 0 14px;
+      color: var(--muted);
     }
 
     footer {
@@ -497,7 +652,9 @@
     @media (max-width: 980px) {
       .hero-grid,
       .layout,
-      .related-grid {
+      .related-grid,
+      .next-steps-grid,
+      .decision-grid {
         grid-template-columns: 1fr;
       }
     }
@@ -518,7 +675,8 @@
 
       .card-header,
       .card-body,
-      .hero-box {
+      .hero-box,
+      .content-card {
         padding-left: 18px;
         padding-right: 18px;
       }
@@ -579,15 +737,15 @@
     ]
   }
   </script>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-E9QVPMKPSV"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-E9QVPMKPSV');
-</script>
 
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-E9QVPMKPSV"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-E9QVPMKPSV');
+  </script>
 </head>
 <body>
   <header class="topbar">
@@ -595,9 +753,9 @@
       <a class="brand" href="/">Rychlé<span>Výpočty</span>.cz</a>
       <nav class="topnav" aria-label="Hlavní navigace">
         <a href="/">Domů</a>
-        <a href="/hypotecni-kalkulacka.html">Hypotéka</a>
-        <a href="/kalkulacka-akontace-a-ltv-hypoteky.html">Akontace a LTV</a>
-        <a href="/mesicni-naklady-na-bydleni-kalkulacka.html">Náklady na bydlení</a>
+        <a href="/finance-a-hypoteky.html">Finance a hypotéky</a>
+        <a href="/hypotecni-kalkulacka.html">Hypoteční kalkulačka</a>
+        <a href="/kalkulacky.html">Všechny kalkulačky</a>
       </nav>
     </div>
   </header>
@@ -606,14 +764,14 @@
     <section class="hero">
       <div class="container">
         <div class="breadcrumbs">
-          <a href="/">RychléVýpočty.cz</a> / Porovnání nájem vs hypotéka kalkulačka
+          <a href="/">RychléVýpočty.cz</a> / <a href="/finance-a-hypoteky.html">Finance a hypotéky</a> / Porovnání nájem vs hypotéka
         </div>
 
         <div class="hero-grid">
           <div class="hero-copy">
             <h1>Porovnání nájem vs hypotéka kalkulačka</h1>
             <p>Spočítejte si, jestli pro vás aktuálně dává větší smysl nájem, nebo vlastní bydlení financované hypotékou. Kalkulačka porovná měsíční zatížení, potřebné vlastní zdroje i orientační rozdíl po zvoleném období.</p>
-            <p>Hodí se jako rychlý decision tool před detailnějším řešením hypotéky, akontace nebo rozpočtu bydlení.</p>
+            <p>Hodí se jako první orientace před detailnějším řešením hypotéky, akontace nebo celkového rozpočtu na bydlení.</p>
 
             <div class="hero-points">
               <div class="hero-pill">Nájem vs splátka</div>
@@ -623,11 +781,12 @@
             </div>
           </div>
 
-          <div class="hero-box">
+          <aside class="hero-box">
             <h2>Co kalkulačka umí</h2>
-            <p>Porovná pravidelný měsíční nájem s orientačními měsíčními náklady vlastního bydlení na hypotéku. U hypotéky navíc ukáže, kolik jistiny by bylo po zvoleném období splaceno a jaký je rozdíl proti variantě nájmu.</p>
-            <p>Výsledek je vhodný pro první orientaci, ne jako finální investiční nebo hypoteční doporučení.</p>
-          </div>
+            <p>Porovná pravidelný měsíční nájem s orientačními měsíčními náklady vlastního bydlení na hypotéku.</p>
+            <p>U hypotéky navíc ukáže, kolik jistiny by bylo po zvoleném období splaceno a jaký je orientační rozdíl proti variantě nájmu.</p>
+            <p>Výsledek je vhodný pro první orientaci, ne jako finální doporučení.</p>
+          </aside>
         </div>
       </div>
     </section>
@@ -652,7 +811,7 @@
               <div class="field">
                 <label for="rentRelatedCosts">Další náklady spojené s nájmem / měsíc</label>
                 <input type="number" id="rentRelatedCosts" min="0" step="100" value="1500" inputmode="decimal">
-                <small>Např. vybavení, pojištění domácnosti nebo jiné náklady navíc.</small>
+                <small>Např. pojištění domácnosti nebo jiné náklady navíc.</small>
               </div>
 
               <div class="field">
@@ -664,7 +823,7 @@
               <div class="field">
                 <label for="rentDeposit">Vratná kauce</label>
                 <input type="number" id="rentDeposit" min="0" step="1000" value="44000" inputmode="decimal">
-                <small>Kauce se do dlouhodobého porovnání nepočítá jako spotřebovaný náklad, ale ukáže potřebné vstupní peníze.</small>
+                <small>Kauce se nepočítá jako spotřebovaný náklad, ale ukáže potřebné vstupní peníze.</small>
               </div>
 
               <div class="section-divider">Varianta hypotéka</div>
@@ -696,7 +855,7 @@
               <div class="field">
                 <label for="ownerCosts">Náklady vlastního bydlení navíc / měsíc</label>
                 <input type="number" id="ownerCosts" min="0" step="100" value="4500" inputmode="decimal">
-                <small>Např. fond oprav, pojištění, údržba, daň z nemovitosti rozpočítaná na měsíc.</small>
+                <small>Např. fond oprav, pojištění, údržba nebo daň z nemovitosti rozpočítaná na měsíc.</small>
               </div>
 
               <div class="field">
@@ -793,11 +952,33 @@
           <div class="note" id="resultNote">
             Výsledek je orientační. Nezahrnuje růst hodnoty nemovitosti, investování volných peněz, daňové aspekty ani změny úrokové sazby po fixaci.
           </div>
+
+          <div class="decision-grid">
+            <div class="decision-box">
+              <div id="monthlyDecisionStatus" class="decision-status caution">Záleží na rozpočtu</div>
+              <h3>Co říká měsíční rozdíl</h3>
+              <p id="monthlyDecisionText">Měsíční porovnání ukazuje, která varianta zatěžuje rozpočet méně právě teď. To je důležité hlavně ve chvíli, kdy řešíte rezervy a pravidelné výdaje domácnosti.</p>
+            </div>
+
+            <div class="decision-box">
+              <h3>Co z výsledku plyne</h3>
+              <p id="decisionSummary">Rozumné rozhodnutí většinou nevychází jen z jedné částky. Je potřeba sledovat měsíční zatížení, vstupní peníze i to, jak obě varianty vypadají po několika letech.</p>
+            </div>
+          </div>
+
+          <div class="cta-panel">
+            <h3>Co řešit jako další krok</h3>
+            <p>Po tomto srovnání obvykle dává smysl přepočítat samotnou hypotéku, akontaci nebo další náklady vlastního bydlení.</p>
+            <div class="cta-actions">
+              <a class="button-link btn-primary" href="/finance-a-hypoteky.html">Zobrazit finance a hypotéky</a>
+              <a class="button-link btn-ghost" href="/hypotecni-kalkulacka.html">Přejít na hypoteční kalkulačku</a>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
-    <section class="container">
+    <section class="container section">
       <div class="card">
         <div class="card-header">
           <h3>Detailní porovnání obou variant</h3>
@@ -824,59 +1005,91 @@
       </div>
     </section>
 
-    <section class="container content-section">
-      <h2>Jak kalkulačka porovnání nájmu a hypotéky funguje</h2>
-      <p>Kalkulačka srovnává dvě různé cesty bydlení. U nájmu počítá s měsíčním nájemným, doplňkovými náklady a orientačním růstem nájmu v čase. U hypotéky pracuje s cenou nemovitosti, akontací, úrokem, dobou splácení a s náklady vlastního bydlení, které u nájmu obvykle nevystupují stejným způsobem.</p>
+    <section class="container section">
+      <h2 class="section-title">Jak kalkulačka porovnání nájmu a hypotéky funguje</h2>
+      <p class="section-intro">Pomůže vám rychle zjistit, která varianta bydlení je pro vás lehčí měsíčně a jak obě možnosti vypadají při delším porovnání.</p>
 
-      <h3>Co ve výsledku uvidíte</h3>
-      <ul>
-        <li>která varianta vychází lépe na měsíční cashflow,</li>
-        <li>jak velký je měsíční rozdíl mezi nájmem a hypotékou,</li>
-        <li>kolik jistiny by bylo u hypotéky po zvoleném období splaceno,</li>
-        <li>jak vychází orientační rozdíl po 3, 5, 7 nebo 10 letech,</li>
-        <li>jak velké vlastní vstupní peníze hypotéka vyžaduje.</li>
-      </ul>
+      <div class="content-card">
+        <h2>Co ve výsledku uvidíte</h2>
+        <ul>
+          <li>která varianta vychází lépe na měsíční cashflow,</li>
+          <li>jak velký je měsíční rozdíl mezi nájmem a hypotékou,</li>
+          <li>kolik jistiny by bylo u hypotéky po zvoleném období splaceno,</li>
+          <li>jak vychází orientační rozdíl po 3, 5, 7 nebo 10 letech,</li>
+          <li>jak velké vlastní vstupní peníze hypotéka vyžaduje.</li>
+        </ul>
 
-      <h3>Co znamená dlouhodobé porovnání</h3>
-      <p>U nájmu kalkulačka sleduje hlavně odchozí peníze za zvolený horizont. U hypotéky porovnává odchozí peníze, ale zároveň zohlední, že část splátek snižuje jistinu úvěru. Právě proto může hypotéka v delším horizontu vycházet jinak než při čistě měsíčním pohledu.</p>
+        <h3>Co znamená dlouhodobé porovnání</h3>
+        <p>U nájmu kalkulačka sleduje hlavně odchozí peníze za zvolený horizont. U hypotéky porovnává odchozí peníze, ale zároveň zohlední, že část splátek snižuje jistinu úvěru. Právě proto může hypotéka v delším horizontu vycházet jinak než při čistě měsíčním pohledu.</p>
 
-      <h3>Co výpočet nezahrnuje</h3>
-      <p>Výpočet nezahrnuje růst nebo pokles hodnoty nemovitosti, výnos z investování peněz, které byste nepoužili na akontaci, ani změny úrokových sazeb po skončení fixace. Je tedy záměrně jednoduchý a konzervativní.</p>
-    </section>
+        <h3>Co výpočet nezahrnuje</h3>
+        <p>Výpočet nezahrnuje růst nebo pokles hodnoty nemovitosti, výnos z investování peněz, které byste nepoužili na akontaci, ani změny úrokových sazeb po skončení fixace. Je tedy záměrně jednoduchý a konzervativní.</p>
+      </div>
 
-    <section class="container content-section">
-      <h2>Kdy je porovnání nájem vs hypotéka nejvíc užitečné</h2>
-      <p>Tahle kalkulačka se hodí ve chvíli, kdy zvažujete první koupi vlastního bydlení, porovnáváte nové bydlení s pokračováním v nájmu nebo řešíte, jestli už jsou vaše vlastní zdroje a měsíční rozpočet pro hypotéku realistické. Dobře funguje i jako vstupní rozcestník před detailnější hypoteční analýzou.</p>
+      <div class="content-card">
+        <h2>Kdy je porovnání nájem vs hypotéka nejvíc užitečné</h2>
+        <p>Tahle kalkulačka se hodí ve chvíli, kdy zvažujete první koupi vlastního bydlení, porovnáváte nové bydlení s pokračováním v nájmu nebo řešíte, jestli už jsou vaše vlastní zdroje a měsíční rozpočet pro hypotéku realistické.</p>
 
-      <h3>Na co lidé často zapomínají</h3>
-      <p>Častou chybou je porovnávat jen nájem proti samotné splátce hypotéky. Ve skutečnosti je potřeba přičíst i náklady vlastního bydlení, fond oprav, pojištění nebo údržbu. Stejně tak je dobré rozlišovat mezi měsíčním zatížením a delším horizontem, kde už hraje roli i postupné splácení jistiny.</p>
+        <h3>Na co lidé často zapomínají</h3>
+        <p>Častou chybou je porovnávat jen nájem proti samotné splátce hypotéky. Ve skutečnosti je potřeba přičíst i náklady vlastního bydlení, fond oprav, pojištění nebo údržbu. Stejně tak je dobré rozlišovat mezi měsíčním zatížením a delším horizontem.</p>
 
-      <h3>Jak výsledek číst rozumně</h3>
-      <p>Pokud vyjde nájem měsíčně levněji, neznamená to automaticky, že je lepší dlouhodobě. A opačně: i když hypotéka vychází lépe v delším horizontu, nemusí být vhodná, pokud by příliš zatížila měsíční rozpočet nebo vyčerpala rezervy domácnosti.</p>
-    </section>
+        <h3>Jak výsledek číst rozumně</h3>
+        <p>Pokud vyjde nájem měsíčně levněji, neznamená to automaticky, že je lepší dlouhodobě. A opačně: i když hypotéka vychází lépe v delším horizontu, nemusí být vhodná, pokud by příliš zatížila měsíční rozpočet nebo vyčerpala rezervy domácnosti.</p>
+      </div>
 
-    <section class="container content-section">
-      <h2>Související kalkulačky</h2>
-      <div class="related-grid">
-        <a class="related-card" href="/hypotecni-kalkulacka.html">
-          <strong>Hypoteční kalkulačka</strong>
-          <span>Výpočet splátky hypotéky, úroků a základních parametrů úvěru.</span>
-        </a>
+      <div class="content-card">
+        <h2>Co řešit dál po srovnání nájmu a hypotéky</h2>
+        <p>Po tomto výpočtu většinou dává smysl dopočítat konkrétní hypotéku, zjistit potřebnou akontaci nebo si spočítat širší náklady na bydlení.</p>
 
-        <a class="related-card" href="/kalkulacka-akontace-a-ltv-hypoteky.html">
-          <strong>Kalkulačka akontace a LTV hypotéky</strong>
-          <span>Spočítejte si vlastní zdroje, akontaci a potřebnou výši hypotéky.</span>
-        </a>
+        <div class="next-steps-grid">
+          <a class="step-card" href="/hypotecni-kalkulacka.html">
+            <strong>Hypoteční kalkulačka</strong>
+            <span>Spočítejte si konkrétní splátku hypotéky, úroky, LTV a orientační potřebný příjem.</span>
+          </a>
 
-        <a class="related-card" href="/mesicni-naklady-na-bydleni-kalkulacka.html">
-          <strong>Kalkulačka měsíčních nákladů na bydlení</strong>
-          <span>Souhrnný přehled nákladů domácnosti, energií a bydlení.</span>
-        </a>
+          <a class="step-card" href="/kalkulacka-akontace-a-ltv-hypoteky.html">
+            <strong>Akontace a LTV hypotéky</strong>
+            <span>Zkontrolujte, kolik vlastních peněz budete potřebovat a jak vysoké vychází LTV.</span>
+          </a>
 
-        <a class="related-card" href="/refinancovani-hypoteky-kalkulacka.html">
-          <strong>Kalkulačka refinancování hypotéky</strong>
-          <span>Porovnání stávající a nové hypotéky včetně orientační úspory.</span>
-        </a>
+          <a class="step-card" href="/finance-a-hypoteky.html">
+            <strong>Další kalkulačky k hypotéce</strong>
+            <span>Přejděte na přehled souvisejících výpočtů pro refinancování, mimořádnou splátku nebo bydlení.</span>
+          </a>
+        </div>
+
+        <div class="next-box">
+          <h3>Chcete pokračovat dál?</h3>
+          <p>Po porovnání nájmu a koupě se nejčastěji hodí přepočítat konkrétní hypotéku, akontaci nebo navazující náklady na vlastní bydlení.</p>
+          <a class="button-link btn-primary" href="/finance-a-hypoteky.html">Zobrazit další kalkulačky k bydlení</a>
+        </div>
+      </div>
+
+      <div class="content-card">
+        <h2>Související kalkulačky</h2>
+        <p>Tyto nástroje vám pomohou navázat na výsledek a dopočítat detaily podle vaší situace.</p>
+
+        <div class="related-grid">
+          <a class="related-card" href="/hypotecni-kalkulacka.html">
+            <strong>Hypoteční kalkulačka</strong>
+            <span>Výpočet splátky hypotéky, úroků a základních parametrů úvěru.</span>
+          </a>
+
+          <a class="related-card" href="/kalkulacka-akontace-a-ltv-hypoteky.html">
+            <strong>Kalkulačka akontace a LTV hypotéky</strong>
+            <span>Spočítejte si vlastní zdroje, akontaci a potřebnou výši hypotéky.</span>
+          </a>
+
+          <a class="related-card" href="/mesicni-naklady-na-bydleni-kalkulacka.html">
+            <strong>Kalkulačka měsíčních nákladů na bydlení</strong>
+            <span>Souhrnný přehled nákladů domácnosti, energií a bydlení.</span>
+          </a>
+
+          <a class="related-card" href="/refinancovani-hypoteky-kalkulacka.html">
+            <strong>Kalkulačka refinancování hypotéky</strong>
+            <span>Porovnání stávající a nové hypotéky včetně orientační úspory.</span>
+          </a>
+        </div>
       </div>
     </section>
   </main>
@@ -903,7 +1116,10 @@
       neededIncome: document.getElementById('neededIncome'),
       comparisonBadge: document.getElementById('comparisonBadge'),
       resultNote: document.getElementById('resultNote'),
-      comparisonBody: document.getElementById('comparisonBody')
+      comparisonBody: document.getElementById('comparisonBody'),
+      monthlyDecisionStatus: document.getElementById('monthlyDecisionStatus'),
+      monthlyDecisionText: document.getElementById('monthlyDecisionText'),
+      decisionSummary: document.getElementById('decisionSummary')
     };
 
     function formatCurrency(value, digits = 0) {
@@ -913,13 +1129,6 @@
         minimumFractionDigits: digits,
         maximumFractionDigits: digits
       }).format(value);
-    }
-
-    function formatPercent(value, digits = 1) {
-      return new Intl.NumberFormat('cs-CZ', {
-        minimumFractionDigits: 0,
-        maximumFractionDigits: digits
-      }).format(value) + ' %';
     }
 
     function formatYears(value) {
@@ -997,7 +1206,6 @@
 
     function calculateRentScenario(values) {
       const monthlyBase = values.monthlyRent + values.rentRelatedCosts;
-      const horizonMonths = values.comparisonYears * 12;
 
       let total = 0;
       let currentMonthlyRent = values.monthlyRent;
@@ -1010,8 +1218,7 @@
       return {
         monthlyBase,
         totalCost: total,
-        entryCash: values.rentDeposit,
-        horizonMonths
+        entryCash: values.rentDeposit
       };
     }
 
@@ -1026,7 +1233,6 @@
       const entryCash = values.downPayment + values.purchaseCosts;
       const effectiveCostOverHorizon = entryCash + totalHousingCashflow - principalPaid;
       const neededIncome = monthlyTotal / (values.incomeShare / 100);
-      const ltv = (loanAmount / values.propertyPrice) * 100;
 
       return {
         loanAmount,
@@ -1037,8 +1243,7 @@
         remainingBalance,
         entryCash,
         effectiveCostOverHorizon,
-        neededIncome,
-        ltv
+        neededIncome
       };
     }
 
@@ -1075,6 +1280,44 @@
           <td>${formatYears(values.comparisonYears)}</td>
         </tr>
       `;
+    }
+
+    function getDecisionMessage(monthlyWinner, longTermWinner, monthlyDifferenceValue, longTermDifferenceValue) {
+      let statusClass = 'caution';
+      let statusLabel = 'Záleží na rozpočtu';
+      let statusText = 'Rozdíl není úplně jednostranný. Rozhoduje hlavně to, jak citlivý je váš měsíční rozpočet a kolik vlastních peněz chcete do bydlení vložit.';
+      let summaryText = 'Rozumné rozhodnutí většinou nevychází jen z jedné částky. Je potřeba sledovat měsíční zatížení, vstupní peníze i to, jak obě varianty vypadají po několika letech.';
+
+      if (monthlyWinner === 'Hypotéka' && longTermWinner === 'Hypotéka') {
+        statusClass = 'safe';
+        statusLabel = 'Hypotéka vychází lépe';
+        statusText = 'Při zadaných hodnotách je hypotéka příznivější měsíčně i po zvoleném období. Pořád ale počítejte s vyšší vstupní hotovostí a menší flexibilitou.';
+        summaryText = 'Tento scénář nahrává vlastnímu bydlení. Další krok je ověřit konkrétní splátku hypotéky, akontaci a zkontrolovat, zda vám zůstane dostatečná rezerva.';
+      } else if (monthlyWinner === 'Nájem' && longTermWinner === 'Nájem') {
+        statusClass = 'risk';
+        statusLabel = 'Nájem vychází lépe';
+        statusText = 'Při zadaných parametrech působí nájem rozumněji měsíčně i v delším srovnání. Hypotéka může být v této konfiguraci zbytečně nákladná.';
+        summaryText = 'Tento výsledek často znamená, že je cena nemovitosti, sazba nebo akontace pro hypotéku zatím méně výhodná. Vyplatí se přepočítat jinou cenu, vyšší akontaci nebo delší horizont.';
+      } else if (monthlyWinner === 'Nájem' && longTermWinner === 'Hypotéka') {
+        statusClass = 'caution';
+        statusLabel = 'Nájem teď, hypotéka později';
+        statusText = 'Nájem zatěžuje rozpočet méně teď, ale hypotéka může v delším horizontu dávat větší smysl. Tady rozhodují hlavně rezervy a schopnost zvládnout vyšší vstupní náklady.';
+        summaryText = 'Typický mezistav. Měsíčně je důležitá opatrnost, ale dlouhodobě už hypotéka nevypadá špatně. Dává smysl přepočítat konkrétní splátku a potřebnou akontaci.';
+      }
+
+      if (monthlyDifferenceValue < 1000 && longTermDifferenceValue < 100000) {
+        statusClass = 'caution';
+        statusLabel = 'Rozdíl je malý';
+        statusText = 'Rozdíl mezi variantami není výrazný. V takové situaci často rozhodují detaily, jako je flexibilita, rezerva domácnosti nebo délka plánovaného bydlení na jednom místě.';
+        summaryText = 'Když jsou výsledky blízko sebe, má smysl podívat se na konkrétní hypotéku, akontaci a další náklady bydlení. Právě ty často rozhodnou.';
+      }
+
+      return {
+        statusClass,
+        statusLabel,
+        statusText,
+        summaryText
+      };
     }
 
     function runCalculation() {
@@ -1123,6 +1366,12 @@
         outputs.comparisonBadge.className = 'badge warning';
         outputs.resultNote.textContent = 'Výsledek není jednostranný. Záleží hlavně na výši vlastních zdrojů, rezervě domácnosti, očekávané délce bydlení na jednom místě a ochotě nést náklady vlastního bydlení.';
       }
+
+      const decision = getDecisionMessage(monthlyWinner, longTermWinner, monthlyDifferenceValue, longTermDifferenceValue);
+      outputs.monthlyDecisionStatus.textContent = decision.statusLabel;
+      outputs.monthlyDecisionStatus.className = 'decision-status ' + decision.statusClass;
+      outputs.monthlyDecisionText.textContent = decision.statusText;
+      outputs.decisionSummary.textContent = decision.summaryText;
 
       renderComparison(values, rentScenario, mortgageScenario);
     }
