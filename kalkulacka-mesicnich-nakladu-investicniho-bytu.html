@@ -1,6 +1,22 @@
 <!DOCTYPE html>
 <html lang="cs">
 <head>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('consent', 'default', {
+    'ad_storage': 'denied',
+    'analytics_storage': 'denied'
+  });
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-E9QVPMKPSV"></script>
+<script>
+  gtag('js', new Date());
+  gtag('config', 'G-E9QVPMKPSV', {
+    'anonymize_ip': true
+  });
+</script>
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Měsíční náklady investičního bytu kalkulačka online | Kde se investice prodražuje? | RychléVýpočty.cz</title>
@@ -804,13 +820,7 @@
   </script>
 
   <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-E9QVPMKPSV"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-E9QVPMKPSV');
-  </script>
+  
 </head>
 <body>
   <header class="topbar">
@@ -1449,5 +1459,35 @@
 
     runCalculation();
   </script>
+<div id="cookie-banner" style="position:fixed;bottom:20px;left:20px;right:20px;background:#fff;border:1px solid #dbe3f0;border-radius:16px;padding:16px;box-shadow:0 10px 30px rgba(0,0,0,0.1);z-index:9999;display:none;">
+<p style="margin:0 0 10px;font-size:14px;">Používáme cookies pro analytiku a zlepšení webu.</p>
+<button onclick="acceptCookies()" style="margin-right:10px;">Přijmout</button>
+<button onclick="rejectCookies()">Odmítnout</button>
+</div>
+<script>
+function setConsent(value){
+  gtag('consent','update',{'analytics_storage':value,'ad_storage':value});
+}
+function acceptCookies(){
+  localStorage.setItem('cookie_consent','accepted');
+  setConsent('granted');
+  document.getElementById('cookie-banner').style.display='none';
+}
+function rejectCookies(){
+  localStorage.setItem('cookie_consent','rejected');
+  setConsent('denied');
+  document.getElementById('cookie-banner').style.display='none';
+}
+window.addEventListener('load',function(){
+  const c=localStorage.getItem('cookie_consent');
+  if(!c){
+    document.getElementById('cookie-banner').style.display='block';
+  }else if(c==='accepted'){
+    setConsent('granted');
+  }else{
+    setConsent('denied');
+  }
+});
+</script>
 </body>
 </html>
