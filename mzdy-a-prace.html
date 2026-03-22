@@ -1,27 +1,25 @@
 <!DOCTYPE html>
 <html lang="cs">
 <head>
-
-
-
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mzdy a práce | Online kalkulačky pro mzdu, dohody a zaměstnání | RychléVýpočty.cz</title>
-  <meta name="description" content="Přehled online kalkulaček pro mzdy a práci. Čistá mzda, hrubá mzda z čisté, náklady zaměstnavatele, nemocenská, hodinová mzda, DPP a DPČ, dovolená, přesčasy, příplatky za směny, odstupné a další pracovní výpočty.">
+
+  <title>Mzdy a práce – spočítejte si čistou mzdu, dohody i náklady práce | RychléVýpočty.cz</title>
+  <meta name="description" content="Spočítejte si čistou mzdu, hrubou mzdu z čisté, náklady zaměstnavatele, DPP a DPČ, dovolenou, nemocenskou, přesčasy i další pracovní výpočty. Praktický rozcestník pro mzdy a práci.">
   <meta name="keywords" content="mzdy a práce, čistá mzda kalkulačka, hrubá mzda z čisté, náklady zaměstnavatele, nemocenská kalkulačka, hodinová mzda, DPP DPČ kalkulačka, dovolená kalkulačka, odstupné kalkulačka">
   <meta name="author" content="RychléVýpočty.cz">
-  <meta name="robots" content="index, follow">
+  <meta name="robots" content="index,follow">
   <link rel="canonical" href="https://rychlevypocty.cz/mzdy-a-prace.html">
 
-  <meta property="og:title" content="Mzdy a práce | Online kalkulačky | RychléVýpočty.cz">
-  <meta property="og:description" content="Přehled kalkulaček pro čistou mzdu, dohody, dovolenou, přesčasy, náklady zaměstnavatele a další pracovní výpočty.">
+  <meta property="og:title" content="Mzdy a práce – spočítejte si čistou mzdu, dohody i náklady práce | RychléVýpočty.cz">
+  <meta property="og:description" content="Praktický rozcestník kalkulaček pro mzdy, zaměstnání, brigády, dohody, dovolenou, nemocenskou a pracovní čas.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://rychlevypocty.cz/mzdy-a-prace.html">
   <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Mzdy a práce | RychléVýpočty.cz">
-  <meta name="twitter:description" content="Online kalkulačky pro mzdy, zaměstnání, brigády, dohody, dovolenou a pracovní čas.">
+  <meta name="twitter:description" content="Spočítejte si čistou mzdu, brigádu, náklady práce i pracovní čas.">
 
   <link rel="icon" type="image/png" href="/favicon.png">
   <link rel="shortcut icon" href="/favicon.png">
@@ -29,6 +27,7 @@
   <style>
     :root {
       --bg: #f5f7fb;
+      --bg-soft: #eef3fb;
       --card: #ffffff;
       --text: #172033;
       --muted: #5f6b85;
@@ -47,7 +46,7 @@
       font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
       background: linear-gradient(180deg, #f7f9fd 0%, #eef3fb 100%);
       color: var(--text);
-      line-height: 1.6;
+      line-height: 1.65;
     }
 
     a {
@@ -60,33 +59,35 @@
     }
 
     .container {
-      width: min(1160px, calc(100% - 32px));
+      width: min(1180px, calc(100% - 32px));
       margin: 0 auto;
     }
 
     .topbar {
-      padding: 18px 0;
-      border-bottom: 1px solid rgba(219, 227, 240, 0.8);
-      background: rgba(255, 255, 255, 0.8);
-      backdrop-filter: blur(10px);
       position: sticky;
       top: 0;
-      z-index: 20;
+      z-index: 30;
+      background: rgba(255, 255, 255, 0.84);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(219, 227, 240, 0.9);
     }
 
     .topbar-inner {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 16px;
+      gap: 20px;
+      padding: 18px 0;
     }
 
     .brand {
+      display: inline-block;
       font-weight: 800;
       font-size: 1.1rem;
       color: var(--text);
       letter-spacing: -0.02em;
       white-space: nowrap;
+      line-height: 1;
     }
 
     .brand span {
@@ -98,6 +99,7 @@
       gap: 18px;
       flex-wrap: wrap;
       justify-content: flex-end;
+      align-items: center;
       font-size: 0.97rem;
     }
 
@@ -123,85 +125,167 @@
 
     .hero-grid {
       display: grid;
-      grid-template-columns: 1.15fr 0.85fr;
+      grid-template-columns: 1.08fr 0.92fr;
       gap: 28px;
-      align-items: start;
+      align-items: stretch;
     }
 
-    .hero-copy h1 {
-      font-size: clamp(2rem, 4vw, 3.2rem);
-      line-height: 1.08;
-      letter-spacing: -0.03em;
-      margin: 0 0 16px;
+    .hero-main {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      border: 1px solid var(--border);
+      border-radius: 30px;
+      padding: 34px;
+      box-shadow: var(--shadow);
     }
 
-    .hero-copy p {
-      margin: 0 0 16px;
-      font-size: 1.06rem;
-      color: var(--muted);
-      max-width: 720px;
-    }
-
-    .hero-points {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 20px;
-    }
-
-    .hero-pill {
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 14px;
+      border-radius: 999px;
       background: rgba(33, 82, 255, 0.08);
       color: var(--primary-dark);
       border: 1px solid rgba(33, 82, 255, 0.12);
-      padding: 10px 14px;
-      border-radius: 999px;
-      font-size: 0.95rem;
-      font-weight: 600;
+      font-size: 0.92rem;
+      font-weight: 700;
+      margin-bottom: 18px;
     }
 
-    .hero-box {
+    h1 {
+      margin: 0 0 16px;
+      font-size: clamp(2.2rem, 4.7vw, 4rem);
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+    }
+
+    .hero-main p {
+      margin: 0 0 14px;
+      color: var(--muted);
+      font-size: 1.04rem;
+      max-width: 760px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 22px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 18px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 0.98rem;
+      text-decoration: none;
+      transition: transform 0.08s ease, background 0.15s ease, border-color 0.15s ease;
+      border: 1px solid transparent;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background: #eef3ff;
+      color: var(--primary-dark);
+      border-color: rgba(33, 82, 255, 0.10);
+    }
+
+    .btn-outline {
+      background: #fff;
+      color: var(--text);
+      border-color: var(--border);
+    }
+
+    .btn-outline:hover {
+      background: #f8fbff;
+    }
+
+    .hero-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    .hero-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: #f4f8ff;
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 0.93rem;
+      font-weight: 700;
+    }
+
+    .hero-side {
+      display: grid;
+      gap: 18px;
+    }
+
+    .hero-panel {
       background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
       border: 1px solid var(--border);
       border-radius: 24px;
       padding: 24px;
-      box-shadow: var(--shadow);
+      box-shadow: var(--shadow-soft);
     }
 
-    .hero-box h2 {
+    .hero-panel h2,
+    .hero-panel h3 {
       margin: 0 0 10px;
-      font-size: 1.2rem;
+      font-size: 1.18rem;
+      letter-spacing: -0.02em;
     }
 
-    .hero-box p {
-      margin: 0 0 14px;
+    .hero-panel p {
+      margin: 0;
       color: var(--muted);
+      font-size: 0.98rem;
     }
 
     .hero-stats {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px;
+      gap: 14px;
       margin-top: 18px;
     }
 
-    .stat {
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 16px;
+    .stat-box {
       background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 16px;
     }
 
-    .stat strong {
+    .stat-box strong {
       display: block;
-      font-size: 1.35rem;
+      font-size: 1.45rem;
       line-height: 1.1;
       letter-spacing: -0.03em;
       margin-bottom: 6px;
     }
 
-    .stat span {
+    .stat-box span {
       color: var(--muted);
-      font-size: 0.9rem;
+      font-size: 0.92rem;
     }
 
     .section {
@@ -218,14 +302,110 @@
 
     .section-head h2 {
       margin: 0 0 8px;
-      font-size: 1.85rem;
+      font-size: 1.9rem;
       letter-spacing: -0.03em;
     }
 
     .section-head p {
       margin: 0;
       color: var(--muted);
-      max-width: 820px;
+      max-width: 860px;
+    }
+
+    .decision-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+    }
+
+    .decision-card {
+      display: block;
+      background: linear-gradient(180deg, #ffffff 0%, #f9fbff 100%);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow-soft);
+      color: var(--text);
+      text-decoration: none;
+      transition: transform 0.12s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .decision-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(33, 82, 255, 0.24);
+      box-shadow: 0 18px 40px rgba(20, 32, 70, 0.10);
+      text-decoration: none;
+    }
+
+    .decision-label {
+      display: inline-flex;
+      align-items: center;
+      padding: 7px 11px;
+      border-radius: 999px;
+      background: #f3f7ff;
+      border: 1px solid var(--border);
+      color: var(--primary-dark);
+      font-size: 0.82rem;
+      font-weight: 800;
+      margin-bottom: 14px;
+    }
+
+    .decision-card h3 {
+      margin: 0 0 10px;
+      font-size: 1.18rem;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+    }
+
+    .decision-card p {
+      margin: 0 0 12px;
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+
+    .decision-next {
+      color: var(--text);
+      font-size: 0.91rem;
+      font-weight: 700;
+    }
+
+    .flow-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .flow-step-card {
+      background: linear-gradient(180deg, #ffffff 0%, #f9fbff 100%);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 22px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .flow-step-no {
+      display: inline-flex;
+      align-items: center;
+      padding: 7px 11px;
+      border-radius: 999px;
+      background: #eef4ff;
+      border: 1px solid var(--border);
+      color: var(--primary-dark);
+      font-size: 0.82rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .flow-step-card h3 {
+      margin: 0 0 10px;
+      font-size: 1.1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .flow-step-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
     }
 
     .tools-grid {
@@ -244,6 +424,7 @@
       transition: transform 0.12s ease, border-color 0.15s ease, box-shadow 0.15s ease;
       color: var(--text);
       text-decoration: none;
+      min-height: 100%;
     }
 
     .tool-card:hover {
@@ -297,9 +478,15 @@
     }
 
     .tool-card p {
-      margin: 0;
+      margin: 0 0 12px;
       color: var(--muted);
       font-size: 0.97rem;
+    }
+
+    .tool-next {
+      color: var(--text);
+      font-size: 0.91rem;
+      font-weight: 700;
     }
 
     .entry-grid {
@@ -338,7 +525,10 @@
       font-size: 0.94rem;
     }
 
-    .list-card {
+    .list-card,
+    .content-card,
+    .bridge-card,
+    .faq-card {
       background: linear-gradient(180deg, #ffffff 0%, #f9fbff 100%);
       border: 1px solid var(--border);
       border-radius: 24px;
@@ -347,7 +537,7 @@
     }
 
     .subgroup {
-      margin-bottom: 22px;
+      margin-bottom: 24px;
     }
 
     .subgroup:last-child {
@@ -414,27 +604,74 @@
       font-size: 0.95rem;
     }
 
-    .related-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
+    .cluster-note {
       margin-top: 18px;
+      padding: 20px;
+      border-radius: 18px;
+      border: 1px solid rgba(33, 82, 255, 0.14);
+      background: linear-gradient(180deg, #eef4ff 0%, #f8fbff 100%);
+    }
+
+    .cluster-note h3 {
+      margin: 0 0 8px;
+      font-size: 1.1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .cluster-note p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .bridge-grid,
+    .related-grid,
+    .faq-grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .bridge-grid {
+      grid-template-columns: 1.1fr 0.9fr;
+    }
+
+    .bridge-card h2,
+    .content-card h2 {
+      margin: 0 0 12px;
+      font-size: 1.7rem;
+      letter-spacing: -0.03em;
+    }
+
+    .bridge-card p,
+    .content-card p {
+      margin: 0 0 14px;
+      color: var(--muted);
+    }
+
+    .bridge-card p:last-child,
+    .content-card p:last-child {
+      margin-bottom: 0;
+    }
+
+    .related-grid {
+      grid-template-columns: repeat(3, 1fr);
     }
 
     .related-card {
       display: block;
-      padding: 18px;
-      border-radius: 16px;
+      padding: 20px;
+      border-radius: 18px;
       border: 1px solid var(--border);
       background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
       color: var(--text);
       box-shadow: var(--shadow-soft);
       text-decoration: none;
+      transition: transform 0.12s ease, border-color 0.15s ease;
     }
 
     .related-card:hover {
       text-decoration: none;
       border-color: rgba(33, 82, 255, 0.22);
+      transform: translateY(-2px);
     }
 
     .related-card strong {
@@ -448,39 +685,8 @@
       font-size: 0.93rem;
     }
 
-    .content-section {
-      padding: 8px 0 8px;
-    }
-
-    .content-section h2 {
-      font-size: 1.7rem;
-      letter-spacing: -0.03em;
-      margin: 0 0 14px;
-    }
-
-    .content-section h3 {
-      font-size: 1.15rem;
-      margin: 28px 0 10px;
-    }
-
-    .content-section p {
-      color: var(--muted);
-      margin: 0 0 14px;
-    }
-
     .faq-grid {
-      display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 18px;
-      margin-top: 18px;
-    }
-
-    .faq-card {
-      background: linear-gradient(180deg, #ffffff 0%, #f9fbff 100%);
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      padding: 24px;
-      box-shadow: var(--shadow-soft);
     }
 
     .faq-card h3 {
@@ -494,24 +700,135 @@
       color: var(--muted);
     }
 
-    footer {
-      margin-top: 40px;
+    .footer {
+      margin-top: 42px;
       border-top: 1px solid rgba(219, 227, 240, 0.9);
-      background: rgba(255, 255, 255, 0.72);
+      background: linear-gradient(180deg, rgba(255,255,255,0.84) 0%, rgba(248,251,255,0.98) 100%);
     }
 
-    .footer-inner {
-      padding: 24px 0 40px;
+    .footer-main {
+      padding: 34px 0 22px;
+      display: grid;
+      grid-template-columns: 1.2fr 0.9fr 0.9fr;
+      gap: 28px;
+    }
+
+    .footer-brand {
+      max-width: 520px;
+    }
+
+    .footer-brand strong {
+      display: inline-block;
+      font-size: 1.14rem;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+
+    .footer-brand p,
+    .footer-col p {
+      margin: 0;
       color: var(--muted);
       font-size: 0.95rem;
     }
 
-    @media (max-width: 980px) {
-      .hero-grid,
+    .footer-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .footer-meta span {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: #f4f8ff;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.86rem;
+      font-weight: 700;
+    }
+
+    .footer-col h3 {
+      margin: 0 0 12px;
+      font-size: 1rem;
+      letter-spacing: -0.02em;
+      color: var(--text);
+    }
+
+    .footer-links {
+      display: grid;
+      gap: 10px;
+    }
+
+    .footer-links a {
+      color: var(--muted);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .footer-links a:hover {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(219, 227, 240, 0.9);
+      padding: 18px 0 34px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .footer-bottom-copy p {
+      margin: 0 0 8px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .footer-bottom-copy p:last-child {
+      margin-bottom: 0;
+    }
+
+    .footer-legal {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 14px 18px;
+    }
+
+    .footer-legal a {
+      color: var(--muted);
+      font-size: 0.92rem;
+      font-weight: 700;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .footer-legal a:hover {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    @media (max-width: 1080px) {
+      .decision-grid,
+      .flow-strip,
       .tools-grid,
       .entry-grid,
-      .related-grid,
-      .faq-grid {
+      .related-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .bridge-grid,
+      .faq-grid,
+      .footer-main,
+      .footer-bottom {
         grid-template-columns: 1fr;
       }
 
@@ -519,31 +836,48 @@
         flex-direction: column;
         align-items: flex-start;
       }
+
+      .footer-legal {
+        justify-content: flex-start;
+      }
     }
 
     @media (max-width: 720px) {
       .container {
-        width: min(100% - 24px, 1160px);
+        width: min(100% - 24px, 1180px);
       }
 
       .topbar-inner {
-        align-items: flex-start;
         flex-direction: column;
+        align-items: flex-start;
       }
 
-      .hero-box,
+      .decision-grid,
+      .flow-strip,
+      .tools-grid,
+      .entry-grid,
+      .related-grid,
+      .faq-grid,
+      .hero-stats {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-main,
+      .hero-panel,
+      .decision-card,
+      .flow-step-card,
+      .tool-card,
+      .entry-card,
       .list-card,
+      .content-card,
+      .bridge-card,
       .faq-card {
-        padding-left: 18px;
-        padding-right: 18px;
+        padding: 20px;
+        border-radius: 20px;
       }
 
       .tool-row-top {
         flex-direction: column;
-      }
-
-      .hero-stats {
-        grid-template-columns: 1fr;
       }
     }
   </style>
@@ -554,7 +888,7 @@
     "@type":"CollectionPage",
     "name":"Mzdy a práce",
     "url":"https://rychlevypocty.cz/mzdy-a-prace.html",
-    "description":"Přehled kalkulaček pro mzdy, zaměstnání, brigády, dovolenou a pracovní čas."
+    "description":"Rozcestník kalkulaček pro mzdy, práci, brigády, dohody, dovolenou, nemocenskou a pracovní čas."
   }
   </script>
 
@@ -584,46 +918,68 @@
     ]
   }
   </script>
-<!-- Google tag (gtag.js) -->
 
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"Kde začít, když chci vědět kolik dostanu na účet?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Nejrychlejší vstup je kalkulačka čisté mzdy. Pokud už znáte čistou částku a potřebujete přepočítat hrubou mzdu, navazuje kalkulačka hrubé mzdy z čisté."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Kdy se hodí DPP / DPČ kalkulačka?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Hlavně tehdy, když řešíte brigádu, vedlejší přivýdělek nebo práci na dohodu a chcete rychle zjistit orientační čistou odměnu."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Jaký je rozdíl mezi čistou mzdou a náklady zaměstnavatele?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Čistá mzda ukazuje, kolik dostane zaměstnanec na účet. Náklady zaměstnavatele ukazují, kolik práce skutečně stojí firmu po započtení odvodů a dalších povinných nákladů."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Jsou výsledky závazné?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Ne. Výsledky slouží pro rychlou orientaci a rozhodování. Přesná výše mzdy, náhrad nebo odvodů může záviset na konkrétním pracovním režimu a individuální situaci."
+        }
+      }
+    ]
+  }
+  </script>
 
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('consent', 'default', {
-    'ad_storage': 'denied',
-    'analytics_storage': 'denied',
-    'ad_user_data': 'denied',
-    'ad_personalization': 'denied'
-  });
-</script>
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-E9QVPMKPSV"></script>
-<script>
-  gtag('js', new Date());
-  gtag('config', 'G-E9QVPMKPSV', {
-    'anonymize_ip': true
-  });
-</script>
-
-<style id="rv-global-footer-responsive">
-@media (max-width: 980px) {
-  footer[style*="margin-top:48px"] > div:first-child,
-  footer[style*="margin-top:48px"] > div:last-child {
-    grid-template-columns: 1fr !important;
-  }
-  footer[style*="margin-top:48px"] > div:last-child div[style*="justify-content:flex-end"] {
-    justify-content: flex-start !important;
-  }
-}
-@media (max-width: 720px) {
-  footer[style*="margin-top:48px"] > div:first-child,
-  footer[style*="margin-top:48px"] > div:last-child {
-    width: min(100% - 24px, 1180px) !important;
-  }
-}
-</style>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('consent', 'default', {
+      'ad_storage': 'denied',
+      'analytics_storage': 'denied',
+      'ad_user_data': 'denied',
+      'ad_personalization': 'denied'
+    });
+  </script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-E9QVPMKPSV"></script>
+  <script>
+    gtag('js', new Date());
+    gtag('config', 'G-E9QVPMKPSV', {
+      'anonymize_ip': true
+    });
+  </script>
 </head>
 <body>
+
   <header class="topbar">
     <div class="container topbar-inner">
       <a class="brand" href="/">Rychlé<span>Výpočty</span>.cz</a>
@@ -631,7 +987,7 @@
         <a href="/">Domů</a>
         <a href="/kalkulacky.html">Všechny kalkulačky</a>
         <a href="/mzdy-a-prace.html">Mzdy a práce</a>
-        <a href="/#podle-situace">Podle situace</a>
+        <a href="/finance-a-hypoteky.html">Finance a hypotéky</a>
       </nav>
     </div>
   </header>
@@ -644,41 +1000,153 @@
         </div>
 
         <div class="hero-grid">
-          <div class="hero-copy">
-            <h1>Mzdy a práce – online kalkulačky pro mzdu, brigády, dohody a zaměstnání</h1>
-            <p>Na této stránce najdete kalkulačky pro čistou mzdu, hrubou mzdu z čisté, náklady zaměstnavatele, nemocenskou, hodinovou mzdu, DPP a DPČ, přesčasy, příplatky za směny, dovolenou, odstupné i další pracovní výpočty.</p>
-            <p>Kategorie funguje jako přehledný rozcestník pro situace, kdy řešíte výplatu, pracovní nabídku, brigádu, zaměstnání, docházku, pracovní čas nebo orientaci v tom, kolik skutečně dostanete a kolik stojí práce firmu.</p>
+          <div class="hero-main">
+            <div class="hero-badge">Rozhodovací rozcestník pro mzdu, brigády a práci</div>
+            <h1>Spočítejte si, kolik opravdu dostanete a kolik vaše práce stojí</h1>
+            <p>
+              Tahle sekce je určená pro situace, kdy řešíte čistou mzdu, pracovní nabídku,
+              brigádu, DPP nebo DPČ, náklady zaměstnavatele, pracovní čas, přesčasy,
+              dovolenou nebo nemocenskou.
+            </p>
+            <p>
+              Nejde jen o seznam kalkulaček. Cílem je dostat vás rychle ke správnému výpočtu
+              a navázat na další krok, který dává v pracovním nebo mzdovém rozhodování smysl.
+            </p>
 
-            <div class="hero-points">
-              <div class="hero-pill">Mzdy a výplata</div>
-              <div class="hero-pill">Dohody a brigády</div>
-              <div class="hero-pill">Pracovní čas</div>
-              <div class="hero-pill">Dovolená a náhrady</div>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="#zacit-tady">Začít podle situace</a>
+              <a class="btn btn-secondary" href="/cista-mzda-kalkulacka.html">Kalkulačka čisté mzdy</a>
+              <a class="btn btn-outline" href="/kalkulacky.html">Všechny kalkulačky</a>
+            </div>
+
+            <div class="hero-pills" aria-label="Hlavní témata stránky">
+              <span class="hero-pill">Mzdy a výplata</span>
+              <span class="hero-pill">Dohody a brigády</span>
+              <span class="hero-pill">Pracovní čas</span>
+              <span class="hero-pill">Dovolená a náhrady</span>
             </div>
           </div>
 
-          <div class="hero-box">
-            <h2>Co v kategorii najdete</h2>
-            <p>Tento cluster spojuje nejsilnější nástroje pro zaměstnance, brigádníky i zaměstnavatele. Vedle výpočtu čisté mzdy tu najdete i výpočty pro dohody, dovolenou, nemocenskou, přesčasy, směnové příplatky nebo náklady zaměstnavatele.</p>
+          <div class="hero-side">
+            <div class="hero-panel">
+              <h2>Co tu najdete</h2>
+              <p>
+                Hlavní kalkulačky pro zaměstnance, brigádníky i zaměstnavatele na jednom místě:
+                čistou mzdu, hrubou mzdu z čisté, náklady zaměstnavatele, DPP a DPČ,
+                pracovní čas, přesčasy, příplatky, dovolenou, nemocenskou i odstupné.
+              </p>
 
-            <div class="hero-stats">
-              <div class="stat">
-                <strong>13</strong>
-                <span>nástrojů</span>
-              </div>
-              <div class="stat">
-                <strong>Mzdy</strong>
-                <span>a zaměstnání</span>
-              </div>
-              <div class="stat">
-                <strong>Práce</strong>
-                <span>na HPP i dohody</span>
-              </div>
-              <div class="stat">
-                <strong>0 Kč</strong>
-                <span>vše zdarma online</span>
+              <div class="hero-stats">
+                <div class="stat-box">
+                  <strong>13+</strong>
+                  <span>nástrojů v kategorii</span>
+                </div>
+                <div class="stat-box">
+                  <strong>Mzda</strong>
+                  <span>od čisté po náklady firmy</span>
+                </div>
+                <div class="stat-box">
+                  <strong>Práce</strong>
+                  <span>HPP i dohody</span>
+                </div>
+                <div class="stat-box">
+                  <strong>Zdarma</strong>
+                  <span>bez registrace a instalace</span>
+                </div>
               </div>
             </div>
+
+            <div class="hero-panel">
+              <h3>Pro koho je tahle sekce nejvíc užitečná</h3>
+              <p>
+                Pro zaměstnance, brigádníky, studenty, personalisty, živnostníky řešící nabídky práce
+                i menší firmy, které potřebují rychle dopočítat náklady, odměny nebo pracovní čas.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="zacit-tady">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h2>Začněte podle toho, co právě řešíte</h2>
+            <p>
+              Nejrychlejší cesta není přes dlouhý seznam nástrojů, ale přes konkrétní otázku.
+              Tohle jsou nejsilnější vstupy do celého pracovního a mzdového flow.
+            </p>
+          </div>
+        </div>
+
+        <div class="decision-grid">
+          <a class="decision-card" href="/cista-mzda-kalkulacka.html">
+            <span class="decision-label">Vstup 1</span>
+            <h3>Chci vědět, kolik dostanu čistého na účet</h3>
+            <p>Nejrychlejší vstup pro běžnou situaci, kdy řešíte výplatu, novou nabídku práce nebo porovnání příjmu.</p>
+            <div class="decision-next">Další krok: hrubá mzda z čisté nebo náklady zaměstnavatele</div>
+          </a>
+
+          <a class="decision-card" href="/dpp-dpc-kalkulacka.html">
+            <span class="decision-label">Vstup 2</span>
+            <h3>Chci spočítat brigádu, DPP nebo DPČ</h3>
+            <p>Správný vstup pro dohody a vedlejší přivýdělek, když chcete rychle odhadnout čistou odměnu.</p>
+            <div class="decision-next">Další krok: hodinová mzda nebo odpracované hodiny</div>
+          </a>
+
+          <a class="decision-card" href="/naklady-zamestnavatele-kalkulacka.html">
+            <span class="decision-label">Vstup 3</span>
+            <h3>Chci vědět, kolik moje práce skutečně stojí firmu</h3>
+            <p>Užitečné při náboru, plánování rozpočtu nebo vyhodnocení skutečných mzdových nákladů zaměstnavatele.</p>
+            <div class="decision-next">Další krok: čistá mzda nebo měsíční mzda z hodinové</div>
+          </a>
+
+          <a class="decision-card" href="/kalkulacka-dovolene.html">
+            <span class="decision-label">Vstup 4</span>
+            <h3>Řeším dovolenou, nemocenskou nebo další náhrady</h3>
+            <p>Vhodný vstup pro situace, kdy už nejde jen o výplatu, ale o širší pracovní a mzdový režim.</p>
+            <div class="decision-next">Další krok: nemocenská, náhrada mzdy nebo odstupné</div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="jak-postupovat">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h2>Jak postupovat krok za krokem</h2>
+            <p>
+              Pokud řešíte práci nebo mzdu od začátku, dává smysl jít právě v tomto pořadí.
+              Díky tomu si nejdřív ověříte základní čísla a potom navážete specializovanějšími výpočty.
+            </p>
+          </div>
+        </div>
+
+        <div class="flow-strip">
+          <div class="flow-step-card">
+            <div class="flow-step-no">Krok 1</div>
+            <h3>Čistá nebo hrubá mzda</h3>
+            <p>Nejdřív si ověřte základní příjem a přepočet mezi hrubou a čistou mzdou.</p>
+          </div>
+
+          <div class="flow-step-card">
+            <div class="flow-step-no">Krok 2</div>
+            <h3>DPP / DPČ nebo hodinová sazba</h3>
+            <p>Potom dává smysl řešit konkrétní typ práce, brigádu nebo odměnu podle sazby.</p>
+          </div>
+
+          <div class="flow-step-card">
+            <div class="flow-step-no">Krok 3</div>
+            <h3>Pracovní čas a přesčasy</h3>
+            <p>Navazuje reálný výkon práce: odpracované hodiny, přesčasy a směnové příplatky.</p>
+          </div>
+
+          <div class="flow-step-card">
+            <div class="flow-step-no">Krok 4</div>
+            <h3>Dovolená a náhrady</h3>
+            <p>Až potom má smysl řešit dovolenou, nemocenskou, náhrady mzdy nebo odstupné.</p>
           </div>
         </div>
       </div>
@@ -688,8 +1156,11 @@
       <div class="container">
         <div class="section-head">
           <div>
-            <h2>Top nástroje v kategorii</h2>
-            <p>Nejdůležitější vstupy pro výplatu, zaměstnání a pracovní rozhodování.</p>
+            <h2>Nejpoužívanější kalkulačky v této sekci</h2>
+            <p>
+              Hlavní nástroje pro mzdy, brigády a práci. Tohle jsou stránky, na které lidé v této kategorii
+              chodí nejčastěji jako na první nebo druhý krok.
+            </p>
           </div>
         </div>
 
@@ -700,25 +1171,8 @@
               <span class="tool-icon">NET</span>
             </div>
             <h3>Kalkulačka čisté mzdy</h3>
-            <p>Orientační výpočet čisté mzdy, daně, odvodů a ceny práce.</p>
-          </a>
-
-          <a class="tool-card" href="/kalkulacka-hrube-mzdy-z-ciste.html">
-            <div class="tool-top">
-              <span class="tool-tag">Mzdy</span>
-              <span class="tool-icon">HRU</span>
-            </div>
-            <h3>Kalkulačka hrubé mzdy z čisté</h3>
-            <p>Přepočet orientační hrubé mzdy podle požadované čisté částky.</p>
-          </a>
-
-          <a class="tool-card" href="/naklady-zamestnavatele-kalkulacka.html">
-            <div class="tool-top">
-              <span class="tool-tag">Zaměstnavatel</span>
-              <span class="tool-icon">FIR</span>
-            </div>
-            <h3>Kalkulačka nákladů zaměstnavatele</h3>
-            <p>Kolik zaměstnanec stojí firmu včetně odvodů a souvisejících nákladů.</p>
+            <p>Orientační výpočet čisté mzdy, odvodů, daně i ceny práce v jednom přehledu.</p>
+            <div class="tool-next">Další krok: hrubá mzda z čisté nebo náklady zaměstnavatele</div>
           </a>
 
           <a class="tool-card" href="/dpp-dpc-kalkulacka.html">
@@ -728,6 +1182,17 @@
             </div>
             <h3>DPP / DPČ kalkulačka</h3>
             <p>Orientační čistá odměna z dohody o provedení práce nebo pracovní činnosti.</p>
+            <div class="tool-next">Další krok: hodinová mzda nebo odpracované hodiny</div>
+          </a>
+
+          <a class="tool-card" href="/naklady-zamestnavatele-kalkulacka.html">
+            <div class="tool-top">
+              <span class="tool-tag">Zaměstnavatel</span>
+              <span class="tool-icon">FIR</span>
+            </div>
+            <h3>Kalkulačka nákladů zaměstnavatele</h3>
+            <p>Kolik zaměstnanec stojí firmu včetně odvodů a souvisejících mzdových nákladů.</p>
+            <div class="tool-next">Další krok: čistá mzda nebo měsíční mzda z hodinové</div>
           </a>
 
           <a class="tool-card" href="/nemocenska-kalkulacka.html">
@@ -737,6 +1202,7 @@
             </div>
             <h3>Nemocenská kalkulačka</h3>
             <p>Orientační výpočet náhrady a nemocenských dávek při pracovní neschopnosti.</p>
+            <div class="tool-next">Další krok: dovolená nebo odstupné</div>
           </a>
 
           <a class="tool-card" href="/kalkulacka-dovolene.html">
@@ -745,7 +1211,18 @@
               <span class="tool-icon">DOV</span>
             </div>
             <h3>Kalkulačka dovolené</h3>
-            <p>Výpočet orientačního nároku na dovolenou podle pracovního režimu.</p>
+            <p>Výpočet orientačního nároku na dovolenou podle pracovního režimu a odpracované doby.</p>
+            <div class="tool-next">Další krok: náhrada mzdy za dovolenou</div>
+          </a>
+
+          <a class="tool-card" href="/kalkulacka-odpracovanych-hodin.html">
+            <div class="tool-top">
+              <span class="tool-tag">Pracovní čas</span>
+              <span class="tool-icon">ČAS</span>
+            </div>
+            <h3>Kalkulačka odpracovaných hodin</h3>
+            <p>Výpočet čistého času odpracovaného ve směnách nebo za celé období.</p>
+            <div class="tool-next">Další krok: přesčasy nebo příplatky za směny</div>
           </a>
         </div>
       </div>
@@ -756,19 +1233,22 @@
         <div class="section-head">
           <div>
             <h2>Rychlé vstupy podle potřeby</h2>
-            <p>Pokud nehledáte konkrétní název kalkulačky, začněte přes situaci, kterou právě řešíte.</p>
+            <p>
+              Když nehledáte přesný název kalkulačky, ale hlavně odpověď na otázku,
+              můžete začít přes tyto praktické vstupy.
+            </p>
           </div>
         </div>
 
         <div class="entry-grid">
           <a class="entry-card" href="/cista-mzda-kalkulacka.html">
             <strong>Chci spočítat čistou mzdu</strong>
-            <span>Rychlá orientace v tom, kolik dostanete na účet.</span>
+            <span>Rychlá orientace v tom, kolik skutečně dostanu na účet.</span>
           </a>
 
           <a class="entry-card" href="/kalkulacka-hrube-mzdy-z-ciste.html">
             <strong>Chci zjistit hrubou mzdu z čisté</strong>
-            <span>Užitečné při vyjednávání nabídky nebo porovnání pozic.</span>
+            <span>Užitečné při vyjednávání nabídky nebo porovnání pracovních pozic.</span>
           </a>
 
           <a class="entry-card" href="/dpp-dpc-kalkulacka.html">
@@ -778,7 +1258,7 @@
 
           <a class="entry-card" href="/naklady-zamestnavatele-kalkulacka.html">
             <strong>Chci spočítat náklady zaměstnavatele</strong>
-            <span>Kolik práce skutečně stojí firmu.</span>
+            <span>Kolik práce skutečně stojí firmu po započtení odvodů.</span>
           </a>
 
           <a class="entry-card" href="/kalkulacka-odpracovanych-hodin.html">
@@ -799,7 +1279,10 @@
         <div class="section-head">
           <div>
             <h2>Všechny kalkulačky v kategorii</h2>
-            <p>Kompletní přehled nástrojů rozdělený do menších logických skupin pro lepší orientaci.</p>
+            <p>
+              Kompletní přehled nástrojů v této sekci rozdělený podle hlavního typu použití.
+              Tady už najdete i doplňkové výpočty, které navazují na širší pracovní rozhodování.
+            </p>
           </div>
         </div>
 
@@ -927,171 +1410,250 @@
               </a>
             </div>
           </div>
+
+          <div class="cluster-note">
+            <h3>Doporučené pořadí při řešení mzdy a práce</h3>
+            <p>
+              Pokud začínáte od nuly, největší smysl má jít v tomto pořadí:
+              čistá mzda → hrubá mzda nebo náklady zaměstnavatele → DPP / DPČ nebo hodinová sazba →
+              pracovní čas a přesčasy → dovolená, nemocenská a další náhrady.
+            </p>
+          </div>
         </div>
       </div>
     </section>
 
-    <section class="container content-section">
-      <h2>Související oblasti</h2>
-      <div class="related-grid">
-        <a class="related-card" href="/finance-a-hypoteky.html">
-          <strong>Finance a hypotéky</strong>
-          <span>Užitečné při řešení příjmu, bonity a širší finanční situace domácnosti.</span>
-        </a>
+    <section class="section" id="dalsi-krok">
+      <div class="container">
+        <div class="bridge-grid">
+          <div class="bridge-card">
+            <h2>Co dává smysl udělat dál</h2>
+            <p>
+              Jakmile máte základní výpočty hotové, většinou už nejde jen o to něco dopočítat,
+              ale správně vyhodnotit pracovní situaci. Typicky mezi těmito kroky:
+            </p>
+            <p>
+              porovnat nabídky podle čisté mzdy, ověřit skutečnou cenu práce pro zaměstnavatele,
+              přepočítat brigádu nebo dohodu na hodinovou sazbu, nebo si zkontrolovat,
+              jak do celkové reality vstupují přesčasy, dovolená a náhrady.
+            </p>
+            <p>
+              Tahle sekce je připravená jako most mezi samotným výpočtem a dalším rozhodnutím,
+              které člověk obvykle řeší hned po něm.
+            </p>
+          </div>
 
-        <a class="related-card" href="/kalkulacky.html">
-          <strong>Business a cenotvorba</strong>
-          <span>Další praktické výpočty pro podnikání, odměňování, provize a cenu práce.</span>
-        </a>
-
-        <a class="related-card" href="/kalkulacky.html">
-          <strong>Datum a čas</strong>
-          <span>Praktické výpočty pracovních dnů, času a plánování v širším kontextu zaměstnání.</span>
-        </a>
+          <div class="bridge-card">
+            <h2>Nejčastější další návaznost</h2>
+            <p><strong>1.</strong> Čistá mzda → <a href="/kalkulacka-hrube-mzdy-z-ciste.html">hrubá mzda z čisté</a></p>
+            <p><strong>2.</strong> Mzda → <a href="/naklady-zamestnavatele-kalkulacka.html">náklady zaměstnavatele</a></p>
+            <p><strong>3.</strong> Dohoda → <a href="/kalkulacka-hodinove-mzdy.html">hodinová mzda</a></p>
+            <p><strong>4.</strong> Pracovní čas → <a href="/kalkulacka-prescasu.html">přesčasy</a></p>
+          </div>
+        </div>
       </div>
     </section>
 
-    <section class="container content-section">
-      <h2>Kdy se kalkulačky mezd a práce nejvíc hodí</h2>
-      <p>Tato kategorie se hodí hlavně tehdy, když řešíte výši výplaty, porovnání pracovní nabídky, brigádu, zaměstnání na dohodu, nemocenskou, dovolenou nebo orientaci v tom, kolik skutečně stojí práce zaměstnavatele. Silná je pro zaměstnance, brigádníky i firmy.</p>
+    <section class="section" id="souvisejici-oblasti">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h2>Související oblasti</h2>
+            <p>
+              Mzdy a práce nejsou izolované téma. Často navazují na finance domácnosti,
+              podnikání, cenu práce nebo širší pracovní rozhodování.
+            </p>
+          </div>
+        </div>
 
-      <h3>Jak mezi sebou jednotlivé nástroje souvisí</h3>
-      <p>Typická cesta uživatele často nezačíná i nekončí jedním výpočtem. U čisté mzdy dává smysl navázat na hrubou mzdu z čisté nebo náklady zaměstnavatele. U brigády a vedlejší práce zase dává smysl přejít na DPP a DPČ kalkulačku. Při práci ve směnách navazují odpracované hodiny, přesčasy a příplatky. U pracovněprávních situací pak dává smysl pokračovat na dovolenou, náhradu mzdy nebo odstupné.</p>
+        <div class="related-grid">
+          <a class="related-card" href="/finance-a-hypoteky.html">
+            <strong>Finance a hypotéky</strong>
+            <span>Užitečné při řešení příjmu, bonity a širší finanční situace domácnosti.</span>
+          </a>
 
-      <h3>Pro koho je tato sekce užitečná</h3>
-      <p>Kategorie je vhodná pro zaměstnance, brigádníky, studenty, personalisty i menší firmy. Díky kombinaci mzdových, pracovních a docházkových výpočtů funguje jako praktický pracovní hub, ne jen jako izolovaný seznam jednotlivých kalkulaček.</p>
+          <a class="related-card" href="/business-a-cenotvorba.html">
+            <strong>Business a cenotvorba</strong>
+            <span>Další praktické výpočty pro podnikání, odměňování, provize a cenu práce.</span>
+          </a>
+
+          <a class="related-card" href="/kalkulacky.html">
+            <strong>Všechny kalkulačky</strong>
+            <span>Kompletní přehled dalších nástrojů, pokud řešíte i související finance, rozpočty nebo čas.</span>
+          </a>
+        </div>
+      </div>
     </section>
 
-    <section class="container content-section">
-      <h2>Časté otázky</h2>
-      <div class="faq-grid">
-        <div class="faq-card">
-          <h3>Jaký je rozdíl mezi čistou mzdou a hrubou mzdou z čisté?</h3>
-          <p>Kalkulačka čisté mzdy počítá, kolik dostanete na účet z dané hrubé mzdy. Kalkulačka hrubé mzdy z čisté dělá opačný přepočet a hodí se při vyjednávání nabídky nebo plánování příjmu.</p>
+    <section class="section" id="o-kategorii">
+      <div class="container">
+        <div class="content-card">
+          <h2>Kdy se kalkulačky mezd a práce hodí nejvíc</h2>
+          <p>
+            Tahle kategorie se hodí hlavně tehdy, když řešíte výši výplaty, porovnání pracovní nabídky,
+            brigádu, zaměstnání na dohodu, nemocenskou, dovolenou nebo orientaci v tom,
+            kolik skutečně stojí práce zaměstnavatele. Silná je pro zaměstnance, brigádníky i firmy.
+          </p>
+          <p>
+            Typická cesta uživatele často nezačíná ani nekončí jedním výpočtem.
+            U čisté mzdy dává smysl navázat na hrubou mzdu z čisté nebo náklady zaměstnavatele.
+            U brigády a vedlejší práce zase dává smysl přejít na DPP a DPČ kalkulačku.
+            Při práci ve směnách navazují odpracované hodiny, přesčasy a příplatky.
+            U pracovněprávních situací pak dává smysl pokračovat na dovolenou, náhradu mzdy nebo odstupné.
+          </p>
+          <p>
+            Kategorie je vhodná pro zaměstnance, brigádníky, studenty, personalisty i menší firmy.
+            Díky kombinaci mzdových, pracovních a docházkových výpočtů funguje jako praktický pracovní hub,
+            ne jen jako izolovaný seznam jednotlivých kalkulaček.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="faq">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h2>Časté otázky</h2>
+            <p>
+              Krátké odpovědi na nejčastější situace, které lidé v této sekci řeší.
+            </p>
+          </div>
         </div>
 
-        <div class="faq-card">
-          <h3>Kdy se hodí DPP / DPČ kalkulačka?</h3>
-          <p>Hlavně tehdy, když řešíte brigádu, vedlejší přivýdělek nebo práci na dohodu a chcete rychle zjistit orientační čistou odměnu.</p>
-        </div>
+        <div class="faq-grid">
+          <div class="faq-card">
+            <h3>Kde začít, když chci vědět kolik dostanu na účet?</h3>
+            <p>Nejrychlejší vstup je kalkulačka čisté mzdy. Pokud už znáte čistou částku a potřebujete přepočítat hrubou mzdu, navazuje kalkulačka hrubé mzdy z čisté.</p>
+          </div>
 
-        <div class="faq-card">
-          <h3>Je nemocenská kalkulačka přesná?</h3>
-          <p>Slouží hlavně pro rychlou orientaci. Přesný výsledek může ovlivnit konkrétní pracovní režim, délka neschopnosti a další individuální okolnosti.</p>
-        </div>
+          <div class="faq-card">
+            <h3>Kdy se hodí DPP / DPČ kalkulačka?</h3>
+            <p>Hlavně tehdy, když řešíte brigádu, vedlejší přivýdělek nebo práci na dohodu a chcete rychle zjistit orientační čistou odměnu.</p>
+          </div>
 
-        <div class="faq-card">
-          <h3>Proč jsou v této kategorii i dovolená, odstupné a příplatky?</h3>
-          <p>Protože cluster není jen o výplatě samotné, ale o širší orientaci v pracovním vztahu, pracovním čase a odměňování.</p>
+          <div class="faq-card">
+            <h3>Jaký je rozdíl mezi čistou mzdou a náklady zaměstnavatele?</h3>
+            <p>Čistá mzda ukazuje, kolik dostane zaměstnanec na účet. Náklady zaměstnavatele ukazují, kolik práce skutečně stojí firmu po započtení odvodů a dalších povinných nákladů.</p>
+          </div>
+
+          <div class="faq-card">
+            <h3>Jsou výsledky závazné?</h3>
+            <p>Ne. Výsledky slouží pro rychlou orientaci a rozhodování. Přesná výše mzdy, náhrad nebo odvodů může záviset na konkrétním pracovním režimu a individuální situaci.</p>
+          </div>
         </div>
       </div>
     </section>
   </main>
 
-  <footer style="margin-top:48px;border-top:1px solid rgba(219,227,240,0.9);background:linear-gradient(180deg, rgba(255,255,255,0.92) 0%, rgba(248,251,255,0.98) 100%);">
-  <div style="width:min(1180px,calc(100% - 32px));margin:0 auto;padding:34px 0 22px;display:grid;grid-template-columns:1.2fr 0.9fr 0.9fr;gap:28px;">
-    <div style="max-width:520px;">
-      <strong style="display:inline-block;font-size:1.14rem;letter-spacing:-0.02em;color:#172033;margin-bottom:12px;">RychléVýpočty.cz</strong>
-      <p style="margin:0;color:#5f6b85;font-size:0.95rem;line-height:1.65;">
-        Online kalkulačky a praktické nástroje zdarma pro finance, bydlení, hypotéky, pronájem,
-        investiční rozhodování, mzdy, podnikání, energie, auto, rekonstrukce a další situace,
-        které dává smysl si předem spočítat.
-      </p>
-      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:16px;">
-        <span style="display:inline-flex;align-items:center;padding:8px 12px;border-radius:999px;background:#f4f8ff;border:1px solid #dbe3f0;color:#5f6b85;font-size:0.86rem;font-weight:700;">Zdarma</span>
-        <span style="display:inline-flex;align-items:center;padding:8px 12px;border-radius:999px;background:#f4f8ff;border:1px solid #dbe3f0;color:#5f6b85;font-size:0.86rem;font-weight:700;">Bez registrace</span>
-        <span style="display:inline-flex;align-items:center;padding:8px 12px;border-radius:999px;background:#f4f8ff;border:1px solid #dbe3f0;color:#5f6b85;font-size:0.86rem;font-weight:700;">Praktické rozhodování</span>
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-main">
+        <div class="footer-brand">
+          <strong>RychléVýpočty.cz</strong>
+          <p>
+            Online kalkulačky a praktické nástroje zdarma pro finance, bydlení, hypotéky, pronájem,
+            investiční rozhodování, mzdy, podnikání, energie, auto, rekonstrukce a další situace,
+            které dává smysl si předem spočítat.
+          </p>
+          <div class="footer-meta" aria-label="Základní charakteristiky webu">
+            <span>Zdarma</span>
+            <span>Bez registrace</span>
+            <span>Praktické rozhodování</span>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h3>Hlavní sekce</h3>
+          <div class="footer-links">
+            <a href="/kalkulacky.html">Všechny kalkulačky</a>
+            <a href="/finance-a-hypoteky.html">Finance a hypotéky</a>
+            <a href="/pronajem-a-investicni-bydleni.html">Pronájem a investiční bydlení</a>
+            <a href="/mzdy-a-prace.html">Mzdy a práce</a>
+            <a href="/stavba-domu.html">Stavba domu</a>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h3>Informace a důvěra</h3>
+          <div class="footer-links">
+            <a href="/o-nas.html">O nás</a>
+            <a href="/kontakt.html">Kontakt</a>
+            <a href="/ochrana-osobnich-udaju.html">Ochrana osobních údajů</a>
+            <a href="/podminky-pouziti.html">Podmínky použití</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div class="footer-bottom-copy">
+          <p>© RychléVýpočty.cz – online kalkulačky a praktické nástroje zdarma</p>
+          <p>Výsledky mají orientační charakter a u důležitých finančních, daňových, právních nebo stavebních rozhodnutí je vhodné je ověřit podle konkrétních podmínek.</p>
+        </div>
+
+        <div class="footer-legal" aria-label="Právní a informační odkazy">
+          <a href="/o-nas.html">O nás</a>
+          <a href="/kontakt.html">Kontakt</a>
+          <a href="/ochrana-osobnich-udaju.html">Soukromí</a>
+          <a href="/podminky-pouziti.html">Podmínky</a>
+        </div>
       </div>
     </div>
+  </footer>
 
-    <div>
-      <h3 style="margin:0 0 12px;font-size:1rem;letter-spacing:-0.02em;color:#172033;">Hlavní sekce</h3>
-      <div style="display:grid;gap:10px;">
-        <a href="/kalkulacky.html" style="color:#5f6b85;font-weight:600;text-decoration:none;">Všechny kalkulačky</a>
-        <a href="/finance-a-hypoteky.html" style="color:#5f6b85;font-weight:600;text-decoration:none;">Finance a hypotéky</a>
-        <a href="/pronajem-a-investicni-bydleni.html" style="color:#5f6b85;font-weight:600;text-decoration:none;">Pronájem a investiční bydlení</a>
-        <a href="/mzdy-a-prace.html" style="color:#5f6b85;font-weight:600;text-decoration:none;">Mzdy a práce</a>
-        <a href="/stavba-domu.html" style="color:#5f6b85;font-weight:600;text-decoration:none;">Stavba domu</a>
-      </div>
-    </div>
-
-    <div>
-      <h3 style="margin:0 0 12px;font-size:1rem;letter-spacing:-0.02em;color:#172033;">Informace a důvěra</h3>
-      <div style="display:grid;gap:10px;">
-        <a href="/o-nas.html" style="color:#5f6b85;font-weight:600;text-decoration:none;">O nás</a>
-        <a href="/kontakt.html" style="color:#5f6b85;font-weight:600;text-decoration:none;">Kontakt</a>
-        <a href="/ochrana-osobnich-udaju.html" style="color:#5f6b85;font-weight:600;text-decoration:none;">Ochrana osobních údajů</a>
-        <a href="/podminky-pouziti.html" style="color:#5f6b85;font-weight:600;text-decoration:none;">Podmínky použití</a>
-      </div>
+  <div id="cookie-banner" style="position:fixed;left:16px;right:16px;bottom:16px;max-width:720px;margin:0 auto;background:#ffffff;border:1px solid #dbe3f0;border-radius:18px;padding:16px 16px 14px;box-shadow:0 18px 40px rgba(20,32,70,0.16);z-index:9999;display:none;">
+    <div style="font-weight:800;font-size:1rem;color:#172033;margin:0 0 6px;">Cookies a měření návštěvnosti</div>
+    <p style="margin:0 0 12px;color:#5f6b85;font-size:0.95rem;line-height:1.55;">Používáme cookies pro měření návštěvnosti a zlepšování webu. Volbu můžete kdykoli změnit. Více najdete na stránce <a href="/ochrana-osobnich-udaju.html" style="color:#2152ff;">Ochrana osobních údajů</a>.</p>
+    <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;">
+      <button type="button" onclick="acceptCookies()" style="border:0;border-radius:12px;padding:12px 16px;background:#2152ff;color:#fff;font-weight:700;cursor:pointer;">Přijmout</button>
+      <button type="button" onclick="rejectCookies()" style="border:1px solid #dbe3f0;border-radius:12px;padding:12px 16px;background:#fff;color:#172033;font-weight:700;cursor:pointer;">Odmítnout</button>
+      <button type="button" onclick="resetCookieConsent()" style="border:1px solid #dbe3f0;border-radius:12px;padding:12px 16px;background:#f8fbff;color:#172033;font-weight:700;cursor:pointer;">Nastavení cookies</button>
     </div>
   </div>
 
-  <div style="width:min(1180px,calc(100% - 32px));margin:0 auto;border-top:1px solid rgba(219,227,240,0.9);padding:18px 0 34px;display:grid;grid-template-columns:1fr auto;gap:20px;align-items:start;">
-    <div>
-      <p style="margin:0 0 8px;color:#5f6b85;font-size:0.92rem;line-height:1.6;">© RychléVýpočty.cz – online kalkulačky a praktické nástroje zdarma</p>
-      <p style="margin:0;color:#5f6b85;font-size:0.92rem;line-height:1.6;">Výsledky mají orientační charakter a u důležitých finančních, daňových, právních nebo stavebních rozhodnutí je vhodné je ověřit podle konkrétních podmínek.</p>
-    </div>
-
-    <div style="display:flex;flex-wrap:wrap;justify-content:flex-end;gap:14px 18px;align-items:center;">
-      <a href="/o-nas.html" style="color:#5f6b85;font-size:0.92rem;font-weight:700;text-decoration:none;white-space:nowrap;">O nás</a>
-      <a href="/kontakt.html" style="color:#5f6b85;font-size:0.92rem;font-weight:700;text-decoration:none;white-space:nowrap;">Kontakt</a>
-      <a href="/ochrana-osobnich-udaju.html" style="color:#5f6b85;font-size:0.92rem;font-weight:700;text-decoration:none;white-space:nowrap;">Soukromí</a>
-      <a href="/podminky-pouziti.html" style="color:#5f6b85;font-size:0.92rem;font-weight:700;text-decoration:none;white-space:nowrap;">Podmínky</a>
-    </div>
-  </div>
-</footer>
-<div id="cookie-banner" style="position:fixed;left:16px;right:16px;bottom:16px;max-width:720px;margin:0 auto;background:#ffffff;border:1px solid #dbe3f0;border-radius:18px;padding:16px 16px 14px;box-shadow:0 18px 40px rgba(20,32,70,0.16);z-index:9999;display:none;">
-  <div style="font-weight:800;font-size:1rem;color:#172033;margin:0 0 6px;">Cookies a měření návštěvnosti</div>
-  <p style="margin:0 0 12px;color:#5f6b85;font-size:0.95rem;line-height:1.55;">Používáme cookies pro měření návštěvnosti a zlepšování webu. Volbu můžete kdykoli změnit. Více najdete na stránce <a href="/ochrana-osobnich-udaju.html" style="color:#2152ff;">Ochrana osobních údajů</a>.</p>
-  <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;">
-    <button type="button" onclick="acceptCookies()" style="border:0;border-radius:12px;padding:12px 16px;background:#2152ff;color:#fff;font-weight:700;cursor:pointer;">Přijmout</button>
-    <button type="button" onclick="rejectCookies()" style="border:1px solid #dbe3f0;border-radius:12px;padding:12px 16px;background:#fff;color:#172033;font-weight:700;cursor:pointer;">Odmítnout</button>
-    <button type="button" onclick="resetCookieConsent()" style="border:1px solid #dbe3f0;border-radius:12px;padding:12px 16px;background:#f8fbff;color:#172033;font-weight:700;cursor:pointer;">Nastavení cookies</button>
-  </div>
-</div>
-<script>
-function setConsent(value){
-  gtag('consent','update',{
-    'analytics_storage': value,
-    'ad_storage': value,
-    'ad_user_data': value,
-    'ad_personalization': value
-  });
-}
-function hideCookieBanner(){
-  var el = document.getElementById('cookie-banner');
-  if (el) el.style.display = 'none';
-}
-function showCookieBanner(){
-  var el = document.getElementById('cookie-banner');
-  if (el) el.style.display = 'block';
-}
-function acceptCookies(){
-  localStorage.setItem('cookie_consent','accepted');
-  setConsent('granted');
-  hideCookieBanner();
-}
-function rejectCookies(){
-  localStorage.setItem('cookie_consent','rejected');
-  setConsent('denied');
-  hideCookieBanner();
-}
-function resetCookieConsent(){
-  localStorage.removeItem('cookie_consent');
-  showCookieBanner();
-}
-window.addEventListener('load',function(){
-  var consent = localStorage.getItem('cookie_consent');
-  if (consent === 'accepted') {
-    setConsent('granted');
-    hideCookieBanner();
-  } else if (consent === 'rejected') {
-    setConsent('denied');
-    hideCookieBanner();
-  } else {
-    showCookieBanner();
-  }
-});
-</script>
+  <script>
+    function setConsent(value){
+      gtag('consent','update',{
+        'analytics_storage': value,
+        'ad_storage': value,
+        'ad_user_data': value,
+        'ad_personalization': value
+      });
+    }
+    function hideCookieBanner(){
+      var el = document.getElementById('cookie-banner');
+      if (el) el.style.display = 'none';
+    }
+    function showCookieBanner(){
+      var el = document.getElementById('cookie-banner');
+      if (el) el.style.display = 'block';
+    }
+    function acceptCookies(){
+      localStorage.setItem('cookie_consent','accepted');
+      setConsent('granted');
+      hideCookieBanner();
+    }
+    function rejectCookies(){
+      localStorage.setItem('cookie_consent','rejected');
+      setConsent('denied');
+      hideCookieBanner();
+    }
+    function resetCookieConsent(){
+      localStorage.removeItem('cookie_consent');
+      showCookieBanner();
+    }
+    window.addEventListener('load',function(){
+      var consent = localStorage.getItem('cookie_consent');
+      if (consent === 'accepted') {
+        setConsent('granted');
+        hideCookieBanner();
+      } else if (consent === 'rejected') {
+        setConsent('denied');
+        hideCookieBanner();
+      } else {
+        showCookieBanner();
+      }
+    });
+  </script>
 </body>
 </html>
