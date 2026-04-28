@@ -1,281 +1,232 @@
-(function () {
+(function(){
   const form = document.getElementById('salaryForm');
-  if (!form) return;
+  if(!form) return;
 
-  const resetBtn = document.getElementById('resetBtn');
-  const grossSalaryInput = document.getElementById('grossSalary');
-  const childrenInput = document.getElementById('children');
-  const taxpayerDiscountInput = document.getElementById('taxpayerDiscount');
-  const taxpayerRow = document.getElementById('taxpayerRow');
+  const elements = {
+    grossSalary: document.getElementById('grossSalary'),
+    children: document.getElementById('children'),
+    taxpayerDiscount: document.getElementById('taxpayerDiscount'),
+    resetBtn: document.getElementById('resetBtn'),
+    presets: Array.from(document.querySelectorAll('[data-preset]')),
 
-  const outputs = {
     netSalaryResult: document.getElementById('netSalaryResult'),
+    grossSalaryResult: document.getElementById('grossSalaryResult'),
     totalCostResult: document.getElementById('totalCostResult'),
     employeeDeductionsResult: document.getElementById('employeeDeductionsResult'),
     taxResult: document.getElementById('taxResult'),
-    resultBadge: document.getElementById('resultBadge'),
-    grossSalaryResult: document.getElementById('grossSalaryResult'),
-    socialEmployeeResult: document.getElementById('socialEmployeeResult'),
-    healthEmployeeResult: document.getElementById('healthEmployeeResult'),
-    socialEmployerResult: document.getElementById('socialEmployerResult'),
-    healthEmployerResult: document.getElementById('healthEmployerResult'),
     discountsResult: document.getElementById('discountsResult'),
     netRatioResult: document.getElementById('netRatioResult'),
+    resultBadge: document.getElementById('resultBadge'),
     resultNote: document.getElementById('resultNote'),
-    summaryTableBody: document.getElementById('summaryTableBody'),
-    nextActionText: document.getElementById('nextActionText'),
-    primaryNextCta: document.getElementById('primaryNextCta'),
-    secondaryNextCta: document.getElementById('secondaryNextCta'),
-    heroPreviewNet: document.getElementById('heroPreviewNet'),
-    heroPreviewGross: document.getElementById('heroPreviewGross'),
-    heroPreviewCost: document.getElementById('heroPreviewCost'),
-    meterDot: document.getElementById('meterDot')
+    meterPercent: document.getElementById('meterPercent'),
+    netRatioBar: document.getElementById('netRatioBar'),
+    breakdownBody: document.getElementById('breakdownBody'),
+
+    heroNet: document.getElementById('heroNet'),
+    heroGross: document.getElementById('heroGross'),
+    heroCost: document.getElementById('heroCost'),
+    heroRatio: document.getElementById('heroRatio'),
+    heroCalcNet: document.getElementById('heroCalcNet'),
+    heroNetBar: document.getElementById('heroNetBar'),
+    heroDeductionsBar: document.getElementById('heroDeductionsBar'),
+
+    decisionText: document.getElementById('decisionText'),
+    decisionNetText: document.getElementById('decisionNetText'),
+    decisionDeductionsText: document.getElementById('decisionDeductionsText'),
+    decisionCostText: document.getElementById('decisionCostText'),
+    decisionCostTag: document.getElementById('decisionCostTag')
   };
 
-  const presetButtons = Array.from(document.querySelectorAll('[data-preset]'));
+  const CONFIG = {
+    socialRateEmployee: 0.065,
+    healthRateEmployee: 0.045,
+    socialRateEmployer: 0.248,
+    healthRateEmployer: 0.09,
+    taxRate: 0.15,
+    taxpayerDiscount: 2570,
+    child1: 1267,
+    child2: 1860,
+    child3plus: 2320
+  };
 
-  const TAX_RATE = 0.15;
-  const SOCIAL_EMPLOYEE_RATE = 0.071;
-  const HEALTH_EMPLOYEE_RATE = 0.045;
-  const SOCIAL_EMPLOYER_RATE = 0.248;
-  const HEALTH_EMPLOYER_RATE = 0.09;
-  const TAXPAYER_DISCOUNT = 2570;
-  const CHILD_BONUSES = { 0: 0, 1: 1267, 2: 3127, 3: 5447 };
+  const presetValues = {
+    standard: { gross: 45000, children: 0, taxpayerDiscount: true },
+    entry: { gross: 32000, children: 0, taxpayerDiscount: true },
+    family: { gross: 52000, children: 2, taxpayerDiscount: true },
+    higher: { gross: 70000, children: 0, taxpayerDiscount: true }
+  };
 
-  function formatCurrency(value) {
-    return new Intl.NumberFormat('cs-CZ', {
-      style: 'currency',
-      currency: 'CZK',
-      maximumFractionDigits: 0
-    }).format(Math.round(Number(value) || 0));
+  const round = (value) => Math.round(Number(value) || 0);
+  const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+  const formatCurrency = (value) => `${round(value).toLocaleString('cs-CZ')} Kč`;
+  const formatPlain = (value) => round(value).toLocaleString('cs-CZ');
+  const formatPercent = (value) => `${value.toLocaleString('cs-CZ', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} %`;
+
+  function getChildCredit(children){
+    if(children <= 0) return 0;
+    if(children === 1) return CONFIG.child1;
+    if(children === 2) return CONFIG.child1 + CONFIG.child2;
+    return CONFIG.child1 + CONFIG.child2 + CONFIG.child3plus;
   }
 
-  function formatPercent(value, digits = 1) {
-    return new Intl.NumberFormat('cs-CZ', {
-      minimumFractionDigits: 0,
-      maximumFractionDigits: digits
-    }).format(Number(value) || 0) + ' %';
-  }
+  function compute(){
+    const gross = Math.max(0, Number(elements.grossSalary.value) || 0);
+    const children = Math.max(0, Number(elements.children.value) || 0);
+    const withTaxpayerDiscount = elements.taxpayerDiscount.checked;
 
-  function roundCurrency(value) {
-    return Math.round(Number(value) || 0);
-  }
+    const socialEmployee = round(gross * CONFIG.socialRateEmployee);
+    const healthEmployee = round(gross * CONFIG.healthRateEmployee);
+    const employeeDeductions = socialEmployee + healthEmployee;
 
-  function setText(key, value) {
-    if (outputs[key]) outputs[key].textContent = value;
-  }
+    const socialEmployer = round(gross * CONFIG.socialRateEmployer);
+    const healthEmployer = round(gross * CONFIG.healthRateEmployer);
+    const totalCost = round(gross + socialEmployer + healthEmployer);
 
-  function buildSummaryRows(rows) {
-    if (!outputs.summaryTableBody) return;
-    outputs.summaryTableBody.innerHTML = rows.map((row) => `
-      <tr>
-        <td>${row.label}</td>
-        <td>${row.amount}</td>
-        <td>${row.note}</td>
-      </tr>
-    `).join('');
-  }
+    const taxBeforeDiscounts = round(gross * CONFIG.taxRate);
+    const basicDiscount = withTaxpayerDiscount ? CONFIG.taxpayerDiscount : 0;
+    const childCredit = getChildCredit(children);
 
-  function syncCheckboxCard() {
-    if (taxpayerRow && taxpayerDiscountInput) {
-      taxpayerRow.classList.toggle('is-checked', taxpayerDiscountInput.checked);
-    }
-  }
+    const taxAfterBasic = Math.max(0, taxBeforeDiscounts - basicDiscount);
+    const taxAfterChildren = taxAfterBasic - childCredit;
+    const taxAfterDiscounts = Math.max(0, taxAfterChildren);
+    const taxBonus = Math.max(0, -taxAfterChildren);
+    const totalDiscountsUsed = (taxBeforeDiscounts - taxAfterDiscounts) + taxBonus;
 
-  function getValues() {
-    return {
-      grossSalary: Number(grossSalaryInput.value),
-      children: Number(childrenInput.value),
-      applyTaxpayerDiscount: taxpayerDiscountInput.checked
-    };
-  }
-
-  function validate(values) {
-    if (!values.grossSalary || values.grossSalary <= 0) return 'Zadejte platnou hrubou mzdu.';
-    return '';
-  }
-
-  function calculateNetSalary(values) {
-    const socialEmployee = roundCurrency(values.grossSalary * SOCIAL_EMPLOYEE_RATE);
-    const healthEmployee = roundCurrency(values.grossSalary * HEALTH_EMPLOYEE_RATE);
-    const taxBeforeDiscounts = roundCurrency(values.grossSalary * TAX_RATE);
-    const taxpayerDiscount = values.applyTaxpayerDiscount ? TAXPAYER_DISCOUNT : 0;
-    const childBonus = CHILD_BONUSES[Math.min(values.children, 3)] || 0;
-    const totalDiscounts = taxpayerDiscount + childBonus;
-    const taxAfterDiscounts = Math.max(0, taxBeforeDiscounts - totalDiscounts);
-    const employeeDeductions = socialEmployee + healthEmployee + taxAfterDiscounts;
-    const netSalary = values.grossSalary - employeeDeductions;
-    const socialEmployer = roundCurrency(values.grossSalary * SOCIAL_EMPLOYER_RATE);
-    const healthEmployer = roundCurrency(values.grossSalary * HEALTH_EMPLOYER_RATE);
-    const totalCost = values.grossSalary + socialEmployer + healthEmployer;
-    const netRatio = values.grossSalary > 0 ? (netSalary / values.grossSalary) * 100 : 0;
+    const netSalary = round(gross - employeeDeductions - taxAfterDiscounts + taxBonus);
+    const netRatio = gross > 0 ? (netSalary / gross) * 100 : 0;
+    const deductionsShare = gross > 0 ? ((employeeDeductions + taxAfterDiscounts - taxBonus) / gross) * 100 : 0;
 
     return {
+      gross,
+      children,
+      withTaxpayerDiscount,
       socialEmployee,
       healthEmployee,
-      taxBeforeDiscounts,
-      taxpayerDiscount,
-      childBonus,
-      totalDiscounts,
-      taxAfterDiscounts,
       employeeDeductions,
-      netSalary,
       socialEmployer,
       healthEmployer,
       totalCost,
-      netRatio
+      taxBeforeDiscounts,
+      basicDiscount,
+      childCredit,
+      taxAfterDiscounts,
+      taxBonus,
+      totalDiscountsUsed,
+      netSalary,
+      netRatio,
+      deductionsShare
     };
   }
 
-  function getIncomeMessage(result, values) {
-    let statusClass = 'warning';
-    let statusLabel = 'Běžný výsledek';
-    let nextActionText = 'Nejdřív sledujte čistou mzdu. Pak si ověřte, jak velká část hrubé mzdy vám opravdu zůstane a jestli tento příjem stačí na bydlení, rezervu a běžné výdaje.';
-    let primaryHref = '/hypotecni-kalkulacka.html';
-    let primaryText = 'Spočítat hypotéku';
-    let secondaryHref = '/porovnani-najem-vs-hypoteka-kalkulacka.html';
-    let secondaryText = 'Nájem vs. hypotéka';
-
-    if (result.netRatio >= 78) {
-      statusClass = 'success';
-      statusLabel = 'Vyšší čistý podíl';
-      nextActionText = 'Výsledek působí příznivěji. Další krok je ověřit, jak by vedle tohoto příjmu vypadaly náklady na bydlení nebo pravidelná rezerva.';
-    } else if (result.netRatio <= 72) {
-      statusClass = 'risk';
-      statusLabel = 'Nižší čistý podíl';
-      nextActionText = 'Z hrubé mzdy vám zůstává menší část. O to důležitější je navázat rozpočtem a ověřit, kolik vám zůstane po bydlení a dalších pevných výdajích.';
+  function buildBadge(result){
+    const badge = elements.resultBadge;
+    badge.classList.remove('warning', 'risk');
+    if(result.netRatio >= 80){
+      badge.textContent = 'Vyšší čistý podíl';
+    } else if(result.netRatio >= 74){
+      badge.textContent = 'Vyvážený poměr';
+      badge.classList.add('warning');
+    } else {
+      badge.textContent = 'Nižší čistý podíl';
+      badge.classList.add('risk');
     }
-
-    if (values.children > 0) {
-      secondaryHref = '/finance-a-hypoteky.html';
-      secondaryText = 'Další finance';
-    }
-
-    return { statusClass, statusLabel, nextActionText, primaryHref, primaryText, secondaryHref, secondaryText };
   }
 
-  function render(values, result) {
-    setText('netSalaryResult', formatCurrency(result.netSalary));
-    setText('totalCostResult', formatCurrency(result.totalCost));
-    setText('employeeDeductionsResult', formatCurrency(result.employeeDeductions));
-    setText('taxResult', formatCurrency(result.taxAfterDiscounts));
-    setText('grossSalaryResult', formatCurrency(values.grossSalary));
-    setText('socialEmployeeResult', formatCurrency(result.socialEmployee));
-    setText('healthEmployeeResult', formatCurrency(result.healthEmployee));
-    setText('socialEmployerResult', formatCurrency(result.socialEmployer));
-    setText('healthEmployerResult', formatCurrency(result.healthEmployer));
-    setText('discountsResult', formatCurrency(result.totalDiscounts));
-    setText('netRatioResult', formatPercent(result.netRatio));
-    setText('heroPreviewNet', formatCurrency(result.netSalary));
-    setText('heroPreviewGross', formatCurrency(values.grossSalary));
-    setText('heroPreviewCost', formatCurrency(result.totalCost));
-
-    if (outputs.meterDot) {
-      const meterPosition = Math.min(96, Math.max(4, result.netRatio));
-      outputs.meterDot.style.left = `${meterPosition}%`;
-    }
-
-    const incomeState = getIncomeMessage(result, values);
-    setText('nextActionText', incomeState.nextActionText);
-    if (outputs.primaryNextCta) {
-      outputs.primaryNextCta.href = incomeState.primaryHref;
-      outputs.primaryNextCta.textContent = incomeState.primaryText;
-    }
-    if (outputs.secondaryNextCta) {
-      outputs.secondaryNextCta.href = incomeState.secondaryHref;
-      outputs.secondaryNextCta.textContent = incomeState.secondaryText;
-    }
-
-    if (outputs.resultBadge) {
-      outputs.resultBadge.className = `status-chip ${incomeState.statusClass}`;
-      outputs.resultBadge.textContent = incomeState.statusLabel;
-    }
-
-    setText('resultNote', 'Výpočet je orientační a počítá s běžným zaměstnaneckým scénářem. Pro účetní nebo právní účely je vhodné ověřit výpočet podle konkrétní situace.');
-
-    buildSummaryRows([
-      { label: 'Hrubá mzda', amount: formatCurrency(values.grossSalary), note: 'Základ pro výpočet' },
-      { label: 'Sociální pojištění zaměstnance', amount: formatCurrency(result.socialEmployee), note: 'Odečítá se z hrubé mzdy' },
-      { label: 'Zdravotní pojištění zaměstnance', amount: formatCurrency(result.healthEmployee), note: 'Odečítá se z hrubé mzdy' },
-      { label: 'Daň před slevami', amount: formatCurrency(result.taxBeforeDiscounts), note: 'Základní orientační daň' },
-      { label: 'Slevy a zvýhodnění', amount: formatCurrency(result.totalDiscounts), note: 'Poplatník a děti' },
-      { label: 'Daň po slevách', amount: formatCurrency(result.taxAfterDiscounts), note: 'Skutečně započtená orientační daň' },
-      { label: 'Čistá mzda', amount: formatCurrency(result.netSalary), note: 'Orientační částka pro zaměstnance' },
-      { label: 'Cena práce', amount: formatCurrency(result.totalCost), note: 'Orientační náklad zaměstnavatele' }
-    ]);
+  function updateDecisionTexts(result){
+    const childrenText = result.children === 0 ? 'bez daňového zvýhodnění na děti' : `s daňovým zvýhodněním na ${result.children} ${result.children === 1 ? 'dítě' : 'děti'}`;
+    elements.decisionText.textContent = `Z hrubé mzdy ${formatCurrency(result.gross)} vám orientačně zůstane ${formatCurrency(result.netSalary)}. To je zhruba ${formatPercent(result.netRatio)} hrubé mzdy ${childrenText}.`;
+    elements.decisionNetText.textContent = `Na účet vychází přibližně ${formatCurrency(result.netSalary)}. Tohle číslo je klíčové pro rozpočet domácnosti, nájem nebo hypotéku.`;
+    elements.decisionDeductionsText.textContent = `Na sociální, zdravotní a daň po slevách odchází přibližně ${formatCurrency(result.employeeDeductions + result.taxAfterDiscounts - result.taxBonus)}.`;
+    elements.decisionCostText.textContent = `Celkový náklad zaměstnavatele je orientačně ${formatCurrency(result.totalCost)}, tedy o ${formatCurrency(result.totalCost - result.gross)} více než samotná hrubá mzda.`;
+    elements.decisionCostTag.classList.remove('risk', 'warning');
+    elements.decisionCostTag.classList.add('safe');
   }
 
-  function renderError(message) {
-    ['netSalaryResult', 'totalCostResult', 'employeeDeductionsResult', 'taxResult', 'grossSalaryResult', 'socialEmployeeResult', 'healthEmployeeResult', 'socialEmployerResult', 'healthEmployerResult', 'discountsResult', 'heroPreviewNet', 'heroPreviewGross', 'heroPreviewCost'].forEach((key) => setText(key, '0 Kč'));
-    setText('netRatioResult', '0 %');
-    setText('resultNote', message);
-    setText('nextActionText', 'Po zadání údajů si jako první vezměte čistou mzdu a podíl z hrubé mzdy. Až potom řešte detailní rozpis nebo návazné rozhodnutí.');
-    if (outputs.resultBadge) {
-      outputs.resultBadge.className = 'status-chip warning';
-      outputs.resultBadge.textContent = 'Chybí vstupní data';
+  function updateNote(result){
+    const parts = [];
+    parts.push(result.withTaxpayerDiscount ? 'Počítáme se slevou na poplatníka.' : 'Počítáme bez slevy na poplatníka.');
+    if(result.children > 0) {
+      parts.push(`Zahrnuto je orientační daňové zvýhodnění na ${result.children} ${result.children === 1 ? 'dítě' : 'děti'}.`);
     }
-    buildSummaryRows([{ label: 'Hrubá mzda', amount: '—', note: message }]);
+    if(result.taxBonus > 0) {
+      parts.push(`V modelu vychází i daňový bonus ${formatCurrency(result.taxBonus)}.`);
+    }
+    parts.push('Výpočet je orientační a nezohledňuje všechny individuální situace.');
+    elements.resultNote.textContent = parts.join(' ');
   }
 
-  function runCalculation() {
-    syncCheckboxCard();
-    const values = getValues();
-    const error = validate(values);
-    if (error) {
-      renderError(error);
-      return;
-    }
-    render(values, calculateNetSalary(values));
+  function updateBreakdown(result){
+    const rows = [
+      ['Hrubá mzda', formatCurrency(result.gross)],
+      ['Sociální pojištění zaměstnance (6,5 %)', formatCurrency(result.socialEmployee)],
+      ['Zdravotní pojištění zaměstnance (4,5 %)', formatCurrency(result.healthEmployee)],
+      ['Daň před slevami (15 %)', formatCurrency(result.taxBeforeDiscounts)],
+      ['Sleva na poplatníka', `− ${formatCurrency(result.basicDiscount)}`],
+      ['Daňové zvýhodnění na děti', `− ${formatCurrency(result.childCredit)}`],
+      ['Daň po slevách', formatCurrency(result.taxAfterDiscounts)],
+      ['Daňový bonus', formatCurrency(result.taxBonus)],
+      ['Čistá mzda', formatCurrency(result.netSalary)],
+      ['Sociální pojištění zaměstnavatele', formatCurrency(result.socialEmployer)],
+      ['Zdravotní pojištění zaměstnavatele', formatCurrency(result.healthEmployer)],
+      ['Cena práce', formatCurrency(result.totalCost)]
+    ];
+
+    elements.breakdownBody.innerHTML = rows.map(([label, value]) => `<tr><td>${label}</td><td>${value}</td></tr>`).join('');
   }
 
-  function setPreset(name) {
-    const presets = {
-      standard: { grossSalary: 45000, children: 0, taxpayerDiscount: true },
-      entry: { grossSalary: 32000, children: 0, taxpayerDiscount: true },
-      family: { grossSalary: 52000, children: 2, taxpayerDiscount: true },
-      higher: { grossSalary: 70000, children: 0, taxpayerDiscount: true }
-    };
-    const preset = presets[name];
-    if (!preset) return;
+  function updateUI(){
+    const result = compute();
 
-    grossSalaryInput.value = preset.grossSalary;
-    childrenInput.value = preset.children;
-    taxpayerDiscountInput.checked = preset.taxpayerDiscount;
+    elements.netSalaryResult.textContent = formatCurrency(result.netSalary);
+    elements.grossSalaryResult.textContent = formatCurrency(result.gross);
+    elements.totalCostResult.textContent = formatCurrency(result.totalCost);
+    elements.employeeDeductionsResult.textContent = formatCurrency(result.employeeDeductions);
+    elements.taxResult.textContent = formatCurrency(result.taxAfterDiscounts);
+    elements.discountsResult.textContent = formatCurrency(result.totalDiscountsUsed);
+    elements.netRatioResult.textContent = formatPercent(result.netRatio);
+    elements.meterPercent.textContent = formatPercent(result.netRatio);
+    elements.netRatioBar.style.width = `${clamp(result.netRatio, 0, 100)}%`;
 
-    presetButtons.forEach((btn) => {
-      const active = btn.dataset.preset === name;
-      btn.classList.toggle('is-active', active);
-      btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+    elements.heroNet.textContent = formatCurrency(result.netSalary);
+    elements.heroGross.textContent = formatCurrency(result.gross);
+    elements.heroCost.textContent = formatCurrency(result.totalCost);
+    elements.heroRatio.textContent = formatPercent(result.netRatio);
+    elements.heroCalcNet.textContent = formatPlain(result.netSalary);
+    elements.heroNetBar.style.width = `${clamp(result.netRatio, 12, 100)}%`;
+    elements.heroDeductionsBar.style.width = `${clamp(result.deductionsShare, 8, 88)}%`;
+
+    buildBadge(result);
+    updateNote(result);
+    updateDecisionTexts(result);
+    updateBreakdown(result);
+  }
+
+  function setPreset(name){
+    const preset = presetValues[name];
+    if(!preset) return;
+    elements.grossSalary.value = preset.gross;
+    elements.children.value = String(preset.children);
+    elements.taxpayerDiscount.checked = preset.taxpayerDiscount;
+    elements.presets.forEach((button) => {
+      button.classList.toggle('active', button.dataset.preset === name);
     });
-
-    runCalculation();
+    updateUI();
   }
 
   form.addEventListener('submit', (event) => {
     event.preventDefault();
-    runCalculation();
+    updateUI();
   });
 
-  if (resetBtn) resetBtn.addEventListener('click', () => setPreset('standard'));
-
-  if (taxpayerRow) {
-    taxpayerRow.addEventListener('click', (event) => {
-      if (event.target.tagName !== 'INPUT') {
-        taxpayerDiscountInput.checked = !taxpayerDiscountInput.checked;
-        runCalculation();
-      }
-    });
-  }
-
-  [grossSalaryInput, childrenInput, taxpayerDiscountInput].forEach((element) => {
-    if (!element) return;
-    element.addEventListener('input', runCalculation);
-    element.addEventListener('change', runCalculation);
+  ['input', 'change'].forEach((eventName) => {
+    form.addEventListener(eventName, () => updateUI());
   });
 
-  presetButtons.forEach((btn) => {
-    btn.addEventListener('click', () => setPreset(btn.dataset.preset));
+  elements.presets.forEach((button) => {
+    button.addEventListener('click', () => setPreset(button.dataset.preset));
   });
 
-  runCalculation();
+  elements.resetBtn.addEventListener('click', () => setPreset('standard'));
+
+  updateUI();
 })();
