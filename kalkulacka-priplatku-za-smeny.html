@@ -1,0 +1,1601 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="format-detection" content="telephone=no"/>
+  <link rel="icon" href="/favicon.ico?v=2" sizes="any"/>
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=2"/>
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=2"/>
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2"/>
+  <link rel="manifest" href="/site.webmanifest?v=2"/>
+  <meta name="theme-color" content="#14253d"/>
+
+  <title>Kalkulačka příplatků za směny online zdarma | Noční, víkend, svátek | RychléVýpočty.cz</title>
+  <meta name="description" content="Spočítejte si orientační příplatky za směny. Kalkulačka umí noční práci, víkend, svátek i vlastní příplatek a zobrazí základní odměnu, příplatek i celkovou částku."/>
+  <meta name="keywords" content="kalkulačka příplatků za směny, noční příplatek kalkulačka, víkendový příplatek, svátek kalkulačka, příplatky za práci"/>
+  <meta name="author" content="RychléVýpočty.cz"/>
+  <meta name="robots" content="index,follow"/>
+  <link rel="canonical" href="https://rychlevypocty.cz/kalkulacka-priplatku-za-smeny.html"/>
+
+  <meta property="og:title" content="Kalkulačka příplatků za směny online zdarma | Noční, víkend, svátek | RychléVýpočty.cz"/>
+  <meta property="og:description" content="Orientační výpočet příplatků za noční směnu, víkend, svátek nebo vlastní režim."/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:url" content="https://rychlevypocty.cz/kalkulacka-priplatku-za-smeny.html"/>
+  <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg"/>
+  <meta property="og:site_name" content="RychléVýpočty.cz"/>
+  <meta property="og:locale" content="cs_CZ"/>
+
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="Kalkulačka příplatků za směny online zdarma | Noční, víkend, svátek | RychléVýpočty.cz"/>
+  <meta name="twitter:description" content="Přehledný výpočet příplatků za směny podle hodinové sazby a typu práce."/>
+  <meta name="twitter:image" content="https://rychlevypocty.cz/og-image.jpg"/>
+  <meta name="twitter:image:alt" content="RychléVýpočty.cz – online kalkulačky a praktické výpočty"/>
+  <link rel="stylesheet" href="/rv-enhancements.css?v=1"/>
+
+  <style>
+    .skip-link {
+      position: absolute;
+      left: 16px;
+      top: -56px;
+      z-index: 100;
+      padding: 12px 16px;
+      border-radius: 12px;
+      background: #172033;
+      color: #ffffff;
+      font-weight: 700;
+      box-shadow: 0 10px 24px rgba(20, 32, 70, 0.18);
+      transition: top 0.16s ease;
+    }
+    .skip-link:focus { top: 16px; }
+
+    :focus-visible {
+      outline: 3px solid rgba(33, 82, 255, 0.45);
+      outline-offset: 3px;
+      border-radius: 10px;
+    }
+
+    main[id], section[id], div[id] { scroll-margin-top: 96px; }
+
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #5f6b85;
+      --primary: #2152ff;
+      --primary-dark: #183dbf;
+      --border: #dbe3f0;
+      --success: #138a4b;
+      --warning: #b66a00;
+      --danger: #b42318;
+      --danger-bg: rgba(180, 35, 24, 0.08);
+      --success-bg: rgba(19, 138, 75, 0.10);
+      --warning-bg: rgba(182, 106, 0, 0.11);
+      --shadow: 0 12px 32px rgba(20, 32, 70, 0.08);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #f7f9fd 0%, #eef3fb 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a { color: var(--primary); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .container {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      padding: 18px 0;
+      border-bottom: 1px solid rgba(219, 227, 240, 0.8);
+      background: rgba(255, 255, 255, 0.86);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+
+    .brand span { color: var(--primary); }
+
+    .topnav {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      font-size: 0.97rem;
+    }
+
+    .topnav a {
+      border-radius: 999px;
+      padding: 8px 12px;
+      transition: background-color 0.15s ease, color 0.15s ease;
+    }
+
+    .topnav a:hover,
+    .topnav a[aria-current="page"] {
+      text-decoration: none;
+      background: rgba(33, 82, 255, 0.08);
+      color: var(--primary);
+    }
+
+    .hero { padding: 40px 0 16px; }
+
+    .breadcrumbs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .breadcrumbs span.sep { color: #8a94a9; }
+    .breadcrumbs a { color: var(--muted); }
+    .breadcrumbs strong { font-weight: 700; color: var(--text); }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.18fr 0.82fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .hero-copy h1 {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 1.06;
+      letter-spacing: -0.03em;
+      margin: 0 0 14px;
+    }
+
+    .hero-copy p {
+      margin: 0 0 14px;
+      font-size: 1.03rem;
+      color: var(--muted);
+      max-width: 760px;
+    }
+
+    .hero-points {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .hero-pill {
+      background: rgba(33, 82, 255, 0.08);
+      color: var(--primary-dark);
+      border: 1px solid rgba(33, 82, 255, 0.12);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 0.94rem;
+      font-weight: 700;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .hero-box, .card, .content-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-box {
+      padding: 24px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+
+    .hero-box h2 {
+      margin: 0 0 12px;
+      font-size: 1.18rem;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-box p, .hero-box li { color: var(--muted); }
+    .hero-box ul { margin: 0; padding-left: 18px; }
+    .hero-box li { margin-bottom: 8px; }
+
+    .quick-answer {
+      margin-top: 20px;
+      padding: 18px;
+      border-radius: 18px;
+      border: 1px solid rgba(33, 82, 255, 0.16);
+      background: linear-gradient(180deg, #eef4ff 0%, #f8fbff 100%);
+    }
+    .quick-answer strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 1rem;
+      letter-spacing: -0.02em;
+    }
+    .quick-answer p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.97rem;
+    }
+
+    .anchor-nav { padding: 6px 0 20px; }
+    .anchor-nav-inner { display: flex; gap: 10px; flex-wrap: wrap; }
+    .anchor-chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: #fff;
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 0.92rem;
+      font-weight: 700;
+      box-shadow: 0 6px 18px rgba(20, 32, 70, 0.04);
+    }
+
+    .tool-master-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.08fr) minmax(280px, 0.72fr);
+      gap: 28px;
+      align-items: start;
+      padding: 10px 0 22px;
+    }
+
+    .tool-primary-stack, .tool-support-rail {
+      display: grid;
+      gap: 20px;
+      align-self: start;
+      min-width: 0;
+    }
+
+    .card-header { padding: 24px 24px 10px; }
+    .card-header h2, .card-header h3 {
+      margin: 0 0 8px;
+      font-size: 1.3rem;
+      letter-spacing: -0.02em;
+    }
+    .card-header p { margin: 0; color: var(--muted); font-size: 0.98rem; }
+    .card-body { padding: 20px 24px 24px; }
+
+    .scenario-preset-band {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 2px 0 22px;
+    }
+
+    .scenario-chip {
+      border: 1px solid rgba(33,82,255,.14);
+      background: #fff;
+      color: var(--text);
+      border-radius: 999px;
+      padding: 10px 14px;
+      font-size: .9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform .08s ease, border-color .15s ease, background-color .15s ease;
+    }
+    .scenario-chip:hover {
+      transform: translateY(-1px);
+      border-color: rgba(33,82,255,.28);
+      background: #f8fbff;
+    }
+    .scenario-chip.active {
+      background: rgba(33,82,255,.08);
+      color: var(--primary-dark);
+      border-color: rgba(33,82,255,.22);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .field { display: flex; flex-direction: column; gap: 8px; }
+    .field label { font-weight: 700; font-size: 0.96rem; }
+    .field small { color: var(--muted); font-size: 0.85rem; margin-top: -2px; }
+
+    .field input, .field select {
+      width: 100%;
+      padding: 14px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      font-size: 1rem;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .field input:focus, .field select:focus {
+      outline: none;
+      border-color: rgba(33, 82, 255, 0.45);
+      box-shadow: 0 0 0 4px rgba(33, 82, 255, 0.10);
+    }
+
+    .full { grid-column: 1 / -1; }
+    .hidden { display: none !important; }
+
+    .option-grid {
+      display: grid;
+      gap: 12px;
+    }
+    .option-box {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 14px 16px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      cursor: pointer;
+    }
+    .option-box input {
+      width: auto;
+      max-width: none;
+      min-width: 20px;
+      min-height: 20px;
+      height: 20px;
+      margin: 2px 0 0;
+      flex: 0 0 20px;
+      align-self: flex-start;
+      accent-color: var(--primary);
+    }
+    .option-box > div {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+    .option-box span {
+      display: block;
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--text);
+      margin-bottom: 2px;
+    }
+    .option-box small {
+      display: block;
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    button, .button-link {
+      border: 0;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.06s ease, background 0.15s ease, opacity 0.15s ease, border-color .15s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+    }
+    button:hover, .button-link:hover {
+      transform: translateY(-1px);
+      text-decoration: none;
+    }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { background: var(--primary-dark); }
+    .btn-secondary { background: #eef3ff; color: var(--primary-dark); }
+    .btn-ghost {
+      background: #fff;
+      color: var(--primary-dark);
+      border: 1px solid rgba(33, 82, 255, 0.16);
+    }
+
+    .inline-help {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1px solid #e7edf7;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .tool-card--result { scroll-margin-top: 110px; }
+    .result-topline {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .result-summary-note {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .result-box {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+    .result-label { font-size: 0.9rem; color: var(--muted); margin-bottom: 8px; }
+    .result-value {
+      font-size: clamp(1.25rem, 2.4vw, 2rem);
+      line-height: 1.15;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+    .highlight {
+      background: linear-gradient(180deg, #eef7ff 0%, #f9fcff 100%);
+      border-color: rgba(33, 82, 255, 0.18);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 800;
+      margin-top: 10px;
+    }
+    .badge.success { background: rgba(19, 138, 75, 0.10); color: var(--success); }
+    .badge.warning { background: rgba(182, 106, 0, 0.11); color: var(--warning); }
+    .badge.risk { background: rgba(180, 35, 24, 0.08); color: var(--danger); }
+
+    .info-list {
+      display: grid;
+      gap: 12px;
+      margin: 18px 0 0;
+    }
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid #edf2fa;
+    }
+    .info-row:last-child { border-bottom: 0; padding-bottom: 0; }
+    .info-row span:first-child { color: var(--muted); }
+
+    .note {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1px solid #e7edf7;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .decision-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 24px;
+    }
+    .decision-box {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      padding: 18px;
+    }
+    .decision-box h3 {
+      margin: 0 0 8px;
+      font-size: 1.05rem;
+      letter-spacing: -0.02em;
+    }
+    .decision-box p { margin: 0; color: var(--muted); font-size: 0.96rem; }
+    .decision-status {
+      display: inline-block;
+      margin-bottom: 10px;
+      padding: 7px 11px;
+      border-radius: 999px;
+      font-size: 0.84rem;
+      font-weight: 800;
+    }
+    .decision-status.safe { color: var(--success); background: var(--success-bg); }
+    .decision-status.caution { color: var(--warning); background: var(--warning-bg); }
+    .decision-status.risk { color: var(--danger); background: var(--danger-bg); }
+
+    .tool-support-card {
+      padding: 22px 24px 24px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      box-shadow: var(--shadow);
+    }
+    .tool-support-card h3 {
+      margin: 0 0 10px;
+      font-size: 1.16rem;
+      letter-spacing: -0.02em;
+    }
+    .tool-support-card p { margin: 0 0 14px; color: var(--muted); }
+    .tool-support-card ul { margin: 0 0 16px; padding-left: 20px; color: var(--muted); }
+    .tool-support-card li { margin-bottom: 8px; }
+
+    .support-mini-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 18px;
+    }
+    .support-mini-box {
+      padding: 16px;
+      border-radius: 14px;
+      background: #f7faff;
+      border: 1px solid rgba(33, 82, 255, 0.1);
+    }
+    .support-mini-box strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 0.98rem;
+    }
+    .support-mini-box span { color: var(--muted); font-size: 0.94rem; }
+    .support-rail-sticky { position: sticky; top: 94px; display: grid; gap: 20px; }
+
+    .section { padding: 10px 0; }
+    .section-title {
+      font-size: 1.7rem;
+      letter-spacing: -0.03em;
+      margin: 0 0 14px;
+    }
+    .section-intro {
+      color: var(--muted);
+      margin: 0 0 22px;
+      max-width: 860px;
+    }
+
+    .content-card { padding: 24px; }
+    .content-card + .content-card { margin-top: 20px; }
+    .content-card h2 {
+      font-size: 1.45rem;
+      letter-spacing: -0.03em;
+      margin: 0 0 14px;
+    }
+    .content-card h3 { font-size: 1.12rem; margin: 24px 0 10px; }
+    .content-card p, .content-card li { color: var(--muted); }
+    .content-card p { margin: 0 0 14px; }
+    .content-card ul { margin: 0 0 14px; padding-left: 20px; }
+
+    .checklist-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin: 18px 0 24px;
+    }
+    .check-card {
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+    .check-card strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 1rem;
+    }
+    .check-card span { color: var(--muted); font-size: 0.95rem; }
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: #fff;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 640px;
+    }
+    th, td {
+      padding: 14px 16px;
+      border-bottom: 1px solid #edf2fa;
+      text-align: left;
+      font-size: 0.95rem;
+      vertical-align: top;
+    }
+    th {
+      background: #f8fbff;
+      color: var(--text);
+      font-weight: 800;
+    }
+    tr:last-child td { border-bottom: 0; }
+
+    .formula-box {
+      margin-top: 16px;
+      padding: 16px 18px;
+      border-radius: 16px;
+      background: #f8fafc;
+      border: 1px solid #e7edf7;
+    }
+    .formula-box strong {
+      display: block;
+      margin-bottom: 8px;
+    }
+    .formula-box code {
+      display: block;
+      white-space: normal;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      color: #29405f;
+      font-size: 0.92rem;
+    }
+
+    .collapsible-card {
+      overflow: hidden;
+    }
+    .collapsible-summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 22px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      font-weight: 700;
+    }
+    .collapsible-summary::-webkit-details-marker { display: none; }
+    .collapsible-summary span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.95rem;
+      font-weight: 400;
+      margin-top: 4px;
+    }
+    .collapsible-content { padding: 0 24px 24px; }
+
+    .tool-trust-strip { padding: 0 0 14px; }
+    .tool-trust-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .tool-trust-item {
+      padding: 16px 18px;
+      border-radius: 16px;
+      border: 1px solid rgba(33, 82, 255, 0.1);
+      background: linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(244,248,255,0.98) 100%);
+      box-shadow: 0 10px 26px rgba(20, 32, 70, 0.04);
+    }
+    .tool-trust-item strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.96rem;
+      letter-spacing: -0.01em;
+    }
+    .tool-trust-item span { color: var(--muted); font-size: 0.93rem; }
+
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 18px;
+    }
+    .related-card {
+      display: block;
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      color: var(--text);
+      transition: transform 0.08s ease, border-color 0.15s ease;
+    }
+    .related-card:hover {
+      transform: translateY(-1px);
+      border-color: rgba(33,82,255,.24);
+      text-decoration: none;
+    }
+    .related-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+    .related-card span { color: var(--muted); font-size: 0.94rem; }
+
+    .site-cta-band { padding: 6px 0 8px; }
+    .site-cta-card {
+      display: grid;
+      grid-template-columns: 1.1fr auto;
+      gap: 20px;
+      align-items: center;
+      padding: 22px 24px;
+      border-radius: 22px;
+      border: 1px solid rgba(33, 82, 255, 0.14);
+      background: linear-gradient(180deg, #eef4ff 0%, #f8fbff 100%);
+      box-shadow: 0 12px 32px rgba(20, 32, 70, 0.06);
+    }
+    .site-cta-copy strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 1.12rem;
+      letter-spacing: -0.02em;
+      color: var(--text);
+    }
+    .site-cta-copy p { margin: 0; color: var(--muted); }
+    .site-cta-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+    .site-cta-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 11px 15px;
+      border-radius: 999px;
+      border: 1px solid rgba(33, 82, 255, 0.15);
+      background: #ffffff;
+      color: var(--text);
+      font-weight: 700;
+      text-decoration: none;
+      box-shadow: 0 8px 18px rgba(20, 32, 70, 0.05);
+      transition: transform 0.12s ease, border-color 0.15s ease;
+    }
+    .site-cta-link:hover {
+      text-decoration: none;
+      transform: translateY(-1px);
+      border-color: rgba(33, 82, 255, 0.28);
+    }
+
+    footer {
+      margin-top: 48px;
+      border-top: 1px solid rgba(219,227,240,0.9);
+      background: linear-gradient(180deg, rgba(255,255,255,0.92) 0%, rgba(248,251,255,0.98) 100%);
+    }
+    .footer-grid-top, .footer-grid-bottom {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    @media (max-width: 1100px) {
+      .hero-grid,
+      .tool-master-layout,
+      .tool-trust-grid,
+      .checklist-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .support-rail-sticky {
+        position: static;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .form-grid,
+      .results-grid,
+      .decision-grid,
+      .related-grid,
+      .support-mini-grid,
+      .site-cta-card {
+        grid-template-columns: 1fr;
+      }
+
+      .site-cta-actions { justify-content: flex-start; }
+      .topbar-inner { align-items: flex-start; }
+      .topnav { gap: 8px; }
+    }
+
+    @media (max-width: 720px) {
+      .container { width: min(100% - 24px, 1160px); }
+      .hero { padding-top: 24px; }
+      .card-header, .card-body, .content-card, .tool-support-card, .collapsible-summary, .collapsible-content {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+      .result-value { font-size: 1.5rem; }
+      .anchor-nav { overflow-x: auto; }
+      .anchor-nav-inner {
+        flex-wrap: nowrap;
+        width: max-content;
+        padding-bottom: 4px;
+      }
+      .actions, .hero-actions, .site-cta-actions { width: 100%; }
+      .actions button, .hero-actions .button-link, .site-cta-actions a {
+        width: 100%;
+      }
+      .option-box {
+        align-items: flex-start;
+      }
+      .option-box input[type="checkbox"],
+      .option-box input[type="radio"] {
+        width: 20px;
+        min-width: 20px;
+        max-width: 20px;
+        height: 20px;
+        min-height: 20px;
+      }
+      .info-row {
+        flex-direction: column;
+        gap: 4px;
+      }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Jak se počítá příplatek za směnu?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Kalkulačka nejprve spočítá základní odměnu podle hodinové sazby a počtu hodin. Poté k ní přidá příplatek podle zvoleného procenta nebo pevné částky za hodinu."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Lze počítat noční, víkend i svátek?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Ano. Kalkulačka umí přednastavené režimy pro noční práci, víkend, svátek i vlastní nastavení, takže je vhodná pro více typů směn."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Je výsledek přesný pro každého zaměstnance?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Výsledek je orientační. Skutečný způsob odměňování může záviset na pracovní smlouvě, interních pravidlech zaměstnavatele, kolektivní smlouvě nebo kombinaci více příplatků najednou."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"Organization",
+    "name":"RychléVýpočty.cz",
+    "url":"https://rychlevypocty.cz/",
+    "logo":"https://rychlevypocty.cz/icon-512.png",
+    "sameAs":[]
+  }
+  </script>
+
+  <script data-rv-schema="v6" type="application/ld+json">[{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"RychléVýpočty.cz","item":"https://rychlevypocty.cz"},{"@type":"ListItem","position":2,"name":"Mzdy a práce","item":"https://rychlevypocty.cz/mzdy-a-prace.html"},{"@type":"ListItem","position":3,"name":"Kalkulačka příplatků za směny"}]},{"@context":"https://schema.org","@type":"WebPage","name":"Kalkulačka příplatků za směny","description":"Spočítejte si orientační příplatky za směny. Kalkulačka umí noční práci, víkend, svátek i vlastní příplatek a zobrazí základní odměnu, příplatek i celkovou částku.","url":"https://rychlevypocty.cz/kalkulacka-priplatku-za-smeny.html","inLanguage":"cs-CZ","isPartOf":{"@type":"WebSite","name":"RychléVýpočty.cz","url":"https://rychlevypocty.cz/"}}]</script>
+  <script data-rv-global-schema="v1" type="application/ld+json">[{"@context":"https://schema.org","@type":"Organization","@id":"https://rychlevypocty.cz/#organization","name":"RychléVýpočty.cz","url":"https://rychlevypocty.cz/","logo":"https://rychlevypocty.cz/icon-512.png"},{"@context":"https://schema.org","@type":"WebSite","@id":"https://rychlevypocty.cz/#website","url":"https://rychlevypocty.cz/","name":"RychléVýpočty.cz","inLanguage":"cs-CZ"},{"@context":"https://schema.org","@type":"WebPage","name":"Kalkulačka příplatků za směny online zdarma | Noční, víkend, svátek | RychléVýpočty.cz","description":"Spočítejte si orientační příplatky za směny. Kalkulačka umí noční práci, víkend, svátek i vlastní příplatek a zobrazí základní odměnu, příplatek i celkovou částku.","url":"https://rychlevypocty.cz/kalkulacka-priplatku-za-smeny.html","inLanguage":"cs-CZ","isPartOf":{"@id":"https://rychlevypocty.cz/#website"},"about":{"@id":"https://rychlevypocty.cz/#organization"}}]</script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Přeskočit na obsah</a>
+
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="/">Rychlé<span>Výpočty</span>.cz</a>
+      <nav class="topnav" aria-label="Hlavní navigace">
+        <a href="/">Domů</a>
+        <a href="/kalkulacka-prescasu.html">Přesčasy</a>
+        <a href="/kalkulacka-hodinove-mzdy.html">Hodinová mzda</a>
+        <a href="/cista-mzda-kalkulacka.html">Čistá mzda</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content" tabindex="-1">
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumbs">
+          <a href="/">RychléVýpočty.cz</a>
+          <span class="sep" aria-hidden="true">/</span>
+          <a href="/mzdy-a-prace.html">Mzdy a práce</a>
+          <span class="sep" aria-hidden="true">/</span>
+          <strong>Kalkulačka příplatků za směny</strong>
+        </div>
+
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <h1>Kalkulačka příplatků za směny</h1>
+            <p>Spočítejte si orientační odměnu za noční práci, víkend, svátek i vlastní režim. Nejdůležitější čísla uvidíte hned pod formulářem.</p>
+
+            <div class="hero-points">
+              <div class="hero-pill">Noční směna</div>
+              <div class="hero-pill">Víkend</div>
+              <div class="hero-pill">Svátek</div>
+              <div class="hero-pill">Vlastní příplatek</div>
+            </div>
+
+            <div class="hero-actions">
+              <a class="button-link btn-primary" href="#kalkulacka">Spočítat příplatek</a>
+              <a class="button-link btn-ghost" href="/mzdy-a-prace.html">Další nástroje ke mzdě</a>
+            </div>
+          </div>
+
+          <aside class="hero-box">
+            <h2>Co spočítáte hned</h2>
+            <ul>
+              <li>základní odměnu za zadané hodiny,</li>
+              <li>samotný příplatek podle typu směny,</li>
+              <li>celkovou odměnu i průměr za 1 hodinu.</li>
+            </ul>
+
+            <div class="quick-answer">
+              <strong>Nejrychlejší čtení výsledku</strong>
+              <p>Podívejte se nejdřív na celkovou odměnu, samotný příplatek a průměr za hodinu. Detailní rozpis je až níže v rozbalovacím bloku.</p>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="anchor-nav">
+      <div class="container">
+        <div class="anchor-nav-inner">
+          <a class="anchor-chip" href="#kalkulacka">Spočítat příplatek</a>
+          <a class="anchor-chip" href="#vysledek">Výsledek</a>
+          <a class="anchor-chip" href="#jak-cist-vysledek">Jak číst výsledek</a>
+          <a class="anchor-chip" href="#faq">FAQ</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="container tool-master-layout" id="kalkulacka">
+      <div class="tool-primary-stack">
+        <div class="card tool-card--form">
+          <div class="card-header">
+            <h2>Zadání směny</h2>
+            <p>Vyplňte sazbu, počet hodin a typ příplatku. Výsledek se přepočítá hned a objeví se ihned pod formulářem.</p>
+          </div>
+
+          <div class="card-body">
+            <div class="scenario-preset-band" aria-label="Rychlé scénáře">
+              <button class="scenario-chip active" data-preset="nightPercent" type="button">Noční</button>
+              <button class="scenario-chip" data-preset="weekendPercent" type="button">Víkend</button>
+              <button class="scenario-chip" data-preset="holidayPercent" type="button">Svátek</button>
+              <button class="scenario-chip" data-preset="customPercent" type="button">Vlastní %</button>
+              <button class="scenario-chip" data-preset="customFixed" type="button">Vlastní Kč/h</button>
+            </div>
+
+            <form id="shiftForm">
+              <div class="form-grid">
+                <div class="field">
+                  <label for="hourlyRate">Hodinová sazba</label>
+                  <input id="hourlyRate" type="number" inputmode="decimal" min="1" step="0.01" value="180"/>
+                  <small>Základní odměna za 1 odpracovanou hodinu.</small>
+                </div>
+
+                <div class="field">
+                  <label for="hoursWorked">Počet hodin</label>
+                  <input id="hoursWorked" type="number" inputmode="decimal" min="0.1" step="0.1" value="8"/>
+                  <small>Počet hodin v režimu s příplatkem.</small>
+                </div>
+
+                <div class="field">
+                  <label for="shiftType">Typ směny</label>
+                  <select id="shiftType">
+                    <option value="nightPercent" selected>Noční práce – procentní příplatek</option>
+                    <option value="weekendPercent">Víkend – procentní příplatek</option>
+                    <option value="holidayPercent">Svátek – procentní příplatek</option>
+                    <option value="customPercent">Vlastní procentní příplatek</option>
+                    <option value="customFixed">Vlastní pevný příplatek za hodinu</option>
+                  </select>
+                  <small>Vyberte přednastavený režim nebo vlastní nastavení.</small>
+                </div>
+
+                <div class="field" id="percentRateField">
+                  <label for="percentRate">Příplatek (%)</label>
+                  <input id="percentRate" type="number" inputmode="decimal" min="0" step="0.01" value="10"/>
+                  <small>Procentní navýšení vůči základní hodinové sazbě.</small>
+                </div>
+
+                <div class="field hidden" id="fixedRateField">
+                  <label for="fixedRate">Pevný příplatek za hodinu</label>
+                  <input id="fixedRate" type="number" inputmode="decimal" min="0" step="0.01" value="25"/>
+                  <small>Pevná částka navíc za každou hodinu práce.</small>
+                </div>
+
+                <div class="field full">
+                  <label>Doplňující nastavení</label>
+                  <div class="option-grid">
+                    <label class="option-box" for="roundWhole">
+                      <input id="roundWhole" type="checkbox"/>
+                      <div>
+                        <span>Zaokrouhlit na celé koruny</span>
+                        <small>Vhodné pro rychlý orientační přehled bez desetinných míst.</small>
+                      </div>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="actions full">
+                  <button class="btn-primary" type="submit">Spočítat příplatky</button>
+                  <button class="btn-secondary" id="resetBtn" type="button">Obnovit výchozí hodnoty</button>
+                </div>
+              </div>
+            </form>
+
+            <div class="inline-help">
+              Nejrychlejší čtení výsledku: <strong>celková odměna</strong> + <strong>samotný příplatek</strong> + <strong>průměr za hodinu</strong>. Detailní rozpis řešte až potom.
+            </div>
+          </div>
+        </div>
+
+        <div class="card tool-card--result" id="vysledek">
+          <div class="card-header">
+            <h2>Výsledek výpočtu</h2>
+            <p>Orientační přehled odměny za směnu s příplatkem podle zadaných parametrů.</p>
+          </div>
+
+          <div class="card-body" aria-live="polite">
+            <div class="result-topline">
+              <p class="result-summary-note">Nejdřív sledujte celkovou odměnu, samotný příplatek a průměr za 1 hodinu.</p>
+              <div class="badge success" id="statusBadge">Výpočet připraven</div>
+            </div>
+
+            <div class="results-grid">
+              <div class="result-box highlight">
+                <div class="result-label">Celková odměna</div>
+                <div class="result-value" id="totalPay">0 Kč</div>
+              </div>
+
+              <div class="result-box">
+                <div class="result-label">Základní odměna</div>
+                <div class="result-value" id="basePay">0 Kč</div>
+              </div>
+
+              <div class="result-box">
+                <div class="result-label">Samotný příplatek</div>
+                <div class="result-value" id="bonusPay">0 Kč</div>
+              </div>
+
+              <div class="result-box">
+                <div class="result-label">Průměr za 1 hodinu</div>
+                <div class="result-value" id="averageHourlyPay">0 Kč</div>
+              </div>
+            </div>
+
+            <div class="info-list">
+              <div class="info-row">
+                <span>Hodinová sazba</span>
+                <strong id="summaryHourlyRate">0 Kč</strong>
+              </div>
+              <div class="info-row">
+                <span>Počet hodin</span>
+                <strong id="summaryHours">0 h</strong>
+              </div>
+              <div class="info-row">
+                <span>Typ směny</span>
+                <strong id="summaryShiftType">–</strong>
+              </div>
+              <div class="info-row">
+                <span>Režim příplatku</span>
+                <strong id="summaryMode">–</strong>
+              </div>
+              <div class="info-row">
+                <span>Hodnota příplatku</span>
+                <strong id="summaryBonusValue">–</strong>
+              </div>
+            </div>
+
+            <div class="note" id="resultNote">Kalkulačka poskytuje orientační výsledek. Skutečné odměňování může být ovlivněné pracovněprávním režimem, vnitřními předpisy zaměstnavatele, kolektivní smlouvou nebo kombinací více příplatků zároveň.</div>
+
+            <div class="decision-grid">
+              <div class="decision-box">
+                <div class="decision-status caution" id="decisionStatusPrimary">Kontrola částky</div>
+                <h3>Co si zkontrolovat jako první</h3>
+                <p id="decisionPrimaryText">Porovnejte samotný příplatek s celkovou odměnou. Hned uvidíte, jak velkou část výsledku dělá příplatkový režim.</p>
+              </div>
+              <div class="decision-box">
+                <div class="decision-status safe" id="decisionStatusSecondary">Další interpretace</div>
+                <h3>Kdy výsledek číst opatrně</h3>
+                <p id="decisionSecondaryText">Pokud se v praxi kombinují dva příplatky najednou nebo firma používá interní pravidla, berte výsledek jako orientační, ne závazný mzdový výpočet.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <aside class="tool-support-rail">
+        <div class="support-rail-sticky">
+          <div class="tool-support-card">
+            <h3>Jak výsledek používat v praxi</h3>
+            <p>Tahle kalkulačka je vhodná pro rychlou kontrolu směny, porovnání různých typů příplatků i orientaci před výplatou.</p>
+            <ul>
+              <li>pro noční směny rychle ověříte dopad procentního příplatku,</li>
+              <li>u víkendu nebo svátku snadno porovnáte rozdíl proti běžné směně,</li>
+              <li>vlastní procento nebo Kč/h využijete pro interní firemní pravidla,</li>
+              <li>zaokrouhlení na celé koruny pomůže pro rychlý orientační přehled.</li>
+            </ul>
+
+            <div class="support-mini-grid">
+              <div class="support-mini-box">
+                <strong>Když řešíte kontrolu výplaty</strong>
+                <span>Porovnejte typ směny, počet hodin a hodnotu příplatku s výplatní páskou nebo interní metodikou.</span>
+              </div>
+              <div class="support-mini-box">
+                <strong>Když plánujete více směn</strong>
+                <span>Zkuste si přepnout scénáře a rychle porovnat, jak se změní výsledek mezi noční, víkendovou a sváteční prací.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="container section" id="prehled-vypoctu">
+      <details class="card collapsible-card">
+        <summary class="collapsible-summary">
+          <div>
+            <strong>Přehled výpočtu</strong>
+            <span>Rozbalte si detailní breakdown základu a příplatku. Patří až po hlavním výsledku, ne do core flow.</span>
+          </div>
+        </summary>
+        <div class="collapsible-content">
+          <div class="table-wrap">
+            <table aria-label="Přehled výpočtu příplatků za směny">
+              <thead>
+                <tr>
+                  <th>Položka</th>
+                  <th>Popis</th>
+                  <th>Hodnota</th>
+                </tr>
+              </thead>
+              <tbody id="breakdownBody">
+                <tr>
+                  <td colspan="3">Po zadání údajů se zobrazí orientační rozpis výpočtu.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="formula-box">
+            <strong>Co z detailu plyne</strong>
+            <p style="margin:0 0 10px;color:#5f6b85;">Nejdřív se počítá základní odměna za odpracované hodiny. Potom se přidá procentní nebo pevný příplatek a vznikne celková odměna.</p>
+            <code>Celková odměna = základní odměna + příplatek</code>
+          </div>
+        </div>
+      </details>
+    </section>
+
+    <section class="container section" id="jak-cist-vysledek">
+      <h2 class="section-title">Jak číst výsledek kalkulačky příplatků za směny</h2>
+      <p class="section-intro">Nedívejte se jen na celkovou částku. Pro rychlou orientaci má smysl sledovat i samotný příplatek, typ režimu a průměr za jednu hodinu.</p>
+
+      <div class="content-card">
+        <h2>Na která čísla se dívat jako první</h2>
+
+        <div class="checklist-grid">
+          <div class="check-card">
+            <strong>Celková odměna</strong>
+            <span>Ukazuje výslednou částku za zadané hodiny včetně příplatku.</span>
+          </div>
+          <div class="check-card">
+            <strong>Samotný příplatek</strong>
+            <span>Rychle ověříte, jak velkou část odměny tvoří právě směnový režim.</span>
+          </div>
+          <div class="check-card">
+            <strong>Průměr za 1 hodinu</strong>
+            <span>Pomůže porovnat, jak výhodná je konkrétní směna proti běžné hodinové sazbě.</span>
+          </div>
+        </div>
+
+        <h3>Kdy výsledek působí užitečně nejvíc</h3>
+        <p>Když potřebujete rychle porovnat několik variant směn, zkontrolovat výplatní pásku nebo si ověřit, jaký dopad má zvolený příplatek na celkovou odměnu.</p>
+
+        <h3>Kdy zbystřit</h3>
+        <p>Opatrnost je na místě ve chvíli, kdy se v praxi sčítá více příplatků zároveň, nebo zaměstnavatel používá vlastní pravidla. V takovém případě výsledek berte jako orientační základ.</p>
+      </div>
+    </section>
+
+    <section class="tool-trust-strip" aria-label="Klíčové benefity kalkulačky">
+      <div class="container">
+        <div class="tool-trust-grid">
+          <div class="tool-trust-item">
+            <strong>Rychlý orientační výpočet</strong>
+            <span>Zadáte pár čísel a hned vidíte základ, příplatek i celkovou odměnu.</span>
+          </div>
+          <div class="tool-trust-item">
+            <strong>Výsledek bez zdržování</strong>
+            <span>Nejdůležitější čísla jsou hned pod formulářem bez balastu mezi inputem a výsledkem.</span>
+          </div>
+          <div class="tool-trust-item">
+            <strong>Vhodné pro porovnání variant</strong>
+            <span>Snadno přepnete noční, víkend, svátek i vlastní režim a rychle porovnáte dopad.</span>
+          </div>
+          <div class="tool-trust-item">
+            <strong>Detail až níže</strong>
+            <span>Breakdown a interpretace jsou mimo core flow, takže kalkulačka zůstává čistá a rychlá.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container section" id="souvisejici-kalkulacky">
+      <div class="content-card">
+        <h2>Co dává smysl spočítat hned po příplatcích za směny</h2>
+        <p>Navazující hodnotu mají hlavně nástroje, které pomůžou zasadit výsledek do širšího kontextu mzdy a odpracovaného času.</p>
+
+        <div class="related-grid">
+          <a class="related-card" href="/kalkulacka-prescasu.html">
+            <strong>Kalkulačka přesčasů</strong>
+            <span>Porovnejte odměnu za přesčas s příplatky za směnový režim.</span>
+          </a>
+          <a class="related-card" href="/kalkulacka-hodinove-mzdy.html">
+            <strong>Kalkulačka hodinové mzdy</strong>
+            <span>Převeďte měsíční příjem na hodinovou sazbu a lépe srovnejte výsledek.</span>
+          </a>
+          <a class="related-card" href="/kalkulacka-odpracovanych-hodin.html">
+            <strong>Kalkulačka odpracovaných hodin</strong>
+            <span>Spočítejte si čistý čas za směny, týdny a měsíce.</span>
+          </a>
+          <a class="related-card" href="/cista-mzda-kalkulacka.html">
+            <strong>Kalkulačka čisté mzdy</strong>
+            <span>Ověřte, jak výsledná částka sedí do celkového čistého příjmu.</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="container section" id="faq">
+      <div class="content-card">
+        <h2>Časté otázky</h2>
+
+        <h3>Jak se počítá příplatek za směnu?</h3>
+        <p>Kalkulačka nejprve spočítá základní odměnu podle hodinové sazby a počtu hodin. Poté k ní přidá příplatek podle zvoleného procenta nebo pevné částky za hodinu.</p>
+
+        <h3>Lze počítat noční, víkend i svátek?</h3>
+        <p>Ano. Kalkulačka umí přednastavené režimy pro noční práci, víkend, svátek i vlastní nastavení, takže je vhodná pro více typů směn.</p>
+
+        <h3>Je výsledek přesný pro každého zaměstnance?</h3>
+        <p>Ne úplně. Jde o orientační výpočet. Skutečný způsob odměňování může záviset na pracovní smlouvě, interních pravidlech zaměstnavatele, kolektivní smlouvě nebo kombinaci více příplatků zároveň.</p>
+
+        <h3>Jaký je rozdíl mezi procentním a pevným příplatkem?</h3>
+        <p>Procentní příplatek navyšuje hodinovou sazbu o určité procento. Pevný příplatek přidává ke každé hodině stejnou částku v korunách.</p>
+      </div>
+    </section>
+
+    <section class="site-cta-band" aria-label="Další krok">
+      <div class="container">
+        <div class="site-cta-card">
+          <div class="site-cta-copy">
+            <strong>Pokračujte v rozhodnutí kolem mzdy a práce</strong>
+            <p>Po základním výpočtu dává největší smysl ověřit přesčasy, hodinovou mzdu, čistý příjem nebo odpracované hodiny.</p>
+          </div>
+          <div class="site-cta-actions">
+            <a class="site-cta-link" href="/kalkulacka-prescasu.html">Přesčasy</a>
+            <a class="site-cta-link" href="/kalkulacka-hodinove-mzdy.html">Hodinová mzda</a>
+            <a class="site-cta-link" href="/cista-mzda-kalkulacka.html">Čistá mzda</a>
+            <a class="site-cta-link" href="/mzdy-a-prace.html">Mzdy a práce</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-grid-top" style="padding:34px 0 22px;display:grid;grid-template-columns:1.2fr 0.9fr 0.9fr;gap:28px;">
+      <div style="max-width:520px;">
+        <strong style="display:inline-block;font-size:1.14rem;letter-spacing:-0.02em;color:#172033;margin-bottom:12px;">RychléVýpočty.cz</strong>
+        <p style="margin:0;color:#5f6b85;font-size:0.95rem;line-height:1.65;">Online kalkulačky a praktické nástroje zdarma pro finance, bydlení, hypotéky, pronájem, investiční rozhodování, mzdy, podnikání, energie, auto, rekonstrukce a další situace, které dává smysl si předem spočítat.</p>
+      </div>
+      <div>
+        <strong style="display:block;margin-bottom:10px;font-size:0.98rem;color:#172033;">Hlavní sekce</strong>
+        <div style="display:grid;gap:8px;">
+          <a href="/finance-a-hypoteky.html">Finance a hypotéky</a>
+          <a href="/mzdy-a-prace.html">Mzdy a práce</a>
+          <a href="/energie-a-domacnost.html">Energie a domácnost</a>
+          <a href="/auto-a-provoz.html">Auto a provoz</a>
+        </div>
+      </div>
+      <div>
+        <strong style="display:block;margin-bottom:10px;font-size:0.98rem;color:#172033;">Informace</strong>
+        <div style="display:grid;gap:8px;">
+          <a href="/o-nas.html">O nás</a>
+          <a href="/kontakt.html">Kontakt</a>
+          <a href="/ochrana-osobnich-udaju.html">Ochrana osobních údajů</a>
+          <a href="/podminky-pouziti.html">Podmínky použití</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-grid-bottom" style="padding:0 0 28px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;border-top:1px solid rgba(219,227,240,.9);padding-top:18px;">
+      <div style="color:#5f6b85;font-size:0.92rem;">© 2026 RychléVýpočty.cz</div>
+      <div style="color:#5f6b85;font-size:0.92rem;">Praktické výpočty bez zbytečného balastu.</div>
+    </div>
+  </footer>
+
+  <script>
+    const form = document.getElementById('shiftForm');
+    const resetBtn = document.getElementById('resetBtn');
+    const shiftType = document.getElementById('shiftType');
+    const percentRateField = document.getElementById('percentRateField');
+    const fixedRateField = document.getElementById('fixedRateField');
+    const scenarioChips = Array.from(document.querySelectorAll('.scenario-chip'));
+
+    const outputs = {
+      totalPay: document.getElementById('totalPay'),
+      basePay: document.getElementById('basePay'),
+      bonusPay: document.getElementById('bonusPay'),
+      averageHourlyPay: document.getElementById('averageHourlyPay'),
+      summaryHourlyRate: document.getElementById('summaryHourlyRate'),
+      summaryHours: document.getElementById('summaryHours'),
+      summaryShiftType: document.getElementById('summaryShiftType'),
+      summaryMode: document.getElementById('summaryMode'),
+      summaryBonusValue: document.getElementById('summaryBonusValue'),
+      statusBadge: document.getElementById('statusBadge'),
+      resultNote: document.getElementById('resultNote'),
+      breakdownBody: document.getElementById('breakdownBody')
+    };
+
+    function formatCurrency(value, whole = false) {
+      const options = {
+        style: 'currency',
+        currency: 'CZK',
+        maximumFractionDigits: whole ? 0 : 2,
+        minimumFractionDigits: whole ? 0 : 2
+      };
+      return new Intl.NumberFormat('cs-CZ', options).format(value);
+    }
+
+    function formatNumber(value, digits = 2) {
+      return new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: digits
+      }).format(value);
+    }
+
+    function getPresetPercent(type) {
+      if (type === 'nightPercent') return 10;
+      if (type === 'weekendPercent') return 10;
+      if (type === 'holidayPercent') return 100;
+      return null;
+    }
+
+    function getShiftLabel(type) {
+      if (type === 'nightPercent') return 'Noční práce';
+      if (type === 'weekendPercent') return 'Víkend';
+      if (type === 'holidayPercent') return 'Svátek';
+      if (type === 'customPercent') return 'Vlastní procentní režim';
+      if (type === 'customFixed') return 'Vlastní pevný režim';
+      return 'Směna';
+    }
+
+    function syncScenarioChips(type) {
+      scenarioChips.forEach(function(chip) {
+        chip.classList.toggle('active', chip.dataset.preset === type);
+      });
+    }
+
+    function updateFields() {
+      const type = shiftType.value;
+      const isFixed = type === 'customFixed';
+
+      percentRateField.classList.toggle('hidden', isFixed);
+      fixedRateField.classList.toggle('hidden', !isFixed);
+
+      const presetPercent = getPresetPercent(type);
+      if (presetPercent !== null) {
+        document.getElementById('percentRate').value = presetPercent;
+      }
+
+      syncScenarioChips(type);
+    }
+
+    function getValues() {
+      return {
+        hourlyRate: Number(document.getElementById('hourlyRate').value),
+        hoursWorked: Number(document.getElementById('hoursWorked').value),
+        shiftType: shiftType.value,
+        percentRate: Number(document.getElementById('percentRate').value),
+        fixedRate: Number(document.getElementById('fixedRate').value),
+        roundWhole: document.getElementById('roundWhole').checked
+      };
+    }
+
+    function validate(values) {
+      if (!Number.isFinite(values.hourlyRate) || values.hourlyRate <= 0) return 'Zadejte platnou hodinovou sazbu.';
+      if (!Number.isFinite(values.hoursWorked) || values.hoursWorked <= 0) return 'Zadejte platný počet hodin.';
+      if (values.shiftType === 'customFixed' && (!Number.isFinite(values.fixedRate) || values.fixedRate < 0)) return 'Zadejte platný pevný příplatek za hodinu.';
+      if (values.shiftType !== 'customFixed' && (!Number.isFinite(values.percentRate) || values.percentRate < 0)) return 'Zadejte platný procentní příplatek.';
+      return '';
+    }
+
+    function calculate(values) {
+      const basePay = values.hourlyRate * values.hoursWorked;
+      let bonusPay = 0;
+      let modeLabel = '';
+      let bonusValueLabel = '';
+
+      if (values.shiftType === 'customFixed') {
+        bonusPay = values.fixedRate * values.hoursWorked;
+        modeLabel = 'Pevná částka za hodinu';
+        bonusValueLabel = formatCurrency(values.fixedRate, values.roundWhole) + ' / hod';
+      } else {
+        bonusPay = basePay * (values.percentRate / 100);
+        modeLabel = 'Procento ze základní sazby';
+        bonusValueLabel = formatNumber(values.percentRate, 2) + ' %';
+      }
+
+      const totalPay = basePay + bonusPay;
+      const averageHourlyPay = totalPay / values.hoursWorked;
+
+      return {
+        basePay,
+        bonusPay,
+        totalPay,
+        averageHourlyPay,
+        shiftLabel: getShiftLabel(values.shiftType),
+        modeLabel,
+        bonusValueLabel
+      };
+    }
+
+    function buildBreakdown(values, result) {
+      return [
+        {
+          label: 'Základní odměna',
+          description: formatNumber(values.hoursWorked, 2) + ' h × ' + formatCurrency(values.hourlyRate, values.roundWhole),
+          value: formatCurrency(result.basePay, values.roundWhole)
+        },
+        {
+          label: 'Příplatek',
+          description: result.modeLabel + ' (' + result.bonusValueLabel + ')',
+          value: formatCurrency(result.bonusPay, values.roundWhole)
+        },
+        {
+          label: 'Celková odměna',
+          description: 'Součet základu a příplatku',
+          value: formatCurrency(result.totalPay, values.roundWhole)
+        },
+        {
+          label: 'Průměr za 1 hodinu',
+          description: 'Celková odměna ÷ počet hodin',
+          value: formatCurrency(result.averageHourlyPay, values.roundWhole)
+        }
+      ];
+    }
+
+    function renderBreakdown(rows) {
+      outputs.breakdownBody.innerHTML = rows.map(function(row) {
+        return '<tr><td>' + row.label + '</td><td>' + row.description + '</td><td>' + row.value + '</td></tr>';
+      }).join('');
+    }
+
+    function updateInterpretation(result) {
+      const primaryStatus = document.getElementById('decisionStatusPrimary');
+      const primaryText = document.getElementById('decisionPrimaryText');
+      const secondaryStatus = document.getElementById('decisionStatusSecondary');
+      const secondaryText = document.getElementById('decisionSecondaryText');
+
+      if (result.bonusPay <= 0) {
+        primaryStatus.textContent = 'Bez příplatku';
+        primaryStatus.className = 'decision-status safe';
+        primaryText.textContent = 'Výsledek tvoří jen základní odměna. Zkontrolujte, jestli jste zadali správný typ směny nebo hodnotu příplatku.';
+      } else if (result.bonusPay / result.totalPay >= 0.35) {
+        primaryStatus.textContent = 'Silný dopad příplatku';
+        primaryStatus.className = 'decision-status caution';
+        primaryText.textContent = 'Příplatek tvoří významnou část výsledku. Tohle je užitečné hlavně při porovnání svátků, víkendů nebo vyšších interních sazeb.';
+      } else {
+        primaryStatus.textContent = 'Běžný dopad příplatku';
+        primaryStatus.className = 'decision-status safe';
+        primaryText.textContent = 'Příplatek navyšuje výsledek, ale hlavní část odměny stále tvoří základní hodinová sazba.';
+      }
+
+      secondaryStatus.textContent = result.shiftLabel;
+      secondaryStatus.className = result.shiftLabel === 'Svátek' ? 'decision-status caution' : 'decision-status safe';
+      secondaryText.textContent = 'Pro režim „' + result.shiftLabel + '“ berte výsledek jako orientační. V praxi může být způsob výpočtu ovlivněný souběhem více příplatků nebo interními pravidly zaměstnavatele.';
+    }
+
+    function render(values, result) {
+      outputs.totalPay.textContent = formatCurrency(result.totalPay, values.roundWhole);
+      outputs.basePay.textContent = formatCurrency(result.basePay, values.roundWhole);
+      outputs.bonusPay.textContent = formatCurrency(result.bonusPay, values.roundWhole);
+      outputs.averageHourlyPay.textContent = formatCurrency(result.averageHourlyPay, values.roundWhole);
+      outputs.summaryHourlyRate.textContent = formatCurrency(values.hourlyRate, values.roundWhole);
+      outputs.summaryHours.textContent = formatNumber(values.hoursWorked, 2) + ' h';
+      outputs.summaryShiftType.textContent = result.shiftLabel;
+      outputs.summaryMode.textContent = result.modeLabel;
+      outputs.summaryBonusValue.textContent = result.bonusValueLabel;
+      outputs.statusBadge.textContent = result.bonusPay > 0 ? 'Zahrnut příplatek' : 'Bez příplatku';
+      outputs.statusBadge.className = result.bonusPay > 0 ? 'badge warning' : 'badge success';
+      outputs.resultNote.textContent = 'Kalkulačka poskytuje orientační výsledek. Skutečné odměňování může být ovlivněné pracovněprávním režimem, vnitřními předpisy zaměstnavatele, kolektivní smlouvou nebo kombinací více příplatků zároveň.';
+      renderBreakdown(buildBreakdown(values, result));
+      updateInterpretation(result);
+    }
+
+    function runCalculation() {
+      const values = getValues();
+      const error = validate(values);
+
+      if (error) {
+        outputs.statusBadge.textContent = 'Zkontrolujte vstupy';
+        outputs.statusBadge.className = 'badge risk';
+        outputs.resultNote.textContent = error;
+        return;
+      }
+
+      const result = calculate(values);
+      render(values, result);
+    }
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      runCalculation();
+      document.getElementById('vysledek').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    ['hourlyRate', 'hoursWorked', 'percentRate', 'fixedRate'].forEach(function(id) {
+      document.getElementById(id).addEventListener('input', runCalculation);
+    });
+
+    ['shiftType', 'roundWhole'].forEach(function(id) {
+      document.getElementById(id).addEventListener('change', function() {
+        updateFields();
+        runCalculation();
+      });
+    });
+
+    scenarioChips.forEach(function(chip) {
+      chip.addEventListener('click', function() {
+        shiftType.value = chip.dataset.preset;
+        updateFields();
+        runCalculation();
+      });
+    });
+
+    resetBtn.addEventListener('click', function() {
+      document.getElementById('hourlyRate').value = 180;
+      document.getElementById('hoursWorked').value = 8;
+      document.getElementById('shiftType').value = 'nightPercent';
+      document.getElementById('percentRate').value = 10;
+      document.getElementById('fixedRate').value = 25;
+      document.getElementById('roundWhole').checked = false;
+      updateFields();
+      runCalculation();
+    });
+
+    updateFields();
+    runCalculation();
+
+    (function() {
+      const path = window.location.pathname.replace(/\/$/, '') || '/';
+      const links = document.querySelectorAll('.topnav a[href]');
+      links.forEach(function(link) {
+        const href = link.getAttribute('href');
+        const normalized = href.replace(/\/$/, '') || '/';
+        if (normalized === path) {
+          link.setAttribute('aria-current', 'page');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

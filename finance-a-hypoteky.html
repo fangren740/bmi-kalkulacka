@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+
+<html lang="cs"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><meta content="telephone=no" name="format-detection"/>
+<link href="/favicon.ico?v=5" rel="icon" sizes="any"/><link href="/favicon.svg?v=5" rel="icon" type="image/svg+xml"/><link href="/favicon-32x32.png?v=5" rel="icon" sizes="32x32" type="image/png"/><link href="/favicon-16x16.png?v=5" rel="icon" sizes="16x16" type="image/png"/><link href="/apple-touch-icon.png?v=5" rel="apple-touch-icon" sizes="180x180"/><link href="/site.webmanifest?v=5" rel="manifest"/><meta content="#0B2447" name="theme-color"/>
+<title>Finance a hypotéky – hypoteční kalkulačky, splátka a dostupnost bydlení | RychléVýpočty.cz</title><meta content="Spočítejte hypotéku, splátku, dostupnost bydlení, vlastní zdroje, akontaci, LTV, refinancování, DPH i nájem vs hypotéka. Online kalkulačky zdarma." name="description"/><meta content="index,follow" name="robots"/><link href="https://rychlevypocty.cz/finance-a-hypoteky.html" rel="canonical"/><meta content="website" property="og:type"/><meta content="https://rychlevypocty.cz/finance-a-hypoteky.html" property="og:url"/><meta content="RychléVýpočty.cz" property="og:site_name"/><meta content="Finance a hypotéky: hypoteční kalkulačky, akontace, refinancování a dostupnost bydlení | RychléVýpočty.cz" property="og:title"/><meta content="Hlavní rozcestník pro hypotéku a financování bydlení. Spočítejte si splátku hypotéky, vlastní zdroje, akontaci, LTV, refinancování, dostupnost bydlení i nájem vs hypotéka." property="og:description"/><meta content="https://rychlevypocty.cz/og-image.jpg?v=5" property="og:image"/>
+<style>
+:root{
+  --ink:#0B2447;
+  --blue:#0B3B78;
+  --blue2:#0F5AA8;
+  --green:#45B22F;
+  --green2:#72D45A;
+  --bg:#F5F9FC;
+  --surface:#FFFFFF;
+  --muted:#60748C;
+  --line:#DCE7F2;
+  --soft-blue:#EAF4FF;
+  --soft-green:#EEFBEA;
+  --gold:#FFB84D;
+  --shadow:0 28px 84px rgba(11,36,71,.13);
+  --shadow-soft:0 14px 34px rgba(11,36,71,.08);
+  --radius:30px;
+  --container:min(1180px,calc(100% - 32px));
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:96px}
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  color:#17243A;
+  line-height:1.62;
+  background:
+    radial-gradient(circle at 8% -2%,rgba(69,178,47,.13),transparent 26%),
+    radial-gradient(circle at 94% 6%,rgba(15,90,168,.14),transparent 34%),
+    linear-gradient(180deg,#fbfffd 0%,var(--bg) 46%,#fff 100%);
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+  background-image:linear-gradient(rgba(11,59,120,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(11,59,120,.035) 1px,transparent 1px);
+  background-size:44px 44px;
+  mask-image:linear-gradient(180deg,rgba(0,0,0,.58),transparent 60%);
+}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:3px solid rgba(69,178,47,.36);outline-offset:3px;border-radius:14px}
+.container{width:var(--container);margin:0 auto}
+.skip-link{position:absolute;left:16px;top:-60px;z-index:200;padding:12px 16px;border-radius:14px;background:var(--ink);color:#fff;font-weight:850;transition:.18s ease}
+.skip-link:focus{top:16px}
+
+/* Header */
+.site-header,.topbar{
+  position:sticky;top:0;z-index:90;
+  background:rgba(255,255,255,.86);
+  border-bottom:1px solid rgba(220,231,242,.76);
+  backdrop-filter:blur(18px);
+  box-shadow:0 10px 28px rgba(11,36,71,.045);
+}
+.header-inner,.topbar-inner{min-height:76px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.brand{display:inline-flex;align-items:center;gap:10px;white-space:nowrap;line-height:1;color:var(--ink);font-weight:900;letter-spacing:-.035em;font-size:23px}
+.brand-icon{width:42px;height:42px;flex:0 0 42px;background:url('/icon.svg?v=5') center/contain no-repeat}
+.brand-wordmark{display:inline-flex;align-items:baseline;gap:0}
+.brand-green{color:var(--green)}
+.nav,.topnav{display:flex;align-items:center;gap:4px;color:#29415F;font-size:.93rem;font-weight:760}
+.nav a,.topnav a{padding:10px 12px;border-radius:999px;white-space:nowrap;transition:.18s ease}
+.nav a:hover,.topnav a:hover,.nav a[aria-current="page"],.topnav a[aria-current="page"]{color:var(--blue);background:rgba(15,90,168,.08);transform:translateY(-1px)}
+.header-cta{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:10px 16px;border-radius:999px;background:linear-gradient(135deg,var(--green),#55C83D);color:white;font-weight:900;box-shadow:0 14px 30px rgba(69,178,47,.25)}
+
+/* Reusable */
+.section{padding:58px 0}
+.section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:26px;margin-bottom:26px}
+.section-kicker,.eyebrow{
+  display:inline-flex;align-items:center;gap:8px;margin:0 0 12px;padding:7px 12px;
+  border:1px solid rgba(69,178,47,.22);border-radius:999px;
+  background:rgba(238,251,234,.92);color:#247D18;font-size:.78rem;font-weight:900;text-transform:uppercase;
+}
+h1,h2,h3,p{margin-top:0}
+h1{margin:0 0 18px;color:var(--ink);font-size:clamp(2.55rem,5.7vw,5.2rem);line-height:.95;font-weight:950;letter-spacing:-.065em;max-width:930px}
+h1 span,h2 span{color:var(--green)}
+h2{margin:0 0 8px;color:var(--ink);font-size:clamp(2rem,3.3vw,3.1rem);line-height:1.06;font-weight:930;letter-spacing:-.045em}
+.lead{font-size:1.16rem;line-height:1.72;color:#566A82;max-width:800px;margin-bottom:0}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:12px 18px;border-radius:999px;border:1px solid transparent;font-weight:900;transition:.18s ease}
+.btn:hover{transform:translateY(-2px)}
+.btn-primary{background:linear-gradient(135deg,var(--green),#55C83D);color:#fff;box-shadow:0 14px 30px rgba(69,178,47,.25)}
+.btn-secondary{background:#fff;color:var(--ink);border-color:var(--line);box-shadow:0 10px 24px rgba(11,36,71,.06)}
+
+/* Hero */
+.breadcrumbs{display:flex;gap:8px;align-items:center;flex-wrap:wrap;color:var(--muted);font-size:.9rem;margin:20px auto 16px;font-weight:720}
+.breadcrumbs a{color:var(--muted)}
+.hero{padding:0 0 20px}
+.hero-shell{
+  position:relative;overflow:hidden;border-radius:42px;border:1px solid rgba(220,231,242,.9);
+  background:
+    radial-gradient(circle at 88% 8%,rgba(114,212,90,.20),transparent 28%),
+    radial-gradient(circle at 4% 94%,rgba(15,90,168,.14),transparent 30%),
+    linear-gradient(135deg,#fff,#f7fbff);
+  box-shadow:var(--shadow);
+}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1.04fr) 430px;gap:42px;align-items:center;padding:44px}
+.hero-actions{display:flex;flex-wrap:wrap;gap:11px;margin-top:24px}
+.hero-pills{display:flex;flex-wrap:wrap;gap:9px;margin:22px 0 0;padding:0;list-style:none}
+.hero-pills li{display:inline-flex;padding:9px 12px;border-radius:999px;border:1px solid var(--line);background:#fff;color:#29415F;font-weight:850;font-size:.88rem;box-shadow:0 8px 20px rgba(11,36,71,.04)}
+.finance-panel{
+  position:relative;min-height:410px;border-radius:34px;
+  background:linear-gradient(145deg,#071F3D,#0B3B78 58%,#0B7A4A);
+  box-shadow:0 28px 70px rgba(11,36,71,.22);
+  overflow:hidden;
+}
+.finance-panel::before{content:"";position:absolute;inset:24px;border-radius:26px;background:rgba(255,255,255,.95);box-shadow:0 20px 44px rgba(11,36,71,.20)}
+.panel-top{position:absolute;z-index:2;left:48px;right:48px;top:48px;height:48px;border-radius:16px;background:#f4f9fd;border:1px solid #dce7f2;display:flex;align-items:center;padding:0 16px;color:#7D8EA4;font-weight:800}
+.rate-card{
+  position:absolute;z-index:3;left:48px;top:122px;width:178px;padding:18px;border-radius:24px;background:#fff;border:1px solid var(--line);box-shadow:0 18px 38px rgba(11,36,71,.14)
+}
+.rate-card small,.saving-card small{display:block;color:var(--muted);font-weight:800}
+.rate-card strong,.saving-card strong{display:block;margin-top:5px;color:var(--ink);font-size:1.55rem;line-height:1}
+.chart{
+  position:absolute;z-index:2;left:54px;right:54px;bottom:56px;height:120px;border-radius:24px;background:linear-gradient(180deg,#fff,#f7fbff);border:1px solid var(--line);box-shadow:0 18px 38px rgba(11,36,71,.12);
+  overflow:hidden;
+}
+.chart svg{position:absolute;inset:18px;width:calc(100% - 36px);height:calc(100% - 36px)}
+.saving-card{
+  position:absolute;z-index:4;right:46px;top:154px;width:164px;padding:17px;border-radius:24px;background:#fff;border:1px solid rgba(69,178,47,.24);box-shadow:0 18px 38px rgba(11,36,71,.14)
+}
+.coin{position:absolute;z-index:4;right:62px;bottom:72px;width:62px;height:62px;border-radius:50%;background:linear-gradient(135deg,var(--green2),var(--green));box-shadow:0 18px 32px rgba(69,178,47,.24)}
+.coin::before{content:"Kč";position:absolute;inset:0;display:grid;place-items:center;color:#fff;font-weight:950;font-size:1.2rem}
+
+/* Decision */
+.decision-panel{
+  display:grid;grid-template-columns:.72fr 1.28fr;gap:24px;align-items:center;
+  padding:26px;border-radius:32px;border:1px solid var(--line);
+  background:linear-gradient(135deg,#fff,#f7fbff);box-shadow:var(--shadow-soft);
+}
+.decision-panel h2{font-size:clamp(1.75rem,2.5vw,2.55rem)}
+.decision-links{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.decision-links a{
+  display:block;padding:18px;border-radius:22px;border:1px solid var(--line);
+  background:#fff;box-shadow:0 10px 24px rgba(11,36,71,.055);transition:.18s ease
+}
+.decision-links a:hover{transform:translateY(-3px);border-color:rgba(69,178,47,.36);box-shadow:0 18px 40px rgba(11,36,71,.10)}
+.decision-links strong{display:block;color:var(--ink);margin-bottom:4px}
+.decision-links span{display:block;color:var(--muted);font-size:.92rem}
+
+/* Tools */
+.tools-wrap{display:grid;gap:20px}
+.tool-group{border-radius:32px;border:1px solid var(--line);background:#fff;box-shadow:var(--shadow-soft);overflow:hidden}
+.tool-group-head{
+  display:grid;grid-template-columns:auto minmax(0,1fr);gap:16px;align-items:center;
+  padding:24px 28px;background:radial-gradient(circle at 95% 0%,rgba(69,178,47,.12),transparent 28%),linear-gradient(90deg,#f7fbff,#fff);
+  border-bottom:1px solid var(--line)
+}
+.group-icon{width:54px;height:54px;border-radius:18px;display:grid;place-items:center;background:var(--soft-green);color:#247D18;font-weight:950}
+.tool-group h3{margin:0 0 5px;color:var(--ink);font-size:1.35rem;letter-spacing:-.02em}
+.tool-group p{margin:0;color:var(--muted)}
+.tool-list{display:grid;gap:0}
+.tool-row{
+  display:grid;grid-template-columns:54px minmax(0,1fr) 112px;gap:16px;align-items:center;
+  padding:19px 28px;border-bottom:1px solid rgba(220,231,242,.82);color:inherit;transition:.16s ease
+}
+.tool-row:last-child{border-bottom:0}
+.tool-row:hover{background:linear-gradient(90deg,#fff,#f4fff0);transform:translateX(3px)}
+.tool-icon{width:50px;height:50px;border-radius:18px;background:linear-gradient(180deg,#eefbea,#e3f7dc);display:grid;place-items:center;color:#247D18;font-weight:950}
+.tool-title{display:block;font-weight:920;color:var(--ink);font-size:1.04rem;margin-bottom:5px;line-height:1.25}
+.tool-desc{display:block;color:var(--muted);font-size:.94rem;line-height:1.5}
+.tool-open{justify-self:end;padding:10px 13px;border-radius:999px;background:var(--soft-green);color:#247D18;border:1px solid rgba(69,178,47,.22);font-weight:900}
+
+/* Insight */
+.insight-panel{
+  display:grid;grid-template-columns:.86fr 1.14fr;gap:28px;padding:30px;border-radius:34px;border:1px solid var(--line);
+  background:radial-gradient(circle at 90% 15%,rgba(69,178,47,.12),transparent 26%),linear-gradient(135deg,#fff,#f8fcff);
+  box-shadow:var(--shadow-soft)
+}
+.insight-panel p{color:var(--muted);margin:0}
+.insight-panel a,.related-note a{color:var(--blue);font-weight:900;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px;text-decoration-color:rgba(69,178,47,.45)}
+.insight-points{display:grid;gap:10px;margin-top:16px}
+.insight-points span{display:flex;gap:10px;align-items:flex-start;color:#29415F;font-weight:820}
+.insight-points span::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--green);margin-top:.65em;flex:0 0 9px}
+
+/* Related and FAQ */
+.related-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.related-card,.faq-card{border:1px solid var(--line);border-radius:24px;background:#fff;box-shadow:var(--shadow-soft);transition:.18s ease;overflow:hidden}
+.related-card{padding:20px}
+.related-card:hover,.faq-card:hover{transform:translateY(-4px);border-color:rgba(69,178,47,.32);box-shadow:0 22px 48px rgba(11,36,71,.12)}
+.related-card strong{display:block;color:var(--ink);margin-bottom:5px}
+.related-card span{display:block;color:var(--muted);font-size:.92rem}
+.related-note{margin-top:10px;max-width:760px;color:var(--muted)}
+.faq-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.faq-card summary{position:relative;cursor:pointer;list-style:none;padding:20px 58px 20px 22px;color:var(--ink);font-weight:900}
+.faq-card summary::-webkit-details-marker{display:none}
+.faq-card summary::after{content:"+";position:absolute;right:18px;top:50%;transform:translateY(-50%);width:30px;height:30px;border-radius:999px;display:grid;place-items:center;background:var(--soft-green);border:1px solid rgba(69,178,47,.24);color:#247D18;font-size:1.2rem;font-weight:950;line-height:1;transition:.16s ease}
+.faq-card[open] summary::after{content:"–";background:linear-gradient(135deg,var(--green),#55C83D);color:#fff;border-color:transparent}
+.faq-card[open] summary{border-bottom:1px solid rgba(220,231,242,.82)}
+.faq-card p{padding:18px 22px 20px;margin:0;color:var(--muted)}
+.faq-card:not([open]) p{display:none}
+
+/* Footer */
+.footer{padding:56px 0 26px;background:#071D3B;color:rgba(255,255,255,.74)}
+.footer .brand{color:#fff}
+.footer-grid{display:grid;grid-template-columns:1.3fr .8fr .8fr;gap:32px}
+.footer-col h3{color:#fff;margin-bottom:12px}
+.footer-links{display:grid;gap:9px}
+.footer-links a{color:rgba(255,255,255,.76)}
+.footer-links a:hover{color:#fff}
+.footer-bottom{margin-top:30px;padding-top:18px;border-top:1px solid rgba(255,255,255,.12);font-size:.88rem}
+
+@media(max-width:1080px){
+  .header-inner,.topbar-inner{flex-wrap:wrap;gap:10px 18px;padding:12px 0}
+  .nav,.topnav{width:100%;overflow-x:auto;justify-content:flex-start;scrollbar-width:none}
+  .hero-grid,.decision-panel,.insight-panel{grid-template-columns:1fr}
+  .finance-panel{min-height:350px}
+  .related-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:760px){
+  :root{--container:min(100% - 24px,1180px)}
+  .brand{font-size:19px}.brand-icon{width:36px;height:36px;flex-basis:36px}
+  .hero-grid{padding:24px;border-radius:30px}
+  .hero-shell{border-radius:30px}
+  .finance-panel{display:none}
+  h1{font-size:clamp(2.35rem,12vw,4rem)}
+  .section{padding:42px 0}
+  .section-head{display:block}
+  .decision-links,.related-grid,.faq-grid,.footer-grid{grid-template-columns:1fr}
+  .tool-row{grid-template-columns:50px minmax(0,1fr);padding:18px 20px}
+  .tool-open{grid-column:2;justify-self:start}
+}
+
+
+/* ultra-subtle finance background layer */
+body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg width='156' height='156' viewBox='0 0 156 156' xmlns='http://www.w3.org/2000/svg'%3E%3Ctext x='20' y='74' font-family='Arial, sans-serif' font-size='34' font-weight='900' fill='%230B3B78' opacity='0.026'%3E%25%3C/text%3E%3Ctext x='82' y='116' font-family='Arial, sans-serif' font-size='26' font-weight='900' fill='%2345B22F' opacity='0.026'%3EK%C4%8D%3C/text%3E%3Cpath d='M25 124 C54 96 76 112 104 78 C121 58 134 62 145 48' fill='none' stroke='%230B3B78' stroke-width='3' stroke-linecap='round' opacity='0.018'/%3E%3C/svg%3E");
+  background-size:156px 156px;
+  mask-image:linear-gradient(180deg,rgba(0,0,0,.78),rgba(0,0,0,.28) 58%,transparent 100%);
+}
+
+/* hero-only watermark: visible enough to add character, not enough to distract */
+.hero-shell::after{
+  content:"Kč";
+  position:absolute;
+  right:34px;
+  bottom:-22px;
+  z-index:0;
+  color:#0B3B78;
+  font-size:clamp(6rem,12vw,10rem);
+  line-height:1;
+  font-weight:950;
+  letter-spacing:-.08em;
+  opacity:.035;
+  pointer-events:none;
+  user-select:none;
+}
+.hero-shell::before{
+  content:"%";
+  position:absolute;
+  right:168px;
+  top:24px;
+  z-index:0;
+  color:#45B22F;
+  font-size:clamp(3.6rem,7vw,6.4rem);
+  line-height:1;
+  font-weight:950;
+  opacity:.032;
+  pointer-events:none;
+  user-select:none;
+}
+.hero-grid{
+  position:relative;
+  z-index:1;
+}
+
+/* keep watermark safe on smaller screens */
+@media(max-width:760px){
+  body::after{opacity:.55}
+  .hero-shell::before,
+  .hero-shell::after{display:none}
+}
+</style><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "Finance a hypotéky – hypoteční kalkulačky a dostupnost bydlení",
+  "url": "https://rychlevypocty.cz/finance-a-hypoteky.html",
+  "description": "Online kalkulačky pro hypotéku, splátku hypotéky, dostupnost bydlení, vlastní zdroje, akontaci, LTV, refinancování, nájem vs hypotéka, DPH a další finanční výpočty."
+}</script><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "RychléVýpočty.cz",
+      "item": "https://rychlevypocty.cz/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Všechny kalkulačky",
+      "item": "https://rychlevypocty.cz/kalkulacky.html"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Finance a hypotéky",
+      "item": "https://rychlevypocty.cz/finance-a-hypoteky.html"
+    }
+  ]
+}</script><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Jak spočítat splátku hypotéky?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Pro orientační výpočet splátky hypotéky zadejte výši úvěru, úrokovou sazbu a dobu splácení. Výsledek závisí na konkrétní nabídce banky, fixaci a dalších podmínkách."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Kolik vlastních peněz potřebuji na koupi nemovitosti?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Potřebná výše vlastních zdrojů závisí na ceně nemovitosti, LTV, akontaci, rezervě a dalších nákladech spojených s koupí."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Je výhodnější nájem nebo hypotéka?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Výhodnost nájmu nebo hypotéky závisí na ceně nemovitosti, výši nájmu, úroku, délce bydlení, růstu hodnoty nemovitosti a alternativním využití peněz."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Kdy řešit refinancování hypotéky?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Refinancování hypotéky se vyplatí prověřit hlavně před koncem fixace, při změně sazeb nebo pokud chcete upravit podmínky hypotéky."
+      }
+    }
+  ]
+}</script><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "RychléVýpočty.cz",
+  "url": "https://rychlevypocty.cz/",
+  "logo": "https://rychlevypocty.cz/icon-512.png"
+}</script></head><body><a class="skip-link" href="#main-content">Přejít na obsah</a><header class="site-header"><div class="container header-inner"><a aria-label="RychléVýpočty.cz – domů" class="brand" href="/"><span aria-hidden="true" class="brand-icon"></span><span class="brand-wordmark"><span>Rychlé</span><span class="brand-green">Výpočty</span><span>.cz</span></span></a><nav aria-label="Hlavní navigace" class="nav"><a href="/">Domů</a><a href="/kalkulacky.html">Všechny kalkulačky</a><a href="/finance-a-hypoteky.html">Finance</a><a href="/mzdy-a-prace.html">Mzdy</a><a href="/business-a-cenotvorba.html">Business</a></nav><a class="header-cta" href="#kalkulacky">Najít kalkulačku</a></div></header>
+<main id="main-content">
+<div aria-label="Drobečková navigace" class="container breadcrumbs">
+<a href="/">RychléVýpočty.cz</a><span>/</span><a href="/kalkulacky.html">Všechny kalkulačky</a><span>/</span><strong>Finance a hypotéky</strong>
+</div>
+<section class="hero">
+<div class="container">
+<div class="hero-shell">
+<div class="hero-grid">
+<div>
+<p class="eyebrow">Kalkulačky pro hypotéku, bydlení a finance</p>
+<h1>Kolik si můžete dovolit <span>a kolik budete splácet?</span></h1>
+<p class="lead">Spočítejte hypotéku, měsíční splátku, vlastní zdroje, akontaci, LTV, refinancování i porovnání nájmu a vlastního bydlení. Rychle, zdarma a bez zbytečné tabulky.</p>
+<div class="hero-actions">
+<a class="btn btn-primary" href="#cim-zacit">Vybrat podle situace</a>
+<a class="btn btn-secondary" href="#kalkulacky">Zobrazit kalkulačky</a>
+</div>
+<ul aria-label="Hlavní témata" class="hero-pills">
+<li>Hypotéka</li>
+<li>Splátka</li>
+<li>Vlastní zdroje</li>
+<li>Nájem vs hypotéka</li>
+<li>Refinancování</li>
+</ul>
+</div>
+<div aria-hidden="true" class="finance-panel">
+<div class="panel-top">Kolik budu splácet?</div>
+<div class="rate-card"><small>Měsíční splátka</small><strong>24 850 Kč</strong></div>
+<div class="saving-card"><small>Vlastní zdroje</small><strong>20 %</strong></div>
+<div class="chart">
+<svg preserveaspectratio="none" viewbox="0 0 300 90">
+<path d="M0 70 C45 50 70 60 110 35 C145 14 178 36 210 24 C245 10 268 20 300 8" fill="none" stroke="#45B22F" stroke-linecap="round" stroke-width="6"></path>
+<path d="M0 70 C45 50 70 60 110 35 C145 14 178 36 210 24 C245 10 268 20 300 8 L300 90 L0 90Z" fill="#EEFBEA"></path>
+</svg>
+</div>
+<div class="coin"></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="section" id="cim-zacit">
+<div class="container">
+<div class="decision-panel">
+<div>
+<p class="section-kicker">Rychlý výběr</p>
+<h2>Nevíte, čím začít?</h2>
+<p class="lead">Vyberte situaci. Stránka vás pošle na výpočet, který dává největší smysl — od dostupnosti bydlení přes splátku až po refinancování.</p>
+</div>
+<div class="decision-links">
+<a href="/muzu-si-dovolit-nemovitost-kalkulacka.html"><strong>Kupuju byt nebo dům</strong><span>Nejdřív ověřit, jak drahou nemovitost si můžete dovolit.</span></a>
+<a href="/hypotecni-kalkulacka.html"><strong>Chci znát splátku hypotéky</strong><span>Spočítat měsíční splátku, úroky a orientační cenu hypotéky.</span></a>
+<a href="/kalkulacka-vlastnich-zdroju-na-koupi-nemovitosti.html"><strong>Řeším vlastní peníze</strong><span>Kolik potřebujete z vlastních zdrojů, akontace a LTV.</span></a>
+<a href="/porovnani-najem-vs-hypoteka-kalkulacka.html"><strong>Rozhoduju nájem vs hypotéka</strong><span>Porovnat měsíční zatížení a dlouhodobý pohled na bydlení.</span></a>
+</div>
+</div>
+</div>
+</section>
+<section class="section" id="kalkulacky">
+<div class="container">
+<div class="section-head">
+<div>
+<p class="section-kicker">Kalkulačky podle situace</p>
+<h2>Kalkulačky pro hypotéku, finance a dostupnost bydlení</h2>
+<p>Nejdřív najdete výpočty pro koupi bydlení, potom rozhodování a optimalizaci hypotéky a nakonec další finanční nástroje.</p>
+</div>
+</div>
+<div class="tools-wrap">
+<section class="tool-group">
+<div class="tool-group-head">
+<span class="group-icon">⌂</span>
+<div><h3>Hypotéka a koupě bydlení</h3><p>Splátka, dostupnost, vlastní zdroje, akontace a první orientace před koupí bytu nebo domu.</p></div>
+</div>
+<div class="tool-list">
+<a class="tool-row" href="/hypotecni-kalkulacka.html"><span class="tool-icon">Kč</span><span><span class="tool-title">Hypoteční kalkulačka</span><span class="tool-desc">Spočítejte orientační splátku hypotéky, úroky a celkovou cenu financování.</span></span><span class="tool-open">Otevřít</span></a>
+<a class="tool-row" href="/muzu-si-dovolit-nemovitost-kalkulacka.html"><span class="tool-icon">⌂</span><span><span class="tool-title">Můžu si dovolit nemovitost?</span><span class="tool-desc">Rychlý odhad, na jak drahý byt nebo dům může rozpočet stačit.</span></span><span class="tool-open">Otevřít</span></a>
+<a class="tool-row" href="/kalkulacka-vlastnich-zdroju-na-koupi-nemovitosti.html"><span class="tool-icon">%</span><span><span class="tool-title">Kalkulačka vlastních zdrojů</span><span class="tool-desc">Kolik peněz potřebujete mít připraveno před koupí nemovitosti.</span></span><span class="tool-open">Otevřít</span></a>
+<a class="tool-row" href="/kalkulacka-akontace-a-ltv-hypoteky.html"><span class="tool-icon">LTV</span><span><span class="tool-title">Kalkulačka akontace a LTV hypotéky</span><span class="tool-desc">Výpočet akontace a orientačního LTV při financování nemovitosti.</span></span><span class="tool-open">Otevřít</span></a>
+</div>
+</section>
+<section class="tool-group">
+<div class="tool-group-head">
+<span class="group-icon">⇄</span>
+<div><h3>Rozhodnutí a optimalizace hypotéky</h3><p>Porovnání variant, refinancování, mimořádné splátky a rozhodnutí, co s volnými penězi.</p></div>
+</div>
+<div class="tool-list">
+<a class="tool-row" href="/porovnani-najem-vs-hypoteka-kalkulacka.html"><span class="tool-icon">⇄</span><span><span class="tool-title">Nájem vs hypotéka</span><span class="tool-desc">Porovnejte nájemní bydlení a vlastní nemovitost financovanou hypotékou.</span></span><span class="tool-open">Otevřít</span></a>
+<a class="tool-row" href="/refinancovani-hypoteky-kalkulacka.html"><span class="tool-icon">↻</span><span><span class="tool-title">Refinancování hypotéky</span><span class="tool-desc">Porovnání stávající a nové hypotéky včetně orientační úspory.</span></span><span class="tool-open">Otevřít</span></a>
+<a class="tool-row" href="/mimoradna-splatka-hypoteky-kalkulacka.html"><span class="tool-icon">+</span><span><span class="tool-title">Mimořádná splátka hypotéky</span><span class="tool-desc">Zjistěte dopad splátky navíc na délku splácení nebo cenu hypotéky.</span></span><span class="tool-open">Otevřít</span></a>
+<a class="tool-row" href="/investovat-vs-splatit-hypoteku-kalkulacka.html"><span class="tool-icon">↗</span><span><span class="tool-title">Investovat vs splatit hypotéku</span><span class="tool-desc">Porovnejte, jestli volné peníze raději investovat, nebo snížit hypotéku.</span></span><span class="tool-open">Otevřít</span></a>
+</div>
+</section>
+<section class="tool-group">
+<div class="tool-group-head">
+<span class="group-icon">%</span>
+<div><h3>Půjčky, daně a finanční výpočty</h3><p>Rychlé finanční výpočty mimo samotnou hypotéku: DPH, inflace, půjčka nebo splátky.</p></div>
+</div>
+<div class="tool-list">
+<a class="tool-row" href="/dph-kalkulacka.html"><span class="tool-icon">DPH</span><span><span class="tool-title">DPH kalkulačka</span><span class="tool-desc">Výpočet ceny s DPH, bez DPH a samotné výše daně.</span></span><span class="tool-open">Otevřít</span></a>
+<a class="tool-row" href="/inflace-kalkulacka.html"><span class="tool-icon">%</span><span><span class="tool-title">Inflační kalkulačka</span><span class="tool-desc">Spočítejte, jak inflace mění hodnotu peněz v čase.</span></span><span class="tool-open">Otevřít</span></a>
+<a class="tool-row" href="/kalkulacka-pujcky.html"><span class="tool-icon">Kč</span><span><span class="tool-title">Kalkulačka půjčky</span><span class="tool-desc">Orientační výpočet splátky půjčky podle částky, sazby a délky splácení.</span></span><span class="tool-open">Otevřít</span></a>
+<a class="tool-row" href="/kalkulacka-slozeneho-uroku.html"><span class="tool-icon">↗</span><span><span class="tool-title">Složené úročení</span><span class="tool-desc">Výpočet růstu peněz v čase při pravidelném nebo jednorázovém zhodnocení.</span></span><span class="tool-open">Otevřít</span></a>
+</div>
+</section>
+</div>
+</div>
+</section>
+<section class="section" id="co-podcenit">
+<div class="container">
+<div class="insight-panel">
+<div>
+<p class="section-kicker">Důležitý pohled</p>
+<h2>Co lidé u hypotéky často podcení</h2>
+</div>
+<div>
+<p>Samotná splátka hypotéky nestačí. Před koupí nemovitosti dává smysl řešit také <a href="/kalkulacka-vlastnich-zdroju-na-koupi-nemovitosti.html">vlastní zdroje</a>, <a href="/kalkulacka-akontace-a-ltv-hypoteky.html">akontaci a LTV</a>, rezervu domácnosti a srovnání, jestli je pro vás výhodnější <a href="/porovnani-najem-vs-hypoteka-kalkulacka.html">nájem nebo hypotéka</a>.</p>
+<div class="insight-points">
+<span>Pro první orientaci začněte dostupností nemovitosti.</span>
+<span>Pro konkrétní nabídku použijte hypoteční kalkulačku.</span>
+<span>Při změně sazby nebo konci fixace zkontrolujte refinancování.</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="section" id="souvisejici">
+<div class="container">
+<div class="section-head">
+<div>
+<p class="section-kicker">Navazující oblasti</p>
+<h2>Finance a bydlení spolu souvisí</h2>
+<p>Pokud řešíte hypotéku, často dává smysl podívat se i na příjmy, rozpočet domácnosti nebo pronájem.</p>
+<p class="related-note">Při rozhodování o bydlení se hodí také <a href="/pronajem-a-investicni-bydleni.html">pronájem a investiční bydlení</a>, <a href="/rodina-a-rozpocet.html">rodina a rozpočet</a> nebo <a href="/mzdy-a-prace.html">mzdy a práce</a>.</p>
+</div>
+</div>
+<div class="related-grid">
+<a class="related-card" href="/pronajem-a-investicni-bydleni.html"><strong>Pronájem a investiční bydlení</strong><span>Nájem vs hypotéka, výnos z pronájmu a cashflow.</span></a>
+<a class="related-card" href="/rodina-a-rozpocet.html"><strong>Rodina a rozpočet</strong><span>Domácí výdaje, rezerva a pravidelné náklady.</span></a>
+<a class="related-card" href="/mzdy-a-prace.html"><strong>Mzdy a práce</strong><span>Čistá mzda, příjem a náklady zaměstnavatele.</span></a>
+<a class="related-card" href="/energie-a-domacnost.html"><strong>Energie a domácnost</strong><span>Provoz domácnosti, vytápění a spotřeba energií.</span></a>
+</div>
+</div>
+</section>
+<section class="section" id="faq">
+<div class="container">
+<div class="section-head">
+<div>
+<p class="section-kicker">Časté otázky</p>
+<h2>Časté otázky k hypotéce a financím</h2>
+<p>Krátké odpovědi pro rychlou orientaci před výpočtem.</p>
+</div>
+</div>
+<div class="faq-grid">
+<details class="faq-card"><summary>Jak spočítat splátku hypotéky?</summary><p>Nejrychlejší je zadat výši úvěru, úrokovou sazbu a dobu splácení do hypoteční kalkulačky. Výsledek berte jako orientační, protože konečná nabídka závisí na bance, fixaci, poplatcích a vaší bonitě.</p></details>
+<details class="faq-card"><summary>Kolik vlastních peněz potřebuji na koupi nemovitosti?</summary><p>Záleží na ceně nemovitosti, maximálním LTV, rezervě a dalších nákladech kolem koupě. Pomůže kalkulačka vlastních zdrojů a akontace, která rychle ukáže, kolik peněz je potřeba mít připraveno.</p></details>
+<details class="faq-card"><summary>Je výhodnější nájem nebo hypotéka?</summary><p>Záleží na ceně nemovitosti, výši nájmu, úroku, růstu hodnoty bydlení, investiční alternativě a vašem plánu bydlení. Pro první srovnání použijte kalkulačku nájem vs hypotéka.</p></details>
+<details class="faq-card"><summary>Kdy řešit refinancování hypotéky?</summary><p>Refinancování má smysl řešit hlavně před koncem fixace, při výrazně jiné sazbě nebo pokud chcete změnit podmínky hypotéky. Orientační výpočet ukáže, jestli může nová nabídka dávat smysl.</p></details>
+</div>
+</div>
+</section>
+</main>
+<footer class="footer"><div class="container footer-grid"><div><a class="brand" href="/"><img alt="" class="brand-icon" height="42" src="/icon.svg?v=5" width="42"/><span class="brand-wordmark"><span>Rychlé</span><span class="brand-green">Výpočty</span><span>.cz</span></span></a><p>Online kalkulačky a praktické nástroje zdarma pro rychlou orientaci v běžných rozhodnutích.</p></div><div><h3>Hlavní sekce</h3><div class="footer-links"><a href="/kalkulacky.html">Všechny kalkulačky</a><a href="/finance-a-hypoteky.html">Finance a hypotéky</a><a href="/mzdy-a-prace.html">Mzdy a práce</a><a href="/business-a-cenotvorba.html">Business</a></div></div><div><h3>Kategorie</h3><div class="footer-links"><a href="/energie-a-domacnost.html">Energie</a><a href="/auto-a-provoz.html">Auto</a><a href="/rodina-a-rozpocet.html">Rodina</a><a href="/stavba-domu.html">Stavba domu</a></div></div><div><h3>Informace</h3><div class="footer-links"><a href="/o-nas.html">O nás</a><a href="/kontakt.html">Kontakt</a><a href="/ochrana-osobnich-udaju.html">Ochrana osobních údajů</a><a href="/podminky-pouziti.html">Podmínky použití</a></div></div></div><div class="container footer-bottom">© RychléVýpočty.cz · Výsledky mají orientační charakter.</div></footer><script>(function(){const input=document.querySelector('.tool-filter'); if(!input)return; const rows=[...document.querySelectorAll('.tool-row')]; input.addEventListener('input',()=>{const q=input.value.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,''); rows.forEach(r=>{const hay=((r.dataset.title||'')+' '+(r.dataset.desc||'')+' '+(r.dataset.tag||'')).normalize('NFD').replace(/[̀-ͯ]/g,''); r.style.display=hay.includes(q)?'grid':'none';})});})();</script></body></html>

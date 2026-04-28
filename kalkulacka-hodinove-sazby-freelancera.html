@@ -1,0 +1,1415 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="format-detection" content="telephone=no"/>
+  <link rel="icon" href="/favicon.ico?v=2" sizes="any"/>
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=2"/>
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=2"/>
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2"/>
+  <link rel="manifest" href="/site.webmanifest?v=2"/>
+  <meta name="theme-color" content="#14253d"/>
+
+  <title>Kalkulačka hodinové sazby freelancera: kolik si říct za hodinu | RychléVýpočty.cz</title>
+  <meta name="description" content="Spočítejte si doporučenou hodinovou sazbu freelancera nebo OSVČ podle cílového čistého příjmu, nákladů, neplaceného času, rezervy a slabších měsíců. Ihned uvidíte minimum, doporučenou sazbu i interpretaci."/>
+  <meta name="keywords" content="kalkulačka hodinové sazby freelancera, hodinová sazba OSVČ, kolik si říct za hodinu freelancer, sazba freelancera kalkulačka, výpočet hodinové sazby OSVČ, jak nacenit freelance práci"/>
+  <meta name="author" content="RychléVýpočty.cz"/>
+  <meta name="robots" content="index,follow"/>
+  <link rel="canonical" href="https://rychlevypocty.cz/kalkulacka-hodinove-sazby-freelancera.html"/>
+
+  <meta property="og:title" content="Kalkulačka hodinové sazby freelancera: kolik si říct za hodinu"/>
+  <meta property="og:description" content="Praktický výpočet hodinové sazby freelancera a OSVČ včetně minima, doporučené sazby, měsíční fakturace a interpretace výsledku."/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:url" content="https://rychlevypocty.cz/kalkulacka-hodinove-sazby-freelancera.html"/>
+  <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg"/>
+  <meta property="og:site_name" content="RychléVýpočty.cz"/>
+  <meta property="og:locale" content="cs_CZ"/>
+
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="Kalkulačka hodinové sazby freelancera: kolik si říct za hodinu"/>
+  <meta name="twitter:description" content="Spočítejte si doporučenou hodinovou sazbu freelancera nebo OSVČ a zjistěte, jestli není vaše nacenění příliš nízké."/>
+  <meta name="twitter:image" content="https://rychlevypocty.cz/og-image.jpg"/>
+
+  <style>
+    .skip-link {
+      position: absolute;
+      left: 16px;
+      top: -56px;
+      z-index: 100;
+      padding: 12px 16px;
+      border-radius: 12px;
+      background: #172033;
+      color: #ffffff;
+      font-weight: 700;
+      box-shadow: 0 10px 24px rgba(20, 32, 70, 0.18);
+      transition: top 0.16s ease;
+    }
+    .skip-link:focus { top: 16px; }
+    :focus-visible {
+      outline: 3px solid rgba(33, 82, 255, 0.45);
+      outline-offset: 3px;
+      border-radius: 10px;
+    }
+    main[id], section[id], div[id] { scroll-margin-top: 96px; }
+
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #5f6b85;
+      --primary: #2152ff;
+      --primary-dark: #183dbf;
+      --border: #dbe3f0;
+      --success: #138a4b;
+      --warning: #b66a00;
+      --danger: #b42318;
+      --success-bg: rgba(19, 138, 75, 0.10);
+      --warning-bg: rgba(182, 106, 0, 0.11);
+      --danger-bg: rgba(180, 35, 24, 0.08);
+      --primary-bg: rgba(33, 82, 255, 0.08);
+      --shadow: 0 12px 32px rgba(20, 32, 70, 0.08);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #f7f9fd 0%, #eef3fb 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    a { color: var(--primary); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .container {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      padding: 18px 0;
+      border-bottom: 1px solid rgba(219, 227, 240, 0.8);
+      background: rgba(255, 255, 255, 0.86);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .brand {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+    }
+    .brand span { color: var(--primary); }
+    .topnav {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      font-size: 0.97rem;
+    }
+    .topnav a {
+      border-radius: 999px;
+      padding: 8px 12px;
+      transition: background-color 0.15s ease, color 0.15s ease;
+    }
+    .topnav a:hover,
+    .topnav a[aria-current="page"] {
+      text-decoration: none;
+      background: rgba(33, 82, 255, 0.08);
+      color: var(--primary);
+    }
+
+    .hero {
+      padding: 40px 0 18px;
+    }
+    .breadcrumbs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+    .breadcrumbs span.sep { color: #8a94a9; }
+    .breadcrumbs a { color: var(--muted); }
+    .breadcrumbs strong { font-weight: 700; color: var(--text); }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 28px;
+      align-items: start;
+    }
+    .hero-copy h1 {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 1.06;
+      letter-spacing: -0.03em;
+      margin: 0 0 14px;
+    }
+    .hero-copy p {
+      margin: 0 0 14px;
+      font-size: 1.04rem;
+      color: var(--muted);
+      max-width: 760px;
+    }
+    .hero-points {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+    .hero-pill {
+      background: rgba(33, 82, 255, 0.08);
+      color: var(--primary-dark);
+      border: 1px solid rgba(33, 82, 255, 0.12);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 0.94rem;
+      font-weight: 700;
+    }
+    .hero-box,
+    .card,
+    .content-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    .hero-box {
+      padding: 24px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+    .hero-box h2 {
+      margin: 0 0 12px;
+      font-size: 1.15rem;
+      letter-spacing: -0.02em;
+    }
+    .hero-box p,
+    .hero-box li { color: var(--muted); }
+    .hero-box ul {
+      margin: 12px 0 0;
+      padding-left: 18px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.02fr) minmax(320px, 0.98fr);
+      gap: 24px;
+      align-items: start;
+      margin-bottom: 24px;
+    }
+    .layout-left {
+      display: grid;
+      gap: 24px;
+    }
+    .card-header {
+      padding: 22px 24px 0;
+    }
+    .card-header h2,
+    .card-header h3 {
+      margin: 0 0 8px;
+      font-size: 1.28rem;
+      letter-spacing: -0.02em;
+    }
+    .card-header p {
+      margin: 0;
+      color: var(--muted);
+    }
+    .card-body {
+      padding: 22px 24px 24px;
+    }
+
+    .preset-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    .preset-btn {
+      border: 1px solid rgba(33,82,255,0.14);
+      background: #fff;
+      color: var(--text);
+      border-radius: 999px;
+      padding: 10px 14px;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.12s ease, border-color 0.15s ease, background-color 0.15s ease;
+    }
+    .preset-btn:hover,
+    .preset-btn.active {
+      border-color: rgba(33,82,255,0.3);
+      background: rgba(33,82,255,0.08);
+      transform: translateY(-1px);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .field.full { grid-column: 1 / -1; }
+    label {
+      font-weight: 700;
+      font-size: 0.96rem;
+      letter-spacing: -0.01em;
+    }
+    input,
+    select {
+      width: 100%;
+      min-height: 52px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px 16px;
+      font: inherit;
+      color: var(--text);
+      background: #fff;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.5);
+    }
+    input::placeholder { color: #98a3b7; }
+    small {
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.45;
+    }
+
+    .inline-hint {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 6px;
+    }
+    .btn-primary,
+    .btn-secondary {
+      appearance: none;
+      border: 0;
+      border-radius: 14px;
+      min-height: 52px;
+      padding: 0 18px;
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 0.12s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+    }
+    .btn-primary {
+      background: linear-gradient(180deg, #2b5cff 0%, #2152ff 100%);
+      color: #fff;
+      box-shadow: 0 12px 24px rgba(33,82,255,0.24);
+    }
+    .btn-secondary {
+      background: #eef3fb;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-primary:hover,
+    .btn-secondary:hover { transform: translateY(-1px); }
+
+    .micro-links {
+      display: grid;
+      gap: 12px;
+      margin-top: 18px;
+    }
+    .micro-link {
+      display: block;
+      padding: 14px 16px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: #fbfcff;
+    }
+    .micro-link strong {
+      display: block;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+    .micro-link span { color: var(--muted); }
+    .micro-link:hover { text-decoration: none; border-color: rgba(33,82,255,0.22); }
+
+    .results-card { position: sticky; top: 96px; }
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+    .result-box {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      background: #fbfcff;
+    }
+    .result-box.highlight {
+      background: linear-gradient(180deg, #eef4ff 0%, #f8fbff 100%);
+      border-color: rgba(33,82,255,0.18);
+    }
+    .result-label {
+      font-size: 0.88rem;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .result-value {
+      font-size: clamp(1.5rem, 3vw, 2.2rem);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      font-weight: 800;
+      color: var(--text);
+    }
+    .result-value.small {
+      font-size: 1.4rem;
+      letter-spacing: -0.02em;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 800;
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 0.92rem;
+      margin-bottom: 16px;
+      border: 1px solid transparent;
+    }
+    .badge.success { color: var(--success); background: var(--success-bg); border-color: rgba(19,138,75,0.18); }
+    .badge.warning { color: var(--warning); background: var(--warning-bg); border-color: rgba(182,106,0,0.18); }
+    .badge.danger { color: var(--danger); background: var(--danger-bg); border-color: rgba(180,35,24,0.18); }
+    .badge.primary { color: var(--primary-dark); background: var(--primary-bg); border-color: rgba(33,82,255,0.18); }
+
+    .decision-box {
+      padding: 16px 18px;
+      border-radius: 16px;
+      background: #f9fbff;
+      border: 1px solid var(--border);
+      margin-bottom: 16px;
+    }
+    .decision-box strong {
+      display: block;
+      font-size: 1rem;
+      letter-spacing: -0.01em;
+      margin-bottom: 6px;
+    }
+    .decision-box p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .info-list {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .info-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: #f8fbff;
+      border: 1px solid rgba(219,227,240,0.8);
+    }
+    .info-row span { color: var(--muted); }
+    .info-row strong { text-align: right; }
+
+    .compare-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 16px;
+      margin-bottom: 16px;
+    }
+    .compare-card {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+    .compare-card h3 {
+      margin: 0 0 10px;
+      font-size: 1rem;
+      letter-spacing: -0.02em;
+    }
+    .compare-card p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .notice {
+      margin: 0;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: rgba(33,82,255,0.06);
+      color: var(--muted);
+      border: 1px solid rgba(33,82,255,0.1);
+      font-size: 0.94rem;
+    }
+
+    .split-grid,
+    .related-grid,
+    .faq-grid {
+      display: grid;
+      gap: 16px;
+    }
+    .split-grid {
+      grid-template-columns: 1.08fr 0.92fr;
+      align-items: start;
+    }
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: #fff;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 560px;
+    }
+    th, td {
+      padding: 14px 16px;
+      text-align: left;
+      border-bottom: 1px solid rgba(219,227,240,0.8);
+      vertical-align: top;
+    }
+    thead th {
+      font-size: 0.84rem;
+      color: var(--muted);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      background: #f8fbff;
+    }
+    tbody tr:last-child td { border-bottom: 0; }
+    .stack-list {
+      display: grid;
+      gap: 12px;
+    }
+    .stack-card,
+    .faq-item,
+    .related-card,
+    .content-card {
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: #fff;
+    }
+    .stack-card strong,
+    .related-card strong,
+    .faq-item h3 {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+      letter-spacing: -0.02em;
+    }
+    .stack-card p,
+    .related-card span,
+    .faq-item p,
+    .content-section p,
+    .content-section li { color: var(--muted); }
+
+    .content-section {
+      margin: 0 auto 24px;
+    }
+    .content-section h2 {
+      font-size: 1.55rem;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      margin: 0 0 14px;
+    }
+    .content-section h3 {
+      font-size: 1.1rem;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      margin: 18px 0 10px;
+    }
+    .content-section ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .site-cta-band {
+      padding: 6px 0 8px;
+    }
+    .site-cta-card {
+      display: grid;
+      grid-template-columns: 1.1fr auto;
+      gap: 20px;
+      align-items: center;
+      padding: 22px 24px;
+      border-radius: 22px;
+      border: 1px solid rgba(33, 82, 255, 0.14);
+      background: linear-gradient(180deg, #eef4ff 0%, #f8fbff 100%);
+      box-shadow: 0 12px 32px rgba(20, 32, 70, 0.06);
+    }
+    .site-cta-copy strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 1.12rem;
+      letter-spacing: -0.02em;
+      color: var(--text);
+    }
+    .site-cta-copy p { margin: 0; color: var(--muted); }
+    .site-cta-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+    .site-cta-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 11px 15px;
+      border-radius: 999px;
+      border: 1px solid rgba(33, 82, 255, 0.15);
+      background: #ffffff;
+      color: var(--text);
+      font-weight: 700;
+      text-decoration: none;
+      box-shadow: 0 8px 18px rgba(20, 32, 70, 0.05);
+      transition: transform 0.12s ease, border-color 0.15s ease;
+    }
+    .site-cta-link:hover {
+      text-decoration: none;
+      transform: translateY(-1px);
+      border-color: rgba(33, 82, 255, 0.28);
+    }
+
+    .back-to-top {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      width: 44px;
+      height: 44px;
+      border-radius: 999px;
+      border: 1px solid rgba(33,82,255,0.18);
+      background: rgba(255,255,255,0.96);
+      box-shadow: 0 12px 24px rgba(20,32,70,0.14);
+      color: var(--text);
+      font-size: 1.1rem;
+      cursor: pointer;
+    }
+
+    @media (max-width: 1024px) {
+      .layout,
+      .hero-grid,
+      .split-grid,
+      .site-cta-card,
+      footer .footer-grid {
+        grid-template-columns: 1fr;
+      }
+      .results-card { position: static; }
+    }
+
+    @media (max-width: 720px) {
+      .topbar { padding: 14px 0; }
+      .topbar-inner { align-items: flex-start; }
+      .topnav { gap: 8px; }
+      .hero { padding-top: 28px; }
+      .hero-copy h1 { font-size: clamp(1.85rem, 9vw, 2.35rem); }
+      .card-header,
+      .card-body,
+      .hero-box { padding-left: 18px; padding-right: 18px; }
+      .form-grid,
+      .results-grid,
+      .compare-grid { grid-template-columns: 1fr; }
+      .actions > * { width: 100%; }
+      .hero-points { gap: 8px; }
+      .hero-pill,
+      .preset-btn { font-size: 0.9rem; }
+      .result-value { font-size: 1.8rem; }
+      .info-row {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+      table { min-width: 480px; }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"Jak si spočítat hodinovou sazbu jako freelancer?",
+        "acceptedAnswer":{"@type":"Answer","text":"Hodinová sazba freelancera by měla vycházet z cílového čistého příjmu, měsíčních nákladů, odvodů, neplaceného času, rezervy a slabších měsíců. Nestačí vydělit požadovaný příjem všemi odpracovanými hodinami, protože ne všechny hodiny jsou fakturovatelné."}
+      },
+      {
+        "@type":"Question",
+        "name":"Co je minimální hodinová sazba freelancera?",
+        "acceptedAnswer":{"@type":"Answer","text":"Minimální hodinová sazba je spodní hranice, při které ještě pokryjete svůj cílový příjem, náklady, odvody a neplacený čas. Pod touto hranicí bývá vaše nacenění dlouhodobě neudržitelné."}
+      },
+      {
+        "@type":"Question",
+        "name":"Proč je hodinová sazba freelancera vyšší než zaměstnanecká hodinovka?",
+        "acceptedAnswer":{"@type":"Answer","text":"Freelancer si ze sazby hradí nejen svůj příjem, ale i náklady na podnikání, dovolenou, nemoc, obchod, administrativu, výpadky zakázek a další neplacené činnosti. Proto přímé srovnání se zaměstnaneckou hodinovou mzdou bývá zavádějící."}
+      },
+      {
+        "@type":"Question",
+        "name":"Je lepší účtovat hodinovou sazbu nebo projektovou cenu?",
+        "acceptedAnswer":{"@type":"Answer","text":"Obě varianty dávají smysl. Hodinová sazba pomáhá určit spodní hranici nacenění a projektová cena je vhodná tam, kde chcete prodávat výsledek, ne čas. Praktické je znát obojí a projektovou cenu si odvozovat ze zdravé hodinové sazby."}
+      }
+    ]
+  }
+  </script>
+
+  <script data-rv-schema="v7" type="application/ld+json">[
+    {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[
+      {"@type":"ListItem","position":1,"name":"RychléVýpočty.cz","item":"https://rychlevypocty.cz"},
+      {"@type":"ListItem","position":2,"name":"Business a cenotvorba","item":"https://rychlevypocty.cz/business-a-cenotvorba.html"},
+      {"@type":"ListItem","position":3,"name":"Kalkulačka hodinové sazby freelancera"}
+    ]},
+    {"@context":"https://schema.org","@type":"WebPage","name":"Kalkulačka hodinové sazby freelancera","description":"Spočítejte si doporučenou hodinovou sazbu freelancera nebo OSVČ podle cílového čistého příjmu, nákladů, neplaceného času, rezervy a slabších měsíců.","url":"https://rychlevypocty.cz/kalkulacka-hodinove-sazby-freelancera.html","inLanguage":"cs-CZ","isPartOf":{"@type":"WebSite","name":"RychléVýpočty.cz","url":"https://rychlevypocty.cz/"}}
+  ]</script>
+  <script data-rv-global-schema="v1" type="application/ld+json">[
+    {"@context":"https://schema.org","@type":"Organization","@id":"https://rychlevypocty.cz/#organization","name":"RychléVýpočty.cz","url":"https://rychlevypocty.cz/","logo":"https://rychlevypocty.cz/icon-512.png"},
+    {"@context":"https://schema.org","@type":"WebSite","@id":"https://rychlevypocty.cz/#website","url":"https://rychlevypocty.cz/","name":"RychléVýpočty.cz","inLanguage":"cs-CZ"}
+  ]</script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Přeskočit na obsah</a>
+
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="/">Rychlé<span>Výpočty</span>.cz</a>
+      <nav class="topnav" aria-label="Hlavní navigace">
+        <a href="/kalkulacky.html">Všechny kalkulačky</a>
+        <a href="/business-a-cenotvorba.html">Business a cenotvorba</a>
+        <a href="/kalkulacka-minimalni-fakturace-osvc.html">Minimální fakturace OSVČ</a>
+        <a href="/obrat-pro-cilovy-zisk-kalkulacka.html">Obrat pro cílový zisk</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content" tabindex="-1">
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumbs">
+          <a href="/">RychléVýpočty.cz</a>
+          <span class="sep" aria-hidden="true">/</span>
+          <a href="/business-a-cenotvorba.html">Business a cenotvorba</a>
+          <span class="sep" aria-hidden="true">/</span>
+          <strong>Kalkulačka hodinové sazby freelancera</strong>
+        </div>
+
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <h1>Kalkulačka hodinové sazby freelancera</h1>
+            <p>Spočítejte si <strong>doporučenou hodinovou sazbu</strong> tak, aby vám pokryla čistý příjem, náklady, odvody, neplacený čas i slabší měsíce. Výsledek vám hned ukáže, jestli je vaše nacenění zdravé, na hraně nebo dlouhodobě neudržitelné.</p>
+            <p>Hodí se pro freelancery, konzultanty, specialisty a OSVČ, kteří prodávají čas, expertizu nebo projektovou práci.</p>
+            <div class="hero-points">
+              <div class="hero-pill">Doporučená sazba i minimum</div>
+              <div class="hero-pill">Neplacené hodiny a rezerva</div>
+              <div class="hero-pill">Kontrola současné sazby</div>
+              <div class="hero-pill">Výsledek hned pod formulářem</div>
+            </div>
+          </div>
+
+          <aside class="hero-box" aria-label="Co kalkulačka řeší">
+            <h2>Co vám kalkulačka odpoví</h2>
+            <ul>
+              <li>Kolik si říct za hodinu, aby podnikání dávalo smysl.</li>
+              <li>Jaká je vaše minimální bezpečná sazba.</li>
+              <li>Kolik musíte měsíčně fakturovat.</li>
+              <li>Jestli je vaše současná sazba podstřelená.</li>
+            </ul>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="container layout" id="kalkulacka">
+      <div class="layout-left">
+        <article class="card calculator-card">
+          <div class="card-header">
+            <h2>Zadání sazby</h2>
+            <p>Vyplňte hlavní parametry podnikání. Kalkulačka se přepočítává automaticky a výsledek uvidíte hned vedle nebo pod formulářem.</p>
+          </div>
+          <div class="card-body">
+            <div class="preset-row" aria-label="Rychlé scénáře">
+              <button class="preset-btn active" type="button" data-preset="standard">Běžný freelance</button>
+              <button class="preset-btn" type="button" data-preset="lean">Nízké náklady</button>
+              <button class="preset-btn" type="button" data-preset="growth">Růst a rezerva</button>
+            </div>
+
+            <form id="rateForm" novalidate>
+              <div class="form-grid">
+                <div class="field">
+                  <label for="targetNetIncome">Cílový čistý příjem měsíčně</label>
+                  <input id="targetNetIncome" type="number" inputmode="decimal" min="1000" step="1000" value="50000" />
+                  <small>Kolik chcete, aby vám po zaplacení všeho reálně zůstalo.</small>
+                </div>
+
+                <div class="field">
+                  <label for="monthlyCosts">Měsíční náklady podnikání</label>
+                  <input id="monthlyCosts" type="number" inputmode="decimal" min="0" step="500" value="10000" />
+                  <small>Software, účetní, marketing, coworking, auto, hardware nebo jiné fixní náklady.</small>
+                </div>
+
+                <div class="field">
+                  <label for="hoursPerMonth">Celkové pracovní hodiny za měsíc</label>
+                  <input id="hoursPerMonth" type="number" inputmode="decimal" min="20" max="300" step="1" value="140" />
+                  <small>Reálné odpracované hodiny, ne jen ty fakturovatelné.</small>
+                </div>
+
+                <div class="field">
+                  <label for="currentRate">Vaše současná hodinová sazba (volitelné)</label>
+                  <input id="currentRate" type="number" inputmode="decimal" min="0" step="10" placeholder="např. 900" />
+                  <small>Pomůže porovnat, jestli byste měli zdražit, nebo máte rezervu.</small>
+                </div>
+
+                <div class="field">
+                  <label for="leviesRate">Orientační odvody a daň (%)</label>
+                  <select id="leviesRate">
+                    <option value="15">15 %</option>
+                    <option selected value="20">20 %</option>
+                    <option value="25">25 %</option>
+                    <option value="30">30 %</option>
+                    <option value="35">35 %</option>
+                  </select>
+                  <small>Orientace pro byznysové rozhodnutí, ne přesná daňová kalkulačka.</small>
+                </div>
+
+                <div class="field">
+                  <label for="nonBillableRate">Podíl neplaceného času (%)</label>
+                  <select id="nonBillableRate">
+                    <option value="10">10 %</option>
+                    <option value="20">20 %</option>
+                    <option selected value="30">30 %</option>
+                    <option value="40">40 %</option>
+                    <option value="50">50 %</option>
+                    <option value="60">60 %</option>
+                  </select>
+                  <small>Schůzky, nabídky, obchod, administrativa, vzdělávání nebo čekání mezi projekty.</small>
+                </div>
+
+                <div class="field">
+                  <label for="monthsOff">Měsíce dovolené nebo slabší fakturace ročně</label>
+                  <select id="monthsOff">
+                    <option value="0">0 měsíců</option>
+                    <option value="1">1 měsíc</option>
+                    <option selected value="2">2 měsíce</option>
+                    <option value="3">3 měsíce</option>
+                    <option value="4">4 měsíce</option>
+                  </select>
+                  <small>Dovolená, nemoc, výpadek zakázek nebo sezónní pokles.</small>
+                </div>
+
+                <div class="field">
+                  <label for="reserveRate">Rezerva a bezpečnostní polštář (%)</label>
+                  <select id="reserveRate">
+                    <option value="5">5 %</option>
+                    <option selected value="10">10 %</option>
+                    <option value="15">15 %</option>
+                    <option value="20">20 %</option>
+                  </select>
+                  <small>Prostor na investice, horší měsíce a nečekané výdaje.</small>
+                </div>
+
+                <div class="field">
+                  <label for="pricingBuffer">Doporučený cenový buffer nad minimem (%)</label>
+                  <select id="pricingBuffer">
+                    <option value="0">0 %</option>
+                    <option selected value="10">10 %</option>
+                    <option value="15">15 %</option>
+                    <option value="20">20 %</option>
+                    <option value="30">30 %</option>
+                  </select>
+                  <small>Rezerva pro vyjednávání, projektové nepřesnosti a zdravější nacenění.</small>
+                </div>
+
+                <div class="field full">
+                  <div class="actions">
+                    <button class="btn-primary" type="submit">Spočítat hodinovou sazbu</button>
+                    <button class="btn-secondary" id="resetBtn" type="button">Obnovit výchozí hodnoty</button>
+                  </div>
+                  <p class="inline-hint">Tip: Když vyplníte i současnou sazbu, kalkulačka rovnou ukáže, jestli je pod minimem, nebo spíš v bezpečné zóně.</p>
+                </div>
+              </div>
+            </form>
+
+            <div class="micro-links" aria-label="Další užitečné výpočty">
+              <a class="micro-link" href="/kalkulacka-minimalni-fakturace-osvc.html">
+                <strong>Potřebujete si spočítat i měsíční minimum?</strong>
+                <span>Navazující kalkulačka ukáže, kolik musíte minimálně fakturovat, aby podnikání dávalo smysl.</span>
+              </a>
+              <a class="micro-link" href="/obrat-pro-cilovy-zisk-kalkulacka.html">
+                <strong>Chcete jít od zisku místo od sazby?</strong>
+                <span>Spočítejte si potřebný obrat pro cílový zisk a porovnejte oba pohledy.</span>
+              </a>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <aside class="card results-card" aria-live="polite">
+        <div class="card-header">
+          <h2>Výsledek výpočtu</h2>
+          <p>Hned vidíte doporučenou sazbu, minimální hranici i to, co výsledek znamená pro vaše nacenění.</p>
+        </div>
+        <div class="card-body">
+          <div class="results-grid">
+            <div class="result-box highlight">
+              <div class="result-label">Doporučená hodinová sazba</div>
+              <div class="result-value" id="recommendedRate">0 Kč</div>
+            </div>
+            <div class="result-box">
+              <div class="result-label">Minimální hodinová sazba</div>
+              <div class="result-value small" id="minimumRate">0 Kč</div>
+            </div>
+            <div class="result-box">
+              <div class="result-label">Orientační měsíční fakturace</div>
+              <div class="result-value small" id="requiredBilling">0 Kč</div>
+            </div>
+            <div class="result-box">
+              <div class="result-label">Fakturovatelné hodiny za měsíc</div>
+              <div class="result-value small" id="billableHours">0 h</div>
+            </div>
+          </div>
+
+          <div class="badge primary" id="rateBadge">Vyplňte parametry a kalkulačka doporučí zdravou sazbu</div>
+
+          <div class="decision-box">
+            <strong id="decisionTitle">Jak výsledek číst</strong>
+            <p id="decisionText">Doporučená sazba je pracovní cena, která má pokrýt vaše podnikání dlouhodobě. Minimální sazba je spodní hranice, pod kterou už obvykle začínáte dotovat svou práci.</p>
+          </div>
+
+          <div class="info-list">
+            <div class="info-row"><span>Cílový čistý příjem</span><strong id="summaryNetIncome">0 Kč</strong></div>
+            <div class="info-row"><span>Měsíční náklady podnikání</span><strong id="summaryCosts">0 Kč</strong></div>
+            <div class="info-row"><span>Orientační odvody a daň</span><strong id="summaryLevies">0 Kč</strong></div>
+            <div class="info-row"><span>Rezerva</span><strong id="summaryReserve">0 Kč</strong></div>
+            <div class="info-row"><span>Slabší měsíce a dovolená</span><strong id="summarySeasonality">0 Kč</strong></div>
+            <div class="info-row"><span>Cenový buffer</span><strong id="summaryBuffer">0 Kč</strong></div>
+          </div>
+
+          <div class="compare-grid">
+            <div class="compare-card">
+              <h3>Kontrola současné sazby</h3>
+              <p id="currentRateAssessment">Pokud doplníte svou současnou sazbu, uvidíte, jestli je pod minimem, na hraně nebo už v bezpečné zóně.</p>
+            </div>
+            <div class="compare-card">
+              <h3>Orientační denní sazba</h3>
+              <p id="dayRateText">Po výpočtu se zobrazí orientační denní sazba při 6 fakturovatelných hodinách denně.</p>
+            </div>
+          </div>
+
+          <p class="notice">Výpočet je orientační a slouží hlavně pro nacenění práce a business planning. Není to účetní nebo daňová kalkulačka, ale praktický model pro zdravější cenotvorbu.</p>
+        </div>
+      </aside>
+    </section>
+
+    <section class="container" aria-labelledby="breakdown-heading">
+      <article class="card">
+        <div class="card-header">
+          <h2 id="breakdown-heading">Rozpad doporučené sazby</h2>
+          <p>Přehled hlavních položek, které vstupují do vaší měsíční fakturace a výsledné hodinové sazby.</p>
+        </div>
+        <div class="card-body split-grid">
+          <div class="table-wrap">
+            <table aria-label="Rozpad hodinové sazby freelancera">
+              <thead>
+                <tr>
+                  <th>Položka</th>
+                  <th>Částka za měsíc</th>
+                  <th>Podíl na fakturaci</th>
+                </tr>
+              </thead>
+              <tbody id="breakdownBody">
+                <tr>
+                  <td colspan="3">Po zadání údajů se zobrazí přehled doporučené sazby.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="stack-list">
+            <div class="stack-card">
+              <strong>Co z výsledku řešit jako první</strong>
+              <p id="nextStepText">Nejdřív se podívejte na rozdíl mezi minimální a doporučenou sazbou. Pokud jsou si velmi blízko, máte malou rezervu pro slevy, výpadky nebo růst.</p>
+            </div>
+            <div class="stack-card">
+              <strong>Kdy bývá sazba podstřelená</strong>
+              <p>Když počítáte jen čistý příjem a ignorujete neplacený čas, dovolenou, obchod nebo náklady. Typicky pak pracujete hodně, ale podnikání nemá dostatečnou marži ani rezervu.</p>
+            </div>
+            <div class="stack-card">
+              <strong>Projektová cena versus hodinovka</strong>
+              <p>Projektovou cenu můžete nastavovat i nad doporučenou hodinovou sazbou, pokud prodáváte expertizu, rychlost nebo výsledek. Hodinová sazba je hlavně spodní kotva pro správné nacenění.</p>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="container content-section">
+      <h2>Jak kalkulačka hodinové sazby freelancera funguje</h2>
+      <p>Freelancer obvykle neprodává celý svůj pracovní čas. Část hodin padne na nabídky, cally, administrativu, komunikaci, obchod, vzdělávání nebo čekání mezi zakázkami. Proto nestačí vzít požadovaný příjem a vydělit ho všemi odpracovanými hodinami. Tato kalkulačka pracuje jen s <strong>fakturovatelnými hodinami</strong> a navíc přidává náklady, orientační odvody, rezervu a slabší měsíce.</p>
+
+      <h3>Co do sazby vstupuje</h3>
+      <ul>
+        <li>váš cílový čistý příjem,</li>
+        <li>fixní a provozní náklady podnikání,</li>
+        <li>orientační daňové a odvodové zatížení,</li>
+        <li>podíl neplaceného času mimo fakturaci,</li>
+        <li>měsíce s nižší fakturací nebo dovolenou,</li>
+        <li>bezpečnostní rezerva a cenový buffer.</li>
+      </ul>
+
+      <h3>Jak číst doporučenou a minimální sazbu</h3>
+      <p><strong>Minimální sazba</strong> je spodní hranice. Ukazuje, pod jakou cenu už vaše podnikání většinou přestává být zdravé. <strong>Doporučená sazba</strong> je praktičtější pracovní cena, která počítá i s rezervou pro vyjednávání, chyby v odhadu, slabší měsíce nebo investice do růstu.</p>
+
+      <h3>Kdy je výpočet nejvíc užitečný</h3>
+      <p>Kalkulačka se hodí při startu na volné noze, při zdražení služeb, při přechodu ze zaměstnání na freelance i ve chvíli, kdy cítíte, že fakturujete hodně hodin, ale výsledný příjem tomu neodpovídá. Výborně navazuje na kalkulačku minimální fakturace OSVČ, kalkulačku rezervy pro podnikání a kalkulačku obratu pro cílový zisk.</p>
+    </section>
+
+    <section class="container content-section">
+      <h2>Jak poznat, že je vaše hodinová sazba příliš nízká</h2>
+      <div class="faq-grid">
+        <div class="faq-item">
+          <h3>Pracujete hodně, ale finančně se neposouváte</h3>
+          <p>Typický signál podstřelené sazby. Peníze mizí v nákladech, odkládané rezervě a neplaceném čase, který v původní ceně vůbec nebyl zohledněn.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Nemáte prostor na dovolenou nebo slabší měsíc</h3>
+          <p>Jestli vás i krátký výpadek zakázek finančně rozhodí, je cena často postavená příliš těsně kolem minima.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Každá sleva bolí</h3>
+          <p>Pokud už malá sleva zásadně snižuje ziskovost, chybí vám cenový buffer. To bývá častý důvod, proč je lepší pracovat s doporučenou sazbou než s holým minimem.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="container content-section" id="faq">
+      <h2>Časté otázky</h2>
+      <div class="faq-grid">
+        <article class="faq-item">
+          <h3>Jak si spočítat hodinovou sazbu jako freelancer?</h3>
+          <p>Začněte cílovým čistým příjmem, přičtěte náklady, rezervu a orientační odvody. Výsledek pak dělte pouze fakturovatelnými hodinami, ne všemi odpracovanými hodinami.</p>
+        </article>
+        <article class="faq-item">
+          <h3>Co znamená podíl neplaceného času?</h3>
+          <p>Jde o hodiny, které nevyfakturujete klientovi, ale musíte je odpracovat. Typicky obchod, administrativa, cally, příprava, vzdělávání nebo marketing.</p>
+        </article>
+        <article class="faq-item">
+          <h3>Je výpočet přesný?</h3>
+          <p>Je orientační. Slouží pro cenotvorbu a rychlé business rozhodnutí. Skutečné odvody a daňové dopady se mohou lišit podle režimu OSVČ, paušálu, slev a konkrétní situace.</p>
+        </article>
+        <article class="faq-item">
+          <h3>Je lepší účtovat hodinovou sazbu nebo projektovou cenu?</h3>
+          <p>Pro klienta bývá často lepší projektová cena, ale i tu je dobré stavět na zdravé hodinové sazbě. Pomůže vám nepodstřelit odhad a chránit ziskovost.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="container content-section">
+      <h2>Související kalkulačky</h2>
+      <div class="related-grid">
+        <a class="related-card" href="/kalkulacka-minimalni-fakturace-osvc.html">
+          <strong>Kalkulačka minimální fakturace OSVČ</strong>
+          <span>Zjistěte, kolik musíte měsíčně fakturovat, aby podnikání ekonomicky dávalo smysl.</span>
+        </a>
+        <a class="related-card" href="/kalkulacka-potrebne-rezervy-podnikani.html">
+          <strong>Kalkulačka potřebné rezervy pro podnikání</strong>
+          <span>Odhad doporučené finanční rezervy pro freelancery, OSVČ a menší podnikání.</span>
+        </a>
+        <a class="related-card" href="/obrat-pro-cilovy-zisk-kalkulacka.html">
+          <strong>Kalkulačka obratu pro cílový zisk</strong>
+          <span>Výpočet potřebného obratu pro dosažení konkrétního zisku.</span>
+        </a>
+        <a class="related-card" href="/minimalni-prodejni-cena-kalkulacka.html">
+          <strong>Kalkulačka minimální prodejní ceny</strong>
+          <span>Výpočet minimální ceny produktu nebo služby s ohledem na náklady a požadovanou marži.</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="site-cta-band" aria-label="Další krok">
+      <div class="container">
+        <div class="site-cta-card">
+          <div class="site-cta-copy">
+            <strong>Navazující krok po hodinové sazbě</strong>
+            <p>Když znáte zdravou sazbu, dává smysl ověřit si i minimální fakturaci, potřebnou rezervu nebo obrat pro cílový zisk.</p>
+          </div>
+          <div class="site-cta-actions">
+            <a class="site-cta-link" href="/kalkulacka-minimalni-fakturace-osvc.html">Minimální fakturace OSVČ</a>
+            <a class="site-cta-link" href="/kalkulacka-potrebne-rezervy-podnikani.html">Rezerva pro podnikání</a>
+            <a class="site-cta-link" href="/obrat-pro-cilovy-zisk-kalkulacka.html">Obrat pro cílový zisk</a>
+            <a class="site-cta-link" href="/minimalni-prodejni-cena-kalkulacka.html">Minimální prodejní cena</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer style="margin-top:48px;border-top:1px solid rgba(219,227,240,0.9);background:linear-gradient(180deg, rgba(255,255,255,0.92) 0%, rgba(248,251,255,0.98) 100%);">
+    <div class="container footer-grid" style="padding:34px 0 22px;display:grid;grid-template-columns:1.2fr 0.9fr 0.9fr;gap:28px;">
+      <div style="max-width:520px;">
+        <strong style="display:inline-block;font-size:1.14rem;letter-spacing:-0.02em;color:#172033;margin-bottom:12px;">RychléVýpočty.cz</strong>
+        <p style="margin:0;color:#5f6b85;font-size:0.95rem;line-height:1.65;">Online kalkulačky a praktické nástroje zdarma pro finance, bydlení, mzdy, podnikání, energie, auto, domácnost i další situace, které dává smysl si nejdřív spočítat.</p>
+      </div>
+      <div>
+        <h3 style="margin:0 0 12px;font-size:1rem;letter-spacing:-0.02em;color:#172033;">Hlavní sekce</h3>
+        <div style="display:grid;gap:10px;">
+          <a href="/kalkulacky.html">Všechny kalkulačky</a>
+          <a href="/business-a-cenotvorba.html">Business a cenotvorba</a>
+          <a href="/mzdy-a-prace.html">Mzdy a práce</a>
+          <a href="/finance-a-hypoteky.html">Finance a hypotéky</a>
+        </div>
+      </div>
+      <div>
+        <h3 style="margin:0 0 12px;font-size:1rem;letter-spacing:-0.02em;color:#172033;">Informace a důvěra</h3>
+        <div style="display:grid;gap:10px;">
+          <a href="/o-nas.html">O nás</a>
+          <a href="/kontakt.html">Kontakt</a>
+          <a href="/ochrana-osobnich-udaju.html">Ochrana osobních údajů</a>
+          <a href="/podminky-pouziti.html">Podmínky použití</a>
+        </div>
+      </div>
+    </div>
+    <div style="width:min(1180px,calc(100% - 32px));margin:0 auto;border-top:1px solid rgba(219,227,240,0.9);padding:18px 0 34px;display:grid;grid-template-columns:1fr;gap:20px;align-items:start;">
+      <div>
+        <p style="margin:0 0 8px;color:#5f6b85;font-size:0.92rem;line-height:1.6;">© RychléVýpočty.cz – online kalkulačky a praktické nástroje zdarma</p>
+        <p style="margin:0;color:#5f6b85;font-size:0.92rem;line-height:1.6;">Výsledky mají orientační charakter a u důležitých finančních, daňových, právních nebo podnikatelských rozhodnutí je vhodné je ověřit podle konkrétních podmínek.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const form = document.getElementById('rateForm');
+    const resetBtn = document.getElementById('resetBtn');
+    const presetButtons = document.querySelectorAll('[data-preset]');
+
+    const outputs = {
+      recommendedRate: document.getElementById('recommendedRate'),
+      minimumRate: document.getElementById('minimumRate'),
+      requiredBilling: document.getElementById('requiredBilling'),
+      billableHours: document.getElementById('billableHours'),
+      summaryNetIncome: document.getElementById('summaryNetIncome'),
+      summaryCosts: document.getElementById('summaryCosts'),
+      summaryLevies: document.getElementById('summaryLevies'),
+      summaryReserve: document.getElementById('summaryReserve'),
+      summarySeasonality: document.getElementById('summarySeasonality'),
+      summaryBuffer: document.getElementById('summaryBuffer'),
+      rateBadge: document.getElementById('rateBadge'),
+      decisionTitle: document.getElementById('decisionTitle'),
+      decisionText: document.getElementById('decisionText'),
+      breakdownBody: document.getElementById('breakdownBody'),
+      currentRateAssessment: document.getElementById('currentRateAssessment'),
+      dayRateText: document.getElementById('dayRateText'),
+      nextStepText: document.getElementById('nextStepText')
+    };
+
+    const defaultValues = {
+      targetNetIncome: 50000,
+      monthlyCosts: 10000,
+      hoursPerMonth: 140,
+      currentRate: '',
+      leviesRate: 20,
+      nonBillableRate: 30,
+      monthsOff: 2,
+      reserveRate: 10,
+      pricingBuffer: 10
+    };
+
+    const presets = {
+      standard: { targetNetIncome: 50000, monthlyCosts: 10000, hoursPerMonth: 140, leviesRate: 20, nonBillableRate: 30, monthsOff: 2, reserveRate: 10, pricingBuffer: 10 },
+      lean: { targetNetIncome: 45000, monthlyCosts: 6000, hoursPerMonth: 145, leviesRate: 18, nonBillableRate: 25, monthsOff: 1, reserveRate: 8, pricingBuffer: 8 },
+      growth: { targetNetIncome: 65000, monthlyCosts: 18000, hoursPerMonth: 145, leviesRate: 25, nonBillableRate: 35, monthsOff: 2, reserveRate: 15, pricingBuffer: 15 }
+    };
+
+    function formatCurrency(value) {
+      return new Intl.NumberFormat('cs-CZ', {
+        style: 'currency',
+        currency: 'CZK',
+        maximumFractionDigits: 0
+      }).format(value);
+    }
+
+    function formatPercent(value, digits = 1) {
+      return new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: digits
+      }).format(value) + ' %';
+    }
+
+    function formatHours(value) {
+      return new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 1
+      }).format(value) + ' h';
+    }
+
+    function setFormValues(values) {
+      Object.keys(values).forEach((key) => {
+        const field = document.getElementById(key);
+        if (field) field.value = values[key];
+      });
+    }
+
+    function getValues() {
+      return {
+        targetNetIncome: Number(document.getElementById('targetNetIncome').value),
+        monthlyCosts: Number(document.getElementById('monthlyCosts').value),
+        hoursPerMonth: Number(document.getElementById('hoursPerMonth').value),
+        currentRate: Number(document.getElementById('currentRate').value) || 0,
+        leviesRate: Number(document.getElementById('leviesRate').value),
+        nonBillableRate: Number(document.getElementById('nonBillableRate').value),
+        monthsOff: Number(document.getElementById('monthsOff').value),
+        reserveRate: Number(document.getElementById('reserveRate').value),
+        pricingBuffer: Number(document.getElementById('pricingBuffer').value)
+      };
+    }
+
+    function validate(values) {
+      if (!values.targetNetIncome || values.targetNetIncome <= 0) return 'Zadejte platný cílový čistý příjem.';
+      if (values.monthlyCosts < 0) return 'Měsíční náklady nemohou být záporné.';
+      if (!values.hoursPerMonth || values.hoursPerMonth <= 0) return 'Zadejte platný počet pracovních hodin za měsíc.';
+      if (values.hoursPerMonth < 20) return 'Počet pracovních hodin za měsíc je neobvykle nízký.';
+      if (values.leviesRate < 0 || values.leviesRate >= 90) return 'Zadejte realistický podíl odvodů a daní.';
+      if (values.nonBillableRate < 0 || values.nonBillableRate >= 90) return 'Zadejte realistický podíl neplaceného času.';
+      if (values.currentRate < 0) return 'Současná sazba nemůže být záporná.';
+      return '';
+    }
+
+    function calculate(values) {
+      const netAndCostsBase = values.targetNetIncome + values.monthlyCosts;
+      const seasonalityMultiplier = 12 / Math.max(1, 12 - values.monthsOff);
+      const seasonalityAdjusted = netAndCostsBase * seasonalityMultiplier;
+      const seasonalityExtra = seasonalityAdjusted - netAndCostsBase;
+
+      const reserveAmount = seasonalityAdjusted * (values.reserveRate / 100);
+      const subtotalBeforeLevies = seasonalityAdjusted + reserveAmount;
+      const grossNeeded = subtotalBeforeLevies / Math.max(0.1, 1 - values.leviesRate / 100);
+      const leviesAmount = grossNeeded - subtotalBeforeLevies;
+
+      const billableHours = values.hoursPerMonth * (1 - values.nonBillableRate / 100);
+      const minimumRate = grossNeeded / Math.max(1, billableHours);
+
+      const bufferAmount = grossNeeded * (values.pricingBuffer / 100);
+      const recommendedBilling = grossNeeded + bufferAmount;
+      const recommendedRate = recommendedBilling / Math.max(1, billableHours);
+      const recommendedDayRate = recommendedRate * 6;
+
+      const currentMonthlyBilling = values.currentRate > 0 ? values.currentRate * billableHours : 0;
+      const currentGapToMinimum = values.currentRate > 0 ? values.currentRate - minimumRate : 0;
+      const currentGapToRecommended = values.currentRate > 0 ? values.currentRate - recommendedRate : 0;
+
+      return {
+        netAndCostsBase,
+        seasonalityAdjusted,
+        seasonalityExtra,
+        reserveAmount,
+        leviesAmount,
+        grossNeeded,
+        billableHours,
+        minimumRate,
+        bufferAmount,
+        recommendedBilling,
+        recommendedRate,
+        recommendedDayRate,
+        currentMonthlyBilling,
+        currentGapToMinimum,
+        currentGapToRecommended
+      };
+    }
+
+    function buildBreakdown(values, result) {
+      const rows = [
+        { label: 'Cílový čistý příjem', value: values.targetNetIncome },
+        { label: 'Náklady podnikání', value: values.monthlyCosts },
+        { label: 'Navýšení kvůli slabším měsícům', value: result.seasonalityExtra },
+        { label: 'Rezerva', value: result.reserveAmount },
+        { label: 'Orientační odvody a daň', value: result.leviesAmount },
+        { label: 'Cenový buffer', value: result.bufferAmount }
+      ];
+
+      return rows
+        .filter(row => row.value > 0)
+        .map(row => ({
+          ...row,
+          share: result.recommendedBilling > 0 ? (row.value / result.recommendedBilling) * 100 : 0
+        }));
+    }
+
+    function renderBreakdown(rows) {
+      if (!rows.length) {
+        outputs.breakdownBody.innerHTML = '<tr><td colspan="3">Po zadání údajů se zobrazí přehled doporučené sazby.</td></tr>';
+        return;
+      }
+      outputs.breakdownBody.innerHTML = rows.map(row => `
+        <tr>
+          <td>${row.label}</td>
+          <td>${formatCurrency(row.value)}</td>
+          <td>${formatPercent(row.share)}</td>
+        </tr>
+      `).join('');
+    }
+
+    function updateBadge(result) {
+      if (result.recommendedRate <= 700) {
+        outputs.rateBadge.className = 'badge success';
+        outputs.rateBadge.textContent = 'Sazba působí realisticky pro běžné služby a širší trh';
+      } else if (result.recommendedRate <= 1200) {
+        outputs.rateBadge.className = 'badge warning';
+        outputs.rateBadge.textContent = 'Sazba už vyžaduje dobré pozicování a jasně popsanou hodnotu';
+      } else {
+        outputs.rateBadge.className = 'badge danger';
+        outputs.rateBadge.textContent = 'Vyšší sazba obvykle vyžaduje specializaci, silnou značku nebo prémiový servis';
+      }
+    }
+
+    function updateDecision(values, result) {
+      const spread = result.recommendedRate - result.minimumRate;
+      if (!values.currentRate) {
+        outputs.decisionTitle.textContent = 'Doporučená sazba je vaše pracovní cena';
+        if (spread <= 80) {
+          outputs.decisionText.textContent = 'Rozdíl mezi minimální a doporučenou sazbou je malý. To znamená menší prostor pro slevy, nečekané výpadky nebo investice do růstu.';
+        } else {
+          outputs.decisionText.textContent = 'Doporučená sazba vytváří rozumný buffer nad minimem. Díky tomu máte větší rezervu pro vyjednávání, nepřesné odhady nebo slabší měsíce.';
+        }
+        return;
+      }
+
+      if (values.currentRate < result.minimumRate) {
+        outputs.decisionTitle.textContent = 'Vaše současná sazba je pod minimem';
+        outputs.decisionText.textContent = `Při sazbě ${formatCurrency(values.currentRate)} jste přibližně ${formatCurrency(result.minimumRate - values.currentRate)} pod minimální zdravou hranicí. Dlouhodobě hrozí, že dotujete vlastní práci nebo nemáte rezervu na výpadky.`;
+      } else if (values.currentRate < result.recommendedRate) {
+        outputs.decisionTitle.textContent = 'Vaše sazba je nad minimem, ale pod doporučením';
+        outputs.decisionText.textContent = `Při sazbě ${formatCurrency(values.currentRate)} podnikání pravděpodobně přežije, ale máte menší prostor pro slevy a růst. Do doporučené sazby vám chybí asi ${formatCurrency(result.recommendedRate - values.currentRate)} za hodinu.`;
+      } else {
+        outputs.decisionTitle.textContent = 'Vaše sazba je v bezpečnější zóně';
+        outputs.decisionText.textContent = `Současná sazba ${formatCurrency(values.currentRate)} je nad doporučenou hranicí. To vám dává více prostoru na vyjednávání, kvalitnější servis nebo slabší měsíce bez zbytečného tlaku.`;
+      }
+    }
+
+    function updateCurrentRateAssessment(values, result) {
+      if (!values.currentRate) {
+        outputs.currentRateAssessment.textContent = 'Pokud doplníte svou současnou sazbu, uvidíte, jestli je pod minimem, na hraně nebo už v bezpečné zóně.';
+        return;
+      }
+
+      if (values.currentRate < result.minimumRate) {
+        outputs.currentRateAssessment.textContent = `Při aktuální sazbě ${formatCurrency(values.currentRate)} by vaše orientační měsíční fakturace vycházela na ${formatCurrency(result.currentMonthlyBilling)}. To je pod minimální zdravou hranicí.`;
+      } else if (values.currentRate < result.recommendedRate) {
+        outputs.currentRateAssessment.textContent = `Aktuální sazba ${formatCurrency(values.currentRate)} je použitelná, ale stále asi ${formatCurrency(result.recommendedRate - values.currentRate)} pod doporučením. Měsíčně by to znamenalo zhruba o ${formatCurrency(result.recommendedBilling - result.currentMonthlyBilling)} nižší fakturaci oproti doporučenému cíli.`;
+      } else {
+        outputs.currentRateAssessment.textContent = `Aktuální sazba ${formatCurrency(values.currentRate)} je nad doporučenou úrovní. Orientační měsíční fakturace by při ní vycházela na ${formatCurrency(result.currentMonthlyBilling)}.`;
+      }
+    }
+
+    function updateNextStep(values, result) {
+      if (values.currentRate && values.currentRate < result.recommendedRate) {
+        outputs.nextStepText.textContent = `Největší dopad teď má práce s cenou. Pokud zdražíte z ${formatCurrency(values.currentRate)} na ${formatCurrency(result.recommendedRate)}, přiblížíte se zdravější měsíční fakturaci bez nutnosti prodávat více hodin.`;
+      } else if (values.nonBillableRate >= 40) {
+        outputs.nextStepText.textContent = 'Velký vliv na výsledek má neplacený čas. Pokud dokážete zefektivnit obchod, administrativu nebo schůzky, může klesnout tlak na sazbu i potřebnou měsíční fakturaci.';
+      } else if (values.monthlyCosts >= 15000) {
+        outputs.nextStepText.textContent = 'Významnou část sazby táhnou měsíční náklady. Zkontrolujte, co je skutečně nutné a co jen snižuje prostor pro zdravější cenotvorbu.';
+      } else {
+        outputs.nextStepText.textContent = 'Nejdřív porovnejte doporučenou sazbu s tím, co dnes skutečně účtujete. Potom dává smysl navázat výpočtem minimální fakturace OSVČ nebo potřebné rezervy pro podnikání.';
+      }
+    }
+
+    function render(values, result) {
+      outputs.recommendedRate.textContent = formatCurrency(result.recommendedRate);
+      outputs.minimumRate.textContent = formatCurrency(result.minimumRate);
+      outputs.requiredBilling.textContent = formatCurrency(result.recommendedBilling);
+      outputs.billableHours.textContent = formatHours(result.billableHours);
+
+      outputs.summaryNetIncome.textContent = formatCurrency(values.targetNetIncome);
+      outputs.summaryCosts.textContent = formatCurrency(values.monthlyCosts);
+      outputs.summaryLevies.textContent = formatCurrency(result.leviesAmount);
+      outputs.summaryReserve.textContent = formatCurrency(result.reserveAmount);
+      outputs.summarySeasonality.textContent = formatCurrency(result.seasonalityExtra);
+      outputs.summaryBuffer.textContent = formatCurrency(result.bufferAmount);
+
+      updateBadge(result);
+      updateDecision(values, result);
+      updateCurrentRateAssessment(values, result);
+      updateNextStep(values, result);
+      outputs.dayRateText.textContent = `Při doporučené sazbě vychází orientační denní sazba na ${formatCurrency(result.recommendedDayRate)} při 6 fakturovatelných hodinách denně.`;
+
+      renderBreakdown(buildBreakdown(values, result));
+    }
+
+    function runCalculation() {
+      const values = getValues();
+      const error = validate(values);
+      if (error) {
+        alert(error);
+        return;
+      }
+      const result = calculate(values);
+      render(values, result);
+    }
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      runCalculation();
+    });
+
+    ['targetNetIncome', 'monthlyCosts', 'hoursPerMonth', 'currentRate', 'leviesRate', 'nonBillableRate', 'monthsOff', 'reserveRate', 'pricingBuffer'].forEach(id => {
+      const el = document.getElementById(id);
+      el.addEventListener('input', runCalculation);
+      el.addEventListener('change', runCalculation);
+    });
+
+    resetBtn.addEventListener('click', function() {
+      setFormValues(defaultValues);
+      presetButtons.forEach(btn => btn.classList.remove('active'));
+      document.querySelector('[data-preset="standard"]').classList.add('active');
+      runCalculation();
+    });
+
+    presetButtons.forEach((button) => {
+      button.addEventListener('click', function() {
+        presetButtons.forEach(btn => btn.classList.remove('active'));
+        this.classList.add('active');
+        const presetName = this.getAttribute('data-preset');
+        setFormValues({ ...presets[presetName], currentRate: document.getElementById('currentRate').value });
+        runCalculation();
+      });
+    });
+
+    (function () {
+      const path = window.location.pathname.replace(/\/$/, '') || '/';
+      const links = document.querySelectorAll('.topnav a[href]');
+      links.forEach((link) => {
+        const href = link.getAttribute('href');
+        if (!href) return;
+        const normalized = href.replace(/\/$/, '') || '/';
+        if (normalized === path) {
+          link.setAttribute('aria-current', 'page');
+        }
+      });
+    })();
+
+    runCalculation();
+  </script>
+  <button aria-label="Zpět nahoru" class="back-to-top" id="rvBackToTop" type="button">↑</button>
+</body>
+</html>

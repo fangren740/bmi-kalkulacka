@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+
+<html lang="cs"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><meta content="telephone=no" name="format-detection"/>
+<link href="/favicon.ico?v=5" rel="icon" sizes="any"/><link href="/favicon.svg?v=5" rel="icon" type="image/svg+xml"/><link href="/favicon-32x32.png?v=5" rel="icon" sizes="32x32" type="image/png"/><link href="/favicon-16x16.png?v=5" rel="icon" sizes="16x16" type="image/png"/><link href="/apple-touch-icon.png?v=5" rel="apple-touch-icon" sizes="180x180"/><link href="/site.webmanifest?v=5" rel="manifest"/><meta content="#0B2447" name="theme-color"/>
+<title>Auto a provoz – náklady na auto, cena za km, leasing | RychléVýpočty.cz</title><meta content="Spočítejte náklady na auto, cenu za km, spotřebu paliva, leasing, splátku auta, amortizaci i nabíjení elektromobilu. Online kalkulačky zdarma." name="description"/><meta content="index,follow" name="robots"/><link href="https://rychlevypocty.cz/auto-a-provoz.html" rel="canonical"/><meta content="website" property="og:type"/><meta content="https://rychlevypocty.cz/auto-a-provoz.html" property="og:url"/><meta content="RychléVýpočty.cz" property="og:site_name"/><meta content="Auto a provoz – náklady auta, cena za km, spotřeba paliva, TCO a splátka auta | RychléVýpočty.cz" property="og:title"/><meta content="Praktický rozcestník pro auto a provoz. Spočítejte si náklady na provoz auta, celkovou cenu vlastnictví, spotřebu paliva, cenu za kilometr, splátku auta, amortizaci i nabíjení elektromobilu." property="og:description"/><meta content="https://rychlevypocty.cz/og-image.jpg?v=5" property="og:image"/>
+<style>
+:root{
+  --ink:#0B2447;
+  --blue:#0B3B78;
+  --blue2:#0F5AA8;
+  --green:#45B22F;
+  --green2:#72D45A;
+  --bg:#F5F9FC;
+  --surface:#FFFFFF;
+  --muted:#61748C;
+  --line:#DCE7F2;
+  --soft-blue:#EAF4FF;
+  --soft-green:#EEFBEA;
+  --shadow:0 26px 78px rgba(11,36,71,.13);
+  --shadow-soft:0 14px 34px rgba(11,36,71,.08);
+  --radius:30px;
+  --container:min(1180px,calc(100% - 32px));
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:94px}
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  color:#17243A;
+  line-height:1.62;
+  background:
+    radial-gradient(circle at 8% -2%,rgba(69,178,47,.13),transparent 26%),
+    radial-gradient(circle at 94% 6%,rgba(15,90,168,.14),transparent 34%),
+    linear-gradient(180deg,#fbfffd 0%,var(--bg) 46%,#fff 100%);
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+  background-image:linear-gradient(rgba(11,59,120,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(11,59,120,.035) 1px,transparent 1px);
+  background-size:44px 44px;
+  mask-image:linear-gradient(180deg,rgba(0,0,0,.58),transparent 60%);
+}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:3px solid rgba(69,178,47,.36);outline-offset:3px;border-radius:14px}
+.container{width:var(--container);margin:0 auto}
+.skip-link{position:absolute;left:16px;top:-60px;z-index:200;padding:12px 16px;border-radius:14px;background:var(--ink);color:#fff;font-weight:850;transition:.18s ease}
+.skip-link:focus{top:16px}
+
+/* Header */
+.site-header,.topbar{
+  position:sticky;top:0;z-index:90;
+  background:rgba(255,255,255,.86);
+  border-bottom:1px solid rgba(220,231,242,.76);
+  backdrop-filter:blur(18px);
+  box-shadow:0 10px 28px rgba(11,36,71,.045);
+}
+.header-inner,.topbar-inner{min-height:76px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.brand{display:inline-flex;align-items:center;gap:10px;white-space:nowrap;line-height:1;color:var(--ink);font-weight:900;letter-spacing:-.035em;font-size:23px}
+.brand-icon{width:42px;height:42px;flex:0 0 42px;background:url('/icon.svg?v=5') center/contain no-repeat}
+.brand-wordmark{display:inline-flex;align-items:baseline;gap:0}
+.brand-green{color:var(--green)}
+.nav,.topnav{display:flex;align-items:center;gap:4px;color:#29415F;font-size:.93rem;font-weight:760}
+.nav a,.topnav a{padding:10px 12px;border-radius:999px;white-space:nowrap;transition:.18s ease}
+.nav a:hover,.topnav a:hover,.nav a[aria-current="page"],.topnav a[aria-current="page"]{color:var(--blue);background:rgba(15,90,168,.08);transform:translateY(-1px)}
+.header-cta{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:10px 16px;border-radius:999px;background:linear-gradient(135deg,var(--green),#55C83D);color:white;font-weight:900;box-shadow:0 14px 30px rgba(69,178,47,.25)}
+
+/* Reusable */
+.section{padding:56px 0}
+.section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:26px;margin-bottom:26px}
+.section-kicker,.eyebrow{
+  display:inline-flex;align-items:center;gap:8px;margin:0 0 12px;padding:7px 12px;
+  border:1px solid rgba(69,178,47,.22);border-radius:999px;
+  background:rgba(238,251,234,.92);color:#247D18;font-size:.78rem;font-weight:900;text-transform:uppercase;
+}
+h1,h2,h3,p{margin-top:0}
+h1{margin:0 0 18px;color:var(--ink);font-size:clamp(2.6rem,5.8vw,5.25rem);line-height:.95;font-weight:950;letter-spacing:-.065em;max-width:900px}
+h1 span,h2 span{color:var(--green)}
+h2{margin:0 0 8px;color:var(--ink);font-size:clamp(2rem,3.3vw,3.1rem);line-height:1.06;font-weight:930;letter-spacing:-.045em}
+.lead{font-size:1.16rem;line-height:1.72;color:#566A82;max-width:780px;margin-bottom:0}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:12px 18px;border-radius:999px;border:1px solid transparent;font-weight:900;transition:.18s ease}
+.btn:hover{transform:translateY(-2px)}
+.btn-primary{background:linear-gradient(135deg,var(--green),#55C83D);color:#fff;box-shadow:0 14px 30px rgba(69,178,47,.25)}
+.btn-secondary{background:#fff;color:var(--ink);border-color:var(--line);box-shadow:0 10px 24px rgba(11,36,71,.06)}
+
+/* Hero */
+.breadcrumbs{display:flex;gap:8px;align-items:center;flex-wrap:wrap;color:var(--muted);font-size:.9rem;margin:20px auto 16px;font-weight:720}
+.breadcrumbs a{color:var(--muted)}
+.hero{padding:0 0 22px}
+.hero-shell{
+  position:relative;
+  overflow:hidden;
+  border-radius:42px;
+  border:1px solid rgba(220,231,242,.9);
+  background:
+    radial-gradient(circle at 86% 10%,rgba(114,212,90,.21),transparent 27%),
+    radial-gradient(circle at 4% 92%,rgba(15,90,168,.14),transparent 30%),
+    linear-gradient(135deg,#fff,#f7fbff);
+  box-shadow:var(--shadow);
+}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1.04fr) 410px;gap:42px;align-items:center;padding:42px}
+.hero-actions{display:flex;flex-wrap:wrap;gap:11px;margin-top:24px}
+.hero-pills{display:flex;flex-wrap:wrap;gap:9px;margin:22px 0 0;padding:0;list-style:none}
+.hero-pills li{display:inline-flex;padding:9px 12px;border-radius:999px;border:1px solid var(--line);background:#fff;color:#29415F;font-weight:850;font-size:.88rem;box-shadow:0 8px 20px rgba(11,36,71,.04)}
+.auto-panel{
+  position:relative;
+  min-height:390px;
+  border-radius:34px;
+  background:linear-gradient(145deg,#071F3D,#0B3B78 58%,#0B7A4A);
+  box-shadow:0 28px 70px rgba(11,36,71,.22);
+  overflow:hidden;
+}
+.auto-panel::before{content:"";position:absolute;inset:24px;border-radius:26px;background:rgba(255,255,255,.95);box-shadow:0 20px 44px rgba(11,36,71,.20)}
+.auto-search{position:absolute;left:48px;right:48px;top:48px;z-index:2;height:48px;border-radius:16px;background:#f4f9fd;border:1px solid #dce7f2;display:flex;align-items:center;padding:0 16px;color:#7D8EA4;font-weight:800}
+.gauge{
+  position:absolute;z-index:2;left:58px;top:132px;width:154px;height:92px;border-radius:154px 154px 0 0;
+  background:conic-gradient(from 225deg,var(--green) 0 34%,#2A91EB 34% 68%,#dce7f2 68% 100%);
+  overflow:hidden;
+}
+.gauge::after{content:"";position:absolute;left:24px;right:24px;bottom:-38px;height:82px;border-radius:50%;background:#fff}
+.gauge strong{position:absolute;z-index:3;left:0;right:0;bottom:12px;text-align:center;color:var(--ink);font-size:1.45rem}
+.visual-card{
+  position:absolute;z-index:3;right:42px;top:126px;width:160px;padding:16px;border-radius:22px;background:#fff;border:1px solid var(--line);box-shadow:0 18px 38px rgba(11,36,71,.14)
+}
+.visual-card small{display:block;color:var(--muted);font-weight:800}
+.visual-card strong{display:block;margin-top:5px;color:var(--ink);font-size:1.35rem}
+.route{
+  position:absolute;z-index:2;left:58px;right:52px;bottom:58px;height:70px;border-radius:22px;background:linear-gradient(90deg,#f7fbff,#fff);border:1px solid var(--line);box-shadow:0 18px 38px rgba(11,36,71,.12)
+}
+.route::before{content:"";position:absolute;left:22px;right:22px;top:34px;height:3px;border-radius:999px;background:linear-gradient(90deg,var(--green),var(--blue2))}
+.route::after{content:"";position:absolute;right:30px;top:24px;width:22px;height:22px;border-radius:50%;background:var(--green);box-shadow:-160px 0 0 #2A91EB}
+.car{
+  position:absolute;z-index:4;right:82px;bottom:74px;width:74px;height:30px;border-radius:16px 24px 10px 10px;background:#071D3B;
+}
+.car::before{content:"";position:absolute;left:18px;top:-16px;width:36px;height:22px;border-radius:20px 20px 0 0;background:#0F5AA8}
+.car::after{content:"";position:absolute;left:10px;bottom:-8px;width:14px;height:14px;border-radius:50%;background:#fff;box-shadow:42px 0 0 #fff}
+
+/* Decision */
+.decision-panel{
+  display:grid;
+  grid-template-columns:.72fr 1.28fr;
+  gap:24px;
+  align-items:center;
+  padding:26px;
+  border-radius:32px;
+  border:1px solid var(--line);
+  background:linear-gradient(135deg,#fff,#f7fbff);
+  box-shadow:var(--shadow-soft);
+}
+.decision-panel h2{font-size:clamp(1.75rem,2.5vw,2.55rem)}
+.decision-links{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.decision-links a{
+  display:block;
+  padding:18px;
+  border-radius:22px;
+  border:1px solid var(--line);
+  background:#fff;
+  box-shadow:0 10px 24px rgba(11,36,71,.055);
+  transition:.18s ease;
+}
+.decision-links a:hover{transform:translateY(-3px);border-color:rgba(69,178,47,.36);box-shadow:0 18px 40px rgba(11,36,71,.10)}
+.decision-links strong{display:block;color:var(--ink);margin-bottom:4px}
+.decision-links span{display:block;color:var(--muted);font-size:.92rem}
+
+/* Tool groups */
+.tools-wrap{display:grid;gap:20px}
+.tool-group{
+  border-radius:32px;
+  border:1px solid var(--line);
+  background:#fff;
+  box-shadow:var(--shadow-soft);
+  overflow:hidden;
+}
+.tool-group-head{
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr);
+  gap:16px;
+  align-items:center;
+  padding:24px 28px;
+  background:
+    radial-gradient(circle at 95% 0%,rgba(69,178,47,.12),transparent 28%),
+    linear-gradient(90deg,#f7fbff,#fff);
+  border-bottom:1px solid var(--line);
+}
+.group-icon{
+  width:54px;height:54px;border-radius:18px;display:grid;place-items:center;
+  background:var(--soft-green);color:#247D18;font-weight:950;
+}
+.tool-group h3{margin:0 0 5px;color:var(--ink);font-size:1.35rem;letter-spacing:-.02em}
+.tool-group p{margin:0;color:var(--muted)}
+.tool-list{display:grid;gap:0}
+.tool-row{
+  display:grid;
+  grid-template-columns:54px minmax(0,1fr) 112px;
+  gap:16px;
+  align-items:center;
+  padding:19px 28px;
+  border-bottom:1px solid rgba(220,231,242,.82);
+  color:inherit;
+  transition:.16s ease;
+}
+.tool-row:last-child{border-bottom:0}
+.tool-row:hover{background:linear-gradient(90deg,#fff,#f4fff0);transform:translateX(3px)}
+.tool-icon{width:50px;height:50px;border-radius:18px;background:linear-gradient(180deg,#eefbea,#e3f7dc);display:grid;place-items:center;color:#247D18;font-weight:950}
+.tool-title{font-weight:920;color:var(--ink);font-size:1.04rem;margin-bottom:3px}
+.tool-desc{color:var(--muted);font-size:.94rem}
+.tool-open{justify-self:end;padding:10px 13px;border-radius:999px;background:var(--soft-green);color:#247D18;border:1px solid rgba(69,178,47,.22);font-weight:900}
+
+/* Insight */
+.insight-panel{
+  display:grid;
+  grid-template-columns:.88fr 1.12fr;
+  gap:28px;
+  padding:30px;
+  border-radius:34px;
+  border:1px solid var(--line);
+  background:
+    radial-gradient(circle at 90% 15%,rgba(69,178,47,.12),transparent 26%),
+    linear-gradient(135deg,#fff,#f8fcff);
+  box-shadow:var(--shadow-soft);
+}
+.insight-panel p{color:var(--muted);margin:0}
+.insight-points{display:grid;gap:10px;margin-top:16px}
+.insight-points span{display:flex;gap:10px;align-items:flex-start;color:#29415F;font-weight:820}
+.insight-points span::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--green);margin-top:.65em;flex:0 0 9px}
+
+/* Related and FAQ */
+.related-grid,.faq-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.related-card,.faq-card{
+  border:1px solid var(--line);border-radius:24px;background:#fff;box-shadow:var(--shadow-soft);transition:.18s ease;overflow:hidden;
+}
+.related-card{padding:20px}
+.related-card:hover,.faq-card:hover{transform:translateY(-4px);border-color:rgba(69,178,47,.32);box-shadow:0 22px 48px rgba(11,36,71,.12)}
+.related-card strong{display:block;color:var(--ink);margin-bottom:5px}
+.related-card span{display:block;color:var(--muted);font-size:.92rem}
+.faq-grid{grid-template-columns:repeat(2,1fr)}
+.faq-card summary{cursor:pointer;list-style:none;padding:18px 20px;color:var(--ink);font-weight:900}
+.faq-card summary::-webkit-details-marker{display:none}
+.faq-card p{padding:0 20px 18px;margin:0;color:var(--muted)}
+
+/* Footer */
+.footer{padding:56px 0 26px;background:#071D3B;color:rgba(255,255,255,.74)}
+.footer .brand{color:#fff}
+.footer-grid{display:grid;grid-template-columns:1.3fr .8fr .8fr;gap:32px}
+.footer-col h3{color:#fff;margin-bottom:12px}
+.footer-links{display:grid;gap:9px}
+.footer-links a{color:rgba(255,255,255,.76)}
+.footer-links a:hover{color:#fff}
+.footer-bottom{margin-top:30px;padding-top:18px;border-top:1px solid rgba(255,255,255,.12);font-size:.88rem}
+
+@media(max-width:1080px){
+  .header-inner,.topbar-inner{flex-wrap:wrap;gap:10px 18px;padding:12px 0}
+  .nav,.topnav{width:100%;overflow-x:auto;justify-content:flex-start;scrollbar-width:none}
+  .hero-grid,.decision-panel,.insight-panel{grid-template-columns:1fr}
+  .auto-panel{min-height:350px}
+  .related-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:760px){
+  :root{--container:min(100% - 24px,1180px)}
+  .brand{font-size:19px}.brand-icon{width:36px;height:36px;flex-basis:36px}
+  .hero-grid{padding:24px;border-radius:30px}
+  .hero-shell{border-radius:30px}
+  .auto-panel{display:none}
+  h1{font-size:clamp(2.35rem,12vw,4rem)}
+  .section{padding:42px 0}
+  .section-head{display:block}
+  .decision-links,.related-grid,.faq-grid,.footer-grid{grid-template-columns:1fr}
+  .tool-row{grid-template-columns:50px minmax(0,1fr);padding:18px 20px}
+  .tool-open{grid-column:2;justify-self:start}
+}
+
+/* spacing fix: title and description in tool rows */
+.tool-row > span:nth-child(2){
+  display:block;
+  min-width:0;
+}
+.tool-title{
+  display:block;
+  margin-bottom:6px;
+  line-height:1.25;
+}
+.tool-desc{
+  display:block;
+  line-height:1.5;
+}
+
+
+/* FAQ fix: consistent collapsed accordion + clear expand affordance */
+.faq-card{
+  min-height:auto;
+}
+.faq-card summary{
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+  padding:20px 58px 20px 22px;
+}
+.faq-card summary::after{
+  content:"+";
+  position:absolute;
+  right:18px;
+  top:50%;
+  transform:translateY(-50%);
+  width:30px;
+  height:30px;
+  border-radius:999px;
+  display:grid;
+  place-items:center;
+  background:var(--soft-green);
+  border:1px solid rgba(69,178,47,.24);
+  color:#247D18;
+  font-size:1.2rem;
+  font-weight:950;
+  line-height:1;
+  transition:.16s ease;
+}
+.faq-card[open] summary::after{
+  content:"–";
+  background:linear-gradient(135deg,var(--green),#55C83D);
+  color:#fff;
+  border-color:transparent;
+}
+.faq-card[open] summary{
+  border-bottom:1px solid rgba(220,231,242,.82);
+}
+.faq-card p{
+  padding:18px 22px 20px;
+}
+.faq-card:not([open]) p{
+  display:none;
+}
+.faq-card:hover summary::after{
+  transform:translateY(-50%) scale(1.05);
+}
+
+/* final SEO UX polish */
+.insight-panel a,
+.related-note a{
+  color:var(--blue);
+  font-weight:900;
+  text-decoration:underline;
+  text-decoration-thickness:2px;
+  text-underline-offset:3px;
+  text-decoration-color:rgba(69,178,47,.45);
+}
+.related-note{
+  margin-top:10px;
+  max-width:760px;
+  color:var(--muted);
+}
+.related-note a:hover,
+.insight-panel a:hover{
+  color:#247D18;
+}
+</style><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "Auto a provoz – náklady na auto, cena za km a leasing",
+  "url": "https://rychlevypocty.cz/auto-a-provoz.html",
+  "description": "Online kalkulačky pro náklady na auto, cenu za kilometr, spotřebu paliva, leasing, splátku auta, amortizaci, celkovou cenu vlastnictví auta a nabíjení elektromobilu."
+}</script><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "RychléVýpočty.cz",
+      "item": "https://rychlevypocty.cz/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Všechny kalkulačky",
+      "item": "https://rychlevypocty.cz/kalkulacky.html"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Auto a provoz",
+      "item": "https://rychlevypocty.cz/auto-a-provoz.html"
+    }
+  ]
+}</script><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Jak spočítat skutečné náklady na auto?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Pro skutečné náklady na auto je vhodné zahrnout palivo, pojištění, servis, pneumatiky, parkování, financování a ztrátu hodnoty auta."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Co znamená cena za kilometr?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Cena za kilometr ukazuje orientační náklad na jeden ujetý kilometr. Hodí se pro porovnání aut, služebních cest a pravidelného dojíždění."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Proč nestačí počítat jen spotřebu paliva?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Spotřeba paliva je jen část nákladů. Reálnou cenu auta ovlivňuje také servis, pojištění, pneumatiky, financování a amortizace."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Jsou výsledky kalkulaček závazné?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Výsledky slouží pro rychlou orientaci. U leasingu, úvěru, pojištění nebo servisu vždy záleží na konkrétních podmínkách."
+      }
+    }
+  ]
+}</script><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "RychléVýpočty.cz",
+  "url": "https://rychlevypocty.cz/",
+  "logo": "https://rychlevypocty.cz/icon-512.png"
+}</script></head><body><a class="skip-link" href="#main-content">Přejít na obsah</a><header class="site-header"><div class="container header-inner"><a aria-label="RychléVýpočty.cz – domů" class="brand" href="/"><span aria-hidden="true" class="brand-icon"></span><span class="brand-wordmark"><span>Rychlé</span><span class="brand-green">Výpočty</span><span>.cz</span></span></a><nav aria-label="Hlavní navigace" class="nav"><a href="/">Domů</a><a href="/kalkulacky.html">Všechny kalkulačky</a><a href="/finance-a-hypoteky.html">Finance</a><a href="/mzdy-a-prace.html">Mzdy</a><a href="/business-a-cenotvorba.html">Business</a></nav><a class="header-cta" href="#kalkulacky">Najít kalkulačku</a></div></header>
+<main id="main-content">
+<div aria-label="Drobečková navigace" class="container breadcrumbs">
+<a href="/">RychléVýpočty.cz</a><span>/</span><a href="/kalkulacky.html">Všechny kalkulačky</a><span>/</span><strong>Auto a provoz</strong>
+</div>
+<section class="hero">
+<div class="container">
+<div class="hero-shell">
+<div class="hero-grid">
+<div>
+<p class="eyebrow">Kalkulačky pro auto, palivo a provoz</p>
+<h1>Kolik vás auto <span>opravdu stojí?</span></h1>
+<p class="lead">Spočítejte si provoz auta, spotřebu paliva, cenu za kilometr, splátku, leasing, amortizaci i nabíjení elektromobilu. Rychle, zdarma a bez zbytečné tabulky.</p>
+<div class="hero-actions">
+<a class="btn btn-primary" href="#cim-zacit">Vybrat podle situace</a>
+<a class="btn btn-secondary" href="#kalkulacky">Zobrazit kalkulačky</a>
+</div>
+<ul aria-label="Hlavní témata" class="hero-pills">
+<li>Provoz auta</li>
+<li>Spotřeba paliva</li>
+<li>Cena za km</li>
+<li>Leasing</li>
+<li>Elektromobil</li>
+</ul>
+</div>
+<div aria-hidden="true" class="auto-panel">
+<div class="auto-search">Co chcete spočítat?</div>
+<div class="gauge"><strong>6,8 l</strong></div>
+<div class="visual-card"><small>Cena za km</small><strong>5,40 Kč</strong></div>
+<div class="route"></div>
+<div class="car"></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="section" id="cim-zacit">
+<div class="container">
+<div class="decision-panel">
+<div>
+<p class="section-kicker">Rychlý výběr</p>
+<h2>Nevíte, čím začít?</h2>
+<p class="lead">Vyberte situaci. Stránka vás pošle na kalkulačku, která dává největší smysl — od spotřeby paliva přes leasing až po amortizaci.</p>
+</div>
+<div class="decision-links">
+<a href="/kalkulacka-celkove-ceny-vlastnictvi-auta.html"><strong>Kupuju auto</strong><span>Spočítat celkovou cenu vlastnictví auta.</span></a>
+<a href="/naklady-na-provoz-auta-kalkulacka.html"><strong>Chci znát měsíční náklady</strong><span>Palivo, servis, pojištění a běžný provoz.</span></a>
+<a href="/spotreba-paliva-kalkulacka.html"><strong>Plánuju cestu</strong><span>Spočítat spotřebu paliva a cenu cesty.</span></a>
+<a href="/cena-nabijeni-elektromobilu-kalkulacka.html"><strong>Řeším elektromobil</strong><span>Odhad ceny domácího i veřejného nabíjení.</span></a>
+</div>
+</div>
+</div>
+</section>
+<section class="section" id="kalkulacky">
+<div class="container">
+<div class="section-head">
+<div>
+<p class="section-kicker">Kalkulačky podle situace</p>
+<h2>Kalkulačky pro náklady na auto a provoz</h2>
+<p>Seznam je rozdělený tak, aby nepůsobil jako katalog. Nejdřív provoz a palivo, potom financování a dlouhodobé náklady.</p>
+</div>
+</div>
+<div class="tools-wrap">
+<section class="tool-group">
+<div class="tool-group-head">
+<span class="group-icon">km</span>
+<div><h3>Provoz a palivo</h3><p>Každodenní náklady auta, spotřeba, cesta a cena za kilometr.</p></div>
+</div>
+<div class="tool-list">
+<a class="tool-row" href="/naklady-na-provoz-auta-kalkulacka.html"><span class="tool-icon">Kč</span><span><span class="tool-title">Kalkulačka nákladů na provoz auta</span><span class="tool-desc">Souhrnný pohled na měsíční a roční provozní náklady auta.</span></span><span class="tool-open">Otevřít</span></a>
+<a class="tool-row" href="/spotreba-paliva-kalkulacka.html"><span class="tool-icon">⛽</span><span><span class="tool-title">Kalkulačka spotřeby paliva</span><span class="tool-desc">Výpočet spotřeby paliva a ceny cesty podle kilometrů, spotřeby a ceny za litr.</span></span><span class="tool-open">Otevřít</span></a>
+<a class="tool-row" href="/cena-za-km-kalkulacka.html"><span class="tool-icon">km</span><span><span class="tool-title">Kalkulačka ceny za km</span><span class="tool-desc">Kolik vás orientačně stojí jeden kilometr provozu auta.</span></span><span class="tool-open">Otevřít</span></a>
+</div>
+</section>
+<section class="tool-group">
+<div class="tool-group-head">
+<span class="group-icon">%</span>
+<div><h3>Financování auta</h3><p>Splátky, leasing a rychlá orientace před podpisem nabídky.</p></div>
+</div>
+<div class="tool-list">
+<a class="tool-row" href="/kalkulacka-splatky-auta.html"><span class="tool-icon">₿</span><span><span class="tool-title">Kalkulačka splátky auta</span><span class="tool-desc">Orientační měsíční splátka při financování auta.</span></span><span class="tool-open">Otevřít</span></a>
+<a class="tool-row" href="/leasing-kalkulacka.html"><span class="tool-icon">↻</span><span><span class="tool-title">Leasing kalkulačka</span><span class="tool-desc">Orientační výpočet leasingové splátky a základních parametrů financování vozu.</span></span><span class="tool-open">Otevřít</span></a>
+</div>
+</section>
+<section class="tool-group">
+<div class="tool-group-head">
+<span class="group-icon">↘</span>
+<div><h3>Dlouhodobé náklady a elektromobil</h3><p>Ztráta hodnoty, TCO a provoz elektroauta.</p></div>
+</div>
+<div class="tool-list">
+<a class="tool-row" href="/kalkulacka-celkove-ceny-vlastnictvi-auta.html"><span class="tool-icon">Σ</span><span><span class="tool-title">Kalkulačka celkové ceny vlastnictví auta</span><span class="tool-desc">Skutečné náklady auta v delším období včetně ztráty hodnoty.</span></span><span class="tool-open">Otevřít</span></a>
+<a class="tool-row" href="/amortizace-auta-kalkulacka.html"><span class="tool-icon">%</span><span><span class="tool-title">Amortizace auta kalkulačka</span><span class="tool-desc">Odhad ztráty hodnoty auta v čase a její dopad na celkové náklady.</span></span><span class="tool-open">Otevřít</span></a>
+<a class="tool-row" href="/cena-nabijeni-elektromobilu-kalkulacka.html"><span class="tool-icon">⚡</span><span><span class="tool-title">Kalkulačka nabíjení elektromobilu</span><span class="tool-desc">Orientační cena nabíjení elektromobilu doma nebo na veřejných místech.</span></span><span class="tool-open">Otevřít</span></a>
+</div>
+</section>
+</div>
+</div>
+</section>
+<section class="section" id="co-podcenit">
+<div class="container">
+<div class="insight-panel">
+<div>
+<p class="section-kicker">Důležitý pohled</p>
+<h2>Co většina lidí u auta podcení</h2>
+</div>
+<div>
+<p>Palivo není celý příběh. U auta často rozhoduje ztráta hodnoty, servis, pojištění auta a financování. Proto se vyplatí počítat nejen spotřebu, ale také <a href="/naklady-na-provoz-auta-kalkulacka.html">náklady na provoz auta</a>, <a href="/cena-za-km-kalkulacka.html">cenu za kilometr</a> a <a href="/kalkulacka-celkove-ceny-vlastnictvi-auta.html">celkovou cenu vlastnictví auta</a>.</p>
+<div class="insight-points">
+<span>Pro krátkou cestu začněte spotřebou paliva.</span>
+<span>Pro měsíční rozpočet použijte náklady na provoz auta.</span>
+<span>Při koupi auta sledujte hlavně celkovou cenu vlastnictví.</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="section" id="souvisejici">
+<div class="container">
+<div class="section-head">
+<div>
+<p class="section-kicker">Navazující oblasti</p>
+<h2>Auto často souvisí s širším rozpočtem</h2>
+<p>Pokud řešíte auto doma nebo ve firmě, můžou se hodit i tyto přehledy.</p>
+<p class="related-note">Pokud řešíte auto jako součást celkového rozpočtu, podívejte se také na <a href="/rodina-a-rozpocet.html">rodinný rozpočet</a> nebo <a href="/energie-a-domacnost.html">energie a domácnost</a>.</p></div>
+</div>
+<div class="related-grid">
+<a class="related-card" href="/energie-a-domacnost.html"><strong>Energie a domácnost</strong><span>Elektřina, nabíjení, spotřeba a domácí provoz.</span></a>
+<a class="related-card" href="/rodina-a-rozpocet.html"><strong>Rodina a rozpočet</strong><span>Pravidelné výdaje a dlouhodobý domácí rozpočet.</span></a>
+<a class="related-card" href="/business-a-cenotvorba.html"><strong>Business a cenotvorba</strong><span>Firemní náklady, sazby a provozní rozhodnutí.</span></a>
+<a class="related-card" href="/finance-a-hypoteky.html"><strong>Finance a hypotéky</strong><span>Splátky, financování a větší rozpočtová rozhodnutí.</span></a>
+</div>
+</div>
+</section>
+<section class="section" id="faq">
+<div class="container">
+<div class="section-head">
+<div>
+<p class="section-kicker">Časté otázky</p>
+<h2>Časté otázky k nákladům auta</h2>
+<p>Krátké odpovědi pro rychlou orientaci před výpočtem.</p>
+</div>
+</div>
+<div class="faq-grid">
+<details class="faq-card"><summary>Jak spočítat skutečné náklady na auto?</summary><p>Zahrňte palivo, pojištění, servis, pneumatiky, parkování, financování a ztrátu hodnoty auta. Pro souhrnný odhad použijte kalkulačku nákladů na provoz auta nebo kalkulačku celkové ceny vlastnictví auta.</p></details>
+<details class="faq-card"><summary>Co znamená cena za kilometr?</summary><p>Cena za kilometr ukazuje orientační náklad na jeden ujetý kilometr. Hodí se pro porovnání aut, služebních cest, dojíždění nebo rozhodnutí, jestli se konkrétní cesta autem vyplatí.</p></details>
+<details class="faq-card"><summary>Proč nestačí počítat jen spotřebu paliva?</summary><p>Spotřeba paliva je jen část nákladů. Reálnou cenu auta ovlivňuje také servis, pojištění, pneumatiky, financování a amortizace, tedy ztráta hodnoty auta v čase.</p></details>
+<details class="faq-card"><summary>Jsou výsledky kalkulaček závazné?</summary><p>Ne. Výsledky slouží pro rychlou orientaci. U leasingu, úvěru, pojištění nebo servisu vždy záleží na konkrétních podmínkách a aktuální nabídce.</p></details>
+</div>
+</div>
+</section>
+</main>
+<footer class="footer"><div class="container footer-grid"><div><a class="brand" href="/"><img alt="" class="brand-icon" height="42" src="/icon.svg?v=5" width="42"/><span class="brand-wordmark"><span>Rychlé</span><span class="brand-green">Výpočty</span><span>.cz</span></span></a><p>Online kalkulačky a praktické nástroje zdarma pro rychlou orientaci v běžných rozhodnutích.</p></div><div><h3>Hlavní sekce</h3><div class="footer-links"><a href="/kalkulacky.html">Všechny kalkulačky</a><a href="/finance-a-hypoteky.html">Finance a hypotéky</a><a href="/mzdy-a-prace.html">Mzdy a práce</a><a href="/business-a-cenotvorba.html">Business</a></div></div><div><h3>Kategorie</h3><div class="footer-links"><a href="/energie-a-domacnost.html">Energie</a><a href="/auto-a-provoz.html">Auto</a><a href="/rodina-a-rozpocet.html">Rodina</a><a href="/stavba-domu.html">Stavba domu</a></div></div><div><h3>Informace</h3><div class="footer-links"><a href="/o-nas.html">O nás</a><a href="/kontakt.html">Kontakt</a><a href="/ochrana-osobnich-udaju.html">Ochrana osobních údajů</a><a href="/podminky-pouziti.html">Podmínky použití</a></div></div></div><div class="container footer-bottom">© RychléVýpočty.cz · Výsledky mají orientační charakter.</div></footer><script>(function(){const input=document.querySelector('.tool-filter'); if(!input)return; const rows=[...document.querySelectorAll('.tool-row')]; input.addEventListener('input',()=>{const q=input.value.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,''); rows.forEach(r=>{const hay=((r.dataset.title||'')+' '+(r.dataset.desc||'')+' '+(r.dataset.tag||'')).normalize('NFD').replace(/[̀-ͯ]/g,''); r.style.display=hay.includes(q)?'grid':'none';})});})();</script></body></html>

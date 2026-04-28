@@ -1,0 +1,1220 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="format-detection" content="telephone=no"/>
+  <link rel="icon" sizes="any" href="/favicon.ico?v=2"/>
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=2"/>
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=2"/>
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2"/>
+  <link rel="manifest" href="/site.webmanifest?v=2"/>
+  <meta name="theme-color" content="#14253d"/>
+
+  <title>Kalkulačka náhrady mzdy za dovolenou online zdarma | RychléVýpočty.cz</title>
+  <meta name="description" content="Spočítejte si orientační náhradu mzdy za dovolenou online. Přehledná kalkulačka pro výpočet náhrady podle průměrného hodinového výdělku a počtu hodin dovolené."/>
+  <meta name="keywords" content="náhrada mzdy za dovolenou, kalkulačka dovolené mzda, výpočet náhrady mzdy, průměrný hodinový výdělek, dovolená výpočet peněz"/>
+  <meta name="author" content="RychléVýpočty.cz"/>
+  <meta name="robots" content="index,follow"/>
+  <link rel="canonical" href="https://rychlevypocty.cz/nahrada-mzdy-za-dovolenou-kalkulacka.html"/>
+
+  <meta property="og:title" content="Kalkulačka náhrady mzdy za dovolenou online zdarma | RychléVýpočty.cz"/>
+  <meta property="og:description" content="Orientační výpočet náhrady mzdy za dovolenou podle průměrného hodinového výdělku a počtu hodin volna."/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:url" content="https://rychlevypocty.cz/nahrada-mzdy-za-dovolenou-kalkulacka.html"/>
+  <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg"/>
+  <meta property="og:site_name" content="RychléVýpočty.cz"/>
+  <meta property="og:locale" content="cs_CZ"/>
+
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="Kalkulačka náhrady mzdy za dovolenou online zdarma | RychléVýpočty.cz"/>
+  <meta name="twitter:description" content="Spočítejte si orientační náhradu mzdy za dovolenou během pár sekund."/>
+  <meta name="twitter:image" content="https://rychlevypocty.cz/og-image.jpg"/>
+
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #5f6b85;
+      --primary: #2152ff;
+      --primary-dark: #183dbf;
+      --border: #dbe3f0;
+      --success: #138a4b;
+      --warning: #b66a00;
+      --danger: #b42318;
+      --danger-bg: rgba(180, 35, 24, 0.08);
+      --primary-bg: rgba(33, 82, 255, 0.08);
+      --shadow: 0 12px 32px rgba(20, 32, 70, 0.08);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #f7f9fd 0%, #eef3fb 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a { color: var(--primary); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .skip-link {
+      position: absolute;
+      left: 16px;
+      top: -56px;
+      z-index: 100;
+      padding: 12px 16px;
+      border-radius: 12px;
+      background: #172033;
+      color: #fff;
+      font-weight: 700;
+      box-shadow: 0 10px 24px rgba(20, 32, 70, 0.18);
+      transition: top .16s ease;
+    }
+    .skip-link:focus { top: 16px; }
+    :focus-visible {
+      outline: 3px solid rgba(33, 82, 255, 0.45);
+      outline-offset: 3px;
+      border-radius: 10px;
+    }
+    main[id], section[id], div[id] { scroll-margin-top: 96px; }
+
+    .container {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      padding: 18px 0;
+      border-bottom: 1px solid rgba(219, 227, 240, 0.8);
+      background: rgba(255,255,255,.86);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 30;
+    }
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .brand {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text);
+      letter-spacing: -.02em;
+    }
+    .brand span { color: var(--primary); }
+    .topnav {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      font-size: .97rem;
+    }
+    .topnav a {
+      border-radius: 999px;
+      padding: 8px 12px;
+      transition: background-color .15s ease, color .15s ease;
+    }
+    .topnav a:hover,
+    .topnav a[aria-current="page"] {
+      text-decoration: none;
+      background: rgba(33,82,255,.08);
+      color: var(--primary);
+    }
+
+    .hero { padding: 40px 0 16px; }
+    .breadcrumbs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      font-size: .92rem;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+    .breadcrumbs .sep { color: #8a94a9; }
+    .breadcrumbs a { color: var(--muted); }
+    .breadcrumbs strong { color: var(--text); }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 28px;
+      align-items: start;
+    }
+    .hero-copy h1 {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 1.06;
+      letter-spacing: -.03em;
+      margin: 0 0 14px;
+    }
+    .hero-copy p {
+      margin: 0 0 14px;
+      font-size: 1.04rem;
+      color: var(--muted);
+      max-width: 760px;
+    }
+    .hero-points {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+    .hero-pill {
+      background: rgba(33,82,255,.08);
+      color: var(--primary-dark);
+      border: 1px solid rgba(33,82,255,.12);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: .94rem;
+      font-weight: 700;
+    }
+    .hero-box,
+    .card,
+    .content-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    .hero-box {
+      padding: 24px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+    .hero-box h2 {
+      margin: 0 0 10px;
+      font-size: 1.16rem;
+      letter-spacing: -.02em;
+    }
+    .hero-box p,
+    .hero-box li { color: var(--muted); }
+    .hero-box ul { margin: 0; padding-left: 18px; }
+
+    .anchor-nav { padding: 6px 0 20px; }
+    .anchor-nav-inner { display: flex; gap: 10px; flex-wrap: wrap; }
+    .anchor-chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: #fff;
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: .92rem;
+      font-weight: 700;
+      box-shadow: 0 6px 18px rgba(20,32,70,.04);
+    }
+
+    .tool-master-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.06fr) minmax(280px, .74fr);
+      gap: 28px;
+      align-items: start;
+      padding: 10px 0 22px;
+    }
+    .tool-primary-stack,
+    .tool-support-rail {
+      display: grid;
+      gap: 20px;
+      min-width: 0;
+      align-self: start;
+    }
+    .support-rail-sticky {
+      position: sticky;
+      top: 94px;
+      display: grid;
+      gap: 20px;
+    }
+    .card-header { padding: 24px 24px 10px; }
+    .card-header h2,
+    .card-header h3 { margin: 0 0 8px; font-size: 1.28rem; letter-spacing: -.02em; }
+    .card-header p { margin: 0; color: var(--muted); font-size: .98rem; }
+    .card-body { padding: 20px 24px 24px; }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-width: 0;
+    }
+    .field label { font-weight: 700; font-size: .96rem; }
+    .field small { color: var(--muted); font-size: .85rem; margin-top: -2px; }
+    .field input,
+    .field select {
+      width: 100%;
+      min-width: 0;
+      padding: 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      font-size: 1rem;
+      color: var(--text);
+      background: #fff;
+      font-family: inherit;
+      transition: border-color .15s ease, box-shadow .15s ease;
+    }
+    .field input:focus,
+    .field select:focus {
+      outline: none;
+      border-color: rgba(33,82,255,.45);
+      box-shadow: 0 0 0 4px rgba(33,82,255,.10);
+    }
+    .full { grid-column: 1 / -1; }
+
+    .inline-error {
+      display: none;
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #fff4f2;
+      border: 1px solid rgba(180,35,24,.16);
+      color: var(--danger);
+      font-size: .95rem;
+      font-weight: 600;
+    }
+    .inline-error.is-visible { display: block; }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+    button,
+    .button-link {
+      border: 0;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform .06s ease, background .15s ease, border-color .15s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      font-family: inherit;
+    }
+    button:hover,
+    .button-link:hover { transform: translateY(-1px); text-decoration: none; }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { background: var(--primary-dark); }
+    .btn-secondary { background: #eef3ff; color: var(--primary-dark); }
+    .btn-ghost { background: #fff; color: var(--primary-dark); border: 1px solid rgba(33,82,255,.16); }
+
+    .result-hero {
+      border: 1px solid rgba(33,82,255,.18);
+      border-radius: 18px;
+      padding: 20px;
+      background: linear-gradient(180deg, #eef4ff 0%, #f8fbff 100%);
+      margin-bottom: 18px;
+    }
+    .result-label {
+      font-size: .92rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .result-value-lg {
+      font-size: clamp(2rem, 4.5vw, 3rem);
+      line-height: 1.05;
+      font-weight: 800;
+      letter-spacing: -.04em;
+      white-space: nowrap;
+      overflow-x: auto;
+      overflow-y: hidden;
+      display: block;
+      padding-bottom: 2px;
+    }
+    .result-support {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+    .result-box {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      min-width: 0;
+    }
+    .result-value {
+      font-size: clamp(1.2rem, 2.4vw, 1.8rem);
+      line-height: 1.15;
+      font-weight: 800;
+      letter-spacing: -.03em;
+      white-space: nowrap;
+      overflow-x: auto;
+      overflow-y: hidden;
+      display: block;
+      padding-bottom: 2px;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: .88rem;
+      font-weight: 800;
+      margin-bottom: 18px;
+      background: rgba(19,138,75,.10);
+      color: var(--success);
+    }
+    .info-list { display: grid; gap: 12px; }
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid #edf2fa;
+      align-items: flex-start;
+    }
+    .info-row:last-child { border-bottom: 0; padding-bottom: 0; }
+    .info-row span:first-child { color: var(--muted); }
+    .info-row strong {
+      text-align: right;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .note {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1px solid #e7edf7;
+      color: var(--muted);
+      font-size: .95rem;
+    }
+
+    .tool-support-card {
+      padding: 22px 24px 24px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      box-shadow: var(--shadow);
+    }
+    .tool-support-card h3 { margin: 0 0 10px; font-size: 1.12rem; letter-spacing: -.02em; }
+    .tool-support-card p { margin: 0 0 14px; color: var(--muted); }
+    .tool-support-card ul { margin: 0; padding-left: 18px; color: var(--muted); }
+    .tool-support-card li { margin-bottom: 8px; }
+    .micro-links { display: grid; gap: 12px; margin-top: 18px; }
+    .micro-link {
+      display: block;
+      padding: 16px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--text);
+      transition: transform .08s ease, border-color .15s ease;
+    }
+    .micro-link:hover { transform: translateY(-1px); text-decoration: none; border-color: rgba(33,82,255,.25); }
+    .micro-link strong { display: block; margin-bottom: 4px; font-size: .98rem; }
+    .micro-link span { color: var(--muted); font-size: .92rem; }
+
+    .section { padding: 10px 0; }
+    .content-card { padding: 24px; }
+    .content-card + .content-card { margin-top: 20px; }
+    .content-card h2 {
+      font-size: 1.42rem;
+      letter-spacing: -.03em;
+      margin: 0 0 14px;
+    }
+    .content-card h3 { font-size: 1.08rem; margin: 22px 0 10px; }
+    .content-card p,
+    .content-card li { color: var(--muted); }
+    .content-card ul { margin: 0; padding-left: 20px; }
+
+    .details-card { overflow: hidden; }
+    .details-summary {
+      list-style: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 22px 24px;
+    }
+    .details-summary::-webkit-details-marker { display: none; }
+    .details-summary::after {
+      content: '+';
+      flex: 0 0 auto;
+      width: 36px;
+      height: 36px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      border: 1px solid rgba(33,82,255,.16);
+      background: #f8fbff;
+      color: var(--primary-dark);
+      font-size: 1.3rem;
+      font-weight: 700;
+      line-height: 1;
+    }
+    .details-card[open] .details-summary::after { content: '−'; }
+    .details-summary strong { display: block; margin-bottom: 6px; font-size: 1.1rem; letter-spacing: -.02em; }
+    .details-summary span { display: block; color: var(--muted); font-size: .95rem; }
+    .details-content { padding: 0 24px 24px; }
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: #fff;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 640px;
+      background: #fff;
+    }
+    th, td {
+      padding: 14px;
+      text-align: left;
+      border-bottom: 1px solid #edf2fa;
+      font-size: .96rem;
+      vertical-align: top;
+    }
+    th {
+      background: #f8fbff;
+      font-weight: 800;
+      color: var(--text);
+    }
+    tr:last-child td { border-bottom: 0; }
+
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+    .related-card {
+      display: block;
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      color: var(--text);
+      box-shadow: var(--shadow);
+      transition: transform .08s ease, border-color .15s ease;
+    }
+    .related-card:hover { transform: translateY(-1px); text-decoration: none; border-color: rgba(33,82,255,.25); }
+    .related-card strong { display: block; margin-bottom: 6px; font-size: 1rem; }
+    .related-card span { color: var(--muted); font-size: .93rem; }
+
+    .site-cta-band { padding: 6px 0 8px; }
+    .site-cta-card {
+      display: grid;
+      grid-template-columns: 1.1fr auto;
+      gap: 20px;
+      align-items: center;
+      padding: 22px 24px;
+      border-radius: 22px;
+      border: 1px solid rgba(33,82,255,.14);
+      background: linear-gradient(180deg, #eef4ff 0%, #f8fbff 100%);
+      box-shadow: 0 12px 32px rgba(20,32,70,.06);
+    }
+    .site-cta-copy strong { display: block; margin-bottom: 8px; font-size: 1.12rem; letter-spacing: -.02em; }
+    .site-cta-copy p { margin: 0; color: var(--muted); }
+    .site-cta-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; }
+    .site-cta-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 11px 15px;
+      border-radius: 999px;
+      border: 1px solid rgba(33,82,255,.15);
+      background: #fff;
+      color: var(--text);
+      font-weight: 700;
+      box-shadow: 0 8px 18px rgba(20,32,70,.05);
+    }
+    .site-cta-link:hover { text-decoration: none; transform: translateY(-1px); }
+
+    footer {
+      margin-top: 48px;
+      border-top: 1px solid rgba(219,227,240,.9);
+      background: linear-gradient(180deg, rgba(255,255,255,.92) 0%, rgba(248,251,255,.98) 100%);
+    }
+    .footer-grid-top,
+    .footer-grid-bottom {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+    .footer-grid-top {
+      padding: 34px 0 22px;
+      display: grid;
+      grid-template-columns: 1.2fr .9fr .9fr;
+      gap: 28px;
+    }
+    .footer-grid-bottom {
+      border-top: 1px solid rgba(219,227,240,.9);
+      padding: 18px 0 34px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    .footer-pills { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+    .footer-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: #f4f8ff;
+      border: 1px solid #dbe3f0;
+      color: #5f6b85;
+      font-size: .86rem;
+      font-weight: 700;
+    }
+    .footer-links-column { display: grid; gap: 10px; }
+    .footer-links-column a { color: #5f6b85; font-weight: 600; }
+
+    .back-to-top {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 30;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 46px;
+      height: 46px;
+      border: 0;
+      border-radius: 999px;
+      background: #172033;
+      color: #fff;
+      box-shadow: 0 10px 24px rgba(20,32,70,.22);
+    }
+
+    @media (max-width: 1024px) {
+      .hero-grid,
+      .tool-master-layout,
+      .footer-grid-top,
+      .site-cta-card,
+      .related-grid {
+        grid-template-columns: 1fr;
+      }
+      .tool-support-rail { order: 3; }
+      .support-rail-sticky { position: static; }
+      .site-cta-actions { justify-content: flex-start; }
+      .related-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 720px) {
+      .container { width: min(100% - 24px, 1160px); }
+      .topbar-inner { align-items: flex-start; }
+      .topnav { gap: 8px; }
+      .form-grid,
+      .result-support,
+      .related-grid {
+        grid-template-columns: 1fr;
+      }
+      .actions {
+        flex-direction: column;
+      }
+      .actions button,
+      .actions .button-link {
+        width: 100%;
+      }
+      .anchor-nav-inner { overflow-x: auto; flex-wrap: nowrap; padding-bottom: 4px; }
+      .anchor-chip { white-space: nowrap; }
+      .info-row { flex-direction: column; gap: 4px; }
+      .info-row strong { text-align: left; }
+      .result-value-lg,
+      .result-value { white-space: nowrap; }
+      .card-header,
+      .card-body,
+      .content-card,
+      .tool-support-card,
+      .details-content,
+      .details-summary { padding-left: 18px; padding-right: 18px; }
+      .card-header { padding-top: 20px; }
+      .footer-grid-top { grid-template-columns: 1fr; }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Jak se počítá náhrada mzdy za dovolenou?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Orientačně se vychází z průměrného hodinového výdělku a počtu hodin dovolené. Pokud zadáte dovolenou ve dnech, kalkulačka ji přepočítá na hodiny podle délky pracovního dne."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Proč se výsledek může lišit od výplatní pásky?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Skutečný výsledek může ovlivnit způsob stanovení průměrného výdělku, rozvrh směn, zaokrouhlení a další pravidla konkrétního zaměstnavatele."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Mohu dovolenou zadat v hodinách i ve dnech?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Ano. V kalkulačce si vyberete režim zadání a podle něj vyplníte počet hodin nebo počet dnů dovolené."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Přeskočit na obsah</a>
+
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a href="/" class="brand">Rychlé<span>Výpočty</span>.cz</a>
+      <nav class="topnav" aria-label="Hlavní navigace">
+        <a href="/kalkulacky.html">Všechny kalkulačky</a>
+        <a href="/finance-a-hypoteky.html">Finance a hypotéky</a>
+        <a href="/pronajem-a-investicni-bydleni.html">Bydlení</a>
+        <a href="/mzdy-a-prace.html">Mzdy a práce</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content" tabindex="-1">
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumbs">
+          <a href="/">RychléVýpočty.cz</a>
+          <span aria-hidden="true" class="sep">/</span>
+          <a href="/mzdy-a-prace.html">Mzdy a práce</a>
+          <span aria-hidden="true" class="sep">/</span>
+          <strong>Kalkulačka náhrady mzdy za dovolenou</strong>
+        </div>
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <h1>Kalkulačka náhrady mzdy za dovolenou</h1>
+            <p>Spočítejte si orientační náhradu mzdy za dobu čerpání dovolené podle průměrného hodinového výdělku a počtu hodin nebo dnů volna.</p>
+            <p>Stačí vyplnit několik údajů a výsledek uvidíte hned. Kalkulačka se hodí pro rychlou kontrolu i pro plánování delší dovolené.</p>
+            <div class="hero-points">
+              <div class="hero-pill">Průměrný hodinový výdělek</div>
+              <div class="hero-pill">Hodiny i dny dovolené</div>
+              <div class="hero-pill">Přepočet na den</div>
+              <div class="hero-pill">Rychlý orientační výsledek</div>
+            </div>
+          </div>
+          <div class="hero-box">
+            <h2>Co uvidíte ve výsledku</h2>
+            <ul>
+              <li>celkovou orientační náhradu mzdy za dovolenou,</li>
+              <li>částku za 1 den a za 1 hodinu,</li>
+              <li>přepočet z hodin na dny,</li>
+              <li>orientační odhad za celý pracovní týden volna.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="anchor-nav" aria-label="Obsah stránky">
+      <div class="container anchor-nav-inner">
+        <a class="anchor-chip" href="#kalkulacka">Kalkulačka</a>
+        <a class="anchor-chip" href="#jak-cist-vysledek">Jak výsledek číst</a>
+        <a class="anchor-chip" href="#detail-vypoctu">Podrobný rozpis</a>
+        <a class="anchor-chip" href="#souvisejici">Související kalkulačky</a>
+        <a class="anchor-chip" href="#faq">FAQ</a>
+      </div>
+    </section>
+
+    <section class="container tool-master-layout" id="kalkulacka">
+      <div class="tool-primary-stack">
+        <div class="card">
+          <div class="card-header">
+            <h2>Zadání pro výpočet</h2>
+            <p>Vyplňte základní údaje o výdělku a rozsahu dovolené. Výsledek se přepočítá automaticky.</p>
+          </div>
+          <div class="card-body">
+            <form id="vacationPayForm" novalidate>
+              <div class="form-grid">
+                <div class="field">
+                  <label for="averageHourlyWage">Průměrný hodinový výdělek</label>
+                  <input id="averageHourlyWage" type="number" inputmode="decimal" min="0.01" step="0.01" value="265"/>
+                  <small>Orientační průměrný hodinový výdělek v Kč.</small>
+                </div>
+                <div class="field">
+                  <label for="hoursPerDay">Délka pracovního dne (hodiny)</label>
+                  <input id="hoursPerDay" type="number" inputmode="decimal" min="1" max="16" step="0.5" value="8"/>
+                  <small>Například 8 hodin při běžném plném úvazku.</small>
+                </div>
+                <div class="field">
+                  <label for="inputMode">Zadávám dovolenou jako</label>
+                  <select id="inputMode">
+                    <option value="hours" selected>Počet hodin</option>
+                    <option value="days">Počet dnů</option>
+                  </select>
+                  <small>Zvolte, v jaké formě chcete dovolenou zadat.</small>
+                </div>
+                <div class="field">
+                  <label for="vacationAmount">Rozsah dovolené</label>
+                  <input id="vacationAmount" type="number" inputmode="decimal" min="0.5" step="0.5" value="16"/>
+                  <small>Počet hodin nebo dnů podle zvoleného režimu.</small>
+                </div>
+                <div class="field">
+                  <label for="deductionRate">Orientační srážka (%)</label>
+                  <input id="deductionRate" type="number" inputmode="decimal" min="0" max="100" step="0.1" value="0"/>
+                  <small>Volitelné. Jen orientační přepočet po srážce.</small>
+                </div>
+                <div class="field">
+                  <label for="weekDays">Počet pracovních dnů v týdnu</label>
+                  <select id="weekDays">
+                    <option value="4">4 dny</option>
+                    <option value="5" selected>5 dní</option>
+                    <option value="6">6 dní</option>
+                  </select>
+                  <small>Pro doplňkový odhad náhrady za celý pracovní týden.</small>
+                </div>
+                <div class="actions full">
+                  <button class="btn-primary" type="submit">Spočítat náhradu mzdy</button>
+                  <button class="btn-secondary" id="resetBtn" type="button">Obnovit výchozí hodnoty</button>
+                </div>
+              </div>
+              <div class="inline-error" id="formError" aria-live="polite"></div>
+            </form>
+          </div>
+        </div>
+
+        <div class="card" aria-live="polite">
+          <div class="card-header">
+            <h2>Výsledek</h2>
+            <p>Náhradu mzdy uvidíte hned po vyplnění formuláře.</p>
+          </div>
+          <div class="card-body">
+            <div class="result-hero">
+              <div class="result-label">Náhrada mzdy celkem</div>
+              <div class="result-value-lg" id="grossVacationPay">0 Kč</div>
+            </div>
+
+            <div class="result-support">
+              <div class="result-box">
+                <div class="result-label">Orientačně po srážce</div>
+                <div class="result-value" id="netVacationPay">0 Kč</div>
+              </div>
+              <div class="result-box">
+                <div class="result-label">Náhrada za 1 den dovolené</div>
+                <div class="result-value" id="dailyVacationPay">0 Kč</div>
+              </div>
+              <div class="result-box">
+                <div class="result-label">Náhrada za 1 hodinu</div>
+                <div class="result-value" id="hourlyVacationPay">0 Kč</div>
+              </div>
+              <div class="result-box">
+                <div class="result-label">Odhad za celý pracovní týden</div>
+                <div class="result-value" id="weeklyVacationPay">0 Kč</div>
+              </div>
+            </div>
+
+            <div class="badge" id="statusBadge">Orientační náhrada mzdy je spočítaná</div>
+
+            <div class="info-list" id="jak-cist-vysledek">
+              <div class="info-row">
+                <span>Počet hodin dovolené</span>
+                <strong id="vacationHoursOutput">0 h</strong>
+              </div>
+              <div class="info-row">
+                <span>Počet dnů dovolené</span>
+                <strong id="vacationDaysOutput">0 dní</strong>
+              </div>
+              <div class="info-row">
+                <span>Průměrný hodinový výdělek</span>
+                <strong id="averageWageOutput">0 Kč</strong>
+              </div>
+              <div class="info-row">
+                <span>Zvolený režim zadání</span>
+                <strong id="modeOutput">—</strong>
+              </div>
+            </div>
+
+            <div class="note">Výsledek je orientační. Skutečná náhrada mzdy za dovolenou se může lišit podle přesného stanovení průměrného výdělku, délky směn, rozvrhu pracovní doby a interních pravidel zaměstnavatele.</div>
+          </div>
+        </div>
+      </div>
+
+      <aside class="tool-support-rail" aria-label="Doplňující informace">
+        <div class="support-rail-sticky">
+          <div class="tool-support-card">
+            <h3>Jak zadat správné hodnoty</h3>
+            <ul>
+              <li>zadejte průměrný hodinový výdělek, ze kterého se dovolená počítá,</li>
+              <li>vyberte, jestli chcete dovolenou zadat v hodinách nebo ve dnech,</li>
+              <li>při zadání ve dnech se dovolená přepočítá podle délky pracovního dne.</li>
+            </ul>
+          </div>
+          <div class="tool-support-card">
+            <h3>Co se hodí navíc</h3>
+            <p>Chcete si výsledek zasadit do širšího kontextu mzdy a práce? Navazující kalkulačky najdete hned tady.</p>
+            <div class="micro-links">
+              <a class="micro-link" href="/kalkulacka-dovolene.html">
+                <strong>Kalkulačka dovolené</strong>
+                <span>Pomůže spočítat nárok, poměrnou část i zbývající hodiny.</span>
+              </a>
+              <a class="micro-link" href="/cista-mzda-kalkulacka.html">
+                <strong>Kalkulačka čisté mzdy</strong>
+                <span>Ukáže orientační čistou mzdu, odvody i cenu práce.</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="container section">
+      <div class="content-card">
+        <h2>Jak kalkulačka funguje</h2>
+        <p>Kalkulačka počítá orientační náhradu mzdy jako součin průměrného hodinového výdělku a počtu hodin čerpané dovolené. Pokud zadáte dovolenou ve dnech, nejprve ji přepočítá na hodiny podle délky pracovního dne.</p>
+        <h3>Co ve výsledku uvidíte</h3>
+        <ul>
+          <li>orientační celkovou náhradu mzdy za dovolenou,</li>
+          <li>částku za jeden den a jednu hodinu dovolené,</li>
+          <li>přepočet zadané dovolené na hodiny i dny,</li>
+          <li>odhad náhrady za celý pracovní týden volna.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="container section" id="detail-vypoctu">
+      <details class="card details-card">
+        <summary class="details-summary">
+          <span>
+            <strong>Podrobný rozpis výpočtu</strong>
+            <span>Rozklikněte si přehled vstupů a dopočtených hodnot.</span>
+          </span>
+        </summary>
+        <div class="details-content">
+          <div class="table-wrap">
+            <table aria-label="Přehled náhrady mzdy za dovolenou">
+              <thead>
+                <tr>
+                  <th>Položka</th>
+                  <th>Hodnota</th>
+                  <th>Význam</th>
+                </tr>
+              </thead>
+              <tbody id="summaryTableBody">
+                <tr>
+                  <td>Hodinový výdělek</td>
+                  <td>0 Kč</td>
+                  <td>Výchozí hodinový základ</td>
+                </tr>
+                <tr>
+                  <td>Rozsah dovolené</td>
+                  <td>0</td>
+                  <td>Zadaná hodnota dovolené</td>
+                </tr>
+                <tr>
+                  <td>Náhrada mzdy</td>
+                  <td>0 Kč</td>
+                  <td>Orientační celková částka</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </details>
+    </section>
+
+    <section class="container section" id="souvisejici">
+      <div class="content-card">
+        <h2>Související kalkulačky</h2>
+        <div class="related-grid">
+          <a class="related-card" href="/kalkulacka-dovolene.html">
+            <strong>Kalkulačka dovolené</strong>
+            <span>Orientační výpočet nároku na dovolenou, poměrné části a zbývajících hodin.</span>
+          </a>
+          <a class="related-card" href="/cista-mzda-kalkulacka.html">
+            <strong>Kalkulačka čisté mzdy</strong>
+            <span>Orientační výpočet čisté mzdy, odvodů a nákladů zaměstnavatele.</span>
+          </a>
+          <a class="related-card" href="/kalkulacka-hodinove-mzdy.html">
+            <strong>Kalkulačka hodinové mzdy</strong>
+            <span>Rychlý přepočet hodinové mzdy z měsíčního příjmu a odpracovaných hodin.</span>
+          </a>
+          <a class="related-card" href="/odstupne-kalkulacka.html">
+            <strong>Kalkulačka odstupného</strong>
+            <span>Orientační výpočet odstupného podle průměrného měsíčního výdělku.</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="container section" id="faq">
+      <div class="content-card">
+        <h2>FAQ</h2>
+        <h3>Jak se počítá náhrada mzdy za dovolenou?</h3>
+        <p>Orientačně se vychází z průměrného hodinového výdělku a počtu hodin dovolené. Když zadáte dovolenou ve dnech, kalkulačka ji přepočítá na hodiny podle délky pracovního dne.</p>
+        <h3>Proč se výsledek může lišit od výplatní pásky?</h3>
+        <p>V praxi se může lišit podle způsobu stanovení průměrného výdělku, směn, zaokrouhlení a dalších pravidel konkrétního zaměstnavatele.</p>
+        <h3>Mohu dovolenou zadat v hodinách i ve dnech?</h3>
+        <p>Ano. V kalkulačce si jen vyberete režim zadání a podle něj vyplníte počet hodin nebo počet dnů dovolené.</p>
+      </div>
+    </section>
+
+    <section class="site-cta-band" aria-label="Další krok">
+      <div class="container">
+        <div class="site-cta-card">
+          <div class="site-cta-copy">
+            <strong>Navazující výpočty pro mzdy a práci</strong>
+            <p>Vyberte si další kalkulačku podle toho, co právě řešíte.</p>
+          </div>
+          <div class="site-cta-actions">
+            <a class="site-cta-link" href="/cista-mzda-kalkulacka.html">Čistá mzda</a>
+            <a class="site-cta-link" href="/kalkulacka-hrube-mzdy-z-ciste.html">Hrubá mzda z čisté</a>
+            <a class="site-cta-link" href="/kalkulacka-hodinove-mzdy.html">Hodinová mzda</a>
+            <a class="site-cta-link" href="/naklady-zamestnavatele-kalkulacka.html">Náklady zaměstnavatele</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-grid-top">
+      <div style="max-width:520px;">
+        <strong style="display:inline-block;font-size:1.14rem;letter-spacing:-0.02em;color:#172033;margin-bottom:12px;">RychléVýpočty.cz</strong>
+        <p style="margin:0;color:#5f6b85;font-size:0.95rem;line-height:1.65;">Online kalkulačky a praktické nástroje zdarma pro finance, bydlení, hypotéky, pronájem, mzdy, podnikání, energie, auto, rekonstrukce a další situace, které dává smysl si předem spočítat.</p>
+        <div class="footer-pills">
+          <span class="footer-pill">Zdarma</span>
+          <span class="footer-pill">Bez registrace</span>
+          <span class="footer-pill">Praktické rozhodování</span>
+        </div>
+      </div>
+      <div>
+        <h3 style="margin:0 0 12px;font-size:1rem;letter-spacing:-0.02em;color:#172033;">Hlavní sekce</h3>
+        <div class="footer-links-column">
+          <a href="/kalkulacky.html">Všechny kalkulačky</a>
+          <a href="/finance-a-hypoteky.html">Finance a hypotéky</a>
+          <a href="/pronajem-a-investicni-bydleni.html">Pronájem a investiční bydlení</a>
+          <a href="/mzdy-a-prace.html">Mzdy a práce</a>
+          <a href="/stavba-domu.html">Stavba domu</a>
+        </div>
+      </div>
+      <div>
+        <h3 style="margin:0 0 12px;font-size:1rem;letter-spacing:-0.02em;color:#172033;">Informace a důvěra</h3>
+        <div class="footer-links-column">
+          <a href="/o-nas.html">O nás</a>
+          <a href="/kontakt.html">Kontakt</a>
+          <a href="/ochrana-osobnich-udaju.html">Ochrana osobních údajů</a>
+          <a href="/podminky-pouziti.html">Podmínky použití</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-grid-bottom">
+      <div>
+        <p style="margin:0 0 8px;color:#5f6b85;font-size:0.92rem;line-height:1.6;">© RychléVýpočty.cz – online kalkulačky a praktické nástroje zdarma</p>
+        <p style="margin:0;color:#5f6b85;font-size:0.92rem;line-height:1.6;">Výsledky mají orientační charakter a u důležitých finančních, daňových, právních nebo stavebních rozhodnutí je vhodné je ověřit podle konkrétních podmínek.</p>
+      </div>
+    </div>
+  </footer>
+
+  <button aria-label="Zpět nahoru" class="back-to-top" id="rvBackToTop" type="button">↑</button>
+
+  <script>
+    const form = document.getElementById('vacationPayForm');
+    const resetBtn = document.getElementById('resetBtn');
+    const formError = document.getElementById('formError');
+
+    const outputs = {
+      grossVacationPay: document.getElementById('grossVacationPay'),
+      netVacationPay: document.getElementById('netVacationPay'),
+      dailyVacationPay: document.getElementById('dailyVacationPay'),
+      hourlyVacationPay: document.getElementById('hourlyVacationPay'),
+      weeklyVacationPay: document.getElementById('weeklyVacationPay'),
+      statusBadge: document.getElementById('statusBadge'),
+      vacationHoursOutput: document.getElementById('vacationHoursOutput'),
+      vacationDaysOutput: document.getElementById('vacationDaysOutput'),
+      averageWageOutput: document.getElementById('averageWageOutput'),
+      modeOutput: document.getElementById('modeOutput'),
+      summaryTableBody: document.getElementById('summaryTableBody')
+    };
+
+    function formatCurrency(value) {
+      return new Intl.NumberFormat('cs-CZ', {
+        style: 'currency',
+        currency: 'CZK',
+        maximumFractionDigits: 0
+      }).format(value);
+    }
+
+    function formatHours(value) {
+      return new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 1
+      }).format(value) + ' h';
+    }
+
+    function formatDays(value) {
+      return new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 1
+      }).format(value) + ' dní';
+    }
+
+    function getValues() {
+      return {
+        averageHourlyWage: Number(document.getElementById('averageHourlyWage').value),
+        hoursPerDay: Number(document.getElementById('hoursPerDay').value),
+        inputMode: document.getElementById('inputMode').value,
+        vacationAmount: Number(document.getElementById('vacationAmount').value),
+        deductionRate: Number(document.getElementById('deductionRate').value),
+        weekDays: Number(document.getElementById('weekDays').value)
+      };
+    }
+
+    function validate(values) {
+      if (!values.averageHourlyWage || values.averageHourlyWage <= 0) return 'Zadejte platný průměrný hodinový výdělek.';
+      if (!values.hoursPerDay || values.hoursPerDay <= 0) return 'Zadejte platnou délku pracovního dne.';
+      if (!values.vacationAmount || values.vacationAmount <= 0) return 'Zadejte platný rozsah dovolené.';
+      if (Number.isNaN(values.deductionRate) || values.deductionRate < 0 || values.deductionRate > 100) return 'Orientační srážka musí být mezi 0 a 100 %.';
+      return '';
+    }
+
+    function calculate(values) {
+      const vacationHours = values.inputMode === 'hours'
+        ? values.vacationAmount
+        : values.vacationAmount * values.hoursPerDay;
+
+      const vacationDays = vacationHours / values.hoursPerDay;
+      const grossVacationPay = values.averageHourlyWage * vacationHours;
+      const netVacationPay = grossVacationPay * (1 - values.deductionRate / 100);
+      const dailyVacationPay = values.averageHourlyWage * values.hoursPerDay;
+      const hourlyVacationPay = values.averageHourlyWage;
+      const weeklyVacationPay = dailyVacationPay * values.weekDays;
+
+      return {
+        vacationHours,
+        vacationDays,
+        grossVacationPay,
+        netVacationPay,
+        dailyVacationPay,
+        hourlyVacationPay,
+        weeklyVacationPay
+      };
+    }
+
+    function renderTable(values, result) {
+      outputs.summaryTableBody.innerHTML = `
+        <tr>
+          <td>Hodinový výdělek</td>
+          <td>${formatCurrency(values.averageHourlyWage)}</td>
+          <td>Výchozí hodinový základ</td>
+        </tr>
+        <tr>
+          <td>Rozsah dovolené</td>
+          <td>${values.inputMode === 'hours' ? formatHours(result.vacationHours) : formatDays(values.vacationAmount)}</td>
+          <td>Zadaná hodnota dovolené</td>
+        </tr>
+        <tr>
+          <td>Přepočet dovolené</td>
+          <td>${formatHours(result.vacationHours)} / ${formatDays(result.vacationDays)}</td>
+          <td>Hodiny a dny dovolené</td>
+        </tr>
+        <tr>
+          <td>Náhrada mzdy</td>
+          <td>${formatCurrency(result.grossVacationPay)}</td>
+          <td>Orientační celková částka</td>
+        </tr>
+        <tr>
+          <td>Náhrada za týden volna</td>
+          <td>${formatCurrency(result.weeklyVacationPay)}</td>
+          <td>Odhad za celý pracovní týden</td>
+        </tr>`;
+    }
+
+    function render(values, result) {
+      outputs.grossVacationPay.textContent = formatCurrency(result.grossVacationPay);
+      outputs.netVacationPay.textContent = formatCurrency(result.netVacationPay);
+      outputs.dailyVacationPay.textContent = formatCurrency(result.dailyVacationPay);
+      outputs.hourlyVacationPay.textContent = formatCurrency(result.hourlyVacationPay);
+      outputs.weeklyVacationPay.textContent = formatCurrency(result.weeklyVacationPay);
+      outputs.vacationHoursOutput.textContent = formatHours(result.vacationHours);
+      outputs.vacationDaysOutput.textContent = formatDays(result.vacationDays);
+      outputs.averageWageOutput.textContent = formatCurrency(values.averageHourlyWage);
+      outputs.modeOutput.textContent = values.inputMode === 'hours' ? 'Počet hodin' : 'Počet dnů';
+      outputs.statusBadge.textContent = 'Orientační náhrada mzdy je spočítaná';
+      renderTable(values, result);
+    }
+
+    function showError(message) {
+      formError.textContent = message;
+      formError.classList.add('is-visible');
+    }
+
+    function clearError() {
+      formError.textContent = '';
+      formError.classList.remove('is-visible');
+    }
+
+    function runCalculation() {
+      const values = getValues();
+      const error = validate(values);
+
+      if (error) {
+        showError(error);
+        return;
+      }
+
+      clearError();
+      render(values, calculate(values));
+    }
+
+    form.addEventListener('submit', function(event) {
+      event.preventDefault();
+      runCalculation();
+    });
+
+    ['averageHourlyWage', 'hoursPerDay', 'inputMode', 'vacationAmount', 'deductionRate', 'weekDays'].forEach((id) => {
+      const el = document.getElementById(id);
+      el.addEventListener('input', runCalculation);
+      el.addEventListener('change', runCalculation);
+    });
+
+    resetBtn.addEventListener('click', function() {
+      document.getElementById('averageHourlyWage').value = 265;
+      document.getElementById('hoursPerDay').value = 8;
+      document.getElementById('inputMode').value = 'hours';
+      document.getElementById('vacationAmount').value = 16;
+      document.getElementById('deductionRate').value = 0;
+      document.getElementById('weekDays').value = 5;
+      runCalculation();
+    });
+
+    runCalculation();
+
+    (function () {
+      const path = window.location.pathname.replace(/\/$/, '') || '/';
+      const links = document.querySelectorAll('.topnav a[href]');
+      links.forEach((link) => {
+        const href = link.getAttribute('href');
+        if (!href) return;
+        const normalized = href.replace(/\/$/, '') || '/';
+        if (normalized === path) link.setAttribute('aria-current', 'page');
+      });
+    })();
+
+    document.getElementById('rvBackToTop').addEventListener('click', function () {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+</body>
+</html>

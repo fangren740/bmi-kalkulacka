@@ -1,0 +1,2079 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <meta content="telephone=no" name="format-detection"/>
+  <link href="/favicon.ico?v=2" rel="icon" sizes="any"/>
+  <link href="/favicon-32x32.png?v=2" rel="icon" sizes="32x32" type="image/png"/>
+  <link href="/favicon-16x16.png?v=2" rel="icon" sizes="16x16" type="image/png"/>
+  <link href="/apple-touch-icon.png?v=2" rel="apple-touch-icon" sizes="180x180"/>
+  <link href="/site.webmanifest?v=2" rel="manifest"/>
+  <meta content="#14253d" name="theme-color"/>
+
+  <title>Kolik stojí umělé mléko? Kalkulačka měsíčních a ročních nákladů | RychléVýpočty.cz</title>
+  <meta content="Spočítejte si, kolik stojí umělé mléko za měsíc i za rok. Praktická kalkulačka ukáže náklady podle počtu balení, ceny balení, délky období i dopadu na rodinný rozpočet." name="description"/>
+  <meta content="kolik stojí umělé mléko, kalkulačka umělého mléka, náklady na umělé mléko, kolik stojí sunar měsíčně, kolik stojí umělé mléko ročně, výdaje na umělé mléko" name="keywords"/>
+  <meta content="RychléVýpočty.cz" name="author"/>
+  <meta content="index,follow" name="robots"/>
+  <link href="https://rychlevypocty.cz/kolik-stoji-umele-mleko-kalkulacka.html" rel="canonical"/>
+
+  <meta content="Kolik stojí umělé mléko? Kalkulačka měsíčních a ročních nákladů | RychléVýpočty.cz" property="og:title"/>
+  <meta content="Zjistěte, kolik vás stojí umělé mléko za měsíc a za rok. Rychlý výpočet podle počtu balení, ceny balení a čistého příjmu domácnosti." property="og:description"/>
+  <meta content="website" property="og:type"/>
+  <meta content="https://rychlevypocty.cz/kolik-stoji-umele-mleko-kalkulacka.html" property="og:url"/>
+  <meta content="https://rychlevypocty.cz/og-image.jpg" property="og:image"/>
+  <meta content="RychléVýpočty.cz" property="og:site_name"/>
+  <meta content="cs_CZ" property="og:locale"/>
+
+  <meta content="summary_large_image" name="twitter:card"/>
+  <meta content="Kolik stojí umělé mléko? Kalkulačka měsíčních a ročních nákladů | RychléVýpočty.cz" name="twitter:title"/>
+  <meta content="Spočítejte si náklady na umělé mléko za měsíc i za rok a uvidíte jejich dopad na rodinný rozpočet." name="twitter:description"/>
+  <meta content="https://rychlevypocty.cz/og-image.jpg" name="twitter:image"/>
+  <meta content="RychléVýpočty.cz – online kalkulačky a praktické výpočty" name="twitter:image:alt"/>
+
+  <style>
+    .skip-link {
+      position: absolute;
+      left: 16px;
+      top: -56px;
+      z-index: 100;
+      padding: 12px 16px;
+      border-radius: 12px;
+      background: #172033;
+      color: #ffffff;
+      font-weight: 700;
+      box-shadow: 0 10px 24px rgba(20, 32, 70, 0.18);
+      transition: top 0.16s ease;
+    }
+
+    .skip-link:focus { top: 16px; }
+
+    :focus-visible {
+      outline: 3px solid rgba(33, 82, 255, 0.45);
+      outline-offset: 3px;
+      border-radius: 10px;
+    }
+
+    main[id],
+    section[id],
+    div[id] {
+      scroll-margin-top: 96px;
+    }
+
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #5f6b85;
+      --primary: #2152ff;
+      --primary-dark: #183dbf;
+      --border: #dbe3f0;
+      --success: #138a4b;
+      --warning: #b66a00;
+      --danger: #b42318;
+      --danger-bg: rgba(180, 35, 24, 0.08);
+      --success-bg: rgba(19, 138, 75, 0.10);
+      --warning-bg: rgba(182, 106, 0, 0.11);
+      --primary-bg: rgba(33, 82, 255, 0.08);
+      --shadow: 0 12px 32px rgba(20, 32, 70, 0.08);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #f7f9fd 0%, #eef3fb 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    a:hover { text-decoration: underline; }
+
+    .container {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      padding: 18px 0;
+      border-bottom: 1px solid rgba(219, 227, 240, 0.8);
+      background: rgba(255, 255, 255, 0.86);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+
+    .brand span { color: var(--primary); }
+
+    .topnav {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      font-size: 0.97rem;
+    }
+
+    .topnav a {
+      border-radius: 999px;
+      padding: 8px 12px;
+      transition: background-color 0.15s ease, color 0.15s ease;
+    }
+
+    .topnav a:hover,
+    .topnav a[aria-current="page"] {
+      text-decoration: none;
+      background: rgba(33, 82, 255, 0.08);
+      color: var(--primary);
+    }
+
+    .hero {
+      padding: 40px 0 16px;
+    }
+
+    .breadcrumbs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .breadcrumbs span.sep { color: #8a94a9; }
+    .breadcrumbs a { color: var(--muted); }
+    .breadcrumbs strong { font-weight: 700; color: var(--text); }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.18fr 0.82fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .hero-copy h1 {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 1.06;
+      letter-spacing: -0.03em;
+      margin: 0 0 14px;
+    }
+
+    .hero-copy p {
+      margin: 0 0 14px;
+      font-size: 1.03rem;
+      color: var(--muted);
+      max-width: 760px;
+    }
+
+    .hero-points {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .hero-pill {
+      background: rgba(33, 82, 255, 0.08);
+      color: var(--primary-dark);
+      border: 1px solid rgba(33, 82, 255, 0.12);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 0.94rem;
+      font-weight: 700;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .hero-box,
+    .card,
+    .content-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-box {
+      padding: 24px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+
+    .hero-box h2 {
+      margin: 0 0 12px;
+      font-size: 1.18rem;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-box p,
+    .hero-box li {
+      color: var(--muted);
+    }
+
+    .hero-box ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .hero-box li { margin-bottom: 8px; }
+
+    .quick-answer {
+      margin-top: 20px;
+      padding: 18px 18px;
+      border-radius: 18px;
+      border: 1px solid rgba(33, 82, 255, 0.16);
+      background: linear-gradient(180deg, #eef4ff 0%, #f8fbff 100%);
+    }
+
+    .quick-answer strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .quick-answer p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.97rem;
+    }
+
+    .anchor-nav { padding: 6px 0 20px; }
+
+    .anchor-nav-inner {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .anchor-chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: #fff;
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 0.92rem;
+      font-weight: 700;
+      box-shadow: 0 6px 18px rgba(20, 32, 70, 0.04);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.03fr 0.97fr;
+      gap: 28px;
+      align-items: start;
+      padding: 10px 0 22px;
+    }
+
+    .layout-left {
+      display: grid;
+      gap: 20px;
+      align-self: start;
+    }
+
+    .card-header {
+      padding: 24px 24px 10px;
+    }
+
+    .card-header h2,
+    .card-header h3 {
+      margin: 0 0 8px;
+      font-size: 1.3rem;
+      letter-spacing: -0.02em;
+    }
+
+    .card-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .card-body { padding: 20px 24px 24px; }
+
+    .scenario-preset-band {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 2px 0 22px;
+    }
+
+    .scenario-chip {
+      border: 1px solid rgba(33,82,255,.14);
+      background: #fff;
+      color: var(--text);
+      border-radius: 999px;
+      padding: 10px 14px;
+      font-size: .9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform .08s ease, border-color .15s ease, background-color .15s ease;
+    }
+
+    .scenario-chip:hover {
+      transform: translateY(-1px);
+      border-color: rgba(33,82,255,.28);
+      background: #f8fbff;
+    }
+
+    .scenario-chip.active {
+      background: rgba(33,82,255,.08);
+      color: var(--primary-dark);
+      border-color: rgba(33,82,255,.22);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field label {
+      font-weight: 700;
+      font-size: 0.96rem;
+    }
+
+    .field small {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: -2px;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      padding: 14px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      font-size: 1rem;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      outline: none;
+      border-color: rgba(33, 82, 255, 0.45);
+      box-shadow: 0 0 0 4px rgba(33, 82, 255, 0.10);
+    }
+
+    .full { grid-column: 1 / -1; }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    button,
+    .button-link {
+      border: 0;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.06s ease, background 0.15s ease, opacity 0.15s ease, border-color .15s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+    }
+
+    button:hover,
+    .button-link:hover {
+      transform: translateY(-1px);
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover { background: var(--primary-dark); }
+
+    .btn-secondary {
+      background: #eef3ff;
+      color: var(--primary-dark);
+    }
+
+    .btn-ghost {
+      background: #fff;
+      color: var(--primary-dark);
+      border: 1px solid rgba(33, 82, 255, 0.16);
+    }
+
+    .inline-help {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1px solid #e7edf7;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .result-box {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+
+    .result-label {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .result-value {
+      font-size: clamp(1.25rem, 2.4vw, 2rem);
+      line-height: 1.15;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .highlight {
+      background: linear-gradient(180deg, #eef7ff 0%, #f9fcff 100%);
+      border-color: rgba(33, 82, 255, 0.18);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 800;
+      margin-top: 10px;
+    }
+
+    .badge.success {
+      background: rgba(19, 138, 75, 0.10);
+      color: var(--success);
+    }
+
+    .badge.warning {
+      background: rgba(182, 106, 0, 0.11);
+      color: var(--warning);
+    }
+
+    .badge.risk {
+      background: rgba(180, 35, 24, 0.08);
+      color: var(--danger);
+    }
+
+    .info-list {
+      display: grid;
+      gap: 12px;
+      margin: 18px 0 0;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid #edf2fa;
+    }
+
+    .info-row:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .info-row span:first-child { color: var(--muted); }
+
+    .note {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1px solid #e7edf7;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .decision-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 24px;
+    }
+
+    .decision-box {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      padding: 18px;
+    }
+
+    .decision-box h3 {
+      margin: 0 0 8px;
+      font-size: 1.05rem;
+      letter-spacing: -0.02em;
+    }
+
+    .decision-box p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+
+    .decision-status {
+      display: inline-block;
+      margin-bottom: 10px;
+      padding: 7px 11px;
+      border-radius: 999px;
+      font-size: 0.84rem;
+      font-weight: 800;
+    }
+
+    .decision-status.safe {
+      color: var(--success);
+      background: var(--success-bg);
+    }
+
+    .decision-status.caution {
+      color: var(--warning);
+      background: var(--warning-bg);
+    }
+
+    .decision-status.risk {
+      color: var(--danger);
+      background: var(--danger-bg);
+    }
+
+    .next-action {
+      margin-top: 22px;
+      padding: 18px;
+      border-radius: 18px;
+      border: 1px solid rgba(33, 82, 255, 0.14);
+      background: linear-gradient(180deg, #eef4ff 0%, #f8fbff 100%);
+    }
+
+    .next-action h3 {
+      margin: 0 0 10px;
+      font-size: 1.08rem;
+      letter-spacing: -0.02em;
+    }
+
+    .next-action p {
+      margin: 0 0 12px;
+      color: var(--muted);
+    }
+
+    .next-action ul {
+      margin: 0 0 12px;
+      padding-left: 18px;
+      color: var(--muted);
+    }
+
+    .next-action li { margin-bottom: 6px; }
+
+    .cta-panel {
+      margin-top: 24px;
+      padding: 20px;
+      border-radius: 18px;
+      border: 1px solid rgba(33, 82, 255, 0.14);
+      background: linear-gradient(180deg, #eef4ff 0%, #f8fbff 100%);
+    }
+
+    .cta-panel h3 {
+      margin: 0 0 8px;
+      font-size: 1.12rem;
+      letter-spacing: -0.02em;
+    }
+
+    .cta-panel p {
+      margin: 0 0 14px;
+      color: var(--muted);
+    }
+
+    .cta-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .micro-links {
+      display: grid;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .micro-link {
+      display: block;
+      padding: 16px 16px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--text);
+      transition: transform .08s ease, border-color .15s ease;
+    }
+
+    .micro-link:hover {
+      transform: translateY(-1px);
+      text-decoration: none;
+      border-color: rgba(33,82,255,.25);
+    }
+
+    .micro-link strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 0.98rem;
+    }
+
+    .micro-link span {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .left-extend-card {
+      padding: 22px 24px 24px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      box-shadow: var(--shadow);
+    }
+
+    .left-extend-card h3 {
+      margin: 0 0 10px;
+      font-size: 1.16rem;
+      letter-spacing: -0.02em;
+    }
+
+    .left-extend-card p {
+      margin: 0 0 14px;
+      color: var(--muted);
+    }
+
+    .left-extend-card ul {
+      margin: 0 0 16px;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    .left-extend-card li { margin-bottom: 8px; }
+
+    .left-extend-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .left-mini-box {
+      padding: 16px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: #fff;
+    }
+
+    .left-mini-box strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.98rem;
+    }
+
+    .left-mini-box span {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .section { padding: 10px 0; }
+
+    .section-title {
+      font-size: 1.7rem;
+      letter-spacing: -0.03em;
+      margin: 0 0 14px;
+    }
+
+    .section-intro {
+      color: var(--muted);
+      margin: 0 0 22px;
+      max-width: 860px;
+    }
+
+    .content-card { padding: 24px; }
+    .content-card + .content-card { margin-top: 20px; }
+
+    .content-card h2 {
+      font-size: 1.45rem;
+      letter-spacing: -0.03em;
+      margin: 0 0 14px;
+    }
+
+    .content-card h3 {
+      font-size: 1.12rem;
+      margin: 24px 0 10px;
+    }
+
+    .content-card p {
+      color: var(--muted);
+      margin: 0 0 14px;
+    }
+
+    .content-card ul {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    .content-card li { margin-bottom: 8px; }
+
+    .checklist-grid,
+    .related-grid,
+    .scenario-grid {
+      display: grid;
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .checklist-grid,
+    .scenario-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .related-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .related-card,
+    .scenario-card,
+    .check-card {
+      display: block;
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      color: var(--text);
+      box-shadow: var(--shadow);
+      transition: transform .08s ease, border-color .15s ease;
+    }
+
+    .related-card:hover,
+    .scenario-card:hover,
+    .check-card:hover {
+      transform: translateY(-1px);
+      text-decoration: none;
+      border-color: rgba(33,82,255,.25);
+    }
+
+    .related-card strong,
+    .scenario-card strong,
+    .check-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .related-card span,
+    .scenario-card span,
+    .check-card span {
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 18px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 640px;
+      background: #fff;
+    }
+
+    th, td {
+      padding: 14px 14px;
+      text-align: left;
+      border-bottom: 1px solid #edf2fa;
+      font-size: 0.96rem;
+      vertical-align: top;
+    }
+
+    th {
+      background: #f8fbff;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    tr:nth-child(even) td { background: rgba(244,248,255,.7); }
+    tr:last-child td { border-bottom: 0; }
+
+    .formula-box {
+      margin-top: 18px;
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px dashed rgba(33, 82, 255, 0.24);
+      background: #fbfdff;
+    }
+
+    .formula-box strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.98rem;
+    }
+
+    .formula-box code {
+      display: inline-block;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      background: #eef4ff;
+      border: 1px solid #dfe8ff;
+      color: #1639ab;
+      padding: 8px 10px;
+      border-radius: 10px;
+      font-size: 0.94rem;
+      white-space: pre-wrap;
+    }
+
+    .site-cta-band { padding: 6px 0 8px; }
+
+    .site-cta-card {
+      display: grid;
+      grid-template-columns: 1.1fr auto;
+      gap: 20px;
+      align-items: center;
+      padding: 22px 24px;
+      border-radius: 22px;
+      border: 1px solid rgba(33, 82, 255, 0.14);
+      background: linear-gradient(180deg, #eef4ff 0%, #f8fbff 100%);
+      box-shadow: 0 12px 32px rgba(20, 32, 70, 0.06);
+    }
+
+    .site-cta-copy strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 1.12rem;
+      letter-spacing: -0.02em;
+      color: var(--text);
+    }
+
+    .site-cta-copy p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .site-cta-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .site-cta-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 11px 15px;
+      border-radius: 999px;
+      border: 1px solid rgba(33, 82, 255, 0.15);
+      background: #ffffff;
+      color: var(--text);
+      font-weight: 700;
+      text-decoration: none;
+      box-shadow: 0 8px 18px rgba(20, 32, 70, 0.05);
+      transition: transform 0.12s ease, border-color 0.15s ease;
+    }
+
+    .site-cta-link:hover {
+      text-decoration: none;
+      transform: translateY(-1px);
+      border-color: rgba(33, 82, 255, 0.28);
+    }
+
+    footer {
+      margin-top: 48px;
+      border-top: 1px solid rgba(219,227,240,0.9);
+      background: linear-gradient(180deg, rgba(255,255,255,0.92) 0%, rgba(248,251,255,0.98) 100%);
+    }
+
+    .footer-grid-top,
+    .footer-grid-bottom {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .footer-grid-top {
+      padding: 34px 0 22px;
+      display: grid;
+      grid-template-columns: 1.2fr 0.9fr 0.9fr;
+      gap: 28px;
+    }
+
+    .footer-grid-bottom {
+      border-top: 1px solid rgba(219,227,240,0.9);
+      padding: 18px 0 34px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .footer-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .footer-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: #f4f8ff;
+      border: 1px solid #dbe3f0;
+      color: #5f6b85;
+      font-size: 0.86rem;
+      font-weight: 700;
+    }
+
+    .footer-links-column {
+      display: grid;
+      gap: 10px;
+    }
+
+    .footer-links-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 14px 18px;
+      align-items: center;
+    }
+
+    .footer-links-column a,
+    .footer-links-row a {
+      color: #5f6b85;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .footer-links-row a {
+      font-size: 0.92rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .back-to-top {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 30;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 46px;
+      height: 46px;
+      padding: 0 14px;
+      border: none;
+      border-radius: 999px;
+      background: #172033;
+      color: #fff;
+      font-weight: 800;
+      box-shadow: 0 14px 30px rgba(20,32,70,.18);
+      cursor: pointer;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(12px);
+      transition: opacity .18s ease, transform .18s ease;
+    }
+
+    .back-to-top.is-visible {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .back-to-top:hover { background: #0f1728; }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .layout,
+      .decision-grid,
+      .checklist-grid,
+      .scenario-grid,
+      .related-grid,
+      .footer-grid-top,
+      .footer-grid-bottom,
+      .left-extend-grid,
+      .site-cta-card {
+        grid-template-columns: 1fr;
+      }
+
+      .site-cta-actions,
+      .footer-links-row { justify-content: flex-start; }
+    }
+
+    @media (max-width: 900px) {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .back-to-top {
+        right: 14px;
+        bottom: 14px;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .container { width: min(100% - 24px, 1160px); }
+
+      .form-grid,
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero { padding-top: 28px; }
+
+      .card-header,
+      .card-body,
+      .hero-box,
+      .content-card,
+      .left-extend-card {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .footer-grid-top,
+      .footer-grid-bottom {
+        width: min(100% - 24px, 1180px);
+      }
+    }
+
+    @media (max-width: 820px) {
+      .topbar {
+        position: static;
+        top: auto;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+      }
+
+      main[id],
+      section[id],
+      div[id] {
+        scroll-margin-top: 24px;
+      }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebApplication",
+    "name":"Kalkulačka nákladů na umělé mléko",
+    "url":"https://rychlevypocty.cz/kolik-stoji-umele-mleko-kalkulacka.html",
+    "applicationCategory":"FinanceApplication",
+    "operatingSystem":"Any",
+    "description":"Online kalkulačka pro výpočet nákladů na umělé mléko podle počtu balení měsíčně, ceny balení, délky období a podílu na rodinném rozpočtu.",
+    "offers":{
+      "@type":"Offer",
+      "price":"0",
+      "priceCurrency":"CZK"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"Kolik stojí umělé mléko měsíčně?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Záleží hlavně na ceně balení a počtu balení za měsíc. Tato kalkulačka ukáže orientační měsíční i roční náklady."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Jak spočítat náklady na umělé mléko za rok?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Nejprve se spočítá měsíční spotřeba balení, vynásobí cenou balení a poté se přepočte na roční období nebo jiný zvolený počet měsíců."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Má smysl sledovat cenu jedné dávky nebo balení?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Ano. Cena za balení a přepočet na měsíc jsou nejrychlejší způsob, jak porovnat různé značky a zjistit, jak silně tato položka zatěžuje rozpočet."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Jsou výsledky stejné pro každé dítě?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Ne. Jde o orientační výpočet. Skutečná spotřeba se liší podle věku dítěte, značky, kombinace s kojením a konkrétní domácnosti."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"Organization",
+    "name":"RychléVýpočty.cz",
+    "url":"https://rychlevypocty.cz/",
+    "logo":"https://rychlevypocty.cz/icon-512.png",
+    "sameAs":[]
+  }
+  </script>
+
+  <script data-rv-schema="v7" type="application/ld+json">
+  [
+    {
+      "@context":"https://schema.org",
+      "@type":"BreadcrumbList",
+      "itemListElement":[
+        {"@type":"ListItem","position":1,"name":"RychléVýpočty.cz","item":"https://rychlevypocty.cz"},
+        {"@type":"ListItem","position":2,"name":"Rodina a rozpočet","item":"https://rychlevypocty.cz/rodina-a-rozpocet.html"},
+        {"@type":"ListItem","position":3,"name":"Kolik stojí umělé mléko"}
+      ]
+    },
+    {
+      "@context":"https://schema.org",
+      "@type":"WebPage",
+      "name":"Kolik stojí umělé mléko",
+      "description":"Spočítejte si orientační náklady na umělé mléko za měsíc i za rok podle počtu balení, ceny balení a dopadu na rozpočet domácnosti.",
+      "url":"https://rychlevypocty.cz/kolik-stoji-umele-mleko-kalkulacka.html",
+      "inLanguage":"cs-CZ",
+      "isPartOf":{"@type":"WebSite","name":"RychléVýpočty.cz","url":"https://rychlevypocty.cz/"}
+    }
+  ]
+  </script>
+  <link rel="stylesheet" href="/rv-enhancements.css?v=1" />
+  <script data-rv-global-schema="v1" type="application/ld+json">[{"@context":"https://schema.org","@type":"Organization","@id":"https://rychlevypocty.cz/#organization","name":"RychléVýpočty.cz","url":"https://rychlevypocty.cz/","logo":"https://rychlevypocty.cz/icon-512.png"},{"@context":"https://schema.org","@type":"WebSite","@id":"https://rychlevypocty.cz/#website","url":"https://rychlevypocty.cz/","name":"RychléVýpočty.cz","inLanguage":"cs-CZ"},{"@context":"https://schema.org","@type":"WebPage","name":"Kolik stojí umělé mléko? Kalkulačka měsíčních a ročních nákladů | RychléVýpočty.cz","description":"Spočítejte si, kolik stojí umělé mléko za měsíc i za rok. Praktická kalkulačka ukáže náklady podle počtu balení, ceny balení, délky období i dopadu na rodinný rozpočet.","url":"https://rychlevypocty.cz/kolik-stoji-umele-mleko-kalkulacka.html","inLanguage":"cs-CZ","isPartOf":{"@id":"https://rychlevypocty.cz/#website"},"about":{"@id":"https://rychlevypocty.cz/#organization"}}]</script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Přeskočit na obsah</a>
+
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="/">Rychlé<span>Výpočty</span>.cz</a>
+      <nav aria-label="Hlavní navigace" class="topnav">
+        <a href="/">Domů</a>
+        <a href="/kalkulacky.html">Všechny kalkulačky</a>
+        <a href="/rodina-a-rozpocet.html">Rodina a rozpočet</a>
+        <a href="/cista-mzda-kalkulacka.html">Čistá mzda</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content" tabindex="-1">
+
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumbs">
+          <a href="/">RychléVýpočty.cz</a>
+          <span aria-hidden="true" class="sep">/</span>
+          <a href="/rodina-a-rozpocet.html">Rodina a rozpočet</a>
+          <span aria-hidden="true" class="sep">/</span>
+          <strong>Kolik stojí umělé mléko</strong>
+        </div>
+
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <h1>Kolik stojí umělé mléko?</h1>
+            <p>Spočítejte si orientační náklady na umělé mléko za měsíc i za rok. Stačí zadat cenu balení, počet balení za měsíc a délku období.</p>
+            <p>Umělé mléko bývá jedna z nejsilnějších pravidelných položek v rozpočtu kolem miminka. Důležité proto není jen měsíční součet, ale i to, jak velkou část čistého příjmu domácnosti tato kategorie ukrojí.</p>
+
+            <div class="hero-points">
+              <div class="hero-pill">Měsíční náklady</div>
+              <div class="hero-pill">Roční náklady</div>
+              <div class="hero-pill">Cena za balení</div>
+              <div class="hero-pill">Podíl na příjmu</div>
+            </div>
+
+            <div class="hero-actions">
+              <a class="button-link btn-primary" href="#kalkulacka">Spočítat mléko</a>
+              <a class="button-link btn-ghost" href="/kolik-me-stoji-dite-kalkulacka.html">Celkové náklady na dítě</a>
+            </div>
+
+            <div class="quick-answer">
+              <strong>Rychlá odpověď</strong>
+              <p>Umělé mléko je nejlepší číst přes měsíční spotřebu balení a celkový měsíční součet. Teprve potom jde rychle poznat, jestli problém dělá dražší značka, nebo vyšší spotřeba.</p>
+            </div>
+          </div>
+
+          <aside class="hero-box">
+            <h2>Co tady vyřešíte</h2>
+            <ul>
+              <li>kolik vás umělé mléko stojí za měsíc a za rok,</li>
+              <li>jak silně tato položka zatěžuje rozpočet domácnosti,</li>
+              <li>jestli výsledek ještě působí rozumně, nebo už tlačí,</li>
+              <li>na jakou další kalkulačku má smysl jít po výpočtu.</li>
+            </ul>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="anchor-nav">
+      <div class="container">
+        <div class="anchor-nav-inner">
+          <a class="anchor-chip" href="#kalkulacka">Spočítat mléko</a>
+          <a class="anchor-chip" href="#jak-cist-vysledek">Jak číst výsledek</a>
+          <a class="anchor-chip" href="#souvisejici-kalkulacky">Další kalkulačky</a>
+          <a class="anchor-chip" href="#faq">FAQ</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="container layout" id="kalkulacka">
+      <div class="layout-left">
+        <div class="card">
+          <div class="card-header">
+            <h2>Zadání nákladů na umělé mléko</h2>
+            <p>Vyplňte základní hodnoty. Výsledek se přepočítá hned a ukáže nejen částky, ale i praktickou interpretaci.</p>
+          </div>
+          <div class="card-body">
+            <div class="scenario-preset-band" aria-label="Rychlé scénáře">
+              <button class="scenario-chip active" data-preset="standard" type="button">Běžný scénář</button>
+              <button class="scenario-chip" data-preset="saving" type="button">Levnější varianta</button>
+              <button class="scenario-chip" data-preset="higher-use" type="button">Vyšší spotřeba</button>
+              <button class="scenario-chip" data-preset="premium" type="button">Dražší značka</button>
+            </div>
+
+            <form id="formulaForm">
+              <div class="form-grid">
+                <div class="field">
+                  <label for="packPrice">Cena balení</label>
+                  <input id="packPrice" inputmode="decimal" min="1" step="1" type="number" value="419"/>
+                  <small>Cena jednoho balení umělého mléka v Kč.</small>
+                </div>
+
+                <div class="field">
+                  <label for="packsPerMonth">Počet balení za měsíc</label>
+                  <input id="packsPerMonth" inputmode="decimal" min="0.5" step="0.5" type="number" value="5"/>
+                  <small>Orientační měsíční spotřeba podle věku dítěte a režimu krmení.</small>
+                </div>
+
+                <div class="field">
+                  <label for="monthsPeriod">Počet měsíců sledování</label>
+                  <input id="monthsPeriod" inputmode="numeric" min="1" max="36" step="1" type="number" value="12"/>
+                  <small>Můžete počítat kratší období i celý rok.</small>
+                </div>
+
+                <div class="field">
+                  <label for="extrasMonthly">Další související výdaje měsíčně</label>
+                  <input id="extrasMonthly" inputmode="decimal" min="0" step="10" type="number" value="250"/>
+                  <small>Lahve, savičky, sterilizace nebo další drobné náklady rozpočítané na měsíc.</small>
+                </div>
+
+                <div class="field">
+                  <label for="householdIncome">Čistý příjem domácnosti měsíčně</label>
+                  <input id="householdIncome" inputmode="decimal" min="1000" step="1000" type="number" value="65000"/>
+                  <small>Pomůže posoudit, jakou část rozpočtu tato kategorie ukrajuje.</small>
+                </div>
+
+                <div class="field">
+                  <label for="incomeShare">Max. doporučený podíl na příjmu (%)</label>
+                  <select id="incomeShare">
+                    <option value="3">3 %</option>
+                    <option selected value="4">4 %</option>
+                    <option value="5">5 %</option>
+                    <option value="6">6 %</option>
+                    <option value="7">7 %</option>
+                  </select>
+                  <small>Orientační limit pro výpočet příjmu, při kterém je položka ještě relativně zvládnutelná.</small>
+                </div>
+
+                <div class="actions full">
+                  <button class="btn-primary" type="submit">Spočítat náklady</button>
+                  <button class="btn-secondary" id="resetBtn" type="button">Obnovit výchozí hodnoty</button>
+                </div>
+              </div>
+            </form>
+
+            <div class="inline-help">
+              Nejrychlejší čtení výsledku: <strong>měsíční náklady</strong> + <strong>roční náklady</strong> + <strong>podíl na příjmu</strong>. Teprve potom řešte delší období a scénáře.
+            </div>
+
+            <div aria-label="Související další kroky" class="micro-links">
+              <a class="micro-link" href="/kolik-stoji-prvni-rok-ditete-kalkulacka.html">
+                <strong>Řešíte celý první rok?</strong>
+                <span>Podívejte se, jak umělé mléko zapadá do celkových nákladů na prvních 12 měsíců dítěte.</span>
+              </a>
+
+              <a class="micro-link" href="/kolik-me-stoji-pleny-kalkulacka.html">
+                <strong>Další velká pravidelná položka?</strong>
+                <span>Spočítejte si vedle mléka i pleny a porovnejte obě kategorie.</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="left-extend-card">
+          <h3>Co změnit, když umělé mléko vychází draze</h3>
+          <p>Když výsledek působí vysoko, nebývá problém jen v ceně balení. Často rozhoduje kombinace ceny a měsíční spotřeby.</p>
+          <ul>
+            <li>oddělte cenu balení od počtu balení za měsíc,</li>
+            <li>zkontrolujte, jestli vysoký součet nedělá hlavně dražší značka,</li>
+            <li>nezapomeňte připočítat i doprovodné drobné náklady,</li>
+            <li>vždy zasazujte mléko do celého rozpočtu dítěte a domácnosti.</li>
+          </ul>
+
+          <div class="cta-actions">
+            <a class="button-link btn-primary" href="/kolik-me-stoji-dite-kalkulacka.html">Hlavní kalkulačka dítěte</a>
+            <a class="button-link btn-ghost" href="/kolik-stoji-prvni-rok-ditete-kalkulacka.html">První rok dítěte</a>
+          </div>
+
+          <div class="left-extend-grid">
+            <div class="left-mini-box">
+              <strong>Když je problém cena</strong>
+              <span>Porovnejte alternativní balení nebo značky a sledujte dopad na měsíční součet, ne jen na jednu koupi.</span>
+            </div>
+            <div class="left-mini-box">
+              <strong>Když je problém spotřeba</strong>
+              <span>Vyšší měsíční spotřeba se rychle promítne do ročního součtu a může být silnější než drobný rozdíl v ceně balení.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>Výsledek výpočtu</h2>
+          <p>Orientační přehled nákladů na umělé mléko včetně interpretace a doporučeného dalšího kroku.</p>
+        </div>
+
+        <div class="card-body" aria-live="polite">
+          <div class="results-grid">
+            <div class="result-box highlight">
+              <div class="result-label">Měsíční náklady na mléko</div>
+              <div class="result-value" id="monthlyCost">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Náklady za zvolené období</div>
+              <div class="result-value" id="periodCost">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Roční náklady na mléko</div>
+              <div class="result-value" id="yearlyCost">0 Kč</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Cena za 1 balení</div>
+              <div class="result-value" id="packPriceResult">0 Kč</div>
+            </div>
+          </div>
+
+          <div class="badge success" id="budgetBadge">Položka spíše v pohodě</div>
+
+          <div class="info-list">
+            <div class="info-row">
+              <span>Spotřeba balení za měsíc</span>
+              <strong id="packsPerMonthResult">0</strong>
+            </div>
+            <div class="info-row">
+              <span>Celkem včetně doplňků měsíčně</span>
+              <strong id="monthlyWithExtras">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Celkem včetně doplňků za rok</span>
+              <strong id="yearlyWithExtras">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Podíl na čistém příjmu domácnosti</span>
+              <strong id="incomeShareResult">0 %</strong>
+            </div>
+            <div class="info-row">
+              <span>Orientační příjem pro zvolený limit</span>
+              <strong id="neededIncome">0 Kč</strong>
+            </div>
+          </div>
+
+          <div class="note">
+            Výpočet je orientační. Reálné náklady se liší podle věku dítěte, zvolené značky, kombinace s kojením, akčních nákupů a toho, jak do výpočtu započítáváte související potřeby.
+          </div>
+
+          <div class="decision-grid">
+            <div class="decision-box">
+              <div class="decision-status caution" id="budgetStatus">Na hraně</div>
+              <h3>Jak náročná je tato položka</h3>
+              <p id="budgetText">Výsledek ukazuje, jak silně může umělé mléko zatěžovat běžný měsíční rozpočet domácnosti.</p>
+            </div>
+
+            <div class="decision-box">
+              <div class="decision-status safe" id="actionStatus">Další krok</div>
+              <h3>Co řešit nejdřív</h3>
+              <p id="decisionSummary">Po výpočtu má největší smysl zjistit, jestli náklady táhne hlavně vyšší cena balení, nebo vysoká měsíční spotřeba.</p>
+            </div>
+          </div>
+
+          <div class="next-action">
+            <h3>Co udělat po výpočtu</h3>
+            <p id="nextActionText">Pokud jsou náklady vyšší, zkontrolujte cenu balení a pak se podívejte, jak umělé mléko zapadá do celkových nákladů dítěte v prvním roce.</p>
+            <div class="cta-actions">
+              <a class="button-link btn-primary" id="primaryNextCta" href="/kolik-stoji-prvni-rok-ditete-kalkulacka.html">První rok dítěte</a>
+              <a class="button-link btn-ghost" id="secondaryNextCta" href="/kolik-me-stoji-pleny-kalkulacka.html">Pleny</a>
+            </div>
+          </div>
+
+          <div class="cta-panel">
+            <h3>Umělé mléko je jen část celého rozpočtu.</h3>
+            <p>Po základním výpočtu dává největší smysl podívat se, jak mléko zapadá do prvního roku dítěte, do plen a do celkového rodinného rozpočtu.</p>
+            <div class="cta-actions">
+              <a class="button-link btn-primary" href="/kolik-me-stoji-dite-kalkulacka.html">Celkové náklady na dítě</a>
+              <a class="button-link btn-ghost" href="/cista-mzda-kalkulacka.html">Porovnat s příjmem</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container section">
+      <div class="card">
+        <div class="card-header">
+          <h3>Srovnání scénářů</h3>
+          <p>Rychle uvidíte, jak se výsledek mění při levnější variantě, vyšší spotřebě nebo dražší značce.</p>
+        </div>
+        <div class="card-body">
+          <div class="table-wrap">
+            <table aria-label="Srovnání scénářů nákladů na umělé mléko">
+              <thead>
+                <tr>
+                  <th>Scénář</th>
+                  <th>Cena balení</th>
+                  <th>Měsíční náklady</th>
+                  <th>Roční náklady</th>
+                  <th>Podíl na příjmu</th>
+                </tr>
+              </thead>
+              <tbody id="scenarioTableBody">
+                <tr>
+                  <td colspan="5">Po zadání údajů se zobrazí srovnání scénářů.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="formula-box">
+            <strong>Jak tabulku číst</strong>
+            <p style="margin:0 0 10px;color:#5f6b85;">Nejdřív sledujte měsíční součet a podíl na příjmu. Ty nejrychleji ukážou, jestli je problém spíš v ceně balení, nebo v počtu balení za měsíc.</p>
+            <code>Měsíční náklady = (počet balení za měsíc × cena balení) + další související výdaje</code>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container section" id="jak-cist-vysledek">
+      <h2 class="section-title">Jak číst výsledek kalkulačky umělého mléka</h2>
+      <p class="section-intro">Na první pohled může rozhodovat cena jednoho balení. Pro rozhodnutí je ale důležitější měsíční součet, roční dopad a podíl na příjmu domácnosti.</p>
+
+      <div class="content-card">
+        <h2>Na která čísla se dívat jako první</h2>
+
+        <div class="checklist-grid">
+          <div class="check-card">
+            <strong>Měsíční náklady</strong>
+            <span>Ukazují reálný tlak na cashflow domácnosti a běžný rozpočet.</span>
+          </div>
+
+          <div class="check-card">
+            <strong>Roční náklady</strong>
+            <span>Pomáhají rychle pochopit, jak velká je tato kategorie v součtu za delší období.</span>
+          </div>
+
+          <div class="check-card">
+            <strong>Podíl na příjmu</strong>
+            <span>Pomůže rozhodnout, jestli jde o rozumnou, citelnou nebo už přestřelenou položku.</span>
+          </div>
+        </div>
+
+        <h3>Kdy výsledek působí zdravěji</h3>
+        <p>Když měsíční součet nepůsobí vysoko vůči čistému příjmu domácnosti a umělé mléko nezastiňuje další pravidelné výdaje spojené s dítětem.</p>
+
+        <h3>Kdy zbystřit</h3>
+        <p>Varovné je hlavně to, když umělé mléko samo o sobě začne tvořit citelnou část měsíčního rozpočtu nebo když vysokou částku způsobí kombinace dražší značky a vyšší spotřeby.</p>
+      </div>
+
+      <div class="content-card">
+        <h2>Co u umělého mléka lidé nejčastěji podcení</h2>
+        <ul>
+          <li>rozdíl mezi cenou jednoho balení a skutečným měsíčním součtem,</li>
+          <li>vyšší spotřebu v určitých obdobích,</li>
+          <li>doplňkové drobné náklady kolem krmení,</li>
+          <li>to, že jde o opakovaný výdaj, který se rychle promítne do ročního součtu.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="container section" id="souvisejici-kalkulacky">
+      <div class="content-card">
+        <h2>Co dává smysl spočítat hned po umělém mléku</h2>
+        <p>Největší rozhodovací hodnotu mají stránky, které zasadí mléko do širšího rodičovského rozpočtu a dopočítají další pravidelné položky.</p>
+
+        <div class="related-grid">
+          <a class="related-card" href="/kolik-me-stoji-dite-kalkulacka.html">
+            <strong>Kolik mě stojí dítě</strong>
+            <span>Hlavní page tématu s širším pohledem na měsíční, roční i dlouhodobé náklady dítěte.</span>
+          </a>
+
+          <a class="related-card" href="/kolik-stoji-prvni-rok-ditete-kalkulacka.html">
+            <strong>Kolik stojí první rok dítěte</strong>
+            <span>Uvidíte, jak velkou část prvního roku tvoří právě krmení a další pravidelné náklady.</span>
+          </a>
+
+          <a class="related-card" href="/kolik-me-stoji-pleny-kalkulacka.html">
+            <strong>Kolik mě stojí pleny</strong>
+            <span>Porovnejte další výraznou pravidelnou položku vedle umělého mléka.</span>
+          </a>
+
+          <a class="related-card" href="/cista-mzda-kalkulacka.html">
+            <strong>Čistá mzda</strong>
+            <span>Ověřte, jak výsledné měsíční náklady sedí k reálnému příjmu domácnosti.</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="container section" id="faq">
+      <div class="content-card">
+        <h2>Časté otázky</h2>
+
+        <h3>Kolik stojí umělé mléko měsíčně?</h3>
+        <p>Záleží hlavně na ceně balení a počtu balení za měsíc. Tato kalkulačka ukáže orientační měsíční náklady i dopad na rozpočet domácnosti.</p>
+
+        <h3>Jak spočítat náklady na umělé mléko za rok?</h3>
+        <p>Nejprve se spočítá měsíční spotřeba balení, vynásobí cenou balení a poté se výsledek přepočte na celý rok nebo jiné zvolené období.</p>
+
+        <h3>Má smysl sledovat cenu balení?</h3>
+        <p>Ano, ale sama o sobě nestačí. Důležitější je spojit cenu balení s počtem balení za měsíc a teprve pak sledovat celkový měsíční součet.</p>
+
+        <h3>Jsou výsledky v kalkulačce přesné pro každé dítě?</h3>
+        <p>Ne. Jde o orientační výpočet. Skutečná spotřeba se liší podle věku dítěte, značky, režimu krmení a konkrétní domácnosti.</p>
+      </div>
+    </section>
+
+    <section aria-label="Další krok" class="site-cta-band">
+      <div class="container">
+        <div class="site-cta-card">
+          <div class="site-cta-copy">
+            <strong>Pokračujte v rozpočtu kolem dítěte</strong>
+            <p>Po umělém mléku dává největší smysl spočítat první rok dítěte, pleny a celkové náklady dítěte.</p>
+          </div>
+
+          <div class="site-cta-actions">
+            <a class="site-cta-link" href="/kolik-me-stoji-dite-kalkulacka.html">Hlavní page dítě</a>
+            <a class="site-cta-link" href="/kolik-stoji-prvni-rok-ditete-kalkulacka.html">První rok dítěte</a>
+            <a class="site-cta-link" href="/kolik-me-stoji-pleny-kalkulacka.html">Pleny</a>
+            <a class="site-cta-link" href="/cista-mzda-kalkulacka.html">Čistá mzda</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-grid-top">
+      <div style="max-width:520px;">
+        <strong style="display:inline-block;font-size:1.14rem;letter-spacing:-0.02em;color:#172033;margin-bottom:12px;">RychléVýpočty.cz</strong>
+        <p style="margin:0;color:#5f6b85;font-size:0.95rem;line-height:1.65;">
+          Online kalkulačky a praktické nástroje zdarma pro finance, bydlení, hypotéky, rodinný rozpočet,
+          mzdy, podnikání, energie, auto, rekonstrukce a další situace, které dává smysl si předem spočítat.
+        </p>
+        <div class="footer-pills">
+          <span class="footer-pill">Zdarma</span>
+          <span class="footer-pill">Bez registrace</span>
+          <span class="footer-pill">Praktické rozhodování</span>
+        </div>
+      </div>
+
+      <div>
+        <h3 style="margin:0 0 12px;font-size:1rem;letter-spacing:-0.02em;color:#172033;">Hlavní sekce</h3>
+        <div class="footer-links-column">
+          <a href="/kalkulacky.html">Všechny kalkulačky</a>
+          <a href="/rodina-a-rozpocet.html">Rodina a rozpočet</a>
+          <a href="/mzdy-a-prace.html">Mzdy a práce</a>
+          <a href="/energie-a-domacnost.html">Energie a domácnost</a>
+          <a href="/finance-a-hypoteky.html">Finance a hypotéky</a>
+        </div>
+      </div>
+
+      <div>
+        <h3 style="margin:0 0 12px;font-size:1rem;letter-spacing:-0.02em;color:#172033;">Informace a důvěra</h3>
+        <div class="footer-links-column">
+          <a href="/o-nas.html">O nás</a>
+          <a href="/kontakt.html">Kontakt</a>
+          <a href="/ochrana-osobnich-udaju.html">Ochrana osobních údajů</a>
+          <a href="/podminky-pouziti.html">Podmínky použití</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-grid-bottom">
+      <div>
+        <p style="margin:0 0 8px;color:#5f6b85;font-size:0.92rem;line-height:1.6;">© RychléVýpočty.cz – online kalkulačky a praktické nástroje zdarma</p>
+        <p style="margin:0;color:#5f6b85;font-size:0.92rem;line-height:1.6;">Výsledky mají orientační charakter a u důležitých finančních nebo rodinných rozhodnutí je vhodné je ověřit podle konkrétní situace domácnosti.</p>
+      </div>
+
+    </div>
+  </footer>
+
+  <button aria-label="Zpět nahoru" class="back-to-top" id="rvBackToTop" type="button">↑</button>
+
+  <script>
+    const form = document.getElementById('formulaForm');
+    const resetBtn = document.getElementById('resetBtn');
+
+    const outputs = {
+      monthlyCost: document.getElementById('monthlyCost'),
+      periodCost: document.getElementById('periodCost'),
+      yearlyCost: document.getElementById('yearlyCost'),
+      packPriceResult: document.getElementById('packPriceResult'),
+      packsPerMonthResult: document.getElementById('packsPerMonthResult'),
+      monthlyWithExtras: document.getElementById('monthlyWithExtras'),
+      yearlyWithExtras: document.getElementById('yearlyWithExtras'),
+      incomeShareResult: document.getElementById('incomeShareResult'),
+      neededIncome: document.getElementById('neededIncome'),
+      budgetBadge: document.getElementById('budgetBadge'),
+      budgetStatus: document.getElementById('budgetStatus'),
+      budgetText: document.getElementById('budgetText'),
+      actionStatus: document.getElementById('actionStatus'),
+      decisionSummary: document.getElementById('decisionSummary'),
+      nextActionText: document.getElementById('nextActionText'),
+      primaryNextCta: document.getElementById('primaryNextCta'),
+      secondaryNextCta: document.getElementById('secondaryNextCta'),
+      scenarioTableBody: document.getElementById('scenarioTableBody')
+    };
+
+    const presetButtons = Array.from(document.querySelectorAll('.scenario-chip'));
+
+    function formatCurrency(value) {
+      return new Intl.NumberFormat('cs-CZ', {
+        style: 'currency',
+        currency: 'CZK',
+        maximumFractionDigits: 0
+      }).format(Math.max(0, value || 0));
+    }
+
+    function formatPercent(value, digits = 1) {
+      return new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: digits
+      }).format(value) + ' %';
+    }
+
+    function formatNumber(value, digits = 1) {
+      return new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: digits
+      }).format(value);
+    }
+
+    function getValues() {
+      return {
+        packPrice: Number(document.getElementById('packPrice').value),
+        packsPerMonth: Number(document.getElementById('packsPerMonth').value),
+        monthsPeriod: Number(document.getElementById('monthsPeriod').value),
+        extrasMonthly: Number(document.getElementById('extrasMonthly').value),
+        householdIncome: Number(document.getElementById('householdIncome').value),
+        incomeShare: Number(document.getElementById('incomeShare').value)
+      };
+    }
+
+    function validate(values) {
+      if (!values.packPrice || values.packPrice <= 0) return 'Zadejte platnou cenu balení.';
+      if (!values.packsPerMonth || values.packsPerMonth <= 0) return 'Zadejte platný počet balení za měsíc.';
+      if (!values.monthsPeriod || values.monthsPeriod <= 0) return 'Zadejte platný počet měsíců.';
+      if (values.extrasMonthly < 0) return 'Další měsíční výdaje nemohou být záporné.';
+      if (!values.householdIncome || values.householdIncome <= 0) return 'Zadejte platný čistý příjem domácnosti.';
+      return '';
+    }
+
+    function calculate(values) {
+      const monthlyCost = values.packPrice * values.packsPerMonth;
+      const monthlyWithExtras = monthlyCost + values.extrasMonthly;
+      const yearlyCost = monthlyCost * 12;
+      const yearlyWithExtras = monthlyWithExtras * 12;
+      const periodCost = monthlyWithExtras * values.monthsPeriod;
+      const incomeShareResult = (monthlyWithExtras / values.householdIncome) * 100;
+      const neededIncome = monthlyWithExtras / (values.incomeShare / 100);
+
+      return {
+        monthlyCost,
+        monthlyWithExtras,
+        yearlyCost,
+        yearlyWithExtras,
+        periodCost,
+        incomeShareResult,
+        neededIncome
+      };
+    }
+
+    function getDecisionMessage(values, result) {
+      let statusClass = 'caution';
+      let statusLabel = 'Na hraně';
+      let badgeLabel = 'Položka na hraně';
+      let budgetText = 'Umělé mléko už tvoří viditelnou pravidelnou položku. Má smysl zkontrolovat cenu balení i reálnou měsíční spotřebu.';
+      let actionLabel = 'Další krok';
+      let summaryText = 'Nejdřív ověřte, jestli problém dělá hlavně dražší značka, nebo vyšší spotřeba balení za měsíc. To určí další rozhodnutí.';
+      let nextActionText = 'Pokud jsou náklady vyšší, porovnejte cenu balení a pak se podívejte, jak umělé mléko zapadá do celkových nákladů dítěte.';
+      let primaryHref = '/kolik-stoji-prvni-rok-ditete-kalkulacka.html';
+      let primaryText = 'První rok dítěte';
+      let secondaryHref = '/kolik-me-stoji-pleny-kalkulacka.html';
+      let secondaryText = 'Pleny';
+
+      if (result.incomeShareResult <= 3) {
+        statusClass = 'safe';
+        statusLabel = 'Spíše v pohodě';
+        badgeLabel = 'Položka spíše v pohodě';
+        budgetText = 'Vůči zadanému příjmu domácnosti působí náklady na umělé mléko relativně zvládnutelně. Teď má smysl zasadit je do širšího rozpočtu dítěte.';
+        actionLabel = 'Dobrá pozice';
+        summaryText = 'Výsledek vypadá zdravěji. Další krok je porovnat umělé mléko s dalšími pravidelnými výdaji a neřešit ho izolovaně.';
+        nextActionText = 'Jste v relativně dobré pozici. Teď dává největší smysl spočítat celý první rok dítěte nebo další pravidelné položky.';
+        primaryHref = '/kolik-me-stoji-dite-kalkulacka.html';
+        primaryText = 'Celkové náklady na dítě';
+        secondaryHref = '/kolik-stoji-prvni-rok-ditete-kalkulacka.html';
+        secondaryText = 'První rok dítěte';
+      } else if (result.incomeShareResult > 5 || values.packPrice >= 550 || values.packsPerMonth >= 7) {
+        statusClass = 'risk';
+        statusLabel = 'Vyšší zátěž';
+        badgeLabel = 'Položka: vyšší zátěž';
+        budgetText = 'Náklady na umělé mléko už představují výraznější pravidelný výdaj. Tady je potřeba hlídat hlavně měsíční spotřebu a dopad na celý rodinný rozpočet.';
+        actionLabel = 'Pozor';
+        summaryText = 'Tento scénář je citlivější na vyšší cenu balení i vyšší spotřebu. Vyplatí se hned porovnat alternativy a zasadit mléko do prvního roku dítěte.';
+        nextActionText = 'Největší páka bývá obvykle v kombinaci ceny a počtu balení za měsíc. Potom má smysl spočítat, jak mléko zatěžuje celý první rok a celý rozpočet dítěte.';
+      }
+
+      return {
+        statusClass,
+        statusLabel,
+        badgeLabel,
+        budgetText,
+        actionLabel,
+        summaryText,
+        nextActionText,
+        primaryHref,
+        primaryText,
+        secondaryHref,
+        secondaryText
+      };
+    }
+
+    function buildScenarioRows(values) {
+      const rows = [
+        {
+          label: 'Levnější varianta',
+          packPrice: values.packPrice * 0.85,
+          packsPerMonth: values.packsPerMonth,
+          extrasMonthly: values.extrasMonthly
+        },
+        {
+          label: 'Běžný scénář',
+          packPrice: values.packPrice,
+          packsPerMonth: values.packsPerMonth,
+          extrasMonthly: values.extrasMonthly
+        },
+        {
+          label: 'Vyšší spotřeba',
+          packPrice: values.packPrice,
+          packsPerMonth: values.packsPerMonth * 1.25,
+          extrasMonthly: values.extrasMonthly
+        },
+        {
+          label: 'Dražší značka',
+          packPrice: values.packPrice * 1.18,
+          packsPerMonth: values.packsPerMonth,
+          extrasMonthly: values.extrasMonthly
+        }
+      ];
+
+      return rows.map((row) => {
+        const monthlyCost = row.packPrice * row.packsPerMonth + row.extrasMonthly;
+        const yearlyCost = monthlyCost * 12;
+        const share = (monthlyCost / values.householdIncome) * 100;
+
+        return {
+          label: row.label,
+          packPrice: row.packPrice,
+          monthlyCost,
+          yearlyCost,
+          share
+        };
+      });
+    }
+
+    function renderScenarioTable(rows) {
+      if (!rows.length) {
+        outputs.scenarioTableBody.innerHTML = '<tr><td colspan="5">Po zadání údajů se zobrazí srovnání scénářů.</td></tr>';
+        return;
+      }
+
+      outputs.scenarioTableBody.innerHTML = rows.map((row) => `
+        <tr>
+          <td>${row.label}</td>
+          <td>${formatCurrency(row.packPrice)}</td>
+          <td>${formatCurrency(row.monthlyCost)}</td>
+          <td>${formatCurrency(row.yearlyCost)}</td>
+          <td>${formatPercent(row.share)}</td>
+        </tr>
+      `).join('');
+    }
+
+    function render(values, result) {
+      outputs.monthlyCost.textContent = formatCurrency(result.monthlyCost);
+      outputs.periodCost.textContent = formatCurrency(result.periodCost);
+      outputs.yearlyCost.textContent = formatCurrency(result.yearlyCost);
+      outputs.packPriceResult.textContent = formatCurrency(values.packPrice);
+      outputs.packsPerMonthResult.textContent = formatNumber(values.packsPerMonth, 1);
+      outputs.monthlyWithExtras.textContent = formatCurrency(result.monthlyWithExtras);
+      outputs.yearlyWithExtras.textContent = formatCurrency(result.yearlyWithExtras);
+      outputs.incomeShareResult.textContent = formatPercent(result.incomeShareResult);
+      outputs.neededIncome.textContent = formatCurrency(result.neededIncome);
+
+      const msg = getDecisionMessage(values, result);
+
+      outputs.budgetBadge.textContent = msg.badgeLabel;
+      outputs.budgetBadge.className = 'badge ' + (msg.statusClass === 'safe' ? 'success' : (msg.statusClass === 'risk' ? 'risk' : 'warning'));
+
+      outputs.budgetStatus.textContent = msg.statusLabel;
+      outputs.budgetStatus.className = 'decision-status ' + msg.statusClass;
+      outputs.budgetText.textContent = msg.budgetText;
+
+      outputs.actionStatus.textContent = msg.actionLabel;
+      outputs.actionStatus.className = 'decision-status ' + msg.statusClass;
+      outputs.decisionSummary.textContent = msg.summaryText;
+      outputs.nextActionText.textContent = msg.nextActionText;
+
+      outputs.primaryNextCta.href = msg.primaryHref;
+      outputs.primaryNextCta.textContent = msg.primaryText;
+      outputs.secondaryNextCta.href = msg.secondaryHref;
+      outputs.secondaryNextCta.textContent = msg.secondaryText;
+
+      renderScenarioTable(buildScenarioRows(values));
+    }
+
+    function runCalculation() {
+      const values = getValues();
+      const error = validate(values);
+
+      if (error) {
+        alert(error);
+        return;
+      }
+
+      const result = calculate(values);
+      render(values, result);
+    }
+
+    function setPreset(name) {
+      const presets = {
+        standard: {
+          packPrice: 419,
+          packsPerMonth: 5,
+          monthsPeriod: 12,
+          extrasMonthly: 250,
+          householdIncome: 65000,
+          incomeShare: 4
+        },
+        saving: {
+          packPrice: 339,
+          packsPerMonth: 5,
+          monthsPeriod: 12,
+          extrasMonthly: 180,
+          householdIncome: 65000,
+          incomeShare: 4
+        },
+        'higher-use': {
+          packPrice: 419,
+          packsPerMonth: 7,
+          monthsPeriod: 12,
+          extrasMonthly: 300,
+          householdIncome: 65000,
+          incomeShare: 5
+        },
+        premium: {
+          packPrice: 569,
+          packsPerMonth: 5,
+          monthsPeriod: 12,
+          extrasMonthly: 300,
+          householdIncome: 65000,
+          incomeShare: 5
+        }
+      };
+
+      const preset = presets[name];
+      if (!preset) return;
+
+      document.getElementById('packPrice').value = preset.packPrice;
+      document.getElementById('packsPerMonth').value = preset.packsPerMonth;
+      document.getElementById('monthsPeriod').value = preset.monthsPeriod;
+      document.getElementById('extrasMonthly').value = preset.extrasMonthly;
+      document.getElementById('householdIncome').value = preset.householdIncome;
+      document.getElementById('incomeShare').value = preset.incomeShare;
+
+      presetButtons.forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.preset === name);
+      });
+
+      runCalculation();
+    }
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      runCalculation();
+    });
+
+    [
+      'packPrice',
+      'packsPerMonth',
+      'monthsPeriod',
+      'extrasMonthly',
+      'householdIncome',
+      'incomeShare'
+    ].forEach(id => {
+      document.getElementById(id).addEventListener('input', runCalculation);
+      document.getElementById(id).addEventListener('change', runCalculation);
+    });
+
+    presetButtons.forEach(btn => {
+      btn.addEventListener('click', function() {
+        setPreset(btn.dataset.preset);
+      });
+    });
+
+    resetBtn.addEventListener('click', function() {
+      setPreset('standard');
+    });
+
+    runCalculation();
+  </script>
+
+  <script>
+    (function () {
+      const layout = document.querySelector('#kalkulacka.layout');
+      if (!layout || layout.dataset.mobileResultFlowFixed === 'true') return;
+
+      const left = layout.querySelector(':scope > .layout-left');
+      const right = Array.from(layout.children).find((child) => !child.classList.contains('layout-left'));
+      if (!left || !right) return;
+
+      const formCard = left.querySelector(':scope > .card');
+      if (!formCard) return;
+
+      const mq = window.matchMedia('(max-width: 980px)');
+      layout.dataset.mobileResultFlowFixed = 'true';
+
+      function syncResultPosition() {
+        const firstExtra = Array.from(left.children).find((child) => child !== formCard);
+
+        if (mq.matches) {
+          if (right.parentElement !== left || formCard.nextElementSibling !== right) {
+            left.insertBefore(right, firstExtra || null);
+          }
+          return;
+        }
+
+        if (right.parentElement !== layout || layout.lastElementChild !== right) {
+          layout.appendChild(right);
+        }
+      }
+
+      if (typeof mq.addEventListener === 'function') {
+        mq.addEventListener('change', syncResultPosition);
+      } else if (typeof mq.addListener === 'function') {
+        mq.addListener(syncResultPosition);
+      }
+
+      syncResultPosition();
+    })();
+  </script>
+
+  <script>
+    (function () {
+      const path = window.location.pathname.replace(/\/$/, '') || '/';
+      const links = document.querySelectorAll('.topnav a[href]');
+      links.forEach((link) => {
+        const href = link.getAttribute('href');
+        if (!href) return;
+        const normalized = href.replace(/\/$/, '') || '/';
+        if (normalized === path) {
+          link.setAttribute('aria-current', 'page');
+        }
+      });
+    })();
+  </script>
+
+  <script data-rv-enhancement="v7">
+    (function(){
+      const btn = document.getElementById('rvBackToTop');
+      if(!btn) return;
+
+      const toggle = () => {
+        btn.classList.toggle('is-visible', window.scrollY > 520);
+      };
+
+      toggle();
+      window.addEventListener('scroll', toggle, { passive:true });
+      btn.addEventListener('click', () => window.scrollTo({ top:0, behavior:'smooth' }));
+    })();
+  </script>
+</body>
+</html>

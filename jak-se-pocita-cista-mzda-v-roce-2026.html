@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Jak se počítá čistá mzda v roce 2026 | RychléVýpočty.cz</title>
+  <meta name="description" content="Zjistěte, jak se počítá čistá mzda v roce 2026. Praktické vysvětlení krok za krokem, co ovlivňuje výsledek a kdy použít kalkulačku čisté mzdy.">
+  <meta name="robots" content="index,follow">
+  <link rel="canonical" href="https://rychlevypocty.cz/jak-se-pocita-cista-mzda-v-roce-2026.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Jak se počítá čistá mzda v roce 2026">
+  <meta property="og:description" content="Praktický průvodce výpočtem čisté mzdy krok za krokem.">
+  <meta property="og:url" content="https://rychlevypocty.cz/jak-se-pocita-cista-mzda-v-roce-2026.html">
+  <meta property="og:site_name" content="RychléVýpočty.cz">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <style>
+    :root {
+      --bg: #ffffff;
+      --surface: #f8fafc;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #475569;
+      --line: #e2e8f0;
+      --accent: #0f766e;
+      --accent-dark: #115e59;
+      --max: 1120px;
+      --radius: 16px;
+      --shadow: 0 8px 28px rgba(15, 23, 42, 0.06);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.65;
+    }
+
+    a {
+      color: var(--accent-dark);
+      text-decoration-thickness: 1.5px;
+      text-underline-offset: 2px;
+    }
+
+    img { max-width: 100%; height: auto; }
+
+    .container {
+      width: min(100% - 32px, var(--max));
+      margin: 0 auto;
+    }
+
+    .site-header {
+      border-bottom: 1px solid var(--line);
+      background: rgba(255,255,255,.94);
+      backdrop-filter: saturate(180%) blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .site-header__inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      min-height: 68px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      text-decoration: none;
+      color: var(--text);
+    }
+
+    .brand__dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 0 6px rgba(15, 118, 110, 0.12);
+    }
+
+    .nav {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    .nav a {
+      text-decoration: none;
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .hero {
+      padding: 28px 0 12px;
+    }
+
+    .breadcrumbs {
+      font-size: 0.95rem;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .breadcrumbs a {
+      color: var(--muted);
+      text-decoration: none;
+    }
+
+    .hero__grid {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .hero__content h1 {
+      margin: 0 0 14px;
+      line-height: 1.12;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      letter-spacing: -0.03em;
+    }
+
+    .lead {
+      font-size: 1.12rem;
+      color: var(--muted);
+      margin: 0 0 18px;
+      max-width: 70ch;
+    }
+
+    .meta {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .hero-card {
+      background: linear-gradient(180deg, #f0fdfa 0%, #ffffff 100%);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 22px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-card h2 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      font-size: 1.2rem;
+    }
+
+    .hero-card ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    .layout {
+      padding: 18px 0 48px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 320px;
+      gap: 28px;
+    }
+
+    .content {
+      min-width: 0;
+    }
+
+    .content section {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 28px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .content h2 {
+      margin-top: 0;
+      margin-bottom: 14px;
+      line-height: 1.2;
+      font-size: clamp(1.35rem, 2.4vw, 1.85rem);
+    }
+
+    .content h3 {
+      margin-top: 26px;
+      margin-bottom: 10px;
+      font-size: 1.12rem;
+    }
+
+    .content p:last-child,
+    .content ul:last-child,
+    .content ol:last-child {
+      margin-bottom: 0;
+    }
+
+    .content ul,
+    .content ol {
+      padding-left: 22px;
+    }
+
+    .highlight {
+      background: #f8fafc;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 18px;
+      margin: 18px 0;
+    }
+
+    .cta {
+      display: grid;
+      gap: 12px;
+      align-items: center;
+      background: linear-gradient(135deg, #ecfeff 0%, #ffffff 100%);
+      border: 1px solid #cbd5e1;
+      border-radius: var(--radius);
+      padding: 22px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 0 18px;
+      border-radius: 12px;
+      background: var(--accent);
+      color: #fff;
+      text-decoration: none;
+      font-weight: 700;
+      width: fit-content;
+    }
+
+    .button:hover {
+      background: var(--accent-dark);
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      margin: 18px 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 560px;
+      background: #fff;
+    }
+
+    th, td {
+      padding: 14px 16px;
+      text-align: left;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+    }
+
+    th {
+      background: #f8fafc;
+      font-size: 0.95rem;
+    }
+
+    tr:last-child td { border-bottom: 0; }
+
+    .faq details {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 16px 18px;
+      background: #fff;
+    }
+
+    .faq details + details {
+      margin-top: 12px;
+    }
+
+    .faq summary {
+      cursor: pointer;
+      font-weight: 700;
+      list-style: none;
+    }
+
+    .faq summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .faq details[open] summary {
+      margin-bottom: 10px;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 88px;
+      align-self: start;
+      display: grid;
+      gap: 18px;
+    }
+
+    .card {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .card h2,
+    .card h3 {
+      margin-top: 0;
+      margin-bottom: 12px;
+      font-size: 1.1rem;
+    }
+
+    .toc ol,
+    .related ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    .note {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .author {
+      display: grid;
+      gap: 8px;
+    }
+
+    .site-footer {
+      border-top: 1px solid var(--line);
+      padding: 28px 0 46px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 980px) {
+      .hero__grid,
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: static;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .container {
+        width: min(100% - 20px, var(--max));
+      }
+
+      .site-header__inner {
+        min-height: 60px;
+      }
+
+      .nav {
+        display: none;
+      }
+
+      .content section,
+      .hero-card,
+      .card {
+        padding: 20px;
+      }
+
+      .lead {
+        font-size: 1rem;
+      }
+
+      .button {
+        width: 100%;
+      }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"Article",
+    "headline":"Jak se počítá čistá mzda v roce 2026",
+    "description":"Praktický průvodce výpočtem čisté mzdy krok za krokem.",
+    "inLanguage":"cs-CZ",
+    "mainEntityOfPage":"https://rychlevypocty.cz/jak-se-pocita-cista-mzda-v-roce-2026.html",
+    "author":{
+      "@type":"Organization",
+      "name":"RychléVýpočty.cz"
+    },
+    "publisher":{
+      "@type":"Organization",
+      "name":"RychléVýpočty.cz"
+    },
+    "datePublished":"2026-04-08",
+    "dateModified":"2026-04-08"
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"Jaký je rozdíl mezi hrubou a čistou mzdou?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Hrubá mzda je částka sjednaná v pracovní smlouvě před odvody a daní. Čistá mzda je částka, kterou zaměstnanec skutečně obdrží na účet po odečtení povinných odvodů a daně."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Proč se může čistá mzda lišit i při stejné hrubé mzdě?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Výsledek ovlivňují například uplatněné slevy na dani, daňové zvýhodnění na děti, typ pracovního vztahu nebo další individuální okolnosti."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Kdy má smysl použít kalkulačku čisté mzdy?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Hodí se při porovnávání pracovních nabídek, plánování rozpočtu nebo při rychlém ověření, kolik přibližně dostanete na účet z určité hrubé mzdy."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Je výsledek kalkulačky vždy přesný?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Online kalkulačka obvykle slouží jako rychlý orientační výpočet. Přesný výsledek může záviset na konkrétních podmínkách zaměstnance a nastavení mezd."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container site-header__inner">
+      <a class="brand" href="/index.html" aria-label="RychléVýpočty.cz">
+        <span class="brand__dot" aria-hidden="true"></span>
+        <span>RychléVýpočty.cz</span>
+      </a>
+      <nav class="nav" aria-label="Hlavní navigace">
+        <a href="/kalkulacky.html">Kalkulačky</a>
+        <a href="/o-nas.html">O projektu</a>
+        <a href="/ochrana-osobnich-udaju.html">Ochrana osobních údajů</a>
+        <a href="/kontakt.html">Kontakt</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumbs" aria-label="Drobečková navigace">
+          <a href="/index.html">Domů</a> /
+          <a href="/kalkulacky.html">Kalkulačky</a> /
+          <span>Jak se počítá čistá mzda v roce 2026</span>
+        </div>
+
+        <div class="hero__grid">
+          <div class="hero__content">
+            <h1>Jak se počítá čistá mzda v roce 2026</h1>
+            <p class="lead">
+              Čistá mzda je částka, která zaměstnanci skutečně dorazí na účet. V praxi ale nevzniká
+              jednoduše tím, že se od hrubé mzdy odečte jedna položka. Do výsledku vstupují odvody,
+              daň, slevy na dani i konkrétní nastavení pracovního poměru. Níže najdete praktické
+              vysvětlení krok za krokem a také odkazy na související výpočty.
+            </p>
+            <div class="meta">
+              <span>Aktualizováno: 8. 4. 2026</span>
+              <span>Autor: RychléVýpočty.cz</span>
+              <span>Doba čtení: 6 minut</span>
+            </div>
+          </div>
+
+          <aside class="hero-card" aria-label="Rychlá akce">
+            <h2>Spočítat čistou mzdu</h2>
+            <p>
+              Chcete místo čtení rovnou výsledek? Použijte naši praktickou kalkulačku a vraťte se sem
+              pro vysvětlení jednotlivých kroků.
+            </p>
+            <a class="button" href="/cista-mzda-kalkulacka.html">Otevřít kalkulačku čisté mzdy</a>
+            <div class="highlight">
+              <strong>Hodí se pro:</strong>
+              <ul>
+                <li>porovnání pracovních nabídek,</li>
+                <li>plánování měsíčního rozpočtu,</li>
+                <li>rychlý přepočet hrubé mzdy na čistou.</li>
+              </ul>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <div class="container layout">
+      <article class="content">
+        <section id="co-je-cista-mzda">
+          <h2>Co je čistá mzda</h2>
+          <p>
+            Když se mluví o mzdě, lidé často zaměňují <strong>hrubou mzdu</strong> a
+            <strong>čistou mzdu</strong>. Hrubá mzda je částka uvedená v pracovní smlouvě nebo v nabídce
+            zaměstnání. Čistá mzda je to, co po zákonných odvodech a dani skutečně dostanete.
+          </p>
+          <p>
+            Rozdíl mezi těmito dvěma čísly může být výrazný. Nejde jen o daň z příjmu, ale také o
+            další položky, které se od výdělku odčítají, případně výsledek snižují nebo naopak zlepšují.
+            Proto je při posuzování nové pracovní nabídky nebo plánování osobních financí důležité dívat
+            se nejen na hrubou částku, ale hlavně na reálný dopad do měsíčního rozpočtu.
+          </p>
+          <div class="highlight">
+            <strong>Praktický tip:</strong> Pokud porovnáváte dvě pracovní nabídky, porovnávejte je vždy
+            podle čisté mzdy a zároveň si ověřte i <a href="/naklady-zamestnavatele-kalkulacka.html">náklady zaměstnavatele</a>,
+            pokud vás zajímá celková cena práce.
+          </div>
+        </section>
+
+        <section id="jak-vypocet-funguje">
+          <h2>Jak se čistá mzda počítá krok za krokem</h2>
+          <p>
+            Samotný výpočet čisté mzdy je ve své logice přehledný, ale v detailu do něj vstupuje více
+            proměnných. Proto se vyplatí rozumět postupu a zároveň pro rychlou práci používat
+            <a href="/cista-mzda-kalkulacka.html">kalkulačku čisté mzdy</a>.
+          </p>
+
+          <h3>1. Základem je hrubá mzda</h3>
+          <p>
+            Hrubá mzda představuje výchozí částku před odečtením povinných položek. Může být stanovena
+            jako měsíční mzda, hodinová sazba nebo jiná forma odměny. Pro zaměstnance je to výchozí údaj,
+            od kterého se odvíjí celý další výpočet.
+          </p>
+
+          <h3>2. Zohlední se povinné odvody</h3>
+          <p>
+            Z hrubé mzdy se odvíjejí povinné odvody spojené se zaměstnáním. Tyto položky mají přímý dopad
+            na to, kolik peněz zůstane zaměstnanci po zpracování mzdy. Pro běžného uživatele je důležité
+            vědět hlavně to, že právě tady vzniká velká část rozdílu mezi hrubou a čistou mzdou.
+          </p>
+
+          <h3>3. Vstupuje daň z příjmu</h3>
+          <p>
+            Další významnou položkou je daň z příjmu. Její dopad ale nemusí být stejný u každého
+            zaměstnance. Vliv mají zejména uplatněné slevy a zvýhodnění. Proto dva lidé se stejnou
+            hrubou mzdou nemusí dostat stejnou čistou částku.
+          </p>
+
+          <h3>4. Výsledek upraví slevy a zvýhodnění</h3>
+          <p>
+            Právě slevy na dani nebo jiné individuální okolnosti mohou mít na konečný výsledek výrazný
+            vliv. Z uživatelského pohledu je důležité, že online kalkulačka by měla umět s těmito
+            možnostmi pracovat, jinak bude výsledek pouze velmi hrubý odhad.
+          </p>
+
+          <div class="cta">
+            <strong>Chcete si to ověřit na svých číslech?</strong>
+            <span>Zadejte svou hrubou mzdu a získejte orientační výsledek během pár sekund.</span>
+            <a class="button" href="/cista-mzda-kalkulacka.html">Přejít na kalkulačku čisté mzdy</a>
+          </div>
+        </section>
+
+        <section id="priklad-vypoctu">
+          <h2>Příklad výpočtu čisté mzdy</h2>
+          <p>
+            Níže je jednoduchý modelový příklad, který ukazuje princip. Konkrétní čísla se mohou lišit
+            podle individuální situace, ale jako orientační ukázka dobře vysvětlují, proč je rozdíl mezi
+            hrubou a čistou mzdou tak výrazný.
+          </p>
+
+          <div class="table-wrap">
+            <table aria-label="Příklad výpočtu čisté mzdy">
+              <thead>
+                <tr>
+                  <th>Položka</th>
+                  <th>Modelová hodnota</th>
+                  <th>Co znamená</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Hrubá mzda</td>
+                  <td>40 000 Kč</td>
+                  <td>Výchozí částka před odečtením daní a odvodů.</td>
+                </tr>
+                <tr>
+                  <td>Povinné odvody</td>
+                  <td>podle nastavení zaměstnance</td>
+                  <td>Položky, které snižují částku vyplacenou zaměstnanci.</td>
+                </tr>
+                <tr>
+                  <td>Daň z příjmu</td>
+                  <td>ovlivněna slevami</td>
+                  <td>Výši může snížit například uplatnění slevy na poplatníka.</td>
+                </tr>
+                <tr>
+                  <td>Čistá mzda</td>
+                  <td>orientační výsledek</td>
+                  <td>Částka, kterou zaměstnanec reálně obdrží.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            Pro přesnější výpočet je vždy lepší zadat údaje přímo do kalkulačky. To je důležité hlavně
+            tehdy, pokud porovnáváte více pracovních nabídek nebo si potřebujete udělat realistický odhad
+            měsíčního čistého příjmu.
+          </p>
+        </section>
+
+        <section id="co-vysledek-ovlivnuje">
+          <h2>Co výsledek nejvíc ovlivňuje</h2>
+          <p>
+            Uživatelé často očekávají, že čistá mzda se bude od hrubé mzdy odvíjet vždy stejně. V praxi
+            ale výsledek ovlivňuje několik faktorů najednou a rozdíly mohou být překvapivě velké.
+          </p>
+
+          <ul>
+            <li><strong>Výše hrubé mzdy:</strong> čím vyšší základ, tím vyšší absolutní rozdíl mezi hrubou a čistou částkou.</li>
+            <li><strong>Uplatněné slevy:</strong> mohou konečný výsledek znatelně upravit.</li>
+            <li><strong>Typ pracovního vztahu:</strong> jinak může působit klasický pracovní poměr a jinak specifické formy odměny.</li>
+            <li><strong>Individuální situace zaměstnance:</strong> například rodinné a daňové okolnosti.</li>
+          </ul>
+
+          <p>
+            Proto dává smysl nespoléhat na odhad „z hlavy“, ale použít nástroj, který zvládne rychle
+            dopočítat orientační výsledek podle zadaných údajů.
+          </p>
+        </section>
+
+        <section id="kdy-kalkulacku-pouzit">
+          <h2>Kdy má smysl použít kalkulačku čisté mzdy</h2>
+          <p>
+            Kalkulačka čisté mzdy je užitečná ve chvíli, kdy potřebujete rychle převést nabídnutou hrubou
+            mzdu na částku, kterou pravděpodobně uvidíte na účtu. Typicky pomáhá v těchto situacích:
+          </p>
+          <ul>
+            <li>porovnáváte dvě nebo více pracovních nabídek,</li>
+            <li>řešíte změnu zaměstnání nebo vyjednávání o mzdě,</li>
+            <li>plánujete osobní nebo rodinný rozpočet,</li>
+            <li>chcete si zkontrolovat orientační dopad vyšší hrubé mzdy.</li>
+          </ul>
+          <p>
+            Pokud navíc řešíte i druhou stranu pracovního vztahu, může se vám hodit také
+            <a href="/naklady-zamestnavatele-kalkulacka.html">kalkulačka nákladů zaměstnavatele</a>,
+            která ukazuje širší pohled na cenu práce.
+          </p>
+        </section>
+
+        <section id="souvisejici-temata">
+          <h2>Související výpočty a témata</h2>
+          <p>
+            Čistá mzda je často jen jeden díl skládačky. Podle situace se vyplatí podívat i na další
+            související nástroje a články:
+          </p>
+          <ul>
+            <li><a href="/naklady-zamestnavatele-kalkulacka.html">Náklady zaměstnavatele</a> – pokud chcete vidět celkovou cenu práce.</li>
+            <li><a href="/dpp-dpc-kalkulacka.html">DPP / DPČ kalkulačka</a> – pro odlišné typy pracovního vztahu.</li>
+            <li><a href="/kalkulacka-hodinove-mzdy.html">Kalkulačka hodinové mzdy</a> – při přepočtu mezi hodinovou a měsíční odměnou.</li>
+            <li><a href="/kalkulacka-hodinove-sazby-freelancera.html">Hodinová sazba freelancera</a> – pokud porovnáváte zaměstnání a práci na sebe.</li>
+          </ul>
+
+          <div class="highlight">
+            <strong>Doporučení pro návštěvníka:</strong> Pokud řešíte změnu práce, nejprve si spočítejte
+            čistou mzdu, potom si ověřte náklady zaměstnavatele a nakonec porovnejte i alternativu
+            práce na IČO.
+          </div>
+        </section>
+
+        <section id="faq" class="faq">
+          <h2>Často kladené otázky</h2>
+
+          <details>
+            <summary>Jaký je rozdíl mezi hrubou a čistou mzdou?</summary>
+            <p>
+              Hrubá mzda je částka před odečtením povinných položek. Čistá mzda je to, co po zpracování
+              mezd skutečně dostanete na účet.
+            </p>
+          </details>
+
+          <details>
+            <summary>Proč se může čistá mzda lišit i při stejné hrubé mzdě?</summary>
+            <p>
+              Výsledek může ovlivnit individuální nastavení zaměstnance, uplatněné slevy a další okolnosti.
+              Proto je lepší nepočítat jen odhadem.
+            </p>
+          </details>
+
+          <details>
+            <summary>Kdy dává smysl použít kalkulačku čisté mzdy?</summary>
+            <p>
+              Především při porovnávání pracovních nabídek, vyjednávání mzdy a při plánování rozpočtu.
+            </p>
+          </details>
+
+          <details>
+            <summary>Je online výpočet vždy přesný?</summary>
+            <p>
+              Slouží hlavně jako rychlý orientační výpočet. Přesný výsledek může záviset na konkrétním
+              nastavení mezd a individuálních okolnostech.
+            </p>
+          </details>
+        </section>
+
+        <section id="zaver">
+          <h2>Shrnutí</h2>
+          <p>
+            Výpočet čisté mzdy není složitý v principu, ale v praxi závisí na více proměnných. Právě proto
+            se vyplatí kombinovat rychlou kalkulačku s jednoduchým vysvětlením, co výsledek ovlivňuje.
+            Pokud chcete přejít rovnou k výpočtu, použijte naši
+            <a href="/cista-mzda-kalkulacka.html">kalkulačku čisté mzdy</a>.
+          </p>
+          <div class="cta">
+            <strong>Chcete pokračovat?</strong>
+            <span>Navštivte hlavní kalkulačku a spočítejte si orientační čistou mzdu během chvíle.</span>
+            <a class="button" href="/cista-mzda-kalkulacka.html">Spočítat čistou mzdu</a>
+          </div>
+        </section>
+      </article>
+
+      <aside class="sidebar">
+        <div class="card toc">
+          <h2>Obsah článku</h2>
+          <ol>
+            <li><a href="#co-je-cista-mzda">Co je čistá mzda</a></li>
+            <li><a href="#jak-vypocet-funguje">Jak funguje výpočet</a></li>
+            <li><a href="#priklad-vypoctu">Příklad výpočtu</a></li>
+            <li><a href="#co-vysledek-ovlivnuje">Co výsledek ovlivňuje</a></li>
+            <li><a href="#kdy-kalkulacku-pouzit">Kdy použít kalkulačku</a></li>
+            <li><a href="#souvisejici-temata">Související témata</a></li>
+            <li><a href="#faq">FAQ</a></li>
+          </ol>
+        </div>
+
+        <div class="card related">
+          <h3>Související kalkulačky</h3>
+          <ul>
+            <li><a href="/cista-mzda-kalkulacka.html">Kalkulačka čisté mzdy</a></li>
+            <li><a href="/naklady-zamestnavatele-kalkulacka.html">Náklady zaměstnavatele</a></li>
+            <li><a href="/dpp-dpc-kalkulacka.html">DPP / DPČ kalkulačka</a></li>
+            <li><a href="/kalkulacka-hodinove-mzdy.html">Hodinová mzda</a></li>
+          </ul>
+        </div>
+
+        <div class="card author">
+          <h3>Poznámka k obsahu</h3>
+          <p class="note">
+            Tento článek slouží jako praktický a orientační průvodce. Přesný výpočet může záviset na
+            konkrétním nastavení zaměstnance, použité metodice a aktuální legislativě.
+          </p>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>
+        © 2026 RychléVýpočty.cz · Praktické online kalkulačky a vysvětlující návody.
+      </p>
+    </div>
+  </footer>
+</body>
+</html>

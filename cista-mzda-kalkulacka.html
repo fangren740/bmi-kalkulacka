@@ -1,0 +1,2101 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <meta content="telephone=no" name="format-detection"/>
+  <link href="/favicon.ico?v=2" rel="icon" sizes="any"/>
+  <link href="/favicon-32x32.png?v=2" rel="icon" sizes="32x32" type="image/png"/>
+  <link href="/favicon-16x16.png?v=2" rel="icon" sizes="16x16" type="image/png"/>
+  <link href="/apple-touch-icon.png?v=2" rel="apple-touch-icon" sizes="180x180"/>
+  <link href="/site.webmanifest?v=2" rel="manifest"/>
+  <meta content="#14253d" name="theme-color"/>
+
+  <title>Kalkulačka čisté mzdy: kolik vám přijde na účet | RychléVýpočty.cz</title>
+  <meta content="Spočítejte si orientační čistou mzdu z hrubé mzdy. Přehledně uvidíte odvody, daň, čistý příjem i orientační cenu práce. Hodí se při změně práce, plánování rozpočtu i porovnání hypotéky." name="description"/>
+  <meta content="kalkulačka čisté mzdy, čistá mzda kalkulačka, hrubá na čistou, výpočet čisté mzdy, čistý příjem, cena práce" name="keywords"/>
+  <meta content="RychléVýpočty.cz" name="author"/>
+  <meta content="index,follow" name="robots"/>
+  <link href="https://rychlevypocty.cz/cista-mzda-kalkulacka.html" rel="canonical"/>
+
+  <meta content="Kalkulačka čisté mzdy: kolik vám přijde na účet | RychléVýpočty.cz" property="og:title"/>
+  <meta content="Spočítejte si orientační čistou mzdu z hrubé mzdy, odvody, daň i cenu práce." property="og:description"/>
+  <meta content="website" property="og:type"/>
+  <meta content="https://rychlevypocty.cz/cista-mzda-kalkulacka.html" property="og:url"/>
+  <meta content="https://rychlevypocty.cz/og-image.jpg" property="og:image"/>
+  <meta content="RychléVýpočty.cz" property="og:site_name"/>
+  <meta content="cs_CZ" property="og:locale"/>
+
+  <meta content="summary_large_image" name="twitter:card"/>
+  <meta content="Kalkulačka čisté mzdy: kolik vám přijde na účet | RychléVýpočty.cz" name="twitter:title"/>
+  <meta content="Přehledný výpočet čisté mzdy z hrubé mzdy včetně odvodů, daně a ceny práce." name="twitter:description"/>
+  <meta content="https://rychlevypocty.cz/og-image.jpg" name="twitter:image"/>
+  <meta content="RychléVýpočty.cz – online kalkulačky a praktické výpočty" name="twitter:image:alt"/>
+
+  <style>
+    .skip-link {
+      position: absolute;
+      left: 16px;
+      top: -56px;
+      z-index: 100;
+      padding: 12px 16px;
+      border-radius: 12px;
+      background: #172033;
+      color: #ffffff;
+      font-weight: 700;
+      box-shadow: 0 10px 24px rgba(20, 32, 70, 0.18);
+      transition: top 0.16s ease;
+    }
+
+    .skip-link:focus { top: 16px; }
+
+    :focus-visible {
+      outline: 3px solid rgba(33, 82, 255, 0.45);
+      outline-offset: 3px;
+      border-radius: 10px;
+    }
+
+    main[id],
+    section[id],
+    div[id] {
+      scroll-margin-top: 96px;
+    }
+
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #5f6b85;
+      --primary: #2152ff;
+      --primary-dark: #183dbf;
+      --border: #dbe3f0;
+      --success: #138a4b;
+      --warning: #b66a00;
+      --danger: #b42318;
+      --danger-bg: rgba(180, 35, 24, 0.08);
+      --success-bg: rgba(19, 138, 75, 0.10);
+      --warning-bg: rgba(182, 106, 0, 0.11);
+      --primary-bg: rgba(33, 82, 255, 0.08);
+      --shadow: 0 12px 32px rgba(20, 32, 70, 0.08);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #f7f9fd 0%, #eef3fb 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    a:hover { text-decoration: underline; }
+
+    .container {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      padding: 18px 0;
+      border-bottom: 1px solid rgba(219, 227, 240, 0.8);
+      background: rgba(255, 255, 255, 0.86);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+
+    .brand span { color: var(--primary); }
+
+    .topnav {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      font-size: 0.97rem;
+    }
+
+    .topnav a {
+      border-radius: 999px;
+      padding: 8px 12px;
+      transition: background-color 0.15s ease, color 0.15s ease;
+    }
+
+    .topnav a:hover,
+    .topnav a[aria-current="page"] {
+      text-decoration: none;
+      background: rgba(33, 82, 255, 0.08);
+      color: var(--primary);
+    }
+
+    .hero { padding: 40px 0 16px; }
+
+    .breadcrumbs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .breadcrumbs span.sep { color: #8a94a9; }
+    .breadcrumbs a { color: var(--muted); }
+    .breadcrumbs strong { font-weight: 700; color: var(--text); }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0;
+      align-items: start;
+    }
+
+    .hero-copy h1 {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 1.06;
+      letter-spacing: -0.03em;
+      margin: 0 0 16px;
+    }
+
+    .hero-copy p {
+      margin: 0 0 14px;
+      font-size: 1.05rem;
+      color: var(--muted);
+      max-width: 780px;
+    }
+
+    .hero-points {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .hero-pill {
+      background: rgba(33, 82, 255, 0.08);
+      color: var(--primary-dark);
+      border: 1px solid rgba(33, 82, 255, 0.12);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .hero-copy {
+      max-width: 780px;
+    }
+
+    .hero-box,
+    .card,
+    .content-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-box {
+      padding: 24px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+
+    .hero-box h2 {
+      margin: 0 0 10px;
+      font-size: 1.2rem;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-box p,
+    .hero-box li {
+      color: var(--muted);
+    }
+
+    .hero-box ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .hero-box li { margin-bottom: 8px; }
+
+    .quick-answer {
+      margin-top: 20px;
+      padding: 18px 18px;
+      border-radius: 18px;
+      border: 1px solid rgba(33, 82, 255, 0.16);
+      background: linear-gradient(180deg, #eef4ff 0%, #f8fbff 100%);
+    }
+
+    .quick-answer strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .quick-answer p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.97rem;
+    }
+
+    .anchor-nav { padding: 6px 0 20px; }
+
+    .anchor-nav-inner {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .anchor-chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: #fff;
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 0.92rem;
+      font-weight: 700;
+      box-shadow: 0 6px 18px rgba(20, 32, 70, 0.04);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.03fr 0.97fr;
+      gap: 28px;
+      align-items: start;
+      padding: 10px 0 22px;
+    }
+
+    .layout-left {
+      display: grid;
+      gap: 20px;
+      align-self: start;
+    }
+
+    .card-header {
+      padding: 24px 24px 10px;
+    }
+
+    .card-header h2,
+    .card-header h3 {
+      margin: 0 0 8px;
+      font-size: 1.3rem;
+      letter-spacing: -0.02em;
+    }
+
+    .card-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .card-body {
+      padding: 20px 24px 24px;
+    }
+
+    .scenario-preset-band {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 2px 0 22px;
+    }
+
+    .scenario-chip {
+      border: 1px solid rgba(33,82,255,.14);
+      background: #fff;
+      color: var(--text);
+      border-radius: 999px;
+      padding: 10px 14px;
+      font-size: .9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform .08s ease, border-color .15s ease, background-color .15s ease;
+    }
+
+    .scenario-chip:hover {
+      transform: translateY(-1px);
+      border-color: rgba(33,82,255,.28);
+      background: #f8fbff;
+    }
+
+    .scenario-chip.active {
+      background: rgba(33,82,255,.08);
+      color: var(--primary-dark);
+      border-color: rgba(33,82,255,.22);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field label {
+      font-weight: 700;
+      font-size: 0.96rem;
+    }
+
+    .field small {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: -2px;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      padding: 14px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      font-size: 1rem;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      font-family: inherit;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      outline: none;
+      border-color: rgba(33, 82, 255, 0.45);
+      box-shadow: 0 0 0 4px rgba(33, 82, 255, 0.10);
+    }
+
+    .full { grid-column: 1 / -1; }
+
+    .checkbox-wrap {
+      display: grid;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .checkbox-row {
+      position: relative;
+      display: grid;
+      grid-template-columns: 22px 1fr;
+      align-items: start;
+      gap: 14px;
+      padding: 16px 18px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: #fff;
+      cursor: pointer;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    }
+
+    .checkbox-row:hover {
+      border-color: rgba(33, 82, 255, 0.28);
+      box-shadow: 0 8px 22px rgba(20, 32, 70, 0.05);
+    }
+
+    .checkbox-row input {
+      margin: 2px 0 0;
+      width: 18px;
+      height: 18px;
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
+
+    .checkbox-row label {
+      margin: 0;
+      font-weight: 700;
+      font-size: 1rem;
+      line-height: 1.4;
+      cursor: pointer;
+    }
+
+    .checkbox-row span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.92rem;
+      font-weight: 400;
+      margin-top: 4px;
+      line-height: 1.5;
+    }
+
+    .checkbox-row.is-checked {
+      border-color: rgba(33, 82, 255, 0.32);
+      background: linear-gradient(180deg, #f8fbff 0%, #eef4ff 100%);
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    button,
+    .button-link {
+      border: 0;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.06s ease, background 0.15s ease, opacity 0.15s ease, border-color .15s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      font-family: inherit;
+    }
+
+    button:hover,
+    .button-link:hover {
+      transform: translateY(-1px);
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover { background: var(--primary-dark); }
+
+    .btn-secondary {
+      background: #eef3ff;
+      color: var(--primary-dark);
+    }
+
+    .btn-ghost {
+      background: #fff;
+      color: var(--primary-dark);
+      border: 1px solid rgba(33, 82, 255, 0.16);
+    }
+
+    .inline-help {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1px solid #e7edf7;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .micro-links {
+      display: grid;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .micro-link {
+      display: block;
+      padding: 16px 16px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--text);
+      transition: transform .08s ease, border-color .15s ease;
+    }
+
+    .micro-link:hover {
+      transform: translateY(-1px);
+      text-decoration: none;
+      border-color: rgba(33,82,255,.25);
+    }
+
+    .micro-link strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 0.98rem;
+    }
+
+    .micro-link span {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .left-extend-card {
+      padding: 22px 24px 24px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      box-shadow: var(--shadow);
+    }
+
+    .left-extend-card h3 {
+      margin: 0 0 10px;
+      font-size: 1.16rem;
+      letter-spacing: -0.02em;
+    }
+
+    .left-extend-card p {
+      margin: 0 0 14px;
+      color: var(--muted);
+    }
+
+    .left-extend-card ul {
+      margin: 0 0 16px;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    .left-extend-card li { margin-bottom: 8px; }
+
+    .left-extend-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .left-mini-box {
+      padding: 16px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: #fff;
+    }
+
+    .left-mini-box strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.98rem;
+    }
+
+    .left-mini-box span {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .result-box {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+
+    .result-label {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .result-value {
+      font-size: clamp(1.25rem, 2.4vw, 2rem);
+      line-height: 1.15;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      word-break: break-word;
+    }
+
+    .highlight {
+      background: linear-gradient(180deg, #eef7ff 0%, #f9fcff 100%);
+      border-color: rgba(33, 82, 255, 0.18);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 800;
+      margin-top: 10px;
+    }
+
+    .badge.success {
+      background: rgba(19, 138, 75, 0.10);
+      color: var(--success);
+    }
+
+    .badge.warning {
+      background: rgba(182, 106, 0, 0.11);
+      color: var(--warning);
+    }
+
+    .badge.risk {
+      background: rgba(180, 35, 24, 0.08);
+      color: var(--danger);
+    }
+
+    .info-list {
+      display: grid;
+      gap: 12px;
+      margin: 18px 0 0;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid #edf2fa;
+    }
+
+    .info-row:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .info-row span:first-child { color: var(--muted); }
+
+    .note {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1px solid #e7edf7;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .decision-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 24px;
+    }
+
+    .decision-box {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      padding: 18px;
+    }
+
+    .decision-box h3 {
+      margin: 0 0 8px;
+      font-size: 1.05rem;
+      letter-spacing: -0.02em;
+    }
+
+    .decision-box p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+
+    .decision-status {
+      display: inline-block;
+      margin-bottom: 10px;
+      padding: 7px 11px;
+      border-radius: 999px;
+      font-size: 0.84rem;
+      font-weight: 800;
+    }
+
+    .decision-status.safe {
+      color: var(--success);
+      background: var(--success-bg);
+    }
+
+    .decision-status.caution {
+      color: var(--warning);
+      background: var(--warning-bg);
+    }
+
+    .decision-status.risk {
+      color: var(--danger);
+      background: var(--danger-bg);
+    }
+
+    .next-action {
+      margin-top: 22px;
+      padding: 18px;
+      border-radius: 18px;
+      border: 1px solid rgba(33, 82, 255, 0.14);
+      background: linear-gradient(180deg, #eef4ff 0%, #f8fbff 100%);
+    }
+
+    .next-action h3 {
+      margin: 0 0 10px;
+      font-size: 1.08rem;
+      letter-spacing: -0.02em;
+    }
+
+    .next-action p {
+      margin: 0 0 12px;
+      color: var(--muted);
+    }
+
+    .next-action ul {
+      margin: 0 0 12px;
+      padding-left: 18px;
+      color: var(--muted);
+    }
+
+    .next-action li { margin-bottom: 6px; }
+
+    .cta-panel {
+      margin-top: 24px;
+      padding: 20px;
+      border-radius: 18px;
+      border: 1px solid rgba(33, 82, 255, 0.14);
+      background: linear-gradient(180deg, #eef4ff 0%, #f8fbff 100%);
+    }
+
+    .result-details-toggle {
+      margin-top: 20px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: #fff;
+      overflow: hidden;
+    }
+
+    .result-details-toggle summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 16px 18px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .result-details-toggle summary::-webkit-details-marker { display: none; }
+
+    .result-details-toggle summary::after {
+      content: '+';
+      font-size: 1.2rem;
+      color: var(--primary-dark);
+    }
+
+    .result-details-toggle[open] summary::after { content: '–'; }
+
+    .result-details-body {
+      padding: 0 18px 18px;
+      border-top: 1px solid #edf2fa;
+    }
+
+    .cta-panel h3 {
+      margin: 0 0 8px;
+      font-size: 1.12rem;
+      letter-spacing: -0.02em;
+    }
+
+    .cta-panel p {
+      margin: 0 0 14px;
+      color: var(--muted);
+    }
+
+    .cta-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .section { padding: 10px 0; }
+
+    .section-title {
+      font-size: 1.7rem;
+      letter-spacing: -0.03em;
+      margin: 0 0 14px;
+    }
+
+    .section-intro {
+      color: var(--muted);
+      margin: 0 0 22px;
+      max-width: 860px;
+    }
+
+    .content-card { padding: 24px; }
+    .content-card + .content-card { margin-top: 20px; }
+
+    .content-card h2 {
+      font-size: 1.45rem;
+      letter-spacing: -0.03em;
+      margin: 0 0 14px;
+    }
+
+    .content-card h3 {
+      font-size: 1.12rem;
+      margin: 24px 0 10px;
+    }
+
+    .content-card p {
+      color: var(--muted);
+      margin: 0 0 14px;
+    }
+
+    .content-card ul {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    .content-card li { margin-bottom: 8px; }
+
+    .checklist-grid,
+    .next-steps-grid,
+    .related-grid,
+    .scenario-grid {
+      display: grid;
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .checklist-grid,
+    .scenario-grid,
+    .next-steps-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .related-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .step-card,
+    .related-card,
+    .scenario-card,
+    .check-card {
+      display: block;
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      color: var(--text);
+      box-shadow: var(--shadow);
+      transition: transform .08s ease, border-color .15s ease;
+    }
+
+    .step-card:hover,
+    .related-card:hover,
+    .scenario-card:hover,
+    .check-card:hover {
+      transform: translateY(-1px);
+      text-decoration: none;
+      border-color: rgba(33,82,255,.25);
+    }
+
+    .step-card strong,
+    .related-card strong,
+    .scenario-card strong,
+    .check-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .step-card span,
+    .related-card span,
+    .scenario-card span,
+    .check-card span {
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 18px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 640px;
+      background: #fff;
+    }
+
+    th, td {
+      padding: 14px 14px;
+      text-align: left;
+      border-bottom: 1px solid #edf2fa;
+      font-size: 0.96rem;
+      vertical-align: top;
+    }
+
+    th {
+      background: #f8fbff;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .table-wrap tr:nth-child(even) td { background: rgba(244,248,255,.7); }
+    tr:last-child td { border-bottom: 0; }
+
+    .site-cta-band { padding: 6px 0 8px; }
+
+    .site-cta-card {
+      display: grid;
+      grid-template-columns: 1.1fr auto;
+      gap: 20px;
+      align-items: center;
+      padding: 22px 24px;
+      border-radius: 22px;
+      border: 1px solid rgba(33, 82, 255, 0.14);
+      background: linear-gradient(180deg, #eef4ff 0%, #f8fbff 100%);
+      box-shadow: 0 12px 32px rgba(20, 32, 70, 0.06);
+    }
+
+    .site-cta-copy strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 1.12rem;
+      letter-spacing: -0.02em;
+      color: var(--text);
+    }
+
+    .site-cta-copy p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .site-cta-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .site-cta-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 11px 15px;
+      border-radius: 999px;
+      border: 1px solid rgba(33, 82, 255, 0.15);
+      background: #ffffff;
+      color: var(--text);
+      font-weight: 700;
+      text-decoration: none;
+      box-shadow: 0 8px 18px rgba(20, 32, 70, 0.05);
+      transition: transform 0.12s ease, border-color 0.15s ease;
+    }
+
+    .site-cta-link:hover {
+      text-decoration: none;
+      transform: translateY(-1px);
+      border-color: rgba(33, 82, 255, 0.28);
+    }
+
+    footer {
+      margin-top: 48px;
+      border-top: 1px solid rgba(219,227,240,0.9);
+      background: linear-gradient(180deg, rgba(255,255,255,0.92) 0%, rgba(248,251,255,0.98) 100%);
+    }
+
+    .footer-grid-top,
+    .footer-grid-bottom {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .footer-grid-top {
+      padding: 34px 0 22px;
+      display: grid;
+      grid-template-columns: 1.2fr 0.9fr 0.9fr;
+      gap: 28px;
+    }
+
+    .footer-grid-bottom {
+      border-top: 1px solid rgba(219,227,240,0.9);
+      padding: 18px 0 34px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .footer-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .footer-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: #f4f8ff;
+      border: 1px solid #dbe3f0;
+      color: #5f6b85;
+      font-size: 0.86rem;
+      font-weight: 700;
+    }
+
+    .footer-links-column {
+      display: grid;
+      gap: 10px;
+    }
+
+    .footer-links-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 14px 18px;
+      align-items: center;
+    }
+
+    .footer-links-column a,
+    .footer-links-row a {
+      color: #5f6b85;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .footer-links-row a {
+      font-size: 0.92rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .back-to-top {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 30;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 46px;
+      height: 46px;
+      padding: 0 14px;
+      border: none;
+      border-radius: 999px;
+      background: #172033;
+      color: #fff;
+      font-weight: 800;
+      box-shadow: 0 14px 30px rgba(20,32,70,.18);
+      cursor: pointer;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(12px);
+      transition: opacity .18s ease, transform .18s ease;
+    }
+
+    .back-to-top.is-visible {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .back-to-top:hover { background: #0f1728; }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .layout,
+      .decision-grid,
+      .checklist-grid,
+      .next-steps-grid,
+      .scenario-grid,
+      .related-grid,
+      .footer-grid-top,
+      .footer-grid-bottom,
+      .left-extend-grid,
+      .site-cta-card {
+        grid-template-columns: 1fr;
+      }
+
+      .site-cta-actions,
+      .footer-links-row { justify-content: flex-start; }
+    }
+
+    @media (max-width: 900px) {
+      .back-to-top {
+        right: 14px;
+        bottom: 14px;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .container {
+        width: min(100% - 24px, 1160px);
+      }
+
+      .form-grid,
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 28px;
+      }
+
+      .card-header,
+      .card-body,
+      .hero-box,
+      .content-card,
+      .left-extend-card {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .footer-grid-top,
+      .footer-grid-bottom {
+        width: min(100% - 24px, 1180px);
+      }
+
+      .checkbox-row {
+        padding: 14px 14px;
+        gap: 12px;
+      }
+
+      .checkbox-row label { font-size: 0.96rem; }
+      .checkbox-row span { font-size: 0.89rem; }
+    }
+
+    @media (max-width: 820px) {
+      .topbar {
+        position: static;
+        top: auto;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+      }
+
+      main[id],
+      section[id],
+      div[id] {
+        scroll-margin-top: 24px;
+      }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebApplication",
+    "name":"Kalkulačka čisté mzdy",
+    "url":"https://rychlevypocty.cz/cista-mzda-kalkulacka.html",
+    "applicationCategory":"FinanceApplication",
+    "operatingSystem":"Any",
+    "description":"Online kalkulačka pro orientační výpočet čisté mzdy z hrubé mzdy, odvodů, daně a ceny práce.",
+    "offers":{
+      "@type":"Offer",
+      "price":"0",
+      "priceCurrency":"CZK"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"Jak se počítá čistá mzda?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Čistá mzda se orientačně počítá z hrubé mzdy po odečtení sociálního pojištění, zdravotního pojištění a daně z příjmů, případně po zohlednění slevy na poplatníka a daňového zvýhodnění na děti."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Je výsledek kalkulačky čisté mzdy přesný?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Výsledek je orientační. Skutečná čistá mzda se může lišit podle konkrétní situace zaměstnance, typu pracovního vztahu, dalších slev, bonusů a aktuálních pravidel."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Co je cena práce?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Cena práce je celkový náklad zaměstnavatele na zaměstnance. Kromě hrubé mzdy zahrnuje i povinné odvody zaměstnavatele."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Proč je čistá mzda důležitá při hypotéce?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Při posuzování hypotéky je důležité hlavně to, kolik vám reálně zůstane po všech odvodech a daních. Čistý příjem lépe ukazuje, jak bezpečně zvládnete měsíční splátku."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"Organization",
+    "name":"RychléVýpočty.cz",
+    "url":"https://rychlevypocty.cz/",
+    "logo":"https://rychlevypocty.cz/icon-512.png",
+    "sameAs":[]
+  }
+  </script>
+
+  <script data-rv-schema="v7" type="application/ld+json">
+  [
+    {
+      "@context":"https://schema.org",
+      "@type":"BreadcrumbList",
+      "itemListElement":[
+        {"@type":"ListItem","position":1,"name":"RychléVýpočty.cz","item":"https://rychlevypocty.cz"},
+        {"@type":"ListItem","position":2,"name":"Mzdy a práce","item":"https://rychlevypocty.cz/mzdy-a-prace.html"},
+        {"@type":"ListItem","position":3,"name":"Kalkulačka čisté mzdy"}
+      ]
+    },
+    {
+      "@context":"https://schema.org",
+      "@type":"WebPage",
+      "name":"Kalkulačka čisté mzdy",
+      "description":"Spočítejte si orientační čistou mzdu z hrubé mzdy. Přehledně uvidíte odvody, daň, čistý příjem i orientační cenu práce. Hodí se při změně práce, plánování rozpočtu i porovnání hypotéky.",
+      "url":"https://rychlevypocty.cz/cista-mzda-kalkulacka.html",
+      "inLanguage":"cs-CZ",
+      "isPartOf":{"@type":"WebSite","name":"RychléVýpočty.cz","url":"https://rychlevypocty.cz/"}
+    }
+  ]
+  </script>
+  <link rel="stylesheet" href="/rv-enhancements.css?v=1" />
+  <script data-rv-global-schema="v1" type="application/ld+json">[{"@context":"https://schema.org","@type":"Organization","@id":"https://rychlevypocty.cz/#organization","name":"RychléVýpočty.cz","url":"https://rychlevypocty.cz/","logo":"https://rychlevypocty.cz/icon-512.png"},{"@context":"https://schema.org","@type":"WebSite","@id":"https://rychlevypocty.cz/#website","url":"https://rychlevypocty.cz/","name":"RychléVýpočty.cz","inLanguage":"cs-CZ"},{"@context":"https://schema.org","@type":"WebPage","name":"Kalkulačka čisté mzdy: kolik vám přijde na účet | RychléVýpočty.cz","description":"Spočítejte si orientační čistou mzdu z hrubé mzdy. Přehledně uvidíte odvody, daň, čistý příjem i orientační cenu práce. Hodí se při změně práce, plánování rozpočtu i porovnání hypotéky.","url":"https://rychlevypocty.cz/cista-mzda-kalkulacka.html","inLanguage":"cs-CZ","isPartOf":{"@id":"https://rychlevypocty.cz/#website"},"about":{"@id":"https://rychlevypocty.cz/#organization"}}]</script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Přeskočit na obsah</a>
+
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="/">Rychlé<span>Výpočty</span>.cz</a>
+      <nav aria-label="Hlavní navigace" class="topnav">
+        <a href="/">Domů</a>
+        <a href="/kalkulacky.html">Všechny kalkulačky</a>
+        <a href="/mzdy-a-prace.html">Mzdy a práce</a>
+        <a href="/hypotecni-kalkulacka.html">Hypotéka</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content" tabindex="-1">
+
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumbs">
+          <a href="/">RychléVýpočty.cz</a>
+          <span aria-hidden="true" class="sep">/</span>
+          <a href="/mzdy-a-prace.html">Mzdy a práce</a>
+          <span aria-hidden="true" class="sep">/</span>
+          <strong>Kalkulačka čisté mzdy</strong>
+        </div>
+
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <h1>Kalkulačka čisté mzdy</h1>
+            <p>Spočítejte si orientační čistou mzdu z hrubé mzdy a hned uvidíte, kolik vám reálně přijde na účet, kolik odvedete a jaká je celková cena práce.</p>
+
+            <div class="hero-points">
+              <div class="hero-pill">Hrubá → čistá mzda</div>
+              <div class="hero-pill">Odvody a daň</div>
+              <div class="hero-pill">Cena práce</div>
+            </div>
+
+            <div class="hero-actions">
+              <a class="button-link btn-primary" href="#kalkulacka">Spočítat čistou mzdu</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+<section class="container layout" id="kalkulacka">
+      <div class="layout-left">
+        <div class="card">
+          <div class="card-header">
+            <h2>Zadání mzdy</h2>
+            <p>Vyplňte základní údaje. Výsledek se přepočítá hned.</p>
+          </div>
+
+          <div class="card-body">
+            <div class="scenario-preset-band" aria-label="Rychlé scénáře">
+              <button class="scenario-chip active" data-preset="standard" type="button">Běžná mzda</button>
+              <button class="scenario-chip" data-preset="entry" type="button">Nižší příjem</button>
+              <button class="scenario-chip" data-preset="family" type="button">Rodina s dětmi</button>
+              <button class="scenario-chip" data-preset="higher" type="button">Vyšší mzda</button>
+            </div>
+
+            <form id="salaryForm">
+              <div class="form-grid">
+                <div class="field">
+                  <label for="grossSalary">Hrubá měsíční mzda</label>
+                  <input id="grossSalary" inputmode="decimal" min="0" step="1" type="number" value="45000"/>
+                  <small>Základní hrubá mzda před odvody a zdaněním.</small>
+                </div>
+
+                <div class="field">
+                  <label for="children">Počet dětí</label>
+                  <select id="children">
+                    <option selected value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3 a více</option>
+                  </select>
+                  <small>Pro orientační daňové zvýhodnění na děti.</small>
+                </div>
+
+                <div class="field full">
+                  <label>Volitelné slevy</label>
+                  <div class="checkbox-wrap">
+                    <div class="checkbox-row" id="taxpayerRow">
+                      <input checked id="taxpayerDiscount" type="checkbox"/>
+                      <label for="taxpayerDiscount">
+                        Uplatnit základní slevu na poplatníka
+                        <span>Typický scénář u hlavního pracovního poměru.</span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="actions full">
+                  <button class="btn-primary" type="submit">Spočítat čistou mzdu</button>
+                  <button class="btn-secondary" id="resetBtn" type="button">Obnovit výchozí hodnoty</button>
+                </div>
+              </div>
+            </form>
+
+          </div>
+        </div>
+
+        <div class="left-extend-card">
+          <h3>Jak výsledek použít v praxi</h3>
+          <p>Po výpočtu se dívejte hlavně na tři čísla: čistou mzdu, podíl čisté mzdy z hrubé a cenu práce. Detailní rozpad odvodů je až druhý krok.</p>
+
+          <div class="left-extend-grid">
+            <div class="left-mini-box">
+              <strong>Pro změnu práce</strong>
+              <span>Porovnávejte nabídky podle čisté mzdy, ne podle hrubé částky v inzerátu.</span>
+            </div>
+            <div class="left-mini-box">
+              <strong>Pro rozpočet a bydlení</strong>
+              <span>Navazujte tím, kolik vám po bydlení a pevných výdajích opravdu zbude.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>Výsledek výpočtu</h2>
+          <p>Nejdřív si vezměte hlavní výsledek. Detailní rozpis najdete níže po rozkliknutí.</p>
+        </div>
+
+        <div class="card-body" aria-live="polite">
+          <div class="results-grid">
+            <div class="result-box highlight">
+              <div class="result-label">Čistá mzda</div>
+              <div class="result-value" id="netSalaryResult">0 Kč</div>
+            </div>
+            <div class="result-box">
+              <div class="result-label">Cena práce</div>
+              <div class="result-value" id="totalCostResult">0 Kč</div>
+            </div>
+            <div class="result-box">
+              <div class="result-label">Odvody zaměstnance</div>
+              <div class="result-value" id="employeeDeductionsResult">0 Kč</div>
+            </div>
+            <div class="result-box">
+              <div class="result-label">Daň po slevách</div>
+              <div class="result-value" id="taxResult">0 Kč</div>
+            </div>
+          </div>
+
+          <div class="badge success" id="resultBadge">Čistý příjem vypadá rozumně</div>
+
+          <div class="info-list">
+            <div class="info-row">
+              <span>Hrubá mzda</span>
+              <strong id="grossSalaryResult">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Podíl čisté mzdy z hrubé</span>
+              <strong id="netRatioResult">0 %</strong>
+            </div>
+            <div class="info-row">
+              <span>Daňové slevy a zvýhodnění</span>
+              <strong id="discountsResult">0 Kč</strong>
+            </div>
+          </div>
+
+          <div class="note" id="resultNote">
+            Výpočet je orientační. Skutečná čistá mzda se může lišit podle konkrétní situace zaměstnance a aktuálních pravidel.
+          </div>
+
+          <div class="next-action">
+            <h3>Jak výsledek číst</h3>
+            <p id="nextActionText">Nejdřív sledujte čistou mzdu. Pak se podívejte, jak velká část hrubé mzdy vám reálně zůstane. Teprve potom řešte detailní rozpis odvodů a další návazné rozhodnutí.</p>
+            <div class="cta-actions">
+              <a class="button-link btn-primary" id="primaryNextCta" href="/hypotecni-kalkulacka.html">Spočítat hypotéku</a>
+              <a class="button-link btn-ghost" id="secondaryNextCta" href="/porovnani-najem-vs-hypoteka-kalkulacka.html">Nájem vs. hypotéka</a>
+            </div>
+          </div>
+
+          <details class="result-details-toggle">
+            <summary>Detailní rozpis odvodů a výpočtu</summary>
+            <div class="result-details-body">
+              <div class="info-list">
+                <div class="info-row">
+                  <span>Sociální pojištění zaměstnance</span>
+                  <strong id="socialEmployeeResult">0 Kč</strong>
+                </div>
+                <div class="info-row">
+                  <span>Zdravotní pojištění zaměstnance</span>
+                  <strong id="healthEmployeeResult">0 Kč</strong>
+                </div>
+                <div class="info-row">
+                  <span>Sociální pojištění zaměstnavatele</span>
+                  <strong id="socialEmployerResult">0 Kč</strong>
+                </div>
+                <div class="info-row">
+                  <span>Zdravotní pojištění zaměstnavatele</span>
+                  <strong id="healthEmployerResult">0 Kč</strong>
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container section">
+      <div class="card">
+        <div class="card-header">
+          <h3>Tabulkový rozpis výpočtu</h3>
+          <p>Přehled hlavních položek, které ovlivňují přechod z hrubé mzdy na čistou mzdu.</p>
+        </div>
+        <div class="card-body">
+          <div class="table-wrap">
+            <table aria-label="Rozpis čisté mzdy">
+              <thead>
+                <tr>
+                  <th>Položka</th>
+                  <th>Částka</th>
+                  <th>Poznámka</th>
+                </tr>
+              </thead>
+              <tbody id="summaryTableBody">
+                <tr>
+                  <td>Hrubá mzda</td>
+                  <td>—</td>
+                  <td>Po zadání údajů se zobrazí detailní přehled.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container section" id="jak-cist-vysledek">
+      <h2 class="section-title">Jak číst výsledek kalkulačky čisté mzdy</h2>
+      <p class="section-intro">Nejde jen o to, kolik vyděláte. Důležité je hlavně to, kolik vám po všech odvodech a daních skutečně zůstane pro běžný život, bydlení a rezervu.</p>
+
+      <div class="content-card">
+        <h2>Na která čísla se dívat jako první</h2>
+
+        <div class="checklist-grid">
+          <div class="check-card">
+            <strong>Čistá mzda</strong>
+            <span>To je reálný příjem, který vám přijde na účet. Právě podle něj plánujte rozpočet a větší závazky.</span>
+          </div>
+          <div class="check-card">
+            <strong>Odvody zaměstnance</strong>
+            <span>Ukazují, jak velká část hrubé mzdy odchází na sociální, zdravotní pojištění a daň.</span>
+          </div>
+          <div class="check-card">
+            <strong>Cena práce</strong>
+            <span>Pomůže pochopit, kolik vás zaměstnavatel skutečně stojí a jak se liší hrubá mzda od celkového nákladu firmy.</span>
+          </div>
+        </div>
+
+        <h3>Co znamená čistá mzda v praxi</h3>
+        <p>Čistý příjem je užitečný hlavně proto, že ukazuje vaši skutečnou finanční kapacitu. Když řešíte nájem, hypotéku nebo rezervu, vycházejte vždy z toho, co vám reálně zbývá po všech srážkách.</p>
+
+        <h3>Kdy zbystřit</h3>
+        <p>Pokud čistá mzda působí na první pohled slušně, ale po zaplacení bydlení a běžných výdajů skoro nic nezbývá, je to signál, že rozpočet je napjatý. V takové chvíli pomáhá propojit výsledek s hypotékou, nájmem nebo detailnějším rozpočtem domácnosti.</p>
+      </div>
+
+      <div class="content-card">
+        <h2>Co výsledek znamená pro rozhodování</h2>
+        <p>Tahle kalkulačka není jen převod hrubé mzdy na čistou. Má pomoct vyhodnotit, jestli vaše příjmy dávají smysl vůči tomu, co chcete dál řešit.</p>
+
+        <div class="scenario-grid">
+          <div class="scenario-card">
+            <strong>Pro práci</strong>
+            <span>Porovnávejte nabídky podle čisté mzdy a ne podle hrubé částky v inzerátu.</span>
+          </div>
+          <div class="scenario-card">
+            <strong>Pro rozpočet</strong>
+            <span>Čistý příjem ukazuje, jak bezpečně zvládnete bydlení, běžné výdaje a tvorbu rezervy.</span>
+          </div>
+          <div class="scenario-card">
+            <strong>Pro hypotéku</strong>
+            <span>Právě čistá mzda je lepší základ pro posouzení, jestli je splátka ještě zdravá, nebo už příliš tlačí.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container section" id="souvisejici-kalkulacky">
+      <div class="content-card">
+        <h2>Co dává smysl spočítat hned po čisté mzdě</h2>
+        <p>Největší rozhodovací hodnotu mají navazující kalkulačky, které řeší skutečnou únosnost bydlení a pravidelných výdajů.</p>
+
+        <div class="related-grid">
+          <a class="related-card" href="/hypotecni-kalkulacka.html">
+            <strong>Hypoteční kalkulačka</strong>
+            <span>Porovnejte čistý příjem se splátkou hypotéky.</span>
+          </a>
+          <a class="related-card" href="/porovnani-najem-vs-hypoteka-kalkulacka.html">
+            <strong>Nájem vs. hypotéka</strong>
+            <span>Zjistěte, který scénář sedí líp k vašemu rozpočtu.</span>
+          </a>
+          <a class="related-card" href="/kalkulacka-hrube-mzdy-z-ciste.html">
+            <strong>Hrubá mzda z čisté</strong>
+            <span>Hodí se při obráceném přepočtu a porovnávání nabídek práce.</span>
+          </a>
+          <a class="related-card" href="/naklady-zamestnavatele-kalkulacka.html">
+            <strong>Náklady zaměstnavatele</strong>
+            <span>Podrobnější pohled na cenu práce a firemní náklad.</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="container section" id="faq">
+      <div class="content-card">
+        <h2>Časté otázky</h2>
+
+        <h3>Jak se počítá čistá mzda?</h3>
+        <p>Čistá mzda se orientačně počítá z hrubé mzdy po odečtení sociálního pojištění, zdravotního pojištění a daně z příjmů. Výsledek může dále ovlivnit základní sleva na poplatníka a daňové zvýhodnění na děti.</p>
+
+        <h3>Je výsledek kalkulačky čisté mzdy přesný?</h3>
+        <p>Ne. Jde o orientační výpočet pro běžný zaměstnanecký scénář. Skutečný výsledek se může lišit podle typu pracovního vztahu, dalších slev, bonusů a aktuálních pravidel.</p>
+
+        <h3>Co je cena práce?</h3>
+        <p>Cena práce je celkový náklad zaměstnavatele na zaměstnance. Vedle hrubé mzdy zahrnuje i povinné odvody zaměstnavatele.</p>
+
+        <h3>Proč je čistá mzda důležitá při hypotéce?</h3>
+        <p>Protože ukazuje, kolik vám po všech srážkách skutečně zůstane. Právě z čistého příjmu se lépe pozná, jestli je měsíční splátka ještě bezpečná, nebo už zbytečně zatěžuje rozpočet.</p>
+      </div>
+    </section>
+
+    <section aria-label="Další krok" class="site-cta-band">
+      <div class="container">
+        <div class="site-cta-card">
+          <div class="site-cta-copy">
+            <strong>Navazující výpočty pro mzdy a práci</strong>
+            <p>Vyberte si další výpočet podle toho, co právě řešíte.</p>
+          </div>
+          <div class="site-cta-actions">
+            <a class="site-cta-link" href="/kalkulacka-hrube-mzdy-z-ciste.html">Hrubá mzda z čisté</a>
+            <a class="site-cta-link" href="/kalkulacka-hodinove-mzdy.html">Hodinová mzda</a>
+            <a class="site-cta-link" href="/naklady-zamestnavatele-kalkulacka.html">Náklady zaměstnavatele</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-grid-top">
+      <div style="max-width:520px;">
+        <strong style="display:inline-block;font-size:1.14rem;letter-spacing:-0.02em;color:#172033;margin-bottom:12px;">RychléVýpočty.cz</strong>
+        <p style="margin:0;color:#5f6b85;font-size:0.95rem;line-height:1.65;">
+          Online kalkulačky a praktické nástroje zdarma pro finance, bydlení, hypotéky, pronájem,
+          investiční rozhodování, mzdy, podnikání, energie, auto, rekonstrukce a další situace,
+          které dává smysl si předem spočítat.
+        </p>
+        <div class="footer-pills">
+          <span class="footer-pill">Zdarma</span>
+          <span class="footer-pill">Bez registrace</span>
+          <span class="footer-pill">Praktické rozhodování</span>
+        </div>
+      </div>
+
+      <div>
+        <h3 style="margin:0 0 12px;font-size:1rem;letter-spacing:-0.02em;color:#172033;">Hlavní sekce</h3>
+        <div class="footer-links-column">
+          <a href="/kalkulacky.html">Všechny kalkulačky</a>
+          <a href="/finance-a-hypoteky.html">Finance a hypotéky</a>
+          <a href="/pronajem-a-investicni-bydleni.html">Pronájem a investiční bydlení</a>
+          <a href="/mzdy-a-prace.html">Mzdy a práce</a>
+          <a href="/stavba-domu.html">Stavba domu</a>
+        </div>
+      </div>
+
+      <div>
+        <h3 style="margin:0 0 12px;font-size:1rem;letter-spacing:-0.02em;color:#172033;">Informace a důvěra</h3>
+        <div class="footer-links-column">
+          <a href="/o-nas.html">O nás</a>
+          <a href="/kontakt.html">Kontakt</a>
+          <a href="/ochrana-osobnich-udaju.html">Ochrana osobních údajů</a>
+          <a href="/podminky-pouziti.html">Podmínky použití</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-grid-bottom">
+      <div>
+        <p style="margin:0 0 8px;color:#5f6b85;font-size:0.92rem;line-height:1.6;">© RychléVýpočty.cz – online kalkulačky a praktické nástroje zdarma</p>
+        <p style="margin:0;color:#5f6b85;font-size:0.92rem;line-height:1.6;">Výsledky mají orientační charakter a u důležitých finančních, daňových, právních nebo stavebních rozhodnutí je vhodné je ověřit podle konkrétních podmínek.</p>
+      </div>
+
+    </div>
+  </footer>
+
+  <button aria-label="Zpět nahoru" class="back-to-top" id="rvBackToTop" type="button">↑</button>
+
+  <script>
+    const form = document.getElementById('salaryForm');
+    const resetBtn = document.getElementById('resetBtn');
+
+    const grossSalaryInput = document.getElementById('grossSalary');
+    const childrenInput = document.getElementById('children');
+    const taxpayerDiscountInput = document.getElementById('taxpayerDiscount');
+    const taxpayerRow = document.getElementById('taxpayerRow');
+
+    const outputs = {
+      netSalaryResult: document.getElementById('netSalaryResult'),
+      totalCostResult: document.getElementById('totalCostResult'),
+      employeeDeductionsResult: document.getElementById('employeeDeductionsResult'),
+      taxResult: document.getElementById('taxResult'),
+      resultBadge: document.getElementById('resultBadge'),
+      grossSalaryResult: document.getElementById('grossSalaryResult'),
+      socialEmployeeResult: document.getElementById('socialEmployeeResult'),
+      healthEmployeeResult: document.getElementById('healthEmployeeResult'),
+      socialEmployerResult: document.getElementById('socialEmployerResult'),
+      healthEmployerResult: document.getElementById('healthEmployerResult'),
+      discountsResult: document.getElementById('discountsResult'),
+      netRatioResult: document.getElementById('netRatioResult'),
+      resultNote: document.getElementById('resultNote'),
+      summaryTableBody: document.getElementById('summaryTableBody'),
+      nextActionText: document.getElementById('nextActionText'),
+      primaryNextCta: document.getElementById('primaryNextCta'),
+      secondaryNextCta: document.getElementById('secondaryNextCta')
+    };
+
+    const presetButtons = Array.from(document.querySelectorAll('.scenario-chip'));
+
+    const TAX_RATE = 0.15;
+    const SOCIAL_EMPLOYEE_RATE = 0.071;
+    const HEALTH_EMPLOYEE_RATE = 0.045;
+    const SOCIAL_EMPLOYER_RATE = 0.248;
+    const HEALTH_EMPLOYER_RATE = 0.09;
+
+    const TAXPAYER_DISCOUNT = 2570;
+    const CHILD_BONUSES = {
+      0: 0,
+      1: 1267,
+      2: 3127,
+      3: 5447
+    };
+
+    function formatCurrency(value) {
+      return new Intl.NumberFormat('cs-CZ', {
+        style: 'currency',
+        currency: 'CZK',
+        maximumFractionDigits: 0
+      }).format(value);
+    }
+
+    function formatPercent(value, digits = 1) {
+      return new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: digits
+      }).format(value) + ' %';
+    }
+
+    function roundCurrency(value) {
+      return Math.round(value);
+    }
+
+    function buildSummaryRows(rows) {
+      outputs.summaryTableBody.innerHTML = rows.map(row => `
+        <tr>
+          <td>${row.label}</td>
+          <td>${row.amount}</td>
+          <td>${row.note}</td>
+        </tr>
+      `).join('');
+    }
+
+    function syncCheckboxCards() {
+      taxpayerRow.classList.toggle('is-checked', taxpayerDiscountInput.checked);
+    }
+
+    function getValues() {
+      return {
+        grossSalary: Number(grossSalaryInput.value),
+        children: Number(childrenInput.value),
+        applyTaxpayerDiscount: taxpayerDiscountInput.checked
+      };
+    }
+
+    function validate(values) {
+      if (!values.grossSalary || values.grossSalary <= 0) {
+        return 'Zadejte platnou hrubou mzdu.';
+      }
+      return '';
+    }
+
+    function calculateNetSalary(values) {
+      const socialEmployee = roundCurrency(values.grossSalary * SOCIAL_EMPLOYEE_RATE);
+      const healthEmployee = roundCurrency(values.grossSalary * HEALTH_EMPLOYEE_RATE);
+      const taxBeforeDiscounts = roundCurrency(values.grossSalary * TAX_RATE);
+
+      const taxpayerDiscount = values.applyTaxpayerDiscount ? TAXPAYER_DISCOUNT : 0;
+      const childBonus = CHILD_BONUSES[Math.min(values.children, 3)];
+      const totalDiscounts = taxpayerDiscount + childBonus;
+
+      const taxAfterDiscounts = Math.max(0, taxBeforeDiscounts - totalDiscounts);
+      const employeeDeductions = socialEmployee + healthEmployee + taxAfterDiscounts;
+      const netSalary = values.grossSalary - socialEmployee - healthEmployee - taxAfterDiscounts;
+
+      const socialEmployer = roundCurrency(values.grossSalary * SOCIAL_EMPLOYER_RATE);
+      const healthEmployer = roundCurrency(values.grossSalary * HEALTH_EMPLOYER_RATE);
+      const totalCost = values.grossSalary + socialEmployer + healthEmployer;
+      const netRatio = values.grossSalary > 0 ? (netSalary / values.grossSalary) * 100 : 0;
+
+      return {
+        socialEmployee,
+        healthEmployee,
+        taxBeforeDiscounts,
+        taxpayerDiscount,
+        childBonus,
+        totalDiscounts,
+        taxAfterDiscounts,
+        employeeDeductions,
+        netSalary,
+        socialEmployer,
+        healthEmployer,
+        totalCost,
+        netRatio
+      };
+    }
+
+    function getIncomeMessage(result, values) {
+      let statusClass = 'warning';
+      let statusLabel = 'Běžný výsledek';
+      let nextActionText = 'Nejdřív sledujte čistou mzdu. Pak si ověřte, jak velká část hrubé mzdy vám opravdu zůstane a jestli tento příjem stačí na bydlení, rezervu a běžné výdaje.';
+      let primaryHref = '/hypotecni-kalkulacka.html';
+      let primaryText = 'Spočítat hypotéku';
+      let secondaryHref = '/porovnani-najem-vs-hypoteka-kalkulacka.html';
+      let secondaryText = 'Nájem vs. hypotéka';
+
+      if (result.netRatio >= 78) {
+        statusClass = 'success';
+        statusLabel = 'Vyšší čistý podíl';
+        nextActionText = 'Výsledek působí příznivěji. Další krok je ověřit, jak by vedle tohoto příjmu vypadaly náklady na bydlení nebo pravidelná rezerva.';
+      } else if (result.netRatio <= 72) {
+        statusClass = 'risk';
+        statusLabel = 'Nižší čistý podíl';
+        nextActionText = 'Z hrubé mzdy vám zůstává menší část. O to důležitější je navázat rozpočtem a ověřit, kolik vám zůstane po bydlení a dalších pevných výdajích.';
+      }
+
+      if (values.children > 0) {
+        secondaryHref = '/finance-a-hypoteky.html';
+        secondaryText = 'Další finance';
+      }
+
+      return {
+        statusClass,
+        statusLabel,
+        nextActionText,
+        primaryHref,
+        primaryText,
+        secondaryHref,
+        secondaryText
+      };
+    }
+
+    function render(values, result) {
+      outputs.netSalaryResult.textContent = formatCurrency(result.netSalary);
+      outputs.totalCostResult.textContent = formatCurrency(result.totalCost);
+      outputs.employeeDeductionsResult.textContent = formatCurrency(result.employeeDeductions);
+      outputs.taxResult.textContent = formatCurrency(result.taxAfterDiscounts);
+      outputs.grossSalaryResult.textContent = formatCurrency(values.grossSalary);
+      outputs.socialEmployeeResult.textContent = formatCurrency(result.socialEmployee);
+      outputs.healthEmployeeResult.textContent = formatCurrency(result.healthEmployee);
+      outputs.socialEmployerResult.textContent = formatCurrency(result.socialEmployer);
+      outputs.healthEmployerResult.textContent = formatCurrency(result.healthEmployer);
+      outputs.discountsResult.textContent = formatCurrency(result.totalDiscounts);
+      outputs.netRatioResult.textContent = formatPercent(result.netRatio);
+
+      const incomeState = getIncomeMessage(result, values);
+      outputs.nextActionText.textContent = incomeState.nextActionText;
+      outputs.primaryNextCta.href = incomeState.primaryHref;
+      outputs.primaryNextCta.textContent = incomeState.primaryText;
+      outputs.secondaryNextCta.href = incomeState.secondaryHref;
+      outputs.secondaryNextCta.textContent = incomeState.secondaryText;
+
+      if (incomeState.statusClass === 'success') {
+        outputs.resultBadge.className = 'badge success';
+      } else if (incomeState.statusClass === 'risk') {
+        outputs.resultBadge.className = 'badge risk';
+      } else {
+        outputs.resultBadge.className = 'badge warning';
+      }
+      outputs.resultBadge.textContent = incomeState.statusLabel;
+
+      outputs.resultNote.textContent = 'Výpočet je orientační a počítá s běžným zaměstnaneckým scénářem. Pro účetní nebo právní účely je vhodné ověřit výpočet podle konkrétní situace.';
+
+      buildSummaryRows([
+        {
+          label: 'Hrubá mzda',
+          amount: formatCurrency(values.grossSalary),
+          note: 'Základ pro výpočet'
+        },
+        {
+          label: 'Sociální pojištění zaměstnance',
+          amount: formatCurrency(result.socialEmployee),
+          note: 'Odečítá se z hrubé mzdy'
+        },
+        {
+          label: 'Zdravotní pojištění zaměstnance',
+          amount: formatCurrency(result.healthEmployee),
+          note: 'Odečítá se z hrubé mzdy'
+        },
+        {
+          label: 'Daň před slevami',
+          amount: formatCurrency(result.taxBeforeDiscounts),
+          note: 'Základní orientační daň'
+        },
+        {
+          label: 'Slevy a zvýhodnění',
+          amount: formatCurrency(result.totalDiscounts),
+          note: 'Poplatník a děti'
+        },
+        {
+          label: 'Daň po slevách',
+          amount: formatCurrency(result.taxAfterDiscounts),
+          note: 'Skutečně započtená orientační daň'
+        },
+        {
+          label: 'Čistá mzda',
+          amount: formatCurrency(result.netSalary),
+          note: 'Orientační částka pro zaměstnance'
+        },
+        {
+          label: 'Cena práce',
+          amount: formatCurrency(result.totalCost),
+          note: 'Orientační náklad zaměstnavatele'
+        }
+      ]);
+    }
+
+    function renderError(message) {
+      outputs.netSalaryResult.textContent = '0 Kč';
+      outputs.totalCostResult.textContent = '0 Kč';
+      outputs.employeeDeductionsResult.textContent = '0 Kč';
+      outputs.taxResult.textContent = '0 Kč';
+      outputs.grossSalaryResult.textContent = '0 Kč';
+      outputs.socialEmployeeResult.textContent = '0 Kč';
+      outputs.healthEmployeeResult.textContent = '0 Kč';
+      outputs.socialEmployerResult.textContent = '0 Kč';
+      outputs.healthEmployerResult.textContent = '0 Kč';
+      outputs.discountsResult.textContent = '0 Kč';
+      outputs.netRatioResult.textContent = '0 %';
+      outputs.resultNote.textContent = message;
+      outputs.resultBadge.className = 'badge warning';
+      outputs.resultBadge.textContent = 'Chybí vstupní data';
+      outputs.nextActionText.textContent = 'Po zadání údajů si jako první vezměte čistou mzdu a podíl z hrubé mzdy. Až potom řešte detailní rozpis nebo návazné rozhodnutí.';
+      buildSummaryRows([
+        {
+          label: 'Hrubá mzda',
+          amount: '—',
+          note: message
+        }
+      ]);
+    }
+
+    function runCalculation() {
+      syncCheckboxCards();
+
+      const values = getValues();
+      const error = validate(values);
+
+      if (error) {
+        renderError(error);
+        return;
+      }
+
+      const result = calculateNetSalary(values);
+      render(values, result);
+    }
+
+    function setPreset(name) {
+      const presets = {
+        standard: {
+          grossSalary: 45000,
+          children: 0,
+          taxpayerDiscount: true
+        },
+        entry: {
+          grossSalary: 32000,
+          children: 0,
+          taxpayerDiscount: true
+        },
+        family: {
+          grossSalary: 52000,
+          children: 2,
+          taxpayerDiscount: true
+        },
+        higher: {
+          grossSalary: 70000,
+          children: 0,
+          taxpayerDiscount: true
+        }
+      };
+
+      const preset = presets[name];
+      if (!preset) return;
+
+      grossSalaryInput.value = preset.grossSalary;
+      childrenInput.value = preset.children;
+      taxpayerDiscountInput.checked = preset.taxpayerDiscount;
+
+      presetButtons.forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.preset === name);
+      });
+
+      runCalculation();
+    }
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      runCalculation();
+    });
+
+    resetBtn.addEventListener('click', function() {
+      setPreset('standard');
+    });
+
+    taxpayerRow.addEventListener('click', function(e) {
+      if (e.target.tagName !== 'INPUT') {
+        taxpayerDiscountInput.checked = !taxpayerDiscountInput.checked;
+        runCalculation();
+      }
+    });
+
+    [grossSalaryInput, childrenInput, taxpayerDiscountInput].forEach(el => {
+      el.addEventListener('input', runCalculation);
+      el.addEventListener('change', runCalculation);
+    });
+
+    presetButtons.forEach(btn => {
+      btn.addEventListener('click', function() {
+        setPreset(btn.dataset.preset);
+      });
+    });
+
+    runCalculation();
+  </script>
+
+  <script>
+    (function () {
+      const layout = document.querySelector('#kalkulacka.layout');
+      if (!layout || layout.dataset.mobileResultFlowFixed === 'true') return;
+
+      const left = layout.querySelector(':scope > .layout-left');
+      const right = Array.from(layout.children).find((child) => !child.classList.contains('layout-left'));
+      if (!left || !right) return;
+
+      const formCard = left.querySelector(':scope > .card');
+      if (!formCard) return;
+
+      const mq = window.matchMedia('(max-width: 980px)');
+      layout.dataset.mobileResultFlowFixed = 'true';
+
+      function syncResultPosition() {
+        const firstExtra = Array.from(left.children).find((child) => child !== formCard);
+
+        if (mq.matches) {
+          if (right.parentElement !== left || formCard.nextElementSibling !== right) {
+            left.insertBefore(right, firstExtra || null);
+          }
+          return;
+        }
+
+        if (right.parentElement !== layout || layout.lastElementChild !== right) {
+          layout.appendChild(right);
+        }
+      }
+
+      if (typeof mq.addEventListener === 'function') {
+        mq.addEventListener('change', syncResultPosition);
+      } else if (typeof mq.addListener === 'function') {
+        mq.addListener(syncResultPosition);
+      }
+
+      syncResultPosition();
+    })();
+  </script>
+
+  <script>
+    (function () {
+      const path = window.location.pathname.replace(/\/$/, '') || '/';
+      const links = document.querySelectorAll('.topnav a[href]');
+      links.forEach((link) => {
+        const href = link.getAttribute('href');
+        if (!href) return;
+        const normalized = href.replace(/\/$/, '') || '/';
+        if (normalized === path) {
+          link.setAttribute('aria-current', 'page');
+        }
+      });
+    })();
+  </script>
+
+  <script data-rv-enhancement="v7">
+    (function(){
+      const btn=document.getElementById('rvBackToTop');
+      if(!btn)return;
+      const toggle=()=>{btn.classList.toggle('is-visible',window.scrollY>520)};
+      toggle();
+      window.addEventListener('scroll',toggle,{passive:true});
+      btn.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+    })();
+  </script>
+</body>
+</html>

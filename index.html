@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="format-detection" content="telephone=no" />
+  <link rel="icon" href="/favicon.ico?v=2" sizes="any" />
+  <link rel="icon" href="/favicon-32x32.png?v=2" sizes="32x32" type="image/png" />
+  <link rel="icon" href="/favicon-16x16.png?v=2" sizes="16x16" type="image/png" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2" sizes="180x180" />
+  <link rel="manifest" href="/site.webmanifest?v=2" />
+  <meta name="theme-color" content="#081A33" />
+  <title>Online kalkulačky a rychlé výpočty | RychléVýpočty.cz</title>
+  <meta name="description" content="Praktické online kalkulačky zdarma pro hypotéky, mzdy, podnikání, bydlení, energie, auto, rekonstrukce a další rychlé výpočty. Rychlá orientace, přehledné kategorie a okamžitý vstup do správné kalkulačky." />
+  <meta name="robots" content="index,follow" />
+  <link rel="canonical" href="https://rychlevypocty.cz/" />
+  <meta property="og:locale" content="cs_CZ" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://rychlevypocty.cz/" />
+  <meta property="og:site_name" content="RychléVýpočty.cz" />
+  <meta property="og:title" content="Online kalkulačky a rychlé výpočty | RychléVýpočty.cz" />
+  <meta property="og:description" content="Praktické online kalkulačky zdarma pro hypotéky, mzdy, podnikání, bydlení, energie, auto, rekonstrukce a další rychlé výpočty." />
+  <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Online kalkulačky a rychlé výpočty | RychléVýpočty.cz" />
+  <meta name="twitter:description" content="Praktické online kalkulačky zdarma pro hypotéky, mzdy, podnikání, bydlení, energie, auto, rekonstrukce a další rychlé výpočty." />
+  <meta name="twitter:image" content="https://rychlevypocty.cz/og-image.jpg" />
+  <meta name="twitter:image:alt" content="RychléVýpočty.cz – online kalkulačky a praktické výpočty" />
+  <style>
+    :root{
+      --ink:#081A33;
+      --ink-2:#0B2447;
+      --blue:#0F5AA8;
+      --blue-2:#2E8FFF;
+      --green:#45B22F;
+      --green-2:#76E05B;
+      --mint:#E8FFE2;
+      --cyan:#DFF2FF;
+      --bg:#F3F8FD;
+      --card:#FFFFFF;
+      --muted:#65758B;
+      --text:#14243A;
+      --line:#DCE7F2;
+      --shadow:0 28px 90px rgba(8,26,51,.16);
+      --shadow-soft:0 16px 42px rgba(8,26,51,.10);
+      --radius:30px;
+      --container:min(1180px,calc(100% - 32px));
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth;scroll-padding-top:92px}
+    body{margin:0;color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;line-height:1.55;background:linear-gradient(180deg,#FFFFFF 0%,#F4F9FF 42%,#FFFFFF 100%);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;overflow-x:hidden}
+    body:before{content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;background:radial-gradient(circle at 12% 4%,rgba(69,178,47,.16),transparent 24%),radial-gradient(circle at 88% 0%,rgba(15,90,168,.16),transparent 30%),linear-gradient(180deg,#fff,#f6fbff)}
+    body:after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background-image:linear-gradient(rgba(11,36,71,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(11,36,71,.035) 1px,transparent 1px);background-size:48px 48px;mask-image:linear-gradient(180deg,rgba(0,0,0,.65),transparent 58%)}
+    a{color:inherit;text-decoration:none} button,input{font:inherit} button{cursor:pointer}
+    :focus-visible{outline:3px solid rgba(118,224,91,.55);outline-offset:3px;border-radius:16px}
+    .skip-link{position:absolute;left:18px;top:-80px;z-index:999;padding:12px 16px;border-radius:16px;background:var(--ink);color:#fff;font-weight:900;transition:top .18s ease}.skip-link:focus{top:18px}
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}.container{width:var(--container);margin:0 auto}
+    .site-header{position:sticky;top:0;z-index:100;border-bottom:1px solid rgba(220,231,242,.72);background:rgba(255,255,255,.78);backdrop-filter:blur(22px)}
+    .header-inner{min-height:78px;display:flex;align-items:center;justify-content:space-between;gap:22px}.brand{display:inline-flex;align-items:center;gap:11px;min-width:max-content;font-weight:950;color:var(--ink)}
+    .brand-icon{width:42px;height:42px;display:grid;place-items:center;flex:0 0 42px;border-radius:15px;box-shadow:0 18px 28px rgba(8,26,51,.20)}.brand-icon svg{width:42px;height:42px;display:block}.brand-wordmark{font-size:23px;line-height:1;font-weight:950;white-space:nowrap}.brand-word-blue,.brand-dot{color:var(--ink)}.brand-word-green{color:var(--green)}
+    .nav{display:flex;align-items:center;justify-content:center;gap:4px;color:#38506A;font-size:.92rem;font-weight:820}.nav a{padding:10px 12px;border-radius:999px;white-space:nowrap;transition:.18s ease}.nav a:hover,.nav a[aria-current="page"]{color:var(--ink);background:rgba(15,90,168,.08)}
+    .header-cta,.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:46px;padding:12px 19px;border:0;border-radius:999px;color:#071D3B;background:linear-gradient(135deg,#76E05B,#45B22F);box-shadow:0 18px 36px rgba(69,178,47,.28);font-weight:950;white-space:nowrap;transition:transform .18s ease,box-shadow .18s ease}.btn:hover,.header-cta:hover{transform:translateY(-2px);box-shadow:0 24px 42px rgba(69,178,47,.34)}.header-cta{min-height:42px;padding:10px 16px;font-size:.9rem}.btn-dark{color:#fff;background:linear-gradient(135deg,#0F5AA8,#081A33);box-shadow:0 18px 36px rgba(8,26,51,.22)}.btn-ghost{color:var(--ink);background:rgba(255,255,255,.88);border:1px solid rgba(201,216,232,.9);box-shadow:0 12px 28px rgba(8,26,51,.08)}
+    h1,h2,h3,p{margin-top:0} h1{margin-bottom:24px;color:#fff;font-size:clamp(3rem,7vw,6.35rem);line-height:.92;letter-spacing:-.07em;font-weight:950;max-width:820px}h2{margin:0;color:var(--ink);font-size:clamp(2rem,4vw,3.25rem);line-height:1.02;letter-spacing:-.045em;font-weight:950}h3{margin:0 0 9px;color:var(--ink);font-size:1.18rem;line-height:1.18;font-weight:920;letter-spacing:-.02em}.lead{max-width:720px;color:rgba(255,255,255,.78);font-size:1.2rem;line-height:1.7}.muted{color:var(--muted)}
+    .eyebrow,.section-kicker{display:inline-flex;align-items:center;gap:8px;min-height:31px;margin-bottom:13px;padding:7px 12px;border-radius:999px;font-size:.76rem;font-weight:950;letter-spacing:.06em;text-transform:uppercase}.eyebrow{color:#DFFFD9;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.14)}.section-kicker{color:#247D18;background:rgba(232,255,226,.9);border:1px solid rgba(69,178,47,.18)}
+    .hero{position:relative;isolation:isolate;padding:34px 0 64px;background:radial-gradient(circle at 18% 18%,rgba(118,224,91,.25),transparent 30%),radial-gradient(circle at 84% 18%,rgba(46,143,255,.26),transparent 32%),linear-gradient(145deg,#07172F 0%,#0B2447 55%,#092C52 100%);overflow:hidden}.hero:before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);background-size:52px 52px;mask-image:linear-gradient(180deg,rgba(0,0,0,.8),transparent 84%);z-index:-1}.hero:after{content:"";position:absolute;width:620px;height:620px;right:-180px;top:-160px;border-radius:50%;background:radial-gradient(circle,rgba(118,224,91,.30),transparent 68%);filter:blur(8px);z-index:-1}
+    .hero-grid{display:grid;grid-template-columns:minmax(0,1.04fr) minmax(390px,.96fr);gap:42px;align-items:center;padding-top:52px}.hero-highlight{display:inline;background:linear-gradient(90deg,#76E05B,#DFFFD9);-webkit-background-clip:text;background-clip:text;color:transparent}.hero-copy{position:relative;z-index:3}.hero-line{max-width:680px;margin-bottom:22px;color:rgba(255,255,255,.88);font-size:1.07rem;font-weight:760}.hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px}.proof-row{display:flex;flex-wrap:wrap;gap:10px;margin:22px 0 0}.proof-pill{display:inline-flex;align-items:center;gap:8px;padding:9px 12px;border:1px solid rgba(255,255,255,.14);border-radius:999px;color:rgba(255,255,255,.82);background:rgba(255,255,255,.08);font-weight:780;font-size:.9rem}.proof-pill strong{color:#fff}.proof-dot{width:8px;height:8px;border-radius:50%;background:var(--green-2);box-shadow:0 0 0 5px rgba(118,224,91,.12)}
+    .search-shell{position:relative;max-width:780px;margin-top:30px;padding:10px;border-radius:28px;background:linear-gradient(135deg,rgba(255,255,255,.22),rgba(255,255,255,.08));border:1px solid rgba(255,255,255,.18);box-shadow:0 28px 80px rgba(0,0,0,.28);backdrop-filter:blur(22px)}.search-form{position:relative;display:grid;grid-template-columns:1fr auto;gap:10px}.search-field{position:relative}.search-field svg{position:absolute;left:20px;top:50%;width:21px;height:21px;transform:translateY(-50%);color:#6F8299;pointer-events:none}.search-input{width:100%;min-height:64px;padding:0 18px 0 54px;border:0;border-radius:20px;color:var(--ink);background:#fff;font-weight:830;box-shadow:inset 0 1px 0 rgba(255,255,255,.8)}.search-input::placeholder{color:#8B9AAD;font-weight:720}.search-button{min-height:64px;border-radius:20px;padding-inline:24px}.search-results{position:absolute;left:0;right:0;top:calc(100% + 12px);z-index:50;display:none;border:1px solid rgba(201,216,232,.95);border-radius:24px;background:#fff;box-shadow:0 28px 65px rgba(8,26,51,.24);overflow:hidden}.search-results.active{display:block}.search-results ul{margin:0;padding:8px;list-style:none}.search-results a{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center;padding:14px;border-radius:17px;transition:.15s ease}.search-results a:hover{background:#F5FAFF;transform:translateY(-1px)}.result-copy strong{display:block;margin-bottom:3px;color:var(--ink);font-size:.96rem}.result-copy span{display:block;color:var(--muted);font-size:.85rem}.result-type{padding:6px 9px;border-radius:999px;color:var(--blue);background:#EAF4FF;font-size:.75rem;font-weight:900}mark{color:var(--green);background:transparent}
+    .quick-chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:16px}.chip{display:inline-flex;align-items:center;min-height:39px;padding:9px 13px;border:1px solid rgba(201,216,232,.88);border-radius:999px;color:#2E4865;background:rgba(255,255,255,.88);font-size:.89rem;font-weight:820;box-shadow:0 10px 24px rgba(8,26,51,.07);transition:.18s ease}button.chip{cursor:pointer}.chip:hover{transform:translateY(-2px);border-color:rgba(69,178,47,.45);background:#fff}.hero .chip{color:rgba(255,255,255,.88);background:rgba(255,255,255,.09);border-color:rgba(255,255,255,.16);box-shadow:none}.hero .chip:hover{color:#fff;background:rgba(255,255,255,.14)}
+    .hero-visual{position:relative;min-height:650px;display:grid;place-items:center}.dashboard{position:relative;width:min(100%,540px);min-height:590px;border-radius:42px;background:linear-gradient(160deg,rgba(255,255,255,.96),rgba(236,247,255,.86));border:1px solid rgba(255,255,255,.48);box-shadow:0 38px 100px rgba(0,0,0,.34);overflow:hidden;transform:rotate(-1deg)}.dashboard:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 88% 8%,rgba(118,224,91,.34),transparent 30%),radial-gradient(circle at 0% 92%,rgba(46,143,255,.20),transparent 34%)}.dash-inner{position:relative;padding:24px}.dash-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}.dash-logo{display:inline-flex;align-items:center;gap:9px;font-weight:950;color:var(--ink)}.dash-status{display:inline-flex;align-items:center;gap:7px;padding:8px 10px;border-radius:999px;background:#E8FFE2;color:#247D18;font-weight:920;font-size:.78rem}.dash-status:before{content:"";width:7px;height:7px;border-radius:50%;background:var(--green)}.dash-search{height:56px;display:flex;align-items:center;gap:10px;padding:0 16px;border-radius:18px;background:#fff;border:1px solid rgba(220,231,242,.86);box-shadow:0 12px 30px rgba(8,26,51,.08);color:#8797AA;font-weight:780}.bento{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}.bento-card{position:relative;min-height:128px;padding:16px;border-radius:24px;background:rgba(255,255,255,.82);border:1px solid rgba(220,231,242,.78);box-shadow:0 14px 36px rgba(8,26,51,.08);overflow:hidden}.bento-card.dark{grid-row:span 2;color:#fff;background:linear-gradient(155deg,#081A33,#0F5AA8);border:0}.bento-card strong{display:block;margin-bottom:6px;font-size:1.03rem;color:inherit}.bento-card span{display:block;color:var(--muted);font-size:.84rem;font-weight:700}.bento-card.dark span{color:rgba(255,255,255,.72)}.bento-value{position:absolute;left:16px;bottom:16px;font-size:2.15rem;line-height:1;font-weight:950;letter-spacing:-.05em}.spark{position:absolute;right:16px;bottom:16px;width:92px;height:48px;border-radius:16px;background:linear-gradient(135deg,rgba(118,224,91,.95),rgba(46,143,255,.6));clip-path:polygon(0 70%,18% 48%,34% 58%,53% 22%,72% 42%,100% 8%,100% 100%,0 100%)}.calc-mini{position:absolute;right:28px;bottom:34px;width:210px;padding:18px;border-radius:28px;background:#071D3B;box-shadow:0 26px 60px rgba(8,26,51,.34);transform:rotate(5deg)}.calc-screen{height:50px;display:flex;align-items:center;justify-content:flex-end;padding:0 14px;border-radius:15px;background:linear-gradient(135deg,#76E05B,#45B22F);color:#071D3B;font-size:1.55rem;font-weight:950}.calc-keys{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:16px}.calc-keys span{height:32px;border-radius:10px;background:#EDF6FF}.calc-keys span:nth-child(4n){background:#2E8FFF}.float-note{position:absolute;left:-8px;bottom:94px;width:210px;padding:15px;border-radius:24px;background:rgba(255,255,255,.86);border:1px solid rgba(255,255,255,.6);box-shadow:0 20px 50px rgba(8,26,51,.20);backdrop-filter:blur(16px)}.float-note span{color:var(--muted);font-size:.78rem;font-weight:850}.float-note strong{display:block;color:var(--ink);font-size:1.35rem;letter-spacing:-.04em}.orb{position:absolute;border-radius:50%;filter:blur(.1px)}.orb.one{width:78px;height:78px;right:3px;top:96px;background:linear-gradient(135deg,#76E05B,#DFFFD9);box-shadow:0 20px 40px rgba(118,224,91,.28)}.orb.two{width:40px;height:40px;left:42px;top:118px;background:linear-gradient(135deg,#2E8FFF,#DFF2FF)}
+    .section{padding:82px 0}.section.compact{padding-top:54px}.section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:30px}.section-head p{max-width:620px;margin:12px 0 0;color:var(--muted);font-size:1.03rem}.link-more{color:var(--blue);font-weight:950;white-space:nowrap}.decision-section{margin-top:-34px;position:relative;z-index:5}.decision-panel{padding:22px;border:1px solid rgba(220,231,242,.74);border-radius:36px;background:rgba(255,255,255,.82);box-shadow:var(--shadow);backdrop-filter:blur(18px)}.decision-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.path-card{position:relative;display:flex;flex-direction:column;min-height:292px;padding:24px;border:1px solid rgba(220,231,242,.90);border-radius:28px;background:linear-gradient(180deg,#fff,#F8FCFF);box-shadow:0 12px 32px rgba(8,26,51,.07);overflow:hidden;transition:.2s ease}.path-card:before{content:"";position:absolute;width:180px;height:180px;right:-70px;top:-86px;border-radius:50%;background:rgba(69,178,47,.12);transition:.2s ease}.path-card:hover{transform:translateY(-6px);box-shadow:0 26px 58px rgba(8,26,51,.13);border-color:rgba(69,178,47,.34)}.path-card:hover:before{transform:scale(1.2);background:rgba(46,143,255,.13)}.path-icon,.card-icon,.value-icon,.step-number{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto}.path-icon{width:52px;height:52px;margin-bottom:18px;border-radius:18px;color:#0A6A44;background:linear-gradient(135deg,#E8FFE2,#DFF2FF);font-size:1.45rem}.path-card p{margin-bottom:0;color:var(--muted)}.path-links{display:grid;gap:9px;margin-top:auto;padding-top:18px}.path-links a,.category-links a{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:11px 13px;border-radius:15px;color:var(--ink);background:#F4F9FF;border:1px solid rgba(220,231,242,.78);font-size:.91rem;font-weight:880}.path-links a:after,.category-links a:after,.card-cta:after{content:"→";color:var(--green);transition:.18s ease}.path-links a:hover,.category-links a:hover{background:#fff}.path-links a:hover:after,.category-links a:hover:after,.calc-card:hover .card-cta:after{transform:translateX(4px)}
+    .steps-band{padding:24px;border-radius:34px;background:linear-gradient(135deg,#081A33,#0B3B78 62%,#0A6A44);color:#fff;box-shadow:var(--shadow)}.steps-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}.step-card{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start;padding:20px;border-radius:24px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13)}.step-number{width:42px;height:42px;border-radius:15px;color:#071D3B;background:linear-gradient(135deg,#76E05B,#DFFFD9);font-weight:950}.step-card h3{color:#fff}.step-card p{margin:0;color:rgba(255,255,255,.72)}
+    .top-layout{display:grid;grid-template-columns:1.08fr .92fr;gap:18px}.calc-hero-card{position:relative;min-height:440px;padding:30px;border-radius:34px;background:radial-gradient(circle at 84% 10%,rgba(118,224,91,.24),transparent 36%),linear-gradient(145deg,#081A33,#0B3B78);color:#fff;box-shadow:var(--shadow);overflow:hidden}.calc-hero-card h3{max-width:420px;color:#fff;font-size:2rem;letter-spacing:-.04em}.calc-hero-card p{max-width:520px;color:rgba(255,255,255,.76);font-size:1.06rem}.calc-hero-card .card-cta{color:#fff}.calc-visual{position:absolute;right:28px;bottom:26px;width:260px;height:190px;border-radius:28px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.14);box-shadow:inset 0 1px 0 rgba(255,255,255,.1)}.calc-visual:before{content:"42 850 Kč";position:absolute;left:18px;top:18px;right:18px;height:58px;display:flex;align-items:center;justify-content:flex-end;padding:0 16px;border-radius:18px;background:linear-gradient(135deg,#76E05B,#45B22F);color:#071D3B;font-weight:950;font-size:1.35rem}.calc-visual:after{content:"";position:absolute;left:18px;right:18px;bottom:18px;height:80px;border-radius:18px;background:repeating-linear-gradient(90deg,rgba(255,255,255,.86) 0 34px,transparent 34px 46px),repeating-linear-gradient(180deg,transparent 0 34px,rgba(255,255,255,.12) 34px 46px)}.calc-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}.calc-card{position:relative;min-height:210px;padding:24px;border:1px solid rgba(220,231,242,.9);border-radius:28px;background:#fff;box-shadow:0 13px 32px rgba(8,26,51,.07);overflow:hidden;transition:.2s ease}.calc-card:hover{transform:translateY(-5px);box-shadow:0 26px 54px rgba(8,26,51,.12);border-color:rgba(69,178,47,.34)}.card-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:18px}.card-icon{width:50px;height:50px;border-radius:18px;color:var(--blue);background:#EAF4FF;font-weight:950}.category-label{display:inline-flex;align-items:center;min-height:28px;padding:5px 10px;border-radius:999px;color:var(--blue);background:#EAF4FF;font-size:.75rem;font-weight:950}.calc-card p{color:var(--muted)}.tags{display:flex;flex-wrap:wrap;gap:7px;margin:16px 0 20px}.tag{padding:6px 9px;border-radius:999px;color:#2E4865;background:#F0F6FC;font-size:.76rem;font-weight:820}.card-cta{display:inline-flex;align-items:center;gap:7px;color:var(--blue);font-weight:950}
+    .trust-section{color:#fff;background:radial-gradient(circle at 14% 20%,rgba(118,224,91,.23),transparent 30%),linear-gradient(135deg,#07172F,#0B2447 58%,#0A6A44)}.trust-section h2,.trust-section h3{color:#fff}.trust-section .section-head p{color:rgba(255,255,255,.72)}.trust-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.value-card{min-height:205px;padding:22px;border:1px solid rgba(255,255,255,.13);border-radius:28px;background:rgba(255,255,255,.08);box-shadow:none}.value-icon{width:46px;height:46px;margin-bottom:18px;border-radius:17px;color:#071D3B;background:linear-gradient(135deg,#76E05B,#DFFFD9);font-weight:950}.value-card p{margin:0;color:rgba(255,255,255,.72)}.disclaimer{display:grid;grid-template-columns:auto 1fr;gap:16px;margin-top:18px;padding:20px;border:1px solid rgba(118,224,91,.30);border-radius:24px;background:rgba(255,255,255,.08)}.disclaimer strong{display:block;color:#fff}.disclaimer p{margin:0;color:rgba(255,255,255,.72)}
+    .category-wrap{padding:28px;border:1px solid rgba(220,231,242,.82);border-radius:36px;background:rgba(255,255,255,.72);box-shadow:var(--shadow-soft)}.category-pills{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:24px}.category-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.category-card{padding:20px;border-radius:24px;background:#fff;border:1px solid rgba(220,231,242,.86);box-shadow:0 10px 25px rgba(8,26,51,.05)}.category-card p{color:var(--muted);font-size:.92rem}.category-links{display:grid;gap:8px;margin-top:15px}.category-links a{font-size:.86rem;padding:10px 11px}
+    .seo-block{display:grid;grid-template-columns:.9fr 1.1fr;gap:34px;align-items:start;padding:34px;border:1px solid rgba(220,231,242,.86);border-radius:34px;background:linear-gradient(135deg,#fff,#F7FBFF);box-shadow:var(--shadow-soft)}.seo-block p{color:#52637B}.area-list{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:0;padding:0;list-style:none}.area-list li{padding:12px 13px;border-radius:16px;border:1px solid rgba(220,231,242,.86);background:#fff;color:var(--ink);font-weight:860}.faq-list{max-width:900px;margin:0 auto;display:grid;gap:13px}.faq-item{border:1px solid rgba(220,231,242,.92);border-radius:22px;background:rgba(255,255,255,.92);box-shadow:0 10px 24px rgba(8,26,51,.06);overflow:hidden}.faq-item summary{cursor:pointer;padding:20px 22px;color:var(--ink);font-weight:950;list-style:none}.faq-item summary::-webkit-details-marker{display:none}.faq-item summary:after{content:"+";float:right;color:var(--green);font-size:1.35rem;line-height:1}.faq-item[open] summary:after{content:"−"}.faq-content{padding:0 22px 20px;color:var(--muted)}.faq-content p{margin:0}
+    .footer{padding:68px 0 28px;color:rgba(255,255,255,.75);background:linear-gradient(180deg,#06172F,#041224)}.footer .brand-word-blue,.footer .brand-dot{color:#fff}.footer-intro p{max-width:430px}.footer-badges{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}.footer-badge{display:inline-flex;align-items:center;gap:8px;padding:9px 12px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.10);color:rgba(255,255,255,.82);font-size:.82rem;font-weight:820}.footer-badge::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--premium-lime)}.footer-grid{display:grid;grid-template-columns:1.35fr .9fr .9fr .9fr;gap:34px;padding-bottom:34px;border-bottom:1px solid rgba(255,255,255,.12)}.footer p{margin:18px 0 0;max-width:420px}.footer h3{color:#fff;font-size:1rem;margin-bottom:12px}.footer-links{display:grid;gap:10px}.footer-links a{color:rgba(255,255,255,.72);font-weight:700}.footer-links a:hover{color:#fff}.footer-bottom{display:flex;justify-content:space-between;gap:24px;padding-top:24px;font-size:.86rem}.footer-bottom p{margin:0;max-width:650px}
+    @media(max-width:1080px){.header-inner{flex-wrap:wrap;gap:10px 18px;padding:12px 0}.nav{order:3;width:100%;justify-content:flex-start;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}.nav::-webkit-scrollbar{display:none}.hero-grid,.top-layout,.seo-block{grid-template-columns:1fr}.hero-visual{min-height:560px}.decision-grid{grid-template-columns:repeat(2,1fr)}.trust-grid,.category-grid{grid-template-columns:repeat(2,1fr)}.footer-grid{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:760px){:root{--container:min(100% - 24px,1180px)}html{scroll-padding-top:136px}.header-inner{min-height:66px}.brand-icon,.brand-icon svg{width:36px;height:36px}.brand-icon{flex-basis:36px}.brand-wordmark{font-size:19px}.header-cta{min-height:38px;padding:9px 12px;font-size:.84rem}.nav{font-size:.86rem}.nav a{padding:8px 10px}.hero{padding:24px 0 42px}.hero-grid{padding-top:34px}.hero-visual{display:none}h1{font-size:clamp(2.7rem,13vw,4.4rem);line-height:.96}.lead{font-size:1.04rem}.search-shell{border-radius:24px}.search-form{grid-template-columns:1fr}.search-button{width:100%}.hero-actions .btn{width:100%}.section{padding:58px 0}.section-head{display:block}.section-head .link-more{display:inline-flex;margin-top:14px}.decision-section{margin-top:0}.decision-panel{padding:14px;border-radius:28px}.decision-grid,.steps-grid,.calc-grid,.trust-grid,.category-grid,.footer-grid,.area-list{grid-template-columns:1fr}.path-card{min-height:auto}.steps-band{padding:16px;border-radius:28px}.calc-hero-card{min-height:390px}.calc-visual{display:none}.category-wrap,.seo-block{padding:20px;border-radius:28px}.footer-bottom{display:block}.footer-bottom p+p{margin-top:14px}}
+    @media(max-width:430px){.header-cta{display:none}.brand-wordmark{font-size:18px}.search-input{min-height:60px}.path-card,.calc-card,.category-card{border-radius:24px;padding:20px}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
+
+    /* === Premium polish pass: modern decision dashboard UI === */
+    :root{--premium-ink:#06152B;--premium-blue:#256DFF;--premium-green:#66E04F;--premium-lime:#CBFF6B;--premium-violet:#8B7CFF;--premium-card-shadow-hover:0 34px 90px rgba(8,26,51,.18)}
+    body{background:linear-gradient(180deg,#fbfdff 0%,#f3f8fe 38%,#fff 100%)}
+    .site-header{background:rgba(255,255,255,.72);box-shadow:0 12px 42px rgba(8,26,51,.055)}
+    .nav a{position:relative}.nav a::after{content:"";position:absolute;left:16px;right:16px;bottom:5px;height:2px;border-radius:99px;background:linear-gradient(90deg,var(--premium-green),var(--premium-blue));opacity:0;transform:scaleX(.35);transition:.2s ease}.nav a:hover::after,.nav a[aria-current="page"]::after{opacity:1;transform:scaleX(1)}
+    .header-cta,.btn{letter-spacing:-.01em}.btn{position:relative;overflow:hidden}.btn::before{content:"";position:absolute;inset:-2px;background:linear-gradient(120deg,transparent 0 30%,rgba(255,255,255,.45) 45%,transparent 60%);transform:translateX(-130%);transition:transform .55s ease}.btn:hover::before{transform:translateX(130%)}
+    .hero{padding:38px 0 76px;background:radial-gradient(circle at 16% 22%,rgba(102,224,79,.24),transparent 30%),radial-gradient(circle at 78% 18%,rgba(37,109,255,.30),transparent 34%),radial-gradient(circle at 54% 94%,rgba(139,124,255,.18),transparent 32%),linear-gradient(145deg,#050E20 0%,#061A35 42%,#092E58 100%)}
+    .hero:before{background-image:linear-gradient(rgba(255,255,255,.052) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.052) 1px,transparent 1px);background-size:56px 56px;mask-image:linear-gradient(180deg,rgba(0,0,0,.85),transparent 86%)}
+    .hero:after{width:780px;height:780px;right:-260px;top:-280px;background:radial-gradient(circle,rgba(102,224,79,.24),rgba(37,109,255,.16) 38%,transparent 70%);filter:blur(3px)}
+    .hero-grid{grid-template-columns:minmax(0,1.02fr) minmax(430px,.98fr);gap:54px;padding-top:58px}.eyebrow{background:rgba(255,255,255,.09);box-shadow:inset 0 1px 0 rgba(255,255,255,.15)}
+    h1{text-wrap:balance;letter-spacing:-.078em;text-shadow:0 22px 70px rgba(0,0,0,.35)}.hero-highlight{background:linear-gradient(90deg,#CBFF6B,#66E04F 55%,#DFFFD9);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .lead{font-size:1.22rem;color:rgba(255,255,255,.80);text-wrap:pretty}.hero-line{display:inline-flex;align-items:center;gap:10px;margin:0 0 2px;padding:10px 13px;border-radius:999px;background:rgba(255,255,255,.075);border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.86)}.hero-line::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--premium-lime);box-shadow:0 0 0 6px rgba(203,255,107,.11)}
+    .search-shell{border-radius:32px;padding:11px;background:linear-gradient(135deg,rgba(255,255,255,.28),rgba(255,255,255,.09));box-shadow:0 30px 95px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.18)}.search-input{min-height:68px;border-radius:22px;font-size:1.01rem}.search-button{min-height:68px;border-radius:22px}.quick-chips{gap:10px;margin-top:17px}.chip{border-color:rgba(255,255,255,.14);background:rgba(255,255,255,.10);color:rgba(255,255,255,.88);backdrop-filter:blur(16px);box-shadow:0 12px 28px rgba(0,0,0,.12)}.chip:hover{background:rgba(255,255,255,.16);border-color:rgba(102,224,79,.42);color:#fff}#kategorie .chip{color:#29415f;background:#fff;border-color:rgba(220,231,242,.92);box-shadow:0 8px 20px rgba(8,26,51,.055)}
+    .proof-row{margin-top:24px}.proof-pill{padding:10px 13px;border-color:rgba(255,255,255,.16);box-shadow:inset 0 1px 0 rgba(255,255,255,.1)}.hero-actions{margin-top:24px}.btn-ghost{color:#fff;background:rgba(255,255,255,.10);border-color:rgba(255,255,255,.16);box-shadow:0 18px 42px rgba(0,0,0,.18)}.btn-ghost:hover{background:rgba(255,255,255,.15)}
+    .dashboard{position:relative;width:min(100%,560px);min-height:590px;border-radius:42px;background:linear-gradient(145deg,rgba(255,255,255,.16),rgba(255,255,255,.06));border:1px solid rgba(255,255,255,.16);box-shadow:0 36px 110px rgba(0,0,0,.38),inset 0 1px 0 rgba(255,255,255,.22);backdrop-filter:blur(26px);overflow:hidden}.dashboard::before{content:"";position:absolute;inset:1px;border-radius:41px;background:radial-gradient(circle at 20% 0%,rgba(203,255,107,.18),transparent 33%),radial-gradient(circle at 98% 18%,rgba(37,109,255,.30),transparent 36%),linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.03));pointer-events:none}.dashboard::after{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);background-size:34px 34px;mask-image:linear-gradient(180deg,rgba(0,0,0,.9),transparent 78%)}
+    .dash-inner{position:relative;z-index:2;left:24px;right:auto;top:24px;width:calc(100% - 48px);padding:20px;border-radius:30px;background:rgba(255,255,255,.92);border:1px solid rgba(255,255,255,.72);box-shadow:0 26px 70px rgba(0,0,0,.24)}.dash-top{padding-bottom:15px;border-bottom:1px solid rgba(220,231,242,.88)}.dash-logo{color:var(--premium-ink);font-weight:950}.dash-status{background:#EAFEEC;color:#247D18;border:1px solid rgba(102,224,79,.28)}.dash-search{height:52px;margin-top:15px;border-radius:18px;background:linear-gradient(180deg,#fff,#F5FAFF);border:1px solid rgba(220,231,242,.92);color:#8290A4;box-shadow:inset 0 1px 0 #fff}
+    .bento{grid-template-columns:1.08fr .92fr;grid-auto-rows:122px;gap:12px;margin-top:16px}.bento-card{position:relative;padding:16px;border-radius:22px;background:linear-gradient(180deg,#fff,#F7FAFF);border:1px solid rgba(220,231,242,.92);box-shadow:0 12px 30px rgba(8,26,51,.07);overflow:hidden}.bento-card strong{font-size:.96rem}.bento-card span{font-size:.82rem}.bento-card.dark{grid-row:span 2;background:radial-gradient(circle at 20% 0%,rgba(102,224,79,.20),transparent 38%),linear-gradient(145deg,#07172F,#0A2C56);border-color:rgba(255,255,255,.10);box-shadow:0 22px 50px rgba(8,26,51,.23)}.bento-value{font-size:2.25rem;letter-spacing:-.06em}.spark{height:82px;border-radius:18px;background:linear-gradient(180deg,rgba(255,255,255,.14),rgba(255,255,255,.05));position:relative}.spark::after{content:"";position:absolute;left:12px;right:12px;bottom:20px;height:38px;background:linear-gradient(135deg,transparent 0 18%,var(--premium-green) 19% 23%,transparent 24% 46%,var(--premium-lime) 47% 52%,transparent 53%);filter:drop-shadow(0 12px 16px rgba(102,224,79,.22))}
+    .premium-metrics{position:relative;z-index:3;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}.metric-tile{padding:13px;border-radius:19px;background:rgba(255,255,255,.92);border:1px solid rgba(220,231,242,.86);box-shadow:0 14px 32px rgba(8,26,51,.08)}.metric-tile span{display:block;color:#6F7F94;font-size:.74rem;font-weight:850}.metric-tile strong{display:block;color:var(--premium-ink);font-size:1.2rem;letter-spacing:-.04em}
+    .float-note{left:8px;bottom:94px;z-index:4;padding:16px 18px;border-radius:24px;background:rgba(255,255,255,.93);border:1px solid rgba(255,255,255,.72);box-shadow:0 26px 60px rgba(0,0,0,.24)}.float-note span{color:#6F7F94}.float-note strong{font-size:1.04rem}.calc-mini{right:24px;bottom:38px;z-index:4;width:190px;border-radius:30px;background:linear-gradient(145deg,#07172F,#0C3A72);box-shadow:0 32px 70px rgba(0,0,0,.32),inset 0 1px 0 rgba(255,255,255,.12)}.calc-screen{background:linear-gradient(135deg,var(--premium-lime),var(--premium-green));color:#06152B}.orb{z-index:1}.orb.one{background:radial-gradient(circle,var(--premium-lime),transparent 68%)}.orb.two{background:radial-gradient(circle,var(--premium-blue),transparent 68%)}
+    .section{padding:92px 0}.section-head{margin-bottom:34px}.section-head p{max-width:700px;color:#65758B;font-size:1.03rem}.section-kicker{letter-spacing:.075em;background:linear-gradient(135deg,#EAFEEC,#F8FFF5)}
+    .decision-section{margin-top:-42px;position:relative;z-index:8}.decision-panel{position:relative;padding:34px;border-radius:40px;background:rgba(255,255,255,.82);border:1px solid rgba(255,255,255,.75);box-shadow:0 36px 100px rgba(8,26,51,.15);backdrop-filter:blur(18px)}.decision-panel::before{content:"";position:absolute;inset:0;border-radius:inherit;background:linear-gradient(135deg,rgba(102,224,79,.10),transparent 30%,rgba(37,109,255,.08));pointer-events:none}.decision-panel>*{position:relative}.decision-grid{gap:18px}.path-card{position:relative;border-radius:30px;background:linear-gradient(180deg,#fff,#F9FCFF);box-shadow:0 18px 48px rgba(8,26,51,.075);border:1px solid rgba(220,231,242,.88)}.path-card::before{content:"";position:absolute;inset:0 0 auto;height:4px;background:linear-gradient(90deg,var(--premium-green),var(--premium-blue));opacity:0;transition:.2s ease}.path-card:hover::before{opacity:1}.path-card:hover{transform:translateY(-7px);box-shadow:var(--premium-card-shadow-hover)}.path-icon,.card-icon,.value-icon,.step-number{display:grid;place-items:center;box-shadow:inset 0 1px 0 rgba(255,255,255,.8)}.path-icon{background:linear-gradient(135deg,#EAFEEC,#EAF2FF);color:#0B5AA7}.path-links a{border-radius:15px;background:#F7FBFF;border-color:rgba(220,231,242,.9);transition:.18s ease}.path-links a:hover{background:#fff;transform:translateX(4px);border-color:rgba(102,224,79,.35)}
+    .steps-band{position:relative;overflow:hidden;border-radius:42px;background:radial-gradient(circle at 18% 12%,rgba(203,255,107,.18),transparent 34%),linear-gradient(135deg,#06152B,#082B55);box-shadow:0 32px 90px rgba(8,26,51,.20)}.steps-band::after{content:"";position:absolute;right:-120px;top:-120px;width:380px;height:380px;border-radius:50%;background:radial-gradient(circle,rgba(37,109,255,.28),transparent 66%)}.steps-band>*{position:relative;z-index:2}.step-card{border-radius:26px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.13);box-shadow:inset 0 1px 0 rgba(255,255,255,.12)}.step-number{background:linear-gradient(135deg,var(--premium-lime),var(--premium-green));color:#06152B}
+    .top-layout{gap:20px}.calc-hero-card{position:relative;display:flex;flex-direction:column;justify-content:space-between;gap:18px;border-radius:38px;background:radial-gradient(circle at 78% 18%,rgba(102,224,79,.16),transparent 26%),radial-gradient(circle at 88% 78%,rgba(37,109,255,.20),transparent 30%),linear-gradient(145deg,#06152B,#0A2E5A 58%,#0B3B78);box-shadow:0 34px 90px rgba(8,26,51,.20);overflow:hidden}.calc-hero-card::before{content:"";position:absolute;inset:1px;border-radius:37px;border:1px solid rgba(255,255,255,.08);pointer-events:none}.calc-hero-card::after{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:42px 42px;mask-image:linear-gradient(180deg,rgba(0,0,0,.75),transparent 78%);pointer-events:none}.calc-hero-content{position:relative;z-index:2;max-width:470px}.calc-hero-card h3{max-width:430px}.calc-hero-card p{max-width:460px;margin-bottom:0}.calc-hero-card .tags{margin-bottom:10px}.mortgage-showcase{position:relative;z-index:2;align-self:flex-end;width:min(100%,495px);min-height:255px;padding:20px;border-radius:30px;background:linear-gradient(180deg,rgba(255,255,255,.13),rgba(255,255,255,.06));border:1px solid rgba(255,255,255,.14);box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 24px 55px rgba(2,12,27,.28);backdrop-filter:blur(12px);overflow:hidden}.mortgage-showcase::before{content:"";position:absolute;right:-55px;top:-55px;width:170px;height:170px;border-radius:50%;background:radial-gradient(circle,rgba(102,224,79,.30),transparent 68%)}.mortgage-showcase::after{content:"";position:absolute;left:-50px;bottom:-50px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(37,109,255,.24),transparent 68%)}.mortgage-topline{position:relative;display:flex;align-items:center;justify-content:space-between;gap:12px;z-index:2;margin-bottom:16px}.mortgage-topline strong{display:block;color:#fff;font-size:.98rem;letter-spacing:-.02em}.mortgage-topline span{display:block;color:rgba(255,255,255,.65);font-size:.78rem;font-weight:760}.mortgage-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.12);color:#DFFFD9;font-size:.78rem;font-weight:900}.mortgage-badge::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--premium-lime);box-shadow:0 0 0 5px rgba(203,255,107,.12)}.mortgage-grid{position:relative;z-index:2;display:grid;grid-template-columns:1.08fr .92fr;gap:14px;align-items:stretch}.mortgage-panel{padding:16px;border-radius:24px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.12)}.mortgage-amount{margin-bottom:14px;padding:16px 18px;border-radius:22px;background:linear-gradient(135deg,var(--premium-lime),var(--premium-green));box-shadow:0 18px 40px rgba(102,224,79,.24)}.mortgage-amount span{display:block;color:#17305A;font-size:.74rem;font-weight:860;text-transform:uppercase;letter-spacing:.08em}.mortgage-amount strong{display:block;margin-top:4px;color:#06152B;font-size:2rem;line-height:1;letter-spacing:-.06em}.mortgage-bars{display:flex;align-items:flex-end;gap:12px;height:110px;padding:12px 8px 6px;border-radius:18px;background:rgba(4,20,42,.28)}.mortgage-bars span{flex:1;border-radius:12px 12px 8px 8px;background:linear-gradient(180deg,rgba(255,255,255,.88),rgba(208,222,236,.72));box-shadow:inset 0 1px 0 rgba(255,255,255,.55)}.mortgage-bars span:nth-child(1){height:54%}.mortgage-bars span:nth-child(2){height:82%}.mortgage-bars span:nth-child(3){height:68%}.mortgage-bars span:nth-child(4){height:92%;background:linear-gradient(180deg,#DDFB86,#72E455)}.mortgage-info{display:grid;gap:12px}.mortgage-mini-card{padding:14px;border-radius:22px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.12)}.mortgage-mini-card span{display:block;color:rgba(255,255,255,.64);font-size:.72rem;font-weight:840;text-transform:uppercase;letter-spacing:.08em}.mortgage-mini-card strong{display:block;margin-top:6px;color:#fff;font-size:1.15rem;letter-spacing:-.03em}.mortgage-mini-card p{margin:4px 0 0;color:rgba(255,255,255,.62);font-size:.78rem;line-height:1.45}.mortgage-mini-card.house-card{position:relative;overflow:hidden}.mortgage-insight{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px;position:relative;z-index:2}.mortgage-insight div{padding:12px;border-radius:18px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12)}.mortgage-insight span{display:block;color:rgba(255,255,255,.62);font-size:.7rem;font-weight:860;text-transform:uppercase;letter-spacing:.08em}.mortgage-insight strong{display:block;margin-top:5px;color:#fff;font-size:1rem;letter-spacing:-.03em}.calc-card{border-radius:30px;background:linear-gradient(180deg,#fff,#F9FCFF);box-shadow:0 16px 42px rgba(8,26,51,.075)}.calc-card::after{content:"";position:absolute;width:120px;height:120px;right:-62px;top:-62px;border-radius:50%;background:rgba(102,224,79,.10);transition:.2s ease}.calc-card:hover::after{transform:scale(1.25);background:rgba(37,109,255,.10)}.card-icon{background:linear-gradient(135deg,#EAF2FF,#F5FFEF);color:#0B5AA7}.card-cta::after{content:"→";color:var(--premium-green);transition:.18s ease}.card-cta:hover::after{transform:translateX(4px)}
+    .trust-section{position:relative;overflow:hidden;background:radial-gradient(circle at 14% 20%,rgba(203,255,107,.18),transparent 30%),radial-gradient(circle at 86% 10%,rgba(37,109,255,.22),transparent 34%),linear-gradient(135deg,#050E20,#071F40 58%,#0A5A3A)}.trust-section::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);background-size:52px 52px;mask-image:linear-gradient(180deg,rgba(0,0,0,.7),transparent 70%)}.trust-section .container{position:relative}.value-card{border-radius:30px;background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.055));box-shadow:inset 0 1px 0 rgba(255,255,255,.10);transition:.18s ease}.value-card:hover{transform:translateY(-5px);background:rgba(255,255,255,.12)}.disclaimer{border-radius:28px;background:rgba(255,255,255,.09);box-shadow:inset 0 1px 0 rgba(255,255,255,.12)}
+    .category-wrap{border-radius:40px;background:linear-gradient(135deg,rgba(255,255,255,.88),rgba(247,251,255,.72));border-color:rgba(255,255,255,.75);box-shadow:0 26px 80px rgba(8,26,51,.10);backdrop-filter:blur(14px)}.category-card{border-radius:26px;transition:.18s ease}.category-card:hover{transform:translateY(-4px);box-shadow:0 18px 42px rgba(8,26,51,.09)}.category-links a{border-radius:14px;color:var(--blue);font-weight:900}.seo-block{border-radius:40px;background:radial-gradient(circle at 100% 0%,rgba(102,224,79,.11),transparent 34%),linear-gradient(135deg,#fff,#F7FBFF);box-shadow:0 26px 80px rgba(8,26,51,.10)}.faq-item{border-radius:24px;transition:.18s ease}.faq-item:hover{box-shadow:0 18px 38px rgba(8,26,51,.08)}
+    @media(max-width:1080px){.hero-grid{gap:38px}.dashboard{margin:0 auto}.premium-metrics{grid-template-columns:repeat(3,1fr)}}
+    @media(max-width:760px){.hero{padding:22px 0 54px}.hero-grid{padding-top:30px}.hero-line{border-radius:18px;align-items:flex-start}.quick-chips .chip{color:#fff;background:rgba(255,255,255,.10)}.decision-section{margin-top:-24px}.decision-panel{padding:18px;border-radius:32px}.section{padding:64px 0}.trust-section{padding-top:70px}.search-input{font-size:.96rem}.proof-row{display:grid;grid-template-columns:1fr}.proof-pill{justify-content:center}.category-pills .chip{color:#29415f;background:#fff}.premium-metrics{display:none}.calc-hero-card{padding:24px;min-height:auto}.calc-hero-content,.calc-hero-card p,.calc-hero-card h3{max-width:none}.mortgage-showcase{align-self:stretch;width:100%;min-height:auto;padding:16px;border-radius:26px}.mortgage-grid,.mortgage-insight{grid-template-columns:1fr}}
+
+
+
+    /* === Critical responsive/search fixes ===
+       Keeps premium desktop design, but prevents the hero from staying in a two-column layout on mobile
+       and forces live search results above chips/buttons/dashboard. */
+    .hero-copy{position:relative;z-index:30}
+    .hero-visual{position:relative;z-index:1}
+    .search-shell{z-index:80;overflow:visible}
+    .search-form,.search-field{z-index:inherit}
+    .search-results{z-index:9999;max-height:min(420px,55vh);overflow:auto;background:#fff;color:var(--ink);isolation:isolate}
+    .search-shell:has(.search-results.active){z-index:500}
+    .search-results.active{display:block;box-shadow:0 34px 90px rgba(3,14,31,.35)}
+
+    @media(max-width:1080px){
+      .hero-grid{grid-template-columns:1fr!important;gap:28px!important;padding-top:34px!important}
+      .hero-visual{display:none!important}
+      .hero-copy{max-width:820px}
+      .search-shell{max-width:760px}
+    }
+
+    @media(max-width:760px){
+      :root{--container:calc(100% - 28px)}
+      html{scroll-padding-top:126px}
+      body{overflow-x:hidden}
+      .site-header{z-index:900;background:rgba(255,255,255,.92)}
+      .header-inner{min-height:64px;gap:8px 12px;padding:10px 0}
+      .brand-icon,.brand-icon svg{width:34px;height:34px}.brand-icon{flex-basis:34px}
+      .brand-wordmark{font-size:18px}
+      .nav{order:3;width:100%;justify-content:flex-start;gap:6px;overflow-x:auto;padding:4px 0 2px;scrollbar-width:none}
+      .nav::-webkit-scrollbar{display:none}
+      .nav a{font-size:.86rem;padding:8px 10px}
+      .header-cta{display:none}
+      .hero{padding:28px 0 42px!important;overflow:hidden}
+      .hero:after{width:360px;height:360px;right:-170px;top:90px;opacity:.72}
+      .hero-grid{display:block!important;width:var(--container);padding-top:24px!important}
+      .eyebrow{max-width:100%;white-space:normal;line-height:1.25;font-size:.68rem;padding:8px 11px;border-radius:18px}
+      h1{max-width:100%;margin:0 0 18px;font-size:clamp(3.05rem,15.8vw,4.35rem)!important;line-height:.96!important;letter-spacing:-.07em!important;overflow-wrap:normal;word-break:normal;text-wrap:balance}
+      .lead{max-width:100%;font-size:1.02rem!important;line-height:1.62!important;margin-bottom:18px;color:rgba(255,255,255,.82)}
+      .hero-line{display:flex;width:100%;max-width:100%;margin:0 0 18px;padding:13px 14px;border-radius:22px;font-size:.96rem;line-height:1.45}
+      .search-shell{width:100%;max-width:none;margin-top:0;padding:8px;border-radius:24px;z-index:500;background:rgba(255,255,255,.16)}
+      .search-form{display:grid;grid-template-columns:1fr;gap:8px}
+      .search-field svg{left:17px;width:20px;height:20px}
+      .search-input{min-height:60px!important;width:100%;padding-left:50px;padding-right:16px;border-radius:18px;font-size:.95rem!important}
+      .search-button{width:100%;min-height:54px!important;border-radius:18px}
+      .search-results{left:0;right:0;top:calc(100% + 10px);border-radius:20px;max-height:360px}
+      .search-results a{grid-template-columns:1fr;gap:8px;padding:13px}
+      .result-type{justify-self:start}
+      .quick-chips{display:flex;gap:8px;margin-top:14px;overflow-x:auto;flex-wrap:nowrap;padding-bottom:4px;scrollbar-width:none}
+      .quick-chips::-webkit-scrollbar{display:none}
+      .quick-chips .chip{flex:0 0 auto;min-height:38px;font-size:.84rem;color:#fff;background:rgba(255,255,255,.10)}
+      .proof-row{display:grid;grid-template-columns:1fr;gap:8px;margin-top:16px}
+      .proof-pill{justify-content:flex-start;min-height:42px;border-radius:18px}
+      .hero-actions{display:grid;grid-template-columns:1fr;gap:10px;margin-top:16px}
+      .hero-actions .btn{width:100%;min-height:50px}
+      .decision-section{margin-top:0!important}
+    }
+
+    @media(max-width:420px){
+      :root{--container:calc(100% - 24px)}
+      h1{font-size:clamp(2.7rem,14.4vw,3.65rem)!important}
+      .lead{font-size:.99rem!important}
+      .hero-line{font-size:.92rem}
+      .brand-wordmark{font-size:17px}
+      .nav a{font-size:.82rem}
+    }
+
+  
+
+    /* === Design depth pass: natural premium details === */
+    .path-icon svg,.card-icon svg,.value-icon svg{width:24px;height:24px;display:block;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+    .path-icon{position:relative;z-index:2;color:#0B5AA7;background:radial-gradient(circle at 30% 15%,#fff,transparent 42%),linear-gradient(135deg,#EAFEEC,#EAF2FF);box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 16px 34px rgba(15,90,168,.10)}
+    .path-card{isolation:isolate}
+    .path-card::after{content:"";position:absolute;right:18px;top:18px;width:92px;height:92px;border-radius:30px;background:linear-gradient(135deg,rgba(15,90,168,.055),rgba(102,224,79,.075));transform:rotate(10deg);z-index:0;opacity:.85;transition:.22s ease}
+    .path-card:hover::after{transform:rotate(6deg) scale(1.12);opacity:1}
+    .path-card h3,.path-card p,.path-card .path-links,.path-card .path-icon{position:relative;z-index:2}
+    .path-card p{max-width:92%}
+    .decision-panel{overflow:hidden}
+    .decision-panel::after{content:"";position:absolute;right:-120px;bottom:-160px;width:430px;height:430px;border-radius:50%;background:radial-gradient(circle,rgba(46,143,255,.10),transparent 68%);pointer-events:none}
+    .card-icon{color:#0B5AA7;background:radial-gradient(circle at 30% 18%,#fff,transparent 45%),linear-gradient(135deg,#EAF2FF,#F5FFEF);box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 12px 26px rgba(8,26,51,.07)}
+    .value-icon{display:grid;place-items:center;color:#06152B;background:linear-gradient(135deg,#DFFFD9,#76E05B);box-shadow:0 16px 34px rgba(102,224,79,.18)}
+    .quick-chips .chip::before{content:"";width:7px;height:7px;margin-right:2px;border-radius:50%;background:rgba(203,255,107,.82);box-shadow:0 0 0 4px rgba(203,255,107,.08)}
+    .craft-section{padding-top:28px}
+    .craft-wrap{position:relative;display:grid;grid-template-columns:.88fr 1.12fr;gap:22px;align-items:stretch;padding:26px;border:1px solid rgba(220,231,242,.86);border-radius:38px;background:radial-gradient(circle at 0% 0%,rgba(102,224,79,.12),transparent 34%),linear-gradient(135deg,rgba(255,255,255,.92),rgba(247,251,255,.76));box-shadow:0 26px 80px rgba(8,26,51,.10);overflow:hidden}
+    .craft-wrap::before{content:"";position:absolute;inset:auto -90px -120px auto;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,rgba(37,109,255,.13),transparent 70%);pointer-events:none}
+    .craft-copy{position:relative;z-index:2;padding:10px 8px 10px 10px}
+    .craft-copy h2{font-size:clamp(1.9rem,3.1vw,3rem)}
+    .craft-copy p{max-width:560px;margin:15px 0 0;color:#5d6e83;font-size:1.02rem;line-height:1.75}
+    .craft-grid{position:relative;z-index:2;display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+    .craft-card{position:relative;min-height:230px;padding:22px;border-radius:28px;background:#fff;border:1px solid rgba(220,231,242,.88);box-shadow:0 14px 34px rgba(8,26,51,.065);overflow:hidden;transition:.18s ease}
+    .craft-card::before{content:"";position:absolute;left:0;right:0;top:0;height:4px;background:linear-gradient(90deg,var(--premium-green),var(--premium-blue));opacity:.9}
+    .craft-card::after{content:"";position:absolute;right:-46px;bottom:-50px;width:132px;height:132px;border-radius:42px;background:linear-gradient(135deg,rgba(102,224,79,.10),rgba(37,109,255,.08));transform:rotate(12deg)}
+    .craft-card:hover{transform:translateY(-4px);box-shadow:0 24px 54px rgba(8,26,51,.10)}
+    .craft-card span{display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;margin-bottom:18px;border-radius:16px;background:linear-gradient(135deg,#EAFEEC,#EAF2FF);color:#0B5AA7;font-weight:950}
+    .craft-card h3{font-size:1.16rem}
+    .craft-card p{position:relative;z-index:2;margin:0;color:#65758B;font-size:.94rem;line-height:1.62}
+    .steps-band{box-shadow:0 34px 100px rgba(8,26,51,.15)}
+    .step-card{position:relative;overflow:hidden}
+    .step-card::before{content:"";position:absolute;inset:0 0 auto;height:3px;background:linear-gradient(90deg,var(--premium-lime),rgba(37,109,255,.75));opacity:.9}
+    @media(max-width:1080px){.craft-wrap{grid-template-columns:1fr}.craft-grid{grid-template-columns:repeat(3,1fr)}}
+    @media(max-width:760px){.craft-section{padding-top:18px}.craft-wrap{padding:18px;border-radius:30px}.craft-grid{grid-template-columns:1fr}.craft-card{min-height:auto}.path-card p{max-width:none}.quick-chips{flex-wrap:nowrap;overflow-x:auto;padding-bottom:6px;scrollbar-width:none}.quick-chips::-webkit-scrollbar{display:none}.quick-chips .chip{flex:0 0 auto}}
+
+  
+    /* === Premium replacement: decision flow / product craft === */
+    .flow-section{padding-top:34px}
+    .flow-panel{position:relative;overflow:hidden;border-radius:46px;padding:36px;background:radial-gradient(circle at 12% 12%,rgba(203,255,107,.18),transparent 28%),radial-gradient(circle at 96% 0%,rgba(37,109,255,.26),transparent 32%),linear-gradient(135deg,#051327 0%,#071F42 52%,#092F62 100%);border:1px solid rgba(255,255,255,.10);box-shadow:0 38px 110px rgba(8,26,51,.22),inset 0 1px 0 rgba(255,255,255,.12);color:#fff}
+    .flow-panel::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);background-size:52px 52px;mask-image:linear-gradient(180deg,rgba(0,0,0,.72),transparent 78%);pointer-events:none}
+    .flow-panel::after{content:"";position:absolute;right:-150px;bottom:-180px;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle,rgba(102,224,79,.20),rgba(37,109,255,.10) 40%,transparent 70%);pointer-events:none}
+    .flow-watermark{position:absolute;right:34px;top:28px;width:310px;height:310px;opacity:.20;pointer-events:none}.flow-watermark svg{width:100%;height:100%;display:block}.flow-watermark path,.flow-watermark circle,.flow-watermark rect{stroke:rgba(255,255,255,.82)}
+    .flow-content{position:relative;z-index:2;display:grid;grid-template-columns:minmax(0,.92fr) minmax(520px,1.08fr);gap:34px;align-items:stretch}
+    .flow-copy{display:flex;flex-direction:column;justify-content:space-between;min-height:460px;padding:6px 0}.flow-copy h2{margin-top:12px;color:#fff;font-size:clamp(2.25rem,4.1vw,4.25rem);line-height:.96;letter-spacing:-.065em;max-width:650px;text-wrap:balance}.flow-copy p{max-width:560px;margin:18px 0 0;color:rgba(255,255,255,.74);font-size:1.06rem;line-height:1.78}.flow-copy .eyebrow{width:max-content}
+    .flow-proof{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:560px;margin-top:28px}.flow-proof span{display:block;padding:14px 13px;border-radius:20px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.10);color:rgba(255,255,255,.72);font-size:.78rem;font-weight:840;line-height:1.35}.flow-proof strong{display:block;margin-bottom:4px;color:#fff;font-size:1.08rem;letter-spacing:-.03em}
+    .flow-device{position:relative;min-height:460px;border-radius:38px;padding:22px;background:linear-gradient(180deg,rgba(255,255,255,.14),rgba(255,255,255,.075));border:1px solid rgba(255,255,255,.14);box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 28px 74px rgba(0,0,0,.22);backdrop-filter:blur(16px);overflow:hidden}.flow-device::before{content:"";position:absolute;inset:1px;border-radius:37px;background:radial-gradient(circle at 90% 12%,rgba(203,255,107,.15),transparent 26%),linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));pointer-events:none}
+    .flow-device-head{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:18px;padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,.12)}.flow-device-title{display:flex;align-items:center;gap:10px;font-weight:950;color:#fff;letter-spacing:-.02em}.flow-device-title::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--premium-lime);box-shadow:0 0 0 7px rgba(203,255,107,.10)}.flow-device-pill{padding:8px 11px;border-radius:999px;background:rgba(203,255,107,.12);border:1px solid rgba(203,255,107,.22);color:#DFFFD9;font-size:.76rem;font-weight:920}
+    .flow-rail{position:relative;z-index:2;display:grid;gap:14px}.flow-step{position:relative;display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:center;padding:17px;border-radius:26px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.12);box-shadow:inset 0 1px 0 rgba(255,255,255,.08);transition:.18s ease}.flow-step:hover{transform:translateX(4px);background:rgba(255,255,255,.13)}.flow-step:not(:last-child)::after{content:"";position:absolute;left:35px;top:calc(100% + 1px);width:2px;height:14px;background:linear-gradient(180deg,rgba(203,255,107,.42),rgba(37,109,255,.28))}
+    .flow-icon{display:grid;place-items:center;width:40px;height:40px;border-radius:15px;background:linear-gradient(135deg,var(--premium-lime),var(--premium-green));color:#06152B;box-shadow:0 18px 34px rgba(102,224,79,.20)}.flow-icon svg{width:21px;height:21px;display:block;stroke:currentColor;stroke-width:2.4;fill:none;stroke-linecap:round;stroke-linejoin:round}.flow-step h3{margin:0 0 4px;color:#fff;font-size:1.1rem;letter-spacing:-.025em}.flow-step p{margin:0;color:rgba(255,255,255,.66);font-size:.9rem;line-height:1.5}.flow-tag{display:inline-flex;align-items:center;justify-content:center;min-width:48px;padding:7px 9px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.11);color:rgba(255,255,255,.72);font-size:.72rem;font-weight:900;letter-spacing:.06em;text-transform:uppercase}
+    .flow-result{position:relative;z-index:2;margin-top:16px;display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center;padding:18px;border-radius:28px;background:linear-gradient(135deg,rgba(203,255,107,.15),rgba(37,109,255,.10));border:1px solid rgba(203,255,107,.20)}.flow-result span{display:block;color:rgba(255,255,255,.66);font-size:.78rem;font-weight:840;text-transform:uppercase;letter-spacing:.08em}.flow-result strong{display:block;margin-top:4px;color:#fff;font-size:1.28rem;letter-spacing:-.035em}.flow-result-visual{display:flex;align-items:flex-end;gap:7px;height:58px;padding:9px 10px;border-radius:18px;background:rgba(3,14,30,.28)}.flow-result-visual i{display:block;width:18px;border-radius:9px 9px 5px 5px;background:linear-gradient(180deg,#DDFB86,#72E455);opacity:.95}.flow-result-visual i:nth-child(1){height:24px}.flow-result-visual i:nth-child(2){height:38px}.flow-result-visual i:nth-child(3){height:31px}.flow-result-visual i:nth-child(4){height:48px;background:linear-gradient(180deg,#9CEBFF,#2E8FFF)}
+    .flow-craft-row{position:relative;z-index:2;display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}.flow-craft{padding:15px;border-radius:22px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.10)}.flow-craft b{display:block;margin-bottom:4px;color:#fff;font-size:.92rem}.flow-craft span{display:block;color:rgba(255,255,255,.62);font-size:.8rem;line-height:1.45}
+    @media(max-width:1080px){.flow-content{grid-template-columns:1fr}.flow-copy{min-height:auto}.flow-device{min-height:auto}.flow-watermark{opacity:.12}}
+    @media(max-width:760px){.flow-section{padding-top:22px}.flow-panel{padding:22px;border-radius:32px}.flow-content{gap:22px}.flow-copy h2{font-size:clamp(2.05rem,11vw,3.2rem)}.flow-copy p{font-size:.98rem}.flow-proof,.flow-craft-row{grid-template-columns:1fr}.flow-device{padding:16px;border-radius:28px}.flow-device::before{border-radius:27px}.flow-device-head{align-items:flex-start}.flow-step{grid-template-columns:auto 1fr;padding:15px}.flow-tag{grid-column:2;justify-self:start}.flow-step:hover{transform:none}.flow-result{grid-template-columns:1fr}.flow-result-visual{justify-content:flex-start}.flow-watermark{display:none}}
+
+  
+    /* === Premium upgrade: categories section === */
+    .category-wrap{padding:0;border:0;background:none;box-shadow:none;backdrop-filter:none}
+    .category-shell{position:relative;overflow:hidden;padding:30px;border-radius:42px;background:radial-gradient(circle at 0% 0%,rgba(102,224,79,.08),transparent 24%),radial-gradient(circle at 100% 0%,rgba(37,109,255,.14),transparent 34%),linear-gradient(135deg,#FBFDFF,#F3F8FF 58%,#EEF5FF);border:1px solid rgba(220,231,242,.86);box-shadow:0 28px 80px rgba(8,26,51,.10)}
+    .category-shell::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(11,36,71,.028) 1px,transparent 1px),linear-gradient(90deg,rgba(11,36,71,.028) 1px,transparent 1px);background-size:42px 42px;mask-image:linear-gradient(180deg,rgba(0,0,0,.44),transparent 78%);pointer-events:none}
+    .category-shell::after{content:"KATEGORIE";position:absolute;right:26px;top:18px;color:rgba(8,26,51,.03);font-size:5.8rem;line-height:.88;font-weight:950;letter-spacing:-.08em;pointer-events:none}
+    .category-shell > *{position:relative;z-index:2}
+    .category-top{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:24px;align-items:end;margin-bottom:22px}
+    .category-head{margin:0}.category-head p{max-width:760px;margin:12px 0 0;color:#62748B;font-size:1.03rem}
+    .category-sidecard{padding:18px 18px 16px;border-radius:26px;background:rgba(255,255,255,.78);border:1px solid rgba(220,231,242,.86);box-shadow:0 16px 34px rgba(8,26,51,.06)}
+    .category-sidecard strong{display:block;color:var(--ink);font-size:1rem;letter-spacing:-.02em}
+    .category-sidecard p{margin:8px 0 0;color:var(--muted);font-size:.92rem;line-height:1.55}
+    .category-sidepoints{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}.category-sidepoints span{display:inline-flex;align-items:center;min-height:30px;padding:6px 10px;border-radius:999px;background:#fff;border:1px solid rgba(220,231,242,.88);color:#334C69;font-size:.77rem;font-weight:850}
+    .category-toolbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:22px}.category-pills{display:flex;flex-wrap:wrap;gap:10px;margin:0}.category-toolbar .link-more{display:inline-flex;align-items:center;gap:8px;padding:12px 14px;border-radius:16px;background:#fff;border:1px solid rgba(220,231,242,.9);box-shadow:0 12px 26px rgba(8,26,51,.05)}
+    .category-grid{grid-template-columns:repeat(4,1fr);gap:18px}
+    .category-card{position:relative;display:flex;flex-direction:column;min-height:250px;padding:20px;border-radius:28px;background:linear-gradient(180deg,#fff,#F9FCFF);border:1px solid rgba(220,231,242,.92);box-shadow:0 16px 38px rgba(8,26,51,.06);overflow:hidden;transition:.2s ease}
+    .category-card::before{content:"";position:absolute;inset:0 0 auto;height:4px;background:linear-gradient(90deg,var(--premium-green),var(--premium-blue));opacity:.95}
+    .category-card::after{content:"";position:absolute;right:-40px;bottom:-44px;width:130px;height:130px;border-radius:50%;background:radial-gradient(circle,rgba(102,224,79,.14),transparent 68%);pointer-events:none}
+    .category-card:hover{transform:translateY(-6px);box-shadow:0 28px 58px rgba(8,26,51,.10);border-color:rgba(102,224,79,.28)}
+    .category-card-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;margin-bottom:14px}
+    .category-icon{width:52px;height:52px;display:grid;place-items:center;border-radius:18px;background:linear-gradient(135deg,#EAFEEC,#EAF2FF);color:#0B5AA7;box-shadow:inset 0 1px 0 rgba(255,255,255,.9)}
+    .category-icon svg{width:24px;height:24px;display:block}
+    .category-mini-label{display:inline-flex;align-items:center;min-height:28px;padding:6px 10px;border-radius:999px;color:#0F5AA8;background:#EEF5FF;font-size:.74rem;font-weight:900}
+    .category-card h3{margin:0 0 8px;font-size:1.08rem;line-height:1.12}
+    .category-card p{margin:0;color:var(--muted);font-size:.93rem}
+    .category-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:15px}.category-tags span{display:inline-flex;align-items:center;min-height:28px;padding:6px 10px;border-radius:999px;background:#F3F8FE;color:#2F4B68;font-size:.76rem;font-weight:840}
+    .category-links{margin-top:auto;padding-top:18px}.category-links a{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;border-radius:16px;background:#F7FBFF;border:1px solid rgba(220,231,242,.92);font-size:.88rem}
+    .category-links a:hover{transform:translateX(4px);background:#fff;border-color:rgba(102,224,79,.30)}
+    @media(max-width:1080px){.category-top{grid-template-columns:1fr}.category-grid{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:760px){.category-shell{padding:22px;border-radius:32px}.category-shell::after{display:none}.category-toolbar{display:block}.category-toolbar .link-more{margin-top:14px}.category-grid{grid-template-columns:1fr;gap:14px}.category-card{min-height:auto}}
+
+  
+    /* === Luxury calm categories section: less noise, more premium === */
+    .category-wrap{padding:0;border:0;background:none;box-shadow:none;backdrop-filter:none}
+    .category-lux{position:relative;overflow:hidden;padding:42px;border-radius:44px;background:linear-gradient(135deg,#FFFFFF 0%,#F7FAFE 54%,#F0F6FF 100%);border:1px solid rgba(214,226,239,.9);box-shadow:0 34px 90px rgba(8,26,51,.10)}
+    .category-lux::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 0% 0%,rgba(102,224,79,.10),transparent 28%),radial-gradient(circle at 96% 0%,rgba(37,109,255,.12),transparent 32%);pointer-events:none}
+    .category-lux::after{content:"";position:absolute;right:36px;top:34px;width:280px;height:280px;border-radius:50%;background:linear-gradient(135deg,rgba(102,224,79,.10),rgba(37,109,255,.10));filter:blur(28px);opacity:.72;pointer-events:none}
+    .category-lux > *{position:relative;z-index:2}
+    .category-lux-head{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:28px;align-items:end;margin-bottom:30px}
+    .category-lux h2{max-width:760px;margin:0;letter-spacing:-.055em}
+    .category-lux p{max-width:760px;margin:14px 0 0;color:#62748B;font-size:1.03rem;line-height:1.75}
+    .category-lux-actions{display:flex;justify-content:flex-end;align-items:center;gap:12px;white-space:nowrap}
+    .category-lux .link-more{display:inline-flex;align-items:center;gap:8px;padding:13px 16px;border-radius:999px;color:#fff;background:linear-gradient(135deg,#0F5AA8,#081A33);box-shadow:0 16px 34px rgba(8,26,51,.16);font-size:.93rem}
+    .category-lux-tabs{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:24px}
+    .category-lux-tabs a{display:inline-flex;align-items:center;min-height:38px;padding:9px 13px;border-radius:999px;background:rgba(255,255,255,.78);border:1px solid rgba(214,226,239,.94);color:#29415F;font-size:.86rem;font-weight:850;box-shadow:0 10px 24px rgba(8,26,51,.045);transition:.18s ease}
+    .category-lux-tabs a:hover{transform:translateY(-2px);border-color:rgba(102,224,79,.34);background:#fff}
+    .category-lux-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+    .category-lux-card{position:relative;min-height:164px;display:flex;flex-direction:column;justify-content:space-between;padding:18px;border-radius:26px;background:rgba(255,255,255,.76);border:1px solid rgba(214,226,239,.92);box-shadow:0 14px 34px rgba(8,26,51,.055);transition:.2s ease;overflow:hidden}
+    .category-lux-card::before{content:"";position:absolute;left:18px;right:18px;top:0;height:3px;border-radius:0 0 999px 999px;background:linear-gradient(90deg,#66E04F,#2E8FFF);opacity:.82}
+    .category-lux-card::after{content:"";position:absolute;right:-38px;bottom:-42px;width:118px;height:118px;border-radius:50%;background:radial-gradient(circle,rgba(102,224,79,.10),transparent 70%);pointer-events:none}
+    .category-lux-card:hover{transform:translateY(-5px);background:#fff;box-shadow:0 24px 54px rgba(8,26,51,.10);border-color:rgba(102,224,79,.28)}
+    .category-lux-icon{width:44px;height:44px;display:grid;place-items:center;border-radius:16px;color:#0F5AA8;background:linear-gradient(135deg,#EAFEEC,#EEF5FF);box-shadow:inset 0 1px 0 rgba(255,255,255,.9)}
+    .category-lux-icon svg{width:22px;height:22px;display:block}
+    .category-lux-card h3{margin:16px 0 8px;color:var(--ink);font-size:1.06rem;line-height:1.15;letter-spacing:-.025em}
+    .category-lux-card p{margin:0;color:#65758B;font-size:.91rem;line-height:1.55}
+    .category-lux-cta{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:20px;color:#0F5AA8;font-size:.9rem;font-weight:950}
+    .category-lux-cta span{display:grid;place-items:center;width:30px;height:30px;border-radius:999px;background:#F1F7FF;color:#45B22F;transition:.18s ease}
+    .category-lux-card:hover .category-lux-cta span{transform:translateX(3px);background:#E8FFE2}
+    .category-lux-note{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-top:18px;padding:16px 18px;border-radius:24px;background:rgba(255,255,255,.62);border:1px solid rgba(214,226,239,.80);color:#52637B;font-size:.94rem;line-height:1.6}
+    .category-lux-note strong{color:var(--ink)}
+    @media(max-width:1080px){.category-lux-head{grid-template-columns:1fr}.category-lux-actions{justify-content:flex-start}.category-lux-grid{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:760px){.category-lux{padding:24px;border-radius:32px}.category-lux h2{font-size:clamp(2rem,9vw,2.7rem)}.category-lux-grid{grid-template-columns:1fr}.category-lux-tabs{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}.category-lux-tabs::-webkit-scrollbar{display:none}.category-lux-card{min-height:auto}.category-lux-note{display:block}.category-lux-note .link-more{display:inline-flex;margin-top:12px}}
+
+  
+    /* === Premium refinement: calm luxury categories === */
+    .category-premium{position:relative;overflow:hidden;padding:48px;border-radius:44px;background:linear-gradient(135deg,#FBFDFF 0%,#F8FBFF 48%,#F3F8FF 100%);border:1px solid rgba(216,228,240,.95);box-shadow:0 34px 100px rgba(8,26,51,.10)}
+    .category-premium::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 0% 0%,rgba(102,224,79,.07),transparent 26%),radial-gradient(circle at 100% 0%,rgba(37,109,255,.10),transparent 30%);pointer-events:none}
+    .category-premium::after{content:"";position:absolute;right:-120px;top:-110px;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(37,109,255,.08),transparent 66%);pointer-events:none}
+    .category-premium > *{position:relative;z-index:2}
+    .category-premium-head{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:28px;align-items:end;padding-bottom:26px;border-bottom:1px solid rgba(214,226,239,.78)}
+    .category-premium-copy h2{max-width:760px;margin:0;letter-spacing:-.055em}
+    .category-premium-copy p{max-width:760px;margin:16px 0 0;color:#62748B;font-size:1.04rem;line-height:1.8}
+    .category-premium-actions{display:flex;align-items:center;gap:12px}
+    .category-premium .link-more{display:inline-flex;align-items:center;gap:10px;padding:14px 20px;border-radius:999px;color:#fff;background:linear-gradient(135deg,#0D4E95,#081A33);box-shadow:0 16px 36px rgba(8,26,51,.16);font-size:.95rem;font-weight:900}
+    .category-premium-meta{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:20px 0 8px}
+    .category-premium-areas{display:flex;flex-wrap:wrap;gap:10px 14px;color:#5F738C;font-size:.95rem;font-weight:760}
+    .category-premium-areas a{color:#24486D;font-weight:820}
+    .category-premium-areas .sep{color:#B7C5D5}
+    .category-premium-note{color:#6D7D91;font-size:.93rem;white-space:nowrap}
+    .category-premium-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:16px}
+    .category-premium-card{position:relative;display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:20px;padding:26px 24px;border-radius:30px;background:rgba(255,255,255,.86);border:1px solid rgba(216,228,240,.94);box-shadow:0 16px 42px rgba(8,26,51,.055);transition:.2s ease;overflow:hidden}
+    .category-premium-card::before{content:"";position:absolute;left:24px;right:24px;top:0;height:2px;border-radius:999px;background:linear-gradient(90deg,rgba(102,224,79,.55),rgba(37,109,255,.55));opacity:.9}
+    .category-premium-card:hover{transform:translateY(-4px);box-shadow:0 26px 54px rgba(8,26,51,.09);background:#fff;border-color:rgba(37,109,255,.18)}
+    .category-premium-icon{width:58px;height:58px;display:grid;place-items:center;border-radius:20px;background:linear-gradient(135deg,#F2FBF1,#EEF5FF);color:#0F5AA8;box-shadow:inset 0 1px 0 rgba(255,255,255,.95)}
+    .category-premium-icon svg{width:26px;height:26px;display:block}
+    .category-premium-body h3{margin:0;color:var(--ink);font-size:1.22rem;line-height:1.12;letter-spacing:-.03em}
+    .category-premium-body p{margin:10px 0 0;color:#65758B;font-size:.98rem;line-height:1.65}
+    .category-premium-arrow{display:grid;place-items:center;width:44px;height:44px;border-radius:999px;background:#F2F7FD;border:1px solid rgba(216,228,240,.9);color:#0F5AA8;font-size:1.05rem;font-weight:900;transition:.18s ease}
+    .category-premium-card:hover .category-premium-arrow{transform:translateX(3px);background:#EDF8E9;color:#2B8B39}
+    .category-premium-footer{display:flex;justify-content:space-between;gap:16px;align-items:center;margin-top:22px;padding-top:18px;border-top:1px solid rgba(214,226,239,.76)}
+    .category-premium-footer p{margin:0;color:#6C7D91;font-size:.95rem;line-height:1.6}
+    .category-premium-footer strong{color:var(--ink)}
+    @media(max-width:1080px){.category-premium-head{grid-template-columns:1fr}.category-premium-actions{justify-content:flex-start}.category-premium-meta{display:block}.category-premium-note{display:block;margin-top:10px;white-space:normal}}
+    @media(max-width:760px){.category-premium{padding:26px;border-radius:32px}.category-premium-copy h2{font-size:clamp(2rem,9vw,2.8rem)}.category-premium-meta{padding-top:16px}.category-premium-areas{gap:8px 12px;font-size:.9rem}.category-premium-grid{grid-template-columns:1fr;gap:14px}.category-premium-card{grid-template-columns:auto 1fr;gap:16px;padding:20px}.category-premium-arrow{grid-column:2;justify-self:start;width:38px;height:38px}.category-premium-footer{display:block}.category-premium-footer p+p{margin-top:8px}}
+
+
+  </style>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"Organization","name":"RychléVýpočty.cz","url":"https://rychlevypocty.cz/","logo":"https://rychlevypocty.cz/icon-512.png","sameAs":[]}
+  </script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebSite","name":"RychléVýpočty.cz","url":"https://rychlevypocty.cz/","potentialAction":{"@type":"SearchAction","target":"https://rychlevypocty.cz/kalkulacky.html?search={search_term_string}","query-input":"required name=search_term_string"}}
+  </script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebPage","name":"Online kalkulačky a rychlé výpočty","url":"https://rychlevypocty.cz/","description":"Praktické online kalkulačky zdarma pro hypotéky, mzdy, podnikání, bydlení, energie, auto, rekonstrukce a další rychlé výpočty.","inLanguage":"cs-CZ"}
+  </script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Co je RychléVýpočty.cz?","acceptedAnswer":{"@type":"Answer","text":"RychléVýpočty.cz je web s praktickými online kalkulačkami pro hypotéky, mzdy, podnikání, bydlení, energie, auto, rekonstrukce, rodinný rozpočet i další situace, které dává smysl si dopředu spočítat."}},{"@type":"Question","name":"Jsou kalkulačky zdarma?","acceptedAnswer":{"@type":"Answer","text":"Ano. Kalkulačky jsou dostupné zdarma a bez registrace, takže se k výpočtu dostanete hned bez zbytečných kroků navíc."}},{"@type":"Question","name":"Jak nejrychleji najdu správnou kalkulačku?","acceptedAnswer":{"@type":"Answer","text":"Nejrychlejší cesta je použít vyhledávání nahoře na homepage nebo vybrat životní situaci. Pokud víte oblast, můžete jít rovnou do příslušné sekce."}},{"@type":"Question","name":"Jsou výsledky přesné pro finální rozhodnutí?","acceptedAnswer":{"@type":"Answer","text":"Výsledky slouží primárně pro rychlou orientaci a porovnání variant. U důležitých rozhodnutí je vždy vhodné je ověřit podle konkrétních podmínek, sazeb nebo aktuální situace."}}]}
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Přejít na obsah</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="/" aria-label="RychléVýpočty.cz – domů">
+        <span class="brand-icon" aria-hidden="true"><svg viewBox="0 0 48 48" role="img" focusable="false"><rect x="4" y="3" width="32" height="42" rx="9" fill="#0B2447"/><rect x="11" y="9" width="18" height="7" rx="2.5" fill="#FFFFFF"/><rect x="11" y="22" width="7" height="6" rx="2" fill="#FFFFFF"/><rect x="22" y="22" width="7" height="6" rx="2" fill="#FFFFFF"/><rect x="11" y="32" width="7" height="6" rx="2" fill="#FFFFFF"/><rect x="22" y="32" width="7" height="6" rx="2" fill="#FFFFFF"/><path d="M34 7 18 28h10l-5 17 20-25H32L34 7Z" fill="#72D45A"/><path d="M30.5 8 18 28h10l-3.5 12 16-20H32L30.5 8Z" fill="#45B22F"/></svg></span>
+        <span class="brand-wordmark"><span class="brand-word-blue">Rychlé</span><span class="brand-word-green">Výpočty</span><span class="brand-dot">.cz</span></span>
+      </a>
+      <nav class="nav" aria-label="Hlavní navigace"><a href="/" aria-current="page">Domů</a><a href="#situace">Situace</a><a href="#top-kalkulacky">Top výpočty</a><a href="#duvera">Proč věřit</a><a href="/kalkulacky.html">Všechny kalkulačky</a></nav>
+      <a class="header-cta" href="#vyhledavani">Najít výpočet</a>
+    </div>
+  </header>
+  <main id="main">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <span class="eyebrow">Rozhodovací centrum pro rychlé výpočty</span>
+          <h1 id="hero-title">Spočítejte si důležitá rozhodnutí <span class="hero-highlight">bez Excelu.</span></h1>
+          <p class="lead">Najděte správnou kalkulačku podle situace, zadejte pár hodnot a během chvíle víte, jestli dává hypotéka, mzda, cena služby, auto nebo rekonstrukce smysl.</p>
+          <p class="hero-line">Ne katalog odkazů. Rychlá navigace k výsledku, který pomůže rozhodnout další krok.</p>
+          <div class="search-shell" id="vyhledavani">
+            <form class="search-form" id="search-form" role="search" aria-label="Vyhledat kalkulačku">
+              <div class="search-field">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21 21-4.3-4.3m1.3-5.2a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                <label class="sr-only" for="calculator-search">Zadejte název kalkulačky</label>
+                <input class="search-input" id="calculator-search" type="search" name="search" autocomplete="off" placeholder="Co chcete spočítat? Hypotéku, čistou mzdu, elektřinu..." aria-controls="search-results" aria-expanded="false" />
+                <div class="search-results" id="search-results" role="listbox"></div>
+              </div>
+              <button class="btn search-button" type="submit">Spočítat</button>
+            </form>
+          </div>
+          <div class="quick-chips" aria-label="Rychlé vyhledávání"><button class="chip" type="button" data-search="Hypotéka">Hypotéka</button><button class="chip" type="button" data-search="Čistá mzda">Čistá mzda</button><button class="chip" type="button" data-search="Nájem vs hypotéka">Nájem vs hypotéka</button><button class="chip" type="button" data-search="Elektřina">Elektřina</button><button class="chip" type="button" data-search="Bod zvratu">Bod zvratu</button><button class="chip" type="button" data-search="Cena auta">Cena auta</button></div>
+          <div class="proof-row" aria-label="Důvěryhodnost"><span class="proof-pill"><span class="proof-dot"></span><strong>Desítky tisíc</strong> výpočtů měsíčně</span><span class="proof-pill">Bez registrace</span><span class="proof-pill">Okamžitý výsledek</span></div>
+          <div class="hero-actions"><a class="btn" href="#situace">Začít podle situace</a><a class="btn btn-ghost" href="/kalkulacky.html">Všechny kalkulačky</a></div>
+        </div>
+        <div class="hero-visual" aria-hidden="true">
+          <div class="dashboard">
+            <span class="orb one"></span><span class="orb two"></span>
+            <div class="dash-inner">
+              <div class="dash-top"><div class="dash-logo"><span class="proof-dot"></span> Decision dashboard</div><span class="dash-status">živé výpočty</span></div>
+              <div class="dash-search">Vyberte situaci nebo napište výpočet...</div>
+              <div class="bento">
+                <div class="bento-card dark"><strong>Doporučený start</strong><span>Nejdřív vyberte, co právě řešíte.</span><div class="bento-value">6 cest</div><div class="spark"></div></div>
+                <div class="bento-card"><strong>Hypotéka</strong><span>splátka, dostupnost, vlastní zdroje</span></div>
+                <div class="bento-card"><strong>Výplata</strong><span>čistá mzda, DPP / DPČ</span></div>
+                <div class="bento-card"><strong>Podnikání</strong><span>marže, cena, bod zvratu</span></div>
+              </div>
+              <div class="premium-metrics">
+                <div class="metric-tile"><span>Start</span><strong>situace</strong></div>
+                <div class="metric-tile"><span>Akce</span><strong>výpočet</strong></div>
+                <div class="metric-tile"><span>Výstup</span><strong>rozhodnutí</strong></div>
+              </div>
+            </div>
+            <div class="float-note"><span>Nejrychlejší cesta</span><strong>situace → výpočet</strong></div>
+            <div class="calc-mini"><div class="calc-screen">42 850</div><div class="calc-keys"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section decision-section" id="situace" aria-labelledby="situace-title">
+      <div class="container decision-panel">
+        <div class="section-head"><div><span class="section-kicker">Začněte tady</span><h2 id="situace-title">Co právě řešíte?</h2><p>Vyberte reálnou situaci. Nemusíte znát název vzorce ani procházet celý katalog.</p></div></div>
+        <div class="decision-grid">
+          <article class="path-card"><span class="path-icon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4.5 10.8 12 4.7l7.5 6.1"/><path d="M6.6 10.2v8.1a1.7 1.7 0 0 0 1.7 1.7h7.4a1.7 1.7 0 0 0 1.7-1.7v-8.1"/><path d="M10 20v-5.1h4V20"/></svg></span><h3>Kupuju nemovitost</h3><p>Splátka, vlastní zdroje a rychlá odpověď, jestli je koupě realistická.</p><div class="path-links"><a href="/hypotecni-kalkulacka.html">Hypoteční kalkulačka</a><a href="/kalkulacka-vlastnich-zdroju-na-koupi-nemovitosti.html">Vlastní zdroje</a><a href="/muzu-si-dovolit-nemovitost-kalkulacka.html">Dostupnost nemovitosti</a></div></article>
+          <article class="path-card"><span class="path-icon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="5" y="6.5" width="14" height="12.5" rx="2.2"/><path d="M9.3 6.5V5.2A1.2 1.2 0 0 1 10.5 4h3A1.2 1.2 0 0 1 14.7 5.2v1.3"/><path d="M5 11.2h14"/><path d="M9.2 14.7h5.6"/></svg></span><h3>Řeším výplatu / práci</h3><p>Ověřte čistou mzdu, hrubou mzdu z čisté nebo výdělek na dohodu.</p><div class="path-links"><a href="/cista-mzda-kalkulacka.html">Kalkulačka čisté mzdy</a><a href="/kalkulacka-hrube-mzdy-z-ciste.html">Hrubá mzda z čisté</a><a href="/dpp-dpc-kalkulacka.html">DPP / DPČ kalkulačka</a></div></article>
+          <article class="path-card"><span class="path-icon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4.8 18.8h14.4"/><path d="M6.4 16.8V10"/><path d="M12 16.8V5.6"/><path d="M17.6 16.8v-7"/><path d="M7 9.8l4.5-4.2 3.1 3.1 3-3"/></svg></span><h3>Nastavuju ceny / podnikání</h3><p>Marže, minimální cena a bod, kdy se projekt přestane prodělávat.</p><div class="path-links"><a href="/kalkulacka-marze-a-prirazky.html">Kalkulačka marže a přirážky</a><a href="/minimalni-prodejni-cena-kalkulacka.html">Minimální prodejní cena</a><a href="/bod-zvratu-kalkulacka.html">Bod zvratu kalkulačka</a></div></article>
+          <article class="path-card"><span class="path-icon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M13 3 5.8 13.1h5.3L10.2 21 18.4 9.8h-5.3L13 3Z"/></svg></span><h3>Počítám náklady domácnosti</h3><p>Rychlý odhad elektřiny, vytápění a provozních nákladů bez tabulek.</p><div class="path-links"><a href="/spotreba-elektriny-kalkulacka.html">Kalkulačka spotřeby elektřiny</a><a href="/naklady-na-vytapeni-kalkulacka.html">Kalkulačka nákladů na vytápění</a><a href="/porovnani-vytapeni-kalkulacka.html">Porovnání vytápění kalkulačka</a></div></article>
+          <article class="path-card"><span class="path-icon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5.4 14.8h13.2l-1.1-4.1A2.4 2.4 0 0 0 15.2 9H8.8a2.4 2.4 0 0 0-2.3 1.7l-1.1 4.1Z"/><path d="M6.3 14.8v3.1"/><path d="M17.7 14.8v3.1"/><circle cx="8" cy="17.4" r="1.4"/><circle cx="16" cy="17.4" r="1.4"/><path d="M8.2 12h7.6"/></svg></span><h3>Řeším auto / provoz</h3><p>Kolik auto skutečně stojí měsíčně, za kilometr i za celou dobu vlastnictví.</p><div class="path-links"><a href="/naklady-na-provoz-auta-kalkulacka.html">Kalkulačka nákladů na provoz auta</a><a href="/kalkulacka-celkove-ceny-vlastnictvi-auta.html">Kalkulačka celkové ceny vlastnictví auta</a><a href="/cena-za-km-kalkulacka.html">Kalkulačka ceny za km</a></div></article>
+          <article class="path-card"><span class="path-icon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4.8 19.2h14.4"/><path d="M6.4 19.2V8.4l5.6-3.6 5.6 3.6v10.8"/><path d="M9.4 19.2v-5.6h5.2v5.6"/><path d="M8.5 10.4h2.2M13.3 10.4h2.2"/></svg></span><h3>Plánuju rekonstrukci</h3><p>Rámcový rozpočet koupelny, kuchyně nebo celé stavby ještě před poptávkou.</p><div class="path-links"><a href="/kalkulacka-ceny-rekonstrukce-koupelny.html">Kalkulačka ceny rekonstrukce koupelny</a><a href="/kalkulacka-ceny-rekonstrukce-kuchyne.html">Kalkulačka ceny rekonstrukce kuchyně</a><a href="/kalkulacka-orientacni-ceny-stavby-domu.html">Kalkulačka orientační ceny stavby domu</a></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section flow-section" aria-labelledby="flow-title">
+      <div class="container flow-panel">
+        <div class="flow-watermark" aria-hidden="true">
+          <svg viewBox="0 0 280 280" fill="none"><circle cx="140" cy="140" r="106" stroke-width="1.4"/><circle cx="140" cy="140" r="68" stroke-width="1.4"/><path d="M68 170c32-52 58-24 86-76 18 34 36 58 64 30" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><rect x="76" y="78" width="128" height="128" rx="30" stroke-width="1.4"/><path d="M108 210h64M140 54v54M140 172v54" stroke-width="1.4" stroke-linecap="round"/></svg>
+        </div>
+        <div class="flow-content">
+          <div class="flow-copy">
+            <div>
+              <span class="eyebrow">Decision flow</span>
+              <h2 id="flow-title">Výpočet nemá jen počítat. Má vás posunout k rozhodnutí.</h2>
+              <p>Proto homepage vede jako nástroj: nejdřív zachytí situaci, potom nabídne správný výpočet a nakonec pomůže porovnat varianty. Žádný katalog pro katalog — jen rychlá cesta k tomu, co má smysl řešit dál.</p>
+            </div>
+            <div class="flow-proof" aria-label="Principy rozhraní">
+              <span><strong>Jasný vstup</strong> člověk začíná otázkou, ne vzorcem</span>
+              <span><strong>Čitelný výsledek</strong> hlavní číslo nesmí zaniknout</span>
+              <span><strong>Další krok</strong> po výpočtu musí být jasné, co dál</span>
+            </div>
+          </div>
+          <div class="flow-device" aria-label="Ukázka rozhodovacího toku">
+            <div class="flow-device-head"><div class="flow-device-title">Rychlá cesta k výsledku</div><span class="flow-device-pill">bez Excelu</span></div>
+            <div class="flow-rail">
+              <article class="flow-step"><span class="flow-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 7h16M7 12h10M10 17h4"/></svg></span><div><h3>Vyberte, co právě řešíte</h3><p>Bydlení, výplata, podnikání, domácnost, auto nebo rekonstrukce.</p></div><span class="flow-tag">Start</span></article>
+              <article class="flow-step"><span class="flow-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12c.8.7 1.3 1.5 1.5 2.5h5c.2-1 .7-1.8 1.5-2.5A7 7 0 0 0 12 2Z"/></svg></span><div><h3>Otevřete výpočet, který sedí</h3><p>Každá cesta ukazuje jen několik relevantních kalkulaček, ne desítky odkazů.</p></div><span class="flow-tag">Akce</span></article>
+              <article class="flow-step"><span class="flow-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 19V5M4 19h16M8 16v-5M12 16V8M16 16v-9"/></svg></span><div><h3>Porovnejte varianty</h3><p>Změňte vstupy a rychle uvidíte, která možnost dává největší smysl.</p></div><span class="flow-tag">Výsledek</span></article>
+            </div>
+            <div class="flow-result"><div><span>Výstup pro uživatele</span><strong>rychlá orientace před finálním rozhodnutím</strong></div><div class="flow-result-visual" aria-hidden="true"><i></i><i></i><i></i><i></i></div></div>
+            <div class="flow-craft-row" aria-label="Co rozhraní hlídá"><div class="flow-craft"><b>Méně šumu</b><span>jen prvky, které vedou k rozhodnutí</span></div><div class="flow-craft"><b>Lepší signály</b><span>popisky podle reálných situací</span></div><div class="flow-craft"><b>Rychlá akce</b><span>vyhledávání a karty vždy po ruce</span></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <section class="section" id="top-kalkulacky" aria-labelledby="top-title"><div class="container"><div class="section-head"><div><span class="section-kicker">Nejžádanější výpočty</span><h2 id="top-title">Výpočty, které lidé otevírají jako první</h2><p>Nejrychlejší vstupy do nejčastějších rozhodnutí — bez zahlcení a bez procházení desítek položek.</p></div><a class="link-more" href="/kalkulacky.html">Zobrazit všechny kalkulačky →</a></div><div class="top-layout"><article class="calc-hero-card"><div class="calc-hero-content"><span class="eyebrow">Top rozhodnutí</span><h3>Hypoteční kalkulačka</h3><p>Než začnete řešit banku, zjistěte orientační splátku a citlivost na sazbu, částku i dobu splácení.</p><div class="tags"><span class="tag">splátka</span><span class="tag">sazba</span><span class="tag">dostupnost bydlení</span></div><a class="card-cta" href="/hypotecni-kalkulacka.html">Otevřít kalkulačku</a></div><div class="mortgage-showcase" aria-hidden="true"><div class="mortgage-topline"><div><strong>Modelový scénář hypotéky</strong><span>rychlá orientace před rozhodnutím</span></div><span class="mortgage-badge">porovnání variant</span></div><div class="mortgage-grid"><div class="mortgage-panel"><div class="mortgage-amount"><span>Orientační splátka</span><strong>42 850 Kč</strong></div><div class="mortgage-bars"><span></span><span></span><span></span><span></span></div></div><div class="mortgage-info"><div class="mortgage-mini-card"><span>Co si snadno ověříte</span><strong>Sazba · doba · výše úvěru</strong><p>Uvidíte, jak změna vstupů pohne měsíční splátkou.</p></div><div class="mortgage-mini-card house-card"><span>Pomůže při rozhodnutí</span><strong>Koupě vs. čekání</strong><p>Rychle zjistíte, jestli vám aktuální scénář vychází.</p></div></div></div><div class="mortgage-insight"><div><span>Scénář</span><strong>vlastní bydlení</strong></div><div><span>Fokus</span><strong>měsíční dopad</strong></div><div><span>Výsledek</span><strong>rychlé rozhodnutí</strong></div></div></div></article><div class="calc-grid"><article class="calc-card"><div class="card-top"><span class="card-icon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 8.2h14v9.6H5z"/><path d="M8.2 8.2V6.1h7.6v2.1"/><circle cx="12" cy="13" r="2.1"/><path d="M7.2 11.1v3.8M16.8 11.1v3.8"/></svg></span><span class="category-label">Práce</span></div><h3>Kalkulačka čisté mzdy</h3><p>Když potřebujete vědět, kolik reálně přijde na účet.</p><a class="card-cta" href="/cista-mzda-kalkulacka.html">Otevřít</a></article><article class="calc-card"><div class="card-top"><span class="card-icon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7.2 17.2 16.8 6.8"/><circle cx="7.5" cy="7.5" r="1.7"/><circle cx="16.5" cy="16.5" r="1.7"/></svg></span><span class="category-label">Business</span></div><h3>Bod zvratu kalkulačka</h3><p>Kolik musíte prodat, aby se náklady začaly vracet.</p><a class="card-cta" href="/bod-zvratu-kalkulacka.html">Otevřít</a></article><article class="calc-card"><div class="card-top"><span class="card-icon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 7h11l-3-3"/><path d="m18 7-3 3"/><path d="M17 17H6l3 3"/><path d="m6 17 3-3"/></svg></span><span class="category-label">Bydlení</span></div><h3>Porovnání nájem vs hypotéka</h3><p>Rychlé srovnání dvou cest k bydlení vedle sebe.</p><a class="card-cta" href="/porovnani-najem-vs-hypoteka-kalkulacka.html">Otevřít</a></article><article class="calc-card"><div class="card-top"><span class="card-icon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M13 3 5.8 13.1h5.3L10.2 21 18.4 9.8h-5.3L13 3Z"/></svg></span><span class="category-label">Domácnost</span></div><h3>Kalkulačka spotřeby elektřiny</h3><p>Odhad nákladů spotřebiče nebo celé domácnosti.</p><a class="card-cta" href="/spotreba-elektriny-kalkulacka.html">Otevřít</a></article><article class="calc-card"><div class="card-top"><span class="card-icon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5.4 14.8h13.2l-1.1-4.1A2.4 2.4 0 0 0 15.2 9H8.8a2.4 2.4 0 0 0-2.3 1.7l-1.1 4.1Z"/><path d="M6.3 14.8v3.1"/><path d="M17.7 14.8v3.1"/><circle cx="8" cy="17.4" r="1.4"/><circle cx="16" cy="17.4" r="1.4"/><path d="M8.2 12h7.6"/></svg></span><span class="category-label">Auto</span></div><h3>Kalkulačka celkové ceny vlastnictví auta</h3><p>Palivo, servis, amortizace a další náklady v jednom pohledu.</p><a class="card-cta" href="/kalkulacka-celkove-ceny-vlastnictvi-auta.html">Otevřít</a></article><article class="calc-card"><div class="card-top"><span class="card-icon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4.8 19.2h14.4"/><path d="M6.4 19.2V8.4l5.6-3.6 5.6 3.6v10.8"/><path d="M9.4 19.2v-5.6h5.2v5.6"/><path d="M8.5 10.4h2.2M13.3 10.4h2.2"/></svg></span><span class="category-label">Stavba</span></div><h3>Kalkulačka ceny rekonstrukce koupelny</h3><p>Rámcový rozpočet dřív, než začnete poptávat řemeslníky.</p><a class="card-cta" href="/kalkulacka-ceny-rekonstrukce-koupelny.html">Otevřít</a></article></div></div></div></section>
+
+    <section class="section trust-section" id="duvera" aria-labelledby="trust-title"><div class="container"><div class="section-head"><div><span class="eyebrow">Proč tomu věřit</span><h2 id="trust-title">Rychlá orientace bez chaosu a bez registrace</h2><p>Kalkulačky nejsou náhrada odborného posouzení. Jsou nejlepší první krok, když potřebujete rychle porovnat varianty a vědět, co řešit dál.</p></div></div><div class="trust-grid"><article class="value-card"><span class="value-icon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M13 3 5.8 13.1h5.3L10.2 21 18.4 9.8h-5.3L13 3Z"/></svg></span><h3>Výsledek hned</h3><p>Žádné zakládání účtu, žádné formuláře na kontakt. Otevřete kalkulačku a počítáte.</p></article><article class="value-card"><span class="value-icon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="10.8" cy="10.8" r="5.8"/><path d="m16 16 3.5 3.5"/></svg></span><h3>Navigace podle problému</h3><p>Homepage vede podle situace, takže nemusíte znát přesný název výpočtu.</p></article><article class="value-card"><span class="value-icon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 7h11l-3-3"/><path d="m18 7-3 3"/><path d="M17 17H6l3 3"/><path d="m6 17 3-3"/></svg></span><h3>Porovnání variant</h3><p>Upravíte vstupy a hned vidíte, co s výsledkem udělá sazba, cena, spotřeba nebo náklady.</p></article><article class="value-card"><span class="value-icon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m5 12.5 4.2 4.1L19 6.8"/></svg></span><h3>Bez složitých tabulek</h3><p>První orientace před rozhodnutím, poptávkou, jednáním s bankou nebo naceněním služby.</p></article></div><div class="disclaimer"><span class="value-icon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 4.4 3.8 18.6h16.4L12 4.4Z"/><path d="M12 9.3v4.1"/><path d="M12 16.5h.01"/></svg></span><div><strong>Důležité rozhodnutí si vždy ověřte podle konkrétních podmínek.</strong><p>Výpočty slouží pro rychlou orientaci a srovnání scénářů. U hypoték, daní, mezd nebo investic rozhodují aktuální sazby, smluvní podmínky a individuální situace.</p></div></div></div></section>
+
+    <section class="section" id="kategorie" aria-labelledby="categories-title"><div class="container category-wrap"><div class="category-premium"><div class="category-premium-head"><div class="category-premium-copy"><span class="section-kicker">Druhá cesta</span><h2 id="categories-title">Kategorie, když chcete projít oblast</h2><p>Primárně vedeme podle situace. Kategorie zůstávají jako klidná, elegantní cesta pro chvíli, kdy víte obor a chcete si jen vybrat správný výpočet bez rušivého katalogového dojmu.</p></div><div class="category-premium-actions"><a class="link-more" href="/kalkulacky.html">Celý katalog <span aria-hidden="true">→</span></a></div></div><div class="category-premium-meta"><div class="category-premium-areas" aria-label="Rychlé oblasti"><a href="/finance-a-hypoteky.html">Finance</a><span class="sep">•</span><a href="/mzdy-a-prace.html">Mzdy</a><span class="sep">•</span><a href="/business-a-cenotvorba.html">Business</a><span class="sep">•</span><a href="/energie-a-domacnost.html">Energie</a><span class="sep">•</span><a href="/auto-a-provoz.html">Auto</a></div><div class="category-premium-note">8 hlavních oblastí webu, jedna klidná sekundární navigace.</div></div><div class="category-premium-grid"><a class="category-premium-card" href="/finance-a-hypoteky.html"><span class="category-premium-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 4l9 6.5"/><path d="M5 10v9h14v-9"/><path d="M9 19v-5h6v5"/></svg></span><div class="category-premium-body"><h3>Finance a hypotéky</h3><p>Hypotéka, refinancování a dostupnost bydlení v jedné přehledné oblasti.</p></div><span class="category-premium-arrow" aria-hidden="true">→</span></a><a class="category-premium-card" href="/mzdy-a-prace.html"><span class="category-premium-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span><div class="category-premium-body"><h3>Mzdy a práce</h3><p>Čistá mzda, dohody a pracovní příjem pro rychlou orientaci před výplatou.</p></div><span class="category-premium-arrow" aria-hidden="true">→</span></a><a class="category-premium-card" href="/business-a-cenotvorba.html"><span class="category-premium-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19h16"/><path d="M7 16v-6"/><path d="M12 16V6"/><path d="M17 16v-3"/></svg></span><div class="category-premium-body"><h3>Business a cenotvorba</h3><p>Marže, minimální cena a bod zvratu pro lepší nastavení nabídky.</p></div><span class="category-premium-arrow" aria-hidden="true">→</span></a><a class="category-premium-card" href="/pronajem-a-investicni-bydleni.html"><span class="category-premium-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 20V8l6-4 6 4v12"/><path d="M4 20h16"/><path d="M9 13h6"/></svg></span><div class="category-premium-body"><h3>Pronájem a investiční bydlení</h3><p>Nájem, výnos a cashflow investičního bytu pro lepší přehled před koupí.</p></div><span class="category-premium-arrow" aria-hidden="true">→</span></a><a class="category-premium-card" href="/energie-a-domacnost.html"><span class="category-premium-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 5 14h7l-1 8 8-12h-7l1-8Z"/></svg></span><div class="category-premium-body"><h3>Energie a domácnost</h3><p>Spotřeba elektřiny, vytápění a běžné náklady domácnosti bez zbytečného hluku.</p></div><span class="category-premium-arrow" aria-hidden="true">→</span></a><a class="category-premium-card" href="/rodina-a-rozpocet.html"><span class="category-premium-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3"/><path d="M5 20c1.6-3.2 4-4.8 7-4.8s5.4 1.6 7 4.8"/></svg></span><div class="category-premium-body"><h3>Rodina a rozpočet</h3><p>Domácí rozpočet, výdaje a orientace v běžných finančních rozhodnutích.</p></div><span class="category-premium-arrow" aria-hidden="true">→</span></a><a class="category-premium-card" href="/auto-a-provoz.html"><span class="category-premium-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 16l2-5h10l2 5"/><path d="M7.5 16v2"/><path d="M16.5 16v2"/><path d="M8 11l1.2-4h5.6L16 11"/></svg></span><div class="category-premium-body"><h3>Auto a provoz</h3><p>Provoz auta, cena za kilometr a TCO pro realističtější pohled na náklady.</p></div><span class="category-premium-arrow" aria-hidden="true">→</span></a><a class="category-premium-card" href="/stavba-domu.html"><span class="category-premium-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16"/><path d="M6 20V9l6-5 6 5v11"/><path d="M10 20v-6h4v6"/></svg></span><div class="category-premium-body"><h3>Rekonstrukce a stavba domu</h3><p>Orientační rozpočty pro stavbu a rekonstrukci s důrazem na rychlou orientaci.</p></div><span class="category-premium-arrow" aria-hidden="true">→</span></a></div><div class="category-premium-footer"><p><strong>Klidnější navigace, jistější dojem.</strong> Kategorie fungují jako elegantní mapa webu. Hlavní rozhodování zůstává nahoře podle situace a vyhledávání.</p></div></div></div></section>
+
+    <section class="section" aria-labelledby="seo-title"><div class="container seo-block"><div><span class="section-kicker">Rychlé výpočty pro rozhodování</span><h2 id="seo-title">Když potřebujete odpověď dřív než tabulku</h2></div><div><p>RychléVýpočty.cz pomáhají v situacích, kdy potřebujete rychle odhadnout splátku hypotéky, čistou mzdu, náklady domácnosti, provoz auta, cenu rekonstrukce nebo minimální cenu služby. Cílem není zahlcení možnostmi, ale rychlá cesta k výpočtu, který vám pomůže udělat další krok.</p><ul class="area-list"><li>Hypotéky a bydlení</li><li>Mzdy a práce</li><li>Business a cenotvorba</li><li>Energie a domácnost</li><li>Auto a provoz</li><li>Rekonstrukce a stavba</li></ul></div></div></section>
+
+    <section class="section" aria-labelledby="faq-title"><div class="container"><div class="section-head"><div><span class="section-kicker">FAQ</span><h2 id="faq-title">Časté otázky</h2></div></div><div class="faq-list"><details class="faq-item"><summary>Co je RychléVýpočty.cz?</summary><div class="faq-content"><p>Web s praktickými online kalkulačkami pro hypotéky, mzdy, podnikání, bydlení, energie, auto, rekonstrukce a další rozhodnutí, která dává smysl si dopředu spočítat.</p></div></details><details class="faq-item"><summary>Jsou kalkulačky zdarma?</summary><div class="faq-content"><p>Ano. Kalkulačky jsou dostupné zdarma a bez registrace.</p></div></details><details class="faq-item"><summary>Jak nejrychleji najdu správnou kalkulačku?</summary><div class="faq-content"><p>Nejrychlejší cesta je použít vyhledávání nahoře nebo vybrat jednu ze situací v bloku „Co právě řešíte?“.</p></div></details><details class="faq-item"><summary>Jsou výsledky přesné pro finální rozhodnutí?</summary><div class="faq-content"><p>Výsledky slouží primárně pro rychlou orientaci. U důležitých rozhodnutí je vhodné ověřit konkrétní podmínky, sazby a aktuální situaci.</p></div></details></div></div></section>
+  </main>
+  <footer class="footer"><div class="container"><div class="footer-grid"><div class="footer-intro"><a class="brand" href="/" aria-label="RychléVýpočty.cz – domů"><span class="brand-icon" aria-hidden="true"><svg viewBox="0 0 48 48" role="img" focusable="false"><rect x="4" y="3" width="32" height="42" rx="9" fill="#0B2447"/><rect x="11" y="9" width="18" height="7" rx="2.5" fill="#FFFFFF"/><rect x="11" y="22" width="7" height="6" rx="2" fill="#FFFFFF"/><rect x="22" y="22" width="7" height="6" rx="2" fill="#FFFFFF"/><rect x="11" y="32" width="7" height="6" rx="2" fill="#FFFFFF"/><rect x="22" y="32" width="7" height="6" rx="2" fill="#FFFFFF"/><path d="M34 7 18 28h10l-5 17 20-25H32L34 7Z" fill="#72D45A"/><path d="M30.5 8 18 28h10l-3.5 12 16-20H32L30.5 8Z" fill="#45B22F"/></svg></span><span class="brand-wordmark"><span class="brand-word-blue">Rychlé</span><span class="brand-word-green">Výpočty</span><span class="brand-dot">.cz</span></span></a><p>Online kalkulačky pro rychlou orientaci před důležitým rozhodnutím — od hypotéky přes mzdu až po náklady domácnosti a podnikání.</p><div class="footer-badges"><span class="footer-badge">bez registrace</span><span class="footer-badge">rychlé výpočty</span><span class="footer-badge">přehledné scénáře</span></div></div><div><h3>Rychlá navigace</h3><div class="footer-links"><a href="#situace">Co právě řešíte?</a><a href="#top-kalkulacky">Top kalkulačky</a><a href="#duvera">Proč tomu věřit</a><a href="/kalkulacky.html">Všechny kalkulačky</a></div></div><div><h3>Oblasti</h3><div class="footer-links"><a href="/finance-a-hypoteky.html">Finance a hypotéky</a><a href="/mzdy-a-prace.html">Mzdy a práce</a><a href="/business-a-cenotvorba.html">Business a cenotvorba</a><a href="/energie-a-domacnost.html">Energie a domácnost</a><a href="/auto-a-provoz.html">Auto a provoz</a><a href="/stavba-domu.html">Stavba domu</a></div></div><div><h3>Informace</h3><div class="footer-links"><a href="/o-nas.html">O nás</a><a href="/kontakt.html">Kontakty</a><a href="/ochrana-osobnich-udaju.html">Ochrana soukromí</a><a href="/podminky-pouziti.html">Podmínky použití</a></div></div></div><div class="footer-bottom"><p>© RychléVýpočty.cz. Výpočty jsou orientační a slouží pro rychlé porovnání scénářů před finálním rozhodnutím.</p><p><a href="/kalkulacky.html">Katalog kalkulaček</a></p></div></div></footer>
+  <script>
+    (function(){
+      const items = [
+        { title:'Hypoteční kalkulačka', url:'/hypotecni-kalkulacka.html', type:'Kalkulačka', desc:'Měsíční splátka a orientační scénář hypotéky', keywords:['hypoteka','hypoteční','hypotecni','splátka','splatka','bydlení','bydleni'] },
+        { title:'Kalkulačka vlastních zdrojů na koupi', url:'/kalkulacka-vlastnich-zdroju-na-koupi-nemovitosti.html', type:'Kalkulačka', desc:'Kolik vlastních peněz připravit na koupi nemovitosti', keywords:['vlastní zdroje','vlastni zdroje','akontace','koupe','nemovitost'] },
+        { title:'Refinancování hypotéky', url:'/refinancovani-hypoteky-kalkulacka.html', type:'Kalkulačka', desc:'Orientační přepočet refinancování hypotéky', keywords:['refinancování','refinancovani','hypoteka'] },
+        { title:'Můžu si dovolit nemovitost?', url:'/muzu-si-dovolit-nemovitost-kalkulacka.html', type:'Kalkulačka', desc:'Odhad dostupnosti bytu nebo domu', keywords:['dostupnost bydleni','nemovitost','byt','dům','dum'] },
+        { title:'Porovnání nájem vs hypotéka', url:'/porovnani-najem-vs-hypoteka-kalkulacka.html', type:'Kalkulačka', desc:'Srovnání nájmu a hypotéky', keywords:['najem','nájem','hypoteka','nájem vs hypotéka','najem vs hypoteka'] },
+        { title:'Kalkulačka čistého výnosu z pronájmu', url:'/kalkulacka-cisteho-vynosu-z-pronajmu.html', type:'Kalkulačka', desc:'Výnos investičního bytu po nákladech', keywords:['pronájem','pronajem','výnos','vynos','investicni byt'] },
+        { title:'Kalkulačka cashflow z pronájmu', url:'/kalkulacka-cashflow-z-pronajmu.html', type:'Kalkulačka', desc:'Měsíční cashflow z pronájmu', keywords:['cashflow','pronajem','pronájem'] },
+        { title:'Kalkulačka čisté mzdy', url:'/cista-mzda-kalkulacka.html', type:'Kalkulačka', desc:'Orientační čistá mzda a odvody', keywords:['čistá mzda','cista mzda','výplata','vyplata','mzda'] },
+        { title:'Kalkulačka hrubé mzdy z čisté', url:'/kalkulacka-hrube-mzdy-z-ciste.html', type:'Kalkulačka', desc:'Přepočet čisté mzdy na hrubou', keywords:['hrubá mzda','hruba mzda','čistá na hrubou','cista na hrubou','mzda'] },
+        { title:'DPP / DPČ kalkulačka', url:'/dpp-dpc-kalkulacka.html', type:'Kalkulačka', desc:'Výpočet práce na dohodu', keywords:['dpp','dpc','dpč','brigada','brigáda'] },
+        { title:'Kalkulačka marže a přirážky', url:'/kalkulacka-marze-a-prirazky.html', type:'Kalkulačka', desc:'Základní cenotvorba a marže', keywords:['marže','marze','přirážka','prirazka','cenotvorba'] },
+        { title:'Kalkulačka minimální prodejní ceny', url:'/minimalni-prodejni-cena-kalkulacka.html', type:'Kalkulačka', desc:'Minimální cena pro pokrytí nákladů', keywords:['minimální cena','minimalni cena','prodejní cena','prodejni cena'] },
+        { title:'Bod zvratu kalkulačka', url:'/bod-zvratu-kalkulacka.html', type:'Kalkulačka', desc:'Kolik musíte prodat, aby se provoz zaplatil', keywords:['bod zvratu','break even','ziskovost'] },
+        { title:'Kalkulačka spotřeby elektřiny', url:'/spotreba-elektriny-kalkulacka.html', type:'Kalkulačka', desc:'Náklady na provoz spotřebičů a domácnosti', keywords:['elektřina','elektrina','elektrika','spotřeba','spotreba','energie'] },
+        { title:'Kalkulačka nákladů na vytápění', url:'/naklady-na-vytapeni-kalkulacka.html', type:'Kalkulačka', desc:'Orientační náklady na vytápění', keywords:['vytápění','vytapeni','topení','topeni'] },
+        { title:'Porovnání vytápění kalkulačka', url:'/porovnani-vytapeni-kalkulacka.html', type:'Kalkulačka', desc:'Srovnání variant vytápění', keywords:['vytápění','vytapeni','porovnání vytápění'] },
+        { title:'Kalkulačka nákladů na provoz auta', url:'/naklady-na-provoz-auta-kalkulacka.html', type:'Kalkulačka', desc:'Průběžné měsíční náklady auta', keywords:['auto','provoz auta','náklady auta','naklady auta'] },
+        { title:'Kalkulačka celkové ceny vlastnictví auta', url:'/kalkulacka-celkove-ceny-vlastnictvi-auta.html', type:'Kalkulačka', desc:'Servis, palivo, amortizace a celkové náklady', keywords:['auto','vlastnictví auta','vlastnictvi auta','cena auta','tco'] },
+        { title:'Kalkulačka ceny za km', url:'/cena-za-km-kalkulacka.html', type:'Kalkulačka', desc:'Orientační cena za kilometr', keywords:['cena za km','kilometr','auto'] },
+        { title:'Kalkulačka ceny rekonstrukce koupelny', url:'/kalkulacka-ceny-rekonstrukce-koupelny.html', type:'Kalkulačka', desc:'Rámcový rozpočet koupelny', keywords:['rekonstrukce koupelny','koupelna'] },
+        { title:'Kalkulačka ceny rekonstrukce kuchyně', url:'/kalkulacka-ceny-rekonstrukce-kuchyne.html', type:'Kalkulačka', desc:'Rámcový rozpočet kuchyně', keywords:['rekonstrukce kuchyně','rekonstrukce kuchyne','kuchyně','kuchyne'] },
+        { title:'Kalkulačka orientační ceny stavby domu', url:'/kalkulacka-orientacni-ceny-stavby-domu.html', type:'Kalkulačka', desc:'První orientace ve stavbě domu', keywords:['stavba domu','dům','dum','cena domu'] },
+        { title:'Finance a hypotéky', url:'/finance-a-hypoteky.html', type:'Kategorie', desc:'Hypotéky, koupě nemovitosti a financování bydlení', keywords:['finance','hypotéka','hypoteka','bydlení'] },
+        { title:'Mzdy a práce', url:'/mzdy-a-prace.html', type:'Kategorie', desc:'Čistá mzda, hrubá mzda, dohody a práce', keywords:['mzda','práce','prace','výplata','vyplata'] },
+        { title:'Business a cenotvorba', url:'/business-a-cenotvorba.html', type:'Kategorie', desc:'Podnikání, marže, cenotvorba a bod zvratu', keywords:['business','podnikání','podnikani','osvc','osvč','freelance'] },
+        { title:'Pronájem a investiční bydlení', url:'/pronajem-a-investicni-bydleni.html', type:'Kategorie', desc:'Pronájem, výnos a investiční bydlení', keywords:['pronajem','pronájem','nájem','investice'] },
+        { title:'Energie a domácnost', url:'/energie-a-domacnost.html', type:'Kategorie', desc:'Spotřeba elektřiny, vytápění a domácnost', keywords:['energie','elektřina','elektrina','domácnost','domacnost'] },
+        { title:'Rodina a rozpočet', url:'/rodina-a-rozpocet.html', type:'Kategorie', desc:'Rozpočet domácnosti a rodinné náklady', keywords:['rodina','rozpočet','rozpocet'] },
+        { title:'Auto a provoz', url:'/auto-a-provoz.html', type:'Kategorie', desc:'Náklady auta a provozní výpočty', keywords:['auto','provoz'] },
+        { title:'Rekonstrukce a stavba domu', url:'/stavba-domu.html', type:'Kategorie', desc:'Rekonstrukce, stavba domu a orientační rozpočty', keywords:['rekonstrukce','stavba','dům','dum'] },
+        { title:'Všechny kalkulačky', url:'/kalkulacky.html', type:'Katalog', desc:'Kompletní seznam všech kalkulaček', keywords:['všechny','vsechny','katalog','kalkulačky','kalkulacky'] }
+      ];
+
+      const form = document.getElementById('search-form');
+      const input = document.getElementById('calculator-search');
+      const results = document.getElementById('search-results');
+      const chips = document.querySelectorAll('[data-search]');
+
+      function normalize(value){
+        return String(value || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+      }
+
+      function escapeHtml(value){
+        return String(value).replace(/[&<>"']/g,function(char){
+          return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char];
+        });
+      }
+
+      function scoreItem(item, query){
+        const q = normalize(query.trim());
+        if (!q) return 0;
+        const title = normalize(item.title);
+        const desc = normalize(item.desc);
+        const keywords = normalize((item.keywords || []).join(' '));
+        let score = 0;
+        if (title === q) score += 150;
+        if (title.startsWith(q)) score += 90;
+        if (title.includes(q)) score += 60;
+        if (keywords.includes(q)) score += 42;
+        if (desc.includes(q)) score += 24;
+        q.split(/\s+/).filter(Boolean).forEach(function(part){
+          if (title.includes(part)) score += 15;
+          if (keywords.includes(part)) score += 12;
+          if (desc.includes(part)) score += 6;
+        });
+        return score;
+      }
+
+      function highlight(text, query){
+        const safe = escapeHtml(text);
+        const q = normalize(query);
+        const normalizedText = normalize(text);
+        const index = normalizedText.indexOf(q);
+        if (!q || index < 0) return safe;
+        return escapeHtml(text.slice(0,index)) + '<mark>' + escapeHtml(text.slice(index,index + query.length)) + '</mark>' + escapeHtml(text.slice(index + query.length));
+      }
+
+      function getMatches(query){
+        return items
+          .map(function(item){ return { item:item, score:scoreItem(item, query) }; })
+          .filter(function(entry){ return entry.score > 0; })
+          .sort(function(a,b){ return b.score - a.score; })
+          .map(function(entry){ return entry.item; });
+      }
+
+      function renderResults(query){
+        const matches = getMatches(query);
+        input.setAttribute('aria-expanded','true');
+        if (!matches.length){
+          results.innerHTML = '<ul><li><a href="/kalkulacky.html?search=' + encodeURIComponent(query) + '"><span class="result-copy"><strong>Nenašli jsme přesnou shodu</strong><span>Zobrazit katalog a pokračovat ve vyhledávání</span></span><span class="result-type">Katalog</span></a></li></ul>';
+          results.classList.add('active');
+          return;
+        }
+        results.innerHTML = '<ul>' + matches.slice(0,6).map(function(item){
+          return '<li><a href="' + item.url + '"><span class="result-copy"><strong>' + highlight(item.title, query) + '</strong><span>' + escapeHtml(item.desc) + '</span></span><span class="result-type">' + escapeHtml(item.type) + '</span></a></li>';
+        }).join('') + '</ul>';
+        results.classList.add('active');
+      }
+
+      function closeResults(){
+        results.classList.remove('active');
+        results.innerHTML = '';
+        input.setAttribute('aria-expanded','false');
+      }
+
+      input.addEventListener('input',function(){
+        const query = input.value.trim();
+        if (!query){
+          closeResults();
+          return;
+        }
+        renderResults(query);
+      });
+
+      input.addEventListener('keydown',function(event){
+        if (event.key === 'Escape'){
+          closeResults();
+          input.blur();
+        }
+      });
+
+      form.addEventListener('submit',function(event){
+        event.preventDefault();
+        const query = input.value.trim();
+        if (!query){
+          window.location.href = '/kalkulacky.html';
+          return;
+        }
+        const ranked = items
+          .map(function(item){ return { item:item, score:scoreItem(item, query) }; })
+          .sort(function(a,b){ return b.score - a.score; });
+        if (ranked[0] && (ranked[0].score >= 80 || normalize(ranked[0].item.title) === normalize(query))){
+          window.location.href = ranked[0].item.url;
+          return;
+        }
+        window.location.href = '/kalkulacky.html?search=' + encodeURIComponent(query);
+      });
+
+      chips.forEach(function(chip){
+        chip.addEventListener('click',function(){
+          input.value = chip.getAttribute('data-search') || '';
+          input.focus();
+          renderResults(input.value);
+        });
+      });
+
+      document.addEventListener('click',function(event){
+        if (!form.contains(event.target)){
+          closeResults();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
