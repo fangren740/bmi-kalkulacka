@@ -38,7 +38,7 @@
   };
 
   const CONFIG = {
-    socialRateEmployee: 0.065,
+    socialRateEmployee: 0.071,
     healthRateEmployee: 0.045,
     socialRateEmployer: 0.248,
     healthRateEmployer: 0.09,
