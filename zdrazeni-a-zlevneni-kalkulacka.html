@@ -1,0 +1,1937 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <meta content="telephone=no" name="format-detection"/>
+  <link href="/favicon.ico?v=2" rel="icon" sizes="any"/>
+  <link href="/favicon-32x32.png?v=2" rel="icon" sizes="32x32" type="image/png"/>
+  <link href="/favicon-16x16.png?v=2" rel="icon" sizes="16x16" type="image/png"/>
+  <link href="/apple-touch-icon.png?v=2" rel="apple-touch-icon" sizes="180x180"/>
+  <link href="/site.webmanifest?v=2" rel="manifest"/>
+  <meta content="#14253d" name="theme-color"/>
+
+  <title>Kalkulačka zdražení a zlevnění | Výpočet procentní změny ceny | RychléVýpočty.cz</title>
+  <meta content="Spočítejte procentní změnu ceny, zdražení nebo zlevnění mezi dvěma hodnotami. Přehledná kalkulačka procentní změny zdarma online." name="description"/>
+  <meta content="zdražení kalkulačka, zlevnění kalkulačka, procentní změna, o kolik procent zdražilo, výpočet procentní změny" name="keywords"/>
+  <meta content="RychléVýpočty.cz" name="author"/>
+  <meta content="index,follow" name="robots"/>
+  <link href="https://rychlevypocty.cz/zdrazeni-a-zlevneni-kalkulacka.html" rel="canonical"/>
+
+  <meta content="Kalkulačka zdražení a zlevnění | Výpočet procentní změny ceny | RychléVýpočty.cz" property="og:title"/>
+  <meta content="Spočítejte procentní změnu ceny, zdražení nebo zlevnění mezi dvěma hodnotami přehledně a zdarma." property="og:description"/>
+  <meta content="website" property="og:type"/>
+  <meta content="https://rychlevypocty.cz/zdrazeni-a-zlevneni-kalkulacka.html" property="og:url"/>
+  <meta content="https://rychlevypocty.cz/og-image.jpg" property="og:image"/>
+  <meta content="RychléVýpočty.cz" property="og:site_name"/>
+  <meta content="cs_CZ" property="og:locale"/>
+
+  <meta content="summary_large_image" name="twitter:card"/>
+  <meta content="Kalkulačka zdražení a zlevnění | Výpočet procentní změny ceny | RychléVýpočty.cz" name="twitter:title"/>
+  <meta content="Výpočet zdražení nebo zlevnění mezi dvěma cenami online zdarma." name="twitter:description"/>
+  <meta content="https://rychlevypocty.cz/og-image.jpg" name="twitter:image"/>
+  <meta content="RychléVýpočty.cz – online kalkulačky a praktické výpočty" name="twitter:image:alt"/>
+  <link rel="stylesheet" href="/rv-enhancements.css?v=1" />
+
+  <style>
+    .skip-link {
+      position: absolute;
+      left: 16px;
+      top: -56px;
+      z-index: 100;
+      padding: 12px 16px;
+      border-radius: 12px;
+      background: #172033;
+      color: #ffffff;
+      font-weight: 700;
+      box-shadow: 0 10px 24px rgba(20, 32, 70, 0.18);
+      transition: top 0.16s ease;
+    }
+
+    .skip-link:focus { top: 16px; }
+
+    :focus-visible {
+      outline: 3px solid rgba(33, 82, 255, 0.45);
+      outline-offset: 3px;
+      border-radius: 10px;
+    }
+
+    main[id],
+    section[id],
+    div[id] {
+      scroll-margin-top: 96px;
+    }
+
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #5f6b85;
+      --primary: #2152ff;
+      --primary-dark: #183dbf;
+      --border: #dbe3f0;
+      --success: #138a4b;
+      --warning: #b66a00;
+      --danger: #b42318;
+      --danger-bg: rgba(180, 35, 24, 0.08);
+      --success-bg: rgba(19, 138, 75, 0.10);
+      --warning-bg: rgba(182, 106, 0, 0.11);
+      --primary-bg: rgba(33, 82, 255, 0.08);
+      --shadow: 0 12px 32px rgba(20, 32, 70, 0.08);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #f7f9fd 0%, #eef3fb 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    a:hover { text-decoration: underline; }
+
+    .container {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      padding: 18px 0;
+      border-bottom: 1px solid rgba(219, 227, 240, 0.8);
+      background: rgba(255, 255, 255, 0.86);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+
+    .brand span { color: var(--primary); }
+
+    .topnav {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      font-size: 0.97rem;
+    }
+
+    .topnav a {
+      border-radius: 999px;
+      padding: 8px 12px;
+      transition: background-color 0.15s ease, color 0.15s ease;
+    }
+
+    .topnav a:hover,
+    .topnav a[aria-current="page"] {
+      text-decoration: none;
+      background: rgba(33, 82, 255, 0.08);
+      color: var(--primary);
+    }
+
+    .hero {
+      padding: 40px 0 16px;
+    }
+
+    .breadcrumbs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .breadcrumbs span.sep { color: #8a94a9; }
+    .breadcrumbs a { color: var(--muted); }
+    .breadcrumbs strong { font-weight: 700; color: var(--text); }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.18fr 0.82fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .hero-copy h1 {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 1.06;
+      letter-spacing: -0.03em;
+      margin: 0 0 14px;
+    }
+
+    .hero-copy p {
+      margin: 0 0 14px;
+      font-size: 1.03rem;
+      color: var(--muted);
+      max-width: 760px;
+    }
+
+    .hero-points {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .hero-pill {
+      background: rgba(33, 82, 255, 0.08);
+      color: var(--primary-dark);
+      border: 1px solid rgba(33, 82, 255, 0.12);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 0.94rem;
+      font-weight: 700;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .hero-box,
+    .card,
+    .content-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-box {
+      padding: 24px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+
+    .hero-box h2 {
+      margin: 0 0 12px;
+      font-size: 1.18rem;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-box p,
+    .hero-box li {
+      color: var(--muted);
+    }
+
+    .hero-box ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .hero-box li { margin-bottom: 8px; }
+
+    .quick-answer {
+      margin-top: 20px;
+      padding: 18px 18px;
+      border-radius: 18px;
+      border: 1px solid rgba(33, 82, 255, 0.16);
+      background: linear-gradient(180deg, #eef4ff 0%, #f8fbff 100%);
+    }
+
+    .quick-answer strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .quick-answer p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.97rem;
+    }
+
+    .anchor-nav { padding: 6px 0 20px; }
+
+    .anchor-nav-inner {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .anchor-chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: #fff;
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 0.92rem;
+      font-weight: 700;
+      box-shadow: 0 6px 18px rgba(20, 32, 70, 0.04);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.03fr 0.97fr;
+      gap: 28px;
+      align-items: start;
+      padding: 10px 0 22px;
+    }
+
+    .layout-left {
+      display: grid;
+      gap: 20px;
+      align-self: start;
+    }
+
+    .card-header {
+      padding: 24px 24px 10px;
+    }
+
+    .card-header h2,
+    .card-header h3 {
+      margin: 0 0 8px;
+      font-size: 1.3rem;
+      letter-spacing: -0.02em;
+    }
+
+    .card-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .card-body { padding: 20px 24px 24px; }
+
+    .scenario-preset-band {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 2px 0 22px;
+    }
+
+    .scenario-chip {
+      border: 1px solid rgba(33,82,255,.14);
+      background: #fff;
+      color: var(--text);
+      border-radius: 999px;
+      padding: 10px 14px;
+      font-size: .9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform .08s ease, border-color .15s ease, background-color .15s ease;
+    }
+
+    .scenario-chip:hover {
+      transform: translateY(-1px);
+      border-color: rgba(33,82,255,.28);
+      background: #f8fbff;
+    }
+
+    .scenario-chip.active {
+      background: rgba(33,82,255,.08);
+      color: var(--primary-dark);
+      border-color: rgba(33,82,255,.22);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field label {
+      font-weight: 700;
+      font-size: 0.96rem;
+    }
+
+    .field small {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: -2px;
+    }
+
+    .field input {
+      width: 100%;
+      padding: 14px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      font-size: 1rem;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      font-family: inherit;
+    }
+
+    .field input:focus {
+      outline: none;
+      border-color: rgba(33, 82, 255, 0.45);
+      box-shadow: 0 0 0 4px rgba(33, 82, 255, 0.10);
+    }
+
+    .full { grid-column: 1 / -1; }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    button,
+    .button-link {
+      border: 0;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.06s ease, background 0.15s ease, opacity 0.15s ease, border-color .15s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      font-family: inherit;
+    }
+
+    button:hover,
+    .button-link:hover {
+      transform: translateY(-1px);
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover { background: var(--primary-dark); }
+
+    .btn-secondary {
+      background: #eef3ff;
+      color: var(--primary-dark);
+    }
+
+    .btn-ghost {
+      background: #fff;
+      color: var(--primary-dark);
+      border: 1px solid rgba(33, 82, 255, 0.16);
+    }
+
+    .inline-help {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1px solid #e7edf7;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .micro-links {
+      display: grid;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .micro-link {
+      display: block;
+      padding: 16px 16px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--text);
+      transition: transform .08s ease, border-color .15s ease;
+    }
+
+    .micro-link:hover {
+      transform: translateY(-1px);
+      text-decoration: none;
+      border-color: rgba(33,82,255,.25);
+    }
+
+    .micro-link strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 0.98rem;
+    }
+
+    .micro-link span {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .left-extend-card {
+      padding: 22px 24px 24px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      box-shadow: var(--shadow);
+    }
+
+    .left-extend-card h3 {
+      margin: 0 0 10px;
+      font-size: 1.16rem;
+      letter-spacing: -0.02em;
+    }
+
+    .left-extend-card p {
+      margin: 0 0 14px;
+      color: var(--muted);
+    }
+
+    .left-extend-card ul {
+      margin: 0 0 16px;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    .left-extend-card li { margin-bottom: 8px; }
+
+    .left-extend-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .left-mini-box {
+      padding: 16px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: #fff;
+    }
+
+    .left-mini-box strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.98rem;
+    }
+
+    .left-mini-box span {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .result-box {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+
+    .result-label {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .result-value {
+      font-size: clamp(1.25rem, 2.4vw, 2rem);
+      line-height: 1.15;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      word-break: break-word;
+    }
+
+    .highlight {
+      background: linear-gradient(180deg, #eef7ff 0%, #f9fcff 100%);
+      border-color: rgba(33, 82, 255, 0.18);
+    }
+
+    .positive {
+      color: var(--danger);
+    }
+
+    .negative {
+      color: var(--success);
+    }
+
+    .neutral {
+      color: var(--text);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 800;
+      margin-top: 10px;
+    }
+
+    .badge.success {
+      background: rgba(19, 138, 75, 0.10);
+      color: var(--success);
+    }
+
+    .badge.warning {
+      background: rgba(182, 106, 0, 0.11);
+      color: var(--warning);
+    }
+
+    .badge.risk {
+      background: rgba(180, 35, 24, 0.08);
+      color: var(--danger);
+    }
+
+    .info-list {
+      display: grid;
+      gap: 12px;
+      margin: 18px 0 0;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid #edf2fa;
+    }
+
+    .info-row:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .info-row span:first-child { color: var(--muted); }
+
+    .note {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1px solid #e7edf7;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .decision-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 24px;
+    }
+
+    .decision-box {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      padding: 18px;
+    }
+
+    .decision-box h3 {
+      margin: 0 0 8px;
+      font-size: 1.05rem;
+      letter-spacing: -0.02em;
+    }
+
+    .decision-box p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+
+    .decision-status {
+      display: inline-block;
+      margin-bottom: 10px;
+      padding: 7px 11px;
+      border-radius: 999px;
+      font-size: 0.84rem;
+      font-weight: 800;
+    }
+
+    .decision-status.safe {
+      color: var(--success);
+      background: var(--success-bg);
+    }
+
+    .decision-status.caution {
+      color: var(--warning);
+      background: var(--warning-bg);
+    }
+
+    .decision-status.risk {
+      color: var(--danger);
+      background: var(--danger-bg);
+    }
+
+    .next-action {
+      margin-top: 22px;
+      padding: 18px;
+      border-radius: 18px;
+      border: 1px solid rgba(33, 82, 255, 0.14);
+      background: linear-gradient(180deg, #eef4ff 0%, #f8fbff 100%);
+    }
+
+    .next-action h3 {
+      margin: 0 0 10px;
+      font-size: 1.08rem;
+      letter-spacing: -0.02em;
+    }
+
+    .next-action p {
+      margin: 0 0 12px;
+      color: var(--muted);
+    }
+
+    .cta-panel {
+      margin-top: 24px;
+      padding: 20px;
+      border-radius: 18px;
+      border: 1px solid rgba(33, 82, 255, 0.14);
+      background: linear-gradient(180deg, #eef4ff 0%, #f8fbff 100%);
+    }
+
+    .cta-panel h3 {
+      margin: 0 0 8px;
+      font-size: 1.12rem;
+      letter-spacing: -0.02em;
+    }
+
+    .cta-panel p {
+      margin: 0 0 14px;
+      color: var(--muted);
+    }
+
+    .cta-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 18px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 620px;
+      background: #fff;
+    }
+
+    th, td {
+      padding: 14px 14px;
+      text-align: left;
+      border-bottom: 1px solid #edf2fa;
+      font-size: 0.96rem;
+      vertical-align: top;
+    }
+
+    th {
+      background: #f8fbff;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    tr:nth-child(even) td { background: rgba(244,248,255,.7); }
+    tr:last-child td { border-bottom: 0; }
+
+    .formula-box {
+      margin-top: 18px;
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px dashed rgba(33, 82, 255, 0.24);
+      background: #fbfdff;
+    }
+
+    .formula-box strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.98rem;
+    }
+
+    .formula-box code {
+      display: inline-block;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      background: #eef4ff;
+      border: 1px solid #dfe8ff;
+      color: #1639ab;
+      padding: 8px 10px;
+      border-radius: 10px;
+      font-size: 0.94rem;
+      white-space: pre-wrap;
+    }
+
+    .section { padding: 10px 0; }
+
+    .section-title {
+      font-size: 1.7rem;
+      letter-spacing: -0.03em;
+      margin: 0 0 14px;
+    }
+
+    .section-intro {
+      color: var(--muted);
+      margin: 0 0 22px;
+      max-width: 860px;
+    }
+
+    .content-card { padding: 24px; }
+    .content-card + .content-card { margin-top: 20px; }
+
+    .content-card h2 {
+      font-size: 1.45rem;
+      letter-spacing: -0.03em;
+      margin: 0 0 14px;
+    }
+
+    .content-card h3 {
+      font-size: 1.12rem;
+      margin: 24px 0 10px;
+    }
+
+    .content-card p {
+      color: var(--muted);
+      margin: 0 0 14px;
+    }
+
+    .content-card ul {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    .content-card li { margin-bottom: 8px; }
+
+    .checklist-grid,
+    .related-grid,
+    .scenario-grid {
+      display: grid;
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .checklist-grid,
+    .scenario-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .related-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .related-card,
+    .scenario-card,
+    .check-card {
+      display: block;
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      color: var(--text);
+      box-shadow: var(--shadow);
+      transition: transform .08s ease, border-color .15s ease;
+    }
+
+    .related-card:hover,
+    .scenario-card:hover,
+    .check-card:hover {
+      transform: translateY(-1px);
+      text-decoration: none;
+      border-color: rgba(33,82,255,.25);
+    }
+
+    .related-card strong,
+    .scenario-card strong,
+    .check-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .related-card span,
+    .scenario-card span,
+    .check-card span {
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    .site-cta-band { padding: 6px 0 8px; }
+
+    .site-cta-card {
+      display: grid;
+      grid-template-columns: 1.1fr auto;
+      gap: 20px;
+      align-items: center;
+      padding: 22px 24px;
+      border-radius: 22px;
+      border: 1px solid rgba(33, 82, 255, 0.14);
+      background: linear-gradient(180deg, #eef4ff 0%, #f8fbff 100%);
+      box-shadow: 0 12px 32px rgba(20, 32, 70, 0.06);
+    }
+
+    .site-cta-copy strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 1.12rem;
+      letter-spacing: -0.02em;
+      color: var(--text);
+    }
+
+    .site-cta-copy p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .site-cta-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .site-cta-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 11px 15px;
+      border-radius: 999px;
+      border: 1px solid rgba(33, 82, 255, 0.15);
+      background: #ffffff;
+      color: var(--text);
+      font-weight: 700;
+      text-decoration: none;
+      box-shadow: 0 8px 18px rgba(20, 32, 70, 0.05);
+      transition: transform 0.12s ease, border-color 0.15s ease;
+    }
+
+    .site-cta-link:hover {
+      text-decoration: none;
+      transform: translateY(-1px);
+      border-color: rgba(33, 82, 255, 0.28);
+    }
+
+    footer {
+      margin-top: 48px;
+      border-top: 1px solid rgba(219,227,240,0.9);
+      background: linear-gradient(180deg, rgba(255,255,255,0.92) 0%, rgba(248,251,255,0.98) 100%);
+    }
+
+    .footer-grid-top,
+    .footer-grid-bottom {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .footer-grid-top {
+      padding: 34px 0 22px;
+      display: grid;
+      grid-template-columns: 1.2fr 0.9fr 0.9fr;
+      gap: 28px;
+    }
+
+    .footer-grid-bottom {
+      border-top: 1px solid rgba(219,227,240,0.9);
+      padding: 18px 0 34px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .footer-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .footer-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: #f4f8ff;
+      border: 1px solid #dbe3f0;
+      color: #5f6b85;
+      font-size: 0.86rem;
+      font-weight: 700;
+    }
+
+    .footer-links-column {
+      display: grid;
+      gap: 10px;
+    }
+
+    .footer-links-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 14px 18px;
+      align-items: center;
+    }
+
+    .footer-links-column a,
+    .footer-links-row a {
+      color: #5f6b85;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .footer-links-row a {
+      font-size: 0.92rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .back-to-top {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 30;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 46px;
+      height: 46px;
+      padding: 0 14px;
+      border: none;
+      border-radius: 999px;
+      background: #172033;
+      color: #fff;
+      font-weight: 800;
+      box-shadow: 0 14px 30px rgba(20,32,70,.18);
+      cursor: pointer;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(12px);
+      transition: opacity .18s ease, transform .18s ease;
+    }
+
+    .back-to-top.is-visible {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .back-to-top:hover { background: #0f1728; }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .layout,
+      .decision-grid,
+      .checklist-grid,
+      .scenario-grid,
+      .related-grid,
+      .footer-grid-top,
+      .footer-grid-bottom,
+      .left-extend-grid,
+      .site-cta-card {
+        grid-template-columns: 1fr;
+      }
+
+      .site-cta-actions,
+      .footer-links-row { justify-content: flex-start; }
+    }
+
+    @media (max-width: 720px) {
+      .container { width: min(100% - 24px, 1160px); }
+
+      .form-grid,
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero { padding-top: 28px; }
+
+      .card-header,
+      .card-body,
+      .hero-box,
+      .content-card,
+      .left-extend-card {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .topbar-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .footer-grid-top,
+      .footer-grid-bottom {
+        width: min(100% - 24px, 1180px);
+      }
+    }
+
+    @media (max-width: 820px) {
+      .topbar {
+        position: static;
+        top: auto;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+      }
+
+      main[id],
+      section[id],
+      div[id] {
+        scroll-margin-top: 24px;
+      }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebApplication",
+    "name":"Kalkulačka zdražení a zlevnění",
+    "url":"https://rychlevypocty.cz/zdrazeni-a-zlevneni-kalkulacka.html",
+    "applicationCategory":"FinanceApplication",
+    "operatingSystem":"Any",
+    "description":"Online kalkulačka pro výpočet procentní změny ceny, zdražení nebo zlevnění mezi dvěma hodnotami.",
+    "offers":{
+      "@type":"Offer",
+      "price":"0",
+      "priceCurrency":"CZK"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {
+        "@type":"Question",
+        "name":"Jak se počítá zdražení nebo zlevnění v procentech?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Procentní změna se počítá jako rozdíl mezi novou a původní cenou dělený původní cenou, vynásobený stem."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Co znamená kladný a záporný výsledek?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Kladný výsledek znamená zdražení, záporný výsledek znamená zlevnění. Nulový výsledek znamená, že se cena nezměnila."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Ukazuje kalkulačka i rozdíl v korunách?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Ano. Kromě procentní změny ukazuje i absolutní rozdíl mezi původní a novou cenou."
+        }
+      },
+      {
+        "@type":"Question",
+        "name":"Kdy se kalkulačka hodí?",
+        "acceptedAnswer":{
+          "@type":"Answer",
+          "text":"Hodí se pro srovnání cen zboží, služeb, rozpočtů, nabídek, investic nebo běžných výdajů."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"Organization",
+    "name":"RychléVýpočty.cz",
+    "url":"https://rychlevypocty.cz/",
+    "logo":"https://rychlevypocty.cz/icon-512.png",
+    "sameAs":[]
+  }
+  </script>
+
+  <script data-rv-schema="v7" type="application/ld+json">
+  [
+    {
+      "@context":"https://schema.org",
+      "@type":"BreadcrumbList",
+      "itemListElement":[
+        {"@type":"ListItem","position":1,"name":"RychléVýpočty.cz","item":"https://rychlevypocty.cz"},
+        {"@type":"ListItem","position":2,"name":"Všechny kalkulačky","item":"https://rychlevypocty.cz/kalkulacky.html"},
+        {"@type":"ListItem","position":3,"name":"Kalkulačka zdražení a zlevnění"}
+      ]
+    },
+    {
+      "@context":"https://schema.org",
+      "@type":"WebPage",
+      "name":"Kalkulačka zdražení a zlevnění",
+      "description":"Spočítejte procentní změnu ceny, zdražení nebo zlevnění mezi dvěma hodnotami. Přehledná kalkulačka procentní změny zdarma online.",
+      "url":"https://rychlevypocty.cz/zdrazeni-a-zlevneni-kalkulacka.html",
+      "inLanguage":"cs-CZ",
+      "isPartOf":{"@type":"WebSite","name":"RychléVýpočty.cz","url":"https://rychlevypocty.cz/"}
+    }
+  ]
+  </script>
+
+  <script data-rv-global-schema="v1" type="application/ld+json">[{"@context":"https://schema.org","@type":"Organization","@id":"https://rychlevypocty.cz/#organization","name":"RychléVýpočty.cz","url":"https://rychlevypocty.cz/","logo":"https://rychlevypocty.cz/icon-512.png"},{"@context":"https://schema.org","@type":"WebSite","@id":"https://rychlevypocty.cz/#website","url":"https://rychlevypocty.cz/","name":"RychléVýpočty.cz","inLanguage":"cs-CZ"},{"@context":"https://schema.org","@type":"WebPage","name":"Kalkulačka zdražení a zlevnění | Výpočet procentní změny ceny | RychléVýpočty.cz","description":"Spočítejte procentní změnu ceny, zdražení nebo zlevnění mezi dvěma hodnotami. Přehledná kalkulačka procentní změny zdarma online.","url":"https://rychlevypocty.cz/zdrazeni-a-zlevneni-kalkulacka.html","inLanguage":"cs-CZ","isPartOf":{"@id":"https://rychlevypocty.cz/#website"},"about":{"@id":"https://rychlevypocty.cz/#organization"}}]</script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Přeskočit na obsah</a>
+
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="/">Rychlé<span>Výpočty</span>.cz</a>
+      <nav aria-label="Hlavní navigace" class="topnav">
+        <a href="/">Domů</a>
+        <a href="/kalkulacky.html">Všechny kalkulačky</a>
+        <a href="/procenta-kalkulacka.html">Procenta</a>
+        <a href="/kalkulacka-prumeru.html">Průměr</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content" tabindex="-1">
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumbs">
+          <a href="/">RychléVýpočty.cz</a>
+          <span aria-hidden="true" class="sep">/</span>
+          <a href="/kalkulacky.html">Všechny kalkulačky</a>
+          <span aria-hidden="true" class="sep">/</span>
+          <strong>Kalkulačka zdražení a zlevnění</strong>
+        </div>
+
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <h1>Kalkulačka zdražení a zlevnění</h1>
+            <p>Spočítejte, o kolik procent se cena zvýšila nebo snížila. Výsledek ukáže nejen procentní změnu, ale i rozdíl v korunách a rychlou interpretaci.</p>
+            <p>Hodí se pro srovnání cen zboží, služeb, rozpočtů, nákupů, nabídek i běžných výdajů, kde potřebujete rychle vidět, co změna opravdu znamená.</p>
+
+            <div class="hero-points">
+              <div class="hero-pill">Procentní změna</div>
+              <div class="hero-pill">Rozdíl v Kč</div>
+              <div class="hero-pill">Zdražení i zlevnění</div>
+              <div class="hero-pill">Rychlá interpretace</div>
+            </div>
+
+            <div class="hero-actions">
+              <a class="button-link btn-primary" href="#kalkulacka">Spočítat změnu</a>
+              <a class="button-link btn-ghost" href="/procenta-kalkulacka.html">Další procenta</a>
+            </div>
+
+            <div class="quick-answer">
+              <strong>Rychlá odpověď</strong>
+              <p>U cenových změn nestačí sledovat jen rozdíl v korunách. Procentní změna rychle ukáže, jak velký dopad má změna vůči původní ceně.</p>
+            </div>
+          </div>
+
+          <aside class="hero-box">
+            <h2>Co tady vyřešíte</h2>
+            <ul>
+              <li>o kolik procent cena zdražila nebo zlevnila,</li>
+              <li>jaký je absolutní rozdíl v korunách,</li>
+              <li>jestli jde o malou, střední nebo výraznou změnu,</li>
+              <li>jaký další krok dává smysl po výpočtu.</li>
+            </ul>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="anchor-nav">
+      <div class="container">
+        <div class="anchor-nav-inner">
+          <a class="anchor-chip" href="#kalkulacka">Kalkulačka</a>
+          <a class="anchor-chip" href="#jak-cist-vysledek">Jak číst výsledek</a>
+          <a class="anchor-chip" href="#priklady">Praktické scénáře</a>
+          <a class="anchor-chip" href="#faq">FAQ</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="container layout" id="kalkulacka">
+      <div class="layout-left">
+        <div class="card calculator-card">
+          <div class="card-header">
+            <h2>Zadání cen</h2>
+            <p>Zadejte původní a novou cenu. Výsledek se přepočítá hned.</p>
+          </div>
+          <div class="card-body">
+            <div class="scenario-preset-band" aria-label="Rychlé scénáře">
+              <button class="scenario-chip active" data-old="1000" data-new="1200" type="button">+20 %</button>
+              <button class="scenario-chip" data-old="1000" data-new="850" type="button">−15 %</button>
+              <button class="scenario-chip" data-old="2500" data-new="3000" type="button">běžné zdražení</button>
+              <button class="scenario-chip" data-old="1990" data-new="1490" type="button">výrazná sleva</button>
+            </div>
+
+            <div class="form-grid">
+              <div class="field">
+                <label for="oldPrice">Původní cena</label>
+                <input id="oldPrice" inputmode="decimal" min="0" step="0.01" type="number" value="1000"/>
+                <small>Původní hodnota, ze které se změna počítá.</small>
+              </div>
+
+              <div class="field">
+                <label for="newPrice">Nová cena</label>
+                <input id="newPrice" inputmode="decimal" min="0" step="0.01" type="number" value="1200"/>
+                <small>Nová hodnota po změně ceny.</small>
+              </div>
+
+              <div class="actions full">
+                <button class="btn-primary" id="calculateBtn" type="button">Spočítat změnu</button>
+                <button class="btn-secondary" id="resetBtn" type="button">Obnovit výchozí hodnoty</button>
+              </div>
+            </div>
+
+            <div class="inline-help">
+              Nejrychlejší čtení výsledku: <strong>procentní změna</strong> + <strong>rozdíl v Kč</strong> + <strong>interpretace</strong>. Hned víte, jestli jde o kosmetickou nebo významnější změnu.
+            </div>
+
+            <div aria-label="Související další kroky" class="micro-links">
+              <a class="micro-link" href="/procenta-kalkulacka.html">
+                <strong>Potřebujete jiné procentní výpočty?</strong>
+                <span>Přejděte na univerzální kalkulačku procent pro širší scénáře a dopočty.</span>
+              </a>
+
+              <a class="micro-link" href="/inflace-kalkulacka.html">
+                <strong>Řešíte růst cen v čase?</strong>
+                <span>Inflace a dlouhodobé zdražování mají jinou logiku než jednorázová změna ceny.</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="left-extend-card">
+          <h3>Kdy má tahle kalkulačka největší hodnotu</h3>
+          <p>Nejvíc pomáhá ve chvíli, kdy dvě ceny samy o sobě nestačí a potřebujete rychle pochopit reálný rozsah změny.</p>
+          <ul>
+            <li>srovnání staré a nové ceny zboží nebo služby,</li>
+            <li>kontrola slevy nebo zdražení v e-shopu,</li>
+            <li>porovnání rozpočtů, nabídek nebo cenových variant,</li>
+            <li>rychlé ověření, jestli změna působí malá, nebo už významná.</li>
+          </ul>
+
+          <div class="cta-actions">
+            <a class="button-link btn-primary" href="/procenta-kalkulacka.html">Kalkulačka procent</a>
+            <a class="button-link btn-ghost" href="/kalkulacky.html">Všechny kalkulačky</a>
+          </div>
+
+          <div class="left-extend-grid">
+            <div class="left-mini-box">
+              <strong>Když sledujete ceny</strong>
+              <span>Procentní změna rychle ukáže, jestli je změna jen drobná, nebo už stojí za pozornost.</span>
+            </div>
+            <div class="left-mini-box">
+              <strong>Když porovnáváte nabídky</strong>
+              <span>Absolutní rozdíl v Kč a procentní změna dohromady dávají lepší obrázek než samotná čísla.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card results-card">
+        <div class="card-header">
+          <h2>Výsledek výpočtu</h2>
+          <p>Přehled procentní změny, rozdílu v korunách a rychlé interpretace výsledku.</p>
+        </div>
+        <div class="card-body" aria-live="polite">
+          <div class="results-grid">
+            <div class="result-box highlight">
+              <div class="result-label">Procentní změna</div>
+              <div class="result-value positive" id="percentChange">0 %</div>
+            </div>
+
+            <div class="result-box">
+              <div class="result-label">Rozdíl v Kč</div>
+              <div class="result-value" id="difference">0 Kč</div>
+            </div>
+          </div>
+
+          <div class="badge success" id="statusBadge">Výpočet připraven</div>
+
+          <div class="info-list">
+            <div class="info-row">
+              <span>Původní cena</span>
+              <strong id="oldPriceSummary">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Nová cena</span>
+              <strong id="newPriceSummary">0 Kč</strong>
+            </div>
+            <div class="info-row">
+              <span>Typ změny</span>
+              <strong id="changeType">—</strong>
+            </div>
+            <div class="info-row">
+              <span>Relativní dopad</span>
+              <strong id="impactLevel">—</strong>
+            </div>
+            <div class="info-row">
+              <span>Změna vůči původní ceně</span>
+              <strong id="changeVsBase">0 %</strong>
+            </div>
+          </div>
+
+          <div class="note" id="resultNote">
+            Zadejte původní a novou cenu a kalkulačka spočítá procentní změnu.
+          </div>
+
+          <div class="decision-grid">
+            <div class="decision-box">
+              <div class="decision-status caution" id="priceStatus">Bez interpretace</div>
+              <h3>Co výsledek říká</h3>
+              <p id="priceText">Po výpočtu uvidíte, jestli jde o zdražení, zlevnění nebo nulovou změnu a jak výrazný je dopad.</p>
+            </div>
+
+            <div class="decision-box">
+              <div class="decision-status safe" id="actionStatus">Další krok</div>
+              <h3>Jak s tím naložit</h3>
+              <p id="decisionSummary">Po výpočtu má smysl rozhodnout, jestli vám stačí rychlé srovnání cen, nebo potřebujete širší procentní nebo inflační kontext.</p>
+            </div>
+          </div>
+
+          <div class="next-action">
+            <h3>Co udělat po výpočtu</h3>
+            <p id="nextActionText">Pokud řešíte jen jednorázovou změnu ceny, máte hotovo. Pokud vás zajímá širší procentní logika nebo růst cen v čase, navazují další kalkulačky.</p>
+            <div class="cta-actions">
+              <a class="button-link btn-primary" id="primaryNextCta" href="/procenta-kalkulacka.html">Kalkulačka procent</a>
+              <a class="button-link btn-ghost" id="secondaryNextCta" href="/inflace-kalkulacka.html">Inflace</a>
+            </div>
+          </div>
+
+          <div class="cta-panel">
+            <h3>Jedna změna ceny často nestačí</h3>
+            <p>Po výpočtu zdražení nebo zlevnění často navazuje širší srovnání procent, inflace nebo jiných variant ceny v čase.</p>
+            <div class="cta-actions">
+              <a class="button-link btn-primary" href="/procenta-kalkulacka.html">Další procenta</a>
+              <a class="button-link btn-ghost" href="/inflace-kalkulacka.html">Inflace</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container section">
+      <div class="card">
+        <div class="card-header">
+          <h3>Přehled výpočtu</h3>
+          <p>Souhrn hlavní změny a rychlé vysvětlení, co výsledek znamená v absolutních i relativních číslech.</p>
+        </div>
+        <div class="card-body">
+          <div class="table-wrap">
+            <table aria-label="Přehled zdražení a zlevnění">
+              <thead>
+                <tr>
+                  <th>Položka</th>
+                  <th>Hodnota</th>
+                  <th>Poznámka</th>
+                </tr>
+              </thead>
+              <tbody id="summaryTableBody">
+                <tr>
+                  <td>Procentní změna</td>
+                  <td>0 %</td>
+                  <td>Po výpočtu se zobrazí detailní přehled.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="formula-box">
+            <strong>Jak se změna počítá</strong>
+            <p style="margin:0 0 10px;color:#5f6b85;">Procentní změna vychází z rozdílu mezi novou a původní cenou vzhledem k původní ceně.</p>
+            <code>((nová cena − původní cena) / původní cena) × 100</code>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container section" id="jak-cist-vysledek">
+      <h2 class="section-title">Jak číst výsledek kalkulačky</h2>
+      <p class="section-intro">Nejdůležitější je procentní změna. Rozdíl v korunách je důležitý doplněk, ale teprve procenta ukážou skutečnou velikost změny vůči původní ceně.</p>
+
+      <div class="content-card">
+        <h2>Na která čísla se dívat jako první</h2>
+
+        <div class="checklist-grid">
+          <div class="check-card">
+            <strong>Procentní změna</strong>
+            <span>Hlavní výstup. Říká, o kolik procent se cena zvýšila nebo snížila vzhledem k původní ceně.</span>
+          </div>
+
+          <div class="check-card">
+            <strong>Rozdíl v Kč</strong>
+            <span>Ukazuje absolutní změnu mezi původní a novou cenou. Hodí se pro rychlou praktickou orientaci.</span>
+          </div>
+
+          <div class="check-card">
+            <strong>Typ změny</strong>
+            <span>Okamžitě vidíte, jestli jde o zdražení, zlevnění nebo nulovou změnu.</span>
+          </div>
+        </div>
+
+        <h3>Kdy stačí tenhle výpočet</h3>
+        <p>Pro jednorázové porovnání dvou cen obvykle úplně stačí. Rychle zjistíte, jak velká změna proběhla a jestli stojí za pozornost.</p>
+
+        <h3>Kdy zbystřit</h3>
+        <p>Pokud řešíte dlouhodobý růst cen, kupní sílu nebo opakované změny v čase, už dává větší smysl navázat inflační nebo širší procentní kalkulačkou.</p>
+      </div>
+    </section>
+
+    <section class="container section" id="priklady">
+      <div class="content-card">
+        <h2>Praktické scénáře použití</h2>
+        <p>Tahle kalkulačka je nejpraktičtější tam, kde potřebujete rychle pochopit rozdíl mezi dvěma cenami bez ručního dopočítávání.</p>
+
+        <div class="scenario-grid">
+          <div class="scenario-card">
+            <strong>E-shop a nákupy</strong>
+            <span>Rychle zjistíte, jestli je sleva nebo zdražení spíš kosmetické, nebo už opravdu významné.</span>
+          </div>
+
+          <div class="scenario-card">
+            <strong>Rozpočet a nabídky</strong>
+            <span>Pomůže porovnat dvě varianty ceny nebo rozpočtu a vidět, jak velký je rozdíl relativně.</span>
+          </div>
+
+          <div class="scenario-card">
+            <strong>Běžné výdaje</strong>
+            <span>Užitečné pro kontrolu růstu nákladů u služeb, energií, nájemného nebo jiných pravidelných plateb.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container section">
+      <div class="content-card">
+        <h2>Co může výsledek ovlivnit</h2>
+
+        <h3>Původní cena jako základ</h3>
+        <p>Stejný rozdíl v korunách může znamenat úplně jinou procentní změnu podle toho, z jaké původní ceny vycházíte.</p>
+
+        <h3>Absolutní vs. relativní pohled</h3>
+        <p>Rozdíl v korunách ukáže konkrétní částku, ale procenta lépe vysvětlí velikost změny v poměru k původní ceně.</p>
+
+        <h3>Jednorázová změna vs. dlouhodobý trend</h3>
+        <p>Tahle kalkulačka řeší jednu změnu mezi dvěma hodnotami. U dlouhodobého růstu cen nebo kupní síly je lepší navázat inflační kalkulačkou.</p>
+      </div>
+    </section>
+
+    <section class="container section" id="faq">
+      <div class="content-card">
+        <h2>Časté otázky</h2>
+
+        <h3>Jak se počítá zdražení nebo zlevnění v procentech?</h3>
+        <p>Procentní změna se počítá jako rozdíl mezi novou a původní cenou dělený původní cenou, vynásobený stem.</p>
+
+        <h3>Co znamená kladný a záporný výsledek?</h3>
+        <p>Kladný výsledek znamená zdražení, záporný výsledek znamená zlevnění. Nulový výsledek znamená, že se cena nezměnila.</p>
+
+        <h3>Ukazuje kalkulačka i rozdíl v korunách?</h3>
+        <p>Ano. Kromě procentní změny ukazuje i absolutní rozdíl mezi původní a novou cenou.</p>
+
+        <h3>Kdy se kalkulačka hodí?</h3>
+        <p>Hodí se pro srovnání cen zboží, služeb, rozpočtů, nabídek, investic nebo běžných výdajů.</p>
+      </div>
+    </section>
+
+    <section class="container section">
+      <div class="content-card">
+        <h2>Co dává smysl spočítat hned potom</h2>
+        <p>Po výpočtu změny ceny často navazuje širší procentní výpočet nebo inflační kontext.</p>
+
+        <div class="related-grid">
+          <a class="related-card" href="/procenta-kalkulacka.html">
+            <strong>Kalkulačka procent</strong>
+            <span>Navazující krok pro jiné procentní scénáře a dopočty.</span>
+          </a>
+
+          <a class="related-card" href="/inflace-kalkulacka.html">
+            <strong>Inflace kalkulačka</strong>
+            <span>Užitečné, když řešíte růst cen v čase a ne jen jednorázovou změnu.</span>
+          </a>
+
+          <a class="related-card" href="/kalkulacka-prumeru.html">
+            <strong>Kalkulačka průměru</strong>
+            <span>Praktický nástroj pro srovnání více hodnot nebo cenových variant.</span>
+          </a>
+
+          <a class="related-card" href="/prevodnik-jednotek.html">
+            <strong>Převodník jednotek</strong>
+            <span>Další univerzální nástroj, když po ceně potřebujete řešit i jednotky nebo přepočty.</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section aria-label="Další krok" class="site-cta-band">
+      <div class="container">
+        <div class="site-cta-card">
+          <div class="site-cta-copy">
+            <strong>Pokračujte dalším praktickým výpočtem</strong>
+            <p>Po výpočtu zdražení nebo zlevnění často dává smysl navázat dalším procentním výpočtem nebo inflací.</p>
+          </div>
+
+          <div class="site-cta-actions">
+            <a class="site-cta-link" href="/procenta-kalkulacka.html">Kalkulačka procent</a>
+            <a class="site-cta-link" href="/inflace-kalkulacka.html">Inflace</a>
+            <a class="site-cta-link" href="/kalkulacka-prumeru.html">Průměr</a>
+            <a class="site-cta-link" href="/kalkulacky.html">Všechny kalkulačky</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-grid-top">
+      <div style="max-width:520px;">
+        <strong style="display:inline-block;font-size:1.14rem;letter-spacing:-0.02em;color:#172033;margin-bottom:12px;">RychléVýpočty.cz</strong>
+        <p style="margin:0;color:#5f6b85;font-size:0.95rem;line-height:1.65;">
+          Online kalkulačky a praktické nástroje zdarma pro finance, bydlení, hypotéky, pronájem,
+          investiční rozhodování, mzdy, podnikání, energie, auto, rekonstrukce a další situace,
+          které dává smysl si předem spočítat.
+        </p>
+        <div class="footer-pills">
+          <span class="footer-pill">Zdarma</span>
+          <span class="footer-pill">Bez registrace</span>
+          <span class="footer-pill">Praktické rozhodování</span>
+        </div>
+      </div>
+
+      <div>
+        <h3 style="margin:0 0 12px;font-size:1rem;letter-spacing:-0.02em;color:#172033;">Hlavní sekce</h3>
+        <div class="footer-links-column">
+          <a href="/kalkulacky.html">Všechny kalkulačky</a>
+          <a href="/finance-a-hypoteky.html">Finance a hypotéky</a>
+          <a href="/pronajem-a-investicni-bydleni.html">Pronájem a investiční bydlení</a>
+          <a href="/mzdy-a-prace.html">Mzdy a práce</a>
+          <a href="/stavba-domu.html">Stavba domu</a>
+        </div>
+      </div>
+
+      <div>
+        <h3 style="margin:0 0 12px;font-size:1rem;letter-spacing:-0.02em;color:#172033;">Informace a důvěra</h3>
+        <div class="footer-links-column">
+          <a href="/o-nas.html">O nás</a>
+          <a href="/kontakt.html">Kontakt</a>
+          <a href="/ochrana-osobnich-udaju.html">Ochrana osobních údajů</a>
+          <a href="/podminky-pouziti.html">Podmínky použití</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-grid-bottom">
+      <div>
+        <p style="margin:0 0 8px;color:#5f6b85;font-size:0.92rem;line-height:1.6;">© RychléVýpočty.cz – online kalkulačky a praktické nástroje zdarma</p>
+        <p style="margin:0;color:#5f6b85;font-size:0.92rem;line-height:1.6;">Výsledky mají orientační charakter a u důležitých finančních, daňových, právních nebo stavebních rozhodnutí je vhodné je ověřit podle konkrétních podmínek.</p>
+      </div>
+    </div>
+  </footer>
+
+  <button aria-label="Zpět nahoru" class="back-to-top" id="rvBackToTop" type="button">↑</button>
+
+  <script>
+    const oldPriceEl = document.getElementById('oldPrice');
+    const newPriceEl = document.getElementById('newPrice');
+    const resetBtn = document.getElementById('resetBtn');
+    const calculateBtn = document.getElementById('calculateBtn');
+    const presetButtons = Array.from(document.querySelectorAll('.scenario-chip'));
+
+    const outputs = {
+      percentChange: document.getElementById('percentChange'),
+      difference: document.getElementById('difference'),
+      oldPriceSummary: document.getElementById('oldPriceSummary'),
+      newPriceSummary: document.getElementById('newPriceSummary'),
+      changeType: document.getElementById('changeType'),
+      impactLevel: document.getElementById('impactLevel'),
+      changeVsBase: document.getElementById('changeVsBase'),
+      resultNote: document.getElementById('resultNote'),
+      statusBadge: document.getElementById('statusBadge'),
+      summaryTableBody: document.getElementById('summaryTableBody'),
+      priceStatus: document.getElementById('priceStatus'),
+      priceText: document.getElementById('priceText'),
+      actionStatus: document.getElementById('actionStatus'),
+      decisionSummary: document.getElementById('decisionSummary'),
+      nextActionText: document.getElementById('nextActionText'),
+      primaryNextCta: document.getElementById('primaryNextCta'),
+      secondaryNextCta: document.getElementById('secondaryNextCta')
+    };
+
+    function formatCurrency(val) {
+      return new Intl.NumberFormat('cs-CZ', {
+        style: 'currency',
+        currency: 'CZK',
+        maximumFractionDigits: 0
+      }).format(val);
+    }
+
+    function formatPercent(val) {
+      return new Intl.NumberFormat('cs-CZ', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2
+      }).format(val) + ' %';
+    }
+
+    function getImpactLevel(absPercent) {
+      if (absPercent === 0) return 'bez změny';
+      if (absPercent < 5) return 'malá změna';
+      if (absPercent < 15) return 'střední změna';
+      return 'výrazná změna';
+    }
+
+    function updateDecisionLayer(percent) {
+      const absPercent = Math.abs(percent);
+
+      if (percent > 0) {
+        outputs.priceStatus.textContent = 'Zdražení';
+        outputs.priceStatus.className = 'decision-status risk';
+        outputs.priceText.textContent = 'Nová cena je vyšší než původní. Výsledek ukazuje, o kolik procent cena zdražila vzhledem k původní hodnotě.';
+        outputs.actionStatus.textContent = 'Další krok';
+        outputs.actionStatus.className = 'decision-status caution';
+        outputs.decisionSummary.textContent = 'U zdražení má smysl posoudit, jestli jde jen o menší úpravu ceny, nebo už o změnu, která ovlivní rozhodnutí nebo rozpočet.';
+        outputs.nextActionText.textContent = 'Pokud vás zajímá širší procentní kontext nebo opakovaný růst cen, navazují další procentní výpočty a inflace.';
+        outputs.primaryNextCta.href = '/procenta-kalkulacka.html';
+        outputs.primaryNextCta.textContent = 'Kalkulačka procent';
+        outputs.secondaryNextCta.href = '/inflace-kalkulacka.html';
+        outputs.secondaryNextCta.textContent = 'Inflace';
+        return;
+      }
+
+      if (percent < 0) {
+        outputs.priceStatus.textContent = 'Zlevnění';
+        outputs.priceStatus.className = 'decision-status safe';
+        outputs.priceText.textContent = 'Nová cena je nižší než původní. Výsledek ukazuje, o kolik procent cena zlevnila vůči původní hodnotě.';
+        outputs.actionStatus.textContent = 'Praktický krok';
+        outputs.actionStatus.className = 'decision-status safe';
+        outputs.decisionSummary.textContent = 'U slevy nebo poklesu ceny se vyplatí ověřit, jestli jde o opravdu zajímavou změnu, nebo jen o drobnou kosmetickou úpravu.';
+        outputs.nextActionText.textContent = 'Pokud chcete srovnávat další varianty nebo dopočítat jiné procentní scénáře, navazuje obecná kalkulačka procent.';
+        outputs.primaryNextCta.href = '/procenta-kalkulacka.html';
+        outputs.primaryNextCta.textContent = 'Kalkulačka procent';
+        outputs.secondaryNextCta.href = '/kalkulacka-prumeru.html';
+        outputs.secondaryNextCta.textContent = 'Kalkulačka průměru';
+        return;
+      }
+
+      outputs.priceStatus.textContent = 'Bez změny';
+      outputs.priceStatus.className = 'decision-status caution';
+      outputs.priceText.textContent = 'Původní a nová cena jsou stejné. V tomto případě nedošlo ke zdražení ani zlevnění.';
+      outputs.actionStatus.textContent = 'Hotovo';
+      outputs.actionStatus.className = 'decision-status safe';
+      outputs.decisionSummary.textContent = 'V takové situaci není co dál interpretovat. Pokud jste chtěli jiný scénář, změňte jednu z cen.';
+      outputs.nextActionText.textContent = 'Pokud potřebujete jiný typ procentního výpočtu, přejděte na univerzální kalkulačku procent.';
+      outputs.primaryNextCta.href = '/procenta-kalkulacka.html';
+      outputs.primaryNextCta.textContent = 'Kalkulačka procent';
+      outputs.secondaryNextCta.href = '/kalkulacky.html';
+      outputs.secondaryNextCta.textContent = 'Další kalkulačky';
+    }
+
+    function calculate(silent = false) {
+      const oldPrice = Number(oldPriceEl.value);
+      const newPrice = Number(newPriceEl.value);
+
+      if (oldPrice <= 0 || Number.isNaN(oldPrice) || Number.isNaN(newPrice)) {
+        if (!silent) alert('Zadejte platnou původní i novou cenu. Původní cena musí být vyšší než 0.');
+        outputs.statusBadge.className = 'badge warning';
+        outputs.statusBadge.textContent = 'Zadejte platná data';
+        outputs.resultNote.textContent = 'Původní cena musí být vyšší než 0 a obě hodnoty musí být vyplněné.';
+        return;
+      }
+
+      const diff = newPrice - oldPrice;
+      const percent = (diff / oldPrice) * 100;
+      const absPercent = Math.abs(percent);
+      const impact = getImpactLevel(absPercent);
+
+      outputs.percentChange.textContent = formatPercent(percent);
+      outputs.percentChange.className = 'result-value ' + (percent > 0 ? 'positive' : percent < 0 ? 'negative' : 'neutral');
+      outputs.difference.textContent = formatCurrency(diff);
+      outputs.oldPriceSummary.textContent = formatCurrency(oldPrice);
+      outputs.newPriceSummary.textContent = formatCurrency(newPrice);
+      outputs.changeType.textContent = percent > 0 ? 'zdražení' : percent < 0 ? 'zlevnění' : 'beze změny';
+      outputs.impactLevel.textContent = impact;
+      outputs.changeVsBase.textContent = formatPercent(percent);
+
+      if (percent > 0) {
+        outputs.statusBadge.className = 'badge risk';
+        outputs.statusBadge.textContent = 'Cena vzrostla';
+        outputs.resultNote.textContent = `Cena vzrostla o ${formatPercent(absPercent)}. Absolutní rozdíl je ${formatCurrency(diff)}.`;
+      } else if (percent < 0) {
+        outputs.statusBadge.className = 'badge success';
+        outputs.statusBadge.textContent = 'Cena klesla';
+        outputs.resultNote.textContent = `Cena klesla o ${formatPercent(absPercent)}. Absolutní rozdíl je ${formatCurrency(Math.abs(diff))}.`;
+      } else {
+        outputs.statusBadge.className = 'badge warning';
+        outputs.statusBadge.textContent = 'Bez změny';
+        outputs.resultNote.textContent = 'Původní i nová cena jsou stejné. Nedošlo ke zdražení ani zlevnění.';
+      }
+
+      outputs.summaryTableBody.innerHTML = `
+        <tr>
+          <td>Původní cena</td>
+          <td>${formatCurrency(oldPrice)}</td>
+          <td>Výchozí hodnota pro výpočet změny</td>
+        </tr>
+        <tr>
+          <td>Nová cena</td>
+          <td>${formatCurrency(newPrice)}</td>
+          <td>Aktuální nebo srovnávaná hodnota</td>
+        </tr>
+        <tr>
+          <td>Rozdíl v Kč</td>
+          <td>${formatCurrency(diff)}</td>
+          <td>Absolutní změna mezi oběma cenami</td>
+        </tr>
+        <tr>
+          <td>Procentní změna</td>
+          <td>${formatPercent(percent)}</td>
+          <td>Relativní změna vůči původní ceně</td>
+        </tr>
+        <tr>
+          <td>Typ změny</td>
+          <td>${percent > 0 ? 'Zdražení' : percent < 0 ? 'Zlevnění' : 'Beze změny'}</td>
+          <td>Rychlá interpretace výsledku</td>
+        </tr>
+      `;
+
+      updateDecisionLayer(percent);
+    }
+
+    function applyPreset(oldVal, newVal, btn) {
+      oldPriceEl.value = oldVal;
+      newPriceEl.value = newVal;
+
+      presetButtons.forEach(chip => {
+        chip.classList.toggle('active', chip === btn);
+      });
+
+      calculate(true);
+    }
+
+    calculateBtn.addEventListener('click', function() {
+      calculate();
+    });
+
+    [oldPriceEl, newPriceEl].forEach(el => {
+      el.addEventListener('input', function() { calculate(true); });
+      el.addEventListener('change', function() { calculate(true); });
+    });
+
+    presetButtons.forEach(btn => {
+      btn.addEventListener('click', function() {
+        applyPreset(btn.dataset.old, btn.dataset.new, btn);
+      });
+    });
+
+    resetBtn.addEventListener('click', function() {
+      oldPriceEl.value = 1000;
+      newPriceEl.value = 1200;
+
+      presetButtons.forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.old === '1000' && btn.dataset.new === '1200');
+      });
+
+      calculate(true);
+    });
+
+    calculate(true);
+  </script>
+
+  <script>
+    (function () {
+      const layout = document.querySelector('#kalkulacka.layout');
+      if (!layout || layout.dataset.mobileResultFlowFixed === 'true') return;
+
+      const left = layout.querySelector(':scope > .layout-left');
+      const right = Array.from(layout.children).find((child) => !child.classList.contains('layout-left'));
+      if (!left || !right) return;
+
+      const formCard = left.querySelector(':scope > .card');
+      if (!formCard) return;
+
+      const mq = window.matchMedia('(max-width: 980px)');
+      layout.dataset.mobileResultFlowFixed = 'true';
+
+      function syncResultPosition() {
+        const firstExtra = Array.from(left.children).find((child) => child !== formCard);
+
+        if (mq.matches) {
+          if (right.parentElement !== left || formCard.nextElementSibling !== right) {
+            left.insertBefore(right, firstExtra || null);
+          }
+          return;
+        }
+
+        if (right.parentElement !== layout || layout.lastElementChild !== right) {
+          layout.appendChild(right);
+        }
+      }
+
+      if (typeof mq.addEventListener === 'function') {
+        mq.addEventListener('change', syncResultPosition);
+      } else if (typeof mq.addListener === 'function') {
+        mq.addListener(syncResultPosition);
+      }
+
+      syncResultPosition();
+    })();
+  </script>
+
+  <script>
+    (function () {
+      const path = window.location.pathname.replace(/\/$/, '') || '/';
+      const links = document.querySelectorAll('.topnav a[href]');
+      links.forEach((link) => {
+        const href = link.getAttribute('href');
+        if (!href) return;
+        const normalized = href.replace(/\/$/, '') || '/';
+        if (normalized === path) {
+          link.setAttribute('aria-current', 'page');
+        }
+      });
+    })();
+  </script>
+
+  <script data-rv-enhancement="v7">
+    (function(){
+      const btn = document.getElementById('rvBackToTop');
+      if(!btn) return;
+
+      const toggle = () => {
+        btn.classList.toggle('is-visible', window.scrollY > 520);
+      };
+
+      toggle();
+      window.addEventListener('scroll', toggle, { passive:true });
+      btn.addEventListener('click', () => window.scrollTo({ top:0, behavior:'smooth' }));
+    })();
+  </script>
+</body>
+</html>

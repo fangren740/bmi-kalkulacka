@@ -1,0 +1,1487 @@
+<!DOCTYPE html>
+
+<html lang="cs">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="telephone=no" name="format-detection"/>
+<link href="/favicon.ico?v=2" rel="icon" sizes="any"/>
+<link href="/favicon-32x32.png?v=2" rel="icon" sizes="32x32" type="image/png"/>
+<link href="/favicon-16x16.png?v=2" rel="icon" sizes="16x16" type="image/png"/>
+<link href="/apple-touch-icon.png?v=2" rel="apple-touch-icon" sizes="180x180"/>
+<link href="/site.webmanifest?v=2" rel="manifest"/>
+<meta content="#14253d" name="theme-color"/>
+<title>Výpočet věku online zdarma | RychléVýpočty.cz</title>
+<meta content="Spočítejte přesný věk podle data narození. Kalkulačka věku zobrazí roky, měsíce, dny i celkový počet dní života přehledně a zdarma online." name="description"/>
+<meta content="výpočet věku, kalkulačka věku, kolik mi je let, věk podle data narození, spočítat věk online" name="keywords"/>
+<meta content="RychléVýpočty.cz" name="author"/>
+<meta content="index,follow" name="robots"/>
+<link href="https://rychlevypocty.cz/vypocet-veku.html" rel="canonical"/>
+<meta content="Výpočet věku online zdarma | RychléVýpočty.cz" property="og:title"/>
+<meta content="Přesný výpočet věku podle data narození v letech, měsících, dnech i celkovém počtu dní života." property="og:description"/>
+<meta content="website" property="og:type"/>
+<meta content="https://rychlevypocty.cz/vypocet-veku.html" property="og:url"/>
+<meta content="https://rychlevypocty.cz/og-image.jpg" property="og:image"/>
+<meta content="https://rychlevypocty.cz/og-image.jpg" name="twitter:image"/>
+<meta content="cs_CZ" property="og:locale"/>
+<meta content="RychléVýpočty.cz" property="og:site_name"/>
+<meta content="summary_large_image" name="twitter:card"/>
+<meta content="Výpočet věku online zdarma | RychléVýpočty.cz" name="twitter:title"/>
+<meta content="Spočítejte si přesný věk přehledně a zdarma." name="twitter:description"/>
+<meta content="RychléVýpočty.cz – online kalkulačky a praktické výpočty" name="twitter:image:alt"/>
+<style>
+  .skip-link {
+    position: absolute;
+    left: 16px;
+    top: -56px;
+    z-index: 100;
+    padding: 12px 16px;
+    border-radius: 12px;
+    background: #172033;
+    color: #ffffff;
+    font-weight: 700;
+    box-shadow: 0 10px 24px rgba(20, 32, 70, 0.18);
+    transition: top 0.16s ease;
+  }
+
+  .skip-link:focus {
+    top: 16px;
+  }
+
+  :focus-visible {
+    outline: 3px solid rgba(33, 82, 255, 0.45);
+    outline-offset: 3px;
+    border-radius: 10px;
+  }
+
+  main[id],
+  section[id],
+  div[id] {
+    scroll-margin-top: 96px;
+  }
+
+  :root {
+    --bg: #f5f7fb;
+    --card: #ffffff;
+    --text: #172033;
+    --muted: #5f6b85;
+    --primary: #2152ff;
+    --primary-dark: #183dbf;
+    --border: #dbe3f0;
+    --success: #138a4b;
+    --warning: #b66a00;
+    --danger: #b42318;
+    --danger-bg: rgba(180, 35, 24, 0.08);
+    --success-bg: rgba(19, 138, 75, 0.10);
+    --warning-bg: rgba(182, 106, 0, 0.11);
+    --shadow: 0 12px 32px rgba(20, 32, 70, 0.08);
+    --radius: 18px;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    background: linear-gradient(180deg, #f7f9fd 0%, #eef3fb 100%);
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  a {
+    color: var(--primary);
+    text-decoration: none;
+  }
+
+  a:hover { text-decoration: underline; }
+
+  .container {
+    width: min(1160px, calc(100% - 32px));
+    margin: 0 auto;
+  }
+
+  .topbar {
+    padding: 18px 0;
+    border-bottom: 1px solid rgba(219, 227, 240, 0.8);
+    background: rgba(255, 255, 255, 0.84);
+    backdrop-filter: blur(10px);
+    position: sticky;
+    top: 0;
+    z-index: 20;
+  }
+
+  .topbar-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .brand {
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: var(--text);
+    letter-spacing: -0.02em;
+  }
+
+  .brand span { color: var(--primary); }
+
+  .topnav {
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    font-size: 0.97rem;
+  }
+
+  .topnav a {
+    border-radius: 999px;
+    padding: 8px 12px;
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+
+  .topnav a:hover,
+  .topnav a[aria-current="page"] {
+    text-decoration: none;
+    background: rgba(33, 82, 255, 0.08);
+    color: var(--primary);
+  }
+
+  .hero {
+    padding: 42px 0 20px;
+  }
+
+  .breadcrumbs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    font-size: 0.92rem;
+    color: var(--muted);
+    margin-bottom: 18px;
+  }
+
+  .breadcrumbs span.sep { color: #8a94a9; }
+  .breadcrumbs a { color: var(--muted); }
+  .breadcrumbs strong { font-weight: 700; color: var(--text); }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1.12fr 0.88fr;
+    gap: 28px;
+    align-items: start;
+  }
+
+  .hero-copy h1 {
+    font-size: clamp(2rem, 4vw, 3.15rem);
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+    margin: 0 0 16px;
+  }
+
+  .hero-copy p {
+    margin: 0 0 16px;
+    font-size: 1.06rem;
+    color: var(--muted);
+    max-width: 760px;
+  }
+
+  .hero-points {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  .hero-pill {
+    background: rgba(33, 82, 255, 0.08);
+    color: var(--primary-dark);
+    border: 1px solid rgba(33, 82, 255, 0.12);
+    padding: 10px 14px;
+    border-radius: 999px;
+    font-size: 0.95rem;
+    font-weight: 600;
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 18px;
+  }
+
+  .hero-box,
+  .card,
+  .content-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+  }
+
+  .hero-box {
+    background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    border-radius: 24px;
+    padding: 24px;
+  }
+
+  .hero-box h2 {
+    margin: 0 0 10px;
+    font-size: 1.2rem;
+  }
+
+  .hero-box p {
+    margin: 0 0 10px;
+    color: var(--muted);
+  }
+
+  .hero-box p:last-child { margin-bottom: 0; }
+
+  .quick-answer {
+    margin-top: 18px;
+    padding: 18px 18px;
+    border-radius: 18px;
+    border: 1px solid rgba(33, 82, 255, 0.16);
+    background: linear-gradient(180deg, #eef4ff 0%, #f8fbff 100%);
+  }
+
+  .quick-answer strong {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 1rem;
+    letter-spacing: -0.02em;
+  }
+
+  .quick-answer p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.97rem;
+  }
+
+  .anchor-nav {
+    padding: 6px 0 20px;
+  }
+
+  .anchor-nav-inner {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .anchor-chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 14px;
+    border-radius: 999px;
+    background: #fff;
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-size: 0.92rem;
+    font-weight: 700;
+    box-shadow: 0 6px 18px rgba(20, 32, 70, 0.04);
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 1.02fr 0.98fr;
+    gap: 28px;
+    align-items: start;
+    padding: 22px 0 32px;
+  }
+
+  .card-header {
+    padding: 24px 24px 10px;
+  }
+
+  .card-header h2,
+  .card-header h3 {
+    margin: 0 0 8px;
+    font-size: 1.3rem;
+    letter-spacing: -0.02em;
+  }
+
+  .card-header p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.98rem;
+  }
+
+  .card-body {
+    padding: 20px 24px 24px;
+  }
+
+  .field-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 18px;
+  }
+
+  .field label {
+    font-weight: 700;
+    font-size: 0.96rem;
+  }
+
+  .field small {
+    color: var(--muted);
+    font-size: 0.85rem;
+    margin-top: -2px;
+  }
+
+  .field input,
+  .field select {
+    width: 100%;
+    padding: 14px 14px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    font-size: 1rem;
+    color: var(--text);
+    background: #fff;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    font-family: inherit;
+  }
+
+  .field input:focus,
+  .field select:focus {
+    outline: none;
+    border-color: rgba(33, 82, 255, 0.45);
+    box-shadow: 0 0 0 4px rgba(33, 82, 255, 0.10);
+  }
+
+  .full { grid-column: 1 / -1; }
+
+  .actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+  }
+
+  button,
+  .button-link {
+    border: 0;
+    border-radius: 12px;
+    padding: 14px 18px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.06s ease, background 0.15s ease, border-color .15s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+  }
+
+  button:hover,
+  .button-link:hover {
+    transform: translateY(-1px);
+    text-decoration: none;
+  }
+
+  .btn-primary {
+    background: var(--primary);
+    color: #fff;
+  }
+
+  .btn-primary:hover { background: var(--primary-dark); }
+
+  .btn-secondary {
+    background: #eef3ff;
+    color: var(--primary-dark);
+  }
+
+  .btn-ghost {
+    background: #fff;
+    color: var(--primary-dark);
+    border: 1px solid rgba(33, 82, 255, 0.16);
+  }
+
+  .results-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  .result-box {
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 18px;
+    background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+  }
+
+  .result-box.highlight {
+    background: linear-gradient(180deg, #eef7ff 0%, #f9fcff 100%);
+    border-color: rgba(33, 82, 255, 0.18);
+  }
+
+  .result-label {
+    font-size: 0.9rem;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  .result-value {
+    font-size: clamp(1.2rem, 2.4vw, 2rem);
+    line-height: 1.15;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    word-break: break-word;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 999px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    margin-top: 10px;
+  }
+
+  .badge.success {
+    background: rgba(19, 138, 75, 0.10);
+    color: var(--success);
+  }
+
+  .badge.warning {
+    background: rgba(182, 106, 0, 0.11);
+    color: var(--warning);
+  }
+
+  .info-list {
+    display: grid;
+    gap: 12px;
+    margin: 18px 0 0;
+  }
+
+  .info-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 12px 0;
+    border-bottom: 1px solid #edf2fa;
+  }
+
+  .info-row:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .info-row span:first-child { color: var(--muted); }
+
+  .note {
+    margin-top: 18px;
+    padding: 14px 16px;
+    border-radius: 14px;
+    background: #f8fafc;
+    border: 1px solid #e7edf7;
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+
+  .decision-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin-top: 24px;
+  }
+
+  .decision-box {
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    padding: 18px;
+  }
+
+  .decision-box h3 {
+    margin: 0 0 8px;
+    font-size: 1.05rem;
+    letter-spacing: -0.02em;
+  }
+
+  .decision-box p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.96rem;
+  }
+
+  .decision-status {
+    display: inline-block;
+    margin-bottom: 10px;
+    padding: 7px 11px;
+    border-radius: 999px;
+    font-size: 0.84rem;
+    font-weight: 800;
+  }
+
+  .decision-status.safe {
+    color: var(--success);
+    background: rgba(19, 138, 75, 0.10);
+  }
+
+  .decision-status.caution {
+    color: var(--warning);
+    background: rgba(182, 106, 0, 0.11);
+  }
+
+  .milestone-list {
+    display: grid;
+    gap: 10px;
+    margin-top: 18px;
+  }
+
+  .milestone-item {
+    display: flex;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: #fbfdff;
+  }
+
+  .milestone-item strong {
+    font-size: 0.95rem;
+  }
+
+  .milestone-item span {
+    color: var(--muted);
+    font-size: 0.93rem;
+    text-align: right;
+  }
+
+  .content-section {
+    padding: 8px 0;
+  }
+
+  .content-card {
+    padding: 24px;
+  }
+
+  .content-card + .content-card {
+    margin-top: 20px;
+  }
+
+  .content-card h2 {
+    font-size: 1.7rem;
+    letter-spacing: -0.03em;
+    margin: 0 0 14px;
+  }
+
+  .content-card h3 {
+    font-size: 1.15rem;
+    margin: 28px 0 10px;
+  }
+
+  .content-card p {
+    color: var(--muted);
+    margin: 0 0 14px;
+  }
+
+  .content-card ul {
+    margin: 0;
+    padding-left: 20px;
+    color: var(--muted);
+  }
+
+  .content-card li { margin-bottom: 8px; }
+
+  .checklist-grid,
+  .related-grid {
+    display: grid;
+    gap: 16px;
+    margin-top: 18px;
+  }
+
+  .checklist-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .related-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .related-card,
+  .check-card {
+    display: block;
+    padding: 18px;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    color: var(--text);
+    box-shadow: var(--shadow);
+  }
+
+  .related-card strong,
+  .check-card strong {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 1rem;
+  }
+
+  .related-card span,
+  .check-card span {
+    color: var(--muted);
+    font-size: 0.93rem;
+  }
+
+  .site-cta-band {
+    padding: 6px 0 8px;
+  }
+
+  .site-cta-card {
+    display: grid;
+    grid-template-columns: 1.1fr auto;
+    gap: 20px;
+    align-items: center;
+    padding: 22px 24px;
+    border-radius: 22px;
+    border: 1px solid rgba(33, 82, 255, 0.14);
+    background: linear-gradient(180deg, #eef4ff 0%, #f8fbff 100%);
+    box-shadow: 0 12px 32px rgba(20, 32, 70, 0.06);
+  }
+
+  .site-cta-copy strong {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 1.12rem;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+
+  .site-cta-copy p {
+    margin: 0;
+    color: var(--muted);
+  }
+
+  .site-cta-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+
+  .site-cta-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 11px 15px;
+    border-radius: 999px;
+    border: 1px solid rgba(33, 82, 255, 0.15);
+    background: #ffffff;
+    color: var(--text);
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 8px 18px rgba(20, 32, 70, 0.05);
+    transition: transform 0.12s ease, border-color 0.15s ease;
+  }
+
+  .site-cta-link:hover {
+    text-decoration: none;
+    transform: translateY(-1px);
+    border-color: rgba(33, 82, 255, 0.28);
+  }
+
+  footer {
+    margin-top: 48px;
+    border-top: 1px solid rgba(219,227,240,0.9);
+    background: linear-gradient(180deg, rgba(255,255,255,0.92) 0%, rgba(248,251,255,0.98) 100%);
+  }
+
+  .footer-grid-top,
+  .footer-grid-bottom {
+    width: min(1180px, calc(100% - 32px));
+    margin: 0 auto;
+  }
+
+  .footer-grid-top {
+    padding: 34px 0 22px;
+    display: grid;
+    grid-template-columns: 1.2fr 0.9fr 0.9fr;
+    gap: 28px;
+  }
+
+  .footer-grid-bottom {
+    border-top: 1px solid rgba(219,227,240,0.9);
+    padding: 18px 0 34px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    align-items: start;
+  }
+
+  .footer-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 16px;
+  }
+
+  .footer-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: #f4f8ff;
+    border: 1px solid #dbe3f0;
+    color: #5f6b85;
+    font-size: 0.86rem;
+    font-weight: 700;
+  }
+
+  .footer-links-column {
+    display: grid;
+    gap: 10px;
+  }
+
+  .footer-links-column a {
+    color: #5f6b85;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .back-to-top {
+    position: fixed;
+    right: 18px;
+    bottom: 18px;
+    z-index: 30;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 46px;
+    height: 46px;
+    padding: 0 14px;
+    border: none;
+    border-radius: 999px;
+    background: #172033;
+    color: #fff;
+    font-weight: 800;
+    box-shadow: 0 14px 30px rgba(20,32,70,.18);
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(12px);
+    transition: opacity .18s ease, transform .18s ease;
+  }
+
+  .back-to-top.is-visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  .back-to-top:hover { background: #0f1728; }
+
+  @media (max-width: 980px) {
+    .hero-grid,
+    .layout,
+    .decision-grid,
+    .checklist-grid,
+    .related-grid,
+    .footer-grid-top,
+    .site-cta-card {
+      grid-template-columns: 1fr;
+    }
+
+    .site-cta-actions {
+      justify-content: flex-start;
+    }
+  }
+
+  @media (max-width: 720px) {
+    .container {
+      width: min(100% - 24px, 1160px);
+    }
+
+    .field-grid,
+    .results-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .milestone-item {
+      flex-direction: column;
+    }
+
+    .hero {
+      padding-top: 28px;
+    }
+
+    .card-header,
+    .card-body,
+    .hero-box,
+    .content-card {
+      padding-left: 18px;
+      padding-right: 18px;
+    }
+
+    .topbar-inner {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .footer-grid-top,
+    .footer-grid-bottom {
+      width: min(100% - 24px, 1180px);
+    }
+
+    .milestone-item span {
+      text-align: left;
+    }
+  }
+
+  @media (max-width: 820px) {
+    .topbar {
+      position: static;
+      top: auto;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+    }
+
+    main[id],
+    section[id],
+    div[id] {
+      scroll-margin-top: 24px;
+    }
+  }
+
+    .result-details {
+      margin-top: 18px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: #fff;
+      overflow: hidden;
+    }
+
+    .result-details summary {
+      cursor: pointer;
+      list-style: none;
+      padding: 16px 18px;
+      font-weight: 800;
+      font-size: 0.98rem;
+    }
+
+    .result-details summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .result-details[open] summary {
+      border-bottom: 1px solid #edf2fa;
+      background: #f8fbff;
+    }
+
+    .result-details .info-list {
+      margin: 0;
+      padding: 0 18px 18px;
+    }
+</style>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"WebApplication",
+  "name":"Výpočet věku",
+  "url":"https://rychlevypocty.cz/vypocet-veku.html",
+  "applicationCategory":"UtilitiesApplication",
+  "operatingSystem":"Any",
+  "description":"Online kalkulačka pro výpočet přesného věku podle data narození.",
+  "offers":{
+    "@type":"Offer",
+    "price":"0",
+    "priceCurrency":"CZK"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"FAQPage",
+  "mainEntity":[
+    {
+      "@type":"Question",
+      "name":"Jak se počítá přesný věk?",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"Přesný věk se počítá jako rozdíl mezi datem narození a zvoleným referenčním datem. Výsledek lze vyjádřit v letech, měsících a dnech."
+      }
+    },
+    {
+      "@type":"Question",
+      "name":"Lze spočítat věk k jinému datu než dnes?",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"Ano. Kalkulačka umožňuje zadat vlastní referenční datum, takže lze zjistit věk nejen dnes, ale i k jinému minulému nebo budoucímu dni."
+      }
+    },
+    {
+      "@type":"Question",
+      "name":"Zobrazuje kalkulačka i počet dní života?",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"Ano. Kromě věku v letech, měsících a dnech může výsledek ukázat i celkový počet dní života."
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"Organization",
+  "name":"RychléVýpočty.cz",
+  "url":"https://rychlevypocty.cz/",
+  "logo":"https://rychlevypocty.cz/icon-512.png",
+  "sameAs": []
+}
+</script>
+<script data-rv-schema="v7" type="application/ld+json">
+[{
+  "@context":"https://schema.org",
+  "@type":"BreadcrumbList",
+  "itemListElement":[
+    {"@type":"ListItem","position":1,"name":"RychléVýpočty.cz","item":"https://rychlevypocty.cz"},
+    {"@type":"ListItem","position":2,"name":"Všechny kalkulačky","item":"https://rychlevypocty.cz/kalkulacky.html"},
+    {"@type":"ListItem","position":3,"name":"Výpočet věku"}
+  ]
+},{
+  "@context":"https://schema.org",
+  "@type":"WebPage",
+  "name":"Výpočet věku",
+  "description":"Spočítejte přesný věk podle data narození. Kalkulačka věku zobrazí roky, měsíce, dny i celkový počet dní života přehledně a zdarma online.",
+  "url":"https://rychlevypocty.cz/vypocet-veku.html",
+  "inLanguage":"cs-CZ",
+  "isPartOf":{"@type":"WebSite","name":"RychléVýpočty.cz","url":"https://rychlevypocty.cz/"}
+}]
+</script>
+<link href="/rv-enhancements.css?v=1" rel="stylesheet"/>
+<script data-rv-global-schema="v1" type="application/ld+json">[{"@context":"https://schema.org","@type":"Organization","@id":"https://rychlevypocty.cz/#organization","name":"RychléVýpočty.cz","url":"https://rychlevypocty.cz/","logo":"https://rychlevypocty.cz/icon-512.png"},{"@context":"https://schema.org","@type":"WebSite","@id":"https://rychlevypocty.cz/#website","url":"https://rychlevypocty.cz/","name":"RychléVýpočty.cz","inLanguage":"cs-CZ"},{"@context":"https://schema.org","@type":"WebPage","name":"Výpočet věku online zdarma | RychléVýpočty.cz","description":"Spočítejte přesný věk podle data narození. Kalkulačka věku zobrazí roky, měsíce, dny i celkový počet dní života přehledně a zdarma online.","url":"https://rychlevypocty.cz/vypocet-veku.html","inLanguage":"cs-CZ","isPartOf":{"@id":"https://rychlevypocty.cz/#website"},"about":{"@id":"https://rychlevypocty.cz/#organization"}}]</script>
+</head>
+<body>
+<a class="skip-link" href="#main-content">Přeskočit na obsah</a>
+<header class="topbar">
+<div class="container topbar-inner">
+<a class="brand" href="/">Rychlé<span>Výpočty</span>.cz</a>
+<nav aria-label="Hlavní navigace" class="topnav">
+<a href="/">Domů</a>
+<a href="/kolik-dni-do-data.html">Dny do data</a>
+<a href="/pracovni-dny-kalkulacka.html">Pracovní dny</a>
+<a href="/bmi-kalkulacka.html">BMI</a>
+</nav>
+</div>
+</header>
+<main id="main-content" tabindex="-1">
+<section class="hero">
+<div class="container">
+<div class="breadcrumbs">
+<a href="/">RychléVýpočty.cz</a>
+<span aria-hidden="true" class="sep">/</span>
+<a href="/kalkulacky.html">Všechny kalkulačky</a>
+<span aria-hidden="true" class="sep">/</span>
+<strong>Výpočet věku</strong>
+</div>
+<div class="hero-grid">
+<div class="hero-copy">
+<h1>Výpočet věku</h1>
+<p>Spočítejte si přesný věk podle data narození. Kalkulačka zobrazí výsledek v letech, měsících a dnech a doplní také celkový počet dní života nebo příští významné narozeniny.</p>
+
+<div class="hero-actions">
+<a class="button-link btn-primary" href="#kalkulacka">Spočítat věk</a>
+<a class="button-link btn-ghost" href="/kolik-dni-do-data.html">Dny do data</a>
+</div>
+
+</div>
+<div class="hero-box">
+<h2>Co kalkulačka umí</h2>
+<p>Počítá přesný věk mezi dvěma daty a ukáže nejen roky, měsíce a dny, ale i doplňkové informace, které dělají výsledek praktičtější.</p>
+<p>Výchozí referenční datum je dnešní den, ale můžete si zvolit i vlastní datum pro minulost nebo budoucnost.</p>
+</div>
+</div>
+</div>
+</section>
+
+<section class="container layout" id="kalkulacka">
+<div class="card">
+<div class="card-header">
+<h2>Zadání dat</h2>
+<p>Zadejte datum narození a případně upravte datum, ke kterému chcete věk spočítat.</p>
+</div>
+<div class="card-body">
+<div class="field-grid">
+<div class="field">
+<label for="birthDate">Datum narození</label>
+<input id="birthDate" type="date"/>
+<small>Vyberte datum narození osoby.</small>
+</div>
+<div class="field">
+<label for="targetDate">Počítat k datu</label>
+<input id="targetDate" type="date"/>
+<small>Výchozí hodnota je dnešní datum.</small>
+</div>
+<div class="field full">
+<label for="displayMode">Zobrazení doplňkových údajů</label>
+<select id="displayMode">
+<option selected="" value="full">Plný výsledek</option>
+<option value="simple">Základní výsledek</option>
+</select>
+<small>Ovlivňuje rozsah doplňkových informací ve výsledku.</small>
+</div>
+</div>
+<div class="actions">
+<button class="btn-primary" id="calculateBtn" type="button">Spočítat věk</button>
+<button class="btn-secondary" id="resetBtn" type="button">Obnovit výchozí hodnoty</button>
+</div>
+<div class="milestone-list">
+<div class="milestone-item">
+<strong>Přesný výsledek</strong>
+<span>Roky, měsíce a dny mezi dvěma daty</span>
+</div>
+<div class="milestone-item">
+<strong>Celkové součty</strong>
+<span>Dny, týdny i měsíce života orientačně na jednom místě</span>
+</div>
+<div class="milestone-item">
+<strong>Další milníky</strong>
+<span>Kolik dní zbývá do dalších narozenin</span>
+</div>
+</div>
+</div>
+</div>
+<div class="card">
+<div class="card-header">
+<h2>Výsledek výpočtu</h2>
+<p>Přehled přesného věku a doplňkových údajů podle zadaných dat.</p>
+</div>
+<div class="card-body">
+<div class="results-grid">
+<div class="result-box highlight">
+<div class="result-label">Přesný věk</div>
+<div class="result-value" id="exactAgeResult">0 let</div>
+</div>
+<div class="result-box">
+<div class="result-label">Celkem dní</div>
+<div class="result-value" id="daysResult">0</div>
+</div>
+<div class="result-box">
+<div class="result-label">Další narozeniny za</div>
+<div class="result-value" id="nextBirthdayResult">0 dní</div>
+</div>
+<div class="result-box">
+<div class="result-label">Věk v měsících</div>
+<div class="result-value" id="monthsResult">0</div>
+</div>
+</div>
+<div class="badge success" id="resultBadge">Výpočet připraven</div>
+<details class="result-details"><summary>Detail výpočtu</summary><div class="info-list">
+<div class="info-row">
+<span>Datum narození</span>
+<strong id="birthDateResult">—</strong>
+</div>
+<div class="info-row">
+<span>Referenční datum</span>
+<strong id="targetDateResult">—</strong>
+</div>
+<div class="info-row">
+<span>Věk ve týdnech</span>
+<strong id="weeksResult">0</strong>
+</div>
+<div class="info-row">
+<span>Uběhlé narozeniny</span>
+<strong id="birthdayCountResult">0</strong>
+</div>
+<div class="info-row">
+<span>Příští kulaté narozeniny</span>
+<strong id="roundBirthdayResult">—</strong>
+</div>
+</div></details>
+<div class="note" id="resultNote">
+          Zadejte datum narození a kalkulačka spočítá přesný věk k vybranému datu.
+        </div>
+
+</div>
+</div>
+</section>
+<section class="container content-section" id="jak-cist-vysledek">
+<div class="content-card">
+<h2>Jak číst výsledek výpočtu věku</h2>
+<p>Pro většinu situací je nejdůležitější přesný věk v letech, měsících a dnech. Ostatní údaje jako počet dní života, týdnů nebo měsíců jsou užitečné hlavně v administrativě, evidenci nebo jako doplňková informace.</p>
+<div class="checklist-grid">
+<div class="check-card">
+<strong>Přesný věk</strong>
+<span>Hlavní výstup pro běžné použití, formuláře a osobní orientaci.</span>
+</div>
+<div class="check-card">
+<strong>Celkem dní</strong>
+<span>Hodí se pro detailnější práci s daty nebo zajímavé porovnání.</span>
+</div>
+<div class="check-card">
+<strong>Další narozeniny</strong>
+<span>Praktická informace pro plánování nebo rychlou orientaci v čase.</span>
+</div>
+</div>
+<h3>Kdy výsledek působí správně</h3>
+<p>Když datum narození i referenční datum odpovídají tomu, co opravdu potřebujete spočítat. Nejčastější chyba bývá v tom, že uživatel nepočítá k dnešnímu dni, ale k jinému datu.</p>
+<h3>Kdy zbystřit</h3>
+<p>Pokud vychází nečekaný věk, zkontrolujte hlavně pořadí dat. Datum narození nesmí být později než referenční datum, ke kterému se věk počítá.</p>
+</div>
+<div class="content-card">
+<h2>Jak výpočet věku funguje</h2>
+<p>Kalkulačka porovnává datum narození s referenčním datem a zjišťuje přesný rozdíl v letech, měsících a dnech. Díky tomu je výsledek použitelný i pro přesnější administrativní nebo osobní potřeby, nejen jako orientační údaj v celých letech.</p>
+<h3>K čemu se kalkulačka věku hodí</h3>
+<ul>
+<li>pro rychlé zjištění aktuálního věku,</li>
+<li>pro výpočet věku dítěte nebo jiné osoby k určitému datu,</li>
+<li>pro formuláře, přihlášky a evidenci,</li>
+<li>pro běžné osobní a rodinné použití.</li>
+</ul>
+<h3>Co ve výsledku uvidíte</h3>
+<p>Kromě přesného věku v letech, měsících a dnech může kalkulačka ukázat i počet dní života, počet týdnů, orientační počet měsíců a informaci o příštích narozeninách.</p>
+<h3>Na co si dát pozor</h3>
+<p>Výsledek závisí na tom, ke kterému datu se věk počítá. Pokud si změníte referenční datum, může jít o věk v minulosti nebo v budoucnu, ne nutně o věk k dnešnímu dni.</p>
+</div>
+</section>
+<section class="container content-section" id="souvisejici">
+<div class="content-card">
+<h2>Související kalkulačky</h2>
+<div class="related-grid">
+<a class="related-card" href="/kolik-dni-do-data.html">
+<strong>Kolik dní do data</strong>
+<span>Výpočet počtu dní do zvoleného termínu nebo události.</span>
+</a>
+<a class="related-card" href="/pracovni-dny-kalkulacka.html">
+<strong>Kalkulačka pracovních dnů</strong>
+<span>Počet pracovních dnů mezi dvěma daty včetně svátků.</span>
+</a>
+<a class="related-card" href="/bmi-kalkulacka.html">
+<strong>BMI kalkulačka</strong>
+<span>Výpočet BMI podle výšky a hmotnosti.</span>
+</a>
+<a class="related-card" href="/kalkulacka-prumeru.html">
+<strong>Kalkulačka průměru</strong>
+<span>Výpočet aritmetického i váženého průměru.</span>
+</a>
+</div>
+</div>
+</section>
+<section class="container content-section" id="faq">
+<div class="content-card">
+<h2>Časté otázky</h2>
+<h3>Jak se počítá přesný věk?</h3>
+<p>Přesný věk se počítá jako rozdíl mezi datem narození a zvoleným referenčním datem. Výsledek lze vyjádřit v letech, měsících a dnech.</p>
+<h3>Lze spočítat věk k jinému datu než dnes?</h3>
+<p>Ano. Kalkulačka umožňuje zadat vlastní referenční datum, takže lze zjistit věk nejen dnes, ale i k jinému minulému nebo budoucímu dni.</p>
+<h3>Zobrazuje kalkulačka i počet dní života?</h3>
+<p>Ano. Kromě věku v letech, měsících a dnech může výsledek ukázat i celkový počet dní života.</p>
+</div>
+</section>
+<section aria-label="Další krok" class="site-cta-band">
+<div class="container">
+<div class="site-cta-card">
+<div class="site-cta-copy">
+<strong>Pokračujte dalším rychlým výpočtem</strong>
+<p>Když máte hotový jeden výpočet, často se hodí ověřit si i další související číslo nebo termín.</p>
+</div>
+<div class="site-cta-actions">
+<a class="site-cta-link" href="/kalkulacky.html">Všechny kalkulačky</a>
+<a class="site-cta-link" href="/kolik-dni-do-data.html">Dny do data</a>
+<a class="site-cta-link" href="/pracovni-dny-kalkulacka.html">Pracovní dny</a>
+<a class="site-cta-link" href="/bmi-kalkulacka.html">BMI</a>
+</div>
+</div>
+</div>
+</section>
+</main>
+<footer>
+<div class="footer-grid-top">
+<div style="max-width:520px;">
+<strong style="display:inline-block;font-size:1.14rem;letter-spacing:-0.02em;color:#172033;margin-bottom:12px;">RychléVýpočty.cz</strong>
+<p style="margin:0;color:#5f6b85;font-size:0.95rem;line-height:1.65;">
+        Online kalkulačky a praktické nástroje zdarma pro finance, bydlení, hypotéky, pronájem,
+        investiční rozhodování, mzdy, podnikání, energie, auto, rekonstrukce a další situace,
+        které dává smysl si předem spočítat.
+      </p>
+<div class="footer-pills">
+<span class="footer-pill">Zdarma</span>
+<span class="footer-pill">Bez registrace</span>
+<span class="footer-pill">Praktické rozhodování</span>
+</div>
+</div>
+<div>
+<h3 style="margin:0 0 12px;font-size:1rem;letter-spacing:-0.02em;color:#172033;">Hlavní sekce</h3>
+<div class="footer-links-column">
+<a href="/kalkulacky.html">Všechny kalkulačky</a>
+<a href="/finance-a-hypoteky.html">Finance a hypotéky</a>
+<a href="/pronajem-a-investicni-bydleni.html">Pronájem a investiční bydlení</a>
+<a href="/mzdy-a-prace.html">Mzdy a práce</a>
+<a href="/stavba-domu.html">Stavba domu</a>
+</div>
+</div>
+<div>
+<h3 style="margin:0 0 12px;font-size:1rem;letter-spacing:-0.02em;color:#172033;">Informace a důvěra</h3>
+<div class="footer-links-column">
+<a href="/o-nas.html">O nás</a>
+<a href="/kontakt.html">Kontakt</a>
+<a href="/ochrana-osobnich-udaju.html">Ochrana osobních údajů</a>
+<a href="/podminky-pouziti.html">Podmínky použití</a>
+</div>
+</div>
+</div>
+<div class="footer-grid-bottom">
+<div>
+<p style="margin:0 0 8px;color:#5f6b85;font-size:0.92rem;line-height:1.6;">© RychléVýpočty.cz – online kalkulačky a praktické nástroje zdarma</p>
+<p style="margin:0;color:#5f6b85;font-size:0.92rem;line-height:1.6;">Výsledky mají orientační charakter a u důležitých finančních, daňových, právních nebo stavebních rozhodnutí je vhodné je ověřit podle konkrétních podmínek.</p>
+</div>
+</div>
+</footer>
+<button aria-label="Zpět nahoru" class="back-to-top" id="rvBackToTop" type="button">↑</button>
+<script>
+  const birthDateInput = document.getElementById('birthDate');
+  const targetDateInput = document.getElementById('targetDate');
+  const displayModeInput = document.getElementById('displayMode');
+
+  const outputs = {
+    exactAgeResult: document.getElementById('exactAgeResult'),
+    daysResult: document.getElementById('daysResult'),
+    nextBirthdayResult: document.getElementById('nextBirthdayResult'),
+    monthsResult: document.getElementById('monthsResult'),
+    resultBadge: document.getElementById('resultBadge'),
+    birthDateResult: document.getElementById('birthDateResult'),
+    targetDateResult: document.getElementById('targetDateResult'),
+    weeksResult: document.getElementById('weeksResult'),
+    birthdayCountResult: document.getElementById('birthdayCountResult'),
+    roundBirthdayResult: document.getElementById('roundBirthdayResult'),
+    resultNote: document.getElementById('resultNote'),
+    decisionStatus: document.getElementById('decisionStatus'),
+    decisionText: document.getElementById('decisionText'),
+    nextStepStatus: document.getElementById('nextStepStatus'),
+    nextStepText: document.getElementById('nextStepText')
+  };
+
+  function formatDateCZ(date) {
+    return new Intl.DateTimeFormat('cs-CZ', {
+      day: 'numeric',
+      month: 'numeric',
+      year: 'numeric'
+    }).format(date);
+  }
+
+  function formatInteger(value) {
+    return new Intl.NumberFormat('cs-CZ').format(value);
+  }
+
+  function parseDate(value) {
+    const [year, month, day] = value.split('-').map(Number);
+    return new Date(year, month - 1, day);
+  }
+
+  function dateToValue(date) {
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, '0');
+    const d = String(date.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+  }
+
+  function daysBetween(start, end) {
+    const msPerDay = 24 * 60 * 60 * 1000;
+    const utcStart = Date.UTC(start.getFullYear(), start.getMonth(), start.getDate());
+    const utcEnd = Date.UTC(end.getFullYear(), end.getMonth(), end.getDate());
+    return Math.floor((utcEnd - utcStart) / msPerDay);
+  }
+
+  function diffYMD(start, end) {
+    let years = end.getFullYear() - start.getFullYear();
+    let months = end.getMonth() - start.getMonth();
+    let days = end.getDate() - start.getDate();
+
+    if (days < 0) {
+      const prevMonth = new Date(end.getFullYear(), end.getMonth(), 0).getDate();
+      days += prevMonth;
+      months--;
+    }
+
+    if (months < 0) {
+      months += 12;
+      years--;
+    }
+
+    return { years, months, days };
+  }
+
+  function nextBirthdayInfo(birthDate, targetDate) {
+    let nextBirthday = new Date(targetDate.getFullYear(), birthDate.getMonth(), birthDate.getDate());
+
+    if (nextBirthday <= targetDate) {
+      nextBirthday = new Date(targetDate.getFullYear() + 1, birthDate.getMonth(), birthDate.getDate());
+    }
+
+    const daysLeft = daysBetween(targetDate, nextBirthday);
+    return { nextBirthday, daysLeft };
+  }
+
+  function nextRoundBirthday(ageYears, birthDate) {
+    const nextRound = Math.ceil((ageYears + 1) / 10) * 10;
+    const roundDate = new Date(birthDate.getFullYear() + nextRound, birthDate.getMonth(), birthDate.getDate());
+    return { nextRound, roundDate };
+  }
+
+  function pluralYears(years) {
+    if (years === 1) return '1 rok';
+    if (years >= 2 && years <= 4) return `${years} roky`;
+    return `${years} let`;
+  }
+
+  function calculateAge() {
+    const birthValue = birthDateInput.value;
+    const targetValue = targetDateInput.value;
+    const displayMode = displayModeInput.value;
+
+    if (!birthValue || !targetValue) {
+      outputs.exactAgeResult.textContent = '0 let';
+      outputs.daysResult.textContent = '0';
+      outputs.nextBirthdayResult.textContent = '0 dní';
+      outputs.monthsResult.textContent = '0';
+      outputs.birthDateResult.textContent = '—';
+      outputs.targetDateResult.textContent = '—';
+      outputs.weeksResult.textContent = '0';
+      outputs.birthdayCountResult.textContent = '0';
+      outputs.roundBirthdayResult.textContent = '—';
+      outputs.resultBadge.className = 'badge warning';
+      outputs.resultBadge.textContent = 'Chybí vstupní data';
+      outputs.resultNote.textContent = 'Vyberte datum narození i referenční datum.';
+      outputs.decisionStatus.className = 'decision-status caution';
+      outputs.decisionStatus.textContent = 'Doplňte vstupy';
+      outputs.decisionText.textContent = 'Bez data narození a referenčního data nelze přesný věk spočítat.';
+      outputs.nextStepStatus.className = 'decision-status safe';
+      outputs.nextStepStatus.textContent = 'Další krok';
+      outputs.nextStepText.textContent = 'Nejdřív doplňte obě data. Pak uvidíte přesný věk i doplňkové milníky.';
+      return;
+    }
+
+    const birthDate = parseDate(birthValue);
+    const targetDate = parseDate(targetValue);
+
+    if (birthDate > targetDate) {
+      outputs.exactAgeResult.textContent = 'Nelze vypočítat';
+      outputs.daysResult.textContent = '0';
+      outputs.nextBirthdayResult.textContent = '0 dní';
+      outputs.monthsResult.textContent = '0';
+      outputs.birthDateResult.textContent = formatDateCZ(birthDate);
+      outputs.targetDateResult.textContent = formatDateCZ(targetDate);
+      outputs.weeksResult.textContent = '0';
+      outputs.birthdayCountResult.textContent = '0';
+      outputs.roundBirthdayResult.textContent = '—';
+      outputs.resultBadge.className = 'badge warning';
+      outputs.resultBadge.textContent = 'Neplatné datum';
+      outputs.resultNote.textContent = 'Datum narození nesmí být později než referenční datum.';
+      outputs.decisionStatus.className = 'decision-status caution';
+      outputs.decisionStatus.textContent = 'Zkontrolujte data';
+      outputs.decisionText.textContent = 'Nejčastější problém je opačně zadané pořadí dat. Datum narození musí být dřívější než datum, ke kterému věk počítáte.';
+      outputs.nextStepStatus.className = 'decision-status safe';
+      outputs.nextStepStatus.textContent = 'Další krok';
+      outputs.nextStepText.textContent = 'Upravte datum narození nebo referenční datum a přepočítejte výsledek.';
+      return;
+    }
+
+    const diff = diffYMD(birthDate, targetDate);
+    const totalDays = daysBetween(birthDate, targetDate);
+    const totalWeeks = Math.floor(totalDays / 7);
+    const totalMonths = diff.years * 12 + diff.months;
+    const birthdayCount = diff.years;
+
+    const birthdayInfo = nextBirthdayInfo(birthDate, targetDate);
+    const roundInfo = nextRoundBirthday(diff.years, birthDate);
+
+    outputs.exactAgeResult.textContent = `${diff.years} let, ${diff.months} měs., ${diff.days} dní`;
+    outputs.daysResult.textContent = formatInteger(totalDays);
+    outputs.nextBirthdayResult.textContent = `${formatInteger(birthdayInfo.daysLeft)} dní`;
+    outputs.monthsResult.textContent = formatInteger(totalMonths);
+    outputs.birthDateResult.textContent = formatDateCZ(birthDate);
+    outputs.targetDateResult.textContent = formatDateCZ(targetDate);
+    outputs.weeksResult.textContent = formatInteger(totalWeeks);
+    outputs.birthdayCountResult.textContent = formatInteger(birthdayCount);
+    outputs.roundBirthdayResult.textContent = `${roundInfo.nextRound}. narozeniny – ${formatDateCZ(roundInfo.roundDate)}`;
+
+    if (displayMode === 'simple') {
+      outputs.resultNote.textContent = `Věk k datu ${formatDateCZ(targetDate)} je ${pluralYears(diff.years)}.`;
+    } else {
+      outputs.resultNote.textContent = `Přesný věk k datu ${formatDateCZ(targetDate)} je ${diff.years} let, ${diff.months} měsíců a ${diff.days} dní.`;
+    }
+
+    outputs.resultBadge.className = 'badge success';
+    outputs.resultBadge.textContent = pluralYears(diff.years);
+
+    if (birthdayInfo.daysLeft <= 30) {
+      outputs.decisionStatus.className = 'decision-status safe';
+      outputs.decisionStatus.textContent = 'Blíží se narozeniny';
+      outputs.decisionText.textContent = `Další narozeniny jsou už za ${formatInteger(birthdayInfo.daysLeft)} dní. Pro běžnou orientaci je teď nejpraktičtější sledovat hlavně celkový věk a tento blízký milník.`;
+    } else {
+      outputs.decisionStatus.className = 'decision-status caution';
+      outputs.decisionStatus.textContent = 'Přesný rozpad';
+      outputs.decisionText.textContent = 'Hlavní výstup je přesný věk v letech, měsících a dnech. Ostatní údaje jako týdny a dny života jsou doplňkové.';
+    }
+
+    outputs.nextStepStatus.className = 'decision-status safe';
+    outputs.nextStepStatus.textContent = 'Další krok';
+    outputs.nextStepText.textContent = 'Pokud řešíte termíny nebo návazné datumy, pokračujte výpočtem dní do data nebo pracovních dnů mezi dvěma daty.';
+  }
+
+  function setDefaults() {
+    const today = new Date();
+    const defaultBirth = new Date(today.getFullYear() - 30, today.getMonth(), today.getDate());
+
+    birthDateInput.value = dateToValue(defaultBirth);
+    targetDateInput.value = dateToValue(today);
+    displayModeInput.value = 'full';
+  }
+
+  document.getElementById('calculateBtn').addEventListener('click', calculateAge);
+
+  document.getElementById('resetBtn').addEventListener('click', function() {
+    setDefaults();
+    calculateAge();
+  });
+
+  [birthDateInput, targetDateInput, displayModeInput].forEach(el => {
+    el.addEventListener('input', calculateAge);
+    el.addEventListener('change', calculateAge);
+  });
+
+  setDefaults();
+  calculateAge();
+</script>
+<script>
+  (function () {
+    const path = window.location.pathname.replace(/\/$/, '') || '/';
+    const links = document.querySelectorAll('.topnav a[href]');
+    links.forEach((link) => {
+      const href = link.getAttribute('href');
+      if (!href) return;
+      const normalized = href.replace(/\/$/, '') || '/';
+      if (normalized === path) {
+        link.setAttribute('aria-current', 'page');
+      }
+    });
+  })();
+</script>
+<script data-rv-enhancement="v7">
+  (function(){
+    const btn = document.getElementById('rvBackToTop');
+    if(!btn) return;
+
+    const toggle = () => {
+      btn.classList.toggle('is-visible', window.scrollY > 520);
+    };
+
+    toggle();
+    window.addEventListener('scroll', toggle, { passive:true });
+    btn.addEventListener('click', () => window.scrollTo({ top:0, behavior:'smooth' }));
+  })();
+</script>
+</body>
+</html>

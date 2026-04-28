@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="cs" data-tool-template="v2">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="format-detection" content="telephone=no" />
+  <meta name="theme-color" content="#081A33" />
+
+  <!-- =========================================================
+    RychléVýpočty.cz — Tool Page V2 Master Template
+    ---------------------------------------------------------
+    Použití:
+    1) Nahraď placeholdery {{...}} konkrétní kalkulačkou.
+    2) Zachovej strukturu sekcí, měň obsah, téma a calculator markup.
+    3) Výpočetní logiku drž v samostatném JS souboru nebo modulu.
+    4) CSS je sdílené: /rv-tool-v2.css
+    5) Core JS je sdílený: /rv-tool-core.js
+  ========================================================== -->
+
+  <title>{{SEO_TITLE}}</title>
+  <meta name="description" content="{{META_DESCRIPTION}}" />
+  <meta name="robots" content="index,follow" />
+  <link rel="canonical" href="https://rychlevypocty.cz/{{CANONICAL_SLUG}}.html" />
+
+  <meta property="og:locale" content="cs_CZ" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://rychlevypocty.cz/{{CANONICAL_SLUG}}.html" />
+  <meta property="og:site_name" content="RychléVýpočty.cz" />
+  <meta property="og:title" content="{{OG_TITLE}}" />
+  <meta property="og:description" content="{{OG_DESCRIPTION}}" />
+  <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <link rel="preload" href="/rv-tool-v2.css" as="style" />
+  <link rel="stylesheet" href="/rv-tool-v2.css" />
+</head>
+
+<body class="rv-tool-page" data-theme="{{THEME}}" data-tool="{{TOOL_ID}}">
+  <a class="skip-link" href="#main">Přejít na obsah</a>
+
+  <!-- Header: sdílený brand header podle index.html -->
+  <header class="site-header" data-component="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="/" aria-label="RychléVýpočty.cz – domů">
+        <span class="brand-mark" aria-hidden="true">RV</span>
+        <span class="brand-copy">
+          <strong>Rychlé<span>Výpočty</span>.cz</strong>
+          <small>kalkulačky, které dávají smysl</small>
+        </span>
+      </a>
+
+      <nav class="main-nav" aria-label="Hlavní navigace">
+        <a href="/">Domů</a>
+        <a href="/kalkulacky.html" aria-current="{{NAV_CURRENT_CALCULATORS}}">Kalkulačky</a>
+        <a href="/{{CATEGORY_URL}}.html" aria-current="{{NAV_CURRENT_CATEGORY}}">{{CATEGORY_NAME}}</a>
+        <a href="/dalsi-prakticke-nastroje.html">Články</a>
+      </nav>
+
+      <div class="header-actions">
+        <a class="btn btn-ghost" href="/kalkulacky.html">Všechny kalkulačky</a>
+        <a class="btn btn-primary" href="#kalkulacka">Spočítat</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- Breadcrumbs -->
+    <nav class="breadcrumbs container" aria-label="Drobečková navigace">
+      <ol>
+        <li><a href="/">RychléVýpočty.cz</a></li>
+        <li><a href="/{{CATEGORY_URL}}.html">{{CATEGORY_NAME}}</a></li>
+        <li aria-current="page">{{TOOL_NAME}}</li>
+      </ol>
+    </nav>
+
+    <!-- Product hero -->
+    <section class="tool-hero" data-component="tool-hero">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow">{{EYEBROW}}</p>
+          <h1>{{H1}}</h1>
+          <p class="lead">{{HERO_LEAD}}</p>
+
+          <div class="hero-actions">
+            <a class="btn btn-primary btn-lg" href="#kalkulacka">{{PRIMARY_CTA}}</a>
+            <a class="btn btn-secondary btn-lg" href="{{SECONDARY_CTA_URL}}">{{SECONDARY_CTA}}</a>
+          </div>
+
+          <ul class="trust-pills" aria-label="Výhody kalkulačky">
+            <li>{{TRUST_BADGE_1}}</li>
+            <li>{{TRUST_BADGE_2}}</li>
+            <li>{{TRUST_BADGE_3}}</li>
+          </ul>
+        </div>
+
+        <!-- Hero visual: pro každý tool se mění obsah, ne layout -->
+        <aside class="hero-visual" aria-label="Ukázka výstupu kalkulačky">
+          <div class="visual-orb visual-orb-a" aria-hidden="true"></div>
+          <div class="visual-orb visual-orb-b" aria-hidden="true"></div>
+
+          <div class="dashboard-card dashboard-card-main">
+            <span class="card-kicker">{{HERO_VISUAL_KICKER}}</span>
+            <strong>{{HERO_VISUAL_RESULT}}</strong>
+            <small>{{HERO_VISUAL_NOTE}}</small>
+          </div>
+
+          <div class="dashboard-grid-mini">
+            <div class="mini-card">
+              <span>{{HERO_METRIC_1_LABEL}}</span>
+              <strong>{{HERO_METRIC_1_VALUE}}</strong>
+            </div>
+            <div class="mini-card">
+              <span>{{HERO_METRIC_2_LABEL}}</span>
+              <strong>{{HERO_METRIC_2_VALUE}}</strong>
+            </div>
+          </div>
+
+          <!-- Inline SVG doporučeno kvůli rychlosti a konzistenci. -->
+          <svg class="hero-line-chart" viewBox="0 0 420 160" role="img" aria-label="Ilustrační průběh výsledku">
+            <defs>
+              <linearGradient id="chartGradient" x1="0" x2="1" y1="0" y2="0">
+                <stop offset="0" stop-color="var(--theme-accent)" />
+                <stop offset="1" stop-color="var(--theme-accent-2)" />
+              </linearGradient>
+            </defs>
+            <path d="M20 122 C90 92 118 82 172 96 C232 112 266 44 322 56 C366 66 388 42 404 30" fill="none" stroke="url(#chartGradient)" stroke-width="10" stroke-linecap="round" />
+            <g fill="var(--theme-accent)">
+              <circle cx="20" cy="122" r="6" />
+              <circle cx="172" cy="96" r="6" />
+              <circle cx="322" cy="56" r="6" />
+              <circle cx="404" cy="30" r="6" />
+            </g>
+          </svg>
+        </aside>
+      </div>
+    </section>
+
+    <!-- Anchor nav -->
+    <nav class="anchor-nav" aria-label="Obsah stránky">
+      <div class="container anchor-scroll">
+        <a href="#kalkulacka">Kalkulačka</a>
+        <a href="#vysledek">Výsledek</a>
+        <a href="#rozhodnuti">Co z toho plyne</a>
+        <a href="#metodika">Metodika</a>
+        <a href="#faq">FAQ</a>
+      </div>
+    </nav>
+
+    <!-- Calculator shell -->
+    <section class="tool-stage container" id="kalkulacka" data-component="calculator-shell">
+      <article class="calculator-card">
+        <div class="section-heading compact">
+          <p class="eyebrow">{{CALCULATOR_EYEBROW}}</p>
+          <h2>{{CALCULATOR_TITLE}}</h2>
+          <p>{{CALCULATOR_DESCRIPTION}}</p>
+        </div>
+
+        <!-- Calculator form: nahradit konkrétními inputy daného toolu. -->
+        <form class="calculator-form" id="{{FORM_ID}}" novalidate>
+          <div class="form-grid">
+            <label class="input-group">
+              <span>{{INPUT_1_LABEL}}</span>
+              <small>{{INPUT_1_HELP}}</small>
+              <div class="input-shell">
+                <input id="{{INPUT_1_ID}}" name="{{INPUT_1_NAME}}" type="number" inputmode="decimal" value="{{INPUT_1_DEFAULT}}" min="{{INPUT_1_MIN}}" step="{{INPUT_1_STEP}}" />
+                <em>{{INPUT_1_UNIT}}</em>
+              </div>
+            </label>
+
+            <label class="input-group">
+              <span>{{INPUT_2_LABEL}}</span>
+              <small>{{INPUT_2_HELP}}</small>
+              <div class="input-shell">
+                <input id="{{INPUT_2_ID}}" name="{{INPUT_2_NAME}}" type="number" inputmode="decimal" value="{{INPUT_2_DEFAULT}}" min="{{INPUT_2_MIN}}" step="{{INPUT_2_STEP}}" />
+                <em>{{INPUT_2_UNIT}}</em>
+              </div>
+            </label>
+          </div>
+
+          <!-- Presety: volitelné. Skrýt, pokud pro konkrétní tool nedávají smysl. -->
+          <div class="preset-row" aria-label="Rychlé scénáře">
+            <button class="chip" type="button" data-preset="{{PRESET_1_ID}}">{{PRESET_1_LABEL}}</button>
+            <button class="chip" type="button" data-preset="{{PRESET_2_ID}}">{{PRESET_2_LABEL}}</button>
+            <button class="chip" type="button" data-preset="{{PRESET_3_ID}}">{{PRESET_3_LABEL}}</button>
+          </div>
+
+          <details class="advanced-settings">
+            <summary>{{ADVANCED_TITLE}}</summary>
+            <div class="form-grid">
+              <!-- Advanced inputy sem. -->
+              {{ADVANCED_INPUTS}}
+            </div>
+          </details>
+        </form>
+      </article>
+
+      <!-- Result panel -->
+      <aside class="result-panel" id="vysledek" aria-live="polite" data-component="result-panel">
+        <div class="result-header">
+          <span>{{RESULT_EYEBROW}}</span>
+          <strong id="resultStatusLabel">{{RESULT_STATUS_DEFAULT}}</strong>
+        </div>
+
+        <div class="primary-result">
+          <small>{{PRIMARY_RESULT_LABEL}}</small>
+          <output id="primaryResult">{{PRIMARY_RESULT_DEFAULT}}</output>
+          <p id="primaryResultNote">{{PRIMARY_RESULT_NOTE_DEFAULT}}</p>
+        </div>
+
+        <div class="result-metrics">
+          <div class="metric-card">
+            <span>{{METRIC_1_LABEL}}</span>
+            <strong id="metric1">{{METRIC_1_DEFAULT}}</strong>
+          </div>
+          <div class="metric-card">
+            <span>{{METRIC_2_LABEL}}</span>
+            <strong id="metric2">{{METRIC_2_DEFAULT}}</strong>
+          </div>
+          <div class="metric-card">
+            <span>{{METRIC_3_LABEL}}</span>
+            <strong id="metric3">{{METRIC_3_DEFAULT}}</strong>
+          </div>
+          <div class="metric-card">
+            <span>{{METRIC_4_LABEL}}</span>
+            <strong id="metric4">{{METRIC_4_DEFAULT}}</strong>
+          </div>
+        </div>
+
+        <div class="status-meter" aria-label="Orientační stav výsledku">
+          <span style="--meter-position: {{METER_DEFAULT}}%"></span>
+        </div>
+
+        <div class="result-explain" id="resultExplain">
+          {{RESULT_EXPLANATION_DEFAULT}}
+        </div>
+
+        <a class="btn btn-primary btn-full" href="#rozhodnuti">{{RESULT_CTA}}</a>
+      </aside>
+    </section>
+
+    <!-- Decision cockpit -->
+    <section class="decision-cockpit container" id="rozhodnuti" data-component="decision-cockpit">
+      <div class="section-heading">
+        <p class="eyebrow">{{DECISION_EYEBROW}}</p>
+        <h2>{{DECISION_TITLE}}</h2>
+        <p>{{DECISION_LEAD}}</p>
+      </div>
+
+      <div class="decision-grid">
+        <article class="decision-card decision-card-featured">
+          <span>{{DECISION_CARD_1_KICKER}}</span>
+          <h3>{{DECISION_CARD_1_TITLE}}</h3>
+          <p id="decisionPrimaryText">{{DECISION_CARD_1_TEXT}}</p>
+        </article>
+        <article class="decision-card">
+          <span>{{DECISION_CARD_2_KICKER}}</span>
+          <h3>{{DECISION_CARD_2_TITLE}}</h3>
+          <p id="decisionSecondaryText">{{DECISION_CARD_2_TEXT}}</p>
+        </article>
+        <article class="decision-card">
+          <span>{{DECISION_CARD_3_KICKER}}</span>
+          <h3>{{DECISION_CARD_3_TITLE}}</h3>
+          <p id="decisionTertiaryText">{{DECISION_CARD_3_TEXT}}</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- Neutral next steps: dnes interní/SEO, do budoucna lze u vybraných toolů nahradit lead/affiliate verzí. -->
+    <section class="next-steps container" data-component="next-steps">
+      <div class="next-steps-panel">
+        <div>
+          <p class="eyebrow">{{NEXT_STEPS_EYEBROW}}</p>
+          <h2>{{NEXT_STEPS_TITLE}}</h2>
+          <p>{{NEXT_STEPS_LEAD}}</p>
+        </div>
+        <div class="next-step-cards">
+          <a class="next-step-card" href="{{NEXT_STEP_1_URL}}">
+            <span>{{NEXT_STEP_1_KICKER}}</span>
+            <strong>{{NEXT_STEP_1_TITLE}}</strong>
+            <small>{{NEXT_STEP_1_TEXT}}</small>
+          </a>
+          <a class="next-step-card" href="{{NEXT_STEP_2_URL}}">
+            <span>{{NEXT_STEP_2_KICKER}}</span>
+            <strong>{{NEXT_STEP_2_TITLE}}</strong>
+            <small>{{NEXT_STEP_2_TEXT}}</small>
+          </a>
+          <a class="next-step-card" href="{{NEXT_STEP_3_URL}}">
+            <span>{{NEXT_STEP_3_KICKER}}</span>
+            <strong>{{NEXT_STEP_3_TITLE}}</strong>
+            <small>{{NEXT_STEP_3_TEXT}}</small>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- SEO / knowledge content -->
+    <section class="content-hub container" id="metodika" data-component="seo-content">
+      <div class="section-heading">
+        <p class="eyebrow">{{SEO_CONTENT_EYEBROW}}</p>
+        <h2>{{SEO_CONTENT_TITLE}}</h2>
+        <p>{{SEO_CONTENT_LEAD}}</p>
+      </div>
+
+      <div class="content-grid">
+        <article class="content-card">
+          <h3>{{METHODOLOGY_TITLE}}</h3>
+          <p>{{METHODOLOGY_TEXT}}</p>
+          <div class="formula-box">{{FORMULA}}</div>
+        </article>
+        <article class="content-card">
+          <h3>{{EXAMPLE_TITLE}}</h3>
+          <p>{{EXAMPLE_TEXT}}</p>
+        </article>
+        <article class="content-card warning-card">
+          <h3>{{LIMITS_TITLE}}</h3>
+          <p>{{LIMITS_TEXT}}</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- Related tools -->
+    <section class="related-tools container" data-component="related-tools">
+      <div class="section-heading compact">
+        <p class="eyebrow">Související kalkulačky</p>
+        <h2>{{RELATED_TITLE}}</h2>
+      </div>
+      <div class="related-grid">
+        {{RELATED_TOOLS}}
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="faq-section container" id="faq" data-component="faq">
+      <div class="section-heading compact">
+        <p class="eyebrow">FAQ</p>
+        <h2>{{FAQ_TITLE}}</h2>
+      </div>
+      <div class="faq-list">
+        {{FAQ_ITEMS}}
+      </div>
+    </section>
+  </main>
+
+  <!-- Mobile sticky summary -->
+  <div class="mobile-result-bar" data-component="mobile-result-bar" hidden>
+    <span>{{MOBILE_RESULT_LABEL}}</span>
+    <strong id="mobilePrimaryResult">{{PRIMARY_RESULT_DEFAULT}}</strong>
+    <a href="#vysledek">Detail</a>
+  </div>
+
+  <!-- Footer: podobný jako index.html, ale univerzální pro tool pages. -->
+  <footer class="site-footer" data-component="site-footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <a class="brand brand-footer" href="/" aria-label="RychléVýpočty.cz – domů">
+          <span class="brand-mark" aria-hidden="true">RV</span>
+          <span class="brand-copy"><strong>Rychlé<span>Výpočty</span>.cz</strong></span>
+        </a>
+        <p>Moderní online kalkulačky pro finance, práci, podnikání, zdraví i běžné domácí výpočty.</p>
+        <div class="footer-badges">
+          <span>Bez registrace</span>
+          <span>Rychlé výpočty</span>
+          <span>Pro lidi</span>
+        </div>
+      </div>
+
+      <nav class="footer-col" aria-label="Hlavní sekce">
+        <h2>Kalkulačky</h2>
+        <a href="/kalkulacky.html">Všechny kalkulačky</a>
+        <a href="/finance-a-hypoteky.html">Finance a hypotéky</a>
+        <a href="/mzdy-a-prace.html">Mzdy a práce</a>
+        <a href="/business-a-cenotvorba.html">Podnikání a daně</a>
+      </nav>
+
+      <nav class="footer-col" aria-label="Populární nástroje">
+        <h2>Populární</h2>
+        <a href="/hypotecni-kalkulacka.html">Hypoteční kalkulačka</a>
+        <a href="/dpp-dpc-kalkulacka.html">DPP / DPČ kalkulačka</a>
+        <a href="/cista-mzda-kalkulacka.html">Čistá mzda</a>
+        <a href="/dph-kalkulacka.html">DPH kalkulačka</a>
+      </nav>
+
+      <nav class="footer-col" aria-label="Informace">
+        <h2>Informace</h2>
+        <a href="/o-nas.html">O webu</a>
+        <a href="/kontakt.html">Kontakt</a>
+        <a href="/podminky-pouziti.html">Podmínky použití</a>
+        <a href="/ochrana-osobnich-udaju.html">Ochrana osobních údajů</a>
+      </nav>
+    </div>
+
+    <div class="container footer-bottom">
+      <p>© {{CURRENT_YEAR}} RychléVýpočty.cz. Výsledky kalkulaček jsou orientační a nenahrazují odborné, právní, daňové ani finanční poradenství.</p>
+    </div>
+  </footer>
+
+  <script src="/rv-tool-core.js" defer></script>
+  <script src="{{TOOL_ID}}.js" defer></script>
+
+  <!-- Schema blocks: nahraď konkrétními daty. -->
+  <script type="application/ld+json">
+  {{BREADCRUMB_SCHEMA}}
+  </script>
+  <script type="application/ld+json">
+  {{WEBAPP_SCHEMA}}
+  </script>
+  <script type="application/ld+json">
+  {{FAQ_SCHEMA}}
+  </script>
+</body>
+</html>
