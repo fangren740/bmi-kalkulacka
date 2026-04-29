@@ -1,182 +1,155 @@
-body.rv-guides-hub-page,
-body.rv-guide-article-page{
-  --guide-ink:#071f3d;
-  --guide-muted:#526981;
-  --guide-line:#dce8f3;
-  --guide-soft:#f4f9fc;
-  --guide-green:#45B22F;
-  --guide-green-dark:#247D18;
-  --guide-blue:#0B3B78;
-  --guide-radius:28px;
-  background:
-    radial-gradient(circle at 8% -5%,rgba(69,178,47,.14),transparent 28%),
-    radial-gradient(circle at 92% 6%,rgba(46,143,255,.12),transparent 30%),
-    linear-gradient(180deg,#fbfffd 0%,#f4f8fc 45%,#fff 100%);
-  color:var(--guide-ink);
+:root{
+  --rv-ink:#081a33;
+  --rv-blue:#0b5aa7;
+  --rv-blue-2:#2e8fff;
+  --rv-green:#45b22f;
+  --rv-green-2:#76e05b;
+  --rv-bg:#eef4f8;
+  --rv-card:#ffffff;
+  --rv-line:#d8e4ef;
+  --rv-soft:#f6fbff;
+  --rv-muted:#607289;
+  --rv-radius:28px;
+  --rv-shadow:0 22px 56px rgba(8,26,51,.08);
+  --rv-shadow-soft:0 14px 34px rgba(8,26,51,.06);
+  --rv-container:min(100% - 40px,1200px);
 }
-
-body.rv-guides-hub-page .site-header,
-body.rv-guide-article-page .site-header{background:rgba(255,255,255,.86);backdrop-filter:blur(16px)}
-
-body.rv-guides-hub-page .rv-guide-hero,
-body.rv-guide-article-page .rv-guide-hero{padding:22px 0 42px}
-
-body.rv-guides-hub-page .rv-guide-hero-grid,
-body.rv-guide-article-page .rv-guide-hero-grid{
-  display:grid;
-  grid-template-columns:minmax(0,1fr) minmax(340px,.52fr);
-  gap:26px;
-  align-items:stretch;
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body.rv-guide-page,
+body.rv-guides-hub-page{margin:0;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:linear-gradient(180deg,#f3f8fb 0%,#edf4f7 100%);color:var(--rv-ink);line-height:1.6}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+.container{width:var(--rv-container);margin:0 auto}
+.skip-link{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
+.skip-link:focus{left:12px;top:12px;width:auto;height:auto;padding:8px 12px;background:#fff;border-radius:12px;z-index:999}
+.site-header{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.88);backdrop-filter:blur(16px);border-bottom:1px solid rgba(216,228,239,.85)}
+.header-inner{display:flex;align-items:center;justify-content:space-between;gap:22px;min-height:78px}
+.brand{display:inline-flex;align-items:center;gap:12px;min-width:0}
+.brand-logo-img{height:auto;display:block}
+.nav{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center}
+.nav a{display:inline-flex;align-items:center;min-height:42px;padding:10px 14px;border-radius:999px;color:#445a73;font-size:.95rem;font-weight:800;transition:.18s ease}
+.nav a:hover,.nav a[aria-current="page"]{background:#fff;color:var(--rv-ink);box-shadow:0 10px 24px rgba(8,26,51,.08)}
+.header-cta{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:12px 18px;border-radius:999px;background:linear-gradient(135deg,var(--rv-blue),#0d345d);color:#fff;font-weight:900;box-shadow:0 18px 40px rgba(11,90,167,.22)}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;min-height:32px;padding:7px 13px;border-radius:999px;background:#e8f7e4;color:#26771b;font-size:.75rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
+.section{padding:72px 0}
+h1,h2,h3{margin:0 0 14px;line-height:1.04;letter-spacing:-.04em;color:var(--rv-ink)}
+h1{font-size:clamp(2.8rem,5vw,4.5rem)}
+h2{font-size:clamp(2rem,4vw,3rem)}
+h3{font-size:clamp(1.18rem,2vw,1.45rem)}
+p{margin:0 0 16px}
+.lead{font-size:1.08rem;color:#4f6278;max-width:720px}
+.btn,.btn-secondary{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:12px 18px;border-radius:999px;font-weight:900;transition:.18s ease}
+.btn{background:linear-gradient(135deg,var(--rv-green-2),var(--rv-green));color:#062345;box-shadow:0 18px 36px rgba(69,178,47,.24)}
+.btn:hover,.btn-secondary:hover,.guide-list-card:hover,.guide-link-card:hover,.quick-link:hover,.sidebar-links a:hover,.step-card:hover,.guide-promo:hover{transform:translateY(-2px)}
+.btn-secondary{background:#fff;border:1px solid rgba(200,214,228,.95);color:var(--rv-ink);box-shadow:var(--rv-shadow-soft)}
+.hero-shell{position:relative;padding:34px 0 30px;background:radial-gradient(circle at 8% 8%,rgba(118,224,91,.12),transparent 24%),radial-gradient(circle at 92% 5%,rgba(46,143,255,.14),transparent 28%),linear-gradient(180deg,rgba(231,241,247,.9) 0%,rgba(240,246,250,0) 100%)}
+.hero-shell::after{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(8,26,51,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(8,26,51,.03) 1px,transparent 1px);background-size:48px 48px;mask-image:linear-gradient(180deg,#000,transparent 82%);pointer-events:none}
+.hero-grid{position:relative;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(320px,.95fr);gap:32px;align-items:center;padding:38px 0 20px}
+.hero-copy,.hero-visual{position:relative;z-index:1}
+.breadcrumbs{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px;color:#66798f;font-size:.92rem;font-weight:760}
+.breadcrumbs a{color:#47617e}
+.hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px}
+.answer-card,.hero-visual-card,.hub-stats,.guide-promo,.guide-list-card,.topic-panel,.section-panel,.step-card,.note-card,.check-card,.sidebar-card,.faq-item,.small-card,.quick-link,.mini-card{border-radius:var(--rv-radius);background:rgba(255,255,255,.92);border:1px solid rgba(216,228,239,.95);box-shadow:var(--rv-shadow-soft)}
+.answer-card{padding:22px 22px 20px}
+.answer-card h3{margin-bottom:10px;font-size:1.15rem}
+.answer-card ul{margin:14px 0 0;padding:0;list-style:none;display:grid;gap:10px}
+.answer-card li{display:flex;align-items:flex-start;gap:10px;color:#45607b;font-weight:700}
+.answer-card li::before{content:"";width:10px;height:10px;border-radius:50%;margin-top:.5em;background:linear-gradient(135deg,var(--rv-green-2),var(--rv-green));box-shadow:0 0 0 5px rgba(118,224,91,.14);flex:0 0 auto}
+.hero-visual-card{padding:14px;background:linear-gradient(180deg,rgba(255,255,255,.92),rgba(241,249,255,.92));overflow:hidden}
+.hero-visual-card img{width:100%;border-radius:22px}
+.guide-layout{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:30px;align-items:start}
+.article-content{display:grid;gap:28px}
+.article-block{padding:30px 30px 28px;border-radius:34px;background:rgba(255,255,255,.84);border:1px solid rgba(216,228,239,.9);box-shadow:var(--rv-shadow)}
+.article-block h2{font-size:clamp(1.9rem,3vw,2.7rem)}
+.kicker{display:block;margin-bottom:10px;color:#4f7f31;font-size:.8rem;font-weight:900;letter-spacing:.09em;text-transform:uppercase}
+.inline-anchor{display:flex;flex-wrap:wrap;gap:10px;padding:14px 16px;border-radius:22px;background:#f7fbff;border:1px solid rgba(216,228,239,.9)}
+.inline-anchor a{display:inline-flex;align-items:center;min-height:38px;padding:8px 12px;border-radius:999px;background:#fff;border:1px solid rgba(216,228,239,.95);font-size:.9rem;font-weight:820;color:#35506e}
+.step-list{display:grid;gap:16px;margin-top:20px}
+.step-card{display:grid;grid-template-columns:48px minmax(0,1fr);gap:16px;padding:20px 20px 18px}
+.step-no{display:grid;place-items:center;width:36px;height:36px;border-radius:50%;background:#0b3261;color:#fff;font-weight:900;font-size:1.02rem;box-shadow:0 10px 24px rgba(11,90,167,.18)}
+.step-card p:last-child,.note-card p:last-child,.check-card p:last-child,.sidebar-card p:last-child,.small-card p:last-child,.guide-list-card p:last-child{margin-bottom:0}
+.check-grid,.small-card-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.check-card,.note-card,.small-card{padding:20px}
+.note-card{background:linear-gradient(180deg,#f7fbff,#ffffff)}
+.example-strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:18px 0 0}
+.example-strip div{padding:14px;border-radius:20px;background:#f4f9fd;border:1px solid rgba(216,228,239,.9)}
+.example-strip span{display:block;color:#6b7d92;font-size:.78rem;font-weight:820;text-transform:uppercase;letter-spacing:.08em}
+.example-strip strong{display:block;margin-top:6px;font-size:1.15rem;letter-spacing:-.03em}
+.result-band{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:18px}
+.result-band article{padding:18px;border-radius:24px;background:#fff;border:1px solid rgba(216,228,239,.92);box-shadow:var(--rv-shadow-soft)}
+.result-band .risk-safe{border-top:4px solid #4bc432}.result-band .risk-mid{border-top:4px solid #2e8fff}.result-band .risk-high{border-top:4px solid #e68a28}
+.sidebar{display:grid;gap:16px}
+.sidebar-card{padding:20px}
+.sidebar-card h3{font-size:1.15rem;margin-bottom:10px}
+.sidebar-links{display:grid;gap:10px}
+.sidebar-links a{display:block;padding:12px 14px;border-radius:18px;background:#f8fbfe;border:1px solid rgba(216,228,239,.92);font-weight:820;color:#32506f;transition:.18s ease}
+.guide-promo{padding:22px;background:linear-gradient(145deg,#081a33,#0f4e86);color:#fff;overflow:hidden;position:relative}
+.guide-promo::after{content:"";position:absolute;right:-55px;bottom:-55px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(118,224,91,.28),transparent 70%)}
+.guide-promo p{color:rgba(255,255,255,.8)}
+.guide-promo .btn-secondary{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.16);color:#fff;box-shadow:none}
+.hub-hero-panel{display:grid;grid-template-columns:minmax(0,1.04fr) minmax(300px,.96fr);gap:26px;align-items:center;padding:34px;border-radius:38px;background:rgba(255,255,255,.86);border:1px solid rgba(216,228,239,.94);box-shadow:var(--rv-shadow)}
+.hub-copy p{max-width:680px}
+.hub-visual{display:grid;gap:16px}
+.hub-visual-card{padding:14px;border-radius:30px;background:linear-gradient(180deg,#f8fcff,#edf6ff);border:1px solid rgba(216,228,239,.95);box-shadow:var(--rv-shadow-soft)}
+.hub-visual-card img{border-radius:22px}
+.hub-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;padding:0;background:transparent;border:none;box-shadow:none}
+.hub-stats article{padding:18px;border-radius:24px;background:#fff;border:1px solid rgba(216,228,239,.92);box-shadow:var(--rv-shadow-soft)}
+.hub-stats span{display:block;color:#6e8196;font-size:.74rem;font-weight:900;text-transform:uppercase;letter-spacing:.08em}
+.hub-stats strong{display:block;margin-top:6px;font-size:1.18rem;letter-spacing:-.03em}
+.quick-grid,.guide-grid,.mini-grid,.topic-grid{display:grid;gap:18px}
+.quick-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.quick-link{display:block;padding:22px;transition:.18s ease}
+.quick-link strong,.guide-list-card strong,.small-card strong{display:block;margin-bottom:8px;font-size:1.15rem;letter-spacing:-.03em}
+.quick-link span,.guide-list-card p,.small-card p,.topic-panel p{display:block;color:#587089}
+.section-head{display:flex;align-items:end;justify-content:space-between;gap:18px;margin-bottom:28px}
+.section-head p{max-width:720px;margin:0;color:#5a7088}
+.topic-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.topic-panel{padding:24px 24px 22px}
+.mini-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+.mini-card{padding:20px}
+.guide-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.guide-list-card{display:grid;grid-template-columns:minmax(0,1fr) 180px;gap:18px;padding:18px;transition:.18s ease}
+.guide-list-card img{height:100%;object-fit:cover;border-radius:22px;border:1px solid rgba(216,228,239,.8)}
+.guide-list-card ul{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 0;padding:0;list-style:none}
+.guide-list-card li{padding:6px 10px;border-radius:999px;background:#f4f9fd;color:#416280;font-size:.78rem;font-weight:820}
+.anchor-nav{padding:12px 0 0}
+.anchor-scroll{display:flex;flex-wrap:wrap;gap:10px}
+.anchor-scroll a{display:inline-flex;align-items:center;min-height:40px;padding:9px 14px;border-radius:999px;background:rgba(255,255,255,.86);border:1px solid rgba(216,228,239,.92);font-size:.89rem;font-weight:820;color:#385572}
+.faq-list{display:grid;gap:14px}
+.faq-item{padding:0;overflow:hidden}
+.faq-item summary{display:flex;align-items:center;justify-content:space-between;gap:14px;list-style:none;padding:20px 22px;font-weight:860;cursor:pointer}
+.faq-item summary::-webkit-details-marker{display:none}
+.faq-item summary::after{content:"+";font-size:1.3rem;color:#59708a}
+.faq-item[open] summary::after{content:"−"}
+.faq-item > div{padding:0 22px 20px;color:#587089}
+.site-footer{padding:58px 0 28px;background:#f5f9fc;border-top:1px solid rgba(216,228,239,.95)}
+.footer-grid{display:grid;grid-template-columns:1.2fr .85fr .85fr .85fr;gap:26px}
+.footer-brand p,.footer-col a{color:#587089}.footer-col{display:grid;gap:10px;align-content:start}.footer-col h2{margin-bottom:2px;font-size:1.25rem}
+.footer-badges{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}.footer-badges span{padding:8px 11px;border-radius:999px;background:#fff;border:1px solid rgba(216,228,239,.95);font-size:.8rem;font-weight:850;color:#385572}
+.footer-bottom{display:flex;justify-content:space-between;gap:14px;margin-top:28px;padding-top:18px;border-top:1px solid rgba(216,228,239,.92);font-size:.92rem;color:#6c7e92}
+@media (max-width:1080px){
+  .hero-grid,.hub-hero-panel,.guide-layout{grid-template-columns:1fr}
+  .hub-stats,.quick-grid,.guide-grid,.topic-grid,.mini-grid,.check-grid,.result-band,.footer-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .guide-list-card{grid-template-columns:1fr}
+  .guide-list-card img{height:220px}
 }
-
-body.rv-guides-hub-page .rv-guide-hero-copy,
-body.rv-guide-article-page .rv-guide-hero-copy,
-body.rv-guides-hub-page .rv-guide-hero-card,
-body.rv-guide-article-page .rv-guide-hero-card,
-body.rv-guide-article-page .rv-guide-card,
-body.rv-guides-hub-page .rv-guide-card,
-body.rv-guides-hub-page .rv-guide-topic,
-body.rv-guide-article-page .rv-guide-sidebar-card{
-  border:1px solid rgba(220,232,243,.92);
-  background:linear-gradient(135deg,rgba(255,255,255,.96),rgba(255,255,255,.82));
-  border-radius:var(--guide-radius);
-  box-shadow:0 18px 44px rgba(8,26,51,.08);
-}
-
-body.rv-guides-hub-page .rv-guide-hero-copy,
-body.rv-guide-article-page .rv-guide-hero-copy{padding:clamp(26px,4vw,44px)}
-body.rv-guides-hub-page .rv-guide-hero-copy h1,
-body.rv-guide-article-page .rv-guide-hero-copy h1{max-width:860px;letter-spacing:-.065em}
-body.rv-guides-hub-page .rv-guide-lead,
-body.rv-guide-article-page .rv-guide-lead{max-width:760px;color:var(--guide-muted);font-size:1.08rem;line-height:1.7;font-weight:650}
-
-body.rv-guides-hub-page .rv-guide-meta,
-body.rv-guide-article-page .rv-guide-meta{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0 0}
-body.rv-guides-hub-page .rv-guide-meta span,
-body.rv-guide-article-page .rv-guide-meta span,
-body.rv-guides-hub-page .rv-guide-pill,
-body.rv-guide-article-page .rv-guide-pill{
-  display:inline-flex;align-items:center;gap:6px;padding:9px 12px;border-radius:999px;
-  background:#fff;border:1px solid var(--guide-line);color:var(--guide-muted);font-weight:850;font-size:.92rem;
-}
-body.rv-guides-hub-page .rv-guide-pill.is-green,
-body.rv-guide-article-page .rv-guide-pill.is-green{background:#eefbea;border-color:rgba(69,178,47,.25);color:var(--guide-green-dark)}
-
-body.rv-guides-hub-page .rv-guide-hero-card,
-body.rv-guide-article-page .rv-guide-hero-card{padding:24px;position:relative;overflow:hidden}
-body.rv-guides-hub-page .rv-guide-hero-card:before,
-body.rv-guide-article-page .rv-guide-hero-card:before{content:"";position:absolute;inset:0 0 auto 0;height:7px;background:linear-gradient(90deg,var(--guide-blue),var(--guide-green))}
-body.rv-guides-hub-page .rv-guide-hero-card h2,
-body.rv-guide-article-page .rv-guide-hero-card h2{font-size:clamp(25px,3vw,36px);line-height:1.1;margin:10px 0 14px;letter-spacing:-.05em}
-body.rv-guides-hub-page .rv-guide-hero-card p,
-body.rv-guide-article-page .rv-guide-hero-card p{color:var(--guide-muted);line-height:1.62;font-weight:650}
-body.rv-guides-hub-page .rv-guide-mini-steps,
-body.rv-guide-article-page .rv-guide-mini-steps{display:grid;gap:10px;margin-top:18px}
-body.rv-guides-hub-page .rv-guide-mini-steps div,
-body.rv-guide-article-page .rv-guide-mini-steps div{display:grid;grid-template-columns:38px 1fr;gap:12px;align-items:center;padding:13px;border-radius:18px;background:#f7fbff;border:1px solid var(--guide-line)}
-body.rv-guides-hub-page .rv-guide-mini-steps b,
-body.rv-guide-article-page .rv-guide-mini-steps b{display:grid;place-items:center;width:34px;height:34px;border-radius:999px;background:var(--guide-ink);color:#fff;font-size:.9rem}
-body.rv-guides-hub-page .rv-guide-mini-steps span,
-body.rv-guide-article-page .rv-guide-mini-steps span{font-weight:900;color:var(--guide-ink)}
-
-body.rv-guides-hub-page .rv-guide-section,
-body.rv-guide-article-page .rv-guide-section{padding:42px 0}
-body.rv-guides-hub-page .rv-guide-section-head,
-body.rv-guide-article-page .rv-guide-section-head{max-width:850px;margin:0 0 24px}
-body.rv-guides-hub-page .rv-guide-section-head.center,
-body.rv-guide-article-page .rv-guide-section-head.center{text-align:center;margin-left:auto;margin-right:auto}
-body.rv-guides-hub-page .rv-guide-section-head p,
-body.rv-guide-article-page .rv-guide-section-head p{color:var(--guide-muted);font-weight:650;line-height:1.68}
-
-body.rv-guides-hub-page .rv-guide-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-body.rv-guides-hub-page .rv-guide-card{padding:24px;display:flex;flex-direction:column;gap:12px;min-height:260px}
-body.rv-guides-hub-page .rv-guide-card.featured{grid-column:span 2;background:linear-gradient(135deg,#fff,#f4fbff)}
-body.rv-guides-hub-page .rv-guide-card h3,
-body.rv-guides-hub-page .rv-guide-topic h3,
-body.rv-guide-article-page .rv-guide-card h2,
-body.rv-guide-article-page .rv-guide-card h3{margin:0;color:var(--guide-ink);letter-spacing:-.045em;line-height:1.15}
-body.rv-guides-hub-page .rv-guide-card h3{font-size:clamp(23px,2.4vw,32px)}
-body.rv-guides-hub-page .rv-guide-card p,
-body.rv-guides-hub-page .rv-guide-topic p,
-body.rv-guide-article-page .rv-guide-card p,
-body.rv-guide-article-page .rv-guide-card li,
-body.rv-guide-article-page .rv-guide-sidebar-card p{color:var(--guide-muted);font-weight:650;line-height:1.68}
-body.rv-guides-hub-page .rv-guide-tag{align-self:flex-start;padding:8px 10px;border-radius:999px;background:#eefbea;color:var(--guide-green-dark);font-size:.78rem;font-weight:950;letter-spacing:.08em;text-transform:uppercase}
-body.rv-guides-hub-page .rv-guide-card a,
-body.rv-guides-hub-page .rv-guide-topic a,
-body.rv-guide-article-page .rv-guide-card a:not(.btn),
-body.rv-guide-article-page .rv-guide-sidebar-card a:not(.btn){font-weight:900;color:var(--guide-green-dark)}
-
-body.rv-guides-hub-page .rv-guide-path{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
-body.rv-guides-hub-page .rv-guide-path article{padding:20px;border:1px solid var(--guide-line);border-radius:24px;background:#fff;box-shadow:0 12px 30px rgba(8,26,51,.06)}
-body.rv-guides-hub-page .rv-guide-path span{display:grid;place-items:center;width:38px;height:38px;border-radius:999px;background:var(--guide-ink);color:#fff;font-weight:900;margin-bottom:12px}
-
-body.rv-guides-hub-page .rv-guide-topic-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
-body.rv-guides-hub-page .rv-guide-topic{padding:24px}
-body.rv-guides-hub-page .rv-guide-topic ul{margin:16px 0 0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:10px}
-body.rv-guides-hub-page .rv-guide-topic a{display:inline-flex;padding:10px 12px;border-radius:14px;background:#f7fbff;border:1px solid var(--guide-line);text-decoration:none}
-
-body.rv-guide-article-page .rv-guide-layout{display:grid;grid-template-columns:minmax(0,780px) minmax(280px,340px);gap:28px;align-items:start}
-body.rv-guide-article-page .rv-guide-content{display:grid;gap:20px}
-body.rv-guide-article-page .rv-guide-card{padding:clamp(22px,3.5vw,34px)}
-body.rv-guide-article-page .rv-guide-card h2{font-size:clamp(30px,3.3vw,44px);margin-bottom:14px}
-body.rv-guide-article-page .rv-guide-card h3{font-size:clamp(21px,2.2vw,28px);margin:18px 0 8px}
-body.rv-guide-article-page .rv-guide-card ul{padding-left:20px;margin:14px 0 0}
-body.rv-guide-article-page .rv-guide-answer{border-left:6px solid var(--guide-green);background:linear-gradient(135deg,#f8fff5,#fff)}
-body.rv-guide-article-page .rv-guide-answer strong{display:block;font-size:1.12rem;color:var(--guide-ink);margin-bottom:8px}
-body.rv-guide-article-page .rv-guide-toc{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
-body.rv-guide-article-page .rv-guide-toc a{display:inline-flex;padding:9px 12px;border-radius:999px;background:#f7fbff;border:1px solid var(--guide-line);color:var(--guide-muted);font-weight:850;text-decoration:none}
-
-body.rv-guide-article-page .rv-guide-steps{display:grid;gap:12px;margin-top:18px}
-body.rv-guide-article-page .rv-guide-step{display:grid;grid-template-columns:46px 1fr;gap:16px;padding:18px;border:1px solid var(--guide-line);border-radius:22px;background:#f7fbff}
-body.rv-guide-article-page .rv-guide-step b{display:grid;place-items:center;width:38px;height:38px;border-radius:999px;background:var(--guide-ink);color:#fff}
-body.rv-guide-article-page .rv-guide-step h3{margin:3px 0 6px;font-size:1.22rem}
-body.rv-guide-article-page .rv-guide-step p{margin:0}
-
-body.rv-guide-article-page .rv-guide-checklist{display:grid;gap:10px;margin-top:14px}
-body.rv-guide-article-page .rv-guide-checklist li{list-style:none;display:grid;grid-template-columns:28px 1fr;gap:10px;padding:12px 0;border-bottom:1px solid var(--guide-line)}
-body.rv-guide-article-page .rv-guide-checklist li:before{content:"✓";display:grid;place-items:center;width:24px;height:24px;border-radius:999px;background:#eefbea;color:var(--guide-green-dark);font-weight:900}
-
-body.rv-guide-article-page .rv-guide-example{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
-body.rv-guide-article-page .rv-guide-example div{padding:18px;border-radius:20px;border:1px solid var(--guide-line);background:#fff}
-body.rv-guide-article-page .rv-guide-example strong{display:block;font-size:1.6rem;letter-spacing:-.04em;color:var(--guide-ink)}
-body.rv-guide-article-page .rv-guide-example span{display:block;margin-top:4px;color:var(--guide-muted);font-weight:750}
-
-body.rv-guide-article-page .rv-guide-cta-band{background:linear-gradient(135deg,#081a33,#0b3b78 60%,#176b3a);color:#fff;overflow:hidden}
-body.rv-guide-article-page .rv-guide-cta-band p{color:rgba(255,255,255,.78)}
-body.rv-guide-article-page .rv-guide-cta-band h2{color:#fff}
-body.rv-guide-article-page .rv-guide-cta-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:16px}
-
-body.rv-guide-article-page aside{display:grid;gap:16px}
-body.rv-guide-article-page .rv-guide-sidebar-card{padding:22px}
-body.rv-guide-article-page .rv-guide-sidebar-card h2{font-size:1.35rem;margin:0 0 10px;color:var(--guide-ink);letter-spacing:-.04em}
-body.rv-guide-article-page .rv-related-links{display:grid;gap:10px;margin-top:14px}
-body.rv-guide-article-page .rv-related-links a{display:block;padding:12px 13px;border:1px solid var(--guide-line);border-radius:14px;background:#fff;text-decoration:none;color:#33506f;font-weight:850}
-body.rv-guide-article-page .rv-related-links a:hover{border-color:rgba(69,178,47,.35);color:var(--guide-green-dark)}
-body.rv-guide-article-page .rv-guide-sidebar-card.highlight{background:linear-gradient(135deg,#fff,#f4fbff)}
-
-body.rv-guides-hub-page .site-footer,
-body.rv-guide-article-page .site-footer{margin-top:42px}
-
-@media(max-width:1080px){
-  body.rv-guides-hub-page .rv-guide-hero-grid,
-  body.rv-guide-article-page .rv-guide-hero-grid,
-  body.rv-guide-article-page .rv-guide-layout{grid-template-columns:1fr}
-  body.rv-guides-hub-page .rv-guide-path{grid-template-columns:1fr 1fr}
-}
-@media(max-width:860px){
-  body.rv-guides-hub-page .rv-guide-grid,
-  body.rv-guides-hub-page .rv-guide-topic-grid,
-  body.rv-guide-article-page .rv-guide-example{grid-template-columns:1fr}
-  body.rv-guides-hub-page .rv-guide-card.featured{grid-column:auto}
-}
-@media(max-width:640px){
-  body.rv-guides-hub-page .rv-guide-path{grid-template-columns:1fr}
-  body.rv-guide-article-page .rv-guide-step{grid-template-columns:1fr}
-  body.rv-guides-hub-page .rv-guide-section,
-  body.rv-guide-article-page .rv-guide-section{padding:30px 0}
-  body.rv-guides-hub-page .rv-guide-hero-card,
-  body.rv-guide-article-page .rv-guide-hero-card,
-  body.rv-guides-hub-page .rv-guide-hero-copy,
-  body.rv-guide-article-page .rv-guide-hero-copy{border-radius:24px}
+@media (max-width:760px){
+  :root{--rv-container:min(100% - 24px,1200px)}
+  .site-header{position:sticky}
+  .header-inner{min-height:68px;flex-wrap:wrap;gap:10px 16px;padding:10px 0}
+  .nav{order:3;width:100%;overflow-x:auto;flex-wrap:nowrap;justify-content:flex-start;padding-bottom:4px;scrollbar-width:none}
+  .nav::-webkit-scrollbar{display:none}
+  .nav a{flex:0 0 auto}
+  .header-cta{display:none}
+  .hero-shell{padding-top:20px}
+  .hero-grid{padding-top:24px}
+  .hub-hero-panel,.article-block{padding:22px}
+  h1{font-size:clamp(2.45rem,12vw,3.5rem)}
+  .lead{font-size:1rem}
+  .hero-actions .btn,.hero-actions .btn-secondary{width:100%}
+  .hub-stats,.quick-grid,.guide-grid,.topic-grid,.mini-grid,.check-grid,.result-band,.example-strip,.footer-grid,.step-card{grid-template-columns:1fr}
+  .step-card{gap:14px}
+  .guide-list-card img{height:200px}
+  .footer-bottom{display:block}
 }
