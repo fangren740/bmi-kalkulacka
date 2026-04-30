@@ -1,222 +1,31 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="cs">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <meta name="format-detection" content="telephone=no"/>
-
-  <link rel="icon" href="/favicon.ico?v=5" sizes="any"/>
-  <link rel="icon" href="/favicon.svg?v=5" type="image/svg+xml"/>
-  <link rel="icon" href="/favicon-32x32.png?v=5" sizes="32x32" type="image/png"/>
-  <link rel="icon" href="/favicon-16x16.png?v=5" sizes="16x16" type="image/png"/>
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=5" sizes="180x180"/>
-  <link rel="manifest" href="/site.webmanifest?v=5"/>
-  <meta name="theme-color" content="#0B2447"/>
-
-  <title>Energie a domácnost - elektřina, vytápění, voda a úspory | RychléVýpočty.cz</title>
-  <meta name="description" content="Rozcestník kalkulaček pro energie a domácnost. Spočítejte spotřebu elektřiny, plynu a vody, vytápění, klimatizaci, LED úsporu a návratnost fotovoltaiky."/>
-  <meta name="robots" content="index,follow"/>
-  <link rel="canonical" href="https://rychlevypocty.cz/energie-a-domacnost.html"/>
-
-  <meta property="og:type" content="website"/>
-  <meta property="og:url" content="https://rychlevypocty.cz/energie-a-domacnost.html"/>
-  <meta property="og:site_name" content="RychléVýpočty.cz"/>
-  <meta property="og:title" content="Energie a domácnost: elektřina, vytápění, voda a úspory | RychléVýpočty.cz"/>
-  <meta property="og:description" content="Praktický hub pro energie doma. Vyberte výpočet podle situace: spotřeba elektřiny, vytápění, plyn, voda, klimatizace, LED úspora nebo fotovoltaika."/>
-  <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg?v=5"/>
-  <meta property="og:locale" content="cs_CZ"/>
-
-  <style>
-:root{
-  --ink:#0B2447;--blue:#0B3B78;--green:#45B22F;--green2:#72D45A;--bg:#F5F9FC;--muted:#60748C;--line:#DCE7F2;--soft-green:#EEFBEA;
-  --shadow:0 28px 84px rgba(11,36,71,.13);--shadow-soft:0 14px 34px rgba(11,36,71,.08);--container:min(1180px,calc(100% - 32px));
-}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth;scroll-padding-top:96px}
-body{margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;color:#17243A;line-height:1.62;background:radial-gradient(circle at 8% -2%,rgba(69,178,47,.13),transparent 26%),radial-gradient(circle at 94% 6%,rgba(15,90,168,.14),transparent 34%),linear-gradient(180deg,#fbfffd 0%,var(--bg) 46%,#fff 100%);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
-body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background-image:linear-gradient(rgba(11,59,120,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(11,59,120,.035) 1px,transparent 1px);background-size:44px 44px;mask-image:linear-gradient(180deg,rgba(0,0,0,.58),transparent 60%)}
-body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg width='156' height='156' viewBox='0 0 156 156' xmlns='http://www.w3.org/2000/svg'%3E%3Ctext x='18' y='74' font-family='Arial, sans-serif' font-size='30' font-weight='900' fill='%230B3B78' opacity='0.026'%3EkWh%3C/text%3E%3Ctext x='86' y='116' font-family='Arial, sans-serif' font-size='26' font-weight='900' fill='%2345B22F' opacity='0.026'%3E%C4%8C%3C/text%3E%3Cpath d='M25 124 C54 96 76 112 104 78 C121 58 134 62 145 48' fill='none' stroke='%230B3B78' stroke-width='3' stroke-linecap='round' opacity='0.018'/%3E%3C/svg%3E");background-size:156px 156px;mask-image:linear-gradient(180deg,rgba(0,0,0,.78),rgba(0,0,0,.28) 58%,transparent 100%)}
-a{color:inherit;text-decoration:none}
-:focus-visible{outline:3px solid rgba(69,178,47,.36);outline-offset:3px;border-radius:14px}
-.container{width:var(--container);margin:0 auto}
-.skip-link{position:absolute;left:16px;top:-60px;z-index:200;padding:12px 16px;border-radius:14px;background:var(--ink);color:#fff;font-weight:850;transition:.18s ease}
-.skip-link:focus{top:16px}
-.site-header{position:sticky;top:0;z-index:90;background:rgba(255,255,255,.86);border-bottom:1px solid rgba(220,231,242,.76);backdrop-filter:blur(18px);box-shadow:0 10px 28px rgba(11,36,71,.045)}
-.header-inner{min-height:76px;display:flex;align-items:center;justify-content:space-between;gap:24px}
-.brand{display:inline-flex;align-items:center;gap:10px;white-space:nowrap;line-height:1;color:var(--ink);font-weight:900;letter-spacing:-.035em;font-size:23px}
-.brand-icon{width:42px;height:42px;flex:0 0 42px;background:url('/icon.svg?v=5') center/contain no-repeat}
-img.brand-icon{display:block;object-fit:contain;background:none}
-.brand-wordmark{display:inline-flex;align-items:baseline;gap:0}.brand-green{color:var(--green)}
-.nav{display:flex;align-items:center;gap:4px;color:#29415F;font-size:.93rem;font-weight:760}
-.nav a{padding:10px 12px;border-radius:999px;white-space:nowrap;transition:.18s ease}
-.nav a:hover,.nav a[aria-current="page"]{color:var(--blue);background:rgba(15,90,168,.08);transform:translateY(-1px)}
-.header-cta{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:10px 16px;border-radius:999px;background:linear-gradient(135deg,var(--green),#55C83D);color:#fff;font-weight:900;box-shadow:0 14px 30px rgba(69,178,47,.25)}
-.section{padding:58px 0}.section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:26px;margin-bottom:26px}
-.section-kicker,.eyebrow{display:inline-flex;align-items:center;gap:8px;margin:0 0 12px;padding:7px 12px;border:1px solid rgba(69,178,47,.22);border-radius:999px;background:rgba(238,251,234,.92);color:#247D18;font-size:.78rem;font-weight:900;text-transform:uppercase}
-h1,h2,h3,p{margin-top:0}
-h1{margin:0 0 18px;color:var(--ink);font-size:clamp(2.55rem,5.7vw,5.2rem);line-height:.95;font-weight:950;letter-spacing:-.065em;max-width:930px}
-h1 span,h2 span{color:var(--green)}
-h2{margin:0 0 8px;color:var(--ink);font-size:clamp(2rem,3.3vw,3.1rem);line-height:1.06;font-weight:930;letter-spacing:-.045em}
-.lead{font-size:1.16rem;line-height:1.72;color:#566A82;max-width:800px;margin-bottom:0}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:12px 18px;border-radius:999px;border:1px solid transparent;font-weight:900;transition:.18s ease}
-.btn:hover{transform:translateY(-2px)}.btn-primary{background:linear-gradient(135deg,var(--green),#55C83D);color:#fff;box-shadow:0 14px 30px rgba(69,178,47,.25)}.btn-secondary{background:#fff;color:var(--ink);border-color:var(--line);box-shadow:0 10px 24px rgba(11,36,71,.06)}
-.breadcrumbs{display:flex;gap:8px;align-items:center;flex-wrap:wrap;color:var(--muted);font-size:.9rem;margin:20px auto 16px;font-weight:720}.breadcrumbs a{color:var(--muted)}
-.hero{padding:0 0 20px}.hero-shell{position:relative;overflow:hidden;border-radius:42px;border:1px solid rgba(220,231,242,.9);background:radial-gradient(circle at 88% 8%,rgba(114,212,90,.20),transparent 28%),radial-gradient(circle at 4% 94%,rgba(15,90,168,.14),transparent 30%),linear-gradient(135deg,#fff,#f7fbff);box-shadow:var(--shadow)}
-.hero-shell::after{content:"kWh";position:absolute;right:28px;bottom:-28px;z-index:0;color:#0B3B78;font-size:clamp(5.2rem,10vw,9rem);line-height:1;font-weight:950;letter-spacing:-.08em;opacity:.035;pointer-events:none}
-.hero-grid{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1.04fr) 430px;gap:42px;align-items:center;padding:44px}
-.hero-actions{display:flex;flex-wrap:wrap;gap:11px;margin-top:24px}.hero-pills{display:flex;flex-wrap:wrap;gap:9px;margin:22px 0 0;padding:0;list-style:none}
-.hero-pills li{display:inline-flex;padding:9px 12px;border-radius:999px;border:1px solid var(--line);background:#fff;color:#29415F;font-weight:850;font-size:.88rem;box-shadow:0 8px 20px rgba(11,36,71,.04)}
-.energy-panel{position:relative;min-height:410px;border-radius:34px;background:linear-gradient(145deg,#071F3D,#0B3B78 58%,#0B7A4A);box-shadow:0 28px 70px rgba(11,36,71,.22);overflow:hidden}
-.energy-panel::before{content:"";position:absolute;inset:24px;border-radius:26px;background:rgba(255,255,255,.95);box-shadow:0 20px 44px rgba(11,36,71,.20)}
-.panel-top{position:absolute;z-index:2;left:48px;right:48px;top:48px;height:48px;border-radius:16px;background:#f4f9fd;border:1px solid #dce7f2;display:flex;align-items:center;padding:0 16px;color:#7D8EA4;font-weight:800}
-.metric-card{position:absolute;z-index:3;left:48px;top:122px;width:178px;padding:18px;border-radius:24px;background:#fff;border:1px solid var(--line);box-shadow:0 18px 38px rgba(11,36,71,.14)}
-.saving-card{position:absolute;z-index:4;right:46px;top:154px;width:164px;padding:17px;border-radius:24px;background:#fff;border:1px solid rgba(69,178,47,.24);box-shadow:0 18px 38px rgba(11,36,71,.14)}
-.metric-card small,.saving-card small{display:block;color:var(--muted);font-weight:800}.metric-card strong,.saving-card strong{display:block;margin-top:5px;color:var(--ink);font-size:1.55rem;line-height:1}
-.chart{position:absolute;z-index:2;left:54px;right:54px;bottom:56px;height:120px;border-radius:24px;background:linear-gradient(180deg,#fff,#f7fbff);border:1px solid var(--line);box-shadow:0 18px 38px rgba(11,36,71,.12);overflow:hidden}.chart svg{position:absolute;inset:18px;width:calc(100% - 36px);height:calc(100% - 36px)}
-.coin{position:absolute;z-index:4;right:62px;bottom:72px;width:62px;height:62px;border-radius:50%;background:linear-gradient(135deg,var(--green2),var(--green));box-shadow:0 18px 32px rgba(69,178,47,.24)}.coin::before{content:"Kč";position:absolute;inset:0;display:grid;place-items:center;color:#fff;font-weight:950;font-size:1.2rem}
-.decision-panel{display:grid;grid-template-columns:.72fr 1.28fr;gap:24px;align-items:center;padding:26px;border-radius:32px;border:1px solid var(--line);background:linear-gradient(135deg,#fff,#f7fbff);box-shadow:var(--shadow-soft)}.decision-panel h2{font-size:clamp(1.75rem,2.5vw,2.55rem)}
-.decision-links{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.decision-links a{display:block;padding:18px;border-radius:22px;border:1px solid var(--line);background:#fff;box-shadow:0 10px 24px rgba(11,36,71,.055);transition:.18s ease}.decision-links a:hover{transform:translateY(-3px);border-color:rgba(69,178,47,.36);box-shadow:0 18px 40px rgba(11,36,71,.10)}.decision-links strong{display:block;color:var(--ink);margin-bottom:4px}.decision-links span{display:block;color:var(--muted);font-size:.92rem}
-.tools-wrap{display:grid;gap:20px}.tool-group{border-radius:32px;border:1px solid var(--line);background:#fff;box-shadow:var(--shadow-soft);overflow:hidden}.tool-group-head{display:grid;grid-template-columns:auto minmax(0,1fr);gap:16px;align-items:center;padding:24px 28px;background:radial-gradient(circle at 95% 0%,rgba(69,178,47,.12),transparent 28%),linear-gradient(90deg,#f7fbff,#fff);border-bottom:1px solid var(--line)}
-.group-icon{width:54px;height:54px;border-radius:18px;display:grid;place-items:center;background:var(--soft-green);color:#247D18;font-weight:950}.tool-group h3{margin:0 0 5px;color:var(--ink);font-size:1.35rem;letter-spacing:-.02em}.tool-group p{margin:0;color:var(--muted)}
-.tool-list{display:grid;gap:0}.tool-row{display:grid;grid-template-columns:54px minmax(0,1fr) 112px;gap:16px;align-items:center;padding:19px 28px;border-bottom:1px solid rgba(220,231,242,.82);color:inherit;transition:.16s ease}.tool-row:last-child{border-bottom:0}.tool-row:hover{background:linear-gradient(90deg,#fff,#f4fff0);transform:translateX(3px)}
-.tool-icon{width:50px;height:50px;border-radius:18px;background:linear-gradient(180deg,#eefbea,#e3f7dc);display:grid;place-items:center;color:#247D18;font-weight:950;font-size:.88rem}.tool-title{display:block;font-weight:920;color:var(--ink);font-size:1.04rem;margin-bottom:5px;line-height:1.25}.tool-desc{display:block;color:var(--muted);font-size:.94rem;line-height:1.5}.tool-open{justify-self:end;padding:10px 13px;border-radius:999px;background:var(--soft-green);color:#247D18;border:1px solid rgba(69,178,47,.22);font-weight:900}
-.insight-panel{display:grid;grid-template-columns:.86fr 1.14fr;gap:28px;padding:30px;border-radius:34px;border:1px solid var(--line);background:radial-gradient(circle at 90% 15%,rgba(69,178,47,.12),transparent 26%),linear-gradient(135deg,#fff,#f8fcff);box-shadow:var(--shadow-soft)}.insight-panel p{color:var(--muted);margin:0}.insight-panel a,.related-note a{color:var(--blue);font-weight:900;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px;text-decoration-color:rgba(69,178,47,.45)}.insight-points{display:grid;gap:10px;margin-top:16px}.insight-points span{display:flex;gap:10px;align-items:flex-start;color:#29415F;font-weight:820}.insight-points span::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--green);margin-top:.65em;flex:0 0 9px}
-.related-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.related-card,.faq-card{border:1px solid var(--line);border-radius:24px;background:#fff;box-shadow:var(--shadow-soft);transition:.18s ease;overflow:hidden}.related-card{padding:20px}.related-card:hover,.faq-card:hover{transform:translateY(-4px);border-color:rgba(69,178,47,.32);box-shadow:0 22px 48px rgba(11,36,71,.12)}.related-card strong{display:block;color:var(--ink);margin-bottom:5px}.related-card span{display:block;color:var(--muted);font-size:.92rem}.related-note{margin-top:10px;max-width:760px;color:var(--muted)}
-.faq-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.faq-card summary{position:relative;cursor:pointer;list-style:none;padding:20px 58px 20px 22px;color:var(--ink);font-weight:900}.faq-card summary::-webkit-details-marker{display:none}.faq-card summary::after{content:"+";position:absolute;right:18px;top:50%;transform:translateY(-50%);width:30px;height:30px;border-radius:999px;display:grid;place-items:center;background:var(--soft-green);border:1px solid rgba(69,178,47,.24);color:#247D18;font-size:1.2rem;font-weight:950;line-height:1;transition:.16s ease}.faq-card[open] summary::after{content:"-";background:linear-gradient(135deg,var(--green),#55C83D);color:#fff;border-color:transparent}.faq-card[open] summary{border-bottom:1px solid rgba(220,231,242,.82)}.faq-card p{padding:18px 22px 20px;margin:0;color:var(--muted)}.faq-card:not([open]) p{display:none}
-.footer{padding:56px 0 26px;background:#071D3B;color:rgba(255,255,255,.74)}.footer .brand{color:#fff}.footer-grid{display:grid;grid-template-columns:1.3fr .8fr .8fr .8fr;gap:32px}.footer-col h3{color:#fff;margin-bottom:12px}.footer-links{display:grid;gap:9px}.footer-links a{color:rgba(255,255,255,.76)}.footer-links a:hover{color:#fff}.footer-bottom{margin-top:30px;padding-top:18px;border-top:1px solid rgba(255,255,255,.12);font-size:.88rem}
-@media(max-width:1080px){.header-inner{flex-wrap:wrap;gap:10px 18px;padding:12px 0}.nav{width:100%;overflow-x:auto;justify-content:flex-start;scrollbar-width:none}.hero-grid,.decision-panel,.insight-panel{grid-template-columns:1fr}.energy-panel{min-height:350px}.related-grid{grid-template-columns:repeat(2,1fr)}.footer-grid{grid-template-columns:1fr 1fr}}
-@media(max-width:760px){:root{--container:min(100% - 24px,1180px)}body::after,.hero-shell::after{display:none}.brand{font-size:19px}.brand-icon{width:36px;height:36px;flex-basis:36px}.hero-grid{padding:24px;border-radius:30px}.hero-shell{border-radius:30px}.energy-panel{display:none}h1{font-size:clamp(2.35rem,12vw,4rem)}.section{padding:42px 0}.section-head{display:block}.decision-links,.related-grid,.faq-grid,.footer-grid{grid-template-columns:1fr}.tool-row{grid-template-columns:50px minmax(0,1fr);padding:18px 20px}.tool-open{grid-column:2;justify-self:start}}
-  </style>
-
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"CollectionPage","name":"Energie a domácnost - elektřina, vytápění, voda a úspory","url":"https://rychlevypocty.cz/energie-a-domacnost.html","description":"Online kalkulačky pro spotřebu elektřiny, plynu a vody, náklady na vytápění, porovnání vytápění, klimatizaci, LED úsporu a návratnost fotovoltaiky."}</script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"RychléVýpočty.cz","item":"https://rychlevypocty.cz/"},{"@type":"ListItem","position":2,"name":"Všechny kalkulačky","item":"https://rychlevypocty.cz/kalkulacky.html"},{"@type":"ListItem","position":3,"name":"Energie a domácnost","item":"https://rychlevypocty.cz/energie-a-domacnost.html"}]}</script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Kde začít, když chci snížit náklady domácnosti?","acceptedAnswer":{"@type":"Answer","text":"Začněte spotřebou elektřiny nebo náklady na vytápění. Pokud řešíte větší změnu, pokračujte porovnáním vytápění nebo návratností fotovoltaiky."}},{"@type":"Question","name":"Jaký je rozdíl mezi náklady na vytápění a porovnáním vytápění?","acceptedAnswer":{"@type":"Answer","text":"Kalkulačka nákladů na vytápění řeší jednu konkrétní variantu. Porovnání vytápění slouží ke srovnání více možností mezi sebou."}},{"@type":"Question","name":"Kdy se hodí kalkulačka návratnosti fotovoltaiky?","acceptedAnswer":{"@type":"Answer","text":"Hodí se ve chvíli, kdy zvažujete domácí fotovoltaiku a chcete odhadnout, za jak dlouho se může investice vrátit."}},{"@type":"Question","name":"Proč řešit vodu, plyn a klimatizaci společně s elektřinou?","acceptedAnswer":{"@type":"Answer","text":"Protože náklady domácnosti tvoří více položek. Elektřina, topení, plyn, voda a chlazení společně ukazují realističtější obraz provozu domácnosti."}}]}</script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"RychléVýpočty.cz","url":"https://rychlevypocty.cz/","logo":"https://rychlevypocty.cz/icon-512.png"}</script>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Energie a domácnost – spotřeba, vytápění a náklady | RychléVýpočty.cz</title>
+<meta name="description" content="Rozcestník pro energie a provoz domácnosti: spotřebiče, elektřina, vytápění, úspory a navazující kalkulačky pro rozpočet."/>
+<link rel="canonical" href="https://rychlevypocty.cz/energie-a-domacnost.html"/>
+<link rel="icon" href="/favicon.ico" sizes="any"/>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml"/>
+<link rel="stylesheet" href="/rv-guide-v1.css?v=9"/>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "CollectionPage", "name": "Energie a domácnost", "url": "https://rychlevypocty.cz/energie-a-domacnost.html", "description": "Praktické návody k provozu spotřebičů, spotřebě elektřiny a nákladům na vytápění.", "hasPart": [{"@type": "WebPage", "name": "Kolik stojí provoz spotřebiče", "url": "https://rychlevypocty.cz/kolik-stoji-provoz-spotrebice.html"}, {"@type": "WebPage", "name": "Jak snížit spotřebu elektřiny v domácnosti", "url": "https://rychlevypocty.cz/jak-snizit-spotrebu-elektriny-v-domacnosti.html"}, {"@type": "WebPage", "name": "Kolik stojí vytápění domu nebo bytu", "url": "https://rychlevypocty.cz/kolik-stoji-vytapeni-domu-nebo-bytu.html"}]}</script>
 </head>
-<body>
-  <a class="skip-link" href="#main">Přejít na obsah</a>
-  <header class="site-header">
-    <div class="container header-inner">
-      <a aria-label="RychléVýpočty.cz - domů" class="brand" href="/"><span aria-hidden="true" class="brand-icon"></span><span class="brand-wordmark"><span>Rychlé</span><span class="brand-green">Výpočty</span><span>.cz</span></span></a>
-      <nav aria-label="Hlavní navigace" class="nav"><a href="/">Domů</a><a href="/kalkulacky.html">Všechny kalkulačky</a><a href="/finance-a-hypoteky.html">Finance</a><a href="/energie-a-domacnost.html" aria-current="page">Energie</a><a href="/rodina-a-rozpocet.html">Rodina</a><a href="/business-a-cenotvorba.html">Business</a></nav>
-      <a class="header-cta" href="#kalkulacky">Najít kalkulačku</a>
-    </div>
-  </header>
-
-  <main id="main">
-    <div aria-label="Drobečková navigace" class="container breadcrumbs"><a href="/">RychléVýpočty.cz</a><span>/</span><a href="/kalkulacky.html">Všechny kalkulačky</a><span>/</span><strong>Energie a domácnost</strong></div>
-
-    <section class="hero">
-      <div class="container">
-        <div class="hero-shell">
-          <div class="hero-grid">
-            <div>
-              <p class="eyebrow">Kalkulačky pro energie, spotřebu a provoz domácnosti</p>
-              <h1>Spočítejte spotřebu, topení <span>a úspory doma</span></h1>
-              <p class="lead">Vyberte výpočet podle toho, co právě řešíte: elektřinu, plyn, vodu, vytápění, klimatizaci, LED úsporu nebo návratnost fotovoltaiky. Bez dlouhých článků, rovnou k orientačnímu výsledku.</p>
-              <div class="hero-actions"><a class="btn btn-primary" href="#cim-zacit">Vybrat podle situace</a><a class="btn btn-secondary" href="#kalkulacky">Zobrazit kalkulačky</a></div>
-              <ul aria-label="Hlavní témata" class="hero-pills"><li>Elektřina</li><li>Vytápění</li><li>Plyn a voda</li><li>Klimatizace</li><li>Fotovoltaika</li></ul>
-            </div>
-            <div aria-hidden="true" class="energy-panel">
-              <div class="panel-top">Kolik stojí provoz domácnosti?</div>
-              <div class="metric-card"><small>Roční spotřeba</small><strong>3 200 kWh</strong></div>
-              <div class="saving-card"><small>Možná úspora</small><strong>12 400 Kč</strong></div>
-              <div class="chart"><svg preserveAspectRatio="none" viewBox="0 0 300 90"><path d="M0 65 C42 48 72 58 108 38 C148 15 178 32 212 20 C248 9 272 19 300 7" fill="none" stroke="#45B22F" stroke-linecap="round" stroke-width="6"></path><path d="M0 65 C42 48 72 58 108 38 C148 15 178 32 212 20 C248 9 272 19 300 7 L300 90 L0 90Z" fill="#EEFBEA"></path></svg></div>
-              <div class="coin"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="cim-zacit">
-      <div class="container">
-        <div class="decision-panel">
-          <div><p class="section-kicker">Rychlý výběr</p><h2>Nevíte, čím začít?</h2><p class="lead">Vyberte situaci. Pro běžné účty začněte elektřinou, pro největší položku vytápěním a u větších investic návratností úspor.</p></div>
-          <div class="decision-links">
-            <a href="/spotreba-elektriny-kalkulacka.html"><strong>Chci znát spotřebu elektřiny</strong><span>Provoz spotřebičů, cena elektřiny a rychlý odhad nákladů.</span></a>
-            <a href="/naklady-na-vytapeni-kalkulacka.html"><strong>Řeším náklady na vytápění</strong><span>Orientační měsíční nebo roční náklady podle typu topení.</span></a>
-            <a href="/porovnani-vytapeni-kalkulacka.html"><strong>Vybírám způsob vytápění</strong><span>Srovnání variant, když řešíte změnu zdroje tepla.</span></a>
-            <a href="/navratnost-fotovoltaiky-kalkulacka.html"><strong>Zvažuju fotovoltaiku</strong><span>Odhad návratnosti domácí investice do úspory energie.</span></a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="kalkulacky">
-      <div class="container">
-        <div class="section-head"><div><p class="section-kicker">Kalkulačky podle situace</p><h2>Kalkulačky pro energie a domácnost</h2><p>Nejdřív spotřeba a vytápění, potom voda, plyn, klimatizace a větší úsporná rozhodnutí.</p></div></div>
-        <div class="tools-wrap">
-          <section class="tool-group">
-            <div class="tool-group-head"><span class="group-icon">kWh</span><div><h3>Spotřeba elektřiny, plynu a vody</h3><p>Základní výpočty pro běžné účty a provoz domácnosti.</p></div></div>
-            <div class="tool-list">
-              <a class="tool-row" href="/spotreba-elektriny-kalkulacka.html"><span class="tool-icon">kWh</span><span><span class="tool-title">Kalkulačka spotřeby elektřiny</span><span class="tool-desc">Orientační náklady na spotřebiče a spotřebu elektřiny v domácnosti.</span></span><span class="tool-open">Otevřít</span></a>
-              <a class="tool-row" href="/spotreba-plynu-kalkulacka.html"><span class="tool-icon">Plyn</span><span><span class="tool-title">Kalkulačka spotřeby plynu</span><span class="tool-desc">Výpočet spotřeby plynu a orientačních nákladů na provoz.</span></span><span class="tool-open">Otevřít</span></a>
-              <a class="tool-row" href="/spotreba-vody-a-naklady-kalkulacka.html"><span class="tool-icon">Voda</span><span><span class="tool-title">Kalkulačka spotřeby vody</span><span class="tool-desc">Orientační spotřeba vody a odpovídající měsíční nebo roční náklady.</span></span><span class="tool-open">Otevřít</span></a>
-            </div>
-          </section>
-          <section class="tool-group">
-            <div class="tool-group-head"><span class="group-icon">Teplo</span><div><h3>Vytápění a chlazení</h3><p>Výpočty pro topení, změnu zdroje tepla i provoz klimatizace.</p></div></div>
-            <div class="tool-list">
-              <a class="tool-row" href="/naklady-na-vytapeni-kalkulacka.html"><span class="tool-icon">Kč</span><span><span class="tool-title">Kalkulačka nákladů na vytápění</span><span class="tool-desc">Orientační náklady podle typu vytápění a provozu domácnosti.</span></span><span class="tool-open">Otevřít</span></a>
-              <a class="tool-row" href="/porovnani-vytapeni-kalkulacka.html"><span class="tool-icon">⇄</span><span><span class="tool-title">Porovnání vytápění kalkulačka</span><span class="tool-desc">Srovnání různých způsobů vytápění a jejich ekonomiky.</span></span><span class="tool-open">Otevřít</span></a>
-              <a class="tool-row" href="/spotreba-klimatizace-kalkulacka.html"><span class="tool-icon">AC</span><span><span class="tool-title">Kalkulačka spotřeby klimatizace</span><span class="tool-desc">Kolik stojí provoz klimatizace podle výkonu a času používání.</span></span><span class="tool-open">Otevřít</span></a>
-            </div>
-          </section>
-          <section class="tool-group">
-            <div class="tool-group-head"><span class="group-icon">Úsp</span><div><h3>Úspory a investice do domácnosti</h3><p>Rychlé ověření, jestli úsporné řešení dává ekonomicky smysl.</p></div></div>
-            <div class="tool-list">
-              <a class="tool-row" href="/navratnost-fotovoltaiky-kalkulacka.html"><span class="tool-icon">FVE</span><span><span class="tool-title">Kalkulačka návratnosti fotovoltaiky</span><span class="tool-desc">Odhad doby návratnosti domácí fotovoltaiky podle vstupních parametrů.</span></span><span class="tool-open">Otevřít</span></a>
-              <a class="tool-row" href="/led-uspora-elektriny-kalkulacka.html"><span class="tool-icon">LED</span><span><span class="tool-title">LED úspora elektřiny kalkulačka</span><span class="tool-desc">Kolik můžete ušetřit přechodem na úspornější LED osvětlení.</span></span><span class="tool-open">Otevřít</span></a>
-              <a class="tool-row" href="/mesicni-naklady-na-bydleni-kalkulacka.html"><span class="tool-icon">Byt</span><span><span class="tool-title">Kalkulačka měsíčních nákladů na bydlení</span><span class="tool-desc">Širší pohled na běžné měsíční náklady domácnosti a bydlení.</span></span><span class="tool-open">Otevřít</span></a>
-            </div>
-          </section>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="co-podcenit">
-      <div class="container">
-        <div class="insight-panel">
-          <div><p class="section-kicker">Důležitý pohled</p><h2>Co u energií doma často zkreslí výsledek</h2></div>
-          <div><p>Samotná cena za kWh nestačí. U elektřiny řešte skutečnou <a href="/spotreba-elektriny-kalkulacka.html">spotřebu spotřebičů</a>, u topení také účinnost systému a u větších změn návratnost investice. Proto dává smysl propojit <a href="/naklady-na-vytapeni-kalkulacka.html">náklady na vytápění</a>, <a href="/porovnani-vytapeni-kalkulacka.html">porovnání vytápění</a> a <a href="/navratnost-fotovoltaiky-kalkulacka.html">fotovoltaiku</a>.</p><div class="insight-points"><span>Začněte položkou, která tvoří největší část účtu.</span><span>U úspor počítejte i pořizovací cenu a návratnost.</span><span>Pro domácí rozpočet přidejte vodu, plyn a náklady na bydlení.</span></div></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="souvisejici">
-      <div class="container">
-        <div class="section-head"><div><p class="section-kicker">Navazující oblasti</p><h2>Energie souvisí s rozpočtem, bydlením i autem</h2><p>Náklady domácnosti často navazují na rozpočet, rekonstrukci, investiční bydlení nebo provoz auta.</p><p class="related-note">Pokračovat můžete na <a href="/rodina-a-rozpocet.html">rodinu a rozpočet</a>, <a href="/stavba-domu.html">stavbu domu</a> nebo <a href="/auto-a-provoz.html">auto a provoz</a>.</p></div></div>
-        <div class="related-grid">
-          <a class="related-card" href="/rodina-a-rozpocet.html"><strong>Rodina a rozpočet</strong><span>Rezerva domácnosti, výdaje a pravidelné náklady.</span></a>
-          <a class="related-card" href="/stavba-domu.html"><strong>Stavba domu</strong><span>Rekonstrukce, vytápění a rozpočet kolem domu.</span></a>
-          <a class="related-card" href="/pronajem-a-investicni-bydleni.html"><strong>Pronájem a investiční bydlení</strong><span>Provoz nemovitosti, náklady a cashflow pronájmu.</span></a>
-          <a class="related-card" href="/auto-a-provoz.html"><strong>Auto a provoz</strong><span>Palivo, nabíjení elektromobilu a provozní náklady.</span></a>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="faq">
-      <div class="container">
-        <div class="section-head"><div><p class="section-kicker">Časté otázky</p><h2>Časté otázky k energiím a domácnosti</h2><p>Krátké odpovědi pro rychlou orientaci před výpočtem.</p></div></div>
-        <div class="faq-grid">
-          <details class="faq-card"><summary>Kde začít, když chci snížit náklady domácnosti?</summary><p>Začněte spotřebou elektřiny nebo náklady na vytápění. Pokud řešíte větší změnu, pokračujte porovnáním vytápění nebo návratností fotovoltaiky.</p></details>
-          <details class="faq-card"><summary>Jaký je rozdíl mezi náklady na vytápění a porovnáním vytápění?</summary><p>Kalkulačka nákladů na vytápění řeší jednu konkrétní variantu. Porovnání vytápění slouží ke srovnání více možností mezi sebou.</p></details>
-          <details class="faq-card"><summary>Kdy se hodí kalkulačka návratnosti fotovoltaiky?</summary><p>Hodí se ve chvíli, kdy zvažujete domácí fotovoltaiku a chcete odhadnout, za jak dlouho se může investice vrátit.</p></details>
-          <details class="faq-card"><summary>Proč řešit vodu, plyn a klimatizaci společně s elektřinou?</summary><p>Protože náklady domácnosti tvoří více položek. Elektřina, topení, plyn, voda a chlazení společně ukazují realističtější obraz provozu domácnosti.</p></details>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer class="footer">
-    <div class="container footer-grid">
-      <div><a class="brand" href="/"><img alt="" class="brand-icon" height="42" src="/icon.svg?v=5" width="42"/><span class="brand-wordmark"><span>Rychlé</span><span class="brand-green">Výpočty</span><span>.cz</span></span></a><p>Online kalkulačky a praktické nástroje zdarma pro rychlou orientaci v běžných rozhodnutích.</p></div>
-      <div class="footer-col"><h3>Hlavní sekce</h3><div class="footer-links"><a href="/kalkulacky.html">Všechny kalkulačky</a><a href="/finance-a-hypoteky.html">Finance a hypotéky</a><a href="/energie-a-domacnost.html">Energie a domácnost</a><a href="/mzdy-a-prace.html">Mzdy a práce</a></div></div>
-      <div class="footer-col"><h3>Kategorie</h3><div class="footer-links"><a href="/auto-a-provoz.html">Auto</a><a href="/rodina-a-rozpocet.html">Rodina</a><a href="/stavba-domu.html">Stavba domu</a><a href="/pronajem-a-investicni-bydleni.html">Pronájem</a></div></div>
-      <div class="footer-col"><h3>Informace</h3><div class="footer-links"><a href="/o-nas.html">O nás</a><a href="/kontakt.html">Kontakt</a><a href="/ochrana-osobnich-udaju.html">Ochrana osobních údajů</a><a href="/podminky-pouziti.html">Podmínky použití</a></div></div>
-    </div>
-    <div class="container footer-bottom">© RychléVýpočty.cz · Výsledky mají orientační charakter.</div>
-  </footer>
+<body class="rv-guides-hub-page">
+<a class="skip-link" href="#main">Přeskočit na obsah</a>
+<header class="site-header">
+<div class="container header-inner">
+<a aria-label="RychléVýpočty.cz – domů" class="brand" href="/"><img alt="RychléVýpočty.cz" class="brand-logo-img" decoding="async" height="42" src="/logo-rychlevypocty.svg" width="230"/></a>
+<nav aria-label="Hlavní navigace" class="nav"><a href="/">Domů</a><a href="/situace.html">Situace</a><a href="/kalkulacky.html">Všechny kalkulačky</a><a href="/bydleni.html">Bydlení</a><a href="/navody.html">Návody</a></nav>
+<a class="header-cta" href="/kalkulacky.html">Najít výpočet</a>
+</div>
+</header>
+<main id="main">
+<section class="hero-shell"><div class="container"><div class="hub-hero-panel"><div class="hub-copy"><div class="breadcrumbs"><a href="/">Domů</a><span>•</span><a href="/navody.html">Návody</a><span>•</span><span>Energie a domácnost</span></div><span class="eyebrow eyebrow-energy">Energie a domácnost</span><h1>Návody k energiím, spotřebě a provozu domácnosti</h1><p class="lead">Energie nejsou jen položka na faktuře. Ovlivňují měsíční rozpočet, dostupnost bydlení i to, jestli domácnost zvládne horší měsíc. Začněte tím, co doma nejvíc spotřebovává, a potom přejděte na konkrétní výpočet.</p><div class="hero-actions"><a class="btn" href="#navody-energie">Vybrat návod</a><a class="btn-secondary" href="/mesicni-naklady-na-bydleni-kalkulacka.html">Spočítat náklady</a></div></div><div class="hub-visual"><div class="hub-visual-card"><img alt="Ilustrace energií v domácnosti" height="520" src="/guide-energie-hero.svg" width="720"/></div><div class="hub-stats"><article><span>Nejčastěji</span><strong>elektřina a provoz</strong></article><article><span>Kontrola</span><strong>měsíční dopad</strong></article><article><span>Navazuje</span><strong>rozpočet domácnosti</strong></article></div></div></div></div></section>
+<section class="section section-soft"><div class="container"><div class="guide-start-panel guide-start-energy"><div><span class="eyebrow eyebrow-energy">Kde začít</span><h2>Nejdřív najděte největší položky</h2><p>Nejlepší úspora není vždy nejviditelnější. U energií má smysl začít spotřebiči, které běží dlouho, vytápěním, ohřevem vody a pravidelnými zálohami. Teprve potom řešte drobnosti.</p></div><div class="guide-start-list"><article><span>1</span><strong>Spočítejte spotřebu</strong><p>Příkon, čas používání a cena za kWh ukážou reálný dopad.</p></article><article><span>2</span><strong>Oddělte provoz a topení</strong><p>Vytápění se chová jinak než běžné spotřebiče.</p></article><article><span>3</span><strong>Navážete na rozpočet</strong><p>Výsledek porovnejte s příjmem, bydlením a rezervou.</p></article></div></div></div></section>
+<section class="section" id="navody-energie"><div class="container"><div class="hub-topic-shell hub-topic-energy"><div class="section-head"><div><span class="eyebrow eyebrow-energy">Návody</span><h2>Vyberte návod podle toho, co chcete zjistit</h2></div><p>První sada řeší tři nejpraktičtější otázky: kolik stojí provoz spotřebiče, kde snížit spotřebu elektřiny a jak uvažovat nad vytápěním.</p></div><div class="guide-grid guide-grid-compact"><a class="guide-list-card" href="/kolik-stoji-provoz-spotrebice.html"><div class="guide-card-copy"><strong>Kolik stojí provoz spotřebiče</strong><p>Jak přepočítat příkon ve wattech na cenu za den, měsíc a rok.</p><ul><li>spotřebič</li><li>kWh</li><li>měsíční dopad</li></ul></div><img alt="Ilustrace provozu spotřebiče" height="520" src="/guide-energie-spotrebic.svg" width="720"/></a><a class="guide-list-card" href="/jak-snizit-spotrebu-elektriny-v-domacnosti.html"><div class="guide-card-copy"><strong>Jak snížit spotřebu elektřiny v domácnosti</strong><p>Kde hledat úspory, které mají smysl a nezhorší běžný život doma.</p><ul><li>elektřina</li><li>úspory</li><li>zálohy</li></ul></div><img alt="Ilustrace snížení spotřeby elektřiny" height="520" src="/guide-energie-elektrina.svg" width="720"/></a><a class="guide-list-card" href="/kolik-stoji-vytapeni-domu-nebo-bytu.html"><div class="guide-card-copy"><strong>Kolik stojí vytápění domu nebo bytu</strong><p>Proč vytápění tvoří samostatnou položku a co ovlivňuje roční i měsíční náklady.</p><ul><li>vytápění</li><li>zima</li><li>rezerva</li></ul></div><img alt="Ilustrace vytápění domu nebo bytu" height="520" src="/guide-energie-vytapeni.svg" width="720"/></a><article class="topic-panel"><span class="kicker">Navazující výpočty</span><h3>Když chcete konkrétní čísla</h3><p>Po návodu pokračujte do kalkulaček pro měsíční náklady, rozpočet domácnosti nebo rezervu. Energie dávají největší smysl v kontextu celého rozpočtu.</p><div class="sidebar-links"><a href="/mesicni-naklady-na-bydleni-kalkulacka.html">Měsíční náklady na bydlení</a><a href="/kalkulacka-rozpoctu-domacnosti.html">Rozpočet domácnosti</a><a href="/kalkulacka-financni-rezervy.html">Finanční rezerva</a></div></article></div></div></div></section>
+<section class="section"><div class="container"><div class="section-head"><div><span class="eyebrow eyebrow-energy">Typické situace</span><h2>Kdy řešit energie samostatně</h2></div></div><div class="energy-mini-grid"><a class="energy-mini-card" href="/mesicni-naklady-na-bydleni-co-zapocitat.html"><span>Bydlení</span><strong>Rostou náklady na bydlení</strong><p>Ověřte, jestli za růstem stojí energie, služby, fond oprav nebo běžný provoz.</p></a><a class="energy-mini-card" href="/jak-zvladnout-necekane-vydaje-v-domacnosti.html"><span>Rezerva</span><strong>Přišel doplatek energií</strong><p>Doplatek patří mezi nečekané výdaje, které je dobré řešit přes rezervu.</p></a><a class="energy-mini-card" href="/jak-usetrit-v-domacnosti-bez-omezeni.html"><span>Úspory</span><strong>Chci snížit pravidelné platby</strong><p>Nejdřív hledejte opakované výdaje, kde změna nebolí každý den.</p></a><a class="energy-mini-card" href="/situace.html"><span>Situace</span><strong>Nevím, kde začít</strong><p>Vyberte praktickou situaci a pokračujte na správný návod nebo kalkulačku.</p></a></div></div></section>
+</main>
+<footer class="site-footer"><div class="container footer-inner"><div class="footer-grid"><div class="footer-brand"><a aria-label="RychléVýpočty.cz – domů" class="brand brand-footer" href="/"><img alt="RychléVýpočty.cz" class="brand-logo-img" decoding="async" height="40" src="/logo-rychlevypocty-footer.svg" width="220"/></a><p>Praktické návody a kalkulačky pro rychlou orientaci před důležitým rozhodnutím.</p></div><div class="footer-col"><h2>Energie a domácnost</h2><a href="/energie-a-domacnost.html">Přehled</a><a href="/kolik-stoji-provoz-spotrebice.html">Provoz spotřebiče</a><a href="/jak-snizit-spotrebu-elektriny-v-domacnosti.html">Snížení spotřeby</a><a href="/kolik-stoji-vytapeni-domu-nebo-bytu.html">Vytápění</a></div><div class="footer-col"><h2>Kalkulačky</h2><a href="/mesicni-naklady-na-bydleni-kalkulacka.html">Náklady na bydlení</a><a href="/kalkulacka-rozpoctu-domacnosti.html">Rozpočet domácnosti</a><a href="/kalkulacka-financni-rezervy.html">Finanční rezerva</a></div><div class="footer-col"><h2>Informace</h2><a href="/o-nas.html">O nás</a><a href="/kontakt.html">Kontakty</a><a href="/ochrana-osobnich-udaju.html">Ochrana soukromí</a><a href="/podminky-pouziti.html">Podmínky použití</a></div></div><div class="footer-bottom"><span>© RychléVýpočty.cz · Orientační obsah.</span><a href="/sitemap.xml">Sitemap</a></div></div></footer>
 </body>
 </html>
