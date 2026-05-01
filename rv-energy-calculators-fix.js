@@ -112,6 +112,11 @@
     write("resultNote", "Při ceně " + num(price, 2) + " Kč/kWh vychází vytápění na " + money(year) + " ročně.");
   }
 
+  function setValue(id, value) {
+    var node = el(id);
+    if (node) node.value = value;
+  }
+
   function renderElectricity() {
     if (!el("devicePower") || !el("periodCost")) return;
     var power = Math.max(0, Number(read("devicePower")) || 0);
@@ -123,17 +128,74 @@
     var period = daily * days;
     var monthly = daily * 30;
     var yearly = daily * 365;
+    var monthlyCost = monthly * price;
+    var costStatus = monthlyCost > 1000 ? "Vysoký měsíční dopad" : monthlyCost > 250 ? "Citelná spotřeba" : "Nízká až běžná spotřeba";
     write("periodCost", money(period * price));
     write("periodConsumption", num(period, 1) + " kWh");
-    write("monthlyCost", money(monthly * price));
+    write("monthlyCost", money(monthlyCost));
     write("yearlyCost", money(yearly * price));
     write("dailyCost", money(daily * price));
     write("dailyConsumption", num(daily, 2) + " kWh");
     write("monthlyConsumption", num(monthly, 1) + " kWh");
     write("yearlyConsumption", num(yearly, 0) + " kWh");
     write("summaryPower", num(power, 0) + " W");
-    write("statusBadge", monthly * price > 1000 ? "Vysoký měsíční dopad" : monthly * price > 250 ? "Citelná spotřeba" : "Nízká až běžná spotřeba");
+    write("statusBadge", costStatus);
+    write("costStatus", costStatus);
+    write("resultNote", "Za zadané období spotřebič odebere přibližně " + num(period, 1) + " kWh a bude stát asi " + money(period * price) + ".");
     write("costStatusText", "Za zadané období spotřebič odebere přibližně " + num(period, 1) + " kWh a bude stát asi " + money(period * price) + ".");
+    write("decisionSummary", monthlyCost > 1000
+      ? "Jde o výraznější položku v rozpočtu. Zkuste porovnat kratší provoz, levnější tarif nebo úspornější spotřebič."
+      : monthlyCost > 250
+        ? "Spotřeba už je v měsíčním rozpočtu znát. Vyplatí se ověřit reálný odběr a čas provozu."
+        : "Jde spíš o menší položku. U celoročního provozu ale sledujte i pohotovostní odběr.");
+    var table = el("summaryTableBody");
+    if (table) {
+      table.innerHTML = "<tr><td>Den</td><td>" + num(daily, 2) + " kWh</td><td>" + money(daily * price) + "</td></tr>" +
+        "<tr><td>Zadané období</td><td>" + num(period, 1) + " kWh</td><td>" + money(period * price) + "</td></tr>" +
+        "<tr><td>Měsíc</td><td>" + num(monthly, 1) + " kWh</td><td>" + money(monthlyCost) + "</td></tr>" +
+        "<tr><td>Rok</td><td>" + num(yearly, 0) + " kWh</td><td>" + money(yearly * price) + "</td></tr>";
+    }
+  }
+
+  function setElectricityPreset(name) {
+    var presets = {
+      tv: { devicePower: 90, hoursPerDay: 4, daysUsed: 30, pricePerKwh: 6.50, standbyPower: 0.5, usageMode: "daily" },
+      washer: { devicePower: 2000, hoursPerDay: 0.8, daysUsed: 12, pricePerKwh: 6.50, standbyPower: 0, usageMode: "monthly" },
+      heater: { devicePower: 1500, hoursPerDay: 2, daysUsed: 30, pricePerKwh: 6.50, standbyPower: 0, usageMode: "seasonal" },
+      fridge: { devicePower: 120, hoursPerDay: 8, daysUsed: 30, pricePerKwh: 6.50, standbyPower: 0, usageMode: "daily" }
+    };
+    var preset = presets[name];
+    if (!preset || !el("devicePower")) return;
+    Object.keys(preset).forEach(function (id) { setValue(id, preset[id]); });
+    var chips = document.querySelectorAll('#electricityForm .scenario-chip[data-preset]');
+    for (var i = 0; i < chips.length; i += 1) {
+      var active = chips[i].getAttribute("data-preset") === name;
+      chips[i].classList.toggle("active", active);
+      chips[i].setAttribute("aria-pressed", active ? "true" : "false");
+    }
+    renderElectricity();
+  }
+
+  function bindElectricityControls() {
+    var form = el("electricityForm");
+    if (!form || form.dataset.rvPresetBound === "true") return;
+    form.dataset.rvPresetBound = "true";
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+      renderElectricity();
+    });
+    var chips = form.querySelectorAll('.scenario-chip[data-preset]');
+    for (var i = 0; i < chips.length; i += 1) {
+      chips[i].addEventListener("click", function () {
+        setElectricityPreset(this.getAttribute("data-preset"));
+      });
+    }
+    var reset = el("resetBtn");
+    if (reset) {
+      reset.addEventListener("click", function () {
+        setElectricityPreset("heater");
+      });
+    }
   }
 
   function renderAll() {
@@ -145,8 +207,10 @@
   bind([
     "annualHeatNeed", "electricityPrice", "gasPrice", "woodPrice", "pelletsPrice", "heatPumpElectricityPrice", "cop", "showCount",
     "floorArea", "buildingType", "heatingSource", "energyPrice", "efficiency", "heatingMonths",
-    "devicePower", "hoursPerDay", "daysUsed", "pricePerKwh", "standbyPower"
+    "devicePower", "hoursPerDay", "daysUsed", "pricePerKwh", "standbyPower", "usageMode"
   ], renderAll);
+
+  bindElectricityControls();
 
   window.RV_ENERGY_FIX_LOADED = true;
 })();
