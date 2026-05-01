@@ -17,6 +17,14 @@
     if (node) node.textContent = value;
   }
 
+  function setValue(id, value) {
+    var node = el(id);
+    if (!node) return;
+    node.value = value;
+    node.dispatchEvent(new Event("input", { bubbles: true }));
+    node.dispatchEvent(new Event("change", { bubbles: true }));
+  }
+
   function num(value, digits) {
     return new Intl.NumberFormat("cs-CZ", { maximumFractionDigits: digits == null ? 0 : digits }).format(isFinite(value) ? value : 0);
   }
@@ -110,11 +118,14 @@
     write("costStatusText", "Roční potřeba tepla je přibližně " + num(heatNeed, 0) + " kWh. Po účinnosti zdroje je potřeba nakoupit asi " + num(purchased, 0) + " kWh energie.");
     write("decisionSummary", "Pokud náklad vychází vysoko, ověřte zateplení, regulaci a reálnou cenu energie z vyúčtování.");
     write("resultNote", "Při ceně " + num(price, 2) + " Kč/kWh vychází vytápění na " + money(year) + " ročně.");
-  }
-
-  function setValue(id, value) {
-    var node = el(id);
-    if (node) node.value = value;
+    var table = el("summaryTableBody");
+    if (table) {
+      table.innerHTML =
+        "<tr><td>Roční náklad</td><td>" + money(year) + "</td><td>Celkový orientační náklad za topnou sezónu.</td></tr>" +
+        "<tr><td>Měsíc v sezóně</td><td>" + money(month) + "</td><td>Roční náklad rozdělený do " + num(months, 0) + " topných měsíců.</td></tr>" +
+        "<tr><td>Potřeba tepla</td><td>" + num(heatNeed, 0) + " kWh</td><td>Odhad podle plochy a stavu objektu.</td></tr>" +
+        "<tr><td>Nakoupená energie</td><td>" + num(purchased, 0) + " kWh</td><td>Potřeba po započtení účinnosti zdroje.</td></tr>";
+    }
   }
 
   function renderElectricity() {
@@ -128,74 +139,17 @@
     var period = daily * days;
     var monthly = daily * 30;
     var yearly = daily * 365;
-    var monthlyCost = monthly * price;
-    var costStatus = monthlyCost > 1000 ? "Vysoký měsíční dopad" : monthlyCost > 250 ? "Citelná spotřeba" : "Nízká až běžná spotřeba";
     write("periodCost", money(period * price));
     write("periodConsumption", num(period, 1) + " kWh");
-    write("monthlyCost", money(monthlyCost));
+    write("monthlyCost", money(monthly * price));
     write("yearlyCost", money(yearly * price));
     write("dailyCost", money(daily * price));
     write("dailyConsumption", num(daily, 2) + " kWh");
     write("monthlyConsumption", num(monthly, 1) + " kWh");
     write("yearlyConsumption", num(yearly, 0) + " kWh");
     write("summaryPower", num(power, 0) + " W");
-    write("statusBadge", costStatus);
-    write("costStatus", costStatus);
-    write("resultNote", "Za zadané období spotřebič odebere přibližně " + num(period, 1) + " kWh a bude stát asi " + money(period * price) + ".");
+    write("statusBadge", monthly * price > 1000 ? "Vysoký měsíční dopad" : monthly * price > 250 ? "Citelná spotřeba" : "Nízká až běžná spotřeba");
     write("costStatusText", "Za zadané období spotřebič odebere přibližně " + num(period, 1) + " kWh a bude stát asi " + money(period * price) + ".");
-    write("decisionSummary", monthlyCost > 1000
-      ? "Jde o výraznější položku v rozpočtu. Zkuste porovnat kratší provoz, levnější tarif nebo úspornější spotřebič."
-      : monthlyCost > 250
-        ? "Spotřeba už je v měsíčním rozpočtu znát. Vyplatí se ověřit reálný odběr a čas provozu."
-        : "Jde spíš o menší položku. U celoročního provozu ale sledujte i pohotovostní odběr.");
-    var table = el("summaryTableBody");
-    if (table) {
-      table.innerHTML = "<tr><td>Den</td><td>" + num(daily, 2) + " kWh</td><td>" + money(daily * price) + "</td></tr>" +
-        "<tr><td>Zadané období</td><td>" + num(period, 1) + " kWh</td><td>" + money(period * price) + "</td></tr>" +
-        "<tr><td>Měsíc</td><td>" + num(monthly, 1) + " kWh</td><td>" + money(monthlyCost) + "</td></tr>" +
-        "<tr><td>Rok</td><td>" + num(yearly, 0) + " kWh</td><td>" + money(yearly * price) + "</td></tr>";
-    }
-  }
-
-  function setElectricityPreset(name) {
-    var presets = {
-      tv: { devicePower: 90, hoursPerDay: 4, daysUsed: 30, pricePerKwh: 6.50, standbyPower: 0.5, usageMode: "daily" },
-      washer: { devicePower: 2000, hoursPerDay: 0.8, daysUsed: 12, pricePerKwh: 6.50, standbyPower: 0, usageMode: "monthly" },
-      heater: { devicePower: 1500, hoursPerDay: 2, daysUsed: 30, pricePerKwh: 6.50, standbyPower: 0, usageMode: "seasonal" },
-      fridge: { devicePower: 120, hoursPerDay: 8, daysUsed: 30, pricePerKwh: 6.50, standbyPower: 0, usageMode: "daily" }
-    };
-    var preset = presets[name];
-    if (!preset || !el("devicePower")) return;
-    Object.keys(preset).forEach(function (id) { setValue(id, preset[id]); });
-    var chips = document.querySelectorAll('#electricityForm .scenario-chip[data-preset]');
-    for (var i = 0; i < chips.length; i += 1) {
-      var active = chips[i].getAttribute("data-preset") === name;
-      chips[i].classList.toggle("active", active);
-      chips[i].setAttribute("aria-pressed", active ? "true" : "false");
-    }
-    renderElectricity();
-  }
-
-  function bindElectricityControls() {
-    var form = el("electricityForm");
-    if (!form || form.dataset.rvPresetBound === "true") return;
-    form.dataset.rvPresetBound = "true";
-    form.addEventListener("submit", function (event) {
-      event.preventDefault();
-      renderElectricity();
-    });
-    var chips = form.querySelectorAll('.scenario-chip[data-preset]');
-    for (var i = 0; i < chips.length; i += 1) {
-      chips[i].addEventListener("click", function () {
-        setElectricityPreset(this.getAttribute("data-preset"));
-      });
-    }
-    var reset = el("resetBtn");
-    if (reset) {
-      reset.addEventListener("click", function () {
-        setElectricityPreset("heater");
-      });
-    }
   }
 
   function renderAll() {
@@ -207,10 +161,69 @@
   bind([
     "annualHeatNeed", "electricityPrice", "gasPrice", "woodPrice", "pelletsPrice", "heatPumpElectricityPrice", "cop", "showCount",
     "floorArea", "buildingType", "heatingSource", "energyPrice", "efficiency", "heatingMonths",
-    "devicePower", "hoursPerDay", "daysUsed", "pricePerKwh", "standbyPower", "usageMode"
+    "devicePower", "hoursPerDay", "daysUsed", "pricePerKwh", "standbyPower"
   ], renderAll);
 
-  bindElectricityControls();
 
+
+  function setPressed(buttons, activeButton) {
+    for (var i = 0; i < buttons.length; i += 1) {
+      buttons[i].classList.toggle("active", buttons[i] === activeButton);
+      buttons[i].setAttribute("aria-pressed", buttons[i] === activeButton ? "true" : "false");
+    }
+  }
+
+  function initHeatingPresets() {
+    if (!el("heatingForm")) return;
+    var presets = {
+      "well-gas": { floorArea: 120, buildingType: "well", heatingSource: "gas", energyPrice: 1.9, efficiency: 92, heatingMonths: 7 },
+      "standard-electric": { floorArea: 85, buildingType: "standard", heatingSource: "electric", energyPrice: 5.8, efficiency: 100, heatingMonths: 7 },
+      "older-wood": { floorArea: 160, buildingType: "older", heatingSource: "wood", energyPrice: 1.25, efficiency: 78, heatingMonths: 8 },
+      "heatpump": { floorArea: 130, buildingType: "well", heatingSource: "heatpump", energyPrice: 5.2, efficiency: 320, heatingMonths: 7 }
+    };
+    var sourceDefaults = {
+      gas: { energyPrice: 1.9, efficiency: 92 },
+      electric: { energyPrice: 5.8, efficiency: 100 },
+      wood: { energyPrice: 1.25, efficiency: 78 },
+      pellets: { energyPrice: 1.65, efficiency: 86 },
+      heatpump: { energyPrice: 5.2, efficiency: 320 }
+    };
+    var buttons = Array.prototype.slice.call(document.querySelectorAll("#heatingForm [data-preset]"));
+    function applyPreset(name, activeButton) {
+      var preset = presets[name];
+      if (!preset) return;
+      Object.keys(preset).forEach(function (key) { setValue(key, preset[key]); });
+      if (activeButton) setPressed(buttons, activeButton);
+      renderAll();
+    }
+    buttons.forEach(function (button) {
+      button.addEventListener("click", function () {
+        applyPreset(button.getAttribute("data-preset"), button);
+      });
+    });
+    var source = el("heatingSource");
+    if (source) {
+      source.addEventListener("change", function () {
+        var defaults = sourceDefaults[source.value];
+        if (!defaults) return;
+        setValue("energyPrice", defaults.energyPrice);
+        setValue("efficiency", defaults.efficiency);
+        renderAll();
+      });
+    }
+    var form = el("heatingForm");
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+      renderAll();
+    });
+    var reset = el("resetBtn");
+    if (reset) {
+      reset.addEventListener("click", function () {
+        applyPreset("well-gas", buttons[0]);
+      });
+    }
+  }
+
+  initHeatingPresets();
   window.RV_ENERGY_FIX_LOADED = true;
 })();
