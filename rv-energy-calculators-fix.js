@@ -17,20 +17,34 @@
     if (node) node.textContent = value;
   }
 
-  function setValue(id, value) {
-    var node = el(id);
-    if (!node) return;
-    node.value = value;
-    node.dispatchEvent(new Event("input", { bubbles: true }));
-    node.dispatchEvent(new Event("change", { bubbles: true }));
-  }
-
   function num(value, digits) {
     return new Intl.NumberFormat("cs-CZ", { maximumFractionDigits: digits == null ? 0 : digits }).format(isFinite(value) ? value : 0);
   }
 
   function money(value) {
     return new Intl.NumberFormat("cs-CZ", { style: "currency", currency: "CZK", maximumFractionDigits: 0 }).format(isFinite(value) ? value : 0);
+  }
+
+  function setValue(id, value) {
+    var node = el(id);
+    if (!node) return;
+    node.value = value;
+  }
+
+  function applyObject(values) {
+    if (!values) return;
+    Object.keys(values).forEach(function (id) { setValue(id, values[id]); });
+  }
+
+  function setActivePreset(button) {
+    var row = button && button.closest ? button.closest(".preset-row") : null;
+    if (!row) return;
+    var buttons = row.querySelectorAll("[data-preset]");
+    for (var i = 0; i < buttons.length; i += 1) {
+      var active = buttons[i] === button;
+      buttons[i].setAttribute("aria-pressed", active ? "true" : "false");
+      buttons[i].classList.toggle("is-active", active);
+    }
   }
 
   function bind(ids, render) {
@@ -43,6 +57,28 @@
     }
     render();
   }
+
+  var heatingDefaultsBySource = {
+    gas: { energyPrice: 1.9, efficiency: 92 },
+    electric: { energyPrice: 5.5, efficiency: 100 },
+    wood: { energyPrice: 1.2, efficiency: 75 },
+    pellets: { energyPrice: 1.9, efficiency: 86 },
+    heatpump: { energyPrice: 5.0, efficiency: 320 }
+  };
+
+  var heatingPresets = {
+    "well-gas": { floorArea: 120, buildingType: "well", heatingSource: "gas", energyPrice: 1.9, efficiency: 92, heatingMonths: 7 },
+    "standard-electric": { floorArea: 90, buildingType: "standard", heatingSource: "electric", energyPrice: 5.5, efficiency: 100, heatingMonths: 7 },
+    "older-wood": { floorArea: 150, buildingType: "older", heatingSource: "wood", energyPrice: 1.2, efficiency: 75, heatingMonths: 7 },
+    "heatpump": { floorArea: 130, buildingType: "well", heatingSource: "heatpump", energyPrice: 5.0, efficiency: 320, heatingMonths: 7 }
+  };
+
+  var electricityPresets = {
+    tv: { devicePower: 100, hoursPerDay: 4, daysUsed: 30, pricePerKwh: 6.0, standbyPower: 0.5 },
+    washer: { devicePower: 900, hoursPerDay: 1, daysUsed: 16, pricePerKwh: 6.0, standbyPower: 0 },
+    heater: { devicePower: 2000, hoursPerDay: 3, daysUsed: 30, pricePerKwh: 6.0, standbyPower: 0 },
+    fridge: { devicePower: 70, hoursPerDay: 24, daysUsed: 30, pricePerKwh: 6.0, standbyPower: 0 }
+  };
 
   function renderHeatCompare() {
     if (!el("annualHeatNeed") || !el("bestOption")) return;
@@ -120,11 +156,10 @@
     write("resultNote", "Při ceně " + num(price, 2) + " Kč/kWh vychází vytápění na " + money(year) + " ročně.");
     var table = el("summaryTableBody");
     if (table) {
-      table.innerHTML =
-        "<tr><td>Roční náklad</td><td>" + money(year) + "</td><td>Celkový orientační náklad za topnou sezónu.</td></tr>" +
-        "<tr><td>Měsíc v sezóně</td><td>" + money(month) + "</td><td>Roční náklad rozdělený do " + num(months, 0) + " topných měsíců.</td></tr>" +
-        "<tr><td>Potřeba tepla</td><td>" + num(heatNeed, 0) + " kWh</td><td>Odhad podle plochy a stavu objektu.</td></tr>" +
-        "<tr><td>Nakoupená energie</td><td>" + num(purchased, 0) + " kWh</td><td>Potřeba po započtení účinnosti zdroje.</td></tr>";
+      table.innerHTML = "<tr><td>Roční potřeba tepla</td><td>" + num(heatNeed, 0) + " kWh</td><td>Plocha × orientační potřeba podle typu objektu</td></tr>" +
+        "<tr><td>Nakoupená energie</td><td>" + num(purchased, 0) + " kWh</td><td>Zohledňuje účinnost zdroje nebo COP</td></tr>" +
+        "<tr><td>Roční náklad</td><td>" + money(year) + "</td><td>Nakoupená energie × cena za kWh</td></tr>" +
+        "<tr><td>Měsíc v topné sezóně</td><td>" + money(month) + "</td><td>Roční náklad rozdělený do " + num(months, 0) + " měsíců</td></tr>";
     }
   }
 
@@ -158,72 +193,69 @@
     renderElectricity();
   }
 
+  function setupHeatingInteractions() {
+    var form = el("heatingForm");
+    if (form) {
+      form.addEventListener("submit", function (event) { event.preventDefault(); renderAll(); });
+    }
+    var chips = document.querySelectorAll("#heatingForm [data-preset]");
+    for (var i = 0; i < chips.length; i += 1) {
+      chips[i].addEventListener("click", function () {
+        applyObject(heatingPresets[this.getAttribute("data-preset")]);
+        setActivePreset(this);
+        renderAll();
+      });
+    }
+    var source = el("heatingSource");
+    if (source) {
+      source.addEventListener("change", function () {
+        applyObject(heatingDefaultsBySource[source.value]);
+        renderAll();
+      });
+    }
+    var reset = el("resetBtn");
+    if (reset && form) {
+      reset.addEventListener("click", function () {
+        applyObject(heatingPresets["well-gas"]);
+        var first = form.querySelector('[data-preset="well-gas"]');
+        if (first) setActivePreset(first);
+        renderAll();
+      });
+    }
+  }
+
+  function setupElectricityInteractions() {
+    var form = el("electricityForm");
+    if (form) {
+      form.addEventListener("submit", function (event) { event.preventDefault(); renderAll(); });
+    }
+    var chips = document.querySelectorAll("#electricityForm [data-preset]");
+    for (var i = 0; i < chips.length; i += 1) {
+      chips[i].addEventListener("click", function () {
+        applyObject(electricityPresets[this.getAttribute("data-preset")]);
+        setActivePreset(this);
+        renderAll();
+      });
+    }
+    var reset = el("resetBtn");
+    if (reset && form) {
+      reset.addEventListener("click", function () {
+        applyObject(electricityPresets.heater);
+        var first = form.querySelector('[data-preset="heater"]');
+        if (first) setActivePreset(first);
+        renderAll();
+      });
+    }
+  }
+
+  setupHeatingInteractions();
+  setupElectricityInteractions();
+
   bind([
     "annualHeatNeed", "electricityPrice", "gasPrice", "woodPrice", "pelletsPrice", "heatPumpElectricityPrice", "cop", "showCount",
     "floorArea", "buildingType", "heatingSource", "energyPrice", "efficiency", "heatingMonths",
     "devicePower", "hoursPerDay", "daysUsed", "pricePerKwh", "standbyPower"
   ], renderAll);
 
-
-
-  function setPressed(buttons, activeButton) {
-    for (var i = 0; i < buttons.length; i += 1) {
-      buttons[i].classList.toggle("active", buttons[i] === activeButton);
-      buttons[i].setAttribute("aria-pressed", buttons[i] === activeButton ? "true" : "false");
-    }
-  }
-
-  function initHeatingPresets() {
-    if (!el("heatingForm")) return;
-    var presets = {
-      "well-gas": { floorArea: 120, buildingType: "well", heatingSource: "gas", energyPrice: 1.9, efficiency: 92, heatingMonths: 7 },
-      "standard-electric": { floorArea: 85, buildingType: "standard", heatingSource: "electric", energyPrice: 5.8, efficiency: 100, heatingMonths: 7 },
-      "older-wood": { floorArea: 160, buildingType: "older", heatingSource: "wood", energyPrice: 1.25, efficiency: 78, heatingMonths: 8 },
-      "heatpump": { floorArea: 130, buildingType: "well", heatingSource: "heatpump", energyPrice: 5.2, efficiency: 320, heatingMonths: 7 }
-    };
-    var sourceDefaults = {
-      gas: { energyPrice: 1.9, efficiency: 92 },
-      electric: { energyPrice: 5.8, efficiency: 100 },
-      wood: { energyPrice: 1.25, efficiency: 78 },
-      pellets: { energyPrice: 1.65, efficiency: 86 },
-      heatpump: { energyPrice: 5.2, efficiency: 320 }
-    };
-    var buttons = Array.prototype.slice.call(document.querySelectorAll("#heatingForm [data-preset]"));
-    function applyPreset(name, activeButton) {
-      var preset = presets[name];
-      if (!preset) return;
-      Object.keys(preset).forEach(function (key) { setValue(key, preset[key]); });
-      if (activeButton) setPressed(buttons, activeButton);
-      renderAll();
-    }
-    buttons.forEach(function (button) {
-      button.addEventListener("click", function () {
-        applyPreset(button.getAttribute("data-preset"), button);
-      });
-    });
-    var source = el("heatingSource");
-    if (source) {
-      source.addEventListener("change", function () {
-        var defaults = sourceDefaults[source.value];
-        if (!defaults) return;
-        setValue("energyPrice", defaults.energyPrice);
-        setValue("efficiency", defaults.efficiency);
-        renderAll();
-      });
-    }
-    var form = el("heatingForm");
-    form.addEventListener("submit", function (event) {
-      event.preventDefault();
-      renderAll();
-    });
-    var reset = el("resetBtn");
-    if (reset) {
-      reset.addEventListener("click", function () {
-        applyPreset("well-gas", buttons[0]);
-      });
-    }
-  }
-
-  initHeatingPresets();
   window.RV_ENERGY_FIX_LOADED = true;
 })();
