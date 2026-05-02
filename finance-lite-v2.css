@@ -1,0 +1,428 @@
+@import url("payroll-time-v2.css");
+
+body.rv-finance-lite-tool .hero-visual {
+  position: relative;
+  isolation: isolate;
+  min-height: 540px;
+  display: grid;
+  align-content: stretch;
+  gap: 18px;
+  background:
+    linear-gradient(135deg, rgba(29, 216, 139, .12) 0 1px, transparent 1px 100%),
+    linear-gradient(155deg, #06152d 0%, #0a284b 38%, #183a77 68%, #19a46d 100%);
+  background-size: 34px 34px, auto;
+  padding: clamp(22px, 3vw, 30px);
+}
+
+body.rv-finance-lite-tool .hero-visual::before {
+  content: "Finanční scénář";
+  position: absolute;
+  z-index: 2;
+  right: 24px;
+  top: 22px;
+  max-width: 230px;
+  padding: 10px 13px;
+  border: 1px solid rgba(255, 255, 255, .22);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .12);
+  color: rgba(255, 255, 255, .88);
+  font-size: 12px;
+  font-weight: 950;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  backdrop-filter: blur(16px);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, .20);
+}
+
+body.rv-compound-page .hero-visual::before {
+  content: "Vklady → výnos → cílová hodnota";
+}
+
+body.rv-inflation-page .hero-visual::before {
+  content: "Cena dnes → kupní síla v čase";
+}
+
+body.rv-roi-page .hero-visual::before {
+  content: "Investice → přínos → návratnost";
+}
+
+body.rv-finance-lite-tool .hero-visual::after {
+  content: "";
+  position: absolute;
+  inset: auto 24px 22px auto;
+  z-index: 0;
+  width: 42%;
+  height: 38%;
+  border-radius: 34px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, .16), rgba(255, 255, 255, .02)),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, .16) 0 1px, transparent 1px 20px);
+  opacity: .55;
+  transform: skewY(-8deg);
+}
+
+body.rv-finance-lite-tool .payroll-dashboard {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 18px;
+  min-height: 350px;
+  padding: clamp(22px, 3.4vw, 34px);
+  border: 1px solid rgba(255, 255, 255, .18);
+  border-radius: 32px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, .13), rgba(255, 255, 255, .05)),
+    linear-gradient(145deg, rgba(7, 24, 50, .95), rgba(16, 43, 82, .82));
+  box-shadow: 0 34px 95px rgba(0, 0, 0, .28);
+  backdrop-filter: blur(20px);
+  overflow: hidden;
+}
+
+body.rv-finance-lite-tool .payroll-dashboard::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 6px;
+  background: linear-gradient(90deg, #1dd88b, #60a5fa, #d9a238);
+}
+
+body.rv-finance-lite-tool .payroll-dashboard > span,
+body.rv-finance-lite-tool .payroll-breakdown span {
+  color: rgba(226, 240, 255, .78);
+  font-size: 12px;
+  font-weight: 950;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+body.rv-finance-lite-tool .payroll-number {
+  max-width: 92%;
+  color: #fff;
+  font-size: clamp(42px, 5vw, 68px);
+  line-height: .92;
+  letter-spacing: -.06em;
+  font-weight: 950;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+
+body.rv-finance-lite-tool .payroll-sub {
+  max-width: 34rem;
+  color: rgba(226, 240, 255, .78);
+  font-size: 15px;
+  line-height: 1.55;
+  font-weight: 780;
+}
+
+body.rv-finance-lite-tool .payroll-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+body.rv-finance-lite-tool .payroll-metrics > div {
+  min-height: 92px;
+  padding: 15px;
+  border: 1px solid rgba(255, 255, 255, .14);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, .09);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .10);
+}
+
+body.rv-finance-lite-tool .payroll-metrics span {
+  display: block;
+  color: rgba(226, 240, 255, .70);
+  font-size: 12px;
+  line-height: 1.25;
+  font-weight: 850;
+}
+
+body.rv-finance-lite-tool .payroll-metrics b {
+  display: block;
+  margin-top: 8px;
+  color: #fff;
+  font-size: clamp(17px, 1.8vw, 22px);
+  line-height: 1.05;
+  letter-spacing: -.03em;
+  font-weight: 950;
+  overflow-wrap: normal;
+  word-break: keep-all;
+}
+
+body.rv-finance-lite-tool .payroll-breakdown {
+  display: grid;
+  gap: 9px;
+  margin-top: auto;
+}
+
+body.rv-finance-lite-tool .payroll-breakdown i {
+  display: block;
+  height: 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .12);
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .10);
+}
+
+body.rv-finance-lite-tool .payroll-breakdown b {
+  display: block;
+  height: 100%;
+  min-width: 8%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #1dd88b, #6ee7b7, #f7c964);
+  box-shadow: 0 0 28px rgba(29, 216, 139, .35);
+}
+
+body.rv-finance-lite-tool .finance-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+body.rv-finance-lite-tool .finance-chip-row button {
+  border: 1px solid #d0dbea;
+  border-radius: 999px;
+  padding: 10px 14px;
+  background: #fff;
+  color: #10223f;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+body.rv-finance-lite-tool .finance-chip-row button:hover {
+  border-color: rgba(29, 216, 139, .75);
+  box-shadow: 0 10px 24px rgba(29, 216, 139, .12);
+}
+
+body.rv-finance-lite-tool .finance-mode-note {
+  margin-top: 10px;
+  color: #64748b;
+  font-weight: 800;
+  line-height: 1.55;
+}
+
+body.rv-finance-lite-tool .mini-chart {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  align-items: end;
+  gap: 7px;
+  min-height: 118px;
+  padding: 18px 18px 14px;
+  border: 1px solid rgba(255, 255, 255, .15);
+  border-radius: 28px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, .10), rgba(255, 255, 255, .04));
+  box-shadow: 0 24px 70px rgba(0, 0, 0, .18);
+}
+
+body.rv-finance-lite-tool .mini-chart span {
+  display: block;
+  min-height: 14px;
+  border-radius: 18px 18px 8px 8px;
+  background: linear-gradient(180deg, #bfe3ff, #42d6bc 58%, #1dd88b);
+  opacity: .92;
+  box-shadow: 0 14px 28px rgba(29, 216, 139, .20);
+}
+
+body.rv-finance-lite-tool .primary-result {
+  position: relative;
+  overflow: hidden;
+}
+
+body.rv-finance-lite-tool .primary-result::after {
+  content: "";
+  position: absolute;
+  right: -24px;
+  bottom: -40px;
+  width: 170px;
+  height: 120px;
+  border-radius: 30px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, .22), rgba(255, 255, 255, .02)),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, .18) 0 1px, transparent 1px 18px);
+  transform: rotate(-10deg);
+}
+
+body.rv-finance-lite-tool .rv-output-summary {
+  border-left: 5px solid #1dd88b;
+  background:
+    linear-gradient(135deg, rgba(29, 216, 139, .10), rgba(96, 165, 250, .08));
+}
+
+body.rv-finance-lite-tool .content-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+}
+
+body.rv-finance-lite-tool .content-card {
+  min-height: 270px;
+}
+
+body.rv-finance-lite-tool .content-card p {
+  font-size: 16px;
+}
+
+body.rv-finance-lite-tool .content-card strong {
+  color: #071832;
+  font-weight: 950;
+}
+
+body.rv-finance-lite-tool .finance-insight-band {
+  margin: 24px auto 54px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(280px, .95fr);
+  gap: 18px;
+  align-items: stretch;
+}
+
+body.rv-finance-lite-tool .finance-insight-band > article {
+  padding: clamp(24px, 4vw, 38px);
+  border: 1px solid rgba(207, 219, 234, .92);
+  border-radius: 34px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, .98), rgba(247, 251, 255, .98));
+  box-shadow: 0 22px 64px rgba(8, 26, 51, .085);
+}
+
+body.rv-finance-lite-tool .finance-insight-band h2 {
+  margin: 0 0 14px;
+  color: #071832;
+  font-size: clamp(26px, 3vw, 38px);
+  line-height: 1.05;
+  letter-spacing: -.05em;
+}
+
+body.rv-finance-lite-tool .finance-insight-band p {
+  margin: 0 0 14px;
+  color: #526783;
+  font-weight: 760;
+  line-height: 1.7;
+}
+
+body.rv-finance-lite-tool .finance-insight-list {
+  display: grid;
+  gap: 12px;
+}
+
+body.rv-finance-lite-tool .finance-insight-list div {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 12px;
+  align-items: start;
+  padding: 15px;
+  border: 1px solid rgba(207, 219, 234, .92);
+  border-radius: 22px;
+  background: #fff;
+}
+
+body.rv-finance-lite-tool .finance-insight-list span {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #071832, #1dd88b);
+  color: #fff;
+  font-weight: 950;
+}
+
+body.rv-finance-lite-tool .finance-insight-list strong {
+  display: block;
+  color: #071832;
+  font-weight: 950;
+}
+
+body.rv-finance-lite-tool .finance-insight-list small {
+  display: block;
+  margin-top: 4px;
+  color: #526783;
+  line-height: 1.45;
+  font-weight: 720;
+}
+
+@media (max-width: 980px) {
+  body.rv-finance-lite-tool .hero-visual {
+    min-height: auto;
+  }
+
+  body.rv-finance-lite-tool .finance-insight-band {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 680px) {
+  body.rv-finance-lite-tool {
+    overflow-x: hidden;
+  }
+
+  body.rv-finance-lite-tool .container,
+  body.rv-finance-lite-tool .hero-grid,
+  body.rv-finance-lite-tool .tool-stage,
+  body.rv-finance-lite-tool .content-grid,
+  body.rv-finance-lite-tool .finance-insight-band {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  body.rv-finance-lite-tool .hero-copy,
+  body.rv-finance-lite-tool .hero-visual,
+  body.rv-finance-lite-tool .payroll-dashboard,
+  body.rv-finance-lite-tool .mini-chart,
+  body.rv-finance-lite-tool .calculator-card,
+  body.rv-finance-lite-tool .result-panel,
+  body.rv-finance-lite-tool .content-card,
+  body.rv-finance-lite-tool .finance-insight-band > article {
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  body.rv-finance-lite-tool h1,
+  body.rv-finance-lite-tool .payroll-number {
+    overflow-wrap: anywhere;
+  }
+
+  body.rv-finance-lite-tool .hero-copy h1 {
+    max-width: min(100%, 318px);
+    font-size: 30px;
+    line-height: 1.04;
+    letter-spacing: -.02em;
+  }
+
+  body.rv-finance-lite-tool .payroll-metrics,
+  body.rv-finance-lite-tool .hero-points,
+  body.rv-finance-lite-tool .content-grid {
+    grid-template-columns: 1fr;
+  }
+
+  body.rv-finance-lite-tool .hero-visual::before {
+    position: relative;
+    inset: auto;
+    display: inline-flex;
+    width: auto;
+    max-width: calc(100% - 2px);
+    line-height: 1.25;
+  }
+
+  body.rv-finance-lite-tool .payroll-dashboard {
+    min-height: auto;
+    padding: 20px;
+  }
+
+  body.rv-finance-lite-tool .payroll-number {
+    max-width: 100%;
+    font-size: 34px;
+  }
+
+  body.rv-finance-lite-tool .payroll-sub {
+    max-width: 100%;
+    font-size: 14px;
+  }
+
+  body.rv-finance-lite-tool .mini-chart {
+    min-height: 90px;
+  }
+}
