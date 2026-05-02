@@ -52,9 +52,206 @@ body.rv-dph-page .rv-breakdown-bars div{display:grid;grid-template-columns:1fr 1
 body.rv-dph-page .rv-breakdown-bars span{color:rgba(255,255,255,.72);font-size:13px;font-weight:850}
 body.rv-dph-page .rv-breakdown-bars i{height:10px;overflow:hidden;border-radius:999px;background:rgba(255,255,255,.16)}
 body.rv-dph-page .rv-breakdown-bars b{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--theme-accent-2),var(--theme-accent))}
-body.rv-loan-page .rv-chart-bars{display:grid;gap:10px;margin-top:20px}
-body.rv-loan-page .rv-chart-bars i{display:block;height:14px;border-radius:999px;background:linear-gradient(90deg,var(--lime),var(--blue-2))}
-body.rv-loan-page .rv-chart-bars i+i{width:42%;background:linear-gradient(90deg,var(--orange),var(--theme-accent));opacity:.88}
+body.rv-loan-page .rv-loan-pro{
+  position:relative;
+  min-height:0;
+  padding:20px;
+  overflow:hidden;
+  background:
+    linear-gradient(145deg,#061326 0%,#0c2f54 46%,#0d5b49 100%);
+  border:1px solid rgba(255,255,255,.16);
+  box-shadow:0 38px 110px rgba(4,22,43,.28);
+}
+body.rv-loan-page .rv-loan-pro:before{
+  content:"";
+  position:absolute;
+  inset:22px;
+  border-radius:32px;
+  background:
+    linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.02));
+  border:1px solid rgba(255,255,255,.08);
+  pointer-events:none;
+}
+body.rv-loan-page .loan-app-shell{
+  position:relative;
+  z-index:2;
+  display:grid;
+  gap:9px;
+  padding:13px;
+  border-radius:30px;
+  background:rgba(255,255,255,.10);
+  border:1px solid rgba(255,255,255,.16);
+  backdrop-filter:blur(18px);
+}
+body.rv-loan-page .loan-app-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  color:rgba(255,255,255,.76);
+  font-weight:900;
+  font-size:13px;
+}
+body.rv-loan-page .loan-app-tabs{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}
+body.rv-loan-page .loan-app-tabs b{
+  padding:7px 9px;
+  border-radius:999px;
+  color:#dceaf9;
+  background:rgba(255,255,255,.09);
+  border:1px solid rgba(255,255,255,.11);
+  font-size:11px;
+}
+body.rv-loan-page .loan-main-panel{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 150px;
+  gap:12px;
+  align-items:stretch;
+}
+body.rv-loan-page .loan-primary,
+body.rv-loan-page .loan-score-card,
+body.rv-loan-page .loan-kpi-grid div,
+body.rv-loan-page .loan-compare-grid div,
+body.rv-loan-page .loan-flow{
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(255,255,255,.09);
+  border-radius:22px;
+}
+body.rv-loan-page .loan-primary{padding:18px}
+body.rv-loan-page .loan-primary .card-kicker{color:#cfe1f5}
+body.rv-loan-page .loan-primary strong{
+  display:block;
+  margin:8px 0 6px;
+  color:#fff;
+  font-size:clamp(2.45rem,4.2vw,3.62rem);
+  line-height:.92;
+  letter-spacing:-.065em;
+}
+body.rv-loan-page .loan-primary small{color:#d7e7f8;font-weight:900}
+body.rv-loan-page .loan-score-card{
+  display:grid;
+  align-content:center;
+  gap:10px;
+  padding:15px;
+}
+body.rv-loan-page .loan-score-card span,
+body.rv-loan-page .loan-kpi-grid span,
+body.rv-loan-page .loan-compare-grid span,
+body.rv-loan-page .loan-flow-head span{
+  color:#cfe1f5;
+  font-size:12px;
+  font-weight:900;
+}
+body.rv-loan-page .loan-score-card strong{color:#fff;font-size:1.12rem}
+body.rv-loan-page .loan-score-card i{
+  display:block;
+  height:10px;
+  overflow:hidden;
+  border-radius:999px;
+  background:rgba(255,255,255,.16);
+}
+body.rv-loan-page .loan-score-card i b{
+  display:block;
+  width:58%;
+  height:100%;
+  border-radius:inherit;
+  background:linear-gradient(90deg,#22c55e,#f5b640);
+}
+body.rv-loan-page .loan-kpi-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+}
+body.rv-loan-page .loan-kpi-grid div{padding:12px}
+body.rv-loan-page .loan-kpi-grid b,
+body.rv-loan-page .loan-compare-grid strong{
+  display:block;
+  margin-top:5px;
+  color:#fff;
+  font-size:1rem;
+  line-height:1.18;
+}
+body.rv-loan-page .loan-compare-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+}
+body.rv-loan-page .loan-compare-grid div{
+  min-height:82px;
+  padding:12px;
+  position:relative;
+}
+body.rv-loan-page .loan-compare-grid div.is-active{
+  background:linear-gradient(135deg,rgba(34,197,94,.28),rgba(59,130,246,.18));
+  border-color:rgba(134,239,172,.42);
+}
+body.rv-loan-page .loan-compare-grid small{
+  display:block;
+  margin-top:7px;
+  color:#b9cce0;
+  font-weight:850;
+}
+body.rv-loan-page .loan-flow{padding:13px}
+body.rv-loan-page .loan-flow-head{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  align-items:center;
+  margin-bottom:10px;
+}
+body.rv-loan-page .loan-flow-head strong{color:#fff}
+body.rv-loan-page .loan-flow-bar{
+  display:flex;
+  height:16px;
+  overflow:hidden;
+  border-radius:999px;
+  background:rgba(255,255,255,.13);
+}
+body.rv-loan-page .loan-flow-bar i,
+body.rv-loan-page .loan-flow-bar b{
+  display:block;
+  height:100%;
+  min-width:6%;
+}
+body.rv-loan-page .loan-flow-bar i{background:linear-gradient(90deg,#22c55e,#60a5fa)}
+body.rv-loan-page .loan-flow-bar b{background:linear-gradient(90deg,#f5b640,#fb7185)}
+body.rv-loan-page .loan-flow-labels{
+  display:flex;
+  justify-content:space-between;
+  margin-top:9px;
+  color:#cfe1f5;
+  font-size:12px;
+  font-weight:850;
+}
+body.rv-loan-page .loan-mini-chart{
+  display:flex;
+  align-items:end;
+  gap:8px;
+  height:52px;
+  padding:9px 12px 0;
+  padding-right:250px;
+  border-radius:22px;
+  background:linear-gradient(180deg,rgba(255,255,255,.09),rgba(255,255,255,.03));
+  border:1px solid rgba(255,255,255,.11);
+}
+body.rv-loan-page .loan-mini-chart i{
+  flex:1;
+  min-width:0;
+  border-radius:999px 999px 0 0;
+  background:linear-gradient(180deg,#86efac,#38bdf8 72%,#2563eb);
+}
+body.rv-loan-page .rv-loan-pro .rv-floating-card{
+  position:absolute;
+  right:20px;
+  bottom:20px;
+  z-index:2;
+  margin:0;
+  max-width:245px;
+  padding:10px 13px;
+  border:1px solid rgba(255,255,255,.18);
+}
+body.rv-loan-page .rv-loan-pro .rv-floating-card strong{font-size:.95rem;line-height:1.25}
+body.rv-loan-page .tool-hero .hero-grid{align-items:center}
+body.rv-loan-page .tool-hero .hero-copy{align-self:center}
 body.rv-leasing-page .rv-car-shape{position:absolute;right:28px;top:28px;width:150px;height:64px;border-radius:40px 58px 22px 22px;background:linear-gradient(135deg,rgba(255,255,255,.92),rgba(118,224,91,.86));box-shadow:0 24px 60px rgba(0,0,0,.22)}
 body.rv-leasing-page .rv-car-shape:before{content:"";position:absolute;left:34px;top:-18px;width:74px;height:36px;border-radius:34px 34px 6px 6px;background:rgba(255,255,255,.8)}
 body.rv-leasing-page .rv-car-shape span:before,body.rv-leasing-page .rv-car-shape span:after{content:"";position:absolute;bottom:-11px;width:28px;height:28px;border-radius:50%;background:var(--ink);box-shadow:inset 0 0 0 7px rgba(255,255,255,.75)}
@@ -64,8 +261,8 @@ body.rv-leasing-page .dashboard-card-main{margin-top:110px}
 body.rv-leasing-page .rv-split-meter{display:flex;overflow:hidden;height:16px;border-radius:999px;background:rgba(255,255,255,.16);margin-top:20px}
 body.rv-leasing-page .rv-split-meter i:first-child{background:var(--orange)}
 body.rv-leasing-page .rv-split-meter i:last-child{background:var(--lime)}
-@media(max-width:980px){body.rv-tool-page .hero-grid,body.rv-tool-page .tool-stage,body.rv-tool-page .content-grid,body.rv-tool-page .footer-grid{grid-template-columns:1fr}body.rv-tool-page .hero-visual{min-height:420px}body.rv-tool-page .result-panel{position:static}body.rv-tool-page .related-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:680px){body.rv-tool-page .form-grid,body.rv-tool-page .result-metrics,body.rv-tool-page .faq-grid,body.rv-tool-page .related-grid{grid-template-columns:1fr}body.rv-tool-page .hero-copy,body.rv-tool-page .hero-visual,body.rv-tool-page .calculator-card,body.rv-tool-page .content-card,body.rv-tool-page .related-tools,body.rv-tool-page .faq-section{border-radius:26px}body.rv-tool-page .rv-hero-metrics{grid-template-columns:1fr}body.rv-dph-page .rv-breakdown-bars div{grid-template-columns:1fr}body.rv-tool-page table{min-width:560px}}
+@media(max-width:980px){body.rv-tool-page .hero-grid,body.rv-tool-page .tool-stage,body.rv-tool-page .content-grid,body.rv-tool-page .footer-grid{grid-template-columns:1fr}body.rv-tool-page .hero-visual{min-height:420px}body.rv-tool-page .result-panel{position:static}body.rv-tool-page .related-grid{grid-template-columns:repeat(2,minmax(0,1fr))}body.rv-loan-page .rv-loan-pro{min-height:auto}body.rv-loan-page .rv-loan-pro .rv-floating-card{position:relative;right:auto;bottom:auto;margin-top:12px;align-self:end}}
+@media(max-width:680px){body.rv-tool-page .form-grid,body.rv-tool-page .result-metrics,body.rv-tool-page .faq-grid,body.rv-tool-page .related-grid{grid-template-columns:1fr}body.rv-tool-page .hero-copy,body.rv-tool-page .hero-visual,body.rv-tool-page .calculator-card,body.rv-tool-page .content-card,body.rv-tool-page .related-tools,body.rv-tool-page .faq-section{border-radius:26px}body.rv-tool-page .rv-hero-metrics{grid-template-columns:1fr}body.rv-dph-page .rv-breakdown-bars div{grid-template-columns:1fr}body.rv-tool-page table{min-width:560px}body.rv-loan-page .rv-loan-pro{padding:16px}body.rv-loan-page .rv-loan-pro:before{display:none}body.rv-loan-page .loan-app-shell{padding:13px;border-radius:24px}body.rv-loan-page .loan-main-panel,body.rv-loan-page .loan-kpi-grid,body.rv-loan-page .loan-compare-grid{grid-template-columns:1fr}body.rv-loan-page .loan-app-top{align-items:flex-start;flex-direction:column}body.rv-loan-page .loan-primary strong{font-size:2.75rem}body.rv-loan-page .loan-mini-chart{height:70px;padding-right:12px}}
 
 body.rv-tool-page .content-grid > *,
 body.rv-tool-page .related-grid > *,
@@ -73,5 +270,4 @@ body.rv-tool-page .faq-grid > * { min-width: 0; max-width: 100%; width: auto; }
 body.rv-tool-page .content-card { width: auto; max-width: 100%; }
 body.rv-tool-page .content-card > * { max-width: 100%; }
 body.rv-tool-page .anchor-scroll { max-width: 100%; }
-body.rv-tool-page .visual-orb { max-width: none; }
 @media(max-width:680px){body.rv-tool-page .content-grid{overflow:hidden}body.rv-tool-page .content-card{padding:22px}}
