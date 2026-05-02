@@ -5,6 +5,7 @@
   const ids = ['remainingPrincipal','remainingYears','currentRate','newRate','newYears','refiFees','monthlyFeeCurrent','monthlyFeeNew','incomeShare'];
   const $ = (id) => document.getElementById(id);
   const money = (v) => new Intl.NumberFormat('cs-CZ',{style:'currency',currency:'CZK',maximumFractionDigits:0}).format(Number.isFinite(v)?v:0);
+  const percent = (v) => new Intl.NumberFormat('cs-CZ',{maximumFractionDigits:2}).format(Number.isFinite(v)?v:0) + ' %';
   const annuity = (principal, rate, years) => { const months = years * 12; const mr = rate / 100 / 12; const monthlyPayment = mr === 0 ? principal / months : principal * mr / (1 - Math.pow(1 + mr, -months)); return { months, monthlyPayment, totalPaid: monthlyPayment * months, totalInterest: monthlyPayment * months - principal }; };
   const read = () => ({ remainingPrincipal:+$('remainingPrincipal').value||0, remainingYears:+$('remainingYears').value||0, currentRate:+$('currentRate').value||0, newRate:+$('newRate').value||0, newYears:+$('newYears').value||0, refiFees:+$('refiFees').value||0, monthlyFeeCurrent:+$('monthlyFeeCurrent').value||0, monthlyFeeNew:+$('monthlyFeeNew').value||0, incomeShare:+$('incomeShare').value||35 });
   function render(){
@@ -29,6 +30,11 @@
     $('newTotalInterest').textContent = money(fresh.totalInterest);
     $('interestSaving').textContent = money(interestSaving);
     $('newTotalWithFees').textContent = money(newTotal);
+    $('heroNewRate').textContent = percent(v.newRate);
+    $('heroCurrentRate').textContent = percent(v.currentRate);
+    $('heroMonthlyDiff').textContent = money(monthlyDifference);
+    $('heroNetSaving').textContent = money(netSaving);
+    $('heroNewPayment').textContent = money(newMonthly);
     $('resultBadge').textContent = netSaving > 0 ? 'Nová nabídka vychází levněji' : 'Nová nabídka nevychází levněji';
     $('decisionHeadline').textContent = netSaving > 0 ? 'Refinancování orientačně dává smysl' : 'Refinancování je potřeba znovu ověřit';
     $('decisionText').textContent = netSaving > 0 ? `Po započtení poplatků vychází úspora přibližně ${money(netSaving)} a měsíční rozdíl ${money(monthlyDifference)}.` : `Po započtení poplatků nová varianta nevychází levněji. Hlídejte hlavně splatnost, poplatky a fixaci.`;

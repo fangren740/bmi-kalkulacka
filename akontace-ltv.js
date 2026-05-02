@@ -7,6 +7,12 @@
   const money = (v) => new Intl.NumberFormat('cs-CZ',{style:'currency',currency:'CZK',maximumFractionDigits:0}).format(Number.isFinite(v)?v:0);
   const percent = (v) => new Intl.NumberFormat('cs-CZ',{maximumFractionDigits:1}).format(Number.isFinite(v)?v:0) + ' %';
   const num = (v) => new Intl.NumberFormat('cs-CZ',{maximumFractionDigits:1}).format(Number.isFinite(v)?v:0);
+  const compactMoney = (v) => {
+    const value = Number.isFinite(v) ? v : 0;
+    if (Math.abs(value) >= 1000000) return `${num(value / 1000000)} mil. Kč`;
+    if (Math.abs(value) >= 1000) return `${num(value / 1000)} tis. Kč`;
+    return money(value);
+  };
   const read = () => ({ propertyPrice:+$('propertyPrice').value||0, ownSavings:+$('ownSavings').value||0, reserveAmount:+$('reserveAmount').value||0, additionalCosts:+$('additionalCosts').value||0, targetLtv:+$('targetLtv').value||80, monthlyIncome:+$('monthlyIncome').value||0 });
   function calculate(v){
     const usableSavings = Math.max(0, v.ownSavings - v.reserveAmount);
@@ -33,6 +39,11 @@
     $('summaryAdditionalCosts').textContent = money(v.additionalCosts);
     $('summaryReserve').textContent = money(v.reserveAmount);
     $('summaryUsedOwnSources').textContent = money(r.usedOwnSources);
+    $('heroLtvValue').textContent = `${percent(r.ltv)} LTV`;
+    $('heroPropertyPrice').textContent = compactMoney(v.propertyPrice);
+    $('heroOwnSources').textContent = compactMoney(r.usedOwnSources);
+    $('heroReserve').textContent = compactMoney(v.reserveAmount);
+    $('heroMortgage').textContent = compactMoney(r.requiredMortgage);
     $('ltvBadge').textContent = r.ltv <= v.targetLtv ? `Vešli jste se do ${v.targetLtv} % LTV` : `Do ${v.targetLtv} % LTV chybí vlastní zdroje`;
     $('decisionHeadline').textContent = r.ltv <= v.targetLtv ? 'LTV vychází v cílovém pásmu' : 'Cílové LTV zatím nevychází';
     $('decisionText').textContent = r.ltv <= v.targetLtv ? `Potřebná hypotéka je ${money(r.requiredMortgage)} a LTV přibližně ${percent(r.ltv)}. Po rezervě a nákladech používáte ${money(r.usedOwnSources)} vlastních zdrojů.` : `Potřebná hypotéka je ${money(r.requiredMortgage)} a do cílového LTV chybí přibližně ${money(r.missingForTarget)} vlastních zdrojů.`;

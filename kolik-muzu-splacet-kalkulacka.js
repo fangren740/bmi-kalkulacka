@@ -37,6 +37,9 @@
     const bar=Math.max(3,Math.min(100,debtRatio*2.1)); if($('debtBar')) $('debtBar').style.width=`${bar}%`;
     if($('heroSafePayment')) $('heroSafePayment').textContent=money(safe);
     if($('heroStatus')) $('heroStatus').textContent=status==='safe'?'bezpečné zatížení':status==='border'?'hraniční zatížení':'rizikové zatížení';
+    if($('heroDebtRatio')) $('heroDebtRatio').textContent=`${debtRatio.toFixed(0)} %`;
+    if($('heroLeftAfter')) $('heroLeftAfter').textContent=money(leftAfter);
+    if($('heroReserveMonths')) $('heroReserveMonths').textContent=`${reserveMonths.toFixed(1).replace('.',',')} měs.`;
     const result=$('vysledek'); if(result){result.dataset.status=status;}
   }
   ['income','expenses','existingPayments','plannedPayment','savings','people','stability','paymentType'].forEach(id=>{const el=$(id); if(el){el.addEventListener('input',calculate);el.addEventListener('change',calculate);}});

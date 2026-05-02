@@ -5,6 +5,12 @@
   const ids = ['remainingPrincipal','annualRate','remainingYears','extraPayment','recalculationMode','fee'];
   const $ = (id) => document.getElementById(id);
   const money = (v) => new Intl.NumberFormat('cs-CZ',{style:'currency',currency:'CZK',maximumFractionDigits:0}).format(Number.isFinite(v)?v:0);
+  const compactMoney = (v) => {
+    const value = Number.isFinite(v) ? v : 0;
+    if (Math.abs(value) >= 1000000) return `${new Intl.NumberFormat('cs-CZ',{maximumFractionDigits:1}).format(value / 1000000)} mil. Kč`;
+    if (Math.abs(value) >= 1000) return `${new Intl.NumberFormat('cs-CZ',{maximumFractionDigits:0}).format(value / 1000)} tis. Kč`;
+    return money(value);
+  };
   const monthsText = (m) => { const months = Math.max(0, Math.round(m)); const y = Math.floor(months / 12); const r = months % 12; return y ? `${y} let ${r} měs.` : `${r} měs.`; };
   const payment = (principal, rate, months) => { const mr = rate / 100 / 12; if (months <= 0) return 0; if (mr === 0) return principal / months; return principal * mr / (1 - Math.pow(1 + mr, -months)); };
   const totalInterest = (monthly, principal, months) => Math.max(0, monthly * months - principal);
@@ -38,6 +44,11 @@
     $('originalInterestResult').textContent = money(r.originalInterest);
     $('newInterestResult').textContent = money(r.selectedInterest);
     $('netBenefitResult').textContent = money(r.netBenefit);
+    $('heroExtraPayment').textContent = compactMoney(v.extraPayment);
+    $('heroNewPrincipal').textContent = compactMoney(r.newPrincipal);
+    $('heroInterestSaving').textContent = compactMoney(r.interestSaved);
+    $('heroMode').textContent = v.recalculationMode === 'reduce-payment' ? 'nižší splátka' : 'kratší doba';
+    $('heroImpact').textContent = v.recalculationMode === 'reduce-payment' ? money(r.originalPayment - r.selectedPayment) + ' měsíčně' : monthsText(r.timeSaved);
     $('statusBadge').textContent = r.netBenefit > 0 ? 'Mimořádná splátka vychází přínosně' : 'Přínos ověřte kvůli poplatku';
     const modeText = v.recalculationMode === 'reduce-payment' ? 'snížením měsíční splátky' : 'zkrácením doby splácení';
     $('decisionHeadline').textContent = r.netBenefit > 0 ? 'Mimořádná splátka dává orientačně smysl' : 'Výsledek je po poplatku slabý';
