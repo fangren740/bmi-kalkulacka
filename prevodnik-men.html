@@ -5,11 +5,11 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <meta content="telephone=no" name="format-detection"/>
-<link href="/favicon.ico?v=2" rel="icon" sizes="any"/>
-<link href="/favicon-32x32.png?v=2" rel="icon" sizes="32x32" type="image/png"/>
-<link href="/favicon-16x16.png?v=2" rel="icon" sizes="16x16" type="image/png"/>
-<link href="/apple-touch-icon.png?v=2" rel="apple-touch-icon" sizes="180x180"/>
-<link href="/site.webmanifest?v=2" rel="manifest"/>
+<link href="favicon.ico?v=2" rel="icon" sizes="any"/>
+<link href="favicon-32x32.png?v=2" rel="icon" sizes="32x32" type="image/png"/>
+<link href="favicon-16x16.png?v=2" rel="icon" sizes="16x16" type="image/png"/>
+<link href="apple-touch-icon.png?v=2" rel="apple-touch-icon" sizes="180x180"/>
+<link href="site.webmanifest?v=2" rel="manifest"/>
 <meta content="#14253d" name="theme-color"/>
 <title>Převodník měn: převod CZK, EUR, USD, GBP a dalších měn | RychléVýpočty.cz</title>
   <meta name="description" content="Převodník měn: převod CZK, EUR, USD, GBP a dalších měn online zdarma. Spočítejte si orientační výsledek rychle, přehledně a bez registrace na RychléVýpočty.cz."/>
@@ -43,6 +43,8 @@
   <meta name="twitter:title" content="Převodník měn: převod CZK, EUR, USD, GBP a dalších měn | RychléVýpočty.cz"/>
   <meta name="twitter:description" content="Převodník měn: převod CZK, EUR, USD, GBP a dalších měn online zdarma. Spočítejte si orientační výsledek rychle, přehledně a bez registrace na RychléVýpočty.cz."/>
   <meta name="twitter:image" content="https://rychlevypocty.cz/og-image.jpg"/>
+<link rel="stylesheet" href="rv-tool-v2.css"/>
+<link rel="stylesheet" href="converter-v2.css"/>
 <style>
     .skip-link {
       position: absolute;
@@ -118,8 +120,8 @@
       border-bottom: 1px solid rgba(219, 227, 240, 0.8);
       background: rgba(255, 255, 255, 0.86);
       backdrop-filter: blur(10px);
-      position: sticky;
-      top: 0;
+      position: static;
+      top: auto;
       z-index: 20;
     }
 
@@ -1206,28 +1208,31 @@
     }
   ]
   </script>
-<link href="/rv-enhancements.css?v=1" rel="stylesheet"/>
+<link href="rv-enhancements.css?v=1" rel="stylesheet"/>
 </head>
-<body>
+<body class="rv-converter-page rv-currency-converter-page">
 <a class="skip-link" href="#main-content">Přeskočit na obsah</a>
-<header class="topbar">
-<div class="container topbar-inner">
-<a class="brand" href="/">Rychlé<span>Výpočty</span>.cz</a>
-<nav aria-label="Hlavní navigace" class="topnav">
-<a href="/">Domů</a>
-<a href="/spotreba-paliva-kalkulacka.html">Spotřeba paliva</a>
-<a href="/hypotecni-kalkulacka.html">Hypotéka</a>
-<a href="/kalkulacka-prumeru.html">Průměr</a>
+<header class="site-header">
+<div class="container header-inner">
+<a class="brand" href="index.html" aria-label="RychléVýpočty.cz">
+<img src="logo-rychlevypocty.svg" alt="RychléVýpočty.cz" class="brand-logo-img" width="220" height="40">
+</a>
+<nav aria-label="Hlavní navigace" class="main-nav">
+<a href="index.html">Domů</a>
+<a href="kalkulacky.html">Kalkulačky</a>
+<a href="finance-a-hypoteky.html" aria-current="page">Finance</a>
+<a href="prevodnik-jednotek.html">Jednotky</a>
 </nav>
+<div class="header-actions"><a class="btn btn-primary" href="#kalkulacka">Spočítat převod</a></div>
 </div>
 </header>
 <main id="main-content" tabindex="-1">
 <section class="hero">
 <div class="container">
 <div class="breadcrumbs">
-<a href="/">RychléVýpočty.cz</a>
+<a href="index.html">RychléVýpočty.cz</a>
 <span aria-hidden="true" class="sep">/</span>
-<a href="/finance-a-hypoteky.html">Finance a hypotéky</a>
+<a href="finance-a-hypoteky.html">Finance a hypotéky</a>
 <span aria-hidden="true" class="sep">/</span>
 <strong>Převodník měn</strong>
 </div>
@@ -1238,18 +1243,27 @@
 
 <div class="hero-actions">
 <a class="button-link btn-primary" href="#kalkulacka">Spočítat převod</a>
-<a class="button-link btn-ghost" href="/procenta-kalkulacka.html">Pokračovat na procenta</a>
+<a class="button-link btn-ghost" href="procenta-kalkulacka.html">Pokračovat na procenta</a>
 </div>
 
 </div>
-<aside class="hero-box">
-<h2>Co tady vyřešíte</h2>
-<ul>
-<li>kolik dostanete po převodu do cílové měny,</li>
-<li>jaký je efektivní kurz po započtení poplatku,</li>
-<li>kolik vás stojí méně výhodná směna,</li>
-<li>jak vypadá převod i v opačném směru.</li>
-</ul>
+<aside class="rv-converter-visual">
+<div class="rv-converter-window"><span>Měnový dashboard</span><span><i></i><i></i><i></i></span></div>
+<div class="rv-converter-main">
+<small>Výsledná částka</small>
+<strong id="heroCurrencyValue">12 625 Kč</strong>
+<span id="heroCurrencyNote">500 EUR při kurzu 25,25 CZK/EUR</span>
+</div>
+<div class="rv-converter-metrics">
+<div><span>Směr</span><strong id="heroCurrencyDirection">EUR → CZK</strong></div>
+<div><span>Efektivní kurz</span><strong id="heroEffectiveRate">25,25</strong></div>
+<div><span>Poplatek</span><strong id="heroCurrencyFee">0 %</strong></div>
+</div>
+<div class="rv-converter-breakdown">
+<div><span>Základ</span><b style="width:88%"></b><em>kurz</em></div>
+<div><span>Poplatek</span><b style="width:12%"></b><em>spread</em></div>
+<div><span>Kontrola</span><b style="width:65%"></b><em>opačný kurz</em></div>
+</div>
 </aside>
 </div>
 </div>
@@ -1343,7 +1357,7 @@
 </ul>
 <div class="cta-actions">
 <a class="button-link btn-primary" href="#jak-cist-vysledek">Jak číst výsledek</a>
-<a class="button-link btn-ghost" href="/finance-a-hypoteky.html">Další finanční kalkulačky</a>
+<a class="button-link btn-ghost" href="finance-a-hypoteky.html">Další finanční kalkulačky</a>
 </div>
 <div class="left-extend-grid">
 <div class="left-mini-box">
@@ -1447,8 +1461,8 @@
 <h3>Nejlepší kurz není ten napsaný. Je to ten skutečně dosažený.</h3>
 <p>U převodu peněz má smysl sledovat hlavně efektivní kurz po započtení poplatku nebo horšího spreadu. Právě ten rozhoduje, kolik peněz vám skutečně zůstane.</p>
 <div class="cta-actions">
-<a class="button-link btn-primary" href="/procenta-kalkulacka.html">Kalkulačka procent</a>
-<a class="button-link btn-ghost" href="/finance-a-hypoteky.html">Další finanční kalkulačky</a>
+<a class="button-link btn-primary" href="procenta-kalkulacka.html">Kalkulačka procent</a>
+<a class="button-link btn-ghost" href="finance-a-hypoteky.html">Další finanční kalkulačky</a>
 </div>
 </div>
 </div>
@@ -1512,19 +1526,19 @@ výsledek po poplatku = výsledek bez poplatku − poplatek</code>
 <h2>Související kalkulačky</h2>
 <p>Po přepočtu měny často dává smysl navázat dalším výpočtem kolem ceny, procentní změny nebo celkových nákladů.</p>
 <div class="related-grid">
-<a class="related-card" href="/hypotecni-kalkulacka.html">
+<a class="related-card" href="hypotecni-kalkulacka.html">
 <strong>Hypoteční kalkulačka</strong>
 <span>Výpočet splátky hypotéky, úroků a celkové ceny úvěru.</span>
 </a>
-<a class="related-card" href="/kalkulacka-pujcky.html">
+<a class="related-card" href="kalkulacka-pujcky.html">
 <strong>Kalkulačka půjčky</strong>
 <span>Výpočet měsíční splátky půjčky a přeplacení.</span>
 </a>
-<a class="related-card" href="/procenta-kalkulacka.html">
+<a class="related-card" href="procenta-kalkulacka.html">
 <strong>Kalkulačka procent</strong>
 <span>Rychlé procentní výpočty pro běžné použití.</span>
 </a>
-<a class="related-card" href="/spotreba-paliva-kalkulacka.html">
+<a class="related-card" href="spotreba-paliva-kalkulacka.html">
 <strong>Kalkulačka spotřeby paliva</strong>
 <span>Výpočet ceny jízdy a nákladů na kilometr.</span>
 </a>
@@ -1539,19 +1553,19 @@ výsledek po poplatku = výsledek bez poplatku − poplatek</code>
 <p>Po základním výpočtu dává smysl porovnat ještě splátku, vlastní zdroje, rezervu nebo variantu nájem vs. koupě.</p>
 </div>
 <div class="site-cta-actions">
-<a class="site-cta-link" href="/hypotecni-kalkulacka.html">Hypoteční kalkulačka</a>
-<a class="site-cta-link" href="/kalkulacka-akontace-a-ltv-hypoteky.html">Akontace a LTV</a>
-<a class="site-cta-link" href="/kalkulacka-vlastnich-zdroju-na-koupi-nemovitosti.html">Vlastní zdroje</a>
-<a class="site-cta-link" href="/porovnani-najem-vs-hypoteka-kalkulacka.html">Nájem vs. hypotéka</a>
+<a class="site-cta-link" href="hypotecni-kalkulacka.html">Hypoteční kalkulačka</a>
+<a class="site-cta-link" href="kalkulacka-akontace-a-ltv-hypoteky.html">Akontace a LTV</a>
+<a class="site-cta-link" href="kalkulacka-vlastnich-zdroju-na-koupi-nemovitosti.html">Vlastní zdroje</a>
+<a class="site-cta-link" href="porovnani-najem-vs-hypoteka-kalkulacka.html">Nájem vs. hypotéka</a>
 </div>
 </div>
 </div>
 </section>
 </main>
-<footer>
+<footer class="site-footer">
 <div class="footer-grid-top">
 <div style="max-width:520px;">
-<strong style="display:inline-block;font-size:1.14rem;letter-spacing:-0.02em;color:#172033;margin-bottom:12px;">RychléVýpočty.cz</strong>
+<a class="brand" href="index.html" aria-label="RychléVýpočty.cz"><img src="logo-rychlevypocty-footer.svg" alt="RychléVýpočty.cz" class="brand-logo-img" width="220" height="40"></a>
 <p style="margin:0;color:#5f6b85;font-size:0.95rem;line-height:1.65;">
           Online kalkulačky a praktické nástroje zdarma pro finance, bydlení, hypotéky, pronájem,
           investiční rozhodování, mzdy, podnikání, energie, auto, rekonstrukce a další situace,
@@ -1566,20 +1580,20 @@ výsledek po poplatku = výsledek bez poplatku − poplatek</code>
 <div>
 <h3 style="margin:0 0 12px;font-size:1rem;letter-spacing:-0.02em;color:#172033;">Hlavní sekce</h3>
 <div class="footer-links-column">
-<a href="/kalkulacky.html">Všechny kalkulačky</a>
-<a href="/finance-a-hypoteky.html">Finance a hypotéky</a>
-<a href="/pronajem-a-investicni-bydleni.html">Pronájem a investiční bydlení</a>
-<a href="/mzdy-a-prace.html">Mzdy a práce</a>
-<a href="/stavba-domu.html">Stavba domu</a>
+<a href="kalkulacky.html">Všechny kalkulačky</a>
+<a href="finance-a-hypoteky.html">Finance a hypotéky</a>
+<a href="pronajem-a-investicni-bydleni.html">Pronájem a investiční bydlení</a>
+<a href="mzdy-a-prace.html">Mzdy a práce</a>
+<a href="stavba-domu.html">Stavba domu</a>
 </div>
 </div>
 <div>
 <h3 style="margin:0 0 12px;font-size:1rem;letter-spacing:-0.02em;color:#172033;">Informace a důvěra</h3>
 <div class="footer-links-column">
-<a href="/o-nas.html">O nás</a>
-<a href="/kontakt.html">Kontakt</a>
-<a href="/ochrana-osobnich-udaju.html">Ochrana osobních údajů</a>
-<a href="/podminky-pouziti.html">Podmínky použití</a>
+<a href="o-nas.html">O nás</a>
+<a href="kontakt.html">Kontakt</a>
+<a href="ochrana-osobnich-udaju.html">Ochrana osobních údajů</a>
+<a href="podminky-pouziti.html">Podmínky použití</a>
 </div>
 </div>
 </div>
@@ -1591,6 +1605,7 @@ výsledek po poplatku = výsledek bez poplatku − poplatek</code>
 </div>
 </footer>
 <button aria-label="Zpět nahoru" class="back-to-top" id="rvBackToTop" type="button">↑</button>
+<script src="rv-tool-core.js" defer></script>
 <script>
     const fromCurrency = document.getElementById('fromCurrency');
     const toCurrency = document.getElementById('toCurrency');
@@ -1617,7 +1632,12 @@ výsledek po poplatku = výsledek bez poplatku − poplatek</code>
       decisionSummary: document.getElementById('decisionSummary'),
       actionStatus: document.getElementById('actionStatus'),
       actionSummary: document.getElementById('actionSummary'),
-      lossSummary: document.getElementById('lossSummary')
+      lossSummary: document.getElementById('lossSummary'),
+      heroCurrencyValue: document.getElementById('heroCurrencyValue'),
+      heroCurrencyNote: document.getElementById('heroCurrencyNote'),
+      heroCurrencyDirection: document.getElementById('heroCurrencyDirection'),
+      heroEffectiveRate: document.getElementById('heroEffectiveRate'),
+      heroCurrencyFee: document.getElementById('heroCurrencyFee')
     };
 
     function formatNumber(value, digits = 2) {
@@ -1727,6 +1747,13 @@ výsledek po poplatku = výsledek bez poplatku − poplatek</code>
 
       outputs.convertedResult.textContent = formatMoneyLike(net, to);
       outputs.effectiveRateResult.textContent = `${formatNumber(effectiveRate, 6)} ${to}/${from}`;
+      if (outputs.heroCurrencyValue) {
+        outputs.heroCurrencyValue.textContent = formatMoneyLike(net, to);
+        outputs.heroCurrencyNote.textContent = `${formatMoneyLike(amountValue, from)} při kurzu ${formatNumber(rateValue, 4)} ${to}/${from}`;
+        outputs.heroCurrencyDirection.textContent = `${from} → ${to}`;
+        outputs.heroEffectiveRate.textContent = formatNumber(effectiveRate, 4);
+        outputs.heroCurrencyFee.textContent = `${formatNumber(feeValue, 2)} %`;
+      }
       outputs.feeAmountResult.textContent = formatMoneyLike(feeAmount, to);
       outputs.inverseRateResult.textContent = `${formatNumber(inverseRate, 6)} ${from}/${to}`;
       outputs.directionResult.textContent = `${from} → ${to}`;
