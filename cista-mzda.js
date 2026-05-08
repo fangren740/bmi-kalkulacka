@@ -34,7 +34,12 @@
     decisionNetText: document.getElementById('decisionNetText'),
     decisionDeductionsText: document.getElementById('decisionDeductionsText'),
     decisionCostText: document.getElementById('decisionCostText'),
-    decisionCostTag: document.getElementById('decisionCostTag')
+    decisionCostTag: document.getElementById('decisionCostTag'),
+
+    salaryPremiumNet: document.getElementById('salaryPremiumNet'),
+    salaryPremiumSentence: document.getElementById('salaryPremiumSentence'),
+    salaryPremiumChecklist: document.getElementById('salaryPremiumChecklist'),
+    salaryScenarioTableBody: document.getElementById('salaryScenarioTableBody')
   };
 
   const CONFIG = {
@@ -174,6 +179,38 @@
     elements.breakdownBody.innerHTML = rows.map(([label, value]) => `<tr><td>${label}</td><td>${value}</td></tr>`).join('');
   }
 
+  function computeForGross(gross){
+    const previous = elements.grossSalary.value;
+    elements.grossSalary.value = gross;
+    const result = compute();
+    elements.grossSalary.value = previous;
+    return result;
+  }
+
+  function updatePremiumDecision(result){
+    if(elements.salaryPremiumNet) elements.salaryPremiumNet.textContent = formatCurrency(result.netSalary);
+    if(elements.salaryPremiumSentence){
+      elements.salaryPremiumSentence.textContent = `Z hrubé mzdy ${formatCurrency(result.gross)} vychází orientační čistá mzda ${formatCurrency(result.netSalary)}. Zaměstnanec na odvodech a dani po slevách odevzdá přibližně ${formatCurrency(result.employeeDeductions + result.taxAfterDiscounts - result.taxBonus)} a celková cena práce je ${formatCurrency(result.totalCost)}.`;
+    }
+    if(elements.salaryPremiumChecklist){
+      const extra = computeForGross(result.gross + 5000);
+      elements.salaryPremiumChecklist.innerHTML = [
+        `Pro domácí rozpočet používejte čistou mzdu ${formatCurrency(result.netSalary)}, ne hrubou částku ze smlouvy.`,
+        `Navýšení hrubé mzdy o 5 000 Kč by v tomto modelu zvýšilo čistou mzdu asi o ${formatCurrency(extra.netSalary - result.netSalary)}.`,
+        result.children > 0 ? 'Daňové zvýhodnění na děti může výrazně změnit čistý výsledek, proto ho při porovnání nabídek nevynechávejte.' : 'Pokud máte děti nebo další slevy, přidejte je do výpočtu. Mohou změnit čistý příjem i daňový bonus.'
+      ].map(item => `<li>${item}</li>`).join('');
+    }
+    if(elements.salaryScenarioTableBody){
+      const up = computeForGross(result.gross + 5000);
+      const down = computeForGross(Math.max(0, result.gross - 5000));
+      elements.salaryScenarioTableBody.innerHTML = [
+        ['Zadaná mzda', formatCurrency(result.netSalary), 'Aktuální čistý příjem pro rozpočet'],
+        ['Hrubá mzda +5 000 Kč', formatCurrency(up.netSalary), `Rozdíl čistě ${formatCurrency(up.netSalary - result.netSalary)}`],
+        ['Hrubá mzda -5 000 Kč', formatCurrency(down.netSalary), `Dopad snížení ${formatCurrency(result.netSalary - down.netSalary)}`]
+      ].map(row => `<tr><td>${row[0]}</td><td>${row[1]}</td><td>${row[2]}</td></tr>`).join('');
+    }
+  }
+
   function updateUI(){
     const result = compute();
 
@@ -199,6 +236,7 @@
     updateNote(result);
     updateDecisionTexts(result);
     updateBreakdown(result);
+    updatePremiumDecision(result);
   }
 
   function setPreset(name){

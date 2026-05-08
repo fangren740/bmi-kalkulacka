@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="cs">
 <head>
   <meta charset="utf-8">
@@ -27,13 +27,15 @@
   <meta name="twitter:description" content="Spočítejte akontaci, použitelnou část vlastních zdrojů, potřebnou hypotéku a LTV podle ceny nemovitosti, rezervy a vedlejších nákladů.">
   <meta name="twitter:image" content="https://rychlevypocty.cz/og-image.jpg">
   <link rel="stylesheet" href="rv-tool-v2.css">
+  <link rel="stylesheet" href="rv-top20-upgrade.css" />
+  <link rel="stylesheet" href="rv-premium-v6.css" />
   <link rel="stylesheet" href="akontace-ltv-v2.css">
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "RychléVýpočty.cz", "item": "https://rychlevypocty.cz/"}, {"@type": "ListItem", "position": 2, "name": "Finance", "item": "https://rychlevypocty.cz/finance-a-hypoteky.html"}, {"@type": "ListItem", "position": 3, "name": "Akontace a LTV hypotéky", "item": "https://rychlevypocty.cz/kalkulacka-akontace-a-ltv-hypoteky.html"}]}</script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "Akontace a LTV hypotéky", "url": "https://rychlevypocty.cz/kalkulacka-akontace-a-ltv-hypoteky.html", "applicationCategory": "FinanceApplication", "operatingSystem": "All", "inLanguage": "cs-CZ", "description": "Spočítejte akontaci, použitelnou část vlastních zdrojů, potřebnou hypotéku a LTV podle ceny nemovitosti, rezervy a vedlejších nákladů.", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "CZK"}}</script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Co znamená LTV u hypotéky?", "acceptedAnswer": {"@type": "Answer", "text": "LTV je poměr výše hypotéky k ceně nemovitosti. Například hypotéka 4 miliony Kč na nemovitost za 5 milionů Kč znamená LTV 80 %."}}, {"@type": "Question", "name": "Počítá kalkulačka i rezervu?", "acceptedAnswer": {"@type": "Answer", "text": "Ano. Rezerva se odečítá od úspor, protože ji nechcete použít na akontaci. Díky tomu výsledek lépe odpovídá reálné koupi."}}, {"@type": "Question", "name": "Co když mi chybí peníze do cílového LTV?", "acceptedAnswer": {"@type": "Answer", "text": "Můžete zvýšit vlastní zdroje, snížit cenu nemovitosti, upravit rezervu nebo porovnat možnosti u banky. Výsledek ukáže chybějící částku."}}, {"@type": "Question", "name": "Je nižší LTV vždy lepší?", "acceptedAnswer": {"@type": "Answer", "text": "Nižší LTV je obvykle bezpečnější, protože znamená nižší úvěr vůči ceně nemovitosti. Zároveň ale vyžaduje více vlastních peněz."}}]}</script>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7745758285259522" crossorigin="anonymous"></script>
 </head>
-<body class="rv-mortgage-tool rv-ltv-page">
+<body class="rv-mortgage-tool rv-ltv-page rv-top20-page rv-premium-page rv-premium-ltv">
   <a class="skip-link" href="#kalkulacka">Přejít na kalkulačku</a>
   <header class="site-header">
     <div class="container header-inner">
@@ -70,7 +72,13 @@
         </div>
       </div>
     </section>
-    <div class="anchor-nav"><div class="container anchor-scroll"><a href="#kalkulacka">Kalkulačka</a><a href="#vysledek">Výsledek</a><a href="#jak-cist-vysledek">Metodika</a><a href="#souvisejici-kalkulacky">Související</a><a href="#faq">FAQ</a></div></div>
+    <section class="premium-proof-strip" aria-label="Co výpočet ukáže">
+      <article><span>Akontace</span><strong>Kolik vlastních peněz jde použít po odečtení rezervy a nákladů.</strong></article>
+      <article><span>LTV</span><strong>Poměr hypotéky k ceně nemovitosti a cílové pásmo banky.</strong></article>
+      <article><span>Riziko</span><strong>Upozornění, když koupě vyčerpává hotovost nebo tlačí LTV vysoko.</strong></article>
+      <article><span>Další krok</span><strong>Navazující výpočet splátky, dostupnosti a celkové ceny koupě.</strong></article>
+    </section>
+    <div class="anchor-nav"><div class="container anchor-scroll"><a href="#kalkulacka">Kalkulačka</a><a href="#vysledek">Výsledek</a><a href="#rozhodnuti">Rozhodnutí</a><a href="#jak-cist-vysledek">Metodika</a><a href="#souvisejici-kalkulacky">Související</a><a href="#faq">FAQ</a></div></div>
     <section class="container tool-stage" id="kalkulacka">
       <form class="calculator-card" id="ltvForm">
         <h2>Zadejte cenu a vlastní zdroje</h2><p>Kalkulačka oddělí použitelnou akontaci od rezervy a vedlejších nákladů.</p>
@@ -90,6 +98,22 @@
         <div class="info-list"><div class="info-row"><span>Cena nemovitosti</span><strong id="summaryPropertyPrice">0 Kč</strong></div><div class="info-row"><span>Vedlejší náklady</span><strong id="summaryAdditionalCosts">0 Kč</strong></div><div class="info-row"><span>Ponechaná rezerva</span><strong id="summaryReserve">0 Kč</strong></div><div class="info-row"><span>Použité vlastní zdroje</span><strong id="summaryUsedOwnSources">0 Kč</strong></div><div class="info-row"><span>Hypotéka jako násobek příjmu</span><strong id="summaryIncomeMultiple">0×</strong></div></div>
         <div class="table-wrap"><table><thead><tr><th>Scénář</th><th>Vlastní zdroje</th><th>Hypotéka</th><th>Stav</th></tr></thead><tbody id="breakdownBody"></tbody></table></div>
       </aside>
+    </section>
+    <section class="premium-decision-lab" id="rozhodnuti">
+      <div class="premium-section-head">
+        <div><span class="premium-label">Rozhodovací čtení</span><h2>Je LTV bezpečné, nebo už tlačí na rozpočet?</h2><p>LTV samo o sobě nestačí. Důležité je, kolik peněz zůstane po koupi, zda se vejdete do cílového pásma a jak naváže měsíční splátka.</p></div>
+        <div class="premium-live-verdict"><span>Aktuální stav</span><strong id="ltvPremiumVerdict">Čekám na výpočet</strong><small id="ltvPremiumSubline">Zadejte cenu, úspory a rezervu.</small></div>
+      </div>
+      <div class="premium-lab-grid">
+        <article class="premium-panel"><h3>Co výsledek znamená</h3><p id="ltvPremiumSentence">Po výpočtu uvidíte, jestli použitelné vlastní zdroje stačí na rozumnou akontaci a jak daleko jste od zvoleného LTV.</p><ul class="premium-checklist" id="ltvPremiumChecklist"></ul></article>
+        <article class="premium-panel"><h3>Citlivost na cílové LTV</h3><div class="premium-table-wrap"><table class="premium-scenario-table"><thead><tr><th>Scénář</th><th>Potřeba hotovosti</th><th>Dopad</th></tr></thead><tbody id="ltvScenarioTableBody"></tbody></table></div></article>
+      </div>
+      <div class="premium-next-grid" aria-label="Co spočítat dál">
+        <a href="hypotecni-kalkulacka.html"><strong>Spočítat splátku hypotéky</strong><small>Ověřte měsíční zatížení a úroky.</small></a>
+        <a href="kalkulacka-vlastnich-zdroju-na-koupi-nemovitosti.html"><strong>Zkontrolovat vlastní zdroje</strong><small>Akontace, náklady a rezerva po koupi.</small></a>
+        <a href="muzu-si-dovolit-nemovitost-kalkulacka.html"><strong>Ověřit dostupnost nemovitosti</strong><small>Porovnejte splátku s příjmem domácnosti.</small></a>
+        <a href="kalkulacka-celkove-ceny-nemovitosti.html"><strong>Dopočítat celkovou cenu koupě</strong><small>Poplatky, vybavení a první výdaje.</small></a>
+      </div>
     </section>
     <section class="container content-grid" id="jak-cist-vysledek">
 <article class="content-card"><p class="eyebrow">Metodika</p><h2>Jak se počítá akontace a LTV</h2><p>LTV vyjadřuje poměr hypotéky k ceně nemovitosti. Kalkulačka nejdřív určí, kolik vlastních peněz je po odečtení rezervy a vedlejších nákladů skutečně použitelné na akontaci. Teprve z této částky dopočítá potřebný úvěr.</p><div class="formula"><code>LTV = hypotéka / cena nemovitosti × 100</code></div><p>To je praktičtější než prosté porovnání ceny a úspor. Část peněz totiž často padne na odhad, právní služby, vybavení, stěhování nebo nutnou rezervu po koupi. Pokud s nimi nepočítáte, může financování vypadat bezpečněji, než skutečně je.</p></article>
@@ -114,12 +138,42 @@
 <details><summary>Je nižší LTV vždy lepší?</summary><p>Nižší LTV je obvykle bezpečnější, protože znamená nižší úvěr vůči ceně nemovitosti. Zároveň ale vyžaduje více vlastních peněz.</p></details></div>
     </section>
   </main>
-  <footer class="footer">
+  
+<section class="rv-top20-bridge" id="dalsi-krok-top20" aria-labelledby="top20-next-title">
+  <div class="rv-top20-bridge__head">
+    <div>
+      <span class="rv-top20-bridge__label">Hypotéky a bydlení</span>
+      <h2 id="top20-next-title">LTV převeďte na vlastní zdroje a reálnou rezervu</h2>
+      <p>LTV říká, jak velkou část hodnoty nemovitosti financuje hypotéka. Čím vyšší LTV, tím citlivější je scénář na cenu, odhad a podmínky banky.</p>
+    </div>
+    <div class="rv-top20-bridge__trust" aria-label="Vlastnosti výpočtu"><span>bez registrace</span><span>orientační výpočet</span><span>další krok</span></div>
+  </div>
+  <div class="rv-top20-bridge__grid">
+    <article class="rv-top20-bridge__card">
+      <h3>Jak výsledek číst</h3>
+      <p>LTV říká, jak velkou část hodnoty nemovitosti financuje hypotéka. Čím vyšší LTV, tím citlivější je scénář na cenu, odhad a podmínky banky.</p>
+    </article>
+    <article class="rv-top20-bridge__card">
+      <h3>Na co si dát pozor</h3>
+      <p>Neutrácejte všechny úspory za akontaci. Rezerva po koupi je součást bezpečného rozhodnutí.</p>
+    </article>
+    <article class="rv-top20-bridge__card">
+      <h3>Co spočítat dál</h3>
+      <div class="rv-top20-next-list">
+          <a href="hypotecni-kalkulacka.html"><span>Hypotečn&#237; spl&#225;tka</span></a>
+          <a href="kalkulacka-vlastnich-zdroju-na-koupi-nemovitosti.html"><span>Vlastn&#237; zdroje na koupi</span></a>
+          <a href="muzu-si-dovolit-bydleni.html"><span>Dostupnost bydlen&#237;</span></a>
+          <a href="kalkulacka-celkove-ceny-nemovitosti.html"><span>Celkov&#225; cena nemovitosti</span></a>
+      </div>
+    </article>
+  </div>
+  <p class="rv-top20-bridge__note">Výpočet neřeší bankovní scoring ani přesný odhad nemovitosti.</p>
+</section><footer class="footer">
     <div class="container footer-grid">
       <div><img src="logo-rychlevypocty-footer.svg" alt="RychléVýpočty.cz" width="190" height="38"><p>Praktické online kalkulačky pro finance, bydlení, práci i provoz domácnosti. Výsledky berte jako orientační podklad pro další rozhodnutí.</p></div>
       <div><h3>Hypotéky</h3><div class="footer-links"><a href="hypotecni-kalkulacka.html">Hypoteční kalkulačka</a><a href="muzu-si-dovolit-nemovitost-kalkulacka.html">Dostupnost nemovitosti</a><a href="porovnani-najem-vs-hypoteka-kalkulacka.html">Nájem vs hypotéka</a></div></div>
       <div><h3>Finance</h3><div class="footer-links"><a href="kalkulacka-pujcky.html">Půjčka</a><a href="kalkulacka-financni-rezervy.html">Finanční rezerva</a><a href="kalkulacka-rozpoctu-domacnosti.html">Rozpočet domácnosti</a></div></div>
-      <div><h3>Web</h3><div class="footer-links"><a href="/jak-pocitame.html">Jak počítáme</a><a href="kontakt.html">Kontakt</a><a href="podminky-pouziti.html">Podmínky použití</a><a href="ochrana-osobnich-udaju.html">Ochrana osobních údajů</a></div></div>
+      <div><h3>Web</h3><div class="footer-links"><a href="jak-pocitame.html">Jak počítáme</a><a href="kontakt.html">Kontakt</a><a href="podminky-pouziti.html">Podmínky použití</a><a href="ochrana-osobnich-udaju.html">Ochrana osobních údajů</a></div></div>
     </div>
     <div class="container footer-bottom"><p>© 2026 RychléVýpočty.cz. Výpočty jsou orientační a nenahrazují individuální nabídku banky ani odborné poradenství.</p></div>
   </footer>
