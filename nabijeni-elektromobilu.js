@@ -19,6 +19,31 @@
     if (element) element.textContent = text;
   }
 
+  function renderHero(data) {
+    const visual = document.querySelector(".hero-visual");
+    if (!visual) return;
+    const numberEl = visual.querySelector(".rv-hero-number");
+    if (numberEl) numberEl.textContent = money(data.chargeCost);
+    const metrics = visual.querySelectorAll(".rv-hero-metrics b");
+    if (metrics[0]) metrics[0].textContent = `${number(data.batteryEnergy)} kWh`;
+    if (metrics[1]) metrics[1].textContent = `${number(data.gridEnergy)} kWh`;
+    if (metrics[2]) metrics[2].textContent = money(data.costPer100);
+    const bars = visual.querySelectorAll(".energy-meter b");
+    const labels = visual.querySelectorAll(".energy-meter strong");
+    if (bars[0]) bars[0].style.width = `${Math.max(6, Math.min(100, data.rangePct))}%`;
+    if (bars[1]) bars[1].style.width = `${Math.max(6, Math.min(100, data.lossPct))}%`;
+    if (labels[0]) labels[0].textContent = `${number(data.rangePct, 0)} %`;
+    if (labels[1]) labels[1].textContent = `${number(data.lossPct, 0)} %`;
+    const fill = visual.querySelector(".ev-fill");
+    if (fill) fill.style.width = `${Math.max(8, Math.min(100, data.rangePct))}%`;
+    const batteryLabel = visual.querySelector(".ev-battery strong");
+    if (batteryLabel) batteryLabel.textContent = `${number(data.start, 0)}-${number(data.target, 0)} %`;
+    const charger = visual.querySelector(".ev-charger");
+    if (charger) charger.textContent = `${number(data.power, 1)} kW`;
+    const card = visual.querySelector(".energy-mini-card strong");
+    if (card) card.textContent = `Jedno nabití stojí asi ${money(data.chargeCost)}. Provoz vychází přibližně na ${money(data.costPer100)} / 100 km.`;
+  }
+
   function render() {
     const capacity = Math.max(1, value("batteryCapacity"));
     const start = Math.max(0, Math.min(100, value("startCharge")));
@@ -52,7 +77,8 @@
     setText("statusBadge", costPer100 > 180 ? "Dražší provoz" : costPer100 > 90 ? "Běžný provoz" : "Levnější provoz");
     setText("chargingVerdict", "Orientační cena nabíjení");
     setText("decisionSummary", `Jedno nabití z ${number(start, 0)} % na ${number(target, 0)} % vychází asi na ${money(chargeCost)}. Cena provozu je přibližně ${money(costPer100)} na 100 km.`);
-    setText("interpretationNote", "Domácí nabíjení obvykle vychází nejlépe pro pravidelný provoz, rychlé veřejné nabíjení může být výrazně dražší.");
+    setText("interpretationNote", "Domácí nabíjení obvykle vychází nejlépe pro pravidelný provoz. Rychlé veřejné nabíjení může být výrazně dražší.");
+    renderHero({ start, target, rangePct, lossPct, batteryEnergy, gridEnergy, chargeCost, costPer100, power });
 
     const table = $("summaryTableBody");
     if (table) {

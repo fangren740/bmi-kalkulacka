@@ -31,6 +31,26 @@
     if (result.fuelShare < 45) return ['Provoz výrazně zvedá cenu', 'Větší část ceny za kilometr tvoří servis, opotřebení nebo jiné náklady. To je důležité při vyúčtování cest i porovnání aut.', 'Zkontrolujte položky'];
     return ['Běžný výsledek', 'Cena za kilometr kombinuje palivo a další zadané náklady. Použijte ji pro férovější porovnání než samotnou spotřebu.', 'Porovnejte trasu'];
   }
+  function renderHero(values, result) {
+    const visual = document.querySelector('.hero-visual');
+    if (!visual) return;
+    const number = visual.querySelector('.rv-hero-number');
+    if (number) number.textContent = `${fmtCurrency(result.totalCostPerKm, values.roundWhole)}/km`;
+    const metrics = visual.querySelectorAll('.rv-hero-metrics b');
+    if (metrics[0]) metrics[0].textContent = fmtCurrency(result.fuelCostPerKm, values.roundWhole);
+    if (metrics[1]) metrics[1].textContent = fmtCurrency(values.extraCostPerKm, values.roundWhole);
+    if (metrics[2]) metrics[2].textContent = fmtCurrency(result.tripCost, values.roundWhole);
+    const bars = visual.querySelectorAll('.rv-fuel-meter b');
+    const labels = visual.querySelectorAll('.rv-fuel-meter strong');
+    const fuelShare = Math.max(0, Math.min(100, result.fuelShare));
+    const operatingShare = Math.max(0, Math.min(100, 100 - fuelShare));
+    if (bars[0]) bars[0].style.width = `${Math.max(6, fuelShare)}%`;
+    if (bars[1]) bars[1].style.width = `${Math.max(6, operatingShare)}%`;
+    if (labels[0]) labels[0].textContent = `${fmtNumber(fuelShare, 0)} %`;
+    if (labels[1]) labels[1].textContent = `${fmtNumber(operatingShare, 0)} %`;
+    const floating = visual.querySelector('.rv-floating-card strong');
+    if (floating) floating.textContent = `Trasa ${fmtNumber(values.tripDistance, 0)} km vychází na ${fmtCurrency(result.tripCost, values.roundWhole)}.`;
+  }
   function renderRows(values, result) {
     const body = $('breakdownBody');
     body.innerHTML = [
@@ -50,7 +70,6 @@
     }
     const result = calculate(values);
     setText('costPerKm', fmtCurrency(result.totalCostPerKm, values.roundWhole));
-    setText('mainResult', fmtCurrency(result.totalCostPerKm, values.roundWhole));
     setText('fuelCostPerKm', fmtCurrency(result.fuelCostPerKm, values.roundWhole));
     setText('tripCost', fmtCurrency(result.tripCost, values.roundWhole));
     setText('monthlyCost', fmtCurrency(result.monthlyCost, values.roundWhole));
@@ -64,6 +83,7 @@
     setText('statusBadge', label); setText('costStatus', label); setText('costText', text); setText('actionStatus', action);
     setText('decisionSummary', `Trasa ${fmtNumber(values.tripDistance, 0)} km vychází na ${fmtCurrency(result.tripCost, values.roundWhole)}.`);
     setText('nextActionText', 'Pro přesnější dlouhodobý výsledek doplňte servis, pneumatiky a opotřebení podle skutečných výdajů.');
+    renderHero(values, result);
     renderRows(values, result);
   }
   function setPreset(name) {

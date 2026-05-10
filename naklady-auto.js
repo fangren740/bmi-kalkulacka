@@ -26,6 +26,30 @@
     if ((values.monthlyNetIncome > 0 && result.incomeShare > 25) || result.costPerKm > 9 || (values.financingMonthly > 0 && result.coreCostShare > 65)) return ['Dražší scénář', 'Auto zabírá výraznější část rozpočtu nebo má vyšší cenu za kilometr. Zvažte nájezd, financování, servis a alternativy dopravy.', 'Porovnejte levnější scénář'];
     return ['Na hraně', 'Výsledek není extrémní, ale stojí za kontrolu hlavních položek. Nejvíc obvykle hýbe palivo, amortizace, servis a financování.', 'Zkontrolujte hlavní položky'];
   }
+  function renderHero(values, result) {
+    const visual = document.querySelector('.hero-visual');
+    if (!visual) return;
+    const number = visual.querySelector('.rv-hero-number');
+    if (number) number.textContent = `${fmtCurrency(result.monthlyTotal)}/měs.`;
+    const metrics = visual.querySelectorAll('.rv-hero-metrics b');
+    if (metrics[0]) metrics[0].textContent = fmtCurrency(result.yearlyTotal);
+    if (metrics[1]) metrics[1].textContent = `${fmtCurrency(result.costPerKm, 2)}/km`;
+    if (metrics[2]) metrics[2].textContent = fmtCurrency(result.fuelMonthly);
+    const fuelShare = result.monthlyTotal > 0 ? result.fuelMonthly / result.monthlyTotal * 100 : 0;
+    const fixedShare = result.monthlyTotal > 0 ? result.fixedMonthly / result.monthlyTotal * 100 : 0;
+    const bars = visual.querySelectorAll('.rv-fuel-meter b');
+    const labels = visual.querySelectorAll('.rv-fuel-meter strong');
+    if (bars[0]) bars[0].style.width = `${Math.max(6, Math.min(100, fuelShare))}%`;
+    if (bars[1]) bars[1].style.width = `${Math.max(6, Math.min(100, fixedShare))}%`;
+    if (labels[0]) labels[0].textContent = fmtPercent(fuelShare);
+    if (labels[1]) labels[1].textContent = fmtPercent(fixedShare);
+    const floating = visual.querySelector('.rv-floating-card strong');
+    if (floating) {
+      floating.textContent = values.monthlyNetIncome > 0
+        ? `Auto bere přibližně ${fmtPercent(result.incomeShare)} čistého příjmu domácnosti.`
+        : `Při nájezdu ${fmtNumber(values.annualKm)} km ročně vychází kilometr na ${fmtCurrency(result.costPerKm, 2)}.`;
+    }
+  }
   function renderBreakdown(result) {
     const body = $('breakdownBody');
     body.innerHTML = result.items.map(([name, monthly]) => {
@@ -41,7 +65,6 @@
     }
     const result = calculate(values);
     setText('monthlyTotal', fmtCurrency(result.monthlyTotal));
-    setText('mainResult', fmtCurrency(result.monthlyTotal));
     setText('yearlyTotal', fmtCurrency(result.yearlyTotal));
     setText('costPerKm', fmtCurrency(result.costPerKm, 2));
     setText('fuelMonthlyResult', fmtCurrency(result.fuelMonthly));
@@ -58,6 +81,7 @@
     setText('actionStatus', action);
     setText('decisionSummary', `Při nájezdu ${fmtNumber(values.annualKm)} km ročně vychází auto na ${fmtCurrency(result.costPerKm, 2)} za kilometr.`);
     setText('nextActionText', 'Pro přesnější výsledek nahraďte odhady skutečnými průměry ze servisu, pojištění a tankování.');
+    renderHero(values, result);
     renderBreakdown(result);
   }
   function setPreset(name) {
