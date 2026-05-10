@@ -1,0 +1,661 @@
+/* Scoped V6 mobile quality guard for upgraded TOP calculators. */
+body.rv-household-budget-page *,
+body.rv-household-budget-page *::before,
+body.rv-household-budget-page *::after,
+body.rv-build-page *,
+body.rv-build-page *::before,
+body.rv-build-page *::after {
+  box-sizing: border-box;
+}
+
+body.rv-household-budget-page,
+body.rv-build-page {
+  overflow-x: hidden;
+}
+
+body.rv-household-budget-page .rv-budget-hero-grid > *,
+body.rv-household-budget-page .rv-budget-tool-grid > *,
+body.rv-household-budget-page .rv-budget-breakdown-grid > *,
+body.rv-household-budget-page .rv-budget-visual,
+body.rv-household-budget-page .rv-budget-main-card,
+body.rv-household-budget-page .rv-budget-bars,
+body.rv-household-budget-page .rv-budget-bars > *,
+body.rv-household-budget-page .rv-budget-floating,
+body.rv-household-budget-page .rv-budget-card,
+body.rv-household-budget-page .rv-budget-result-card,
+body.rv-build-page .hero-grid > *,
+body.rv-build-page .hero-visual,
+body.rv-build-page .reno-dashboard,
+body.rv-build-page .reno-product,
+body.rv-build-page .product-card,
+body.rv-build-page .hero-mini-strip,
+body.rv-build-page .calculator-card,
+body.rv-build-page .result-panel,
+body.rv-build-page .result-metrics > *,
+body.rv-build-page .info-row,
+body.rv-build-page .rv-top20-bridge {
+  min-width: 0;
+  max-width: 100%;
+}
+
+body.rv-household-budget-page .rv-budget-visual,
+body.rv-build-page .hero-visual {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+body.rv-household-budget-page .rv-budget-visual::after,
+body.rv-build-page .hero-visual::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, .06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, .06) 1px, transparent 1px);
+  background-size: 34px 34px;
+  mask-image: linear-gradient(180deg, transparent, #000 16%, #000 84%, transparent);
+}
+
+body.rv-household-budget-page .rv-budget-window,
+body.rv-household-budget-page .rv-budget-main-card,
+body.rv-household-budget-page .rv-budget-bars,
+body.rv-household-budget-page .rv-budget-floating,
+body.rv-build-page .reno-dashboard,
+body.rv-build-page .reno-product,
+body.rv-build-page .hero-mini-strip {
+  position: relative;
+  z-index: 1;
+}
+
+body.rv-household-budget-page .rv-budget-main-card {
+  background: linear-gradient(180deg, #fff, #f8fcff);
+}
+
+body.rv-build-page .reno-dashboard {
+  overflow: hidden;
+}
+
+body.rv-build-page .reno-dashboard::after {
+  content: "";
+  position: absolute;
+  left: 22px;
+  right: 22px;
+  bottom: 0;
+  height: 44%;
+  border-radius: 26px 26px 0 0;
+  background: linear-gradient(135deg, rgba(29, 216, 139, .25), rgba(96, 165, 250, .18));
+  clip-path: polygon(0 72%, 22% 54%, 43% 64%, 64% 34%, 82% 46%, 100% 12%, 100% 100%, 0 100%);
+  pointer-events: none;
+}
+
+body.rv-household-budget-page .rv-budget-main-card strong,
+body.rv-household-budget-page .rv-budget-primary-result strong,
+body.rv-household-budget-page .rv-budget-result-grid strong,
+body.rv-household-budget-page .rv-budget-floating strong,
+body.rv-household-budget-page .rv-budget-breakdown-item em,
+body.rv-build-page .reno-number,
+body.rv-build-page .reno-metrics b,
+body.rv-build-page .product-card strong,
+body.rv-build-page .hero-mini-strip span,
+body.rv-build-page .primary-result strong,
+body.rv-build-page .result-metrics strong,
+body.rv-build-page .info-row strong {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+body.rv-household-budget-page .rv-budget-bars b {
+  display: block;
+  max-width: 100%;
+  min-width: 18px;
+}
+
+body.rv-household-budget-page .rv-budget-visual[data-tone="risk"] .rv-budget-main-card span {
+  background: #fff1f2;
+  color: #b42318;
+}
+
+body.rv-household-budget-page .rv-budget-visual[data-tone="warning"] .rv-budget-main-card span {
+  background: #fff7e6;
+  color: #9a5b00;
+}
+
+body.rv-household-budget-page .rv-budget-visual[data-tone="healthy"] .rv-budget-main-card span {
+  background: #ecfbe8;
+  color: #23751b;
+}
+
+body.rv-build-page .hero-mini-strip span {
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.15;
+}
+
+body.rv-build-page .hero-visual[data-tone="low"] .reno-number {
+  color: #dfffea;
+}
+
+body.rv-build-page .hero-visual[data-tone="high"] .reno-number {
+  color: #fff2c7;
+}
+
+@media (max-width: 760px) {
+  body.rv-household-budget-page .rv-budget-hero-grid,
+  body.rv-build-page .hero-grid {
+    gap: 16px;
+  }
+
+  body.rv-household-budget-page .rv-budget-visual,
+  body.rv-build-page .hero-visual {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    min-height: 0;
+    padding: 16px;
+    border-radius: 26px;
+  }
+
+  body.rv-household-budget-page .rv-budget-window {
+    padding: 11px 12px;
+    border-radius: 18px;
+    font-size: .92rem;
+  }
+
+  body.rv-household-budget-page .rv-budget-main-card {
+    margin-top: 0;
+    padding: 18px;
+    border-radius: 22px;
+  }
+
+  body.rv-household-budget-page .rv-budget-main-card strong {
+    font-size: clamp(2rem, 10vw, 2.7rem);
+    letter-spacing: -.035em;
+  }
+
+  body.rv-household-budget-page .rv-budget-main-card span {
+    max-width: 100%;
+    line-height: 1.2;
+  }
+
+  body.rv-household-budget-page .rv-budget-bars {
+    margin-top: 0;
+    gap: 9px;
+  }
+
+  body.rv-household-budget-page .rv-budget-bars div {
+    grid-template-columns: minmax(64px, .7fr) minmax(92px, 1fr) minmax(88px, .8fr);
+    gap: 8px;
+    padding: 10px;
+    border-radius: 15px;
+  }
+
+  body.rv-household-budget-page .rv-budget-bars span,
+  body.rv-household-budget-page .rv-budget-bars em {
+    font-size: .78rem;
+    line-height: 1.15;
+  }
+
+  body.rv-household-budget-page .rv-budget-bars em {
+    grid-column: auto;
+    text-align: right;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  body.rv-household-budget-page .rv-budget-floating {
+    margin-top: 0;
+    padding: 13px;
+    border-radius: 18px;
+  }
+
+  body.rv-household-budget-page .rv-budget-floating strong {
+    font-size: 1rem;
+    line-height: 1.25;
+  }
+
+  body.rv-build-page .reno-dashboard {
+    padding: 18px;
+    border-radius: 22px;
+  }
+
+  body.rv-build-page .reno-number {
+    font-size: clamp(34px, 10vw, 42px);
+    letter-spacing: -.035em;
+  }
+
+  body.rv-build-page .reno-sub {
+    font-size: .94rem;
+    line-height: 1.45;
+  }
+
+  body.rv-build-page .reno-metrics {
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+  }
+
+  body.rv-build-page .reno-metrics div {
+    padding: 10px;
+    border-radius: 15px;
+  }
+
+  body.rv-build-page .reno-metrics b {
+    font-size: .9rem;
+  }
+
+  body.rv-build-page .reno-product {
+    min-height: 118px;
+    margin: 0;
+    border-radius: 22px;
+  }
+
+  body.rv-build-page .product-card {
+    inset: 14px 14px auto;
+    padding: 13px;
+    grid-template-columns: minmax(0, 1fr) 38px;
+    border-radius: 18px;
+  }
+
+  body.rv-build-page .product-card strong {
+    font-size: 1rem;
+  }
+
+  body.rv-build-page .product-card i {
+    width: 38px;
+    height: 38px;
+    border-radius: 14px;
+  }
+
+  body.rv-build-page .hero-mini-strip,
+  body.rv-build-page .result-metrics {
+    grid-template-columns: 1fr;
+  }
+
+  body.rv-build-page .primary-result strong {
+    font-size: clamp(34px, 10vw, 42px);
+  }
+
+  body.rv-build-page .info-row strong {
+    max-width: 52%;
+  }
+}
+
+@media (max-width: 430px) {
+  body.rv-household-budget-page .rv-budget-hero-copy h1 {
+    font-size: 2.18rem;
+    line-height: 1.02;
+    letter-spacing: -.035em;
+  }
+
+  body.rv-household-budget-page .rv-budget-hero-actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  body.rv-household-budget-page .rv-budget-bars div,
+  body.rv-build-page .reno-metrics {
+    grid-template-columns: 1fr;
+  }
+
+  body.rv-household-budget-page .rv-budget-bars em {
+    text-align: left;
+  }
+
+  body.rv-build-page .hero-visual {
+    padding: 14px;
+    border-radius: 24px;
+  }
+
+  body.rv-build-page .reno-dashboard::after {
+    opacity: .65;
+  }
+}
+
+/* V6 TOP20 mobile pass: keep the calculator close to the first screen. */
+@media (max-width: 760px) {
+  body.rv-tool-page,
+  body.rv-premium-page,
+  body.rv-renovation-tool,
+  body.rv-mortgage-tool,
+  body.rv-household-budget-page {
+    overflow-x: hidden;
+  }
+
+  body.rv-tool-page *,
+  body.rv-tool-page *::before,
+  body.rv-tool-page *::after,
+  body.rv-premium-page *,
+  body.rv-premium-page *::before,
+  body.rv-premium-page *::after,
+  body.rv-renovation-tool *,
+  body.rv-renovation-tool *::before,
+  body.rv-renovation-tool *::after,
+  body.rv-mortgage-tool *,
+  body.rv-mortgage-tool *::before,
+  body.rv-mortgage-tool *::after {
+    box-sizing: border-box;
+  }
+
+  body.rv-tool-page .container,
+  body.rv-premium-page .container,
+  body.rv-renovation-tool .container,
+  body.rv-mortgage-tool .container,
+  body.rv-household-budget-page .container {
+    width: min(100% - 20px, 1180px);
+  }
+
+  body.rv-tool-page .tool-hero,
+  body.rv-premium-page .tool-hero,
+  body.rv-renovation-tool .tool-hero,
+  body.rv-mortgage-tool .tool-hero,
+  body.rv-premium-page .hero,
+  body.rv-household-budget-page .rv-budget-hero {
+    padding-top: 10px;
+    padding-bottom: 18px;
+  }
+
+  body.rv-tool-page .hero-grid,
+  body.rv-premium-page .hero-grid,
+  body.rv-renovation-tool .hero-grid,
+  body.rv-mortgage-tool .hero-grid,
+  body.rv-premium-page .hero-shell,
+  body.rv-household-budget-page .rv-budget-hero-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  body.rv-tool-page .hero-grid > *,
+  body.rv-premium-page .hero-grid > *,
+  body.rv-renovation-tool .hero-grid > *,
+  body.rv-mortgage-tool .hero-grid > *,
+  body.rv-premium-page .hero-shell > *,
+  body.rv-household-budget-page .rv-budget-hero-grid > *,
+  body.rv-tool-page .tool-stage > *,
+  body.rv-premium-page .tool-stage > *,
+  body.rv-renovation-tool .tool-stage > *,
+  body.rv-mortgage-tool .tool-stage > * {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  body.rv-tool-page .hero-copy,
+  body.rv-premium-page .hero-copy,
+  body.rv-renovation-tool .hero-copy,
+  body.rv-mortgage-tool .hero-copy {
+    padding: 20px;
+    border-radius: 24px;
+  }
+
+  body.rv-tool-page .hero-copy h1,
+  body.rv-premium-page .hero-copy h1,
+  body.rv-renovation-tool .hero-copy h1,
+  body.rv-mortgage-tool .hero-copy h1,
+  body.rv-premium-page .hero h1 {
+    font-size: clamp(2rem, 8.5vw, 2.45rem);
+    line-height: 1.02;
+    letter-spacing: -.035em;
+    margin-bottom: 12px;
+    overflow-wrap: normal;
+    word-break: normal;
+  }
+
+  body.rv-tool-page .hero-copy p,
+  body.rv-premium-page .hero-copy p,
+  body.rv-renovation-tool .hero-copy p,
+  body.rv-mortgage-tool .hero-copy p {
+    font-size: .98rem;
+    line-height: 1.55;
+    margin-top: 10px;
+  }
+
+  body.rv-tool-page .hero-actions,
+  body.rv-premium-page .hero-actions,
+  body.rv-renovation-tool .hero-actions,
+  body.rv-mortgage-tool .hero-actions {
+    gap: 10px;
+    margin-top: 16px;
+  }
+
+  body.rv-tool-page .hero-actions a,
+  body.rv-premium-page .hero-actions a,
+  body.rv-renovation-tool .hero-actions a,
+  body.rv-mortgage-tool .hero-actions a,
+  body.rv-tool-page .hero-actions button,
+  body.rv-premium-page .hero-actions button,
+  body.rv-renovation-tool .hero-actions button,
+  body.rv-mortgage-tool .hero-actions button {
+    min-height: 46px;
+    padding: 11px 14px;
+  }
+
+  body.rv-tool-page .hero-points,
+  body.rv-premium-page .hero-points,
+  body.rv-renovation-tool .hero-points,
+  body.rv-mortgage-tool .hero-points,
+  body.rv-premium-page .hero-pills,
+  body.rv-premium-page .hero-trust-strip,
+  body.rv-household-budget-page .rv-budget-pills {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 2px;
+    scrollbar-width: none;
+  }
+
+  body.rv-tool-page .hero-points::-webkit-scrollbar,
+  body.rv-premium-page .hero-points::-webkit-scrollbar,
+  body.rv-renovation-tool .hero-points::-webkit-scrollbar,
+  body.rv-mortgage-tool .hero-points::-webkit-scrollbar,
+  body.rv-premium-page .hero-pills::-webkit-scrollbar,
+  body.rv-premium-page .hero-trust-strip::-webkit-scrollbar,
+  body.rv-household-budget-page .rv-budget-pills::-webkit-scrollbar {
+    display: none;
+  }
+
+  body.rv-tool-page .hero-points > *,
+  body.rv-premium-page .hero-points > *,
+  body.rv-renovation-tool .hero-points > *,
+  body.rv-mortgage-tool .hero-points > *,
+  body.rv-premium-page .hero-pills > *,
+  body.rv-premium-page .hero-trust-strip > *,
+  body.rv-household-budget-page .rv-budget-pills > * {
+    flex: 0 0 auto;
+    max-width: 86vw;
+    white-space: nowrap;
+  }
+
+  body.rv-tool-page .hero-visual,
+  body.rv-premium-page .hero-visual,
+  body.rv-renovation-tool .hero-visual,
+  body.rv-mortgage-tool .hero-visual {
+    min-height: 0;
+    max-height: 430px;
+    padding: 16px;
+    border-radius: 26px;
+    overflow: hidden;
+  }
+
+  body.rv-tool-page .hero-visual .visual-orb,
+  body.rv-premium-page .hero-visual .visual-orb,
+  body.rv-renovation-tool .hero-visual .visual-orb,
+  body.rv-mortgage-tool .hero-visual .visual-orb {
+    display: none;
+  }
+
+  body.rv-tool-page .rv-hero-number,
+  body.rv-premium-page .rv-hero-number,
+  body.rv-renovation-tool .rv-hero-number,
+  body.rv-mortgage-tool .rv-hero-number,
+  body.rv-tool-page .reno-number,
+  body.rv-renovation-tool .reno-number,
+  body.rv-tool-page .primary-result strong,
+  body.rv-premium-page .primary-result strong,
+  body.rv-renovation-tool .primary-result strong,
+  body.rv-mortgage-tool .primary-result strong {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    overflow-wrap: normal;
+    word-break: normal;
+  }
+
+  body.rv-tool-page .rv-hero-number,
+  body.rv-premium-page .rv-hero-number,
+  body.rv-renovation-tool .rv-hero-number,
+  body.rv-mortgage-tool .rv-hero-number {
+    font-size: clamp(2.15rem, 10vw, 3rem);
+    line-height: 1;
+  }
+
+  body.rv-tool-page .rv-hero-metrics,
+  body.rv-premium-page .rv-hero-metrics,
+  body.rv-renovation-tool .rv-hero-metrics,
+  body.rv-mortgage-tool .rv-hero-metrics,
+  body.rv-tool-page .hero-mini-strip,
+  body.rv-premium-page .hero-mini-strip,
+  body.rv-renovation-tool .hero-mini-strip,
+  body.rv-mortgage-tool .hero-mini-strip {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  body.rv-tool-page .rv-hero-metrics > *,
+  body.rv-premium-page .rv-hero-metrics > *,
+  body.rv-renovation-tool .rv-hero-metrics > *,
+  body.rv-mortgage-tool .rv-hero-metrics > *,
+  body.rv-tool-page .hero-mini-strip > *,
+  body.rv-premium-page .hero-mini-strip > *,
+  body.rv-renovation-tool .hero-mini-strip > *,
+  body.rv-mortgage-tool .hero-mini-strip > * {
+    min-width: 0;
+    padding: 9px;
+    font-size: .78rem;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  body.rv-tool-page .tool-stage,
+  body.rv-premium-page .tool-stage,
+  body.rv-renovation-tool .tool-stage,
+  body.rv-mortgage-tool .tool-stage {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+    padding-top: 12px;
+    padding-bottom: 28px;
+  }
+
+  body.rv-tool-page .anchor-nav,
+  body.rv-premium-page .anchor-nav,
+  body.rv-renovation-tool .anchor-nav,
+  body.rv-mortgage-tool .anchor-nav,
+  body.rv-household-budget-page .rv-budget-anchor {
+    margin: 4px auto 8px;
+    padding: 0;
+  }
+
+  body.rv-tool-page .anchor-scroll,
+  body.rv-premium-page .anchor-scroll,
+  body.rv-renovation-tool .anchor-scroll,
+  body.rv-mortgage-tool .anchor-scroll,
+  body.rv-household-budget-page .rv-budget-anchor {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    scrollbar-width: none;
+  }
+
+  body.rv-tool-page .anchor-scroll::-webkit-scrollbar,
+  body.rv-premium-page .anchor-scroll::-webkit-scrollbar,
+  body.rv-renovation-tool .anchor-scroll::-webkit-scrollbar,
+  body.rv-mortgage-tool .anchor-scroll::-webkit-scrollbar,
+  body.rv-household-budget-page .rv-budget-anchor::-webkit-scrollbar {
+    display: none;
+  }
+
+  body.rv-tool-page .calculator-card,
+  body.rv-premium-page .calculator-card,
+  body.rv-renovation-tool .calculator-card,
+  body.rv-mortgage-tool .calculator-card,
+  body.rv-tool-page .result-panel,
+  body.rv-premium-page .result-panel,
+  body.rv-renovation-tool .result-panel,
+  body.rv-mortgage-tool .result-panel {
+    border-radius: 24px;
+  }
+
+  body.rv-tool-page .tool-stage > .result-panel,
+  body.rv-premium-page .tool-stage > .result-panel,
+  body.rv-renovation-tool .tool-stage > .result-panel,
+  body.rv-mortgage-tool .tool-stage > .result-panel,
+  body.rv-premium-page .stage > .result-panel,
+  body.rv-household-budget-page .rv-budget-tool-grid > .rv-budget-result-card {
+    order: -1;
+    position: static;
+  }
+
+  body.rv-tool-page .tool-stage > .calculator-card,
+  body.rv-premium-page .tool-stage > .calculator-card,
+  body.rv-renovation-tool .tool-stage > .calculator-card,
+  body.rv-mortgage-tool .tool-stage > .calculator-card,
+  body.rv-premium-page .stage > .calculator-card,
+  body.rv-household-budget-page .rv-budget-tool-grid > .rv-budget-form {
+    order: 1;
+  }
+
+  body.rv-premium-page .stage,
+  body.rv-premium-page .tool-layout,
+  body.rv-household-budget-page .rv-budget-tool-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  body.rv-premium-page .tool-layout > .result-panel {
+    order: -1;
+    position: static;
+  }
+
+  body.rv-premium-page .tool-layout > .tool-card {
+    order: 1;
+  }
+}
+
+@media (max-width: 430px) {
+  body.rv-tool-page .hero-copy,
+  body.rv-premium-page .hero-copy,
+  body.rv-renovation-tool .hero-copy,
+  body.rv-mortgage-tool .hero-copy {
+    padding: 18px;
+  }
+
+  body.rv-tool-page .hero-visual,
+  body.rv-premium-page .hero-visual,
+  body.rv-renovation-tool .hero-visual,
+  body.rv-mortgage-tool .hero-visual {
+    max-height: 390px;
+    padding: 14px;
+  }
+
+  body.rv-tool-page .rv-hero-metrics,
+  body.rv-premium-page .rv-hero-metrics,
+  body.rv-renovation-tool .rv-hero-metrics,
+  body.rv-mortgage-tool .rv-hero-metrics,
+  body.rv-tool-page .hero-mini-strip,
+  body.rv-premium-page .hero-mini-strip,
+  body.rv-renovation-tool .hero-mini-strip,
+  body.rv-mortgage-tool .hero-mini-strip {
+    grid-template-columns: 1fr;
+  }
+}
