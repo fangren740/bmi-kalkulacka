@@ -4,7 +4,42 @@
   const fmt = (value, digits = 0) => new Intl.NumberFormat('cs-CZ', { style:'currency', currency:'CZK', maximumFractionDigits:digits }).format(Number.isFinite(value) ? value : 0);
   const num = (value, digits = 0) => new Intl.NumberFormat('cs-CZ', { maximumFractionDigits:digits }).format(Number.isFinite(value) ? value : 0);
   const set = (id, value) => { const el = $(id); if (el) el.textContent = value; };
+  const heroSet = (selector, value) => { const el = document.querySelector(selector); if (el) el.textContent = value; };
+  const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
   const fields = ['carPrice','downPayment','interestRate','years','monthlyFee','insuranceMonthly','incomeShare','balloonPayment'];
+
+  function ensureNextActions() {
+    if (document.querySelector('.rv-next-actions')) return;
+    const note = document.querySelector('.rv-result-note');
+    if (!note) return;
+    note.insertAdjacentHTML('afterend', `
+      <div class="rv-next-actions" aria-label="Co spočítat dál">
+        <strong>Co spočítat dál</strong>
+        <div class="rv-next-actions__grid">
+          <a href="/naklady-na-provoz-auta-kalkulacka.html">Přidat palivo, servis a pojištění</a>
+          <a href="/cena-za-km-kalkulacka.html">Přepočítat auto na cenu za km</a>
+          <a href="/amortizace-auta-kalkulacka.html">Zohlednit ztrátu hodnoty auta</a>
+        </div>
+      </div>
+    `);
+  }
+
+  function updateHero(v, r) {
+    heroSet('.rv-hero-number', fmt(r.monthlyWithFees || r.monthlyPayment));
+    document.querySelectorAll('.rv-hero-metrics b').forEach((el, index) => {
+      const values = [fmt(v.carPrice), fmt(v.downPayment), `${num(v.years)} let`];
+      el.textContent = values[index] || el.textContent;
+    });
+    const bars = document.querySelectorAll('.rv-fuel-meter b');
+    const labels = document.querySelectorAll('.rv-fuel-meter strong');
+    const financedShare = v.carPrice > 0 ? (r.loanAmount / v.carPrice) * 100 : 0;
+    const incomeLoad = r.neededIncome > 0 ? (r.monthlyWithFees / r.neededIncome) * 100 : 0;
+    if (bars[0]) bars[0].style.width = `${clamp(financedShare, 8, 100)}%`;
+    if (labels[0]) labels[0].textContent = `${Math.round(clamp(financedShare, 0, 100))} %`;
+    if (bars[1]) bars[1].style.width = `${clamp(incomeLoad, 8, 100)}%`;
+    if (labels[1]) labels[1].textContent = `${Math.round(clamp(incomeLoad, 0, 100))} %`;
+  }
+
   function values(){ return Object.fromEntries(fields.map((id) => [id, Number($(id).value)])); }
   function calc(v){
     const loanAmount = v.carPrice - v.downPayment;
@@ -47,11 +82,23 @@
   }
   function run(){
     const v = values();
-    if (!v.carPrice || v.downPayment >= v.carPrice || !v.years || v.balloonPayment >= (v.carPrice - v.downPayment)) { set('monthlyPayment','0 Kč'); set('resultNote','Zkontrolujte cenu auta, akontaci a závěrečný doplatek.'); return; }
+    if (!v.carPrice || v.downPayment >= v.carPrice || !v.years || v.balloonPayment >= (v.carPrice - v.downPayment)) {
+      set('monthlyPayment','0 Kč');
+      set('monthlyWithFees','0 Kč');
+      set('totalPaid','0 Kč');
+      set('totalOverpayment','0 Kč');
+      set('neededIncome','0 Kč');
+      set('financingBadge','Zkontrolujte zadání');
+      set('resultNote','Zkontrolujte cenu auta, akontaci a závěrečný doplatek. Doplatek nesmí být vyšší než financovaná částka.');
+      const body = $('scheduleBody');
+      if (body) body.innerHTML = '';
+      return;
+    }
     const r = calc(v);
     set('monthlyPayment', fmt(r.monthlyPayment)); set('monthlyWithFees', fmt(r.monthlyWithFees)); set('totalPaid', fmt(r.totalPaid)); set('totalOverpayment', fmt(r.totalOverpayment)); set('neededIncome', fmt(r.neededIncome));
     set('summaryLoanAmount', fmt(r.loanAmount)); set('summaryDownPaymentPercent', `${num(r.downPaymentPercent,1)} %`); set('summaryInstallments', `${r.months}`); set('summaryBalloon', fmt(v.balloonPayment));
-    const d = decision(v,r); set('financingBadge', d[0]); set('budgetStatus', d[0]); set('budgetText', d[1]); set('actionStatus', d[2]); set('decisionSummary', `Splátka včetně poplatků vychází na ${fmt(r.monthlyWithFees)} měsíčně.`); set('nextActionText', 'Po splátce vždy dopočítejte palivo, servis, pojištění a ztrátu hodnoty auta.'); set('resultNote', 'Výpočet je orientační a nezahrnuje všechny smluvní podmínky konkrétní nabídky.');
+    const d = decision(v,r); set('financingBadge', d[0]); set('budgetStatus', d[0]); set('budgetText', d[1]); set('actionStatus', d[2]); set('decisionSummary', `Splátka včetně poplatků vychází na ${fmt(r.monthlyWithFees)} měsíčně. Při zvoleném limitu by měla odpovídat čistému příjmu zhruba ${fmt(r.neededIncome)}.`); set('nextActionText', 'Po splátce vždy dopočítejte palivo, servis, pojištění a ztrátu hodnoty auta. Až součet projde rozpočtem, porovnejte konkrétní nabídky podle RPSN a smluvních podmínek.'); set('resultNote', 'Výpočet je orientační a nezahrnuje všechny smluvní podmínky konkrétní nabídky.');
+    updateHero(v, r);
     schedule(v,r);
   }
   function preset(name){
@@ -64,5 +111,6 @@
   fields.forEach((id) => { $(id).addEventListener('input', run); $(id).addEventListener('change', run); });
   document.querySelectorAll('.scenario-chip').forEach((btn) => btn.addEventListener('click', () => preset(btn.dataset.preset)));
   $('resetBtn').addEventListener('click', () => preset('standard'));
+  ensureNextActions();
   run();
 })();
