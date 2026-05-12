@@ -13,6 +13,42 @@
     `${new Intl.NumberFormat("cs-CZ", { maximumFractionDigits: 1 }).format(
       Number.isFinite(value) ? value : 0
     )} %`;
+  const moneyFine = (value) =>
+    new Intl.NumberFormat("cs-CZ", {
+      style: "currency",
+      currency: "CZK",
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 2
+    }).format(Number.isFinite(value) ? value : 0);
+
+  function ensureNextActions() {
+    const summary = document.querySelector(".result-panel .rv-output-summary");
+    if (!summary || document.querySelector(".rv-business-next-actions")) return;
+    summary.insertAdjacentHTML(
+      "afterend",
+      `<div class="rv-business-next-actions" aria-label="Co spočítat dál">
+        <strong>Co spočítat dál</strong>
+        <a href="kalkulacka-marze-a-prirazky.html">Ověřit marži a přirážku</a>
+        <a href="bod-zvratu-kalkulacka.html">Spočítat bod zvratu</a>
+        <a href="dph-kalkulacka.html">Zkontrolovat cenu s DPH</a>
+      </div>`
+    );
+  }
+
+  function updateHero(v, r) {
+    const number = document.querySelector(".hero-visual .reno-number");
+    if (number) number.textContent = moneyFine(r.minPriceNet);
+    const sub = document.querySelector(".hero-visual .reno-sub");
+    if (sub) {
+      sub.textContent = r.priceDifference < 0
+        ? "Aktuální cena je pod minimem, zadaný model nepokrývá cíl."
+        : "Cena pokrývá náklady, provizi i požadovanou marži.";
+    }
+    document.querySelectorAll(".hero-visual .reno-metrics b").forEach((element, index) => {
+      const valuesForHero = [moneyFine(r.totalCosts), moneyFine(r.commissionAmount), moneyFine(r.minPriceGross)];
+      element.textContent = valuesForHero[index] || element.textContent;
+    });
+  }
 
   function values() {
     return {
@@ -48,15 +84,15 @@
   function render() {
     const v = values();
     const r = calculate(v);
-    $("minPriceNet").textContent = money(r.minPriceNet);
-    $("minPriceGross").textContent = money(r.minPriceGross);
-    $("marginAmount").textContent = money(r.marginAmount);
-    $("priceDifference").textContent = money(r.priceDifference);
-    $("totalCosts").textContent = money(r.totalCosts);
-    $("commissionAmount").textContent = money(r.commissionAmount);
-    $("vatAmount").textContent = money(r.vatAmount);
-    $("currentPriceResult").textContent = money(v.currentPrice);
-    $("currentPriceGrossResult").textContent = money(r.currentPriceGross);
+    $("minPriceNet").textContent = moneyFine(r.minPriceNet);
+    $("minPriceGross").textContent = moneyFine(r.minPriceGross);
+    $("marginAmount").textContent = moneyFine(r.marginAmount);
+    $("priceDifference").textContent = moneyFine(r.priceDifference);
+    $("totalCosts").textContent = moneyFine(r.totalCosts);
+    $("commissionAmount").textContent = moneyFine(r.commissionAmount);
+    $("vatAmount").textContent = moneyFine(r.vatAmount);
+    $("currentPriceResult").textContent = moneyFine(v.currentPrice);
+    $("currentPriceGrossResult").textContent = moneyFine(r.currentPriceGross);
     $("actualMarginResult").textContent = pct(r.actualMargin);
     const below = v.currentPrice > 0 && v.currentPrice < r.minPriceNet;
     const tight = v.currentPrice > 0 && v.currentPrice < r.minPriceNet * 1.1;
@@ -72,22 +108,32 @@
         : "Cena vypadá udržitelně";
     $("decisionText").textContent = `Minimální cena bez DPH vychází ${money(
       r.minPriceNet
-    )}. Aktuální cena je proti ní ${money(r.priceDifference)}.`;
+    )}. Aktuální cena je proti ní ${moneyFine(r.priceDifference)}. ${
+      below
+        ? "To znamená, že pro zadané náklady, provizi a marži je cena příliš nízko."
+        : tight
+          ? "Rezerva je malá, takže sleva nebo růst nákladů může rychle smazat marži."
+          : "Cena má nad spodní hranicí prostor na běžné výkyvy a obchodní slevy."
+    }`;
     $("nextStepText").textContent = below
       ? "Další krok: upravte cenu, provizi nebo náklady, jinak obchod nepokryje zadaný cíl."
-      : "Další krok: ověřte marži v kalkulačce marže a dopad objemu prodeje v bodu zvratu.";
+      : tight
+        ? "Další krok: ověřte, kolik slevy si ještě můžete dovolit, a spočítejte bod zvratu."
+        : "Další krok: ověřte marži v kalkulačce marže a dopad objemu prodeje v bodu zvratu.";
     $("interpretationNote").textContent = $("decisionText").textContent;
     $("summaryTableBody").innerHTML = [
-      ["Celkové náklady na kus", money(r.totalCosts), "součet nákladů bez provize"],
-      ["Provize", money(r.commissionAmount), "proměnlivý poplatek z ceny"],
-      ["Cílová marže", money(r.marginAmount), "rezerva nad náklady"],
-      ["Minimální cena bez DPH", money(r.minPriceNet), "dolní hranice ceny"],
-      ["Minimální cena s DPH", money(r.minPriceGross), "orientační koncová cena"]
+      ["Celkové náklady na kus", moneyFine(r.totalCosts), "součet nákladů bez provize"],
+      ["Provize", moneyFine(r.commissionAmount), "proměnlivý poplatek z ceny"],
+      ["Cílová marže", moneyFine(r.marginAmount), "rezerva nad náklady"],
+      ["Minimální cena bez DPH", moneyFine(r.minPriceNet), "dolní hranice ceny"],
+      ["Minimální cena s DPH", moneyFine(r.minPriceGross), "orientační koncová cena"]
     ]
       .map((row) => `<tr><td>${row[0]}</td><td>${row[1]}</td><td>${row[2]}</td></tr>`)
       .join("");
+    updateHero(v, r);
   }
 
+  ensureNextActions();
   form.addEventListener("submit", (event) => {
     event.preventDefault();
     render();

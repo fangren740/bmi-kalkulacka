@@ -3,6 +3,11 @@
   const fmt = new Intl.NumberFormat('cs-CZ',{maximumFractionDigits:0});
   const money = (v) => `${fmt.format(Math.round(v))} Kč`;
   const num = (id) => Math.max(0, Number($(id)?.value || 0));
+  function ensureResultActions(){
+    const next = document.querySelector('.rv-installment-next');
+    if(!next || document.querySelector('.rv-installment-result-actions')) return;
+    next.insertAdjacentHTML('afterend', '<div class="rv-installment-result-actions" aria-label="Co spočítat dál"><strong>Co spočítat dál</strong><a href="kalkulacka-rozpoctu-domacnosti.html">Ověřit celý domácí rozpočet</a><a href="kalkulacka-financni-rezervy.html">Spočítat finanční rezervu</a><a href="leasing-kalkulacka.html">Porovnat leasing auta</a></div>');
+  }
   function calculate(){
     const income=num('income'), expenses=num('expenses'), existing=num('existingPayments'), planned=num('plannedPayment'), savings=num('savings');
     const people=Math.max(1,num('people'));
@@ -22,9 +27,9 @@
     const totalPayments = existing + planned;
     const debtRatio = income > 0 ? totalPayments / income * 100 : 0;
     const leftAfter = income - expenses - totalPayments;
-    let status='safe', title='Splátka vypadá bezpečně', meter='bezpečná zóna', text='Po nové splátce vám zůstává rozumný prostor v rozpočtu a celkové zatížení příjmu je přijatelné.', next='Porovnejte splátku s celým rozpočtem domácnosti a ponechte si rezervu i na nečekané výdaje.';
-    if(planned > border || leftAfter < baseLivingBuffer*0.45 || debtRatio > 45){status='risk';title='Splátka je riziková';meter='riziková zóna';text='Plánovaná splátka výrazně zatěžuje rozpočet. Po zaplacení výdajů a závazků zůstává málo prostoru, nebo je podíl splátek na příjmu příliš vysoký.';next='Zvažte nižší částku, delší splatnost, vyšší vlastní zdroje nebo odložení nákupu. Nejdřív zkontrolujte rozpočet a rezervu.'}
-    else if(planned > safe || leftAfter < baseLivingBuffer || debtRatio > 32){status='border';title='Splátka je na hraně';meter='hraniční zóna';text='Splátka může být zvládnutelná, ale rozpočet už nemá velký prostor na výpadky, opravy nebo růst cen.';next='Před podpisem si projděte rozpočet domácnosti a ověřte, že máte finanční rezervu alespoň na několik měsíců výdajů.'}
+    let status='safe', title='Splátka vypadá bezpečně', meter='bezpečná zóna', text='Po nové splátce vám zůstává rozumný prostor v rozpočtu a celkové zatížení příjmu je přijatelné. Bezpečný limit ale není cíl, spíš horní vodítko pro rozhodování.', next='Porovnejte splátku s celým rozpočtem domácnosti a ponechte si rezervu i na nečekané výdaje.';
+    if(planned > border || leftAfter < baseLivingBuffer*0.45 || debtRatio > 45){status='risk';title='Splátka je riziková';meter='riziková zóna';text='Plánovaná splátka výrazně zatěžuje rozpočet. Po zaplacení výdajů a závazků zůstává málo prostoru, nebo je podíl splátek na příjmu příliš vysoký. Tady už nejde jen o schválení, ale o odolnost rozpočtu.';next='Zvažte nižší částku, delší splatnost, vyšší vlastní zdroje nebo odložení nákupu. Nejdřív zkontrolujte rozpočet a rezervu.'}
+    else if(planned > safe || leftAfter < baseLivingBuffer || debtRatio > 32){status='border';title='Splátka je na hraně';meter='hraniční zóna';text='Splátka může být zvládnutelná, ale rozpočet už nemá velký prostor na výpadky, opravy nebo růst cen. Hraniční výsledek dává smysl jen se stabilním příjmem a rezervou.';next='Před podpisem si projděte rozpočet domácnosti a ověřte, že máte finanční rezervu alespoň na několik měsíců výdajů.'}
     if($( 'safePayment')) $('safePayment').textContent=money(safe);
     if($( 'borderPayment')) $('borderPayment').textContent=money(border);
     if($( 'leftAfter')) $('leftAfter').textContent=money(leftAfter);
@@ -40,9 +45,14 @@
     if($('heroDebtRatio')) $('heroDebtRatio').textContent=`${debtRatio.toFixed(0)} %`;
     if($('heroLeftAfter')) $('heroLeftAfter').textContent=money(leftAfter);
     if($('heroReserveMonths')) $('heroReserveMonths').textContent=`${reserveMonths.toFixed(1).replace('.',',')} měs.`;
+    const bars = document.querySelectorAll('.rv-installment-bars div');
+    if(bars[0]) bars[0].style.setProperty('--w', `${Math.max(8, Math.min(100, (safe / Math.max(1, border)) * 58))}%`);
+    if(bars[1]) bars[1].style.setProperty('--w', `${Math.max(12, Math.min(100, (planned / Math.max(1, border)) * 78))}%`);
+    if(bars[2]) bars[2].style.setProperty('--w', `${Math.max(22, Math.min(100, debtRatio * 2.1))}%`);
     const result=$('vysledek'); if(result){result.dataset.status=status;}
   }
   ['income','expenses','existingPayments','plannedPayment','savings','people','stability','paymentType'].forEach(id=>{const el=$(id); if(el){el.addEventListener('input',calculate);el.addEventListener('change',calculate);}});
   $('calculateInstallment')?.addEventListener('click',calculate);
+  ensureResultActions();
   calculate();
 })();
