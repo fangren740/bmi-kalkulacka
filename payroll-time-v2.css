@@ -1,5 +1,10 @@
 @import url("date-v2.css");
 
+body.rv-shift-bonus-page .site-header {
+  position: static !important;
+  top: auto !important;
+}
+
 body.rv-payroll-time-tool .hero-visual {
   background:
     radial-gradient(circle at 18% 16%, rgba(29, 216, 139, .22), transparent 28%),
@@ -20,6 +25,27 @@ body.rv-payroll-time-tool .payroll-dashboard {
   color: #fff;
 }
 
+body.rv-payroll-time-tool .payroll-dashboard-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+body.rv-payroll-time-tool .payroll-dashboard-head b {
+  min-width: 0;
+  max-width: 52%;
+  padding: 8px 11px;
+  border: 1px solid rgba(255, 255, 255, .18);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .1);
+  color: #fff;
+  font-size: 13px;
+  line-height: 1.15;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
 body.rv-payroll-time-tool .payroll-dashboard > span,
 body.rv-payroll-time-tool .payroll-mini-card span,
 body.rv-payroll-time-tool .payroll-breakdown span {
@@ -31,10 +57,12 @@ body.rv-payroll-time-tool .payroll-breakdown span {
 }
 
 body.rv-payroll-time-tool .payroll-number {
-  font-size: clamp(44px, 7vw, 78px);
+  max-width: 100%;
+  font-size: clamp(38px, 6vw, 72px);
   line-height: .95;
   font-weight: 950;
   letter-spacing: -.06em;
+  overflow-wrap: anywhere;
 }
 
 body.rv-payroll-time-tool .payroll-sub {
@@ -60,8 +88,10 @@ body.rv-payroll-time-tool .payroll-metrics b {
   display: block;
   margin-top: 5px;
   color: #fff;
-  font-size: 17px;
+  font-size: clamp(15px, 2.2vw, 17px);
   font-weight: 950;
+  line-height: 1.12;
+  overflow-wrap: anywhere;
 }
 
 body.rv-payroll-time-tool .payroll-breakdown {
@@ -105,6 +135,48 @@ body.rv-payroll-time-tool .payroll-mini-card strong {
   margin-top: 6px;
   font-size: 22px;
   letter-spacing: -.03em;
+  line-height: 1.12;
+  overflow-wrap: anywhere;
+}
+
+body.rv-payroll-time-tool .shift-rail {
+  display: grid;
+  gap: 12px;
+  padding: 15px;
+  border: 1px solid rgba(255, 255, 255, .14);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, .08);
+}
+
+body.rv-payroll-time-tool .shift-rail-row {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr);
+  align-items: center;
+  gap: 11px;
+}
+
+body.rv-payroll-time-tool .shift-rail-row span {
+  color: rgba(226, 240, 255, .82);
+  font-size: 12px;
+  font-weight: 900;
+  line-height: 1.2;
+}
+
+body.rv-payroll-time-tool .shift-rail-row i {
+  display: block;
+  height: 12px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .16);
+}
+
+body.rv-payroll-time-tool .shift-rail-row b {
+  display: block;
+  height: 100%;
+  width: 0;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #1dd88b, #93c5fd, #fbbf24);
+  transition: width .2s ease;
 }
 
 body.rv-payroll-time-tool .preset-row {
@@ -173,15 +245,60 @@ body.rv-payroll-time-tool .rv-output-summary strong {
   color: #071832;
 }
 
+body.rv-payroll-time-tool .shift-decision {
+  margin-top: 14px;
+  padding: 16px;
+  border: 1px solid rgba(29, 216, 139, .28);
+  border-radius: 20px;
+  background: #f3fff8;
+  color: #12382d;
+  font-weight: 850;
+  line-height: 1.55;
+}
+
+body.rv-payroll-time-tool .result-metrics strong,
+body.rv-payroll-time-tool .primary-result strong {
+  overflow-wrap: anywhere;
+}
+
 @media (max-width: 680px) {
   body.rv-payroll-time-tool .payroll-metrics,
   body.rv-payroll-time-tool .time-pair {
     grid-template-columns: 1fr;
   }
 
+  body.rv-payroll-time-tool .payroll-dashboard {
+    padding: 18px;
+    border-radius: 26px;
+  }
+
+  body.rv-payroll-time-tool .payroll-dashboard-head {
+    display: grid;
+  }
+
+  body.rv-payroll-time-tool .payroll-dashboard-head b {
+    max-width: 100%;
+    text-align: left;
+  }
+
+  body.rv-payroll-time-tool .shift-rail-row {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
   body.rv-payroll-time-tool .payroll-mini-card {
     position: static;
     width: auto;
     margin-top: 14px;
+  }
+}
+
+@media (max-width: 760px) {
+  body.rv-shift-bonus-page .tool-stage > .calculator-card {
+    order: 1 !important;
+  }
+
+  body.rv-shift-bonus-page .tool-stage > .result-panel {
+    order: 2 !important;
   }
 }
