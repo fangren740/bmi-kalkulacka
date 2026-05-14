@@ -46,7 +46,7 @@
   </script>
   <link rel="stylesheet" href="rv-tool-v2.css" />
   <link rel="stylesheet" href="rv-premium-v6.css" />
-  <link rel="stylesheet" href="mortgage-v2.css" />
+  <link rel="stylesheet" href="mortgage-v2.css?v=2" />
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7745758285259522" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="rv-top20-mobile-quality.css">
 </head>
@@ -73,7 +73,7 @@
             <h1 id="hero-title">Hypoteční kalkulačka, která neukáže jen splátku.</h1>
             <p class="lead">Spočítejte měsíční splátku hypotéky, LTV, vlastní zdroje, celkové úroky a potřebný čistý příjem. Výsledek rovnou přeložíme do rozhodnutí: bezpečné, hraniční, nebo rizikové pro běžný rozpočet domácnosti.</p>
             <div class="hero-actions"><a class="btn btn-primary" href="#kalkulacka">Spočítat hypotéku</a><a class="btn btn-secondary" href="#rozhodnuti">Vyhodnotit riziko</a></div>
-            <ul class="hero-pills" aria-label="Hlavní výstupy"><li>Splátka</li><li>LTV</li><li>Vlastní zdroje</li><li>Potřebný příjem</li><li>Stress test +1 p. b.</li></ul>
+            <ul class="hero-pills" aria-label="Hlavní výstupy"><li>Splátka</li><li>LTV</li><li>Vlastní zdroje</li><li>Podíl na příjmu</li><li>Stress test +2 p. b.</li></ul>
             <div class="hero-trust-strip" aria-label="Důvěryhodnost výpočtu"><span>Bez registrace</span><span>Orientační metodika</span><span>Bez odesílání dat</span></div>
           </div>
           <aside class="hero-visual" aria-label="Produktový náhled hypotečního dashboardu">
@@ -119,7 +119,7 @@
               <div class="field"><label for="loanAmount">Výše hypotéky</label><div class="input-wrap"><input id="loanAmount" inputmode="decimal" min="100000" step="10000" type="number" value="4000000" required><span class="unit">Kč</span></div><small>Částka, kterou si chcete půjčit.</small></div>
               <div class="field"><label for="interestRate">Roční úroková sazba</label><div class="input-wrap"><input id="interestRate" inputmode="decimal" min="0" max="25" step="0.01" type="number" value="4.89" required><span class="unit">%</span></div><small>Orientační nominální sazba.</small></div>
               <div class="field"><label for="years">Doba splácení</label><div class="input-wrap"><input id="years" inputmode="numeric" min="1" max="40" step="1" type="number" value="30" required><span class="unit">let</span></div><small>Delší splatnost snižuje splátku, ale zvyšuje úroky.</small></div>
-              <details class="advanced" open><summary>Pokročilé nastavení rozpočtu</summary><div class="advanced-body form-grid"><div class="field"><label for="monthlyFee">Měsíční poplatky</label><div class="input-wrap"><input id="monthlyFee" inputmode="decimal" min="0" step="10" type="number" value="0"><span class="unit">Kč</span></div><small>Volitelné poplatky k hypotéce.</small></div><div class="field"><label for="incomeShare">Max. podíl splátky na příjmu</label><div class="input-wrap"><input id="incomeShare" inputmode="decimal" min="10" max="80" step="1" type="number" value="40"><span class="unit">%</span></div><small>Pro orientační výpočet potřebného čistého příjmu.</small></div></div></details>
+              <details class="advanced" open><summary>Pokročilé nastavení rozpočtu</summary><div class="advanced-body form-grid"><div class="field"><label for="monthlyFee">Měsíční poplatky</label><div class="input-wrap"><input id="monthlyFee" inputmode="decimal" min="0" step="10" type="number" value="0"><span class="unit">Kč</span></div><small>Volitelné poplatky k hypotéce.</small></div><div class="field"><label for="incomeShare">Max. podíl splátky na příjmu</label><div class="input-wrap"><input id="incomeShare" inputmode="decimal" min="10" max="80" step="1" type="number" value="40"><span class="unit">%</span></div><small>Pro orientační výpočet potřebného čistého příjmu.</small></div><div class="field"><label for="monthlyIncome">Čistý příjem domácnosti</label><div class="input-wrap"><input id="monthlyIncome" inputmode="decimal" min="0" step="1000" type="number" value="70000"><span class="unit">Kč</span></div><small>Pomůže vyhodnotit, jestli splátka netlačí rozpočet příliš vysoko.</small></div></div></details>
             </div>
             <div class="actions"><button class="btn btn-primary" type="submit" data-analytics-event="mortgage_calculate">Přepočítat scénář</button><button class="btn btn-secondary" id="resetBtn" type="button">Obnovit hodnoty</button></div>
             <div class="error-box" id="errorBox" role="alert"></div>
@@ -131,6 +131,12 @@
           <div class="result-eyebrow"><p class="section-kicker" style="margin:0">Výsledek</p><span class="live-badge">počítá se automaticky</span></div>
           <div class="primary-result"><span id="result-title">Měsíční splátka</span><strong id="monthlyPayment">0 Kč</strong><p>Včetně poplatků: <b id="monthlyWithFees">0 Kč</b>. Potřebný čistý příjem: <b id="neededIncomeInline">0 Kč</b>.</p></div>
           <div class="metric-grid"><div class="metric"><span>LTV</span><strong id="ltvValue">0 %</strong></div><div class="metric"><span>Vlastní zdroje</span><strong id="ownFunds">0 Kč</strong></div><div class="metric"><span>Celkem zaplaceno</span><strong id="totalPaid">0 Kč</strong></div><div class="metric"><span>Úroky + poplatky</span><strong id="totalInterest">0 Kč</strong></div></div>
+          <div class="mortgage-stress-grid" aria-label="Rozhodovací metriky hypotéky">
+            <div><span>Ročně splátek</span><strong id="annualPaymentResult">0 Kč</strong></div>
+            <div><span>Sazba +2 p. b.</span><strong id="stressPaymentResult">0 Kč</strong></div>
+            <div><span>Úvěr -10 %</span><strong id="lowerLoanPaymentResult">0 Kč</strong></div>
+            <div><span>Podíl na příjmu</span><strong id="incomeBurdenResult">0 %</strong></div>
+          </div>
           <div class="insight-box"><span class="decision-status warning" id="affordabilityStatus">Na hraně rozpočtu</span><h3>Co výsledek znamená</h3><p id="affordabilityText">Vyhodnocení se počítá z aktuálně zadaných hodnot.</p></div>
           <div class="result-cta"><a class="btn btn-primary" href="#rozhodnuti">Ukázat rozhodnutí</a><a class="btn btn-secondary" id="primaryNextCta" href="kalkulacka-vlastnich-zdroju-na-koupi-nemovitosti.html">Spočítat vlastní zdroje</a></div>
         </aside>
@@ -313,7 +319,7 @@
     </div>
   </footer>
   <script src="rv-tool-core.js" defer></script>
-  <script src="mortgage.js" defer></script>
+  <script src="mortgage.js?v=2" defer></script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Jak se počítá splátka hypotéky?","acceptedAnswer":{"@type":"Answer","text":"Splátka se počítá podle výše úvěru, roční úrokové sazby a doby splácení. Při anuitním splácení je měsíční splátka po dobu fixace stejná, ale mění se podíl úroku a jistiny."}},{"@type":"Question","name":"Co znamená LTV u hypotéky?","acceptedAnswer":{"@type":"Answer","text":"LTV je poměr výše hypotéky k hodnotě nemovitosti. Například úvěr 4 miliony Kč na nemovitost za 5 milionů Kč znamená LTV 80 %."}},{"@type":"Question","name":"Kolik musím vydělávat na hypotéku?","acceptedAnswer":{"@type":"Answer","text":"Záleží na splátce, výdajích domácnosti a dalších závazcích. Kalkulačka ukazuje orientační potřebný čistý příjem podle zvoleného podílu splátky na příjmu."}},{"@type":"Question","name":"Jak velkou rezervu mít po koupi?","acceptedAnswer":{"@type":"Answer","text":"Prakticky dává smysl, aby po zaplacení akontace a vedlejších nákladů zůstala rezerva alespoň na několik měsíců běžných výdajů domácnosti. Čím méně stabilní příjem, tím opatrnější scénář."}},{"@type":"Question","name":"Proč testovat vyšší úrokovou sazbu?","acceptedAnswer":{"@type":"Answer","text":"Sazba po skončení fixace může být jiná než dnešní sazba. Test vyšší sazby ukáže, jestli domácnost zvládne hypotéku i při méně příznivých podmínkách."}},{"@type":"Question","name":"Je výpočet závazná nabídka banky?","acceptedAnswer":{"@type":"Answer","text":"Ne. Výpočet je orientační. Reálná nabídka závisí na příjmu, závazcích, fixaci sazby, odhadu nemovitosti a podmínkách konkrétní banky."}}]}</script>
 </body>
 </html>
