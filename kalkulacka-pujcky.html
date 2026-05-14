@@ -21,7 +21,7 @@
   <meta name="twitter:description" content="Spočítejte splátku půjčky, úroky, poplatky a celkové přeplacení." />
   <meta name="twitter:image" content="https://rychlevypocty.cz/og-image.jpg" />
   <link rel="stylesheet" href="rv-tool-v2.css" />
-  <link rel="stylesheet" href="pujcka-v2.css" />
+  <link rel="stylesheet" href="pujcka-v2.css?v=2" />
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Jak se počítá splátka půjčky?","acceptedAnswer":{"@type":"Answer","text":"Splátka se počítá podle výše půjčky, roční sazby a doby splácení. Při běžném anuitním splácení je měsíční splátka v modelu stejná."}},{"@type":"Question","name":"Co je celkové přeplacení?","acceptedAnswer":{"@type":"Answer","text":"Celkové přeplacení je rozdíl mezi celkem zaplacenou částkou a původní výší půjčky. Orientačně ukazuje cenu úvěru za celé období."}},{"@type":"Question","name":"Je výsledek kalkulačky půjčky závazný?","acceptedAnswer":{"@type":"Answer","text":"Ne. Výsledek je orientační a nezahrnuje všechny možné poplatky, pojištění, změny sazeb nebo individuální podmínky poskytovatele."}}]}</script>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7745758285259522" crossorigin="anonymous"></script>
 </head>
@@ -171,6 +171,14 @@
 </span>
 <small>Volitelný poplatek připočtený ke každé splátce.</small>
 </label>
+<label class="input-group" for="upfrontFee">
+<span>Jednorázový poplatek</span>
+<span class="input-shell">
+<input id="upfrontFee" type="number" inputmode="decimal" min="0" step="100" value="0">
+<em>Kč</em>
+</span>
+<small>Například poplatek za sjednání, administraci nebo čerpání.</small>
+</label>
 <label class="input-group" for="incomeShare">
 <span>Max. podíl splátky na příjmu</span>
 <span class="input-shell">
@@ -178,6 +186,14 @@
 <em>%</em>
 </span>
 <small>Pro orientační výpočet potřebného čistého příjmu.</small>
+</label>
+<label class="input-group" for="monthlyIncome">
+<span>Čistý příjem domácnosti</span>
+<span class="input-shell">
+<input id="monthlyIncome" type="number" inputmode="decimal" min="0" step="1000" value="45000">
+<em>Kč</em>
+</span>
+<small>Pomůže vyhodnotit, zda splátka opravdu sedí do rozpočtu.</small>
 </label>
 </div>
 <div class="form-actions">
@@ -212,6 +228,16 @@
 <span>Splátka s poplatky</span>
 <strong id="monthlyWithFeesDetail">0 Kč</strong>
 </div>
+<div class="metric-card">
+<span>Podíl na příjmu</span>
+<strong id="incomeBurden">0 %</strong>
+</div>
+</div>
+<div class="loan-stress-grid" aria-label="Stres test půjčky">
+<div><span>Sazba +2 p. b.</span><strong id="stressRatePayment">0 Kč</strong><small>nová splátka</small></div>
+<div><span>Kratší o 2 roky</span><strong id="shorterTotalSaving">0 Kč</strong><small>rozdíl celkem</small></div>
+<div><span>Delší o 2 roky</span><strong id="longerTotalCost">0 Kč</strong><small>rozdíl celkem</small></div>
+<div><span>Poplatky celkem</span><strong id="feesTotal">0 Kč</strong><small>měsíční + jednorázové</small></div>
 </div>
 <div class="rv-result-note">
 <span class="decision-status caution" id="affordabilityStatus">Vyhodnocení</span>
@@ -408,7 +434,7 @@
 </footer>
   <script src="rv-tool-core.js" defer>
 </script>
-  <script src="pujcka.js" defer>
+  <script src="pujcka.js?v=2" defer>
 </script>
 </body>
 </html>

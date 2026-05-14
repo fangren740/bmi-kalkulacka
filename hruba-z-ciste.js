@@ -3,108 +3,207 @@
   if (!form) return;
 
   const $ = (id) => document.getElementById(id);
-  const TAX_RATE = 0.15;
-  const SOCIAL_EMPLOYEE_RATE = 0.071;
-  const HEALTH_EMPLOYEE_RATE = 0.045;
-  const SOCIAL_EMPLOYER_RATE = 0.248;
-  const HEALTH_EMPLOYER_RATE = 0.09;
-  const TAXPAYER_DISCOUNT = 2570;
-  const STUDENT_DISCOUNT = 335;
-  const CHILD_BONUSES = { 0: 0, 1: 1267, 2: 3131, 3: 5453 };
+  const CONFIG = {
+    socialEmployee: 0.071,
+    healthEmployee: 0.045,
+    socialEmployer: 0.248,
+    healthEmployer: 0.09,
+    taxBasic: 0.15,
+    taxHigh: 0.23,
+    highTaxThreshold: 146901,
+    taxpayerDiscount: 2570,
+    child1: 1267,
+    child2: 1860,
+    child3plus: 2320
+  };
 
-  function money(value) {
-    return new Intl.NumberFormat("cs-CZ", { style: "currency", currency: "CZK", maximumFractionDigits: 0 }).format(value);
+  const presets = {
+    standard: { netSalary: 35000, otherDeductions: 0, children: 0, taxpayerDiscount: true },
+    family: { netSalary: 43000, otherDeductions: 0, children: 2, taxpayerDiscount: true },
+    higher: { netSalary: 70000, otherDeductions: 0, children: 0, taxpayerDiscount: true },
+    manager: { netSalary: 130000, otherDeductions: 0, children: 0, taxpayerDiscount: true }
+  };
+
+  const round = (value) => Math.round(Number(value) || 0);
+  const roundUp = (value) => Math.ceil(Number(value) || 0);
+  const money = (value) => new Intl.NumberFormat("cs-CZ", { style: "currency", currency: "CZK", maximumFractionDigits: 0 }).format(round(value));
+  const pct = (value) => `${new Intl.NumberFormat("cs-CZ", { maximumFractionDigits: 1 }).format(value)} %`;
+
+  function childCredit(children) {
+    if (children <= 0) return 0;
+    if (children === 1) return CONFIG.child1;
+    if (children === 2) return CONFIG.child1 + CONFIG.child2;
+    return CONFIG.child1 + CONFIG.child2 + (children - 2) * CONFIG.child3plus;
   }
 
-  function round(value) {
-    return Math.round(value);
+  function taxBase(gross) {
+    if (gross <= 100) return roundUp(gross);
+    return Math.ceil(gross / 100) * 100;
   }
 
-  function forwardNetFromGross(grossSalary, children, taxpayer, student) {
-    const socialEmployee = round(grossSalary * SOCIAL_EMPLOYEE_RATE);
-    const healthEmployee = round(grossSalary * HEALTH_EMPLOYEE_RATE);
-    const taxBeforeDiscounts = round(grossSalary * TAX_RATE);
-    const totalDiscounts = (taxpayer ? TAXPAYER_DISCOUNT : 0) + (student ? STUDENT_DISCOUNT : 0) + CHILD_BONUSES[Math.min(children, 3)];
-    const taxAfterDiscounts = Math.max(0, taxBeforeDiscounts - totalDiscounts);
-    const netSalary = grossSalary - socialEmployee - healthEmployee - taxAfterDiscounts;
-    const socialEmployer = round(grossSalary * SOCIAL_EMPLOYER_RATE);
-    const healthEmployer = round(grossSalary * HEALTH_EMPLOYER_RATE);
+  function taxBeforeDiscounts(base) {
+    const basic = Math.min(base, CONFIG.highTaxThreshold);
+    const high = Math.max(0, base - CONFIG.highTaxThreshold);
+    return roundUp(basic * CONFIG.taxBasic + high * CONFIG.taxHigh);
+  }
+
+  function forward(grossSalary, input) {
+    const gross = Math.max(0, round(grossSalary));
+    const socialEmployee = roundUp(gross * CONFIG.socialEmployee);
+    const healthEmployee = roundUp(gross * CONFIG.healthEmployee);
+    const socialEmployer = roundUp(gross * CONFIG.socialEmployer);
+    const healthEmployer = roundUp(gross * CONFIG.healthEmployer);
+    const base = taxBase(gross);
+    const taxBefore = taxBeforeDiscounts(base);
+    const taxpayer = input.taxpayerDiscount ? CONFIG.taxpayerDiscount : 0;
+    const childrenCredit = childCredit(input.children);
+    const totalDiscounts = taxpayer + childrenCredit;
+    const taxAfterBasic = Math.max(0, taxBefore - taxpayer);
+    const taxAfterChildrenRaw = taxAfterBasic - childrenCredit;
+    const taxAfterDiscounts = Math.max(0, taxAfterChildrenRaw);
+    const taxBonus = Math.max(0, -taxAfterChildrenRaw);
+    const netBeforeOther = gross - socialEmployee - healthEmployee - taxAfterDiscounts + taxBonus;
+    const netAfterOther = Math.max(0, netBeforeOther - input.otherDeductions);
+    const employeeDeductions = socialEmployee + healthEmployee + taxAfterDiscounts + input.otherDeductions - taxBonus;
     return {
-      grossSalary,
-      netSalary,
+      grossSalary: gross,
+      taxBase: base,
+      netBeforeOther,
+      netAfterOther,
       socialEmployee,
       healthEmployee,
-      taxBeforeDiscounts,
+      taxBefore,
+      taxpayer,
+      childrenCredit,
       totalDiscounts,
       taxAfterDiscounts,
-      employeeDeductions: socialEmployee + healthEmployee + taxAfterDiscounts,
+      taxBonus,
+      otherDeductions: input.otherDeductions,
+      employeeDeductions,
       socialEmployer,
       healthEmployer,
-      totalCost: grossSalary + socialEmployer + healthEmployer
+      totalCost: gross + socialEmployer + healthEmployer,
+      highTaxBase: Math.max(0, base - CONFIG.highTaxThreshold)
     };
   }
 
-  function estimateGrossFromNet(targetNet, children, taxpayer, student) {
+  function readInput() {
+    return {
+      targetNet: Math.max(0, Number($("netSalary").value) || 0),
+      otherDeductions: Math.max(0, Number($("otherDeductions").value) || 0),
+      children: Math.max(0, Math.min(5, Math.round(Number($("children").value) || 0))),
+      taxpayerDiscount: $("taxpayerDiscount").checked
+    };
+  }
+
+  function estimate(input) {
     let low = 0;
-    let high = Math.max(targetNet * 2.2, 30000);
-    let result = forwardNetFromGross(high, children, taxpayer, student);
-    let safety = 0;
-    while (result.netSalary < targetNet && safety < 40) {
+    let high = Math.max((input.targetNet + input.otherDeductions) * 2.4, 30000);
+    let best = forward(high, input);
+    let guard = 0;
+    while (best.netAfterOther < input.targetNet && guard < 50) {
       high *= 1.5;
-      result = forwardNetFromGross(high, children, taxpayer, student);
-      safety++;
+      best = forward(high, input);
+      guard++;
     }
-    let best = result;
-    for (let i = 0; i < 60; i++) {
+    for (let i = 0; i < 70; i++) {
       const mid = Math.round((low + high) / 2);
-      const current = forwardNetFromGross(mid, children, taxpayer, student);
-      if (Math.abs(current.netSalary - targetNet) < Math.abs(best.netSalary - targetNet)) best = current;
-      if (current.netSalary < targetNet) low = mid + 1;
+      const current = forward(mid, input);
+      if (Math.abs(current.netAfterOther - input.targetNet) < Math.abs(best.netAfterOther - input.targetNet)) best = current;
+      if (current.netAfterOther < input.targetNet) low = mid + 1;
       else high = mid - 1;
     }
     return best;
   }
 
-  function renderTable(targetNet, data) {
-    $("summaryTableBody").innerHTML = [
-      ["Zadaná čistá mzda", money(targetNet), "Cílová částka po odvodech a dani"],
-      ["Hrubá mzda", money(data.grossSalary), "Orientačně dopočtený základ"],
-      ["Sociální pojištění", money(data.socialEmployee), "Odvod zaměstnance"],
-      ["Zdravotní pojištění", money(data.healthEmployee), "Odvod zaměstnance"],
-      ["Daň před slevami", money(data.taxBeforeDiscounts), "Základní daň"],
-      ["Slevy a zvýhodnění", money(data.totalDiscounts), "Poplatník, student, děti"],
-      ["Daň po slevách", money(data.taxAfterDiscounts), "Započtená orientační daň"],
-      ["Cena práce", money(data.totalCost), "Orientační náklad zaměstnavatele"]
-    ].map((row) => `<tr><td>${row[0]}</td><td>${row[1]}</td><td>${row[2]}</td></tr>`).join("");
+  function setText(id, value) {
+    const element = $(id);
+    if (element) element.textContent = value;
+  }
+
+  function bar(id, value, max) {
+    const element = $(id);
+    if (element) element.style.width = `${Math.max(8, Math.min(100, max ? value / max * 100 : 0))}%`;
+  }
+
+  function renderTable(input, data) {
+    const rows = [
+      ["Cílová čistá mzda na účet", money(input.targetNet), "Částka, kterou chcete dostat po odvodech a srážkách"],
+      ["Hrubá mzda", money(data.grossSalary), "Orientačně dopočtená smluvní hrubá mzda"],
+      ["Základ pro zálohu na daň", money(data.taxBase), "Hrubá mzda zaokrouhlená pro daňový výpočet"],
+      ["Sociální pojištění zaměstnance (7,1 %)", `− ${money(data.socialEmployee)}`, "Odvod zaměstnance"],
+      ["Zdravotní pojištění zaměstnance (4,5 %)", `− ${money(data.healthEmployee)}`, "Odvod zaměstnance"],
+      ["Daň před slevami (15 % / 23 %)", money(data.taxBefore), data.highTaxBase > 0 ? "Část mzdy spadá do 23% pásma" : "Základní daňové pásmo"],
+      ["Sleva na poplatníka", `− ${money(data.taxpayer)}`, "Základní měsíční sleva"],
+      ["Daňové zvýhodnění na děti", `− ${money(data.childrenCredit)}`, "Může vytvořit daňový bonus"],
+      ["Daň po slevách", `− ${money(data.taxAfterDiscounts)}`, "Reálně započtená daň"],
+      ["Daňový bonus", `+ ${money(data.taxBonus)}`, "Bonus z daňového zvýhodnění na děti"],
+      ["Jiné pravidelné srážky", `− ${money(data.otherDeductions)}`, "Srážky po výpočtu čisté mzdy"],
+      ["Čistá mzda podle modelu", money(data.netAfterOther), "Nejbližší dopočtená částka"],
+      ["Cena práce", money(data.totalCost), "Hrubá mzda plus odvody zaměstnavatele"]
+    ];
+    $("summaryTableBody").innerHTML = rows.map((row) => `<tr><td>${row[0]}</td><td>${row[1]}</td><td>${row[2]}</td></tr>`).join("");
+  }
+
+  function render(input, data) {
+    const diff = data.netAfterOther - input.targetNet;
+    const absDiff = Math.abs(diff);
+    const matchLabel = absDiff <= 20 ? "Velmi blízký odhad" : absDiff <= 100 ? "Blízký odhad" : "Orientační odhad";
+    const grossToNet = data.grossSalary > 0 ? data.netAfterOther / data.grossSalary * 100 : 0;
+
+    setText("grossSalaryResult", money(data.grossSalary));
+    setText("totalCostResult", money(data.totalCost));
+    setText("employeeDeductionsResult", money(Math.max(0, data.employeeDeductions)));
+    setText("taxResult", money(data.taxAfterDiscounts));
+    setText("netSalaryResult", money(data.netAfterOther));
+    setText("socialEmployeeResult", money(data.socialEmployee));
+    setText("healthEmployeeResult", money(data.healthEmployee));
+    setText("socialEmployerResult", money(data.socialEmployer));
+    setText("healthEmployerResult", money(data.healthEmployer));
+    setText("discountsResult", `${money(data.totalDiscounts)} / bonus ${money(data.taxBonus)}`);
+    setText("heroGross", money(data.grossSalary));
+    setText("heroNet", money(data.netAfterOther));
+    setText("heroCost", money(data.totalCost));
+    setText("heroDeductions", money(Math.max(0, data.employeeDeductions)));
+    setText("heroMatch", matchLabel.toLowerCase());
+
+    const badge = $("resultBadge");
+    badge.className = absDiff <= 50 ? "badge success" : "badge warning";
+    badge.textContent = matchLabel;
+
+    const note = [
+      `Cílové čisté mzdě ${money(input.targetNet)} odpovídá přibližně hrubá mzda ${money(data.grossSalary)}.`,
+      `Model dopočítal čistou mzdu ${money(data.netAfterOther)}, rozdíl proti cíli je ${money(absDiff)}.`,
+      input.children > 0 ? `Zahrnuto je daňové zvýhodnění na ${input.children} ${input.children === 1 ? "dítě" : "děti"}.` : "Bez daňového zvýhodnění na děti.",
+      data.highTaxBase > 0 ? `Část základu nad ${money(CONFIG.highTaxThreshold)} spadá do 23% pásma.` : "Výpočet zůstává v 15% daňovém pásmu.",
+      "Výsledek berte jako orientační model pro běžný zaměstnanecký scénář."
+    ];
+    setText("resultNote", note.join(" "));
+    setText("grossDecision", `Dopočtená hrubá mzda tvoří čistý podíl ${pct(grossToNet)}. Pro nabídku práce zkontrolujte nejen částku na účet, ale i cenu práce ${money(data.totalCost)} a případné nepravidelné složky mzdy.`);
+    setText("annualGrossResult", money(data.grossSalary * 12));
+    setText("annualCostResult", money(data.totalCost * 12));
+    setText("targetDiffResult", money(absDiff));
+    setText("taxBandSummary", data.highTaxBase > 0 ? "15 % + 23 %" : "15 %");
+
+    bar("heroNetBar", data.netAfterOther, data.totalCost);
+    bar("heroDeductionsBar", Math.max(0, data.employeeDeductions), data.totalCost);
+    bar("heroCostBar", data.totalCost, data.totalCost);
+    renderTable(input, data);
   }
 
   function run() {
-    const targetNet = Number($("netSalary").value) || 0;
-    const children = Number($("children").value) || 0;
-    const taxpayer = $("taxpayerDiscount").checked;
-    const student = $("studentDiscount").checked;
-    if (targetNet <= 0) return;
-    const data = estimateGrossFromNet(targetNet, children, taxpayer, student);
-    const diff = Math.abs(data.netSalary - targetNet);
-    $("grossSalaryResult").textContent = money(data.grossSalary);
-    $("totalCostResult").textContent = money(data.totalCost);
-    $("employeeDeductionsResult").textContent = money(data.employeeDeductions);
-    $("taxResult").textContent = money(data.taxAfterDiscounts);
-    $("netSalaryResult").textContent = money(targetNet);
-    $("socialEmployeeResult").textContent = money(data.socialEmployee);
-    $("healthEmployeeResult").textContent = money(data.healthEmployee);
-    $("socialEmployerResult").textContent = money(data.socialEmployer);
-    $("healthEmployerResult").textContent = money(data.healthEmployer);
-    $("discountsResult").textContent = money(data.totalDiscounts);
-    $("resultBadge").className = diff <= 50 ? "badge success" : "badge warning";
-    $("resultBadge").textContent = diff <= 50 ? "Velmi blízký odhad" : "Orientační odhad";
-    $("resultNote").textContent = `Zadané čisté mzdě ${money(targetNet)} odpovídá přibližně hrubá mzda ${money(data.grossSalary)}. Model počítá běžný zaměstnanecký scénář.`;
-    $("heroGross").textContent = money(data.grossSalary);
-    $("heroNet").textContent = money(targetNet);
-    $("heroCost").textContent = money(data.totalCost);
-    $("heroDeductions").textContent = money(data.employeeDeductions);
-    $("heroBar").style.width = `${Math.max(8, Math.min(100, data.employeeDeductions / Math.max(data.grossSalary, 1) * 100))}%`;
-    renderTable(targetNet, data);
+    const input = readInput();
+    if (input.targetNet <= 0) return;
+    render(input, estimate(input));
+  }
+
+  function applyPreset(name) {
+    const preset = presets[name] || presets.standard;
+    $("netSalary").value = preset.netSalary;
+    $("otherDeductions").value = preset.otherDeductions;
+    $("children").value = preset.children;
+    $("taxpayerDiscount").checked = preset.taxpayerDiscount;
+    run();
   }
 
   form.addEventListener("submit", (event) => {
@@ -112,18 +211,15 @@
     run();
   });
 
-  ["netSalary", "children", "taxpayerDiscount", "studentDiscount"].forEach((id) => {
+  ["netSalary", "otherDeductions", "children", "taxpayerDiscount"].forEach((id) => {
     $(id).addEventListener("input", run);
     $(id).addEventListener("change", run);
   });
 
-  $("resetBtn").addEventListener("click", () => {
-    $("netSalary").value = 35000;
-    $("children").value = 0;
-    $("taxpayerDiscount").checked = true;
-    $("studentDiscount").checked = false;
-    run();
+  document.querySelectorAll("[data-gross-preset]").forEach((button) => {
+    button.addEventListener("click", () => applyPreset(button.dataset.grossPreset));
   });
 
+  $("resetBtn").addEventListener("click", () => applyPreset("standard"));
   run();
 })();
