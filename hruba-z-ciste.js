@@ -171,15 +171,10 @@
     badge.className = absDiff <= 50 ? "badge success" : "badge warning";
     badge.textContent = matchLabel;
 
-    const note = [
-      `Cílové čisté mzdě ${money(input.targetNet)} odpovídá přibližně hrubá mzda ${money(data.grossSalary)}.`,
-      `Model dopočítal čistou mzdu ${money(data.netAfterOther)}, rozdíl proti cíli je ${money(absDiff)}.`,
-      input.children > 0 ? `Zahrnuto je daňové zvýhodnění na ${input.children} ${input.children === 1 ? "dítě" : "děti"}.` : "Bez daňového zvýhodnění na děti.",
-      data.highTaxBase > 0 ? `Část základu nad ${money(CONFIG.highTaxThreshold)} spadá do 23% pásma.` : "Výpočet zůstává v 15% daňovém pásmu.",
-      "Výsledek berte jako orientační model pro běžný zaměstnanecký scénář."
-    ];
-    setText("resultNote", note.join(" "));
-    setText("grossDecision", `Dopočtená hrubá mzda tvoří čistý podíl ${pct(grossToNet)}. Pro nabídku práce zkontrolujte nejen částku na účet, ale i cenu práce ${money(data.totalCost)} a případné nepravidelné složky mzdy.`);
+    const childText = input.children > 0 ? `Včetně zvýhodnění na ${input.children} ${input.children === 1 ? "dítě" : "děti"}.` : "Bez daňového zvýhodnění na děti.";
+    const bandText = data.highTaxBase > 0 ? "Část mzdy spadá do 23% pásma." : "Výpočet zůstává v 15% pásmu.";
+    setText("resultNote", `Pro cílovou čistou mzdu ${money(input.targetNet)} vychází hrubá mzda ${money(data.grossSalary)}. Dopočtená čistá je ${money(data.netAfterOther)}, rozdíl proti cíli ${money(absDiff)}. ${childText} ${bandText}`);
+    setText("grossDecision", `Čistý podíl z hrubé mzdy je ${pct(grossToNet)}. Pro nabídku práce sledujte i cenu práce ${money(data.totalCost)}; detail odvodů je v rozpadu níže.`);
     setText("annualGrossResult", money(data.grossSalary * 12));
     setText("annualCostResult", money(data.totalCost * 12));
     setText("targetDiffResult", money(absDiff));

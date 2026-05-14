@@ -26,7 +26,7 @@
   <meta name="twitter:description" content="Zjistěte, jaká hrubá mzda přibližně odpovídá požadované čisté částce.">
   <meta name="twitter:image" content="https://rychlevypocty.cz/og-image.jpg">
   <link rel="stylesheet" href="rv-tool-v2.css">
-  <link rel="stylesheet" href="payroll-time-v2.css?v=4">
+  <link rel="stylesheet" href="payroll-time-v2.css?v=5">
   <link rel="stylesheet" href="rv-top20-mobile-quality.css">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"RychléVýpočty.cz","item":"https://rychlevypocty.cz/"},{"@type":"ListItem","position":2,"name":"Mzdy a práce","item":"https://rychlevypocty.cz/mzdy-a-prace.html"},{"@type":"ListItem","position":3,"name":"Hrubá mzda z čisté","item":"https://rychlevypocty.cz/kalkulacka-hrube-mzdy-z-ciste.html"}]}</script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Kalkulačka hrubé mzdy z čisté","url":"https://rychlevypocty.cz/kalkulacka-hrube-mzdy-z-ciste.html","applicationCategory":"FinanceApplication","operatingSystem":"All","inLanguage":"cs-CZ","description":"Online kalkulačka pro orientační přepočet čisté mzdy na hrubou mzdu, odvody, daň a cenu práce.","offers":{"@type":"Offer","price":"0","priceCurrency":"CZK"}}</script>
@@ -97,26 +97,20 @@
         <div class="form-actions"><button class="btn-primary" type="submit">Spočítat hrubou mzdu</button><button class="btn-secondary" id="resetBtn" type="button">Obnovit hodnoty</button></div>
       </form>
 
-      <div class="gross-left-seo" aria-label="Rychlé vysvětlení výpočtu hrubé mzdy z čisté">
-        <article>
-          <span>Pro nabídku práce</span>
-          <h2>Hrubá mzda je částka do smlouvy. Čistá je částka na účet.</h2>
-          <p>Když víte, kolik chcete dostávat čistého, potřebujete převést čistou mzdu na hrubou. Právě hrubá mzda se objevuje v pracovní smlouvě, v nabídce zaměstnavatele a ve mzdových podkladech.</p>
-        </article>
-        <article>
-          <span>Jak číst výsledek</span>
-          <h3>Nezastavujte se u hrubé mzdy</h3>
-          <p>Zkontrolujte i cenu práce, odvody zaměstnance, daň po slevách, daňový bonus a rozdíl proti cílové čisté částce. U vyšší mzdy sledujte, zda část základu nespadá do 23% pásma.</p>
-        </article>
-        <article>
-          <span>Co může rozhodit výplatu</span>
-          <h3>Bonusy, srážky a děti umí výsledek posunout</h3>
-          <p>Do reálné výplaty můžou vstoupit prémie, nemoc, dovolená, exekuce, benefity, více pracovních poměrů nebo změna daňového prohlášení. Proto berte výpočet jako přesný odhad pro běžný měsíc, ne jako závaznou mzdovou pásku.</p>
-        </article>
-        <div class="gross-left-links">
-          <a href="cista-mzda-kalkulacka.html"><strong>Ověřit opačným směrem</strong><small>Čistá mzda z dopočítané hrubé</small></a>
-          <a href="kalkulacka-priplatku-za-smeny.html"><strong>Přidat příplatky</strong><small>Noční, víkend, svátek a směny</small></a>
-          <a href="kolik-je-superhruba-mzda-a-cena-prace.html"><strong>Řešit cenu práce</strong><small>Celkový náklad zaměstnavatele</small></a>
+      <div class="gross-guidance-panel" aria-label="Jak s kalkulačkou pracovat">
+        <div>
+          <span>Rychlý postup</span>
+          <strong>Nejdřív zadejte čistou částku. Pak kontrolujte hrubou, cenu práce a rozdíl proti cíli.</strong>
+        </div>
+        <ol>
+          <li>Pro pracovní smlouvu použijte dopočtenou hrubou mzdu.</li>
+          <li>Pro domácí rozpočet sledujte čistou mzdu na účet.</li>
+          <li>Pro vyjednávání se dívejte i na cenu práce.</li>
+        </ol>
+        <div class="gross-guidance-links">
+          <a href="cista-mzda-kalkulacka.html">Ověřit čistou mzdu</a>
+          <a href="kalkulacka-priplatku-za-smeny.html">Přidat příplatky</a>
+          <a href="#detail-vysledku">Rozpad výsledku</a>
         </div>
       </div>
       </div>
@@ -143,18 +137,25 @@
           <div><span>Rozdíl proti cíli</span><strong id="targetDiffResult">0 Kč</strong></div>
           <div><span>Daňové pásmo</span><strong id="taxBandSummary">15 %</strong></div>
         </div>
-        <div class="gross-offer-check">
-          <strong>Jak s výsledkem pracovat při nabídce práce</strong>
-          <ul>
-            <li>Hrubou mzdu berte jako částku do pracovní smlouvy, čistou jako dopad na domácí rozpočet.</li>
-            <li>Cenu práce použijte při vyjednávání v menší firmě nebo při plánování rozpočtu týmu.</li>
-            <li>Pokud jsou ve mzdě prémie, dopočítejte si ještě čistou mzdu z konkrétní hrubé částky.</li>
-          </ul>
-        </div>
-        <div class="table-wrap"><table><thead><tr><th>Položka</th><th>Hodnota</th><th>Význam</th></tr></thead><tbody id="summaryTableBody"></tbody></table></div>
+        <div class="gross-result-actions"><a href="#detail-vysledku">Zobrazit detailní rozpad</a><a href="cista-mzda-kalkulacka.html">Ověřit čistou mzdu</a></div>
       </aside>
     </section>
 
+    <section class="container gross-result-detail" id="detail-vysledku">
+      <div class="gross-detail-head">
+        <p class="eyebrow">Detail výsledku</p>
+        <h2>Rozpad hrubé mzdy, daně a ceny práce</h2>
+        <p>Nejdůležitější výsledek je nahoře. Detailní tabulka je tady, aby šla zkontrolovat až ve chvíli, kdy potřebujete vidět jednotlivé položky mzdy.</p>
+      </div>
+      <div class="gross-detail-layout">
+        <div class="table-wrap"><table><thead><tr><th>Položka</th><th>Hodnota</th><th>Význam</th></tr></thead><tbody id="summaryTableBody"></tbody></table></div>
+        <aside class="gross-detail-cards">
+          <article><span>Pracovní smlouva</span><strong>Hrubá mzda</strong><p>Částka, kterou typicky řeší smlouva nebo mzdový výměr.</p></article>
+          <article><span>Domácí rozpočet</span><strong>Čistá mzda</strong><p>Částka po odvodech, dani, bonusech a zadaných srážkách.</p></article>
+          <article><span>Pohled firmy</span><strong>Cena práce</strong><p>Hrubá mzda plus odvody placené zaměstnavatelem.</p></article>
+        </aside>
+      </div>
+    </section>
     <section class="container gross-seo-guide" id="jak-cist-vysledek">
       <div class="gross-seo-head">
         <p class="eyebrow">Průvodce výpočtem</p>
@@ -227,6 +228,6 @@
     <div class="container footer-bottom"><p>© 2026 RychléVýpočty.cz. Výpočty jsou orientační a nenahrazují účetní, právní ani personální posouzení.</p></div>
   </footer>
   <script src="rv-tool-core.js"></script>
-  <script src="hruba-z-ciste.js?v=2"></script>
+  <script src="hruba-z-ciste.js?v=3"></script>
 </body>
 </html>
