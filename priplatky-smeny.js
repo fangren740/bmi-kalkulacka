@@ -124,6 +124,8 @@
     const monthlyBonus = bonusPay * input.shiftCount;
     const monthlyTotal = totalPay * input.shiftCount;
     const bonusShare = totalPay > 0 ? bonusPay / totalPay * 100 : 0;
+    const extraHourlyPay = input.hoursWorked > 0 ? bonusPay / input.hoursWorked : 0;
+    const effectiveBonusPercent = basePay > 0 ? bonusPay / basePay * 100 : 0;
 
     return {
       items,
@@ -137,7 +139,9 @@
       monthlyBase,
       monthlyBonus,
       monthlyTotal,
-      bonusShare
+      bonusShare,
+      extraHourlyPay,
+      effectiveBonusPercent
     };
   }
 
@@ -183,15 +187,33 @@
 
   function renderDecision(input, result) {
     const active = labels(result);
+    const hasStack = result.items.length > 1 || result.fixedBonus > 0;
     let verdict = "Výsledek je neutrální kontrolní odhad.";
-    if (result.bonusShare >= 40) verdict = "Příplatky tvoří výraznou část směny, proto zkontrolujte sazby a souběh na výplatní pásce.";
-    else if (result.bonusShare >= 15) verdict = "Příplatky mají viditelný dopad na odměnu, hlavně pokud se směny opakují každý měsíc.";
-    else if (result.bonusPay <= 0) verdict = "Bez započteného příplatku jde jen o základní odměnu za hodiny.";
+    let badge = "Nízký dopad příplatků";
+    let badgeClass = "badge success";
+    let focus = "evidence hodin";
 
-    setText("decisionText", `${verdict} Pro další krok porovnejte měsíční příplatky ${money(result.monthlyBonus, input.roundWhole)} s čistou mzdou.`);
-    setText("statusBadge", result.bonusPay > 0 ? "Příplatky započteny" : "Bez příplatku");
-    $("statusBadge").className = result.bonusPay > 0 ? "badge warning" : "badge success";
+    if (result.bonusPay <= 0) {
+      verdict = "Bez započteného příplatku jde jen o základní odměnu za hodiny.";
+      badge = "Bez příplatku";
+      focus = "zapnuté režimy";
+    } else if (result.bonusShare >= 40) {
+      verdict = "Příplatky tvoří výraznou část směny. Zkontrolujte hlavně sazby, souběh a to, zda výplatní páska počítá stejný počet hodin.";
+      badge = "Vysoký podíl příplatků";
+      badgeClass = "badge warning";
+      focus = hasStack ? "souběh příplatků" : "sazba příplatku";
+    } else if (result.bonusShare >= 15) {
+      verdict = "Příplatky mají viditelný dopad na odměnu, hlavně pokud se stejné směny opakují každý měsíc.";
+      badge = "Příplatky mají dopad";
+      badgeClass = "badge warning";
+      focus = hasStack ? "souběh příplatků" : "měsíční dopad";
+    }
+
+    setText("decisionText", `${verdict} Pro další krok porovnejte měsíční příplatky ${money(result.monthlyBonus, input.roundWhole)} s čistou mzdou a s evidencí pracovní doby.`);
+    setText("statusBadge", badge);
+    $("statusBadge").className = badgeClass;
     setText("resultNote", `Za ${nf.format(input.hoursWorked)} hodin v režimu ${active} vychází základ ${money(result.basePay, input.roundWhole)}, příplatky ${money(result.bonusPay, input.roundWhole)} a celkem ${money(result.totalPay, input.roundWhole)} hrubého za směnu. Výsledek berte jako orientační kontrolu, protože skutečná páska může pracovat s průměrným výdělkem, náhradním volnem nebo jinou smluvní sazbou.`);
+    setText("payrollCheckFocus", focus);
   }
 
   function render(input, result) {
@@ -201,6 +223,9 @@
     setText("bonusPay", money(result.bonusPay, input.roundWhole));
     setText("averageHourlyPay", money(result.averageHourlyPay, input.roundWhole));
     setText("monthlyTotalPay", money(result.monthlyTotal, input.roundWhole));
+    setText("monthlyBonusPay", money(result.monthlyBonus, input.roundWhole));
+    setText("extraHourlyPay", money(result.extraHourlyPay, input.roundWhole));
+    setText("effectiveBonusPercent", `${nf.format(result.effectiveBonusPercent)} %`);
     setText("summaryShiftType", activeLabel);
     setText("bonusShare", `${nf.format(result.bonusShare)} %`);
 
