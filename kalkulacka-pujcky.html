@@ -21,7 +21,7 @@
   <meta name="twitter:description" content="Spočítejte splátku půjčky, úroky, poplatky a celkové přeplacení." />
   <meta name="twitter:image" content="https://rychlevypocty.cz/og-image.jpg" />
   <link rel="stylesheet" href="rv-tool-v2.css" />
-  <link rel="stylesheet" href="pujcka-v2.css?v=5" />
+  <link rel="stylesheet" href="pujcka-v2.css?v=6" />
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"RychléVýpočty.cz","item":"https://rychlevypocty.cz/"},{"@type":"ListItem","position":2,"name":"Finance a hypotéky","item":"https://rychlevypocty.cz/finance-a-hypoteky.html"},{"@type":"ListItem","position":3,"name":"Kalkulačka půjčky","item":"https://rychlevypocty.cz/kalkulacka-pujcky.html"}]}</script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Kalkulačka půjčky","url":"https://rychlevypocty.cz/kalkulacka-pujcky.html","applicationCategory":"FinanceApplication","operatingSystem":"All","inLanguage":"cs-CZ","description":"Online kalkulačka půjčky pro orientační výpočet měsíční splátky, celkem zaplacené částky, přeplacení, poplatků a dopadu na rozpočet.","offers":{"@type":"Offer","price":"0","priceCurrency":"CZK"}}</script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Jak se počítá splátka půjčky?","acceptedAnswer":{"@type":"Answer","text":"Podle výše půjčky, roční sazby a doby splácení. Při běžném anuitním splácení je měsíční splátka v modelu stejná."}},{"@type":"Question","name":"Co je celkové přeplacení?","acceptedAnswer":{"@type":"Answer","text":"Je to rozdíl mezi celkem zaplacenou částkou a půjčenou částkou. Zahrnuje úroky a zadané měsíční poplatky."}},{"@type":"Question","name":"Proč sledovat potřebný příjem?","acceptedAnswer":{"@type":"Answer","text":"Samotná splátka nestačí. Potřebný příjem ukazuje, jak velký rozpočet by byl potřeba, aby splátka tvořila jen zvolenou část příjmu."}},{"@type":"Question","name":"Je výsledek stejný jako nabídka banky?","acceptedAnswer":{"@type":"Answer","text":"Ne. Skutečná nabídka může obsahovat RPSN, pojištění, jednorázové poplatky a individuální posouzení klienta."}},{"@type":"Question","name":"Je lepší nižší splátka, nebo kratší splatnost?","acceptedAnswer":{"@type":"Answer","text":"Nižší splátka uleví měsíčnímu rozpočtu, ale delší splatnost obvykle zvýší celkové přeplacení. Kratší splatnost bývá levnější celkově, ale náročnější měsíčně."}},{"@type":"Question","name":"Proč sledovat RPSN?","acceptedAnswer":{"@type":"Answer","text":"RPSN pomáhá porovnat celkovou nákladovost půjčky včetně povinných nákladů. Samotný úrok nemusí stačit, pokud nabídka obsahuje další poplatky."}},{"@type":"Question","name":"Kolik z příjmu dát maximálně na splátku?","acceptedAnswer":{"@type":"Answer","text":"Záleží na rozpočtu domácnosti a dalších závazcích. Prakticky je důležité, aby po splátce zůstala rezerva na bydlení, energie, jídlo, dopravu a nečekané výdaje."}}]}</script>
@@ -204,39 +204,6 @@
 <button class="btn btn-secondary" id="resetBtn" type="button">Obnovit hodnoty</button>
 </div>
 </form>
-<section class="loan-stage-panel" aria-label="Srovnání splatnosti půjčky">
-<div class="loan-stage-head">
-<p class="eyebrow">Scénáře bez scrollování</p>
-<h2>Co udělá změna splatnosti</h2>
-<p>Stejná půjčka může být měsíčně pohodlnější, ale celkově dražší. Tady vidíte rychlé srovnání vedle hlavního výsledku.</p>
-</div>
-<div class="loan-stage-cards">
-<article>
-<span>Kratší splatnost</span>
-<strong id="stageShortPayment">0 Kč</strong>
-<small id="stageShortMeta">méně úroků</small>
-</article>
-<article class="is-main">
-<span>Aktuální zadání</span>
-<strong id="stageBasePayment">0 Kč</strong>
-<small id="stageBaseMeta">základní varianta</small>
-</article>
-<article>
-<span>Delší splatnost</span>
-<strong id="stageLongPayment">0 Kč</strong>
-<small id="stageLongMeta">nižší splátka</small>
-</article>
-</div>
-<div class="loan-stage-chart" aria-hidden="true">
-<div><span>Kratší</span><i><b id="stageShortBar"></b></i></div>
-<div><span>Základ</span><i><b id="stageBaseBar"></b></i></div>
-<div><span>Delší</span><i><b id="stageLongBar"></b></i></div>
-</div>
-<div class="loan-stage-foot">
-<div><span>Největší rozdíl</span><strong id="stageBiggestDifference">0 Kč</strong></div>
-<div><span>Co sledovat</span><strong id="stageWatch">RPSN a rezervu</strong></div>
-</div>
-</section>
 </div>
 <aside class="result-panel" id="vysledek" aria-live="polite">
 <div class="result-header">
@@ -323,6 +290,39 @@
 </div>
 </div>
 </aside>
+<section class="loan-stage-panel" aria-label="Srovnání splatnosti půjčky">
+<div class="loan-stage-head">
+<p class="eyebrow">Scénáře bez scrollování</p>
+<h2>Co udělá změna splatnosti</h2>
+<p>Stejná půjčka může být měsíčně pohodlnější, ale celkově dražší. Tady vidíte rychlé srovnání vedle hlavního výsledku.</p>
+</div>
+<div class="loan-stage-cards">
+<article>
+<span>Kratší splatnost</span>
+<strong id="stageShortPayment">0 Kč</strong>
+<small id="stageShortMeta">méně úroků</small>
+</article>
+<article class="is-main">
+<span>Aktuální zadání</span>
+<strong id="stageBasePayment">0 Kč</strong>
+<small id="stageBaseMeta">základní varianta</small>
+</article>
+<article>
+<span>Delší splatnost</span>
+<strong id="stageLongPayment">0 Kč</strong>
+<small id="stageLongMeta">nižší splátka</small>
+</article>
+</div>
+<div class="loan-stage-chart" aria-hidden="true">
+<div><span>Kratší</span><i><b id="stageShortBar"></b></i></div>
+<div><span>Základ</span><i><b id="stageBaseBar"></b></i></div>
+<div><span>Delší</span><i><b id="stageLongBar"></b></i></div>
+</div>
+<div class="loan-stage-foot">
+<div><span>Největší rozdíl</span><strong id="stageBiggestDifference">0 Kč</strong></div>
+<div><span>Co sledovat</span><strong id="stageWatch">RPSN a rezervu</strong></div>
+</div>
+</section>
 </section>
     <section class="container content-grid" id="jak-cist-vysledek">
 <article class="content-card">
