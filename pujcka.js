@@ -19,6 +19,14 @@
     monthlyWithFeesDetail: $("monthlyWithFeesDetail"),
     summaryInstallmentsCompact: $("summaryInstallmentsCompact"),
     incomeBurden: $("incomeBurden"),
+    cockpitHeadline: $("cockpitHeadline"),
+    burdenFill: $("burdenFill"),
+    burdenLabel: $("burdenLabel"),
+    overpayFill: $("overpayFill"),
+    overpayLabel: $("overpayLabel"),
+    principalPart: $("principalPart"),
+    interestPart: $("interestPart"),
+    feePart: $("feePart"),
     stressRatePayment: $("stressRatePayment"),
     shorterTotalSaving: $("shorterTotalSaving"),
     longerTotalCost: $("longerTotalCost"),
@@ -107,6 +115,7 @@
     const neededIncome = monthlyWithFees / (values.incomeShare / 100);
     const overpaymentRatio = values.loanAmount > 0 ? totalOverpayment / values.loanAmount * 100 : 0;
     const actualIncomeShare = values.monthlyIncome > 0 ? monthlyWithFees / values.monthlyIncome * 100 : 0;
+    const interestPaid = totalPaidWithoutFees - values.loanAmount;
 
     return {
       months,
@@ -116,6 +125,7 @@
       totalFees,
       totalPaid,
       totalOverpayment,
+      interestPaid,
       neededIncome,
       overpaymentRatio,
       actualIncomeShare
@@ -212,6 +222,9 @@
     outputs.neededIncomeKpi.textContent = formatCurrency(result.neededIncome);
     outputs.totalPaid.textContent = formatCurrency(result.totalPaid);
     outputs.totalOverpayment.textContent = formatCurrency(result.totalOverpayment);
+    if (outputs.principalPart) outputs.principalPart.textContent = formatCurrency(values.loanAmount);
+    if (outputs.interestPart) outputs.interestPart.textContent = formatCurrency(result.interestPaid);
+    if (outputs.feePart) outputs.feePart.textContent = formatCurrency(result.totalFees);
     outputs.summaryLoan.textContent = formatCurrency(values.loanAmount);
     outputs.summaryYears.textContent = pluralYears(values.years);
     outputs.summaryRate.textContent = formatPercent(values.interestRate, 2);
@@ -231,6 +244,11 @@
     if (outputs.feesTotal) outputs.feesTotal.textContent = formatCurrency(result.totalFees);
 
     const affordability = getAffordabilityMessage(values, result);
+    if (outputs.cockpitHeadline) outputs.cockpitHeadline.textContent = affordability.statusText.split(".")[0] + ".";
+    if (outputs.burdenFill) outputs.burdenFill.style.width = `${Math.max(4, Math.min(100, result.actualIncomeShare || 0))}%`;
+    if (outputs.overpayFill) outputs.overpayFill.style.width = `${Math.max(4, Math.min(100, result.overpaymentRatio))}%`;
+    if (outputs.burdenLabel) outputs.burdenLabel.textContent = values.monthlyIncome > 0 ? formatPercent(result.actualIncomeShare, 1) : "nezadáno";
+    if (outputs.overpayLabel) outputs.overpayLabel.textContent = formatPercent(result.overpaymentRatio, 1);
     outputs.loanBadge.className = `badge ${affordability.statusClass === "safe" ? "success" : affordability.statusClass === "risk" ? "risk" : "warning"}`;
     outputs.loanBadge.textContent = affordability.statusLabel;
     outputs.affordabilityStatus.textContent = affordability.statusLabel;
