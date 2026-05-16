@@ -27,6 +27,17 @@
     principalPart: $("principalPart"),
     interestPart: $("interestPart"),
     feePart: $("feePart"),
+    stageShortPayment: $("stageShortPayment"),
+    stageBasePayment: $("stageBasePayment"),
+    stageLongPayment: $("stageLongPayment"),
+    stageShortMeta: $("stageShortMeta"),
+    stageBaseMeta: $("stageBaseMeta"),
+    stageLongMeta: $("stageLongMeta"),
+    stageShortBar: $("stageShortBar"),
+    stageBaseBar: $("stageBaseBar"),
+    stageLongBar: $("stageLongBar"),
+    stageBiggestDifference: $("stageBiggestDifference"),
+    stageWatch: $("stageWatch"),
     stressRatePayment: $("stressRatePayment"),
     shorterTotalSaving: $("shorterTotalSaving"),
     longerTotalCost: $("longerTotalCost"),
@@ -238,10 +249,24 @@
     const rateStress = calculateLoan({ ...values, interestRate: values.interestRate + 2 });
     const shorterDiff = scenarioTotal(values, shorterYears) - result.totalPaid;
     const longerDiff = scenarioTotal(values, longerYears) - result.totalPaid;
+    const shortScenario = calculateLoan({ ...values, years: shorterYears });
+    const longScenario = calculateLoan({ ...values, years: longerYears });
     if (outputs.stressRatePayment) outputs.stressRatePayment.textContent = formatCurrency(rateStress.monthlyWithFees);
     if (outputs.shorterTotalSaving) outputs.shorterTotalSaving.textContent = `${shorterDiff <= 0 ? "− " : "+ "}${formatCurrency(Math.abs(shorterDiff))}`;
     if (outputs.longerTotalCost) outputs.longerTotalCost.textContent = `${longerDiff >= 0 ? "+ " : "− "}${formatCurrency(Math.abs(longerDiff))}`;
     if (outputs.feesTotal) outputs.feesTotal.textContent = formatCurrency(result.totalFees);
+    if (outputs.stageShortPayment) outputs.stageShortPayment.textContent = formatCurrency(shortScenario.monthlyWithFees);
+    if (outputs.stageBasePayment) outputs.stageBasePayment.textContent = formatCurrency(result.monthlyWithFees);
+    if (outputs.stageLongPayment) outputs.stageLongPayment.textContent = formatCurrency(longScenario.monthlyWithFees);
+    if (outputs.stageShortMeta) outputs.stageShortMeta.textContent = `${pluralYears(shorterYears)}, rozdíl celkem ${shorterDiff <= 0 ? "− " : "+ "}${formatCurrency(Math.abs(shorterDiff))}`;
+    if (outputs.stageBaseMeta) outputs.stageBaseMeta.textContent = `${pluralYears(values.years)}, celkem ${formatCurrency(result.totalPaid)}`;
+    if (outputs.stageLongMeta) outputs.stageLongMeta.textContent = `${pluralYears(longerYears)}, rozdíl celkem ${longerDiff >= 0 ? "+ " : "− "}${formatCurrency(Math.abs(longerDiff))}`;
+    const maxScenarioPayment = Math.max(shortScenario.monthlyWithFees, result.monthlyWithFees, longScenario.monthlyWithFees, 1);
+    if (outputs.stageShortBar) outputs.stageShortBar.style.width = `${Math.max(8, shortScenario.monthlyWithFees / maxScenarioPayment * 100)}%`;
+    if (outputs.stageBaseBar) outputs.stageBaseBar.style.width = `${Math.max(8, result.monthlyWithFees / maxScenarioPayment * 100)}%`;
+    if (outputs.stageLongBar) outputs.stageLongBar.style.width = `${Math.max(8, longScenario.monthlyWithFees / maxScenarioPayment * 100)}%`;
+    if (outputs.stageBiggestDifference) outputs.stageBiggestDifference.textContent = formatCurrency(Math.max(Math.abs(shorterDiff), Math.abs(longerDiff)));
+    if (outputs.stageWatch) outputs.stageWatch.textContent = result.overpaymentRatio > 45 ? "celkové přeplacení" : result.actualIncomeShare > values.incomeShare ? "měsíční rozpočet" : "RPSN a rezervu";
 
     const affordability = getAffordabilityMessage(values, result);
     if (outputs.cockpitHeadline) outputs.cockpitHeadline.textContent = affordability.statusText.split(".")[0] + ".";
