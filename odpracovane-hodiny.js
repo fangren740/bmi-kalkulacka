@@ -4,6 +4,47 @@
 
   const $ = (id) => document.getElementById(id);
   const nf = new Intl.NumberFormat("cs-CZ", { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+  const pf = new Intl.NumberFormat("cs-CZ", { maximumFractionDigits: 0 });
+
+  const outputs = {
+    statShift: $("statShift"),
+    statGross: $("statGross"),
+    statPeriod: $("statPeriod"),
+    rowStart: $("rowStart"),
+    rowEnd: $("rowEnd"),
+    rowBreak: $("rowBreak"),
+    rowNet: $("rowNet"),
+    rowDays: $("rowDays"),
+    rowTotal: $("rowTotal"),
+    resultNote: $("resultNote"),
+    detailText: $("detailText"),
+    statusBadge: $("statusBadge"),
+    readingTitle: $("readingTitle"),
+    readingText: $("readingText"),
+    workShareBar: $("workShareBar"),
+    breakShareBar: $("breakShareBar"),
+    workShareText: $("workShareText"),
+    breakShareText: $("breakShareText"),
+    workedTableBody: $("workedTableBody"),
+    heroShift: $("heroShift"),
+    mobileHeroShift: $("mobileHeroShift"),
+    heroClock: $("heroClock"),
+    heroStart: $("heroStart"),
+    heroEnd: $("heroEnd"),
+    heroBreak: $("heroBreak"),
+    heroPeriod: $("heroPeriod"),
+    heroDays: $("heroDays"),
+    heroWorkBar: $("heroWorkBar"),
+    heroBreakBar: $("heroBreakBar")
+  };
+
+  function setText(target, value) {
+    if (target) target.textContent = value;
+  }
+
+  function setWidth(target, value) {
+    if (target) target.style.width = value;
+  }
 
   function fillSelect(select, start, end, step, pad) {
     select.innerHTML = "";
@@ -45,6 +86,13 @@
     return `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`;
   }
 
+  function dayLabel(value) {
+    const absolute = Math.abs(value);
+    if (absolute === 1) return "1 směna";
+    if (absolute >= 2 && absolute <= 4) return `${value} směny`;
+    return `${value} směn`;
+  }
+
   function values() {
     return {
       startHour: Number($("startHour").value),
@@ -64,7 +112,9 @@
     const gross = end - start;
     const net = Math.max(0, gross - input.breakMinutes);
     const total = net * input.workDays;
-    return { gross, net, total, crossesMidnight: endRaw <= start };
+    const workShare = gross > 0 ? (net / gross) * 100 : 0;
+    const breakShare = gross > 0 ? Math.min(100, (input.breakMinutes / gross) * 100) : 0;
+    return { gross, net, total, workShare, breakShare, crossesMidnight: endRaw <= start };
   }
 
   function periodLabel(input) {
@@ -73,26 +123,87 @@
     return "součet za zadané období";
   }
 
-  function render(input, result) {
-    $("statShift").textContent = durationLabel(result.net);
-    $("statDay").textContent = decimalHours(result.net);
-    $("statPeriod").textContent = decimalHours(result.total);
-    $("rowStart").textContent = clock(input.startHour, input.startMinute);
-    $("rowEnd").textContent = clock(input.endHour, input.endMinute);
-    $("rowGross").textContent = durationLabel(result.gross);
-    $("rowBreak").textContent = `${input.breakMinutes} min`;
-    $("rowNet").textContent = durationLabel(result.net);
-    $("rowDays").textContent = String(input.workDays);
-    $("rowTotal").textContent = decimalHours(result.total);
-    $("heroShift").textContent = durationLabel(result.net);
-    $("heroPeriod").textContent = decimalHours(result.total);
-    $("heroBreak").textContent = `${input.breakMinutes} min`;
-    $("heroDays").textContent = `${input.workDays} dní`;
-    $("heroBar").style.width = `${Math.max(8, Math.min(100, result.net / 720 * 100))}%`;
+  function renderStatus(input, result) {
+    if (result.net === 0) {
+      setText(outputs.statusBadge, "Pauza pohltila celou směnu");
+      setText(outputs.resultNote, "Čistý čas vychází 0 h. Zkontrolujte, zda pauza není delší než samotná směna.");
+      setText(outputs.detailText, `Hrubá směna je ${durationLabel(result.gross)}, zadaná pauza ${input.breakMinutes} minut.`);
+      setText(outputs.readingTitle, "Výsledek je potřeba ověřit.");
+      setText(outputs.readingText, "Pokud čistý čas vychází nulový, obvykle je špatně zadaná pauza, začátek nebo konec směny.");
+      return;
+    }
 
-    const midnight = result.crossesMidnight ? " Směna přechází přes půlnoc, proto se konec počítá jako další den." : "";
-    $("resultNote").textContent = `Čistý čas směny je ${durationLabel(result.net)}. ${periodLabel(input)} při ${input.workDays} dnech vychází ${decimalHours(result.total)}.${midnight}`;
-    $("detailText").textContent = `Výpočet: hrubá délka směny ${durationLabel(result.gross)} minus pauza ${input.breakMinutes} minut = čistý čas ${durationLabel(result.net)}.`;
+    if (result.net > 12 * 60) {
+      setText(outputs.statusBadge, "Neobvykle dlouhá směna");
+      setText(outputs.readingTitle, "Směna je delší než běžný pracovní den.");
+      setText(outputs.readingText, "Výsledek může být správný u specifických směn, ale pro mzdu a bezpečnostní přestávky ho ověřte proti docházce a pravidlům zaměstnavatele.");
+    } else if (result.crossesMidnight) {
+      setText(outputs.statusBadge, "Směna přes půlnoc");
+      setText(outputs.readingTitle, "Konec směny je započtený do dalšího dne.");
+      setText(outputs.readingText, "U směny přes půlnoc zkontrolujte, zda zadáváte skutečný začátek a konec jedné směny, ne dvě oddělené směny.");
+    } else {
+      setText(outputs.statusBadge, "Směna vypadá standardně");
+      setText(outputs.readingTitle, "Směna vypadá standardně.");
+      setText(outputs.readingText, `Čistý čas směny je ${durationLabel(result.net)} a ${periodLabel(input)} při ${dayLabel(input.workDays)} vychází ${decimalHours(result.total)}.`);
+    }
+
+    const midnight = result.crossesMidnight ? " Směna přechází přes půlnoc, proto se konec počítá jako následující den." : "";
+    setText(outputs.resultNote, `Čistý čas směny je ${durationLabel(result.net)}. ${periodLabel(input)} při ${dayLabel(input.workDays)} vychází ${decimalHours(result.total)}.${midnight}`);
+    setText(outputs.detailText, `Výpočet: hrubá délka směny ${durationLabel(result.gross)} minus pauza ${input.breakMinutes} minut = čistý čas ${durationLabel(result.net)}.`);
+  }
+
+  function renderTable(input, result) {
+    if (!outputs.workedTableBody) return;
+    const rows = [
+      ["Začátek směny", clock(input.startHour, input.startMinute), "Čas nástupu na směnu"],
+      ["Konec směny", clock(input.endHour, input.endMinute), result.crossesMidnight ? "Konec je počítaný jako následující den" : "Čas odchodu ze směny"],
+      ["Hrubá směna", durationLabel(result.gross), "Čas mezi začátkem a koncem"],
+      ["Pauza", `${input.breakMinutes} min`, "Odečtená neplacená část"],
+      ["Čistý čas", durationLabel(result.net), "Započtený pracovní čas"],
+      ["Celkem", decimalHours(result.total), `Čistý čas × ${dayLabel(input.workDays)}`]
+    ];
+    outputs.workedTableBody.innerHTML = rows.map((row) => (
+      `<tr><td>${row[0]}</td><td>${row[1]}</td><td>${row[2]}</td></tr>`
+    )).join("");
+  }
+
+  function renderBars(result) {
+    const workShare = Math.max(0, Math.min(100, result.workShare));
+    const breakShare = Math.max(0, Math.min(100, result.breakShare));
+    setText(outputs.workShareText, `${pf.format(workShare)} %`);
+    setText(outputs.breakShareText, `${pf.format(breakShare)} %`);
+    setWidth(outputs.workShareBar, `${Math.max(4, workShare)}%`);
+    setWidth(outputs.breakShareBar, `${Math.max(4, breakShare)}%`);
+    setWidth(outputs.heroWorkBar, `${Math.max(8, Math.min(100, result.net / 720 * 100))}%`);
+    setWidth(outputs.heroBreakBar, `${Math.max(4, Math.min(100, breakShare))}%`);
+  }
+
+  function render(input, result) {
+    const startClock = clock(input.startHour, input.startMinute);
+    const endClock = clock(input.endHour, input.endMinute);
+
+    setText(outputs.statShift, durationLabel(result.net));
+    setText(outputs.statGross, durationLabel(result.gross));
+    setText(outputs.statPeriod, decimalHours(result.total));
+    setText(outputs.rowStart, startClock);
+    setText(outputs.rowEnd, endClock);
+    setText(outputs.rowBreak, `${input.breakMinutes} min`);
+    setText(outputs.rowNet, durationLabel(result.net));
+    setText(outputs.rowDays, String(input.workDays));
+    setText(outputs.rowTotal, decimalHours(result.total));
+
+    setText(outputs.heroShift, durationLabel(result.net));
+    setText(outputs.mobileHeroShift, durationLabel(result.net));
+    setText(outputs.heroClock, `${startClock} → ${endClock}`);
+    setText(outputs.heroStart, startClock);
+    setText(outputs.heroEnd, endClock);
+    setText(outputs.heroBreak, `${input.breakMinutes} min`);
+    setText(outputs.heroPeriod, decimalHours(result.total));
+    setText(outputs.heroDays, dayLabel(input.workDays));
+
+    renderStatus(input, result);
+    renderBars(result);
+    renderTable(input, result);
   }
 
   function run() {

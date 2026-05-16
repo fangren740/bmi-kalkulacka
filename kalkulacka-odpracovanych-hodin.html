@@ -9,9 +9,9 @@
   <link rel="icon" href="favicon-16x16.png?v=2" sizes="16x16" type="image/png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png?v=2" sizes="180x180">
   <link rel="manifest" href="site.webmanifest?v=2">
-  <meta name="theme-color" content="#14253d">
-  <title>Kalkulačka odpracovaných hodin: směna, pauza a součet | RychléVýpočty.cz</title>
-  <meta name="description" content="Spočítejte čistý čas směny po odečtení pauzy, denní výsledek i součet za týden nebo měsíc. Kalkulačka odpracovaných hodin funguje také pro směny přes půlnoc.">
+  <meta name="theme-color" content="#0b1b35">
+  <title>Kalkulačka odpracovaných hodin 2026: směna, pauza a měsíční součet | RychléVýpočty.cz</title>
+  <meta name="description" content="Spočítejte čistý čas směny po odečtení pauzy, směnu přes půlnoc, týdenní i měsíční součet odpracovaných hodin. Kalkulačka ukáže rozpad, interpretaci a navazující výpočty mzdy.">
   <meta name="robots" content="index,follow">
   <link rel="canonical" href="https://rychlevypocty.cz/kalkulacka-odpracovanych-hodin.html">
   <meta property="og:title" content="Kalkulačka odpracovaných hodin">
@@ -23,42 +23,403 @@
   <meta property="og:locale" content="cs_CZ">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Kalkulačka odpracovaných hodin | RychléVýpočty.cz">
-  <meta name="twitter:description" content="Spočítejte směnu, pauzu a celkový počet odpracovaných hodin.">
+  <meta name="twitter:description" content="Spočítejte směnu, pauzu, práci přes půlnoc a celkový počet odpracovaných hodin.">
   <meta name="twitter:image" content="https://rychlevypocty.cz/og-image.jpg">
   <link rel="stylesheet" href="rv-tool-v2.css">
-  <link rel="stylesheet" href="payroll-time-v2.css">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"RychléVýpočty.cz","item":"https://rychlevypocty.cz/"},{"@type":"ListItem","position":2,"name":"Mzdy a práce","item":"https://rychlevypocty.cz/mzdy-a-prace.html"},{"@type":"ListItem","position":3,"name":"Kalkulačka odpracovaných hodin","item":"https://rychlevypocty.cz/kalkulacka-odpracovanych-hodin.html"}]}</script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Kalkulačka odpracovaných hodin","url":"https://rychlevypocty.cz/kalkulacka-odpracovanych-hodin.html","applicationCategory":"UtilitiesApplication","operatingSystem":"All","inLanguage":"cs-CZ","description":"Online kalkulačka pro výpočet čistého času směny po odečtení pauzy a součtu za období.","offers":{"@type":"Offer","price":"0","priceCurrency":"CZK"}}</script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Umí kalkulačka směnu přes půlnoc?","acceptedAnswer":{"@type":"Answer","text":"Ano. Pokud je konec směny dříve než začátek, kalkulačka automaticky počítá konec jako čas v následujícím dni."}},{"@type":"Question","name":"Odečítá se pauza automaticky?","acceptedAnswer":{"@type":"Answer","text":"Ano. Zadejte délku neplacené pauzy v minutách a kalkulačka ji odečte od hrubé délky směny."}},{"@type":"Question","name":"Jak získám měsíční součet hodin?","acceptedAnswer":{"@type":"Answer","text":"Zadejte čistou směnu a počet odpracovaných dnů v období. Kalkulačka denní výsledek vynásobí počtem dnů."}},{"@type":"Question","name":"Je výsledek vhodný pro mzdu?","acceptedAnswer":{"@type":"Answer","text":"Výsledek je dobrý podklad pro kontrolu docházky nebo mzdové kalkulačky, ale skutečná mzda závisí také na sazbě, příplatcích a pravidlech zaměstnavatele."}}]}</script>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7745758285259522" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="payroll-time-v2.css?v=15">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "RychléVýpočty.cz", "item": "https://rychlevypocty.cz/"},
+      {"@type": "ListItem", "position": 2, "name": "Mzdy a práce", "item": "https://rychlevypocty.cz/mzdy-a-prace.html"},
+      {"@type": "ListItem", "position": 3, "name": "Kalkulačka odpracovaných hodin", "item": "https://rychlevypocty.cz/kalkulacka-odpracovanych-hodin.html"}
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Kalkulačka odpracovaných hodin",
+    "url": "https://rychlevypocty.cz/kalkulacka-odpracovanych-hodin.html",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "All",
+    "inLanguage": "cs-CZ",
+    "description": "Online kalkulačka pro výpočet čistého času směny po odečtení pauzy a součtu odpracovaných hodin za období.",
+    "offers": {"@type": "Offer", "price": "0", "priceCurrency": "CZK"}
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {"@type": "Question", "name": "Umí kalkulačka spočítat směnu přes půlnoc?", "acceptedAnswer": {"@type": "Answer", "text": "Ano. Pokud je konec směny dříve než začátek, kalkulačka ho automaticky počítá jako čas v následujícím dni."}},
+      {"@type": "Question", "name": "Odečítá kalkulačka pauzu od pracovní doby?", "acceptedAnswer": {"@type": "Answer", "text": "Ano. Zadaná neplacená pauza se odečte od hrubé délky směny a výsledek ukazuje čistý započtený čas."}},
+      {"@type": "Question", "name": "Jak spočítám měsíční součet odpracovaných hodin?", "acceptedAnswer": {"@type": "Answer", "text": "Zadejte čistou směnu a počet odpracovaných dnů v období. Kalkulačka denní výsledek vynásobí počtem dnů."}},
+      {"@type": "Question", "name": "Je výsledek vhodný pro kontrolu mzdy?", "acceptedAnswer": {"@type": "Answer", "text": "Je vhodný jako orientační podklad pro kontrolu docházky. Mzda ale závisí také na hodinové sazbě, příplatcích, přesčasech a pravidlech zaměstnavatele."}},
+      {"@type": "Question", "name": "Co když mám dvě pauzy během směny?", "acceptedAnswer": {"@type": "Answer", "text": "Sečtěte všechny neplacené pauzy a zadejte jejich celkový počet minut do pole pauza."}},
+      {"@type": "Question", "name": "Počítá kalkulačka svátky a příplatky?", "acceptedAnswer": {"@type": "Answer", "text": "Ne. Tato kalkulačka řeší čas. Pro příplatky nebo čistou mzdu pokračujte navazující mzdovou kalkulačkou."}}
+    ]
+  }
+  </script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7745758285259522" crossorigin="anonymous"></script>
 </head>
-<body class="rv-renovation-tool rv-business-tool rv-payroll-time-tool rv-worked-hours-page">
+<body class="rv-business-tool rv-payroll-time-tool rv-worked-hours-page">
   <a class="skip-link" href="#kalkulacka">Přejít na kalkulačku</a>
-  <header class="site-header"><div class="container header-inner"><a class="brand-logo" href="index.html" aria-label="RychléVýpočty.cz"><img class="brand-logo-img" src="logo-rychlevypocty.svg" alt="RychléVýpočty.cz" width="190" height="38"></a><nav class="main-nav"><a href="index.html">Domů</a><a href="kalkulacky.html">Kalkulačky</a><a href="mzdy-a-prace.html" aria-current="page">Mzdy</a><a href="kalkulacka-prescasu.html">Přesčasy</a></nav><a class="header-cta" href="#kalkulacka">Spočítat hodiny</a></div></header>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand-logo" href="index.html" aria-label="RychléVýpočty.cz">
+        <img class="brand-logo-img" src="logo-rychlevypocty.svg" alt="RychléVýpočty.cz" width="190" height="38">
+      </a>
+      <nav class="main-nav">
+        <a href="index.html">Domů</a>
+        <a href="kalkulacky.html">Kalkulačky</a>
+        <a href="mzdy-a-prace.html" aria-current="page">Mzdy</a>
+        <a href="kalkulacka-prescasu.html">Přesčasy</a>
+      </nav>
+      <a class="header-cta" href="#kalkulacka">Spočítat hodiny</a>
+    </div>
+  </header>
+
   <main id="main-content">
-    <section class="tool-hero"><div class="container hero-grid"><div class="hero-copy"><nav class="breadcrumb"><a href="index.html">Domů</a><span>/</span><a href="mzdy-a-prace.html">Mzdy a práce</a><span>/</span><strong>Odpracované hodiny</strong></nav><p class="eyebrow">Docházka a směny</p><h1>Spočítejte čistý čas směny a součet odpracovaných hodin</h1><p>Zadejte začátek, konec, pauzu a počet dnů. Kalkulačka ukáže čistou délku směny, denní výsledek i součet za zadané období v hodinách a minutách.</p><div class="hero-actions"><a class="btn-primary" href="#kalkulacka">Začít výpočet</a><a class="btn-secondary" href="#jak-cist-vysledek">Jak výsledek číst</a></div><div class="hero-points"><span>Směny přes půlnoc</span><span>Pauza v minutách</span><span>Týdenní i měsíční součet</span></div></div><div class="hero-visual" aria-hidden="true"><div class="payroll-dashboard"><span>Čistý čas směny</span><div class="payroll-number" id="heroShift">8 h 00 min</div><div class="payroll-sub">Výpočet odečte pauzu a připraví součet pro docházku, mzdu nebo kontrolu přesčasů.</div><div class="payroll-metrics"><div><span>Období</span><b id="heroPeriod">160 h</b></div><div><span>Pauza</span><b id="heroBreak">30 min</b></div><div><span>Dny</span><b id="heroDays">20 dní</b></div></div><div class="payroll-breakdown"><span>Délka směny proti 12 hodinám</span><i><b id="heroBar"></b></i></div></div><div class="payroll-mini-card"><span>Časový panel</span><strong>08:00 → 16:30</strong><small>Včetně odečtení pauzy.</small></div></div></div></section>
-    <div class="anchor-nav"><div class="container anchor-scroll"><a href="#kalkulacka">Kalkulačka</a><a href="#vysledek">Výsledek</a><a href="#jak-cist-vysledek">Metodika</a><a href="#souvisejici-kalkulacky">Související</a><a href="#faq">FAQ</a></div></div>
-    <section class="container tool-stage" id="kalkulacka">
-      <form class="calculator-card" id="workedHoursForm" novalidate>
-        <p class="eyebrow">Zadání</p><h2>Zadejte čas směny</h2><p>Čistý čas se počítá jako konec směny minus začátek směny minus neplacená pauza. Pokud konec vychází dříve než začátek, počítá se směna přes půlnoc.</p>
-        <div class="preset-row"><button type="button" data-time-preset="08:00-16:30">Ranní směna</button><button type="button" data-time-preset="06:00-14:30">Brzká směna</button><button type="button" data-time-preset="18:00-02:00">Přes půlnoc</button></div>
-        <div class="form-grid">
-          <div class="input-group"><label>Začátek směny</label><div class="time-pair"><div class="input-shell"><select id="startHour" aria-label="Hodina začátku směny"></select><span>h</span></div><div class="input-shell"><select id="startMinute" aria-label="Minuta začátku směny"></select><span>min</span></div></div><small>Čas nástupu na směnu.</small></div>
-          <div class="input-group"><label>Konec směny</label><div class="time-pair"><div class="input-shell"><select id="endHour" aria-label="Hodina konce směny"></select><span>h</span></div><div class="input-shell"><select id="endMinute" aria-label="Minuta konce směny"></select><span>min</span></div></div><small>Čas odchodu ze směny.</small></div>
-          <label class="input-group" for="breakMinutes"><span>Neplacená pauza</span><div class="input-shell"><input id="breakMinutes" inputmode="numeric" min="0" step="5" type="number" value="30"><span>min</span></div><small>Pauza, která se nepočítá do práce.</small></label>
-          <label class="input-group" for="workDays"><span>Počet dnů v období</span><div class="input-shell"><input id="workDays" inputmode="numeric" min="1" step="1" type="number" value="20"><span>dní</span></div><small>Pro týdenní nebo měsíční součet.</small></label>
-          <label class="input-group" for="periodType"><span>Typ období</span><div class="input-shell"><select id="periodType"><option value="custom">Zadané období</option><option value="week">Týden</option><option value="month" selected>Měsíc</option></select></div><small>Slouží pro popis výsledku.</small></label>
+    <section class="tool-hero worked-hero">
+      <div class="container hero-grid worked-hero-grid">
+        <div class="hero-copy worked-hero-copy">
+          <nav class="breadcrumb">
+            <a href="index.html">Domů</a>
+            <span>/</span>
+            <a href="mzdy-a-prace.html">Mzdy a práce</a>
+            <span>/</span>
+            <strong>Odpracované hodiny</strong>
+          </nav>
+          <p class="eyebrow">Docházka a směny</p>
+          <h1>Spočítejte čistý čas směny a součet odpracovaných hodin</h1>
+          <p class="lead">Zadejte začátek, konec, pauzu a počet dnů. Výsledek ukáže hrubou délku směny, čistý započtený čas, měsíční součet a upozorní na směnu přes půlnoc nebo neobvykle dlouhý čas.</p>
+          <div class="worked-mobile-snapshot" aria-hidden="true">
+            <span>Ukázková směna</span>
+            <strong id="mobileHeroShift">8 h 00 min</strong>
+            <small>08:00 až 16:30, pauza 30 min</small>
+          </div>
+          <div class="hero-actions">
+            <a class="btn-primary" href="#kalkulacka">Začít výpočet</a>
+            <a class="btn-secondary" href="#detail">Zkontrolovat rozpad</a>
+          </div>
+          <div class="hero-points">
+            <span>směny přes půlnoc</span>
+            <span>pauza v minutách</span>
+            <span>měsíční součet</span>
+          </div>
         </div>
-        <div class="form-actions"><button class="btn-primary" type="submit">Spočítat hodiny</button><button class="btn-secondary" id="resetBtn" type="button">Obnovit hodnoty</button></div>
-      </form>
-      <aside class="result-panel" id="vysledek" aria-live="polite"><p class="eyebrow">Výsledek</p><h2>Odpracovaný čas</h2><p>Výsledek rozlišuje hrubou délku směny, pauzu a čistý čas započítaný do odpracovaných hodin.</p><div class="primary-result"><span>Čistý čas směny</span><strong id="statShift">8 h 00 min</strong><small>Po odečtení pauzy</small></div><div class="result-metrics"><div><span>Denně</span><strong id="statDay">8 h</strong></div><div><span>Za období</span><strong id="statPeriod">160 h</strong></div><div><span>Začátek</span><strong id="rowStart">08:00</strong></div><div><span>Konec</span><strong id="rowEnd">16:30</strong></div></div><div class="rv-output-summary"><p id="resultNote">Směna trvá 8 hodin čistého času.</p><p id="detailText">Výpočet: konec směny minus začátek směny minus neplacená pauza.</p></div><div class="table-wrap"><table><thead><tr><th>Položka</th><th>Hodnota</th><th>Význam</th></tr></thead><tbody><tr><td>Hrubá směna</td><td id="rowGross">8 h 30 min</td><td>Čas mezi začátkem a koncem</td></tr><tr><td>Pauza</td><td id="rowBreak">30 min</td><td>Odečtená neplacená část</td></tr><tr><td>Čistý čas</td><td id="rowNet">8 h 00 min</td><td>Započtený pracovní čas</td></tr><tr><td>Počet dnů</td><td id="rowDays">20</td><td>Násobitel období</td></tr><tr><td>Celkem</td><td id="rowTotal">160 h</td><td>Čistý čas × dny</td></tr></tbody></table></div></aside>
+
+        <div class="hero-visual worked-visual" aria-hidden="true">
+          <div class="worked-dashboard">
+            <div class="worked-clock-card">
+              <span>Čistý čas směny</span>
+              <strong id="heroShift">8 h 00 min</strong>
+              <small id="heroClock">08:00 → 16:30</small>
+            </div>
+            <div class="worked-timeline">
+              <div class="worked-track">
+                <b id="heroWorkBar"></b>
+                <i id="heroBreakBar"></i>
+              </div>
+              <div class="worked-time-labels">
+                <span id="heroStart">08:00</span>
+                <span id="heroEnd">16:30</span>
+              </div>
+            </div>
+            <div class="worked-mini-metrics">
+              <div><span>Pauza</span><b id="heroBreak">30 min</b></div>
+              <div><span>Období</span><b id="heroPeriod">160 h</b></div>
+              <div><span>Dny</span><b id="heroDays">20 dní</b></div>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
-    <section class="container content-grid" id="jak-cist-vysledek"><article class="content-card"><p class="eyebrow">Metodika</p><h2>Jak se počítá čistý čas směny</h2><p>Nejdříve se zjistí rozdíl mezi koncem a začátkem směny. Od něj se odečte neplacená pauza. Pokud směna končí po půlnoci, kalkulačka přičte konec k následujícímu dni.</p><div class="formula"><code>čistý čas = konec směny − začátek směny − pauza</code></div></article><article class="content-card"><p class="eyebrow">Docházka</p><h2>Proč oddělit pauzu</h2><p>Hrubá délka směny a započtený pracovní čas se často liší právě o pauzu. Pro kontrolu docházky, mzdy nebo přesčasů proto sledujte hlavně čistý čas.</p><p>Při delších směnách může malá chyba v pauze výrazně změnit měsíční součet.</p></article><article class="content-card"><p class="eyebrow">Příklad</p><h2>Směna 8:00 až 16:30</h2><p>Od 8:00 do 16:30 je to 8 hodin a 30 minut. Po odečtení 30 minut pauzy vychází čistý čas 8 hodin. Při 20 dnech jde o 160 hodin.</p></article><article class="content-card"><p class="eyebrow">Další krok</p><h2>Kdy navázat mzdovou kalkulačkou</h2><p>Jakmile znáte odpracované hodiny, můžete je použít pro přepočet hodinové mzdy, přesčasů nebo porovnání měsíční a hodinové odměny.</p><p>U směn, svátků a víkendů si ověřte také příplatky a pravidla zaměstnavatele.</p></article></section>
-    <section class="container related-tools" id="souvisejici-kalkulacky"><p class="eyebrow">Související kalkulačky</p><h2>Navazující výpočty</h2><div class="related-grid"><a class="related-card" href="kalkulacka-prescasu.html"><span>P</span><strong>Přesčasy</strong><small>Odměna za přesčasové hodiny.</small></a><a class="related-card" href="kalkulacka-hodinove-mzdy.html"><span>H</span><strong>Hodinová mzda</strong><small>Přepočet měsíční mzdy na hodinu.</small></a><a class="related-card" href="kalkulacka-dovolene.html"><span>D</span><strong>Dovolená</strong><small>Nárok a zůstatek dovolené.</small></a><a class="related-card" href="pracovni-dny-kalkulacka.html"><span>K</span><strong>Pracovní dny</strong><small>Kolik pracovních dní je v období.</small></a></div></section>
-    <section class="container faq-section" id="faq"><p class="eyebrow">FAQ</p><h2>Časté otázky k odpracovaným hodinám</h2><div class="faq-grid"><details><summary>Umí kalkulačka směnu přes půlnoc?</summary><p>Ano. Pokud je konec směny dříve než začátek, počítá se jako čas v následujícím dni.</p></details><details><summary>Odečítá se pauza automaticky?</summary><p>Ano. Zadejte délku neplacené pauzy a kalkulačka ji odečte od hrubé délky směny.</p></details><details><summary>Jak spočítám měsíční součet?</summary><p>Zadejte čistou směnu a počet odpracovaných dnů v měsíci. Kalkulačka výsledek vynásobí.</p></details><details><summary>Stačí výsledek pro mzdu?</summary><p>Je to dobrý podklad, ale mzda závisí také na sazbě, příplatcích, svátcích a interních pravidlech.</p></details></div></section>
+
+    <div class="anchor-nav worked-anchor" aria-label="Navigace na stránce">
+      <div class="container anchor-scroll">
+        <a href="#kalkulacka">Kalkulačka</a>
+        <a href="#vysledek">Výsledek</a>
+        <a href="#detail">Detail</a>
+        <a href="#metodika">Metodika</a>
+        <a href="#faq">FAQ</a>
+      </div>
+    </div>
+
+    <section class="container tool-stage worked-stage" id="kalkulacka">
+      <form class="calculator-card worked-form" id="workedHoursForm" novalidate>
+        <p class="eyebrow">Zadání</p>
+        <h2>Zadejte směnu, pauzu a počet dnů</h2>
+        <p class="form-intro">Čistý čas se počítá jako konec směny minus začátek směny minus neplacená pauza. Pokud směna končí po půlnoci, kalkulačka to automaticky zohlední.</p>
+
+        <div class="preset-row worked-presets">
+          <button type="button" data-time-preset="08:00-16:30">Ranní směna</button>
+          <button type="button" data-time-preset="06:00-14:30">Brzká směna</button>
+          <button type="button" data-time-preset="18:00-02:00">Přes půlnoc</button>
+          <button type="button" data-time-preset="07:00-19:00">Dvanáctka</button>
+        </div>
+
+        <div class="worked-time-grid">
+          <fieldset>
+            <legend>Začátek směny</legend>
+            <div class="time-pair">
+              <label class="worked-select-shell"><span>Hodina</span><select id="startHour" aria-label="Hodina začátku směny"></select></label>
+              <label class="worked-select-shell"><span>Minuta</span><select id="startMinute" aria-label="Minuta začátku směny"></select></label>
+            </div>
+          </fieldset>
+          <fieldset>
+            <legend>Konec směny</legend>
+            <div class="time-pair">
+              <label class="worked-select-shell"><span>Hodina</span><select id="endHour" aria-label="Hodina konce směny"></select></label>
+              <label class="worked-select-shell"><span>Minuta</span><select id="endMinute" aria-label="Minuta konce směny"></select></label>
+            </div>
+          </fieldset>
+        </div>
+
+        <div class="form-grid worked-fields">
+          <label class="input-group" for="breakMinutes">
+            <span>Neplacená pauza</span>
+            <div class="input-shell">
+              <input id="breakMinutes" inputmode="numeric" min="0" step="5" type="number" value="30">
+              <span>min</span>
+            </div>
+            <small>Sečtěte všechny neplacené pauzy během směny.</small>
+          </label>
+          <label class="input-group" for="workDays">
+            <span>Počet směn v období</span>
+            <div class="input-shell">
+              <input id="workDays" inputmode="numeric" min="1" step="1" type="number" value="20">
+              <span>dnů</span>
+            </div>
+            <small>Pro týdenní, měsíční nebo vlastní součet.</small>
+          </label>
+          <label class="input-group" for="periodType">
+            <span>Typ období</span>
+            <div class="input-shell">
+              <select id="periodType">
+                <option value="custom">Zadané období</option>
+                <option value="week">Týden</option>
+                <option value="month" selected>Měsíc</option>
+              </select>
+            </div>
+            <small>Slouží pro popis výsledku a další doporučení.</small>
+          </label>
+        </div>
+
+        <div class="worked-note">
+          <strong>Tip:</strong> Pro mzdu a přesčasy porovnávejte čistý čas s docházkou. Pauza, která se nezapočítává do pracovní doby, může u měsíce změnit výsledek o celé hodiny.
+        </div>
+
+        <div class="form-actions">
+          <button class="btn-primary" type="submit">Spočítat hodiny</button>
+          <button class="btn-secondary" id="resetBtn" type="button">Obnovit hodnoty</button>
+        </div>
+      </form>
+
+      <aside class="result-panel worked-result-panel" id="vysledek" aria-live="polite">
+        <p class="eyebrow">Výsledek</p>
+        <h2>Odpracovaný čas po odečtení pauzy</h2>
+        <p>Hlavní číslo je čistý čas směny. Celkový součet za období použijte jako rychlou kontrolu proti docházce, ne jako závaznou mzdovou evidenci.</p>
+        <div class="primary-result worked-primary">
+          <span>Čistý čas směny</span>
+          <strong id="statShift">8 h 00 min</strong>
+          <small id="statusBadge">Po odečtení pauzy</small>
+        </div>
+        <div class="worked-result-bars">
+          <div><span>Práce</span><i><b id="workShareBar"></b></i><strong id="workShareText">94 %</strong></div>
+          <div><span>Pauza</span><i><b id="breakShareBar"></b></i><strong id="breakShareText">6 %</strong></div>
+        </div>
+        <div class="result-metrics worked-result-metrics">
+          <div><span>Hrubá směna</span><strong id="statGross">8 h 30 min</strong></div>
+          <div><span>Za období</span><strong id="statPeriod">160 h</strong></div>
+          <div><span>Začátek</span><strong id="rowStart">08:00</strong></div>
+          <div><span>Konec</span><strong id="rowEnd">16:30</strong></div>
+        </div>
+        <div class="rv-output-summary worked-summary-box">
+          <p id="resultNote">Čistý čas směny je 8 hodin. Měsíční součet při 20 dnech vychází 160 hodin.</p>
+          <p id="detailText">Výpočet: hrubá délka směny 8 h 30 min minus pauza 30 minut = čistý čas 8 h 00 min.</p>
+        </div>
+        <div class="worked-next-actions">
+          <a href="kalkulacka-prescasu.html">Spočítat přesčas</a>
+          <a href="kalkulacka-priplatku-za-smeny.html">Příplatky za směny</a>
+          <a href="cista-mzda-kalkulacka.html">Čistá mzda</a>
+        </div>
+      </aside>
+    </section>
+
+    <section class="container worked-detail-card" id="detail">
+      <div class="section-heading">
+        <p class="eyebrow">Detail výsledku</p>
+        <h2>Rozpad směny, který se dá porovnat s docházkou</h2>
+        <p>Kontrolujte hlavně hrubou délku směny, odečtenou pauzu a čistý započtený čas. Tyhle položky nejčastěji vysvětlují rozdíl proti výplatní pásce nebo interní evidenci.</p>
+      </div>
+      <div class="worked-detail-layout">
+        <div class="worked-reading-card">
+          <span>Čtení výsledku</span>
+          <h3 id="readingTitle">Směna vypadá standardně.</h3>
+          <p id="readingText">Čistý čas směny je 8 h 00 min a měsíční součet při 20 dnech vychází 160 h.</p>
+        </div>
+        <div class="worked-detail-stats">
+          <div><span>Pauza</span><strong id="rowBreak">30 min</strong></div>
+          <div><span>Čistý čas</span><strong id="rowNet">8 h 00 min</strong></div>
+          <div><span>Počet směn</span><strong id="rowDays">20</strong></div>
+          <div><span>Celkem</span><strong id="rowTotal">160 h</strong></div>
+        </div>
+      </div>
+      <div class="worked-table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Položka</th>
+              <th>Hodnota</th>
+              <th>Co znamená</th>
+            </tr>
+          </thead>
+          <tbody id="workedTableBody">
+            <tr><td>Hrubá směna</td><td>8 h 30 min</td><td>Čas mezi začátkem a koncem směny</td></tr>
+            <tr><td>Pauza</td><td>30 min</td><td>Odečtená neplacená část</td></tr>
+            <tr><td>Čistý čas</td><td>8 h 00 min</td><td>Započtený pracovní čas</td></tr>
+            <tr><td>Celkem</td><td>160 h</td><td>Čistý čas × počet směn v období</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="container worked-guide" id="metodika">
+      <article>
+        <p class="eyebrow">Metodika</p>
+        <h2>Jak se počítá čistý čas směny</h2>
+        <p>Nejdříve se spočítá rozdíl mezi koncem a začátkem směny. Potom se odečte neplacená pauza. Pokud je konec časově dříve než začátek, kalkulačka předpokládá, že směna končí následující den.</p>
+        <div class="worked-formula">čistý čas = konec směny - začátek směny - pauza</div>
+        <p>Výsledek v hodinách je vhodný pro kontrolu docházky, měsíčního fondu, přesčasů nebo hodinové mzdy. Neřeší ale samotné mzdové nároky, příplatky ani právní posouzení pracovní doby.</p>
+      </article>
+      <article>
+        <p class="eyebrow">Docházka</p>
+        <h2>Proč oddělit pauzu od pracovní doby</h2>
+        <p>Hrubá délka směny a započtený pracovní čas se často liší právě o pauzu. U jedné směny jde třeba jen o 30 minut, ale za měsíc už to může znamenat několik hodin rozdílu.</p>
+        <ul>
+          <li>Pauzu zadávejte jako celkový počet neplacených minut.</li>
+          <li>U směny přes půlnoc zkontrolujte, že konec opravdu patří do dalšího dne.</li>
+          <li>Pro mzdu navazujte přesčasem, příplatky nebo čistou mzdou.</li>
+        </ul>
+      </article>
+      <article>
+        <p class="eyebrow">Příklad</p>
+        <h2>Směna 8:00 až 16:30</h2>
+        <p>Od 8:00 do 16:30 je to 8 hodin a 30 minut. Po odečtení 30 minut pauzy vychází čistý čas 8 hodin. Při 20 směnách za měsíc je součet 160 hodin.</p>
+        <div class="worked-example-list">
+          <div><span>Hrubá směna</span><strong>8 h 30 min</strong></div>
+          <div><span>Pauza</span><strong>30 min</strong></div>
+          <div><span>Čistý čas</span><strong>8 h 00 min</strong></div>
+        </div>
+      </article>
+      <article>
+        <p class="eyebrow">Limity</p>
+        <h2>Co kalkulačka záměrně neřeší</h2>
+        <p>Kalkulačka počítá čas, ne právní nárok. Nezahrnuje příplatky, přesčasy, práci ve svátek, bezpečnostní přestávky, překážky v práci, dovolenou ani individuální pravidla směnného provozu.</p>
+        <p>Pokud výsledek používáte pro mzdu, berte ho jako orientační kontrolu a porovnejte ho s evidencí pracovní doby u zaměstnavatele.</p>
+      </article>
+    </section>
+
+    <section class="container worked-seo-block">
+      <div>
+        <p class="eyebrow">Rozhodování</p>
+        <h2>Odpracované hodiny jsou základ pro mzdu, přesčasy i plánování směn</h2>
+        <p>U běžné směny často stačí vědět, kolik hodin zůstane po odečtení pauzy. U nepravidelných směn, práce přes půlnoc nebo většího počtu směn je ale důležitý i rozpad. Malý rozdíl v jedné směně se v měsíčním součtu rychle nasčítá.</p>
+        <p>Pro zaměstnance je výpočet užitečný při kontrole výplatní pásky. Pro firmu pomáhá rychle odhalit, jestli sedí plán směn, fond hodin a případné přesčasy.</p>
+      </div>
+      <div class="worked-checklist">
+        <h3>Co zkontrolovat před použitím výsledku</h3>
+        <ul>
+          <li>Je začátek a konec převzatý ze stejné evidence?</li>
+          <li>Je pauza neplacená, nebo se do pracovní doby započítává?</li>
+          <li>Nejde o směnu přes půlnoc nebo delší směnný režim?</li>
+          <li>Souhlasí počet směn v období s docházkou?</li>
+          <li>Neřešíte současně přesčas, víkend, svátek nebo noční práci?</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="container worked-next-section" id="souvisejici-kalkulacky">
+      <div>
+        <p class="eyebrow">Co spočítat dál</p>
+        <h2>Navazující mzdové a časové výpočty</h2>
+        <p>Jakmile znáte čistý počet hodin, nejčastější další krok je přesčas, příplatky za směny, hodinová mzda nebo čistá mzda.</p>
+      </div>
+      <div class="related-grid">
+        <a class="related-card" href="kalkulacka-prescasu.html"><span>P</span><strong>Přesčas</strong><small>Kolik přidá práce nad rámec směny.</small></a>
+        <a class="related-card" href="kalkulacka-priplatku-za-smeny.html"><span>S</span><strong>Příplatky za směny</strong><small>Noční, víkend, svátek a souběhy.</small></a>
+        <a class="related-card" href="kalkulacka-dovolene.html"><span>D</span><strong>Dovolená</strong><small>Nárok a zůstatek dovolené v hodinách.</small></a>
+        <a class="related-card" href="pracovni-dny-kalkulacka.html"><span>K</span><strong>Pracovní dny</strong><small>Počet pracovních dnů v období.</small></a>
+      </div>
+    </section>
+
+    <section class="container worked-sources">
+      <div>
+        <p class="eyebrow">Zdroje a ověření</p>
+        <h2>Odkud vychází metodika</h2>
+        <p>Výpočet je praktický model pro kontrolu času. Pravidla pracovní doby, přestávek a evidence vždy ověřte podle pracovněprávních podkladů a interní evidence zaměstnavatele.</p>
+      </div>
+      <div class="worked-source-links">
+        <a href="https://ppropo.mpsv.cz/VIII2Delkapracovnidoby" target="_blank" rel="noopener"><span>MPSV</span><strong>Délka pracovní doby</strong><small>Výklad pracovní doby a započítávání přestávek.</small></a>
+        <a href="https://ppropo.mpsv.cz/VIII4Prestavkavpraciabezpecnostn" target="_blank" rel="noopener"><span>MPSV</span><strong>Přestávka v práci</strong><small>Pravidla pro přestávky na jídlo a oddech.</small></a>
+        <a href="https://ppropo.mpsv.cz/VIII9Evidencepracovnidoby" target="_blank" rel="noopener"><span>MPSV</span><strong>Evidence pracovní doby</strong><small>Jak chápat evidenci a kontrolu pracovní doby.</small></a>
+      </div>
+    </section>
+
+    <section class="container faq-section worked-faq" id="faq">
+      <p class="eyebrow">FAQ</p>
+      <h2>Časté otázky k odpracovaným hodinám</h2>
+      <div class="faq-grid">
+        <details><summary>Umí kalkulačka směnu přes půlnoc?</summary><p>Ano. Pokud je konec směny dříve než začátek, kalkulačka ho počítá jako čas v následujícím dni. Typicky jde třeba o směnu 18:00 až 02:00.</p></details>
+        <details><summary>Odečítá se pauza automaticky?</summary><p>Ano. Do pole pauza zadejte počet minut, které se nemají započítat do pracovní doby. Kalkulačka je odečte od hrubé délky směny.</p></details>
+        <details><summary>Co když mám během směny více pauz?</summary><p>Sečtěte všechny neplacené pauzy dohromady. Například 20 minut plus 10 minut zadejte jako 30 minut.</p></details>
+        <details><summary>Jak spočítám měsíční součet hodin?</summary><p>Zadejte čistou směnu a počet odpracovaných směn v měsíci. Výsledek za období je čistý čas směny vynásobený počtem směn.</p></details>
+        <details><summary>Stačí výsledek pro výplatu?</summary><p>Ne sám o sobě. Je to dobrý podklad pro kontrolu docházky, ale mzda závisí také na sazbě, přesčasech, příplatcích, svátcích a interních pravidlech.</p></details>
+        <details><summary>Počítá kalkulačka svátky, víkendy a noční práci?</summary><p>Ne. Tahle stránka počítá čas. Pro příplatky pokračujte kalkulačkou příplatků za směny nebo přesčasů.</p></details>
+        <details><summary>Proč se výsledek může lišit od evidence zaměstnavatele?</summary><p>Nejčastěji kvůli jinak započtené pauze, zaokrouhlení docházky, bezpečnostním přestávkám, směně přes půlnoc nebo tomu, že některá část doby není pracovní dobou.</p></details>
+      </div>
+    </section>
   </main>
-  <footer class="footer"><div class="container footer-grid"><div><img src="logo-rychlevypocty-footer.svg" alt="RychléVýpočty.cz" width="190" height="38"><p>Praktické online kalkulačky pro mzdy, finance, bydlení, podnikání i každodenní rozhodování.</p></div><div><h3>Mzdy</h3><div class="footer-links"><a href="mzdy-a-prace.html">Mzdy a práce</a><a href="cista-mzda-kalkulacka.html">Čistá mzda</a><a href="kalkulacka-prescasu.html">Přesčasy</a></div></div><div><h3>Čas</h3><div class="footer-links"><a href="kalkulacka-dovolene.html">Dovolená</a><a href="pracovni-dny-kalkulacka.html">Pracovní dny</a><a href="kolik-dni-do-data.html">Kolik dní do data</a></div></div><div><h3>Web</h3><div class="footer-links"><a href="/jak-pocitame.html">Jak počítáme</a><a href="kontakt.html">Kontakt</a><a href="podminky-pouziti.html">Podmínky použití</a><a href="ochrana-osobnich-udaju.html">Ochrana osobních údajů</a></div></div></div><div class="container footer-bottom"><p>© 2026 RychléVýpočty.cz. Výpočty jsou orientační a slouží pro rychlou kontrolu vstupů.</p></div></footer>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <img src="logo-rychlevypocty-footer.svg" alt="RychléVýpočty.cz" width="190" height="38">
+        <p>Praktické online kalkulačky pro mzdy, finance, bydlení, podnikání i každodenní rozhodování.</p>
+      </div>
+      <div class="footer-col">
+        <h3>Mzdy</h3>
+        <a href="mzdy-a-prace.html">Mzdy a práce</a>
+        <a href="cista-mzda-kalkulacka.html">Čistá mzda</a>
+        <a href="kalkulacka-prescasu.html">Přesčas</a>
+        <a href="kalkulacka-priplatku-za-smeny.html">Příplatky za směny</a>
+      </div>
+      <div class="footer-col">
+        <h3>Čas</h3>
+        <a href="kalkulacka-dovolene.html">Dovolená</a>
+        <a href="pracovni-dny-kalkulacka.html">Pracovní dny</a>
+        <a href="kolik-dni-do-data.html">Kolik dní do data</a>
+      </div>
+      <div class="footer-col">
+        <h3>Web</h3>
+        <a href="jak-pocitame.html">Jak počítáme</a>
+        <a href="kontakt.html">Kontakt</a>
+        <a href="podminky-pouziti.html">Podmínky použití</a>
+        <a href="ochrana-osobnich-udaju.html">Ochrana osobních údajů</a>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <p>© 2026 RychléVýpočty.cz. Výpočty jsou orientační a nenahrazují účetní, právní ani personální posouzení.</p>
+    </div>
+  </footer>
+
   <script src="rv-tool-core.js"></script>
-  <script src="odpracovane-hodiny.js"></script>
+  <script src="odpracovane-hodiny.js?v=2"></script>
 </body>
 </html>

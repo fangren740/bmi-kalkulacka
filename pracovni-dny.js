@@ -1,17 +1,25 @@
 (() => {
   const $ = (id) => document.getElementById(id);
   const form = $("workdaysForm");
-  const resetBtn = $("resetBtn");
-  const int = (value) => new Intl.NumberFormat("cs-CZ").format(Number.isFinite(value) ? value : 0);
-  const dateValue = (date) =>
+  if (!form) return;
+
+  const nf = new Intl.NumberFormat("cs-CZ");
+  const fmtNum = (value, digits = 0) =>
+    nf.format(Number.isFinite(value) ? Number(value.toFixed(digits)) : 0);
+  const fmtDate = (date) =>
+    new Intl.DateTimeFormat("cs-CZ", { day: "numeric", month: "short", year: "numeric" }).format(date);
+  const fmtMonth = (date) =>
+    new Intl.DateTimeFormat("cs-CZ", { month: "long", year: "numeric" }).format(date);
+  const iso = (date) =>
     `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
-  const parse = (value) => {
-    const [y, m, d] = value.split("-").map(Number);
-    return new Date(y, m - 1, d);
+  const parseDate = (value) => {
+    const [year, month, day] = String(value || "").split("-").map(Number);
+    return Number.isFinite(year) ? new Date(year, month - 1, day) : new Date();
   };
-  const fmt = (date) => new Intl.DateTimeFormat("cs-CZ", { day: "numeric", month: "short", year: "numeric" }).format(date);
-  const key = (date) => dateValue(date);
   const addDays = (date, days) => new Date(date.getFullYear(), date.getMonth(), date.getDate() + days);
+  const startOfMonth = (date) => new Date(date.getFullYear(), date.getMonth(), 1);
+  const endOfMonth = (date) => new Date(date.getFullYear(), date.getMonth() + 1, 0);
+  const key = (date) => iso(date);
 
   function easterSunday(year) {
     const a = year % 19;
@@ -48,66 +56,195 @@
     ].forEach(([month, day, name]) => {
       map[key(new Date(year, month, day))] = name;
     });
-    map[key(addDays(easterSunday(year), -2))] = "Velký pátek";
-    map[key(addDays(easterSunday(year), 1))] = "Velikonoční pondělí";
+    const easter = easterSunday(year);
+    map[key(addDays(easter, -2))] = "Velký pátek";
+    map[key(addDays(easter, 1))] = "Velikonoční pondělí";
     return map;
   }
 
   function setDefaults() {
     const today = new Date();
-    $("startDate").value = dateValue(today);
-    $("endDate").value = dateValue(addDays(today, 30));
+    $("startDate").value = iso(startOfMonth(today));
+    $("endDate").value = iso(endOfMonth(today));
+    $("hoursPerDay").value = 8;
+    $("countMode").value = "inclusive";
+    $("excludeWeekends").checked = true;
+    $("excludeHolidays").checked = true;
+  }
+
+  function applyPreset(type) {
+    const today = new Date();
+    if (type === "month") {
+      $("startDate").value = iso(startOfMonth(today));
+      $("endDate").value = iso(endOfMonth(today));
+    }
+    if (type === "next-month") {
+      const next = new Date(today.getFullYear(), today.getMonth() + 1, 1);
+      $("startDate").value = iso(startOfMonth(next));
+      $("endDate").value = iso(endOfMonth(next));
+    }
+    if (type === "30") {
+      $("startDate").value = iso(today);
+      $("endDate").value = iso(addDays(today, 29));
+    }
+    if (type === "quarter") {
+      $("startDate").value = iso(today);
+      $("endDate").value = iso(addDays(today, 89));
+    }
+    render();
+  }
+
+  function readInputs() {
+    let start = parseDate($("startDate").value);
+    let end = parseDate($("endDate").value);
+    if (end < start) [start, end] = [end, start];
+    if ($("countMode").value === "exclusive-end") {
+      end = addDays(end, -1);
+    }
+    const hours = Math.min(24, Math.max(0.5, Number($("hoursPerDay").value) || 8));
+    return {
+      start,
+      end,
+      hours,
+      excludeWeekends: $("excludeWeekends").checked,
+      excludeHolidays: $("excludeHolidays").checked
+    };
+  }
+
+  function calculate() {
+    const input = readInputs();
+    const days = [];
+    const end = input.end < input.start ? input.start : input.end;
+
+    for (let cursor = new Date(input.start); cursor <= end; cursor = addDays(cursor, 1)) {
+      const holidayMap = holidays(cursor.getFullYear());
+      const isWeekend = cursor.getDay() === 0 || cursor.getDay() === 6;
+      const holidayName = holidayMap[key(cursor)] || "";
+      const isHoliday = Boolean(holidayName);
+      const excludedByWeekend = input.excludeWeekends && isWeekend;
+      const excludedByHoliday = input.excludeHolidays && isHoliday;
+      const isWorking = !excludedByWeekend && !excludedByHoliday;
+      days.push({
+        date: new Date(cursor),
+        isWeekend,
+        isHoliday,
+        holidayName,
+        isWorking,
+        note: holidayName || (isWeekend ? "víkend" : "běžný pracovní den")
+      });
+    }
+
+    const calendarDays = days.length;
+    const workingDays = days.filter((day) => day.isWorking).length;
+    const weekendDays = days.filter((day) => day.isWeekend).length;
+    const holidayDays = days.filter((day) => day.isHoliday && (!day.isWeekend || !input.excludeWeekends)).length;
+    const nonWorking = calendarDays - workingDays;
+    const workingHours = workingDays * input.hours;
+    const workShare = calendarDays ? Math.round((workingDays / calendarDays) * 100) : 0;
+    const offShare = Math.max(0, 100 - workShare);
+
+    return { ...input, days, calendarDays, workingDays, weekendDays, holidayDays, nonWorking, workingHours, workShare, offShare };
+  }
+
+  function interpretation(data) {
+    if (data.workingDays <= 0) {
+      return {
+        headline: "V období nevychází žádný pracovní den.",
+        status: "Období je celé mimo pracovní režim.",
+        text: "Pro běžnou práci nebo dodání je potřeba posunout termín, započítat směny mimo víkend, nebo vypnout odečtení víkendů a svátků.",
+        next: "Ověřte, jestli opravdu řešíte pracovní dny. Pro prostý odpočet zkuste kalkulačku dní do data."
+      };
+    }
+    if (data.workingDays < 5) {
+      return {
+        headline: "Jde o krátké pracovní okno.",
+        status: "Rezerva je malá.",
+        text: `Z ${fmtNum(data.calendarDays)} kalendářních dnů zůstává jen ${fmtNum(data.workingDays)} pracovních dnů. U termínů je dobré počítat s rezervou nebo posunout deadline.`,
+        next: "Pro plán práce si dopočítejte odpracované hodiny a u dovolené ověřte zůstatek."
+      };
+    }
+    if (data.workShare < 60) {
+      return {
+        headline: "Volné dny tvoří výraznou část období.",
+        status: "Kalendářní termín může klamat.",
+        text: `Pracovní část tvoří přibližně ${fmtNum(data.workShare)} % období. Pokud plánujete zakázku, kapacitu nebo výplatní období, čtěte hlavně pracovní dny a hodiny.`,
+        next: "Navazujte výpočtem dovolené, odpracovaných hodin nebo hodinové mzdy."
+      };
+    }
+    return {
+      headline: "Období má použitelnou pracovní kapacitu.",
+      status: "Výsledek je vhodný jako plánovací rámec.",
+      text: `V období vychází ${fmtNum(data.workingDays)} pracovních dnů, tedy orientačně ${fmtNum(data.workingHours)} hodin při délce dne ${fmtNum(data.hours, 1)} h.`,
+      next: "Pro přesnější plán odečtěte dovolenou, interní volno, porady a rezervu."
+    };
+  }
+
+  function renderTable(data) {
+    const rows = data.days.slice(0, 14).map((day) => {
+      const type = day.isWorking ? "pracovní den" : "volno";
+      return `<tr><td>${fmtDate(day.date)}</td><td>${type}</td><td>${day.note}</td></tr>`;
+    });
+    if (data.days.length > 14) {
+      rows.push(`<tr><td colspan="3">Dalších ${fmtNum(data.days.length - 14)} dnů je zahrnuto v souhrnu výše.</td></tr>`);
+    }
+    $("scheduleBody").innerHTML = rows.join("");
   }
 
   function render() {
-    let start = parse($("startDate").value);
-    let end = parse($("endDate").value);
-    if (end < start) [start, end] = [end, start];
-    const hours = Number($("hoursPerDay").value) || 8;
-    const excludeWeekends = $("excludeWeekends").checked;
-    const excludeHolidays = $("excludeHolidays").checked;
-    const days = [];
-    for (let cursor = new Date(start); cursor <= end; cursor = addDays(cursor, 1)) {
-      const isWeekend = cursor.getDay() === 0 || cursor.getDay() === 6;
-      const holidayName = holidays(cursor.getFullYear())[key(cursor)] || "";
-      const isHoliday = Boolean(holidayName);
-      const isWorking = !(excludeWeekends && isWeekend) && !(excludeHolidays && isHoliday);
-      days.push({ date: new Date(cursor), isWeekend, isHoliday, holidayName, isWorking });
-    }
-    const workingDays = days.filter((day) => day.isWorking).length;
-    const weekendDays = days.filter((day) => day.isWeekend).length;
-    const holidayDays = days.filter((day) => day.isHoliday && !day.isWeekend).length;
-    const calendarDays = days.length;
-    const nonWorking = calendarDays - workingDays;
-    $("workingDays").textContent = int(workingDays);
-    $("workingHours").textContent = `${int(workingDays * hours)} h`;
-    $("calendarDays").textContent = int(calendarDays);
-    $("nonWorkingDays").textContent = int(nonWorking);
-    $("periodBadge").textContent = "Výpočet hotový";
-    $("weekendDays").textContent = int(weekendDays);
-    $("holidayDays").textContent = int(holidayDays);
-    $("periodLabel").textContent = `${fmt(start)} až ${fmt(end)}`;
-    $("modeLabel").textContent = `${excludeWeekends ? "bez víkendů" : "včetně víkendů"}, ${excludeHolidays ? "bez svátků" : "včetně svátků"}`;
-    $("dayLengthLabel").textContent = `${hours} h`;
-    $("capacityStatus").textContent = nonWorking > 0 ? "Kalendářní dny se liší od pracovních" : "Všechny dny jsou započtené";
-    $("capacityText").textContent = `Z ${int(calendarDays)} kalendářních dnů vychází ${int(workingDays)} pracovních dnů.`;
-    $("decisionSummary").textContent = "Pro termíny a kapacitu používejte pracovní dny, pro jednoduchý odpočet stačí kalendářní dny.";
-    $("nextActionText").textContent = "Pokud výpočet navazuje na mzdu nebo dovolenou, zkontrolujte i hodinovou sazbu a mzdové kalkulačky.";
-    $("scheduleBody").innerHTML = days.slice(0, 8).map((day) => `<tr><td>${fmt(day.date)}</td><td>${day.isWorking ? "pracovní" : "volno"}</td><td>${day.holidayName || (day.isWeekend ? "víkend" : "—")}</td></tr>`).join("");
+    const data = calculate();
+    const text = interpretation(data);
+
+    $("workingDays").textContent = fmtNum(data.workingDays);
+    $("workingHours").textContent = `${fmtNum(data.workingHours, data.workingHours % 1 ? 1 : 0)} h`;
+    $("calendarDays").textContent = fmtNum(data.calendarDays);
+    $("weekendDays").textContent = fmtNum(data.weekendDays);
+    $("holidayDays").textContent = fmtNum(data.holidayDays);
+    $("nonWorkingDays").textContent = fmtNum(data.nonWorking);
+    $("dayLengthLabel").textContent = `${fmtNum(data.hours, data.hours % 1 ? 1 : 0)} h`;
+    $("periodLabel").textContent = `${fmtDate(data.start)} - ${fmtDate(data.end)}`;
+    $("periodBadge").textContent = `${fmtDate(data.start)} - ${fmtDate(data.end)}`;
+    $("workShareText").textContent = `${data.workShare} %`;
+    $("offShareText").textContent = `${data.offShare} %`;
+    $("workShareBar").style.width = `${data.workShare}%`;
+    $("offShareBar").style.width = `${data.offShare}%`;
+    $("capacityStatus").textContent = text.status;
+    $("capacityText").textContent = text.text;
+    $("nextActionText").textContent = text.next;
+    $("decisionHeadline").textContent = text.headline;
+    $("decisionSummary").textContent = text.text;
+
+    $("heroWorkingDays").textContent = fmtNum(data.workingDays);
+    $("heroCapacity").textContent = `${fmtNum(data.workingHours, data.workingHours % 1 ? 1 : 0)} h kapacity`;
+    $("heroRange").textContent = fmtMonth(data.start);
+    $("heroWorkBar").style.width = `${data.workShare}%`;
+    $("heroOffBar").style.width = `${data.offShare}%`;
+    $("heroWorkShare").textContent = `${data.workShare} %`;
+    $("heroOffShare").textContent = `${data.offShare} %`;
+
+    renderTable(data);
   }
 
   form.addEventListener("submit", (event) => {
     event.preventDefault();
     render();
+    $("vysledek").scrollIntoView({ behavior: "smooth", block: "start" });
   });
+
   ["startDate", "endDate", "hoursPerDay", "countMode", "excludeWeekends", "excludeHolidays"].forEach((id) => {
-    $(id).addEventListener("input", render);
-    $(id).addEventListener("change", render);
+    const el = $(id);
+    el.addEventListener("input", render);
+    el.addEventListener("change", render);
   });
-  resetBtn.addEventListener("click", () => {
+
+  document.querySelectorAll("[data-preset]").forEach((button) => {
+    button.addEventListener("click", () => applyPreset(button.dataset.preset));
+  });
+
+  $("resetBtn").addEventListener("click", () => {
     setDefaults();
     render();
   });
+
   setDefaults();
   render();
 })();
