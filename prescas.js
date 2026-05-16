@@ -65,7 +65,8 @@
     const averagePerHour = input.overtimeHours > 0 ? totalPay / input.overtimeHours : 0;
     const bonusPerHour = input.overtimeHours > 0 ? bonusPay / input.overtimeHours : 0;
     const bonusShare = totalPay > 0 ? bonusPay / totalPay * 100 : 0;
-    return { hourly, rate, basePay, bonusPay, totalPay, averagePerHour, bonusPerHour, bonusShare };
+    const baseShare = totalPay > 0 ? basePay / totalPay * 100 : 0;
+    return { hourly, rate, basePay, bonusPay, totalPay, averagePerHour, bonusPerHour, bonusShare, baseShare };
   }
 
   function renderBreakdown(input, result) {
@@ -131,6 +132,8 @@
     setText("overtimeBonusShare", `${nf.format(result.bonusShare)} %`);
     setText("overtimeExtraPerHour", money(result.bonusPerHour, input.roundWhole));
     setText("overtimePeriodImpact", money(result.totalPay, input.roundWhole));
+    setText("baseShareLabel", `${nf.format(result.baseShare)} %`);
+    setText("bonusShareLabel", `${nf.format(result.bonusShare)} %`);
     setText("decisionText", decisionText(input, result));
     setText("overtimeCheckFocus", focusText(input, result));
 
@@ -150,6 +153,10 @@
     setText("heroMode", input.rateMode === "monthly" ? "Měsíční mzda" : "Hodinová sazba");
     const bar = $("heroBar");
     if (bar) bar.style.width = `${Math.max(12, Math.min(100, result.rate))}%`;
+    const baseShareBar = $("baseShareBar");
+    const bonusShareBar = $("bonusShareBar");
+    if (baseShareBar) baseShareBar.style.width = `${Math.max(4, Math.min(100, result.baseShare))}%`;
+    if (bonusShareBar) bonusShareBar.style.width = `${Math.max(4, Math.min(100, result.bonusShare))}%`;
 
     renderBreakdown(input, result);
   }
