@@ -66,6 +66,18 @@
     return `${pf.format(value)} %`;
   }
 
+  function setText(target, value) {
+    if (target) target.textContent = value;
+  }
+
+  function setClass(target, value) {
+    if (target) target.className = value;
+  }
+
+  function setWidth(target, value) {
+    if (target) target.style.width = value;
+  }
+
   function clamp(value, min, max) {
     return Math.max(min, Math.min(max, value));
   }
@@ -112,33 +124,33 @@
   }
 
   function setStatus(result, input) {
-    outputs.statusBadge.className = "badge success";
+    setClass(outputs.statusBadge, "badge success");
 
     if (result.remainingHours < 0) {
-      outputs.statusBadge.textContent = "Zůstatek vychází přečerpaný";
-      outputs.statusBadge.className = "badge warning";
-      outputs.remainingSummary.textContent = `Podle zadaných hodnot je vyčerpáno o ${hours(Math.abs(result.remainingHours))} více, než odpovídá poměrné části. Ověřte evidenci dovolené, převody a případnou změnu úvazku.`;
-      outputs.decisionSummary.textContent = "Tohle je rizikový signál pro kontrolu s personalistikou. Nejdřív ověřte vyčerpané hodiny a období, za které poměrnou část počítáte.";
-      outputs.resultReadingTitle.textContent = "Výsledek ukazuje přečerpání dovolené.";
-      outputs.resultReadingText.textContent = `Přečerpání o ${hours(Math.abs(result.remainingHours))} nemusí automaticky znamenat chybu, ale je potřeba ho porovnat s interní evidencí, převodem dovolené a pravidly zaměstnavatele.`;
+      setText(outputs.statusBadge, "Zůstatek vychází přečerpaný");
+      setClass(outputs.statusBadge, "badge warning");
+      setText(outputs.remainingSummary, `Podle zadaných hodnot je vyčerpáno o ${hours(Math.abs(result.remainingHours))} více, než odpovídá poměrné části. Ověřte evidenci dovolené, převody a případnou změnu úvazku.`);
+      setText(outputs.decisionSummary, "Tohle je rizikový signál pro kontrolu s personalistikou. Nejdřív ověřte vyčerpané hodiny a období, za které poměrnou část počítáte.");
+      setText(outputs.resultReadingTitle, "Výsledek ukazuje přečerpání dovolené.");
+      setText(outputs.resultReadingText, `Přečerpání o ${hours(Math.abs(result.remainingHours))} nemusí automaticky znamenat chybu, ale je potřeba ho porovnat s interní evidencí, převodem dovolené a pravidly zaměstnavatele.`);
       return;
     }
 
     if (result.remainingHours <= input.workdayHours) {
-      outputs.statusBadge.textContent = "Zbývá už jen malá rezerva";
-      outputs.statusBadge.className = "badge warning";
-      outputs.remainingSummary.textContent = `Zbývá přibližně ${hours(result.remainingHours)}, tedy ${days(result.remainingDays)} při délce dne ${hours(input.workdayHours)}. Další volno už plánujte proti přesné evidenci směn.`;
-      outputs.decisionSummary.textContent = "Rezerva je nízká. Před žádostí o delší volno zkontrolujte, zda se do evidence nepromítá jiná délka směny.";
-      outputs.resultReadingTitle.textContent = "Zůstatek je nízký a vyplatí se ho ověřit.";
-      outputs.resultReadingText.textContent = "Když zbývá zhruba jeden pracovní den nebo méně, i drobný rozdíl v hodinách, směně nebo zaokrouhlení může změnit praktické plánování volna.";
+      setText(outputs.statusBadge, "Zbývá už jen malá rezerva");
+      setClass(outputs.statusBadge, "badge warning");
+      setText(outputs.remainingSummary, `Zbývá přibližně ${hours(result.remainingHours)}, tedy ${days(result.remainingDays)} při délce dne ${hours(input.workdayHours)}. Další volno už plánujte proti přesné evidenci směn.`);
+      setText(outputs.decisionSummary, "Rezerva je nízká. Před žádostí o delší volno zkontrolujte, zda se do evidence nepromítá jiná délka směny.");
+      setText(outputs.resultReadingTitle, "Zůstatek je nízký a vyplatí se ho ověřit.");
+      setText(outputs.resultReadingText, "Když zbývá zhruba jeden pracovní den nebo méně, i drobný rozdíl v hodinách, směně nebo zaokrouhlení může změnit praktické plánování volna.");
       return;
     }
 
-    outputs.statusBadge.textContent = "Zůstatek je orientačně v pořádku";
-    outputs.remainingSummary.textContent = `Zbývá přibližně ${hours(result.remainingHours)}, tedy ${days(result.remainingDays)} při délce pracovního dne ${hours(input.workdayHours)}. Výsledek je vhodný jako rychlá kontrola proti evidenci zaměstnavatele.`;
-    outputs.decisionSummary.textContent = "Číslo působí bezpečně pro běžné plánování. U směnného provozu nebo změny úvazku si přesto ověřte, kolik hodin se odečte za konkrétní dny volna.";
-    outputs.resultReadingTitle.textContent = "Zůstatek dovoluje plánovat další volno.";
-    outputs.resultReadingText.textContent = `Poměrná část vychází ${hours(result.earnedHours)} a po odečtení čerpání zbývá ${hours(result.remainingHours)}. Přepočet na dny používejte hlavně pro orientaci v kalendáři.`;
+    setText(outputs.statusBadge, "Zůstatek je orientačně v pořádku");
+    setText(outputs.remainingSummary, `Zbývá přibližně ${hours(result.remainingHours)}, tedy ${days(result.remainingDays)} při délce pracovního dne ${hours(input.workdayHours)}. Výsledek je vhodný jako rychlá kontrola proti evidenci zaměstnavatele.`);
+    setText(outputs.decisionSummary, "Číslo působí bezpečně pro běžné plánování. U směnného provozu nebo změny úvazku si přesto ověřte, kolik hodin se odečte za konkrétní dny volna.");
+    setText(outputs.resultReadingTitle, "Zůstatek dovoluje plánovat další volno.");
+    setText(outputs.resultReadingText, `Poměrná část vychází ${hours(result.earnedHours)} a po odečtení čerpání zbývá ${hours(result.remainingHours)}. Přepočet na dny používejte hlavně pro orientaci v kalendáři.`);
   }
 
   function renderTable(input, result) {
@@ -151,6 +163,7 @@
       ["Podíl čerpání", moneylessPercent(result.usedShare), "Kolik z poměrné části je už vyčerpáno"]
     ];
 
+    if (!outputs.summaryTableBody) return;
     outputs.summaryTableBody.innerHTML = rows.map((row) => (
       `<tr><td>${row[0]}</td><td>${row[1]}</td><td>${row[2]}</td></tr>`
     )).join("");
@@ -160,33 +173,32 @@
     const usedShare = clamp(result.usedShare, 0, 100);
     const remainingShare = clamp(result.remainingShare, 0, 100);
 
-    outputs.usedShareText.textContent = moneylessPercent(usedShare);
-    outputs.remainingShareText.textContent = moneylessPercent(remainingShare);
-    outputs.usedShareBar.style.width = `${Math.max(4, usedShare)}%`;
-    outputs.remainingShareBar.style.width = `${Math.max(4, remainingShare)}%`;
-
-    outputs.heroUsedBar.style.width = `${Math.max(5, usedShare)}%`;
-    outputs.heroRemainingBar.style.width = `${Math.max(5, remainingShare)}%`;
+    setText(outputs.usedShareText, moneylessPercent(usedShare));
+    setText(outputs.remainingShareText, moneylessPercent(remainingShare));
+    setWidth(outputs.usedShareBar, `${Math.max(4, usedShare)}%`);
+    setWidth(outputs.remainingShareBar, `${Math.max(4, remainingShare)}%`);
+    setWidth(outputs.heroUsedBar, `${Math.max(5, usedShare)}%`);
+    setWidth(outputs.heroRemainingBar, `${Math.max(5, remainingShare)}%`);
   }
 
   function render(input, result) {
-    outputs.remainingHours.textContent = hours(result.remainingHours);
-    outputs.annualHours.textContent = hours(result.annualHours);
-    outputs.earnedHours.textContent = hours(result.earnedHours);
-    outputs.usedOutput.textContent = hours(input.usedHours);
-    outputs.remainingDays.textContent = days(result.remainingDays);
-    outputs.annualDays.textContent = days(result.annualDays);
-    outputs.earnedDays.textContent = days(result.earnedDays);
-    outputs.summaryWeeks.textContent = weeks(input.annualWeeks);
-    outputs.summaryWeeklyHours.textContent = hours(input.weeklyHours);
+    setText(outputs.remainingHours, hours(result.remainingHours));
+    setText(outputs.annualHours, hours(result.annualHours));
+    setText(outputs.earnedHours, hours(result.earnedHours));
+    setText(outputs.usedOutput, hours(input.usedHours));
+    setText(outputs.remainingDays, days(result.remainingDays));
+    setText(outputs.annualDays, days(result.annualDays));
+    setText(outputs.earnedDays, days(result.earnedDays));
+    setText(outputs.summaryWeeks, weeks(input.annualWeeks));
+    setText(outputs.summaryWeeklyHours, hours(input.weeklyHours));
 
-    outputs.heroRemaining.textContent = hours(result.remainingHours);
-    outputs.heroEarned.textContent = hours(result.earnedHours);
-    outputs.heroUsed.textContent = hours(input.usedHours);
-    outputs.heroDays.textContent = days(result.remainingDays);
-    outputs.heroWeekly.textContent = hours(input.weeklyHours);
-    outputs.heroWeeks.textContent = weeks(input.annualWeeks);
-    outputs.heroMonths.textContent = `${input.monthsWorked}/12`;
+    setText(outputs.heroRemaining, hours(result.remainingHours));
+    setText(outputs.heroEarned, hours(result.earnedHours));
+    setText(outputs.heroUsed, hours(input.usedHours));
+    setText(outputs.heroDays, days(result.remainingDays));
+    setText(outputs.heroWeekly, hours(input.weeklyHours));
+    setText(outputs.heroWeeks, weeks(input.annualWeeks));
+    setText(outputs.heroMonths, `${input.monthsWorked}/12`);
 
     setStatus(result, input);
     renderBars(result);
@@ -198,8 +210,8 @@
     const error = validate(input);
 
     if (error) {
-      outputs.statusBadge.textContent = error;
-      outputs.statusBadge.className = "badge warning";
+      setText(outputs.statusBadge, error);
+      setClass(outputs.statusBadge, "badge warning");
       return;
     }
 
