@@ -1,135 +1,163 @@
-(function () {
-  const form = document.getElementById("sickForm");
-  if (!form) return;
 
-  const $ = (id) => document.getElementById(id);
-  const RULES_2026 = {
-    dailyThresholds: [1633, 2449, 4897],
-    hourlyThresholds: [285.78, 428.58, 856.98]
+(function(){
+  const $ = id => document.getElementById(id);
+  const form = $("sickForm");
+  if(!form) return;
+
+  const RH1 = 1633, RH2 = 2449, RH3 = 4897;
+  const fmt = new Intl.NumberFormat("cs-CZ", {maximumFractionDigits:0});
+  const czk = n => `${fmt.format(Math.round(Number.isFinite(n) ? n : 0))} Kč`;
+  const dayText = n => {
+    n = Math.round(n);
+    if(n === 1) return "1 den";
+    if(n >= 2 && n <= 4) return `${n} dny`;
+    return `${n} dnů`;
   };
+  const monthFmt = new Intl.DateTimeFormat("cs-CZ", {day:"numeric", month:"long", year:"numeric"});
+  let mode = "monthly";
+  const modeBtns = Array.from(document.querySelectorAll(".ns-mode"));
 
-  function money(value, whole) {
-    return new Intl.NumberFormat("cs-CZ", {
-      style: "currency",
-      currency: "CZK",
-      minimumFractionDigits: whole ? 0 : 2,
-      maximumFractionDigits: whole ? 0 : 2
-    }).format(value);
+  function val(id){
+    const el = $(id);
+    const n = Number(String(el?.value || "").replace(",", "."));
+    return Number.isFinite(n) ? n : 0;
   }
 
-  function nf(value, digits) {
-    return new Intl.NumberFormat("cs-CZ", { maximumFractionDigits: digits ?? 2 }).format(value);
+  function reducedDVZ(dvz){
+    let r = 0;
+    r += Math.min(dvz, RH1) * 0.90;
+    if(dvz > RH1) r += Math.min(dvz - RH1, RH2 - RH1) * 0.60;
+    if(dvz > RH2) r += Math.min(dvz - RH2, RH3 - RH2) * 0.30;
+    return Math.max(0, r);
   }
 
-  function values() {
-    return {
-      avgHourlyEarnings: Number($("avgHourlyEarnings").value) || 0,
-      avgMonthlyGross: Number($("avgMonthlyGross").value) || 0,
-      missedHoursFirst14: Number($("missedHoursFirst14").value) || 0,
-      totalSickDays: Number($("totalSickDays").value) || 0,
-      roundWhole: $("roundMode").value === "whole"
-    };
+  function addDays(date, days){
+    const d = new Date(date.getTime());
+    d.setDate(d.getDate() + Math.max(0, Math.round(days)) - 1);
+    return d;
   }
 
-  function reduceBase(value, thresholds) {
-    const [t1, t2, t3] = thresholds;
-    let reduced = Math.min(value, t1) * 0.9;
-    if (value > t1) reduced += Math.max(0, Math.min(value, t2) - t1) * 0.6;
-    if (value > t2) reduced += Math.max(0, Math.min(value, t3) - t2) * 0.3;
-    return reduced;
+  function bandDays(totalDays){
+    const paid = Math.max(0, totalDays - 14);
+    const b1 = Math.max(0, Math.min(totalDays, 30) - 14);
+    const b2 = Math.max(0, Math.min(totalDays, 60) - 30);
+    const b3 = Math.max(0, totalDays - 60);
+    return {paid,b1,b2,b3};
   }
 
-  function calculate(input) {
-    const reducedHourly = reduceBase(input.avgHourlyEarnings, RULES_2026.hourlyThresholds);
-    const wageCompensation = reducedHourly * input.missedHoursFirst14 * 0.6;
-    const estimatedDVZ = (input.avgMonthlyGross * 12) / 365;
-    const reducedDVZ = reduceBase(estimatedDVZ, RULES_2026.dailyThresholds);
-    const days15to30 = Math.max(0, Math.min(input.totalSickDays, 30) - 14);
-    const days31to60 = Math.max(0, Math.min(input.totalSickDays, 60) - 30);
-    const days61plus = Math.max(0, input.totalSickDays - 60);
-    const benefit15to30 = days15to30 * reducedDVZ * 0.6;
-    const benefit31to60 = days31to60 * reducedDVZ * 0.66;
-    const benefit61plus = days61plus * reducedDVZ * 0.72;
-    const sicknessBenefit = benefit15to30 + benefit31to60 + benefit61plus;
-    const totalCompensation = wageCompensation + sicknessBenefit;
-    const totalBenefitDays = days15to30 + days31to60 + days61plus;
-    return {
-      reducedHourly,
-      wageCompensation,
-      estimatedDVZ,
-      reducedDVZ,
-      days15to30,
-      days31to60,
-      days61plus,
-      benefit15to30,
-      benefit31to60,
-      benefit61plus,
-      sicknessBenefit,
-      totalCompensation,
-      avgDailyBenefit: totalBenefitDays > 0 ? sicknessBenefit / totalBenefitDays : 0
-    };
+  function setMode(nextMode){
+    mode = nextMode;
+    modeBtns.forEach(btn => {
+      const active = btn.dataset.mode === mode;
+      btn.classList.toggle("is-active", active);
+      btn.setAttribute("aria-pressed", String(active));
+    });
+    form.classList.toggle("is-monthly-mode", mode === "monthly");
+    form.classList.toggle("is-total-mode", mode === "total");
+
+    const hint = $("modeHint");
+    if(hint){
+      hint.textContent = mode === "monthly"
+        ? "Zadejte běžnou průměrnou hrubou mzdu. Roční příjem si kalkulačka dopočítá."
+        : "Zadejte celkový hrubý příjem za rozhodné období. Měsíční průměr se dopočítá.";
+    }
+    calculate();
   }
 
-  function renderTable(input, result) {
-    $("breakdownBody").innerHTML = [
-      ["Průměrný hodinový výdělek", money(input.avgHourlyEarnings, input.roundWhole), "Vstup pro prvních 14 dní"],
-      ["Redukovaný hodinový výdělek", money(result.reducedHourly, input.roundWhole), "Upravený hodinový základ"],
-      ["Náhrada mzdy", money(result.wageCompensation, input.roundWhole), "60 % z redukovaného hodinového výdělku"],
-      ["Odhad DVZ", money(result.estimatedDVZ, input.roundWhole), "Orientační denní základ z měsíční mzdy"],
-      ["Redukovaný DVZ", money(result.reducedDVZ, input.roundWhole), "Denní základ pro nemocenské"],
-      ["Dny 15-30", money(result.benefit15to30, input.roundWhole), `${result.days15to30} dní × 60 %`],
-      ["Dny 31-60", money(result.benefit31to60, input.roundWhole), `${result.days31to60} dní × 66 %`],
-      ["Dny 61+", money(result.benefit61plus, input.roundWhole), `${result.days61plus} dní × 72 %`],
-      ["Celkem", money(result.totalCompensation, input.roundWhole), "Náhrada mzdy plus nemocenské"]
-    ].map((row) => `<tr><td>${row[0]}</td><td>${row[1]}</td><td>${row[2]}</td></tr>`).join("");
+  function calculate(){
+    const monthlyIncome = Math.max(0, val("monthlyIncome"));
+    const totalIncome = Math.max(0, val("totalIncome"));
+    const periodDays = Math.max(1, val("periodDays"));
+    const sickDays = Math.max(1, val("sickDays"));
+    const reductionType = $("reductionType").value;
+    const penalty = reductionType === "half" ? 0.5 : 1;
+
+    if(mode === "monthly"){
+      $("totalIncome").value = Math.round(monthlyIncome * 12);
+    } else {
+      $("monthlyIncome").value = Math.round(totalIncome / 12);
+    }
+
+    const effectiveMonthly = Math.max(0, val("monthlyIncome"));
+    const effectiveTotal = mode === "monthly" ? effectiveMonthly * 12 : Math.max(0, val("totalIncome"));
+    const dvz = effectiveTotal / periodDays;
+    const rdvz = reducedDVZ(dvz);
+
+    const {paid,b1,b2,b3} = bandDays(sickDays);
+    const daily60 = rdvz * 0.60 * penalty;
+    const daily66 = rdvz * 0.66 * penalty;
+    const daily72 = rdvz * 0.72 * penalty;
+
+    const amount1 = b1 * daily60;
+    const amount2 = b2 * daily66;
+    const amount3 = b3 * daily72;
+    const total = amount1 + amount2 + amount3;
+    const avgDaily = paid > 0 ? total / paid : 0;
+    const normalIncomeForPeriod = effectiveMonthly > 0 ? effectiveMonthly / 30.4167 * sickDays : 0;
+    const loss = Math.max(0, normalIncomeForPeriod - total);
+
+    $("totalResult").textContent = czk(total);
+    $("paidDaysResult").textContent = dayText(paid);
+    $("dailyResult").textContent = paid > 0 ? czk(avgDaily) : "0 Kč";
+    $("bandResult").textContent = sickDays <= 14 ? "bez dávky ČSSZ" : sickDays <= 30 ? "60 %" : sickDays <= 60 ? "60 / 66 %" : "60 / 66 / 72 %";
+    $("primarySub").textContent = paid > 0 ? `Za ${dayText(paid)} nemocenského od ČSSZ.` : "Při délce do 14 dnů nevzniká nemocenské od ČSSZ.";
+    $("band1Result").textContent = czk(amount1);
+    $("band2Result").textContent = czk(amount2);
+    $("band3Result").textContent = czk(amount3);
+    $("dvzResult").textContent = czk(dvz);
+    $("reducedDvzResult").textContent = czk(rdvz);
+    $("lossResult").textContent = effectiveMonthly > 0 ? czk(loss) : "—";
+
+    const start = $("startDate").value;
+    if(start){
+      const d = new Date(start + "T00:00:00");
+      $("endResult").textContent = monthFmt.format(addDays(d, sickDays));
+    } else {
+      $("endResult").textContent = "zadejte datum";
+    }
+
+    let status = "Nemocenské od 15. dne";
+    let title = "Praktický závěr";
+    let text = "Nemocenské od ČSSZ začíná až od 15. dne. U delší neschopenky sledujte hlavně celkový výpadek příjmu proti běžné mzdě.";
+    let next = "Porovnejte výsledek s čistou mzdou a zkontrolujte finanční rezervu domácnosti.";
+
+    if(sickDays <= 14){
+      status = "Bez nemocenské ČSSZ";
+      title = "Krátká neschopenka";
+      text = "Při neschopence do 14 dnů kalkulačka ukazuje 0 Kč nemocenského od ČSSZ. Toto období se obvykle řeší náhradou mzdy od zaměstnavatele.";
+      next = "Pro přesný výpočet prvních 14 dnů je potřeba znát rozvrh směn a průměrný hodinový výdělek.";
+    } else if(sickDays > 60){
+      status = "Dlouhá neschopenka";
+      title = "Dlouhá pracovní neschopnost";
+      text = "U delší nemoci se použije i sazba 72 %, ale příjem může být stále výrazně nižší než běžná výplata.";
+      next = "Zkontrolujte rozpočet domácnosti a finanční rezervu na několik měsíců.";
+    } else if(reductionType === "half"){
+      status = "Snížená dávka";
+      title = "Výsledek počítá snížení o 50 %";
+      text = "Zvolili jste speciální snížení dávky. Používejte ho jen pro situace, kdy se nemocenské podle pravidel opravdu krátí.";
+      next = "Ověřte konkrétní důvod snížení u ČSSZ.";
+    }
+
+    $("statusPill").textContent = status;
+    $("decisionTitle").textContent = title;
+    $("decisionText").textContent = text;
+    $("nextActionText").textContent = next;
   }
 
-  function render(input, result) {
-    $("totalCompensation").textContent = money(result.totalCompensation, input.roundWhole);
-    $("wageCompensation").textContent = money(result.wageCompensation, input.roundWhole);
-    $("sicknessBenefit").textContent = money(result.sicknessBenefit, input.roundWhole);
-    $("avgDailyBenefit").textContent = money(result.avgDailyBenefit, input.roundWhole);
-    $("reducedHourly").textContent = money(result.reducedHourly, input.roundWhole);
-    $("estimatedDVZ").textContent = money(result.estimatedDVZ, input.roundWhole);
-    $("reducedDVZ").textContent = money(result.reducedDVZ, input.roundWhole);
-    $("days15to30").textContent = String(result.days15to30);
-    $("days31to60").textContent = String(result.days31to60);
-    $("days61plus").textContent = String(result.days61plus);
-    $("statusBadge").textContent = input.totalSickDays <= 14 ? "Jen náhrada mzdy" : "Náhrada mzdy + nemocenské";
-    $("statusBadge").className = input.totalSickDays <= 14 ? "badge warning" : "badge success";
-    $("resultNote").textContent = input.totalSickDays <= 14
-      ? "Podle zadané délky neschopnosti se počítá jen orientační náhrada mzdy za zameškané pracovní hodiny."
-      : `Za ${nf(input.totalSickDays, 0)} kalendářních dnů vychází orientační součet náhrady mzdy a nemocenského ${money(result.totalCompensation, input.roundWhole)}.`;
-    $("heroTotal").textContent = money(result.totalCompensation, input.roundWhole);
-    $("heroWage").textContent = money(result.wageCompensation, input.roundWhole);
-    $("heroBenefit").textContent = money(result.sicknessBenefit, input.roundWhole);
-    $("heroDays").textContent = `${nf(input.totalSickDays, 0)} dní`;
-    $("heroBar").style.width = `${Math.max(8, Math.min(100, input.totalSickDays / 60 * 100))}%`;
-    renderTable(input, result);
-  }
-
-  function run() {
-    render(values(), calculate(values()));
-  }
-
-  form.addEventListener("submit", (event) => {
-    event.preventDefault();
-    run();
+  modeBtns.forEach(btn => btn.addEventListener("click", () => setMode(btn.dataset.mode)));
+  ["monthlyIncome","totalIncome","periodDays","sickDays","startDate","reductionType"].forEach(id => {
+    const el = $(id);
+    if(el){
+      el.addEventListener("input", calculate);
+      el.addEventListener("change", calculate);
+    }
   });
 
-  ["avgHourlyEarnings", "avgMonthlyGross", "missedHoursFirst14", "totalSickDays", "roundMode"].forEach((id) => {
-    $(id).addEventListener("input", run);
-    $(id).addEventListener("change", run);
-  });
+  const start = $("startDate");
+  if(start && !start.value){
+    const d = new Date();
+    start.value = d.toISOString().slice(0,10);
+  }
 
-  $("resetBtn").addEventListener("click", () => {
-    $("avgHourlyEarnings").value = 220;
-    $("avgMonthlyGross").value = 38000;
-    $("missedHoursFirst14").value = 56;
-    $("totalSickDays").value = 30;
-    $("roundMode").value = "exact";
-    run();
-  });
-
-  run();
+  setMode("monthly");
 })();
