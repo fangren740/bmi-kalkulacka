@@ -113,37 +113,61 @@
     $("targetMonthlyResult").textContent = czk(targetMonthly);
     $("monthsToThreeResult").textContent = monthText(monthsToThree);
 
+    const usedPercent = total > 0 ? Math.min(100, Math.max(0, used / total * 100)) : 0;
+    const usedPercentEl = $("usedPercentResult");
+    const usedBar = $("usedProgressBar");
+    const usedAmountEl = $("usedAmountResult");
+    const leftAmountEl = $("leftAmountResult");
+    if(usedPercentEl) usedPercentEl.textContent = `${Math.round(usedPercent)} % vyčerpáno`;
+    if(usedBar) usedBar.style.width = `${usedPercent}%`;
+    if(usedAmountEl) usedAmountEl.textContent = `Vyčerpáno ${czk(used)}`;
+    if(leftAmountEl) leftAmountEl.textContent = `Zbývá ${czk(remaining)}`;
+
     let status = "Vyrovnané čerpání";
     let title = "Toto nastavení je vyrovnané";
     let text = "Měsíční částka rozkládá rodičovský příspěvek relativně rozumně a může dobře zapadnout do rodinného rozpočtu.";
     let next = "Porovnejte variantu s plánem návratu do práce, čistou mzdou a pravidelnými výdaji domácnosti.";
+    let planType = "Vyrovnaný plán";
+    let planMicro = "Výsledek je vhodný pro stabilní domácí rozpočet bez velkých výkyvů.";
 
     if(remaining <= 0){
       status = "Rodičák je vyčerpaný";
       title = "Podle zadání už nezbývá co čerpat";
       text = "Už vyčerpaná částka je stejná nebo vyšší než celkový nárok. Zkontrolujte vstupy.";
       next = "Ověřte skutečný zůstatek v podkladech z Úřadu práce.";
+      planType = "Bez zůstatku";
+      planMicro = "Kalkulačka nenašla zbývající částku k čerpání.";
     } else if(monthly > limit){
       status = "Nad orientačním limitem";
       title = "Zadaná měsíční částka je nad limitem";
       text = `Zadané čerpání ${czk(monthly)} je vyšší než orientační limit ${czk(limit)}. Pokud máte vyšší limit podle DVZ, upravte pole limitu.`;
       next = "Ověřte limit podle denního vyměřovacího základu a případně přepočítejte scénář.";
+      planType = "Nutné ověřit limit";
+      planMicro = "Částka může být dostupná jen při vyšším limitu podle DVZ.";
     } else if(monthsToThree > 0 && duration < monthsToThree * 0.55){
       status = "Rychlé čerpání";
       title = "Čerpání je rychlé";
       text = "Měsíčně dostanete více peněz, ale rodičovský příspěvek skončí výrazně dříve. Hodí se hlavně při plánovaném návratu do práce nebo jiném příjmu.";
       next = "Zvažte, zda budete mít po vyčerpání rodičáku dostatečný příjem nebo rezervu.";
+      planType = "Rychlý plán";
+      planMicro = "Dává více peněz teď, ale vyžaduje jasný další příjem později.";
     } else if(monthsToThree > 0 && duration > monthsToThree * 1.18){
       status = "Pomalé čerpání";
       title = "Čerpání je spíš pomalé";
       text = "Rodičovský příspěvek je rozložený na delší dobu. Měsíční částka může být nízká vůči běžným výdajům domácnosti.";
       next = "Zkuste spočítat částku potřebnou do cílového data nebo do 3 let dítěte.";
+      planType = "Pomalý plán";
+      planMicro = "Dávka vydrží déle, ale měsíční částka může být slabá pro reálné výdaje.";
     }
 
     $("statusPill").textContent = status;
     $("decisionTitle").textContent = title;
     $("decisionText").textContent = text;
     $("nextActionText").textContent = next;
+    const planTypeEl = $("planTypeResult");
+    const planMicroEl = $("planMicrocopy");
+    if(planTypeEl) planTypeEl.textContent = planType;
+    if(planMicroEl) planMicroEl.textContent = planMicro;
 
     const balancedAmount = monthsToThree > 0 ? Math.min(limit, Math.max(1, remaining / monthsToThree)) : Math.min(limit, monthly);
     const variants = [
@@ -161,15 +185,33 @@
       if(v.score >= 1 && dist < bestDistance){ bestIndex = i; bestDistance = dist; }
     });
 
-    $("variantBody").innerHTML = variants.map((v, i) => `
-      <tr class="${i === bestIndex ? "is-best" : ""}">
-        <td><strong>${v.label}${i === bestIndex ? " · doporučeno" : ""}</strong></td>
-        <td>${czk(v.amount)}</td>
-        <td>${monthText(v.months)}</td>
-        <td>${remaining > 0 ? monthFmt.format(v.end) : "—"}</td>
-        <td>${v.rating}</td>
-      </tr>
-    `).join("");
+    const variantBody = $("variantBody");
+    if(variantBody){
+      variantBody.innerHTML = variants.map((v, i) => `
+        <tr class="${i === bestIndex ? "is-best" : ""}">
+          <td><strong>${v.label}${i === bestIndex ? " · doporučeno" : ""}</strong></td>
+          <td>${czk(v.amount)}</td>
+          <td>${monthText(v.months)}</td>
+          <td>${remaining > 0 ? monthFmt.format(v.end) : "—"}</td>
+          <td>${v.rating}</td>
+        </tr>
+      `).join("");
+    }
+
+    const variantCards = $("variantCards");
+    if(variantCards){
+      variantCards.innerHTML = variants.map((v, i) => `
+        <article class="rp-variant-mini ${i === bestIndex ? "is-best" : ""}">
+          <div><span>${v.label}</span>${i === bestIndex ? "<strong>doporučeno</strong>" : ""}</div>
+          <dl>
+            <dt>Měsíčně</dt><dd>${czk(v.amount)}</dd>
+            <dt>Vydrží</dt><dd>${monthText(v.months)}</dd>
+            <dt>Konec</dt><dd>${remaining > 0 ? monthFmt.format(v.end) : "—"}</dd>
+          </dl>
+          <p>${v.rating}</p>
+        </article>
+      `).join("");
+    }
   }
 
   inputs.forEach(input => input.addEventListener("input", calculate));

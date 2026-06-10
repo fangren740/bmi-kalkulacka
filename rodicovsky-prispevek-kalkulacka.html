@@ -22,7 +22,7 @@
   <meta name="twitter:image" content="https://rychlevypocty.cz/og-image.jpg">
   <link rel="stylesheet" href="rv-tool-v2.css">
   <link rel="stylesheet" href="rv-top20-upgrade.css">
-  <link rel="stylesheet" href="rodicovsky-prispevek-v2.css?v=20260610-1">
+  <link rel="stylesheet" href="rodicovsky-prispevek-v2.css?v=20260610-2">
   <link rel="stylesheet" href="rv-top20-mobile-quality.css">
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "RychléVýpočty.cz", "item": "https://rychlevypocty.cz/"}, {"@type": "ListItem", "position": 2, "name": "Rodina a rozpočet", "item": "https://rychlevypocty.cz/rodina-a-rozpocet.html"}, {"@type": "ListItem", "position": 3, "name": "Kalkulačka rodičovského příspěvku", "item": "https://rychlevypocty.cz/rodicovsky-prispevek-kalkulacka.html"}]}</script>
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "Kalkulačka rodičovského příspěvku 2026", "url": "https://rychlevypocty.cz/rodicovsky-prispevek-kalkulacka.html", "applicationCategory": "FinanceApplication", "operatingSystem": "Web", "inLanguage": "cs-CZ", "description": "Orientační kalkulačka pro plánování rodičovského příspěvku, měsíčního čerpání, zůstatku a konce čerpání.", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "CZK"}}</script>
@@ -63,6 +63,13 @@
       </div>
     </section>
 
+    <section class="container rp-trust-strip" aria-label="Rychlé shrnutí kalkulačky">
+      <div class="rp-trust-item"><span>Základní nárok</span><strong>350 000 Kč</strong><small>pro jedno dítě</small></div>
+      <div class="rp-trust-item"><span>Vícerčata</span><strong>700 000 Kč</strong><small>dvojnásobek částky</small></div>
+      <div class="rp-trust-item"><span>Hlavní výstup</span><strong>měsíční plán</strong><small>zůstatek, konec, varianty</small></div>
+      <div class="rp-trust-item"><span>Nejdůležitější</span><strong>rozpočet</strong><small>nejen maximální částka</small></div>
+    </section>
+
     <div class="anchor-nav rp-anchor"><div class="container anchor-scroll"><a href="#kalkulacka">Kalkulačka</a><a href="#vysledek">Výsledek</a><a href="#varianty">Varianty</a><a href="#jak-cist-vysledek">Metodika</a><a href="#faq">FAQ</a></div></div>
 
     <section class="container rp-stage" id="kalkulacka">
@@ -97,30 +104,59 @@
         <div class="rp-info-strip">
           <strong>Tip:</strong> Pro plánování rozpočtu je nejlepší porovnat aspoň tři varianty: rychlejší čerpání, vyrovnaný plán a delší rozložení.
         </div>
+        <div class="rp-inline-help">
+          <article><span>1</span><strong>Zůstatek</strong><p>Nejdřív si ověřte, kolik už bylo vyčerpáno. Právě zůstatek rozhoduje o tom, jak dlouho rodičák vydrží.</p></article>
+          <article><span>2</span><strong>Měsíční částka</strong><p>Vyšší částka pomůže teď, ale zkrátí dobu čerpání. Nižší částka prodlouží podporu, ale může být slabá pro rozpočet.</p></article>
+          <article><span>3</span><strong>Návrat do práce</strong><p>Nejlepší plán je ten, který navazuje na reálný příjem domácnosti po návratu do práce nebo školky.</p></article>
+        </div>
       </form>
 
-      <aside class="result-panel rp-result" id="vysledek" aria-live="polite">
+      <aside class="result-panel rp-result rp-result-v2" id="vysledek" aria-live="polite">
         <div class="result-eyebrow-row"><span>Výsledek</span><strong id="statusPill">Vyrovnané čerpání</strong></div>
+
         <div class="primary-result rp-primary">
           <span id="primaryLabel">Zbývá čerpat</span>
           <output id="remainingResult">264 000 Kč</output>
           <small id="primarySub">Při 12 000 Kč měsíčně vydrží přibližně 22 měsíců.</small>
         </div>
+
+        <div class="rp-progress-card">
+          <div class="rp-progress-head">
+            <span>Stav nároku</span>
+            <strong id="usedPercentResult">25 % vyčerpáno</strong>
+          </div>
+          <div class="rp-progress-track" aria-hidden="true"><i id="usedProgressBar"></i></div>
+          <div class="rp-progress-legend">
+            <span id="usedAmountResult">Vyčerpáno 86 000 Kč</span>
+            <span id="leftAmountResult">Zbývá 264 000 Kč</span>
+          </div>
+        </div>
+
         <div class="result-metrics rp-metrics">
           <div><span>Vydrží</span><strong id="durationResult">22 měsíců</strong></div>
           <div><span>Konec čerpání</span><strong id="endResult">—</strong></div>
           <div><span>Měsíčně do cíle</span><strong id="targetMonthlyResult">9 429 Kč</strong></div>
           <div><span>Do 3 let zbývá</span><strong id="monthsToThreeResult">28 měsíců</strong></div>
         </div>
+
+        <div class="rp-plan-card">
+          <div>
+            <span>Typ plánu</span>
+            <strong id="planTypeResult">Vyrovnaný plán</strong>
+          </div>
+          <p id="planMicrocopy">Výsledek je vhodný pro stabilní domácí rozpočet bez velkých výkyvů.</p>
+        </div>
+
         <div class="rv-result-note">
           <p><strong id="decisionTitle">Praktický závěr</strong></p>
           <p id="decisionText">Toto nastavení je vyrovnané a pomáhá držet stabilní rodinný rozpočet.</p>
           <p><strong>Další krok</strong></p>
-          <p id="nextActionText">Porovnejte varianty podle návratu do práce a pravidelných výdajů domácnosti.</p>
+          <p id="nextActionText">Porovnejte variantu s plánem návratu do práce, čistou mzdou a pravidelnými výdaji domácnosti.</p>
         </div>
-        <div class="rp-variant-table" id="varianty">
-          <h3>Porovnání variant</h3>
-          <div class="table-wrap"><table><thead><tr><th>Varianta</th><th>Měsíčně</th><th>Vydrží</th><th>Konec</th><th>Hodnocení</th></tr></thead><tbody id="variantBody"></tbody></table></div>
+
+        <div class="rp-variant-table rp-variant-cards" id="varianty">
+          <h3>Varianty čerpání</h3>
+          <div id="variantCards" class="rp-variant-list"></div>
         </div>
       </aside>
     </section>
@@ -171,6 +207,20 @@
       </div>
     </section>
 
+    <section class="container rp-matrix">
+      <div class="section-heading compact">
+        <p class="eyebrow">Praktické porovnání</p>
+        <h2>Co si pohlídat před změnou měsíční částky</h2>
+        <p>Rodičák není jen dávka. Je to část cashflow domácnosti. Před změnou měsíčního čerpání zkontrolujte tyto čtyři body.</p>
+      </div>
+      <div class="rp-matrix-grid">
+        <article><span>01</span><h3>Rezerva domácnosti</h3><p>Pokud nemáte rezervu, příliš rychlé čerpání může vytvořit problém ve chvíli, kdy dávka skončí.</p></article>
+        <article><span>02</span><h3>Datum návratu do práce</h3><p>Částku nastavujte podle toho, kdy realisticky přijde další pravidelný příjem.</p></article>
+        <article><span>03</span><h3>Náklady na dítě</h3><p>Pleny, výbava, jídlo, školka a bydlení často rozhodnou víc než samotná výše rodičáku.</p></article>
+        <article><span>04</span><h3>Limit čerpání</h3><p>Pokud zadáte částku nad limit, berte ji jako scénář k ověření, ne jako automaticky dostupnou volbu.</p></article>
+      </div>
+    </section>
+
     <section class="container related-tools rp-related" id="souvisejici-kalkulacky">
       <div class="section-heading compact"><p class="eyebrow">Související výpočty</p><h2>Další kalkulačky pro rodinu a rozpočet</h2></div>
       <div class="related-grid">
@@ -218,6 +268,6 @@
   </footer>
 
   <script src="rv-tool-core.js" defer></script>
-  <script src="rodicovsky-prispevek.js?v=20260610-1" defer></script>
+  <script src="rodicovsky-prispevek.js?v=20260610-2" defer></script>
 </body>
 </html>
