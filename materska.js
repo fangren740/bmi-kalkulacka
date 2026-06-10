@@ -130,8 +130,8 @@
 
     if(hint){
       hint.textContent = mode === "monthly"
-        ? "Zadáváte běžnou průměrnou hrubou mzdu. Roční příjem se dopočítá automaticky."
-        : "Zadáváte celkový hrubý příjem za 12 měsíců. Průměrná měsíční mzda se dopočítá automaticky.";
+        ? "Zadejte běžnou průměrnou hrubou mzdu. Roční příjem si kalkulačka dopočítá."
+        : "Zadejte celkový hrubý příjem za rozhodné období. Měsíční průměr se dopočítá.";
     }
   }
 
