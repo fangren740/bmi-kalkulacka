@@ -115,6 +115,26 @@
     $("nextActionText").textContent = next;
   }
 
+  function updateModeUi(){
+    form.classList.toggle("is-monthly-mode", mode === "monthly");
+    form.classList.toggle("is-total-mode", mode === "total");
+
+    const monthlyInput = $("monthlyIncome");
+    const totalInput = $("totalIncome");
+    const hint = $("modeHint");
+
+    if(monthlyInput && totalInput){
+      monthlyInput.readOnly = mode !== "monthly";
+      totalInput.readOnly = mode !== "total";
+    }
+
+    if(hint){
+      hint.textContent = mode === "monthly"
+        ? "Zadáváte běžnou průměrnou hrubou mzdu. Roční příjem se dopočítá automaticky."
+        : "Zadáváte celkový hrubý příjem za 12 měsíců. Průměrná měsíční mzda se dopočítá automaticky.";
+    }
+  }
+
   function setMode(nextMode){
     mode = nextMode;
     modeBtns.forEach(btn => {
@@ -122,6 +142,7 @@
       btn.classList.toggle("is-active", active);
       btn.setAttribute("aria-pressed", String(active));
     });
+    updateModeUi();
     calculate();
   }
 
@@ -140,5 +161,6 @@
     start.value = d.toISOString().slice(0,10);
   }
 
+  updateModeUi();
   calculate();
 })();
