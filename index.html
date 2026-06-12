@@ -1326,6 +1326,29 @@
       }
     }
 
+
+    /* === Lighthouse performance pass: keep first render light === */
+    .decision-section,
+    .flow-section,
+    #top-kalkulacky,
+    .trust-section,
+    #kategorie,
+    .rv-home-preseo-dark,
+    .rv-home-guides-v2,
+    .rv-home-faq-v3,
+    .footer{
+      content-visibility:auto;
+      contain-intrinsic-size:1px 760px;
+    }
+    @media(max-width:760px){
+      body:after{display:none}
+      .hero{padding-top:24px;padding-bottom:48px}
+      .site-header{backdrop-filter:none;background:rgba(255,255,255,.94)}
+      .rv-hero-v12-panel,
+      .rv-hero-v12-stat,
+      .search-shell{backdrop-filter:none}
+    }
+
 </style>
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"Organization","name":"RychléVýpočty.cz","url":"https://rychlevypocty.cz/","logo":"https://rychlevypocty.cz/icon-512.png","sameAs":[]}
@@ -1339,7 +1362,6 @@
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Co je RychléVýpočty.cz?","acceptedAnswer":{"@type":"Answer","text":"RychléVýpočty.cz je web s praktickými online kalkulačkami pro hypotéky, mzdy, podnikání, bydlení, energie, auto, rekonstrukce, rodinný rozpočet i další situace, které dává smysl si dopředu spočítat."}},{"@type":"Question","name":"Jsou kalkulačky zdarma?","acceptedAnswer":{"@type":"Answer","text":"Ano. Kalkulačky jsou dostupné zdarma a bez registrace, takže se k výpočtu dostanete hned bez zbytečných kroků navíc."}},{"@type":"Question","name":"Jak nejrychleji najdu správnou kalkulačku?","acceptedAnswer":{"@type":"Answer","text":"Nejrychlejší cesta je použít vyhledávání nahoře na homepage nebo vybrat životní situaci. Pokud víte oblast, můžete jít rovnou do příslušné sekce."}},{"@type":"Question","name":"Jsou výsledky přesné pro finální rozhodnutí?","acceptedAnswer":{"@type":"Answer","text":"Výsledky slouží primárně pro rychlou orientaci a porovnání variant. U důležitých rozhodnutí je vždy vhodné je ověřit podle konkrétních podmínek, sazeb nebo aktuální situace."}}]}
   </script>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7745758285259522" crossorigin="anonymous"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Přejít na obsah</a>
@@ -1665,7 +1687,7 @@
     <div class="rv-footer-main">
       <div class="rv-footer-brand">
         <a class="rv-footer-logo" href="/" aria-label="RychléVýpočty.cz – domů">
-          <img src="logo-rychlevypocty-footer.svg" alt="RychléVýpočty.cz" loading="lazy" decoding="async">
+          <img src="logo-rychlevypocty-footer.svg" alt="RychléVýpočty.cz" width="180" height="42" loading="lazy" decoding="async">
         </a>
         <p>Praktické online kalkulačky zdarma pro rychlou orientaci před důležitým rozhodnutím — finance, mzdy, bydlení, energie, auto, stavba, rekonstrukce i podnikání.</p>
 
@@ -1877,5 +1899,24 @@
       });
     })();
   </script>
+  <script>
+    window.addEventListener('load', function(){
+      var loadAds = function(){
+        if (document.querySelector('script[data-rv-adsense]')) return;
+        var s = document.createElement('script');
+        s.async = true;
+        s.crossOrigin = 'anonymous';
+        s.dataset.rvAdsense = 'true';
+        s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7745758285259522';
+        document.head.appendChild(s);
+      };
+      if ('requestIdleCallback' in window){
+        requestIdleCallback(loadAds, { timeout: 4500 });
+      } else {
+        setTimeout(loadAds, 3500);
+      }
+    }, { once:true });
+  </script>
+
 </body>
 </html>
