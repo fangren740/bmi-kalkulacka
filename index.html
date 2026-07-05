@@ -1331,7 +1331,7 @@
   {"@context":"https://schema.org","@type":"Organization","name":"RychléVýpočty.cz","url":"https://rychlevypocty.cz/","logo":"https://rychlevypocty.cz/icon-512.png","sameAs":[]}
   </script>
   <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"WebSite","name":"RychléVýpočty.cz","url":"https://rychlevypocty.cz/","potentialAction":{"@type":"SearchAction","target":"https://rychlevypocty.cz/kalkulacky.html?search={search_term_string}","query-input":"required name=search_term_string"}}
+  {"@context":"https://schema.org","@type":"WebSite","name":"RychléVýpočty.cz","url":"https://rychlevypocty.cz/","potentialAction":{"@type":"SearchAction","target":"https://rychlevypocty.cz/kalkulacky.html?q={search_term_string}","query-input":"required name=search_term_string"}}
   </script>
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"WebPage","name":"Online kalkulačky a rychlé výpočty","url":"https://rychlevypocty.cz/","description":"Praktické online kalkulačky zdarma pro hypotéky, mzdy, podnikání, bydlení, energie, auto, rekonstrukce a další rychlé výpočty.","inLanguage":"cs-CZ"}
@@ -1340,6 +1340,7 @@
   {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Co je RychléVýpočty.cz?","acceptedAnswer":{"@type":"Answer","text":"RychléVýpočty.cz je web s praktickými online kalkulačkami pro hypotéky, mzdy, podnikání, bydlení, energie, auto, rekonstrukce, rodinný rozpočet i další situace, které dává smysl si dopředu spočítat."}},{"@type":"Question","name":"Jsou kalkulačky zdarma?","acceptedAnswer":{"@type":"Answer","text":"Ano. Kalkulačky jsou dostupné zdarma a bez registrace, takže se k výpočtu dostanete hned bez zbytečných kroků navíc."}},{"@type":"Question","name":"Jak nejrychleji najdu správnou kalkulačku?","acceptedAnswer":{"@type":"Answer","text":"Nejrychlejší cesta je použít vyhledávání nahoře na homepage nebo vybrat životní situaci. Pokud víte oblast, můžete jít rovnou do příslušné sekce."}},{"@type":"Question","name":"Jsou výsledky přesné pro finální rozhodnutí?","acceptedAnswer":{"@type":"Answer","text":"Výsledky slouží primárně pro rychlou orientaci a porovnání variant. U důležitých rozhodnutí je vždy vhodné je ověřit podle konkrétních podmínek, sazeb nebo aktuální situace."}}]}
   </script>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7745758285259522" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="/rv-home-workspace.css?v=1" />
 </head>
 <body>
   <a class="skip-link" href="#main">Přejít na obsah</a>
@@ -1645,7 +1646,19 @@
       </div>
     </section>
 
-  </main>
+  <section class="rv-home-workspace" id="moje-vypocty" aria-labelledby="rv-home-workspace-title">
+    <div class="container">
+      <div class="rv-home-workspace__shell">
+        <div class="rv-home-workspace__head"><div><span class="rv-home-workspace__label">Vaše pracovní plocha</span><h2 id="rv-home-workspace-title">Pokračujte tam, kde jste skončili</h2><p>Oblíbené a naposledy otevřené kalkulačky z katalogu máte dostupné také na hlavní stránce. Data zůstávají jen v tomto prohlížeči.</p></div><a href="/kalkulacky.html#muj-vyber">Spravovat v katalogu →</a></div>
+        <div class="rv-home-workspace__grid">
+          <article class="rv-home-workspace__panel"><div class="rv-home-workspace__panel-head"><h3>Oblíbené</h3><span id="rvHomeFavoritesCount">0</span></div><div class="rv-home-workspace__list" id="rvHomeFavorites"><p class="rv-home-workspace__empty">V katalogu označte kalkulačku hvězdičkou a objeví se zde.</p></div></article>
+          <article class="rv-home-workspace__panel"><div class="rv-home-workspace__panel-head"><h3>Naposledy použité</h3><span id="rvHomeRecentCount">0</span></div><div class="rv-home-workspace__list" id="rvHomeRecent"><p class="rv-home-workspace__empty">Po otevření kalkulačky se zde zobrazí rychlá cesta zpět.</p></div></article>
+        </div>
+        <div class="rv-home-workspace__footer"><span><strong data-home-tool-count>90</strong> unikátních nástrojů v jednom katalogu</span><a href="/kalkulacky.html">Procházet všechny kalkulačky</a></div>
+      </div>
+    </div>
+  </section>
+</main>
   
 
 <footer class="footer rv-footer-v3">
@@ -1714,9 +1727,10 @@
 </footer>
 
 
+  <script src="/rv-tool-index.js?v=1"></script>
   <script>
     (function(){
-      const items = [
+      const items = window.RV_TOOL_INDEX || [
         { title:'Hypoteční kalkulačka', url:'/hypotecni-kalkulacka.html', type:'Kalkulačka', desc:'Měsíční splátka a orientační scénář hypotéky', keywords:['hypoteka','hypoteční','hypotecni','splátka','splatka','bydlení','bydleni'] },
         { title:'Kalkulačka vlastních zdrojů na koupi', url:'/kalkulacka-vlastnich-zdroju-na-koupi-nemovitosti.html', type:'Kalkulačka', desc:'Kolik vlastních peněz připravit na koupi nemovitosti', keywords:['vlastní zdroje','vlastni zdroje','akontace','koupe','nemovitost'] },
         { title:'Refinancování hypotéky', url:'/refinancovani-hypoteky-kalkulacka.html', type:'Kalkulačka', desc:'Orientační přepočet refinancování hypotéky', keywords:['refinancování','refinancovani','hypoteka'] },
@@ -1777,7 +1791,7 @@
         if (!q) return 0;
         const title = normalize(item.title);
         const desc = normalize(item.desc);
-        const keywords = normalize((item.keywords || []).join(' '));
+        const keywords = normalize(Array.isArray(item.keywords) ? item.keywords.join(' ') : (item.keywords || ''));
         let score = 0;
         if (title === q) score += 150;
         if (title.startsWith(q)) score += 90;
@@ -1788,6 +1802,12 @@
           if (title.includes(part)) score += 15;
           if (keywords.includes(part)) score += 12;
           if (desc.includes(part)) score += 6;
+          if (part.length >= 6){
+            const stem = part.slice(0, Math.max(5, part.length - 3));
+            if (title.includes(stem)) score += 11;
+            if (keywords.includes(stem)) score += 8;
+            if (desc.includes(stem)) score += 4;
+          }
         });
         return score;
       }
@@ -1813,7 +1833,7 @@
         const matches = getMatches(query);
         input.setAttribute('aria-expanded','true');
         if (!matches.length){
-          results.innerHTML = '<ul><li><a href="/kalkulacky.html?search=' + encodeURIComponent(query) + '"><span class="result-copy"><strong>Nenašli jsme přesnou shodu</strong><span>Zobrazit katalog a pokračovat ve vyhledávání</span></span><span class="result-type">Katalog</span></a></li></ul>';
+          results.innerHTML = '<ul><li><a href="/kalkulacky.html?q=' + encodeURIComponent(query) + '"><span class="result-copy"><strong>Nenašli jsme přesnou shodu</strong><span>Zobrazit katalog a pokračovat ve vyhledávání</span></span><span class="result-type">Katalog</span></a></li></ul>';
           results.classList.add('active');
           return;
         }
@@ -1859,7 +1879,7 @@
           window.location.href = ranked[0].item.url;
           return;
         }
-        window.location.href = '/kalkulacky.html?search=' + encodeURIComponent(query);
+        window.location.href = '/kalkulacky.html?q=' + encodeURIComponent(query);
       });
 
       chips.forEach(function(chip){
@@ -1877,5 +1897,6 @@
       });
     })();
   </script>
+  <script src="/rv-home-workspace.js?v=1" defer></script>
 </body>
 </html>
