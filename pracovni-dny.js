@@ -13,8 +13,10 @@
   const iso = (date) =>
     `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
   const parseDate = (value) => {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(String(value || ""))) return null;
     const [year, month, day] = String(value || "").split("-").map(Number);
-    return Number.isFinite(year) ? new Date(year, month - 1, day) : new Date();
+    const date = new Date(year, month - 1, day);
+    return date.getFullYear() === year && date.getMonth() === month - 1 && date.getDate() === day ? date : null;
   };
   const addDays = (date, days) => new Date(date.getFullYear(), date.getMonth(), date.getDate() + days);
   const startOfMonth = (date) => new Date(date.getFullYear(), date.getMonth(), 1);
@@ -97,7 +99,9 @@
   function readInputs() {
     let start = parseDate($("startDate").value);
     let end = parseDate($("endDate").value);
+    if (!start || !end) return { valid: false };
     if (end < start) [start, end] = [end, start];
+    const displayEnd = new Date(end);
     if ($("countMode").value === "exclusive-end") {
       end = addDays(end, -1);
     }
@@ -105,6 +109,8 @@
     return {
       start,
       end,
+      displayEnd,
+      valid: true,
       hours,
       excludeWeekends: $("excludeWeekends").checked,
       excludeHolidays: $("excludeHolidays").checked
@@ -113,8 +119,9 @@
 
   function calculate() {
     const input = readInputs();
+    if (!input.valid) return input;
     const days = [];
-    const end = input.end < input.start ? input.start : input.end;
+    const end = input.end;
 
     for (let cursor = new Date(input.start); cursor <= end; cursor = addDays(cursor, 1)) {
       const holidayMap = holidays(cursor.getFullYear());
@@ -187,11 +194,25 @@
     if (data.days.length > 14) {
       rows.push(`<tr><td colspan="3">Dalších ${fmtNum(data.days.length - 14)} dnů je zahrnuto v souhrnu výše.</td></tr>`);
     }
+    if (!rows.length) {
+      rows.push('<tr><td colspan="3">V zadaném režimu období neobsahuje žádný započítaný den.</td></tr>');
+    }
     $("scheduleBody").innerHTML = rows.join("");
   }
 
   function render() {
     const data = calculate();
+    if (!data.valid) {
+      $("workingDays").textContent = "—";
+      $("workingHours").textContent = "—";
+      $("periodBadge").textContent = "Doplňte obě data";
+      $("capacityStatus").textContent = "Neúplné zadání";
+      $("capacityText").textContent = "Pro výpočet je potřeba platné počáteční i koncové datum.";
+      $("decisionHeadline").textContent = "Zkontrolujte datumy";
+      $("decisionSummary").textContent = "Prázdné nebo neplatné datum nelze bezpečně započítat.";
+      $("scheduleBody").innerHTML = '<tr><td colspan="3">Doplňte platný rozsah dat.</td></tr>';
+      return;
+    }
     const text = interpretation(data);
 
     $("workingDays").textContent = fmtNum(data.workingDays);
@@ -201,8 +222,8 @@
     $("holidayDays").textContent = fmtNum(data.holidayDays);
     $("nonWorkingDays").textContent = fmtNum(data.nonWorking);
     $("dayLengthLabel").textContent = `${fmtNum(data.hours, data.hours % 1 ? 1 : 0)} h`;
-    $("periodLabel").textContent = `${fmtDate(data.start)} - ${fmtDate(data.end)}`;
-    $("periodBadge").textContent = `${fmtDate(data.start)} - ${fmtDate(data.end)}`;
+    $("periodLabel").textContent = `${fmtDate(data.start)} - ${fmtDate(data.displayEnd)}`;
+    $("periodBadge").textContent = `${fmtDate(data.start)} - ${fmtDate(data.displayEnd)}`;
     $("workShareText").textContent = `${data.workShare} %`;
     $("offShareText").textContent = `${data.offShare} %`;
     $("workShareBar").style.width = `${data.workShare}%`;

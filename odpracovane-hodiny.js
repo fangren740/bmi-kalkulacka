@@ -99,8 +99,8 @@
       startMinute: Number($("startMinute").value),
       endHour: Number($("endHour").value),
       endMinute: Number($("endMinute").value),
-      breakMinutes: Math.max(0, Number($("breakMinutes").value) || 0),
-      workDays: Math.max(1, Number($("workDays").value) || 1),
+      breakMinutes: Math.max(0, Math.round(Number($("breakMinutes").value) || 0)),
+      workDays: Math.max(1, Math.floor(Number($("workDays").value) || 1)),
       periodType: $("periodType").value
     };
   }
@@ -108,13 +108,14 @@
   function calculate(input) {
     const start = minutes(input.startHour, input.startMinute);
     const endRaw = minutes(input.endHour, input.endMinute);
-    const end = endRaw <= start ? endRaw + 1440 : endRaw;
+    const equalTimes = endRaw === start;
+    const end = endRaw < start ? endRaw + 1440 : endRaw;
     const gross = end - start;
     const net = Math.max(0, gross - input.breakMinutes);
     const total = net * input.workDays;
     const workShare = gross > 0 ? (net / gross) * 100 : 0;
     const breakShare = gross > 0 ? Math.min(100, (input.breakMinutes / gross) * 100) : 0;
-    return { gross, net, total, workShare, breakShare, crossesMidnight: endRaw <= start };
+    return { gross, net, total, workShare, breakShare, crossesMidnight: endRaw < start, equalTimes };
   }
 
   function periodLabel(input) {
@@ -124,6 +125,14 @@
   }
 
   function renderStatus(input, result) {
+    if (result.equalTimes) {
+      setText(outputs.statusBadge, "Začátek a konec jsou stejné");
+      setText(outputs.resultNote, "Čistý čas vychází 0 h. Pro celodenní směnu zadejte skutečný čas konce následujícího dne.");
+      setText(outputs.detailText, "Stejný začátek a konec se nevykládá automaticky jako 24hodinová směna.");
+      setText(outputs.readingTitle, "Čas směny je potřeba upřesnit.");
+      setText(outputs.readingText, "Kalkulačka tím předchází nechtěnému výsledku 24 hodin při shodných časech.");
+      return;
+    }
     if (result.net === 0) {
       setText(outputs.statusBadge, "Pauza pohltila celou směnu");
       setText(outputs.resultNote, "Čistý čas vychází 0 h. Zkontrolujte, zda pauza není delší než samotná směna.");
