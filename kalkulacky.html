@@ -345,6 +345,7 @@ h1{max-width:760px}
   </script>
 <script async="" crossorigin="anonymous" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7745758285259522"></script>
 <link href="/rv-hub-authority.css?v=1" rel="stylesheet"/>
+<link href="/rv-catalog-workspace.css?v=1" rel="stylesheet"/>
 </head>
 <body>
 <a class="skip-link" href="#main">Přeskočit na obsah</a>
@@ -373,7 +374,7 @@ h1{max-width:760px}
 <p class="lead">Přehledný katalog kalkulaček pro mzdu, hypotéku, DPH, energie, bydlení, podnikání, auto, stavbu i běžné domácí výpočty. Hledejte podle názvu, tématu nebo situace — a rovnou otevřete správný nástroj.</p>
 <div class="hero-actions"><a class="btn btn-primary" href="#seznam">Najít kalkulačku</a><a class="btn btn-secondary" href="#seo">Jak se v katalogu vyznat</a></div>
 <div aria-label="Vlastnosti katalogu" class="hero-trust-row">
-<span>94 nástrojů</span>
+<span><b data-tool-count>93</b> nástrojů</span>
 <span>12+ oblastí</span>
 <span>zdarma</span>
 <span>bez registrace</span>
@@ -400,7 +401,7 @@ h1{max-width:760px}
 </div>
 </div>
 <div class="catalog-orb">
-<strong>88</strong>
+<strong data-tool-count>93</strong>
 <span>nástrojů</span>
 </div>
 </div>
@@ -451,7 +452,8 @@ h1{max-width:760px}
 <button class="suggest-chip" data-suggest="auto" type="button">auto</button>
 </div>
 <div aria-label="Rychlé filtry" class="cat-strip">
-<button class="cat-chip is-active" data-filter="all" type="button"><span>⌘</span>Vše <b>89</b></button>
+<button class="cat-chip is-active" data-filter="all" type="button"><span>⌘</span>Vše <b>93</b></button>
+<button class="cat-chip" data-filter="favorites" type="button"><span>★</span>Moje oblíbené <b>0</b></button>
 <button class="cat-chip" data-filter="finance-a-hypoteky" type="button"><span>⌂</span>Finance a hypotéky <b>18</b></button>
 <button class="cat-chip" data-filter="mzdy-a-prace" type="button"><span>Kč</span>Mzdy a práce <b>13</b></button>
 <button class="cat-chip" data-filter="business-a-cenotvorba" type="button"><span>↗</span>Business a cenotvorba <b>11</b></button>
@@ -465,10 +467,17 @@ h1{max-width:760px}
 <button class="cat-chip" data-filter="datum-a-cas" type="button"><span>⏱</span>Datum a čas <b>3</b></button>
 <button class="cat-chip" data-filter="dalsi-prakticke-nastroje" type="button"><span>✦</span>Další praktické nástroje <b>3</b></button>
 </div>
-<div class="finder-meta"><span id="result-count">Zobrazuji <strong>89</strong> z <strong>89</strong> nástrojů</span><span>Tip: zkuste hledat i podle situace, třeba “kolik dostanu čistého”.</span></div>
+<div class="finder-meta"><span id="result-count">Zobrazuji <strong>93</strong> z <strong>93</strong> nástrojů</span><span>Tip: zkuste hledat i podle situace, třeba “kolik dostanu čistého”.</span></div>
 <div class="empty-state" id="empty-state">Nic přesného jsme nenašli. Zkuste jiné slovo nebo přepněte filtr na „Vše“. <button id="reset-search" type="button">Resetovat hledání</button></div>
 </section>
 </div>
+</section>
+<section class="rv-personal-workspace container" id="muj-vyber" aria-labelledby="rv-personal-title">
+  <div class="rv-personal-head"><div><span class="section-kicker">Osobní pracovní plocha</span><h2 id="rv-personal-title">Vaše kalkulačky po ruce</h2><p>Uložte si důležité nástroje hvězdičkou a rychle se vraťte k naposledy otevřeným výpočtům. Výběr zůstává pouze v tomto prohlížeči.</p></div><span class="rv-local-badge">Bez účtu a bez odesílání dat</span></div>
+  <div class="rv-personal-grid">
+    <article class="rv-personal-panel"><div class="rv-personal-panel__head"><h3>Oblíbené kalkulačky</h3><span class="rv-personal-count" id="rvFavoritesCount">0</span></div><div class="rv-personal-list" id="rvFavoritesList"><p class="rv-personal-empty">Klikněte na hvězdičku u kalkulačky a vytvořte si vlastní rychlý výběr.</p></div></article>
+    <article class="rv-personal-panel"><div class="rv-personal-panel__head"><h3>Naposledy použité</h3><span class="rv-personal-count" id="rvRecentCount">0</span></div><div class="rv-personal-list" id="rvRecentList"><p class="rv-personal-empty">Po otevření kalkulačky se zde zobrazí vaše naposledy použité nástroje.</p></div></article>
+  </div>
 </section>
 <section aria-labelledby="directory-title" class="section tight" id="seznam">
 <div class="container">
@@ -1247,7 +1256,17 @@ h1{max-width:760px}
   const suggest=Array.from(document.querySelectorAll('.suggest-chip'));
   let active='all';
   const total=items.length;
+  const initialQuery=new URLSearchParams(window.location.search).get('q');
+  if(initialQuery) input.value=initialQuery;
   const norm=s=>(s||'').toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  const queryAliases={
+    'hypoteka':['hypot'],
+    'splatka hypoteky':['hypot','splatk'],
+    'cista mzda':['cistou mzdu','ciste mzdy'],
+    'kolik dostanu cisteho':['cista mzda','ciste mzdy'],
+    'elektrina':['elektr'],
+    'rekonstrukce':['rekonstruk']
+  };
   const labelFor=()=>{
     const chip=chips.find(c=>c.dataset.filter===active);
     return chip ? chip.childNodes[1]?.textContent?.trim() || chip.textContent.replace(/\d+/g,'').trim() : 'Vše';
@@ -1261,9 +1280,11 @@ h1{max-width:760px}
     clearBtn.classList.toggle('is-visible',!!input.value.trim());
     let visible=0;
     items.forEach(item=>{
-      const okCat=active==='all'||item.dataset.category===active;
+      const href=item.querySelector('a[href]')?.getAttribute('href')||'';
+      const okCat=active==='all'||(active==='favorites' ? !!window.rvCatalogIsFavorite?.(href) : item.dataset.category===active);
       const hay=norm(item.dataset.search+' '+item.textContent);
-      const okQ=!q||hay.includes(q);
+      const searchTerms=q ? [q,...(queryAliases[q]||[])] : [];
+      const okQ=!q||searchTerms.some(term=>hay.includes(term));
       const show=okCat&&okQ;
       item.classList.toggle('is-hidden',!show);
       if(show) visible++;
@@ -1308,7 +1329,9 @@ h1{max-width:760px}
   const back=document.getElementById('rvBackToTop');
   if(back){const toggle=()=>back.classList.toggle('is-visible',window.scrollY>520);window.addEventListener('scroll',toggle,{passive:true});toggle();back.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));}
   apply();
+  window.addEventListener('rv:favorites-changed',apply);
 })();
   </script>
+  <script src="/rv-catalog-workspace.js?v=1" defer></script>
 </body>
 </html>
