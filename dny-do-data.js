@@ -9,8 +9,10 @@
   const dateValue = (date) =>
     `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
   const parse = (value) => {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return null;
     const [y, m, d] = value.split("-").map(Number);
-    return new Date(y, m - 1, d);
+    const date = new Date(y, m - 1, d);
+    return date.getFullYear() === y && date.getMonth() === m - 1 && date.getDate() === d ? date : null;
   };
   const fmt = (date) => new Intl.DateTimeFormat("cs-CZ", { day: "numeric", month: "long", year: "numeric" }).format(date);
   const diffDays = (a, b) =>
@@ -44,14 +46,23 @@
   function render() {
     const start = parse($("startDate").value);
     const target = parse($("targetDate").value);
+    if (!start || !target) {
+      $("daysResult").textContent = "—";
+      $("statusResult").textContent = "Doplňte obě data";
+      $("resultBadge").textContent = "Neúplné zadání";
+      $("resultNote").textContent = "Pro výpočet je potřeba platné počáteční i cílové datum.";
+      return;
+    }
     const diff = diffDays(start, target);
     const abs = Math.abs(diff);
+    const signed = $("calculationMode").value === "signed";
+    const shownDays = signed ? diff : abs;
     const weeks = Math.floor(abs / 7);
     const remaining = abs % 7;
     const monthsApprox = abs / 30.44;
     const calendar = calendarDiff(start, target);
     const status = diff > 0 ? "Datum teprve přijde" : diff < 0 ? "Datum už proběhlo" : "Stejný den";
-    $("daysResult").textContent = `${int(abs)} dní`;
+    $("daysResult").textContent = `${shownDays > 0 && signed ? "+" : ""}${int(shownDays)} dní`;
     $("statusResult").textContent = status;
     $("weeksResult").textContent = `${int(weeks)} týdnů ${int(remaining)} dní`;
     $("monthsResult").textContent = dec(monthsApprox);
@@ -61,7 +72,9 @@
     $("directionResult").textContent = diff > 0 ? "do budoucna" : diff < 0 ? "do minulosti" : "bez rozdílu";
     $("calendarMonthsResult").textContent = `${calendar.years * 12 + calendar.months} měs.`;
     $("yearsResult").textContent = `${calendar.years} let`;
-    $("resultNote").textContent = `Mezi daty je ${int(abs)} kalendářních dní.`;
+    $("resultNote").textContent = signed
+      ? `Směrový rozdíl je ${shownDays > 0 ? "+" : ""}${int(shownDays)} kalendářních dní.`
+      : `Mezi daty je ${int(abs)} kalendářních dní.`;
     $("timingStatus").textContent = status;
     $("timingText").textContent =
       diff > 0

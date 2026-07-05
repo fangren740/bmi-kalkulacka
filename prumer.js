@@ -12,8 +12,11 @@
   }
 
   function parseList(text) {
-    return text
-      .split(/[\s,;]+/)
+    const normalized = text.trim();
+    const parts = /[;\n\r]|\s/.test(normalized)
+      ? normalized.split(/(?:\s*;\s*|\s+)/)
+      : normalized.split(/\s*,\s*/);
+    return parts
       .map((item) => Number(item.replace(",", ".")))
       .filter((value) => Number.isFinite(value));
   }

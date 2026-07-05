@@ -13,12 +13,13 @@
     `${new Intl.NumberFormat("cs-CZ", { maximumFractionDigits: 2 }).format(Number.isFinite(value) ? value : 0)} %`;
 
   function values() {
+    const clampPercent = (value) => Math.min(100, Math.max(0, Number(value) || 0));
     return {
-      originalPrice: Number($("originalPrice").value) || 0,
-      discountPercent: Number($("discountPercent").value) || 0,
-      secondDiscount: Number($("secondDiscount").value) || 0,
-      couponValue: Number($("couponValue").value) || 0,
-      quantity: Number($("quantity").value) || 0,
+      originalPrice: Math.max(0, Number($("originalPrice").value) || 0),
+      discountPercent: clampPercent($("discountPercent").value),
+      secondDiscount: clampPercent($("secondDiscount").value),
+      couponValue: Math.max(0, Number($("couponValue").value) || 0),
+      quantity: Math.max(1, Math.floor(Number($("quantity").value) || 1)),
       vatMode: $("vatMode").value
     };
   }

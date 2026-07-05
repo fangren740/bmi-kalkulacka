@@ -32,7 +32,7 @@
       priceB: Number($("priceB").value) || 0,
       amountB: Number($("amountB").value) || 0,
       unitB: $("amountUnitB").value,
-      discountB: Number($("discountB").value) || 0
+      discountB: Math.min(100, Math.max(0, Number($("discountB").value) || 0))
     };
   }
 

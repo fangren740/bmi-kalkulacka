@@ -19,6 +19,21 @@
   function render() {
     const oldPrice = Number($("oldPrice").value) || 0;
     const newPrice = Number($("newPrice").value) || 0;
+    if (oldPrice <= 0) {
+      $("percentChange").textContent = "—";
+      $("difference").textContent = money(newPrice - oldPrice);
+      $("statusBadge").textContent = "Chybí kladná původní cena";
+      $("changeType").textContent = "Nelze určit";
+      $("impactLevel").textContent = "Bez procentního základu";
+      $("changeVsBase").textContent = "—";
+      $("resultNote").textContent = "Procentní změnu nelze počítat z nulové původní ceny.";
+      $("priceStatus").textContent = "Upravte původní cenu";
+      $("priceText").textContent = "Zadejte původní cenu vyšší než nula.";
+      $("decisionSummary").textContent = "Nulový základ nemá definovanou procentní změnu.";
+      $("nextActionText").textContent = "Korunový rozdíl lze zobrazit, procentní srovnání ale potřebuje kladný základ.";
+      $("summaryTableBody").innerHTML = '<tr><td>Původní cena</td><td>0 Kč</td><td>neplatný procentní základ</td></tr>';
+      return;
+    }
     const diff = newPrice - oldPrice;
     const percent = oldPrice > 0 ? (diff / oldPrice) * 100 : 0;
     const absPercent = Math.abs(percent);

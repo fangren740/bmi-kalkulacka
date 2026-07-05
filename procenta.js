@@ -62,6 +62,24 @@
       const oldValue = Number($("oldValue").value) || 0;
       const newValue = Number($("newValue").value) || 0;
       const diff = newValue - oldValue;
+      if (oldValue === 0) {
+        renderResult({
+          main: "—",
+          secondary: "Nulový základ",
+          diff: number(diff),
+          type: "Procentní změna",
+          badge: "Nelze vypočítat",
+          input1: number(oldValue),
+          input2: number(newValue),
+          formula: "(nová - původní) / původní × 100",
+          context: "chybí nenulový základ",
+          note: "Procentní změnu nelze určit z nulové původní hodnoty.",
+          interpret: "Korunový nebo číselný rozdíl existuje, procentní změna ale potřebuje nenulový základ.",
+          next: "Zadejte původní hodnotu různou od nuly.",
+          action: "Nulu nelze v tomto vzorci použít jako dělitel."
+        });
+        return;
+      }
       const change = oldValue !== 0 ? (diff / oldValue) * 100 : 0;
       renderResult({
         main: `${number(change)} %`,
@@ -83,6 +101,24 @@
     if (active === "share") {
       const a = Number($("valueA").value) || 0;
       const b = Number($("valueB").value) || 0;
+      if (b === 0) {
+        renderResult({
+          main: "—",
+          secondary: `${number(a)} z 0`,
+          diff: number(-a),
+          type: "Podíl",
+          badge: "Celek nesmí být nula",
+          input1: number(a),
+          input2: number(b),
+          formula: "část / celek × 100",
+          context: "neplatný nulový celek",
+          note: "Podíl z nulového celku nemá definovaný procentní výsledek.",
+          interpret: "Procentní podíl vyžaduje celek různý od nuly.",
+          next: "Opravte hodnotu celku.",
+          action: "Zkontrolujte, zda druhá hodnota skutečně představuje celý základ."
+        });
+        return;
+      }
       const result = b !== 0 ? (a / b) * 100 : 0;
       renderResult({
         main: `${number(result)} %`,
@@ -102,10 +138,10 @@
       return;
     }
     const original = Number($("priceOriginal").value) || 0;
-    const percent = Number($("pricePercent").value) || 0;
+    const percent = Math.max(0, Number($("pricePercent").value) || 0);
     const mode = $("priceMode").value;
     const changeAmount = (percent / 100) * original;
-    const finalPrice = mode === "discount" ? original - changeAmount : original + changeAmount;
+    const finalPrice = mode === "discount" ? Math.max(0, original - changeAmount) : original + changeAmount;
     renderResult({
       main: money(finalPrice),
       secondary: mode === "discount" ? "Cena po slevě" : "Cena po navýšení",

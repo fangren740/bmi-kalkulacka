@@ -26,9 +26,19 @@
 
   function render() {
     const v = values();
-    const directResult = v.a > 0 ? direct(v) : 0;
-    const inverseResult = v.c > 0 ? inverse(v) : 0;
     const mode = v.mode === "inverse" ? "inverse" : "direct";
+    const divisor = mode === "inverse" ? v.c : v.a;
+    if (divisor === 0) {
+      $("resultValue").textContent = "—";
+      $("statusBadge").textContent = "Dělitel nesmí být nula";
+      $("sentenceOutput").textContent = mode === "inverse" ? "Pro nepřímou úměru zadejte c různé od nuly." : "Pro přímou úměru zadejte a různé od nuly.";
+      $("logicStatus").textContent = "Neplatné zadání";
+      $("logicText").textContent = "Dělení nulou nemá definovaný číselný výsledek.";
+      $("exactOutput").textContent = "—";
+      return;
+    }
+    const directResult = v.a !== 0 ? direct(v) : 0;
+    const inverseResult = v.c !== 0 ? inverse(v) : 0;
     const result = mode === "inverse" ? inverseResult : directResult;
     const modeLabel = mode === "inverse" ? "Nepřímá" : "Přímá";
     const ratio = v.a > 0 ? v.b / v.a : 0;

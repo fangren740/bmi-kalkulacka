@@ -7,8 +7,10 @@
   const dateValue = (date) =>
     `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
   const parse = (value) => {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return null;
     const [y, m, d] = value.split("-").map(Number);
-    return new Date(y, m - 1, d);
+    const date = new Date(y, m - 1, d);
+    return date.getFullYear() === y && date.getMonth() === m - 1 && date.getDate() === d ? date : null;
   };
   const fmt = (date) => new Intl.DateTimeFormat("cs-CZ", { day: "numeric", month: "long", year: "numeric" }).format(date);
   const daysBetween = (a, b) =>
@@ -30,8 +32,14 @@
   }
 
   function nextBirthday(birth, target) {
-    let date = new Date(target.getFullYear(), birth.getMonth(), birth.getDate());
-    if (date < target) date = new Date(target.getFullYear() + 1, birth.getMonth(), birth.getDate());
+    const birthdayIn = (year) => {
+      if (birth.getMonth() === 1 && birth.getDate() === 29 && new Date(year, 1, 29).getMonth() !== 1) {
+        return new Date(year, 1, 28);
+      }
+      return new Date(year, birth.getMonth(), birth.getDate());
+    };
+    let date = birthdayIn(target.getFullYear());
+    if (date < target) date = birthdayIn(target.getFullYear() + 1);
     return { date, days: daysBetween(target, date) };
   }
 
@@ -44,6 +52,14 @@
   function render() {
     const birth = parse($("birthDate").value);
     const target = parse($("targetDate").value);
+    if (!birth || !target || birth > target) {
+      $("exactAgeResult").textContent = "—";
+      $("resultBadge").textContent = birth && target ? "Datum narození je po cílovém datu" : "Doplňte obě data";
+      $("decisionHeadline").textContent = "Zkontrolujte zadání";
+      $("decisionText").textContent = "Datum narození musí být stejné nebo dřívější než cílové datum.";
+      $("resultNote").textContent = "Výsledek nelze bezpečně spočítat z neplatného pořadí dat.";
+      return;
+    }
     const diff = diffYMD(birth, target);
     const totalDays = Math.max(0, daysBetween(birth, target));
     const totalWeeks = Math.floor(totalDays / 7);

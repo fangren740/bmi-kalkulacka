@@ -16,9 +16,9 @@
 
   function values() {
     return {
-      baseAmount: Number($("baseAmount").value) || 0,
-      commissionRate: Number($("commissionRate").value) || 0,
-      fixedCommission: Number($("fixedCommission").value) || 0,
+      baseAmount: Math.max(0, Number($("baseAmount").value) || 0),
+      commissionRate: Math.max(0, Number($("commissionRate").value) || 0),
+      fixedCommission: Math.max(0, Number($("fixedCommission").value) || 0),
       calculationMode: $("calculationMode").value
     };
   }
@@ -32,7 +32,7 @@
     }
     const totalCommission = Math.round(percentCommission + v.fixedCommission);
     const roundedPercent = Math.round(percentCommission);
-    const afterCommission = Math.round(v.baseAmount - totalCommission);
+    const afterCommission = Math.max(0, Math.round(v.baseAmount - totalCommission));
     const effectiveRate = v.baseAmount > 0 ? (totalCommission / v.baseAmount) * 100 : 0;
     return { percentCommission: roundedPercent, totalCommission, grossAmount: v.baseAmount, afterCommission, effectiveRate };
   }
@@ -50,7 +50,7 @@
     $("grossAmountResult").textContent = money(r.grossAmount);
     $("afterCommissionResult").textContent = money(r.afterCommission);
     $("differenceResult").textContent = money(r.totalCommission);
-    $("resultBadge").textContent = r.effectiveRate <= 10 ? "Nižší efektivní provize" : "Vyšší efektivní provize";
+    $("resultBadge").textContent = r.totalCommission > v.baseAmount ? "Provize převyšuje základ" : r.effectiveRate <= 10 ? "Nižší efektivní provize" : "Vyšší efektivní provize";
     $("decisionHeadline").textContent =
       r.effectiveRate <= 10 ? "Provize je v běžném pásmu" : "Provize tvoří výraznou část částky";
     $("decisionText").textContent = `Celková provize vychází ${money(
