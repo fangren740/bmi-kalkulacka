@@ -138,7 +138,7 @@
       'U faktury s více položkami počítejte každou sazbu zvlášť a až potom porovnejte součty.'
     ].map(item => `<li>${item}</li>`).join('');
 
-    outputs.premiumTable.innerHTML = [21, 15, 12].map(rate => {
+    outputs.premiumTable.innerHTML = [21, 12].map(rate => {
       const scenario = calculateVAT({ ...values, rate });
       return `<tr><td>${formatPercent(rate, 0)}</td><td>${formatCurrency(scenario.dph)}</td><td>${formatCurrency(scenario.withDPH)}</td></tr>`;
     }).join('');
@@ -219,7 +219,6 @@
     const presets = {
       with21: { amount: 1000, mode: 'with', rate: '21' },
       without21: { amount: 1000, mode: 'without', rate: '21' },
-      with15: { amount: 1150, mode: 'with', rate: '15' },
       with12: { amount: 1120, mode: 'with', rate: '12' }
     };
     const preset = presets[name];
