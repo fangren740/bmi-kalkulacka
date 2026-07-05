@@ -3,25 +3,67 @@
   const numberList = $("numberList");
   const decimalPlaces = $("decimalPlaces");
   const weightedTableBody = $("weightedTableBody");
+  const modeButtons = Array.from(document.querySelectorAll("[data-average-mode]"));
+  const modePanels = Array.from(document.querySelectorAll("[data-average-panel]"));
   const num = (value, digits = 2) =>
     new Intl.NumberFormat("cs-CZ", { maximumFractionDigits: digits }).format(Number.isFinite(value) ? value : 0);
   let active = "arithmetic";
 
   function digits() {
-    return Number(decimalPlaces.value) || 2;
+    return Number(decimalPlaces.value) || 0;
   }
 
   function parseList(text) {
     const normalized = text.trim();
+    if (!normalized) return [];
     const parts = /[;\n\r]|\s/.test(normalized)
       ? normalized.split(/(?:\s*;\s*|\s+)/)
       : normalized.split(/\s*,\s*/);
     return parts
-      .map((item) => Number(item.replace(",", ".")))
+      .map((item) => Number(item.replace(/,$/, "").replace(",", ".")))
       .filter((value) => Number.isFinite(value));
   }
 
+  function setMode(mode, focusPanel = false) {
+    active = mode === "weighted" ? "weighted" : "arithmetic";
+    modeButtons.forEach((button) => {
+      const selected = button.dataset.averageMode === active;
+      button.setAttribute("aria-selected", String(selected));
+      button.tabIndex = selected ? 0 : -1;
+    });
+    modePanels.forEach((panel) => {
+      panel.hidden = panel.dataset.averagePanel !== active;
+    });
+    $("averageModeContext").textContent = active === "weighted" ? "Vážený průměr" : "Aritmetický průměr";
+    if (focusPanel) $(active === "weighted" ? "average-panel-weighted" : "average-panel-arithmetic").focus?.();
+    active === "weighted" ? calculateWeighted() : calculateArithmetic();
+  }
+
+  function setEmpty(type, message) {
+    $("countLabel").textContent = type === "Vážený" ? "Počet řádků" : "Počet hodnot";
+    $("sumLabel").textContent = type === "Vážený" ? "Vážený součet" : "Součet";
+    $("averageResult").textContent = "—";
+    $("averageResult").classList.add("average-empty");
+    $("averageType").textContent = type;
+    $("countResult").textContent = "0";
+    $("sumResult").textContent = "—";
+    $("rangeResult").textContent = "—";
+    $("minResult").textContent = "—";
+    $("maxResult").textContent = "—";
+    $("weightsSumResult").textContent = "—";
+    $("inputPreview").textContent = "—";
+    $("resultBadge").textContent = "Doplňte hodnoty";
+    $("resultNote").textContent = message;
+    $("affordabilityStatus").textContent = "Bez výsledku";
+    $("affordabilityText").textContent = "Výsledek se zobrazí, jakmile zadání obsahuje platná čísla.";
+    $("decisionSummary").textContent = "Zkontrolujte formát čísel a u váženého průměru také kladné váhy.";
+    $("nextActionText").textContent = "Můžete použít připravený příklad a následně hodnoty přepsat.";
+  }
+
   function update(data) {
+    $("countLabel").textContent = data.type === "Vážený" ? "Počet řádků" : "Počet hodnot";
+    $("sumLabel").textContent = data.type === "Vážený" ? "Vážený součet" : "Součet";
+    $("averageResult").classList.remove("average-empty");
     $("averageResult").textContent = num(data.average, digits());
     $("averageType").textContent = data.type;
     $("countResult").textContent = String(data.count);
@@ -31,24 +73,29 @@
     $("rangeResult").textContent = num(data.range, digits());
     $("weightsSumResult").textContent = data.weightsSum == null ? "—" : num(data.weightsSum, digits());
     $("inputPreview").textContent = data.preview;
-    $("resultBadge").textContent = "Výpočet hotový";
+    $("resultBadge").textContent = "Výsledek odpovídá aktivnímu režimu";
     $("resultNote").textContent = `${data.type} průměr vychází ${num(data.average, digits())}.`;
     $("affordabilityStatus").textContent = data.type;
     $("affordabilityText").textContent = data.note;
-    $("decisionSummary").textContent = "Zkontrolujte rozsah hodnot, minimum a maximum. Extrémy mohou běžný průměr výrazně posunout.";
-    $("nextActionText").textContent = active === "weighted" ? "U váženého průměru ověřte hlavně váhy." : "Pokud mají hodnoty různou důležitost, použijte vážený průměr.";
+    $("decisionSummary").textContent = data.range > 0
+      ? `Hodnoty leží v rozsahu ${num(data.range, digits())}. Minimum je ${num(data.min, digits())} a maximum ${num(data.max, digits())}.`
+      : "Všechny započítané hodnoty jsou stejné, takže rozsah je nulový.";
+    $("nextActionText").textContent = active === "weighted"
+      ? "Ověřte, že váhy vyjadřují skutečnou důležitost nebo četnost hodnot."
+      : "Pokud mají hodnoty různou důležitost, přepněte na vážený průměr.";
   }
 
   function calculateArithmetic() {
-    active = "arithmetic";
     const values = parseList(numberList.value);
-    if (!values.length) return;
+    if (!values.length) {
+      setEmpty("Aritmetický", "Zadejte alespoň jednu platnou číselnou hodnotu.");
+      return;
+    }
     const sum = values.reduce((acc, value) => acc + value, 0);
-    const average = sum / values.length;
     const min = Math.min(...values);
     const max = Math.max(...values);
     update({
-      average,
+      average: sum / values.length,
       type: "Aritmetický",
       count: values.length,
       sum,
@@ -56,8 +103,8 @@
       max,
       range: max - min,
       weightsSum: null,
-      preview: values.slice(0, 8).map((value) => num(value, digits())).join(", "),
-      note: "Aritmetický průměr dává každé hodnotě stejnou váhu."
+      preview: values.slice(0, 8).map((value) => num(value, digits())).join(" · "),
+      note: "Každá zadaná hodnota má ve výsledku stejný vliv."
     });
   }
 
@@ -65,66 +112,87 @@
     return Array.from(weightedTableBody.querySelectorAll("tr"))
       .map((row) => {
         const inputs = row.querySelectorAll("input");
-        return { value: Number(inputs[0].value) || 0, weight: Number(inputs[1].value) || 0 };
+        const value = Number(inputs[0].value);
+        const weight = Number(inputs[1].value);
+        return { value, weight };
       })
-      .filter((row) => row.weight > 0);
+      .filter((row) => Number.isFinite(row.value) && Number.isFinite(row.weight) && row.weight > 0);
   }
 
   function calculateWeighted() {
-    active = "weighted";
     const rows = weightedRows();
-    if (!rows.length) return;
+    if (!rows.length) {
+      setEmpty("Vážený", "Zadejte alespoň jednu hodnotu s váhou větší než nula.");
+      return;
+    }
     const weightedSum = rows.reduce((acc, row) => acc + row.value * row.weight, 0);
     const weightsSum = rows.reduce((acc, row) => acc + row.weight, 0);
     const values = rows.map((row) => row.value);
-    const sum = values.reduce((acc, value) => acc + value, 0);
-    const average = weightedSum / weightsSum;
     const min = Math.min(...values);
     const max = Math.max(...values);
     update({
-      average,
+      average: weightedSum / weightsSum,
       type: "Vážený",
       count: rows.length,
-      sum,
+      sum: weightedSum,
       min,
       max,
       range: max - min,
       weightsSum,
-      preview: rows.map((row) => `${num(row.value, digits())} × ${num(row.weight, digits())}`).join(", "),
-      note: "Vážený průměr dává vyšší váze větší vliv na výsledek."
+      preview: rows.slice(0, 6).map((row) => `${num(row.value, digits())} × ${num(row.weight, digits())}`).join(" · "),
+      note: "Vyšší váha dává příslušné hodnotě větší vliv na výsledek."
     });
   }
 
-  function bindWeightedInputs() {
-    weightedTableBody.querySelectorAll("input").forEach((input) => input.addEventListener("input", calculateWeighted));
+  function rowMarkup(value = "", weight = "") {
+    return `<tr><td><input type="number" step="any" value="${value}" aria-label="Hodnota"></td><td><input type="number" min="0" step="any" value="${weight}" aria-label="Váha"></td><td><button class="average-remove-row" type="button" aria-label="Odstranit řádek">×</button></td></tr>`;
   }
 
+  function recalculate() {
+    active === "weighted" ? calculateWeighted() : calculateArithmetic();
+  }
+
+  modeButtons.forEach((button) => button.addEventListener("click", () => setMode(button.dataset.averageMode)));
   $("calcArithmeticBtn").addEventListener("click", calculateArithmetic);
   $("calcWeightedBtn").addEventListener("click", calculateWeighted);
   $("fillExampleBtn").addEventListener("click", () => {
-    numberList.value = "10, 15, 20, 25";
+    numberList.value = "10; 15; 20; 25";
     calculateArithmetic();
   });
   $("clearArithmeticBtn").addEventListener("click", () => {
     numberList.value = "";
+    setEmpty("Aritmetický", "Zadejte alespoň jednu platnou číselnou hodnotu.");
+    numberList.focus();
   });
   $("addRowBtn").addEventListener("click", () => {
-    weightedTableBody.insertAdjacentHTML("beforeend", '<tr><td><input type="number" step="any" value="1"></td><td><input type="number" step="any" value="1"></td></tr>');
-    bindWeightedInputs();
-    calculateWeighted();
+    if (weightedTableBody.querySelectorAll("tr").length >= 20) return;
+    weightedTableBody.insertAdjacentHTML("beforeend", rowMarkup());
   });
   $("fillWeightedExampleBtn").addEventListener("click", () => {
-    weightedTableBody.innerHTML = '<tr><td><input type="number" step="any" value="1"></td><td><input type="number" step="any" value="1"></td></tr><tr><td><input type="number" step="any" value="2"></td><td><input type="number" step="any" value="2"></td></tr><tr><td><input type="number" step="any" value="3"></td><td><input type="number" step="any" value="3"></td></tr>';
-    bindWeightedInputs();
+    weightedTableBody.innerHTML = rowMarkup(1, 1) + rowMarkup(2, 2) + rowMarkup(3, 3);
     calculateWeighted();
   });
   $("resetWeightedBtn").addEventListener("click", () => {
-    weightedTableBody.innerHTML = '<tr><td><input type="number" step="any" value="1"></td><td><input type="number" step="any" value="1"></td></tr>';
-    bindWeightedInputs();
+    weightedTableBody.innerHTML = rowMarkup();
+    setEmpty("Vážený", "Zadejte alespoň jednu hodnotu s váhou větší než nula.");
+  });
+  weightedTableBody.addEventListener("click", (event) => {
+    const button = event.target.closest(".average-remove-row");
+    if (!button) return;
+    const rows = weightedTableBody.querySelectorAll("tr");
+    if (rows.length === 1) {
+      rows[0].querySelectorAll("input").forEach((input) => { input.value = ""; });
+    } else {
+      button.closest("tr").remove();
+    }
     calculateWeighted();
   });
-  numberList.addEventListener("input", calculateArithmetic);
-  decimalPlaces.addEventListener("change", () => (active === "weighted" ? calculateWeighted() : calculateArithmetic()));
-  bindWeightedInputs();
-  calculateArithmetic();
+  weightedTableBody.addEventListener("input", () => {
+    if (active === "weighted") calculateWeighted();
+  });
+  numberList.addEventListener("input", () => {
+    if (active === "arithmetic") calculateArithmetic();
+  });
+  decimalPlaces.addEventListener("change", recalculate);
+  setMode("arithmetic");
 })();
