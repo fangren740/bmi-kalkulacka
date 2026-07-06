@@ -1,51 +1,558 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="cs">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="format-detection" content="telephone=no">
-  <link rel="icon" href="favicon.ico?v=2" sizes="any">
-  <link rel="icon" href="favicon-32x32.png?v=2" sizes="32x32" type="image/png">
-  <link rel="icon" href="favicon-16x16.png?v=2" sizes="16x16" type="image/png">
-  <link rel="apple-touch-icon" href="apple-touch-icon.png?v=2" sizes="180x180">
-  <link rel="manifest" href="site.webmanifest?v=2">
-  <meta name="theme-color" content="#14253d">
-  <title>Kalkulačka slevy | Výpočet slevy v % i Kč | RychléVýpočty.cz</title>
-  <meta name="description" content="Spočítejte cenu po slevě, úsporu v Kč, efektivní slevu při více slevách, kuponu a více kusech. Přehledná kalkulačka slevy online.">
-  <meta name="robots" content="index,follow">
-  <link rel="canonical" href="https://rychlevypocty.cz/kalkulacka-slevy.html">
-  <meta property="og:title" content="Kalkulačka slevy">
-  <meta property="og:description" content="Spočítejte finální cenu po slevě, úsporu a efektivní procento slevy.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://rychlevypocty.cz/kalkulacka-slevy.html">
-  <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg">
-  <meta property="og:site_name" content="RychléVýpočty.cz">
-  <meta property="og:locale" content="cs_CZ">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Kalkulačka slevy">
-  <meta name="twitter:description" content="Cena po slevě, úspora v Kč a efektivní sleva.">
-  <meta name="twitter:image" content="https://rychlevypocty.cz/og-image.jpg">
-  <link rel="stylesheet" href="rv-tool-v2.css">
-<link rel="stylesheet" href="percent-v2.css">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"RychléVýpočty.cz","item":"https://rychlevypocty.cz/"},{"@type":"ListItem","position":2,"name":"Kalkulačky","item":"https://rychlevypocty.cz/kalkulacky.html"},{"@type":"ListItem","position":3,"name":"Kalkulačka slevy","item":"https://rychlevypocty.cz/kalkulacka-slevy.html"}]}</script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Kalkulačka slevy","url":"https://rychlevypocty.cz/kalkulacka-slevy.html","applicationCategory":"FinanceApplication","operatingSystem":"All","inLanguage":"cs-CZ","offers":{"@type":"Offer","price":"0","priceCurrency":"CZK"}}</script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Jak se počítá sleva v procentech?","acceptedAnswer":{"@type":"Answer","text":"Cena po slevě se vypočítá jako původní cena krát jedna minus sleva dělená stem."}},{"@type":"Question","name":"Sčítají se dvě slevy dohromady?","acceptedAnswer":{"@type":"Answer","text":"Ne vždy. Dvě po sobě jdoucí slevy se počítají postupně, proto 20 % a 10 % není totéž jako 30 %."}},{"@type":"Question","name":"Proč sledovat efektivní slevu?","acceptedAnswer":{"@type":"Answer","text":"Efektivní sleva ukazuje skutečný pokles proti původní ceně po všech slevách a kuponu."}}]}</script>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7745758285259522" crossorigin="anonymous"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kalkulačka slevy | Cena po slevě, úspora a zisk</title>
+<meta name="description" content="Spočítejte cenu po jedné či více slevách, kuponu a nákupu více kusů. Pro prodejce navíc zisk, marži, bezpečnou slevu a potřebný růst prodeje.">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<link rel="canonical" href="https://rychlevypocty.cz/kalkulacka-slevy.html">
+<meta property="og:title" content="Kalkulačka slevy: cena, úspora i dopad na zisk">
+<meta property="og:description" content="Jednoduchý výpočet ceny po slevě a volitelná obchodní analýza slevové akce.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://rychlevypocty.cz/kalkulacka-slevy.html">
+<meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg">
+<meta property="og:site_name" content="RychléVýpočty.cz">
+<meta property="og:locale" content="cs_CZ">
+<link rel="icon" href="favicon.ico?v=2">
+<link rel="apple-touch-icon" href="apple-touch-icon.png?v=2">
+<link rel="manifest" href="site.webmanifest?v=2">
+<meta name="theme-color" content="#071a36">
+<link rel="stylesheet" href="rv-tool-v2.css">
+<link rel="stylesheet" href="business-v2.css">
+<link rel="stylesheet" href="discount-pro.css?v=20260706-1">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"RychléVýpočty.cz","item":"https://rychlevypocty.cz/"},{"@type":"ListItem","position":2,"name":"Kalkulačky","item":"https://rychlevypocty.cz/kalkulacky.html"},{"@type":"ListItem","position":3,"name":"Kalkulačka slevy","item":"https://rychlevypocty.cz/kalkulacka-slevy.html"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Kalkulačka slevy","url":"https://rychlevypocty.cz/kalkulacka-slevy.html","description":"Výpočet ceny po slevě, úspory, efektivní slevy a dopadu slevové akce na zisk.","applicationCategory":"FinanceApplication","operatingSystem":"All","inLanguage":"cs-CZ","dateModified":"2026-07-06","offers":{"@type":"Offer","price":"0","priceCurrency":"CZK"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Jak vypočítat cenu po slevě?","acceptedAnswer":{"@type":"Answer","text":"Původní cenu vynásobte číslem jedna minus sleva dělená stem. Při slevě 20 % tedy cenu násobíte 0,8."}},{"@type":"Question","name":"Kolik je sleva 20 % z 2 490 Kč?","acceptedAnswer":{"@type":"Answer","text":"Úspora je 498 Kč a cena po slevě 1 992 Kč."}},{"@type":"Question","name":"Sčítají se dvě slevy?","acceptedAnswer":{"@type":"Answer","text":"Ne. Slevy se aplikují postupně. Sleva 20 % a následně 10 % znamená efektivní slevu 28 %."}},{"@type":"Question","name":"Jak kupon ovlivní efektivní slevu?","acceptedAnswer":{"@type":"Answer","text":"Částka kuponu se odečte po procentních slevách. Efektivní sleva porovná konečnou cenu s původní cenou a zahrne všechny kroky."}},{"@type":"Question","name":"Jak sleva ovlivní zisk prodejce?","acceptedAnswer":{"@type":"Answer","text":"Sleva snižuje prodejní cenu, ale jednotkový náklad zůstává stejný. Zisk na kus proto obvykle klesá rychleji než cena."}},{"@type":"Question","name":"Jaká je maximální bezpečná sleva?","acceptedAnswer":{"@type":"Answer","text":"Při pohledu pouze na jednotkový náklad je hraniční sleva rozdíl mezi prodejní cenou a nákladem vyjádřený jako podíl z původní ceny. Nezahrnuje fixní náklady ani požadovaný zisk."}}]}</script>
 </head>
-<body class="rv-renovation-tool rv-business-tool rv-percent-tool rv-discount-page">
-  <a class="skip-link" href="#kalkulacka">Přejít na kalkulačku</a>
-  <header class="site-header"><div class="container header-inner"><a class="brand-logo" href="index.html" aria-label="RychléVýpočty.cz"><img class="brand-logo-img" src="logo-rychlevypocty.svg" alt="RychléVýpočty.cz" width="190" height="38"></a><nav class="main-nav"><a href="index.html">Domů</a><a href="kalkulacky.html">Kalkulačky</a><a href="procenta-kalkulacka.html">Procenta</a><a href="kalkulacka-marze-a-prirazky.html">Marže</a></nav><a class="header-cta" href="#kalkulacka">Spočítat slevu</a></div></header>
-  <main id="main-content">
-    <section class="tool-hero"><div class="container hero-grid"><div class="hero-copy"><nav class="breadcrumb"><a href="index.html">Domů</a><span>/</span><a href="kalkulacky.html">Kalkulačky</a><span>/</span><strong>Sleva</strong></nav><p class="eyebrow">Cena po slevě</p><h1>Spočítejte slevu a skutečnou úsporu</h1><p>Zadejte původní cenu, jednu nebo dvě slevy, kupon a počet kusů. Výsledek ukáže finální cenu, úsporu v Kč i efektivní slevu.</p><div class="hero-actions"><a class="btn-primary" href="#kalkulacka">Začít výpočet</a><a class="btn-secondary" href="#jak-cist-vysledek">Jak číst slevu</a></div><div class="hero-points"><span>Sleva v % i Kč</span><span>Více slev za sebou</span><span>Kupon a počet kusů</span></div></div><div class="hero-visual" aria-hidden="true"><div class="reno-dashboard"><span>Cena po slevě</span><div class="reno-number">1 992 Kč</div><div class="reno-sub">Při ceně 2 490 Kč a slevě 20 % ušetříte 498 Kč na kus.</div><div class="reno-metrics"><div><span>Původní cena</span><b>2 490 Kč</b></div><div><span>Sleva</span><b>20 %</b></div><div><span>Úspora</span><b>498 Kč</b></div></div></div><div class="reno-product"><div class="product-card"><div><span>Slevový štítek</span><strong>cena − sleva</strong></div><i></i></div></div><div class="hero-mini-strip"><span>původní</span><span>sleva</span><span>nová cena</span></div></div></div></section>
-    <div class="anchor-nav"><div class="container anchor-scroll"><a href="#kalkulacka">Kalkulačka</a><a href="#vysledek">Výsledek</a><a href="#jak-cist-vysledek">Metodika</a><a href="#souvisejici-kalkulacky">Související</a><a href="#faq">FAQ</a></div></div>
-    <section class="container tool-stage" id="kalkulacka"><form class="calculator-card" id="discountForm"><h2>Zadejte cenu a slevy</h2><p>Výpočet zachovává původní logiku: první sleva, druhá sleva, kupon v Kč a přepočet na zadaný počet kusů.</p><div class="form-grid"><div class="input-group"><label for="originalPrice">Původní cena</label><div class="input-shell"><input id="originalPrice" type="number" min="0.01" step="0.01" value="2490"><span>Kč</span></div></div><div class="input-group"><label for="discountPercent">První sleva</label><div class="input-shell"><input id="discountPercent" type="number" min="0" max="100" step="0.01" value="20"><span>%</span></div></div><div class="input-group"><label for="secondDiscount">Druhá sleva</label><div class="input-shell"><input id="secondDiscount" type="number" min="0" max="100" step="0.01" value="0"><span>%</span></div></div><div class="input-group"><label for="couponValue">Kupon</label><div class="input-shell"><input id="couponValue" type="number" min="0" step="0.01" value="0"><span>Kč</span></div></div><div class="input-group"><label for="quantity">Počet kusů</label><div class="input-shell"><input id="quantity" type="number" min="1" step="1" value="1"><span>ks</span></div></div><div class="input-group"><label for="vatMode">Režim ceny</label><select id="vatMode"><option value="gross" selected>Cena včetně DPH</option><option value="net">Cena bez DPH</option></select></div></div><div class="form-actions"><button class="btn-primary" type="submit">Spočítat slevu</button><button class="btn-secondary" id="resetBtn" type="button">Obnovit hodnoty</button></div></form>
-      <aside class="result-panel" id="vysledek"><p class="eyebrow">Výsledek</p><h2>Finální cena</h2><p>Výsledek ukazuje cenu za kus, celkovou cenu, úsporu a skutečné procento slevy po všech krocích.</p><div class="primary-result"><span>Cena za kus po slevě</span><strong id="finalPricePerPiece">0 Kč</strong><small id="discountBadge">Efektivní sleva: 0 %</small></div><div class="result-metrics"><div><span>Celkem zaplatíte</span><strong id="finalTotalPrice">0 Kč</strong></div><div><span>Úspora za kus</span><strong id="savedPerPiece">0 Kč</strong></div><div><span>Úspora celkem</span><strong id="savedTotal">0 Kč</strong></div></div><div class="rv-output-summary"><p><strong id="decisionHeadline">Orientační výsledek</strong></p><p id="decisionText">Po zadání hodnot se doplní interpretace.</p><p id="nextStepText">Další krok se zobrazí po výpočtu.</p></div><div class="info-list"><div class="info-row"><span>Původní cena</span><strong id="summaryOriginal">0 Kč</strong></div><div class="info-row"><span>Po první slevě</span><strong id="summaryAfterFirst">0 Kč</strong></div><div class="info-row"><span>Po druhé slevě</span><strong id="summaryAfterSecond">0 Kč</strong></div><div class="info-row"><span>Po kuponu</span><strong id="summaryAfterCoupon">0 Kč</strong></div><div class="info-row"><span>Počet kusů</span><strong id="summaryQuantity">0</strong></div></div><div class="table-wrap"><table><thead><tr><th>Krok</th><th>Hodnota</th><th>Význam</th></tr></thead><tbody id="stepsBody"></tbody></table></div></aside></section>
-    <section class="container content-grid" id="jak-cist-vysledek"><article class="content-card"><p class="eyebrow">Metodika</p><h2>Jak se počítá cena po slevě</h2><p>Základní sleva se počítá z původní ceny. Když následuje druhá sleva, počítá se už z ceny po první slevě, ne z původní ceny.</p><div class="formula"><code>cena po slevě = cena × (1 - sleva / 100)</code></div></article><article class="content-card"><p class="eyebrow">Dvě slevy</p><h2>Proč se slevy jednoduše nesčítají</h2><p>Sleva 20 % a další sleva 10 % nedává celkem 30 %, ale 28 %. Druhá sleva se totiž aplikuje na už sníženou cenu.</p><p>Proto je efektivní sleva důležitější než součet slevových štítků.</p></article><article class="content-card"><p class="eyebrow">Praxe</p><h2>Kdy výsledek porovnat s marží</h2><p>Pokud slevu používáte v podnikání, ověřte, zda cena po slevě stále pokrývá náklady a minimální prodejní cenu. Sleva může vypadat malá pro zákazníka, ale velká pro zisk.</p></article><article class="content-card"><p class="eyebrow">Limit</p><h2>Co výpočet neřeší</h2><p>Kalkulačka neřeší dopravu, poplatky, cashback ani odlišné DPH. Slouží pro rychlé porovnání cen a slevových scénářů.</p></article></section>
-    <section class="container related-tools" id="souvisejici-kalkulacky"><p class="eyebrow">Související kalkulačky</p><h2>Další procentní výpočty</h2><div class="related-grid"><a class="related-card" href="procenta-kalkulacka.html"><span>%</span><strong>Kalkulačka procent</strong><small>Procenta z částky i změna.</small></a><a class="related-card" href="zdrazeni-a-zlevneni-kalkulacka.html"><span>↕</span><strong>Zdražení a zlevnění</strong><small>Procentní změna ceny.</small></a><a class="related-card" href="kalkulacka-marze-a-prirazky.html"><span>M</span><strong>Marže a přirážka</strong><small>Dopad slevy na zisk.</small></a><a class="related-card" href="dph-kalkulacka.html"><span>D</span><strong>DPH kalkulačka</strong><small>Cena s DPH i bez DPH.</small></a></div></section>
-    <section class="container faq-section" id="faq"><p class="eyebrow">FAQ</p><h2>Časté otázky</h2><div class="faq-grid"><details><summary>Jak spočítám cenu po slevě?</summary><p>Původní cenu vynásobte koeficientem jedna minus sleva dělená stem.</p></details><details><summary>Sčítají se dvě slevy?</summary><p>Ne přesně. Počítají se postupně, takže efektivní sleva je nižší než prostý součet procent.</p></details><details><summary>Co je efektivní sleva?</summary><p>Skutečný pokles ceny proti původní ceně po všech slevách a kuponu.</p></details><details><summary>Je výsledek závazný?</summary><p>Ne. Jde o orientační výpočet pro rychlé porovnání cen.</p></details></div></section>
+<body class="rv-renovation-tool rv-business-tool discount-pro">
+<a class="skip-link" href="#kalkulacka">Přejít na kalkulačku</a>
+<header class="site-header">
+<div class="container header-inner">
+<a class="brand-logo" href="index.html">
+<img src="logo-rychlevypocty.svg" alt="RychléVýpočty.cz" width="190" height="38">
+</a>
+<nav class="main-nav">
+<a href="index.html">Domů</a>
+<a href="kalkulacky.html">Kalkulačky</a>
+<a href="procenta-kalkulacka.html">Procenta</a>
+<a href="business-a-cenotvorba.html">Cenotvorba</a>
+</nav>
+<a class="header-cta" href="#kalkulacka">Spočítat slevu</a>
+</div>
+</header>
+<main>
+<section class="discount-hero">
+<div class="container discount-hero-grid">
+<div>
+<nav class="breadcrumb">
+<a href="index.html">Domů</a>
+<span>/</span>
+<a href="kalkulacky.html">Kalkulačky</a>
+<span>/</span>
+<strong>Sleva</strong>
+</nav>
+<p class="eyebrow">Cena po slevě bez počítání v hlavě</p>
+<h1>Kolik opravdu zaplatíte po slevě?</h1>
+<p class="lead">Zadejte cenu a procento. Hned uvidíte novou cenu i úsporu. Druhou slevu, kupon, více kusů a analýzu zisku otevřete jen tehdy, když je potřebujete.</p>
+<a class="btn-primary" href="#kalkulacka">Spočítat slevu</a>
+<div class="hero-trust">
+<span>Výpočet v prohlížeči</span>
+<span>Bez registrace</span>
+<span>Výsledek ihned</span>
+</div>
+</div>
+<div class="discount-ticket" aria-hidden="true">
+<div class="ticket-top">
+<span>Modelový nákup</span>
+<b>−20 %</b>
+</div>
+<s>2 490 Kč</s>
+<strong>1 992 Kč</strong>
+<div class="ticket-save">
+<span>Ušetříte</span>
+<b>498 Kč</b>
+</div>
+<div class="ticket-line">
+<i>
+</i>
+<i>
+</i>
+<i>
+</i>
+</div>
+<small>Dvě postupné slevy se nesčítají.</small>
+</div>
+</div>
+</section>
+<section class="container discount-work" id="kalkulacka">
+<form class="discount-form" id="discountForm" novalidate>
+<p class="eyebrow">Rychlý výpočet</p>
+<h2>Zadejte cenu a slevu</h2>
+<div class="discount-presets">
+<button type="button" data-preset="standard">−20 %</button>
+<button type="button" data-preset="sale">Výprodej −40 %</button>
+<button type="button" data-preset="stacked">Dvě slevy</button>
+<button type="button" data-preset="business">Prodejce</button>
+</div>
+<label>
+<span>Původní cena za kus</span>
+<div class="discount-input">
+<input id="originalPrice" type="number" min="0.01" step="0.01" value="2490" inputmode="decimal">
+<b>Kč</b>
+</div>
+</label>
+<label>
+<span>První sleva</span>
+<div class="discount-input">
+<input id="discountPercent" type="number" min="0" max="100" step="0.01" value="20" inputmode="decimal">
+<b>%</b>
+</div>
+</label>
+<details class="advanced" id="advancedOptions">
+<summary>Další sleva, kupon nebo více kusů <span>Volitelné</span>
+</summary>
+<div class="advanced-grid">
+<label>
+<span>Druhá sleva</span>
+<div class="discount-input">
+<input id="secondDiscount" type="number" min="0" max="100" step="0.01" value="0" inputmode="decimal">
+<b>%</b>
+</div>
+<small>Počítá se až z ceny po první slevě.</small>
+</label>
+<label>
+<span>Hodnota kuponu</span>
+<div class="discount-input">
+<input id="couponValue" type="number" min="0" step="0.01" value="0" inputmode="decimal">
+<b>Kč</b>
+</div>
+</label>
+<label>
+<span>Kupon platí</span>
+<select id="couponScope">
+<option value="order">jednou na celý nákup</option>
+<option value="piece">na každý kus</option>
+</select>
+</label>
+<label>
+<span>Počet kusů</span>
+<div class="discount-input">
+<input id="quantity" type="number" min="1" step="1" value="1" inputmode="numeric">
+<b>ks</b>
+</div>
+</label>
+</div>
+</details>
+<div class="discount-error" id="discountError" role="alert" hidden>
+</div>
+<div class="actions">
+<button class="btn-primary" type="submit">Spočítat cenu po slevě</button>
+<button class="btn-secondary" id="resetBtn" type="button">Obnovit příklad</button>
+</div>
+<p class="privacy">Hodnoty se nikam neodesílají.</p>
+</form>
+<aside class="discount-result" id="vysledek" aria-live="polite">
+<div class="result-head">
+<div>
+<p class="eyebrow">Výsledek</p>
+<h2>Po slevě zaplatíte</h2>
+</div>
+<span id="statusBadge">Výpočet hotový</span>
+</div>
+<div class="discount-answer">
+<s id="originalTotal">0 Kč</s>
+<strong id="finalTotalPrice">0 Kč</strong>
+<p id="resultSentence">
+</p>
+</div>
+<div class="discount-metrics">
+<div>
+<span>Úspora celkem</span>
+<strong id="savedTotal">0 Kč</strong>
+</div>
+<div>
+<span>Efektivní sleva</span>
+<strong id="effectiveDiscount">0 %</strong>
+</div>
+<div>
+<span>Cena za kus</span>
+<strong id="finalPricePerPiece">0 Kč</strong>
+</div>
+<div>
+<span>Úspora za kus</span>
+<strong id="savedPerPiece">0 Kč</strong>
+</div>
+</div>
+<div class="price-waterfall">
+<h3>Jak se cena změnila</h3>
+<div id="waterfall">
+</div>
+</div>
+<div class="discount-decision">
+<h3 id="decisionHeadline">Přehled slevy</h3>
+<p id="decisionText">
+</p>
+<strong id="nextStepText">
+</strong>
+</div>
+</aside>
+</section>
+<section class="container business-analyser" id="pro-prodejce">
+<div class="section-head">
+<p class="eyebrow">Volitelné pro e-shop a podnikání</p>
+<h2>Co sleva udělá se ziskem?</h2>
+<p>Spotřebitel tuto část nepotřebuje. Prodejce může doplnit jednotkový náklad a původní objem prodeje. Částky ceny a nákladu musí být ve stejné bázi – obě s DPH, nebo obě bez DPH.</p>
+</div>
+<div class="business-layout">
+<form id="businessForm">
+<label>
+<span>Náklad na jeden kus</span>
+<div class="discount-input">
+<input id="unitCost" type="number" min="0" step="0.01" value="1200" inputmode="decimal">
+<b>Kč</b>
+</div>
+<small>Nákup, výroba a další proměnné náklady na kus.</small>
+</label>
+<label>
+<span>Původní počet prodaných kusů</span>
+<div class="discount-input">
+<input id="originalUnits" type="number" min="1" step="1" value="100" inputmode="numeric">
+<b>ks</b>
+</div>
+<small>Objem před slevovou akcí.</small>
+</label>
+<div class="business-error" id="businessError" role="alert" hidden>
+</div>
+<button class="btn-primary" type="submit">Vyhodnotit slevovou akci</button>
+</form>
+<div class="business-results">
+<div>
+<span>Zisk na kus po slevě</span>
+<strong id="profitAfter">0 Kč</strong>
+<small id="profitChange">Změna proti původní ceně</small>
+</div>
+<div>
+<span>Marže po slevě</span>
+<strong id="marginAfter">0 %</strong>
+<small>Podíl zisku z prodejní ceny</small>
+</div>
+<div>
+<span>Hraniční sleva</span>
+<strong id="breakEvenDiscount">0 %</strong>
+<small>Než cena klesne na jednotkový náklad</small>
+</div>
+<div>
+<span>Potřebný prodej</span>
+<strong id="requiredUnits">0 ks</strong>
+<small id="upliftText">Pro stejný celkový zisk</small>
+</div>
+</div>
+</div>
+<div class="business-note" id="businessNote">
+</div>
+<div class="scenario-table">
+<h3>Jak se mění zisk při různých slevách</h3>
+<div>
+<table>
+<thead>
+<tr>
+<th>Sleva</th>
+<th>Prodejní cena</th>
+<th>Zisk na kus</th>
+<th>Marže</th>
+<th>Kusy pro stejný zisk</th>
+</tr>
+</thead>
+<tbody id="scenarioBody">
+</tbody>
+</table>
+</div>
+<p>Scénáře používají jednu slevu bez kuponu a ukazují citlivost vůči zadanému nákladu. Nejsou předpovědí poptávky.</p>
+</div>
+</section>
+<section class="container seo-card">
+<p class="eyebrow">Výpočet krok za krokem</p>
+<h2>Jak vypočítat cenu po slevě</h2>
+<p>Procentní sleva říká, jaká část původní ceny se odečte. Při slevě 20 % zákazník platí zbývajících 80 %. Původní cenu proto můžete vynásobit koeficientem 0,80. U produktu za 2 490 Kč je sleva 498 Kč a nová cena 1 992 Kč.</p>
+<div class="formula-grid">
+<code>úspora = původní cena × sleva ÷ 100</code>
+<code>nová cena = původní cena × (1 − sleva ÷ 100)</code>
+<code>efektivní sleva = úspora ÷ původní cena × 100</code>
+</div>
+<p>Kalkulačka počítá s haléřovou přesností a výsledek zobrazuje na dvě desetinná místa. Skutečná částka na pokladně se může lišit podle pravidel zaokrouhlení obchodníka, měny, dopravy nebo dalších poplatků. Tyto položky nejsou automaticky součástí slevy.</p>
+</section>
+<section class="container seo-dark">
+<p class="eyebrow">Dvě slevy za sebou</p>
+<h2>20 % + 10 % není sleva 30 %</h2>
+<p>Každá další procentní sleva se počítá z právě platné ceny. Po první slevě 20 % zbývá 80 % původní ceny. Druhá sleva 10 % odebere desetinu z těchto 80 %, tedy dalších 8 % původní ceny. Celkem zákazník ušetří 28 %, nikoli 30 %.</p>
+<div class="step-cards">
+<article>
+<b>1</b>
+<h3>Původní cena 1 000 Kč</h3>
+<p>První sleva 20 % sníží cenu na 800 Kč.</p>
+</article>
+<article>
+<b>2</b>
+<h3>Druhá sleva 10 %</h3>
+<p>Počítá se z 800 Kč a odečte dalších 80 Kč.</p>
+</article>
+<article>
+<b>3</b>
+<h3>Konečná cena 720 Kč</h3>
+<p>Úspora 280 Kč znamená efektivní slevu 28 %.</p>
+</article>
+</div>
+<p>Stejný princip platí pro tři a více procentních slev. Násobí se jejich zbývající koeficienty. Pořadí procentních slev výsledek nezmění, ale pořadí procentní slevy a pevného kuponu jej změnit může. Nástroj proto jasně uvádí, že kupon odečítá až po procentních slevách.</p>
+</section>
+<section class="container seo-card">
+<p class="eyebrow">Kupony a více kusů</p>
+<h2>Rozlišujte kupon na kus a kupon na celý nákup</h2>
+<p>Kupon 200 Kč může znamenat dvě odlišné věci. Pokud platí na každý kus, odečte se od ceny každého produktu. Při třech kusech tak přinese úsporu 600 Kč. Pokud platí jednou na celý nákup, odečte se pouze 200 Kč z celého košíku. Kalkulačka umožňuje zvolit obě varianty a podle toho dopočítá cenu za kus.</p>
+<p>Kupon nemůže vytvořit zápornou konečnou cenu. Jestliže jeho hodnota převýší cenu po procentních slevách, výsledek se zastaví na nule. V praxi mohou podmínky akce zakázat kombinaci kuponů, stanovit minimální hodnotu košíku, vyloučit některé značky nebo omezit maximální slevu. Matematický výsledek proto porovnejte s podmínkami konkrétní nabídky.</p>
+<div class="insight-grid">
+<article>
+<h3>Procentní sleva</h3>
+<p>Její korunová hodnota roste s cenou produktu. U dražšího zboží bývá silnější než pevný kupon.</p>
+</article>
+<article>
+<h3>Pevný kupon</h3>
+<p>Má stejnou nominální hodnotu. U levnějšího nákupu může vytvořit vysokou efektivní slevu.</p>
+</article>
+<article>
+<h3>Doprava zdarma</h3>
+<p>Snižuje celkový výdaj, ale není slevou z ceny produktu. V této kalkulačce ji nezadávejte jako procento.</p>
+</article>
+</div>
+</section>
+<section class="container seo-card">
+<p class="eyebrow">Pro kupující</p>
+<h2>Jak poznat, zda je nabídka opravdu výhodná</h2>
+<p>Velké procento samo o sobě nezaručuje dobrou cenu. Nejprve porovnejte konečnou částku po všech slevách, nikoli velikost barevného štítku. Stejný produkt může mít u jiného prodejce nižší běžnou cenu i bez akce. Do celkového výdaje zahrňte dopravu, povinné poplatky, cenu příslušenství a případné členství potřebné pro získání slevy.</p>
+<p>U oznámení o slevě z ceny výrobku má prodejce podle informací České obchodní inspekce uvádět také nejnižší cenu, za kterou výrobek nabízel a prodával v určeném předchozím období, typicky 30 dnů. Procentní výhodnost proto neposuzujte jen proti přeškrtnuté „běžné“ ceně. Pravidla mají výjimky a odlišnosti, například u postupně zvyšované slevy nebo zboží podléhajícího rychlé zkáze; kalkulačka právní posouzení konkrétní akce neprovádí.</p>
+<div class="checklist">
+<article>
+<b>01</b>
+<div>
+<h3>Porovnejte konečnou cenu</h3>
+<p>Hledejte stejnou variantu, množství, záruku a podmínky dodání.</p>
+</div>
+</article>
+<article>
+<b>02</b>
+<div>
+<h3>Zkontrolujte referenční cenu</h3>
+<p>U výrobku sledujte nejnižší cenu uváděnou pro předchozí období.</p>
+</div>
+</article>
+<article>
+<b>03</b>
+<div>
+<h3>Přečtěte podmínky kuponu</h3>
+<p>Ověřte platnost, minimální útratu, vyloučené zboží a možnost kombinace.</p>
+</div>
+</article>
+<article>
+<b>04</b>
+<div>
+<h3>Nenechte se tlačit odpočtem</h3>
+<p>Časové omezení nemění užitek produktu ani váš rozpočet.</p>
+</div>
+</article>
+</div>
+</section>
+<section class="container seo-dark">
+<p class="eyebrow">Pro e-shop a prodejce</p>
+<h2>Sleva 20 % může ukrojit mnohem více než 20 % zisku</h2>
+<p>Jednotkový náklad se při slevě obvykle nezmenší. Jestliže produkt prodáváte za 1 000 Kč a jeho proměnný náklad je 600 Kč, původní zisk na kus je 400 Kč. Sleva 20 % sníží cenu na 800 Kč, ale zisk na kus na 200 Kč. Cena klesla o pětinu, zisk o polovinu. Pro zachování původního celkového zisku musíte prodat dvojnásobný počet kusů.</p>
+<div class="formula-grid">
+<code>zisk na kus = cena po slevě − jednotkový náklad</code>
+<code>marže = zisk na kus ÷ cena po slevě × 100</code>
+<code>potřebné kusy = původní celkový zisk ÷ nový zisk na kus</code>
+</div>
+<p>Výpočet potřebného objemu není prognóza, že zákazníci skutečně nakoupí více. Ukazuje pouze matematickou hranici. Rozhodnutí musí zohlednit kapacitu skladu, marketingové náklady, vratky, platební poplatky, logistiku a to, zda akce nepřesune běžné nákupy do zlevněného období.</p>
+</section>
+<section class="container seo-card">
+<p class="eyebrow">Bezpečná cenotvorba</p>
+<h2>Hraniční sleva není doporučená sleva</h2>
+<p>Hraniční sleva v obchodní analýze ukazuje okamžik, kdy se prodejní cena rovná zadanému jednotkovému nákladu. Při ceně 1 000 Kč a nákladu 600 Kč je tato hranice 40 %. Prodej za tuto cenu ale vytváří nulový příspěvek na úhradu fixních nákladů a nulový zisk. Jde tedy o varovný strop jednoduchého modelu, ne o bezpečné doporučení.</p>
+<p>Skutečná minimální cena musí často pokrýt také balení, expedici, provizi tržiště, platbu kartou, očekávané vratky, reklamace, práci a podíl na režii. Pokud některý z těchto nákladů roste s objednávkou, zahrňte jej do jednotkového nákladu. Fixní měsíční výdaje je vhodnější řešit samostatně přes kalkulaci minimální prodejní ceny nebo bodu zvratu.</p>
+<div class="mistake-grid">
+<article>
+<h3>Míchání částek s DPH a bez DPH</h3>
+<p>Prodejní cenu i náklad porovnávejte ve stejné bázi. Plátce typicky řídí marži bez DPH.</p>
+</article>
+<article>
+<h3>Ignorování kuponu</h3>
+<p>Kupon placený prodejcem snižuje skutečný výnos stejně jako sleva.</p>
+</article>
+<article>
+<h3>Odhad nákladu jen podle nákupu</h3>
+<p>Doprava, obal, provize a platba mohou významně snížit příspěvek z objednávky.</p>
+</article>
+<article>
+<h3>Záměna marže a přirážky</h3>
+<p>Marže se dělí prodejní cenou, přirážka nákladem. Nejde o stejné procento.</p>
+</article>
+<article>
+<h3>Více objednávek bez kapacity</h3>
+<p>Vyšší objem může zvýšit přesčasy, chybovost, vratky nebo náklady na expedici.</p>
+</article>
+<article>
+<h3>Akce bez cíle</h3>
+<p>Sleva má mít měřitelný účel: akvizici, vyprodání zásob, zvýšení košíku nebo opakovaný nákup.</p>
+</article>
+</div>
+</section>
+<section class="container seo-card">
+<p class="eyebrow">Rozhodovací rámec</p>
+<h2>Jak připravit slevovou akci, která dává ekonomický smysl</h2>
+<div class="checklist">
+<article>
+<b>01</b>
+<div>
+<h3>Určete cíl</h3>
+<p>Rozlište získání nových zákazníků, uvolnění skladu, zvýšení průměrné objednávky a podporu opakovaného nákupu. Každý cíl potřebuje jinou metriku.</p>
+</div>
+</article>
+<article>
+<b>02</b>
+<div>
+<h3>Spočítejte ekonomiku před akcí</h3>
+<p>Zapište cenu, reálný jednotkový náklad, zisk na kus, běžný počet objednávek a vratkovost. Bez výchozího stavu nelze změřit přínos.</p>
+</div>
+</article>
+<article>
+<b>03</b>
+<div>
+<h3>Stanovte hranici</h3>
+<p>Určete minimální přijatelný příspěvek na kus, maximální rozpočet akce a kapacitu, kterou zvládnete obsloužit.</p>
+</div>
+</article>
+<article>
+<b>04</b>
+<div>
+<h3>Vyhodnoťte inkrementální prodej</h3>
+<p>Nezapočítávejte jako přínos objednávky, které by přišly i bez slevy. Sledujte rozdíl proti srovnatelnému období nebo kontrolní skupině.</p>
+</div>
+</article>
+</div>
+<p>Po akci porovnejte nejen obrat, ale i hrubý zisk, náklady na propagaci, počet nových zákazníků, opakované nákupy a vratky. Vysoký obrat se slabým příspěvkem nemusí být úspěch. Naopak cílený kupon pro malou skupinu může mít lepší návratnost než plošná sleva pro celý katalog.</p>
+</section>
+<section class="container seo-card" id="faq">
+<p class="eyebrow">FAQ</p>
+<h2>Časté otázky ke slevám</h2>
+<div class="faq-list">
+<details>
+<summary>Jak vypočítat cenu po slevě?</summary>
+<p>Původní cenu vynásobte číslem jedna minus sleva dělená stem. Při slevě 20 % násobíte 0,8.</p>
+</details>
+<details>
+<summary>Kolik je 20 % z 2 490 Kč?</summary>
+<p>Úspora je 498 Kč a cena po slevě 1 992 Kč.</p>
+</details>
+<details>
+<summary>Sčítají se dvě slevy?</summary>
+<p>Ne. Počítají se postupně. Slevy 20 % a 10 % vytvoří efektivní slevu 28 %.</p>
+</details>
+<details>
+<summary>Jak kalkulačka počítá kupon?</summary>
+<p>Kupon odečítá po procentních slevách. Můžete zvolit, zda platí jednou na objednávku, nebo na každý kus.</p>
+</details>
+<details>
+<summary>Jak sleva ovlivní zisk?</summary>
+<p>Cena klesne, ale jednotkový náklad zůstane stejný. Procentní pokles zisku proto může být výrazně vyšší než procento slevy.</p>
+</details>
+<details>
+<summary>Je hraniční sleva bezpečné doporučení?</summary>
+<p>Ne. Ukazuje jen bod, kdy cena dosáhne jednotkového nákladu. Nezahrnuje požadovaný zisk ani fixní režii.</p>
+</details>
+</div>
+</section>
+<section class="container related-tools">
+<p class="eyebrow">Navazující výpočty</p>
+<h2>Co spočítat dál</h2>
+<div class="related-grid">
+<a class="related-card" href="procenta-kalkulacka.html">
+<strong>Procenta</strong>
+<small>Procento z částky a procentní změna.</small>
+</a>
+<a class="related-card" href="kalkulacka-marze-a-prirazky.html">
+<strong>Marže a přirážka</strong>
+<small>Ziskovost ceny a rozdíl pojmů.</small>
+</a>
+<a class="related-card" href="minimalni-prodejni-cena-kalkulacka.html">
+<strong>Minimální cena</strong>
+<small>Zahrňte náklady a požadovaný zisk.</small>
+</a>
+<a class="related-card" href="bod-zvratu-kalkulacka.html">
+<strong>Bod zvratu</strong>
+<small>Kolik prodat pro pokrytí režie.</small>
+</a>
+</div>
+</section>
+<section class="container seo-card">
+  <p class="eyebrow">Praktické scénáře</p><h2>Čtyři různé slevy, čtyři různá rozhodnutí</h2>
+  <div class="case-grid">
+    <article><span>Móda a sezónní zásoby</span><h3>Vyprodání kolekce se slevou 30 %</h3><p>Tričko s původní cenou 900 Kč a jednotkovým nákladem 360 Kč vytváří před akcí zisk 540 Kč. Po slevě stojí 630 Kč a na kus zbývá 270 Kč. Zisk na kus se snížil o polovinu, přestože cena klesla o 30 %. Pro stejný celkový zisk je potřeba prodat dvojnásobný počet kusů. Akce může dávat smysl, pokud uvolní sklad pro novou kolekci a náklad držení zásoby by byl vyšší než ztracený příspěvek.</p></article>
+    <article><span>Elektronika a kupon</span><h3>Kupon 500 Kč na dražší produkt</h3><p>U notebooku za 25 000 Kč odpovídá kupon 500 Kč efektivní slevě pouze 2 %. U příslušenství za 1 000 Kč by stejný kupon znamenal 50 %. Pevný kupon proto nelze hodnotit bez znalosti ceny košíku. Prodejce by měl také vědět, zda kupon financuje celý, nebo se na něm podílí dodavatel či tržiště. Do nákladu akce patří jen část, která skutečně snižuje výnos prodejce.</p></article>
+    <article><span>Služba a volná kapacita</span><h3>Sleva na termín mimo špičku</h3><p>U služby nebývá jednotkový náklad jen materiál. Patří sem čas pracovníka, příprava, úklid, platební poplatky a spotřební vybavení. Sleva na neobsazený dopolední termín může využít kapacitu, která by jinak zůstala prázdná. Plošná sleva na všechny termíny ale může pouze přesunout zákazníky ze špičky a snížit zisk bez růstu celkového počtu zakázek. Proto měřte, kolik návštěv bylo skutečně navíc.</p></article>
+    <article><span>B2B množstevní cena</span><h3>Nižší cena za větší objednávku</h3><p>Množstevní sleva má smysl, pokud větší objednávka snižuje náklad na zpracování, expedici nebo obchodní obsluhu. Nestačí vynásobit nižší zisk na kus vysokým počtem kusů. Ověřte platební podmínky, riziko nezaplacení, financování zásob a kapacitu výroby. Pokud velká zakázka vytlačí ziskovější objednávky, může být její skutečný náklad vyšší, než ukazuje jednoduchá jednotková kalkulace.</p></article>
+  </div>
+</section>
+<section class="container seo-dark">
+  <p class="eyebrow">Vyhodnocení po akci</p><h2>Obrat nestačí: sledujte přírůstek zisku a kvalitu zákazníků</h2>
+  <p>Slevová kampaň často vypadá úspěšně, protože během ní vzroste počet objednávek. Správná otázka ale zní, kolik objednávek a zisku vzniklo navíc proti situaci bez akce. Pokud by stálí zákazníci nakoupili i za běžnou cenu, sleva pouze snížila výnos z jejich nákupů. Tento jev se označuje jako kanibalizace běžného prodeje.</p>
+  <div class="measure-grid"><article><h3>Inkrementální hrubý zisk</h3><p>Od zisku vytvořeného během akce odečtěte odhad zisku, který by vznikl bez ní, a také náklady na reklamu, kupony a obsluhu vyššího objemu.</p></article><article><h3>Průměrná hodnota objednávky</h3><p>Sleva může zákazníka přimět přidat další položku, ale také nakoupit jen zlevněný produkt. Porovnávejte cenu košíku i jeho příspěvek na úhradu.</p></article><article><h3>Noví a vracející se zákazníci</h3><p>Nový zákazník získaný se slevou má hodnotu až tehdy, když se vrací nebo přináší dostatečný první zisk. Oddělte akvizici od odměny stávajících klientů.</p></article><article><h3>Vratky a storna</h3><p>Vyšší objem může zvýšit počet vratek. Sledujte výsledky až po uplynutí běžné doby pro vrácení, ne pouze v den ukončení kampaně.</p></article></div>
+  <p>Nejpřesnější vyhodnocení poskytuje srovnatelná kontrolní skupina, část zákazníků nebo produktů bez stejné pobídky. Když ji nemáte, porovnejte podobné dny, sezónnost, dostupnost zboží a intenzitu reklamy. Jednoduché srovnání s předchozím týdnem může být zavádějící, pokud mezitím přišel výplatní termín, svátek nebo změna počasí.</p>
+</section>
+<section class="container seo-card">
+  <p class="eyebrow">Limity kalkulačky</p><h2>Co výsledek zahrnuje a co musíte posoudit sami</h2>
+  <p>Základní část kalkulačky přesně kombinuje dvě procentní slevy, pevný kupon a počet kusů v pořadí zobrazeném ve výsledku. Neověřuje platnost kuponu, minimální hodnotu objednávky, vyloučené produkty, dopravu, cashback, věrnostní body ani zaokrouhlení konkrétní pokladny. Pokud sleva platí jen na část košíku, počítejte tyto položky odděleně.</p>
+  <p>Obchodní část používá jednoduchý model jednotkové ekonomiky. Předpokládá stejný náklad na každý kus a neměnné podmínky při vyšším objemu. Nezapočítává fixní režii, daň z příjmů, změnu nákupní ceny při množství, omezenou kapacitu, marketingový rozpočet ani hodnotu budoucích nákupů zákazníka. Potřebný růst prodeje proto znamená matematický počet kusů pro stejný hrubý příspěvek, nikoli obchodní prognózu.</p>
+  <p>Jestliže pracujete s cenou včetně DPH, zadejte také náklad ve srovnatelné bázi. U plátce s nárokem na odpočet je pro řízení marže obvykle vhodnější porovnávat částky bez DPH. U neplátce může být zaplacená daň součástí nákladu. Kalkulačka neurčuje daňový režim a neposuzuje právní správnost prezentace slevy. Výsledek používejte jako kontrolní model, který doplníte o vlastní obchodní data a aktuální pravidla.</p>
+</section>
 </main>
-  <footer class="footer"><div class="container footer-grid"><div><img src="logo-rychlevypocty-footer.svg" alt="RychléVýpočty.cz" width="190" height="38"><p>Praktické online kalkulačky pro finance, podnikání, mzdy, bydlení i provoz domácnosti.</p></div><div><h3>Procenta</h3><div class="footer-links"><a href="procenta-kalkulacka.html">Kalkulačka procent</a><a href="zdrazeni-a-zlevneni-kalkulacka.html">Zdražení a zlevnění</a><a href="dph-kalkulacka.html">DPH kalkulačka</a></div></div><div><h3>Cenotvorba</h3><div class="footer-links"><a href="kalkulacka-marze-a-prirazky.html">Marže a přirážka</a><a href="minimalni-prodejni-cena-kalkulacka.html">Minimální cena</a><a href="business-a-cenotvorba.html">Business</a></div></div><div><h3>Web</h3><div class="footer-links"><a href="/jak-pocitame.html">Jak počítáme</a><a href="kontakt.html">Kontakt</a><a href="podminky-pouziti.html">Podmínky použití</a><a href="ochrana-osobnich-udaju.html">Ochrana osobních údajů</a></div></div></div><div class="container footer-bottom"><p>© 2026 RychléVýpočty.cz. Výsledky jsou orientační a nenahrazují účetní ani daňové poradenství.</p></div></footer>
-  <script src="rv-tool-core.js"></script>
-  <script src="sleva.js"></script>
+<footer class="footer">
+<div class="container footer-grid">
+<div>
+<img src="logo-rychlevypocty-footer.svg" alt="RychléVýpočty.cz" width="190" height="38">
+<p>Praktické online kalkulačky pro finance, podnikání, mzdy, bydlení i provoz domácnosti.</p>
+</div>
+<div>
+<h3>Procenta a ceny</h3>
+<div class="footer-links">
+<a href="procenta-kalkulacka.html">Kalkulačka procent</a>
+<a href="zdrazeni-a-zlevneni-kalkulacka.html">Zdražení a zlevnění</a>
+<a href="dph-kalkulacka.html">DPH kalkulačka</a>
+<a href="kalkulacka-marze-a-prirazky.html">Marže a přirážka</a>
+</div>
+</div>
+<div>
+<h3>Kalkulačky</h3>
+<div class="footer-links">
+<a href="business-a-cenotvorba.html">Business a cenotvorba</a>
+<a href="minimalni-prodejni-cena-kalkulacka.html">Minimální prodejní cena</a>
+<a href="kalkulacky.html">Všechny kalkulačky</a>
+</div>
+</div>
+<div>
+<h3>Web</h3>
+<div class="footer-links">
+<a href="jak-pocitame.html">Jak počítáme</a>
+<a href="kontakt.html">Kontakt</a>
+<a href="podminky-pouziti.html">Podmínky použití</a>
+<a href="ochrana-osobnich-udaju.html">Ochrana osobních údajů</a>
+</div>
+</div>
+</div>
+<div class="container footer-bottom">
+<p>© 2026 RychléVýpočty.cz. Výsledky jsou orientační a nenahrazují účetní, daňové ani právní poradenství.</p>
+</div>
+</footer>
+<script src="rv-tool-core.js">
+</script>
+<script src="sleva.js?v=20260706-1">
+</script>
 </body>
 </html>
