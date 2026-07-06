@@ -1,52 +1,454 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="cs">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="format-detection" content="telephone=no">
-  <link rel="icon" href="favicon.ico?v=2" sizes="any">
-  <link rel="icon" href="favicon-32x32.png?v=2" sizes="32x32" type="image/png">
-  <link rel="icon" href="favicon-16x16.png?v=2" sizes="16x16" type="image/png">
-  <link rel="apple-touch-icon" href="apple-touch-icon.png?v=2" sizes="180x180">
-  <link rel="manifest" href="site.webmanifest?v=2">
-  <meta name="theme-color" content="#14253d">
-  <title>Kalkulačka průměru | Aritmetický a vážený průměr | RychléVýpočty.cz</title>
-  <meta name="description" content="Spočítejte aritmetický nebo vážený průměr, součet, počet hodnot, minimum, maximum a rozsah. Přehledná kalkulačka průměru online.">
-  <meta name="robots" content="index,follow">
-  <link rel="canonical" href="https://rychlevypocty.cz/kalkulacka-prumeru.html">
-  <meta property="og:title" content="Kalkulačka průměru">
-  <meta property="og:description" content="Aritmetický a vážený průměr s kontrolou rozsahu hodnot.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://rychlevypocty.cz/kalkulacka-prumeru.html">
-  <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg">
-  <meta property="og:site_name" content="RychléVýpočty.cz">
-  <meta property="og:locale" content="cs_CZ">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Kalkulačka průměru">
-  <meta name="twitter:description" content="Spočítejte aritmetický i vážený průměr.">
-  <meta name="twitter:image" content="https://rychlevypocty.cz/og-image.jpg">
-  <link rel="stylesheet" href="rv-tool-v2.css">
-<link rel="stylesheet" href="math-v2.css">
-<link rel="stylesheet" href="average-pro.css?v=3">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"RychléVýpočty.cz","item":"https://rychlevypocty.cz/"},{"@type":"ListItem","position":2,"name":"Matematika a převody","item":"https://rychlevypocty.cz/matematika-a-prevody.html"},{"@type":"ListItem","position":3,"name":"Kalkulačka průměru","item":"https://rychlevypocty.cz/kalkulacka-prumeru.html"}]}</script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Kalkulačka průměru","url":"https://rychlevypocty.cz/kalkulacka-prumeru.html","applicationCategory":"UtilitiesApplication","operatingSystem":"All","inLanguage":"cs-CZ","offers":{"@type":"Offer","price":"0","priceCurrency":"CZK"}}</script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Jak se počítá aritmetický průměr?","acceptedAnswer":{"@type":"Answer","text":"Sečtou se všechny hodnoty a součet se vydělí jejich počtem."}},{"@type":"Question","name":"Kdy použít vážený průměr?","acceptedAnswer":{"@type":"Answer","text":"Vážený průměr použijte, když některé hodnoty mají větší důležitost nebo četnost."}},{"@type":"Question","name":"Proč sledovat minimum a maximum?","acceptedAnswer":{"@type":"Answer","text":"Extrémní hodnoty mohou běžný průměr výrazně zkreslit."}}]}</script>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7745758285259522" crossorigin="anonymous"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kalkulačka průměru | Aritmetický, vážený a medián</title>
+<meta name="description" content="Spočítejte aritmetický nebo vážený průměr, medián, součet, minimum, maximum, rozsah a směrodatnou odchylku. Výsledek s interpretací.">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<link rel="canonical" href="https://rychlevypocty.cz/kalkulacka-prumeru.html">
+<meta property="og:title" content="Kalkulačka průměru s mediánem a kontrolou dat">
+<meta property="og:description" content="Běžný i vážený průměr bez přeplácaného zadání.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://rychlevypocty.cz/kalkulacka-prumeru.html">
+<meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg">
+<meta property="og:site_name" content="RychléVýpočty.cz">
+<meta property="og:locale" content="cs_CZ">
+<link rel="icon" href="favicon.ico?v=2">
+<link rel="apple-touch-icon" href="apple-touch-icon.png?v=2">
+<link rel="manifest" href="site.webmanifest?v=2">
+<meta name="theme-color" content="#081b34">
+<link rel="stylesheet" href="rv-tool-v2.css">
+<link rel="stylesheet" href="business-v2.css">
+<link rel="stylesheet" href="average-top.css?v=20260706-1">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"RychléVýpočty.cz","item":"https://rychlevypocty.cz/"},{"@type":"ListItem","position":2,"name":"Matematika a převody","item":"https://rychlevypocty.cz/matematika-a-prevody.html"},{"@type":"ListItem","position":3,"name":"Kalkulačka průměru","item":"https://rychlevypocty.cz/kalkulacka-prumeru.html"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Kalkulačka průměru","url":"https://rychlevypocty.cz/kalkulacka-prumeru.html","description":"Aritmetický a vážený průměr s mediánem, rozsahem a kontrolou variability.","applicationCategory":"UtilitiesApplication","operatingSystem":"All","inLanguage":"cs-CZ","dateModified":"2026-07-06","offers":{"@type":"Offer","price":"0","priceCurrency":"CZK"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Jak se počítá aritmetický průměr?","acceptedAnswer":{"@type":"Answer","text":"Sečtou se všechny hodnoty a součet se vydělí jejich počtem."}},{"@type":"Question","name":"Kdy použít vážený průměr?","acceptedAnswer":{"@type":"Answer","text":"Když mají hodnoty různou důležitost, četnost nebo zastoupení."}},{"@type":"Question","name":"Jaký je rozdíl mezi průměrem a mediánem?","acceptedAnswer":{"@type":"Answer","text":"Průměr používá všechny hodnoty, medián je prostřední hodnota seřazeného souboru a méně jej ovlivňují extrémy."}},{"@type":"Question","name":"Může být průměr mimo minimum a maximum?","acceptedAnswer":{"@type":"Answer","text":"Aritmetický i vážený průměr s nezápornými vahami leží mezi minimem a maximem započítaných hodnot."}},{"@type":"Question","name":"Co znamená směrodatná odchylka?","acceptedAnswer":{"@type":"Answer","text":"Popisuje typickou vzdálenost hodnot od průměru. Vyšší odchylka znamená větší rozptýlení."}},{"@type":"Question","name":"Jak zadat desetinná čísla?","acceptedAnswer":{"@type":"Answer","text":"Použijte středník nebo nový řádek mezi hodnotami a desetinnou čárku uvnitř čísla."}}]}</script>
 </head>
-<body class="rv-renovation-tool rv-business-tool rv-percent-tool rv-math-tool rv-average-page">
-  <a class="skip-link" href="#kalkulacka">Přejít na kalkulačku</a>
-  <header class="site-header"><div class="container header-inner"><a class="brand-logo" href="index.html" aria-label="RychléVýpočty.cz"><img class="brand-logo-img" src="logo-rychlevypocty.svg" alt="RychléVýpočty.cz" width="190" height="38"></a><nav class="main-nav"><a href="index.html">Domů</a><a href="kalkulacky.html">Kalkulačky</a><a href="matematika-a-prevody.html" aria-current="page">Matematika</a><a href="procenta-kalkulacka.html">Procenta</a></nav><a class="header-cta" href="#kalkulacka">Spočítat průměr</a></div></header>
-  <main id="main-content">
-    <section class="tool-hero"><div class="container hero-grid"><div class="hero-copy"><nav class="breadcrumb"><a href="index.html">Domů</a><span>/</span><a href="kalkulacky.html">Kalkulačky</a><span>/</span><strong>Průměr</strong></nav><p class="eyebrow">Aritmetický a vážený průměr</p><h1>Průměr bez zmatků: běžný i vážený</h1><p>Vyberte běžný nebo vážený průměr. Oba režimy mají vlastní zadání a výsledek vždy jasně ukáže, ze kterých dat právě vychází.</p><div class="hero-actions"><a class="btn-primary" href="#kalkulacka">Začít výpočet</a><a class="btn-secondary" href="#jak-cist-vysledek">Jak průměr číst</a></div><div class="hero-points"><span>Aritmetický průměr</span><span>Vážený průměr</span><span>Minimum a maximum</span></div></div><div class="hero-visual" aria-hidden="true"><div class="reno-dashboard"><span>Aritmetický průměr</span><div class="reno-number">17,5</div><div class="reno-sub">Hodnoty 10, 15, 20 a 25 mají součet 70 a průměr 17,5.</div><div class="reno-metrics"><div><span>Počet</span><b>4</b></div><div><span>Součet</span><b>70</b></div><div><span>Rozsah</span><b>15</b></div></div></div><div class="reno-product"><div class="product-card"><div><span>Datový panel</span><strong>součet / počet</strong></div><i></i></div></div><div class="hero-mini-strip"><span>hodnoty</span><span>součet</span><span>průměr</span></div></div></div></section>
-    <div class="anchor-nav"><div class="container anchor-scroll"><a href="#kalkulacka">Kalkulačka</a><a href="#vysledek">Výsledek</a><a href="#jak-cist-vysledek">Metodika</a><a href="#souvisejici-kalkulacky">Související</a><a href="#faq">FAQ</a></div></div>
-    <section class="container tool-stage" id="kalkulacka"><div class="calculator-card"><div class="average-intro"><p class="eyebrow">Zadání</p><h2>Vyberte typ průměru</h2><p>Aritmetický a vážený průměr používají jiné vstupy. Přepínač zobrazí vždy jen aktivní režim, takže se zadání ani výsledek nemohou zaměnit.</p></div><div class="average-mode-switch" role="tablist" aria-label="Typ průměru"><button id="average-tab-arithmetic" type="button" role="tab" aria-selected="true" aria-controls="average-panel-arithmetic" data-average-mode="arithmetic"><span><strong>Aritmetický průměr</strong><span>Všechny hodnoty mají stejnou váhu</span></span></button><button id="average-tab-weighted" type="button" role="tab" aria-selected="false" aria-controls="average-panel-weighted" data-average-mode="weighted"><span><strong>Vážený průměr</strong><span>Každá hodnota může mít jiný vliv</span></span></button></div><section class="average-panel" id="average-panel-arithmetic" role="tabpanel" aria-labelledby="average-tab-arithmetic" data-average-panel="arithmetic"><div class="average-panel__head"><div><h3>Aritmetický průměr</h3><p>Vložte čísla oddělená mezerou, středníkem nebo čárkou.</p></div><span class="average-panel__badge">Stejná váha</span></div><div class="input-group"><label for="numberList">Hodnoty</label><textarea id="numberList" aria-describedby="numberListHelp">10, 15, 20, 25</textarea><div class="average-input-help" id="numberListHelp"><span>10 15 20 25</span><span>10; 15; 20; 25</span><span>1,5; 2,5; 3,5</span></div></div><div class="average-settings"><div class="input-group"><label for="decimalPlaces">Zaokrouhlení výsledku</label><select id="decimalPlaces"><option value="0">Celé číslo</option><option value="1">1 desetinné místo</option><option value="2" selected>2 desetinná místa</option><option value="4">4 desetinná místa</option></select></div></div><div class="average-actions"><button class="btn-primary" id="calcArithmeticBtn" type="button">Spočítat průměr</button><button class="btn-secondary" id="fillExampleBtn" type="button">Načíst příklad</button><button class="btn-secondary" id="clearArithmeticBtn" type="button">Vymazat hodnoty</button></div></section><section class="average-panel" id="average-panel-weighted" role="tabpanel" aria-labelledby="average-tab-weighted" data-average-panel="weighted" hidden><div class="average-panel__head"><div><h3>Vážený průměr</h3><p>Vyšší váha znamená větší vliv hodnoty na výsledek.</p></div><span class="average-panel__badge">Různý vliv</span></div><div class="table-wrap"><table class="average-weight-table"><colgroup><col><col><col style="width:48px"></colgroup><thead><tr><th>Hodnota</th><th>Váha</th><th><span class="sr-only">Akce</span></th></tr></thead><tbody id="weightedTableBody"><tr><td><input type="number" step="any" value="1" aria-label="Hodnota 1"></td><td><input type="number" min="0" step="any" value="1" aria-label="Váha 1"></td><td><button class="average-remove-row" type="button" aria-label="Odstranit řádek">×</button></td></tr><tr><td><input type="number" step="any" value="2" aria-label="Hodnota 2"></td><td><input type="number" min="0" step="any" value="2" aria-label="Váha 2"></td><td><button class="average-remove-row" type="button" aria-label="Odstranit řádek">×</button></td></tr><tr><td><input type="number" step="any" value="3" aria-label="Hodnota 3"></td><td><input type="number" min="0" step="any" value="3" aria-label="Váha 3"></td><td><button class="average-remove-row" type="button" aria-label="Odstranit řádek">×</button></td></tr></tbody></table></div><div class="average-actions"><button class="btn-secondary" id="addRowBtn" type="button">Přidat řádek</button><button class="btn-secondary" id="fillWeightedExampleBtn" type="button">Načíst příklad</button><button class="btn-secondary" id="resetWeightedBtn" type="button">Vymazat tabulku</button><button class="btn-primary" id="calcWeightedBtn" type="button">Spočítat vážený průměr</button></div></section></div>
-      <aside class="result-panel" id="vysledek" aria-live="polite"><p class="eyebrow">Výsledek</p><h2>Průměr</h2><p>Panel zobrazuje výhradně výsledek právě aktivního režimu.</p><div class="average-result-context"><span>Aktivní výpočet:</span><strong id="averageModeContext">Aritmetický průměr</strong></div><div class="primary-result"><span id="averageType">Aritmetický</span><strong id="averageResult">0</strong><small id="resultBadge">Výpočet se načítá</small></div><div class="result-metrics"><div><span id="countLabel">Počet hodnot</span><strong id="countResult">0</strong></div><div><span id="sumLabel">Součet</span><strong id="sumResult">0</strong></div><div><span>Rozsah</span><strong id="rangeResult">0</strong></div></div><div class="rv-output-summary"><p id="resultNote">Interpretace se doplní po výpočtu.</p><p><strong id="affordabilityStatus">Orientační pohled</strong></p><p id="affordabilityText">Nejdřív si ověřte správný typ průměru.</p><p><strong id="actionStatus">Další krok</strong></p><p id="decisionSummary">Po výpočtu zkontrolujte rozsah hodnot.</p><p id="nextActionText">Další doporučení se doplní po výpočtu.</p></div><div class="info-list"><div class="info-row"><span>Minimum</span><strong id="minResult">0</strong></div><div class="info-row"><span>Maximum</span><strong id="maxResult">0</strong></div><div class="info-row"><span>Součet vah</span><strong id="weightsSumResult">—</strong></div><div class="info-row"><span>Náhled vstupu</span><strong id="inputPreview">—</strong></div></div></aside></section>
-    <section class="container content-grid" id="jak-cist-vysledek"><article class="content-card"><p class="eyebrow">Metodika</p><h2>Jak se počítá aritmetický průměr</h2><p>Aritmetický průměr je součet hodnot vydělený jejich počtem. Hodí se, když mají všechny hodnoty stejnou důležitost.</p><div class="formula"><code>průměr = součet hodnot / počet hodnot</code></div></article><article class="content-card"><p class="eyebrow">Váhy</p><h2>Kdy použít vážený průměr</h2><p>Vážený průměr použijte, když některé hodnoty mají větší význam nebo četnost. Typicky známky s různou vahou, průměrná cena nákupu nebo skóre podle důležitosti.</p><div class="formula"><code>vážený průměr = součet(hodnota × váha) / součet vah</code></div></article><article class="content-card"><p class="eyebrow">Kontrola</p><h2>Proč sledovat rozsah</h2><p>Minimum a maximum rychle ukážou, jestli průměr není zkreslený extrémní hodnotou. U hodně rozdílných hodnot může být užitečný také medián.</p></article><article class="content-card"><p class="eyebrow">Příklad</p><h2>10, 15, 20 a 25</h2><p>Součet je 70, počet hodnot je 4 a aritmetický průměr je 17,5. Rozsah mezi minimem 10 a maximem 25 je 15.</p></article></section>
-    <section class="container related-tools" id="souvisejici-kalkulacky"><p class="eyebrow">Související kalkulačky</p><h2>Další matematické nástroje</h2><div class="related-grid"><a class="related-card" href="procenta-kalkulacka.html"><span>%</span><strong>Kalkulačka procent</strong><small>Procenta a podíly.</small></a><a class="related-card" href="trojclenka-kalkulacka.html"><span>T</span><strong>Trojčlenka</strong><small>Přímá a nepřímá úměra.</small></a><a class="related-card" href="jednotkova-cena-kalkulacka.html"><span>J</span><strong>Jednotková cena</strong><small>Cena za kg, litr nebo kus.</small></a><a class="related-card" href="kalkulacky.html"><span>K</span><strong>Všechny kalkulačky</strong><small>Přehled nástrojů.</small></a></div></section>
-    <section class="container faq-section" id="faq"><p class="eyebrow">FAQ</p><h2>Časté otázky</h2><div class="faq-grid"><details><summary>Jak se počítá aritmetický průměr?</summary><p>Sečtete všechny hodnoty a vydělíte je počtem hodnot.</p></details><details><summary>Kdy použít vážený průměr?</summary><p>Když některé hodnoty mají vyšší důležitost nebo četnost.</p></details><details><summary>Proč sledovat minimum a maximum?</summary><p>Extrémní hodnoty mohou průměr výrazně posunout.</p></details><details><summary>Je výsledek závazný?</summary><p>Ne. Jde o matematický výpočet podle zadaných hodnot.</p></details></div></section>
+<body class="rv-renovation-tool rv-business-tool average-top">
+<a class="skip-link" href="#kalkulacka">Přejít na kalkulačku</a>
+<header class="site-header">
+<div class="container header-inner">
+<a class="brand-logo" href="index.html">
+<img src="logo-rychlevypocty.svg" alt="RychléVýpočty.cz" width="190" height="38">
+</a>
+<nav class="main-nav">
+<a href="index.html">Domů</a>
+<a href="kalkulacky.html">Kalkulačky</a>
+<a href="matematika-a-prevody.html">Matematika</a>
+<a href="procenta-kalkulacka.html">Procenta</a>
+</nav>
+<a class="header-cta" href="#kalkulacka">Spočítat průměr</a>
+</div>
+</header>
+<main>
+<section class="average-hero">
+<div class="container average-hero-grid">
+<div>
+<nav class="breadcrumb">
+<a href="index.html">Domů</a>
+<span>/</span>
+<a href="kalkulacky.html">Kalkulačky</a>
+<span>/</span>
+<strong>Průměr</strong>
+</nav>
+<p class="eyebrow">Průměr s kontextem, ne jen jedno číslo</p>
+<h1>Spočítejte průměr a zjistěte, co skrývá</h1>
+<p class="lead">Vložte seznam hodnot nebo tabulku hodnot a vah. Kromě výsledku uvidíte medián, rozsah a rozptýlení, takže snadno poznáte, zda průměr není zavádějící.</p>
+<a class="btn-primary" href="#kalkulacka">Spočítat průměr</a>
+</div>
+<div class="average-dash" aria-hidden="true">
+<span>Aritmetický průměr</span>
+<strong>17,5</strong>
+<div>
+<p>
+<b>10</b>
+<small>minimum</small>
+</p>
+<i>
+</i>
+<p>
+<b>17,5</b>
+<small>medián</small>
+</p>
+<i>
+</i>
+<p>
+<b>25</b>
+<small>maximum</small>
+</p>
+</div>
+</div>
+</div>
+</section>
+<section class="container average-work" id="kalkulacka">
+<form class="average-form" id="averageForm" data-mode="arithmetic" novalidate>
+<p class="eyebrow">Vyberte typ výpočtu</p>
+<div class="average-modes">
+<button type="button" data-mode="arithmetic">
+<strong>Aritmetický průměr</strong>
+<span>Každá hodnota má stejný vliv</span>
+</button>
+<button type="button" data-mode="weighted">
+<strong>Vážený průměr</strong>
+<span>Hodnoty mají různou váhu</span>
+</button>
+</div>
+<section data-panel="arithmetic">
+<h2>Zadejte hodnoty</h2>
+<p>Nejspolehlivější je oddělit hodnoty středníkem nebo novým řádkem.</p>
+<label>
+<span>Seznam čísel</span>
+<textarea id="numberList" rows="5">10; 15; 20; 25</textarea>
+</label>
+<div class="format-help">
+<span>Celá čísla: 10; 15; 20</span>
+<span>Desetinná: 1,5; 2,75; 3,2</span>
+</div>
+</section>
+<section data-panel="weighted" hidden>
+<h2>Zadejte hodnoty a váhy</h2>
+<p>Vyšší váha dává hodnotě větší vliv. Váha může znamenat důležitost, počet kusů nebo četnost.</p>
+<div class="weighted-table">
+<table>
+<thead>
+<tr>
+<th>Hodnota</th>
+<th>Váha</th>
+<th>
+</th>
+</tr>
+</thead>
+<tbody id="weightedRows">
+</tbody>
+</table>
+</div>
+<button class="btn-secondary" id="addWeightedRow" type="button">+ Přidat řádek</button>
+</section>
+<div class="average-options">
+<label>
+<span>Zaokrouhlení</span>
+<select id="decimalPlaces">
+<option value="0">Celé číslo</option>
+<option value="1">1 desetinné místo</option>
+<option value="2" selected>2 desetinná místa</option>
+<option value="4">4 desetinná místa</option>
+</select>
+</label>
+</div>
+<div class="average-error" id="averageError" role="alert" hidden>
+</div>
+<div class="actions">
+<button class="btn-primary" type="submit">Spočítat průměr</button>
+<button class="btn-secondary" id="exampleBtn" type="button">Načíst příklad</button>
+<button class="btn-secondary" id="resetBtn" type="button">Vymazat</button>
+</div>
+<p class="privacy">Výpočet probíhá pouze ve vašem prohlížeči.</p>
+</form>
+<aside class="average-result" id="vysledek" aria-live="polite">
+<div class="result-head">
+<div>
+<p class="eyebrow">Výsledek</p>
+<h2 id="resultTitle">Aritmetický průměr</h2>
+</div>
+<span id="statusBadge">Výpočet hotový</span>
+</div>
+<div class="average-answer">
+<span>Výsledný průměr</span>
+<strong id="averageValue">0</strong>
+<p id="resultSentence">
+</p>
+</div>
+<div class="average-metrics">
+<div>
+<span>Počet hodnot</span>
+<strong id="countValue">0</strong>
+</div>
+<div>
+<span>Součet</span>
+<strong id="sumValue">0</strong>
+</div>
+<div>
+<span>Medián</span>
+<strong id="medianValue">0</strong>
+</div>
+<div>
+<span>Směrodatná odchylka</span>
+<strong id="stdValue">0</strong>
+</div>
+</div>
+<div class="distribution">
+<h3>Rozložení hodnot</h3>
+<div class="distribution-track">
+<i id="meanMarker">
+</i>
+<u id="medianMarker">
+</u>
+</div>
+<div>
+<span>Min <b id="minValue">0</b>
+</span>
+<span>Průměr</span>
+<span>Medián</span>
+<span>Max <b id="maxValue">0</b>
+</span>
+</div>
+</div>
+<div class="range-card">
+<span>Rozsah hodnot</span>
+<strong id="rangeValue">0</strong>
+<p id="rangeText">
+</p>
+</div>
+<div class="average-decision">
+<h3 id="decisionHeadline">Jak průměr číst</h3>
+<p id="decisionText">
+</p>
+<strong id="nextStepText">
+</strong>
+</div>
+</aside>
+</section>
+<section class="container method-card">
+<p class="eyebrow">Rychlé rozlišení</p>
+<h2>Který průměr použít?</h2>
+<div class="method-grid">
+<article>
+<span>Aritmetický</span>
+<h3>Všechny hodnoty jsou rovnocenné</h3>
+<p>Teploty za jednotlivé dny, výsledky stejného typu měření nebo body se stejnou důležitostí.</p>
+<code>součet hodnot ÷ počet hodnot</code>
+</article>
+<article>
+<span>Vážený</span>
+<h3>Každá hodnota má jiný vliv</h3>
+<p>Známky s různou vahou, průměrná nákupní cena podle množství nebo skupiny s různým počtem členů.</p>
+<code>součet(hodnota × váha) ÷ součet vah</code>
+</article>
+<article>
+<span>Medián</span>
+<h3>Data obsahují extrémy</h3>
+<p>Příjmy, ceny nemovitostí nebo doby čekání, kde několik velmi vysokých hodnot posouvá průměr.</p>
+<code>prostřední hodnota seřazených dat</code>
+</article>
+</div>
+</section>
+<section class="container seo-card">
+<p class="eyebrow">Aritmetický průměr</p>
+<h2>Jak se počítá běžný průměr</h2>
+<p>Všechny hodnoty se sečtou a součet se vydělí jejich počtem. Pro čísla 10, 15, 20 a 25 je součet 70. Čtyři hodnoty proto mají průměr 17,5. Každé číslo má stejný vliv bez ohledu na pořadí.</p>
+<div class="formula-grid">
+<code>průměr = součet ÷ počet</code>
+<code>(10 + 15 + 20 + 25) ÷ 4 = 17,5</code>
+<code>kontrola: průměr leží mezi 10 a 25</code>
+</div>
+<p>Aritmetický průměr je vhodný, když data popisují stejný typ pozorování a žádné nemá vyšší důležitost. Pokud jedna hodnota reprezentuje deset případů a jiná jen jeden, použijte váhy nebo původní data rozepište podle četnosti.</p>
+</section>
+<section class="container seo-dark">
+<p class="eyebrow">Vážený průměr</p>
+<h2>Jak započítat různou důležitost nebo četnost</h2>
+<p>Každou hodnotu vynásobíte její vahou, výsledné součiny sečtete a vydělíte součtem vah. Hodnota 1 s vahou 1, hodnota 2 s vahou 2 a hodnota 3 s vahou 3 mají vážený součet 14 a součet vah 6. Výsledek je přibližně 2,33.</p>
+<div class="step-grid">
+<article>
+<b>01</b>
+<h3>Vynásobte</h3>
+<p>1 × 1, 2 × 2 a 3 × 3.</p>
+</article>
+<article>
+<b>02</b>
+<h3>Sečtěte součiny</h3>
+<p>1 + 4 + 9 = 14.</p>
+</article>
+<article>
+<b>03</b>
+<h3>Sečtěte váhy</h3>
+<p>1 + 2 + 3 = 6.</p>
+</article>
+<article>
+<b>04</b>
+<h3>Vydělte</h3>
+<p>14 ÷ 6 = 2,33.</p>
+</article>
+</div>
+<p>Váhy nemusí dávat dohromady 100. Mohou být 1, 2 a 3, procenta, počty kusů nebo počty lidí. Důležité je, aby jejich poměr správně vyjadřoval relativní vliv.</p>
+</section>
+<section class="container seo-card">
+<p class="eyebrow">Medián</p>
+<h2>Proč prostřední hodnota někdy popisuje data lépe</h2>
+<p>Medián získáte seřazením hodnot a výběrem prostřední. U lichého počtu je to jedna hodnota, u sudého počet se zprůměrují dvě prostřední. Data 10, 12, 13, 14 a 100 mají průměr 29,8, ale medián 13. Jediná extrémní stovka průměr výrazně posunula.</p>
+<p>Rozdíl mezi průměrem a mediánem je praktický varovný signál. Když jsou si blízké, rozdělení může být poměrně vyrovnané. Velký rozdíl často ukazuje extrémy nebo asymetrii, ale sám o sobě nevysvětluje příčinu.</p>
+</section>
+<section class="container seo-card">
+<p class="eyebrow">Minimum, maximum a rozsah</p>
+<h2>Jedno průměrné číslo nestačí</h2>
+<p>Minimum je nejnižší a maximum nejvyšší hodnota. Jejich rozdíl tvoří rozsah. Dva soubory mohou mít stejný průměr, ale zcela jiné rozložení: hodnoty 49, 50 a 51 mají průměr 50 a rozsah 2, zatímco 0, 50 a 100 mají stejný průměr, ale rozsah 100.</p>
+<p>Rozsah rychle ukáže krajní rozdíl, používá však pouze dvě hodnoty. Pro podrobnější pohled kalkulačka zobrazuje také populační směrodatnou odchylku, která zapojuje všechny hodnoty.</p>
+</section>
+<section class="container seo-dark">
+<p class="eyebrow">Směrodatná odchylka</p>
+<h2>Jak moc jsou hodnoty rozptýlené kolem průměru</h2>
+<p>Směrodatná odchylka popisuje typickou velikost odchylky od průměru. Nulová hodnota znamená, že všechna čísla jsou stejná. Vyšší hodnota znamená větší rozptýlení. Kalkulačka používá populační variantu, tedy dělí součet čtverců odchylek počtem hodnot.</p>
+<p>Odchylku čtěte ve stejné jednotce jako původní data. Sama neříká, zda je variabilita dobrá nebo špatná. Přijatelné rozptýlení závisí na oboru, přesnosti měření a účelu analýzy.</p>
+<div class="formula-grid">
+<code>variance = průměr čtverců odchylek</code>
+<code>směrodatná odchylka = odmocnina variance</code>
+<code>všechna čísla stejná → odchylka 0</code>
+</div>
+</section>
+<section class="container seo-card">
+<p class="eyebrow">Průměr známek</p>
+<h2>Kdy záleží na vahách</h2>
+<p>Pokud mají všechny známky stejnou důležitost, stačí aritmetický průměr. Jestliže závěrečný test má váhu tři a domácí úkol váhu jedna, použijte vážený režim. Do prvního sloupce zadejte známku a do druhého její váhu.</p>
+<p>Výsledný průměr nemusí automaticky určovat výslednou známku. Škola nebo vyučující může používat hranice, další podmínky, povinné práce nebo pedagogické posouzení. Kalkulačka řeší pouze matematický průměr.</p>
+</section>
+<section class="container seo-card">
+<p class="eyebrow">Průměrná nákupní cena</p>
+<h2>Proč nestačí zprůměrovat dvě ceny</h2>
+<p>Nákup 10 kusů za 100 Kč a 100 kusů za 80 Kč nemá průměrnou cenu 90 Kč. Druhá cena se týká desetinásobného množství, a proto musí mít vyšší váhu. Vážený průměr je (100 × 10 + 80 × 100) ÷ 110, tedy přibližně 81,82 Kč za kus.</p>
+<p>Stejný postup funguje u zásob, investičních nákupů nebo průměrné ceny materiálu. Nezahrnuje však poplatky, měnové převody ani daňové dopady, pokud je samostatně nepřipočítáte k hodnotám.</p>
+</section>
+<section class="container seo-card">
+<p class="eyebrow">Formát vstupu</p>
+<h2>Jak správně zadat čísla</h2>
+<p>Pro česká desetinná čísla používejte středník nebo nový řádek jako oddělovač: například 1,5; 2,75; 3,2. Celá čísla lze oddělit také mezerami. Středník je nejbezpečnější, protože čárka pak jednoznačně zůstává desetinným oddělovačem.</p>
+<p>Nečíselné položky kalkulačka odmítne místo tichého vynechání. Záporná čísla a nula jsou pro aritmetický průměr platné. Ve váženém režimu musí být váha vyšší než nula, protože nulová váha hodnotu fakticky nezapočítává.</p>
+</section>
+<section class="container seo-card">
+<p class="eyebrow">Nejčastější chyby</p>
+<h2>Co před použitím výsledku zkontrolovat</h2>
+<div class="mistake-grid">
+<article>
+<h3>Průměr průměrů</h3>
+<p>Průměry různě velkých skupin nelze zprůměrovat bez vah odpovídajících velikosti skupin.</p>
+</article>
+<article>
+<h3>Ignorování extrému</h3>
+<p>Jedna mimořádná hodnota může průměr výrazně posunout. Porovnejte medián.</p>
+</article>
+<article>
+<h3>Nesprávné váhy</h3>
+<p>Váha musí vyjadřovat četnost nebo důležitost, ne náhodně zvolené číslo.</p>
+</article>
+<article>
+<h3>Míchání jednotek</h3>
+<p>Nelze průměrovat koruny, procenta a kilogramy v jednom souboru.</p>
+</article>
+<article>
+<h3>Předčasné zaokrouhlení</h3>
+<p>Zaokrouhlete až konečný výsledek, zejména u navazujících výpočtů.</p>
+</article>
+<article>
+<h3>Záměna populace a vzorku</h3>
+<p>Zobrazená odchylka je populační. Výběrová odchylka používá jiný jmenovatel.</p>
+</article>
+</div>
+</section>
+<section class="container seo-card">
+<p class="eyebrow">Limity interpretace</p>
+<h2>Průměr nepopisuje příčinu ani typickou zkušenost automaticky</h2>
+<p>Průměr shrnuje data, ale nevysvětluje, proč se liší. Nemusí odpovídat žádné skutečné pozorované hodnotě a u asymetrických dat nemusí představovat typického člověka nebo případ. Vedle něj sledujte velikost souboru, medián, rozsah a původ dat.</p>
+<p>U důležitých statistických rozhodnutí nestačí popisná kalkulačka. Může být potřeba výběrová směrodatná odchylka, interval spolehlivosti, test hypotézy nebo kontrola kvality dat.</p>
+</section>
+<section class="container seo-card"><p class="eyebrow">Praktické příklady</p><h2>Stejný vzorec, různý význam výsledku</h2><div class="case-grid"><article><h3>Průměrná teplota</h3><p>Hodnoty 18, 20, 19, 23 a 25 °C mají součet 105 a průměr 21 °C. Medián je 20 °C. Každý den má stejnou váhu, proto stačí aritmetický průměr.</p></article><article><h3>Doba vyřízení</h3><p>Časy 5, 6, 6, 7 a 40 minut mají průměr 12,8 minuty, ale medián 6 minut. Jediný mimořádně dlouhý případ posouvá průměr a medián lépe popisuje běžnou zkušenost.</p></article><article><h3>Průměrná známka</h3><p>Známky 1, 2 a 3 s vahami 1, 2 a 3 mají vážený průměr 2,33. Prostý průměr 2 by ignoroval vyšší vliv poslední známky.</p></article><article><h3>Průměrná cena</h3><p>Deset kusů za 100 Kč a sto kusů za 80 Kč má váženou cenu 81,82 Kč. Váhou je počet nakoupených kusů.</p></article><article><h3>Průměrná rychlost</h3><p>Rychlosti nelze vždy zprůměrovat prostě. Při stejných vzdálenostech rozhoduje harmonický průměr, při stejných časech aritmetický.</p></article><article><h3>Průměrný příjem</h3><p>Několik velmi vysokých příjmů může průměr výrazně zvýšit. Pro typickou hodnotu bývá vhodné uvést také medián.</p></article></div></section>
+<section class="container seo-dark"><p class="eyebrow">Průměr skupin</p><h2>Proč nelze bez vah průměrovat dva průměry</h2><p>První skupina má průměr 80 bodů a obsahuje deset lidí. Druhá má průměr 60 bodů a obsahuje devadesát lidí. Prostý průměr skupinových průměrů je 70, ale ignoruje rozdílnou velikost skupin. Správný celkový průměr je vážený počtem lidí.</p><div class="formula-grid"><code>80 × 10 = 800 bodů</code><code>60 × 90 = 5 400 bodů</code><code>(800 + 5 400) ÷ 100 = 62 bodů</code></div><p>Rozdíl mezi 70 a 62 je významný. Stejná chyba vzniká při spojování poboček, tříd, měsíců nebo produktových skupin. Každý dílčí průměr musí být vážen počtem pozorování, ze kterých vznikl, případně jinou správnou vahou.</p><p>Pokud velikosti skupin neznáte, přesný společný průměr z pouhých dílčích průměrů obvykle dopočítat nelze. Nepředpokládejte automaticky stejné skupiny, pokud to data nepotvrzují.</p></section>
+<section class="container seo-card"><p class="eyebrow">Kvalita vstupních dat</p><h2>Chybějící, nulové a extrémní hodnoty</h2><p>Nula může být platná naměřená hodnota a neměla by být automaticky vynechána. Chybějící údaj je něco jiného než nula. Pokud se měření neuskutečnilo, nevkládejte místo něj nulu, protože by průměr uměle snížila. Kalkulačka prázdné položky ve vážené tabulce nezapočítá, ale neplatně vyplněný řádek označí jako chybu.</p><p>Extrémní hodnotu neodstraňujte jen proto, že mění výsledek. Nejdřív ověřte, zda jde o chybu měření, překlep nebo skutečný mimořádný případ. Pokud je platná, uveďte vedle průměru medián, rozsah a velikost souboru. Odstranění platného extrému bez vysvětlení může být zavádějící.</p><div class="quality-grid"><article><h3>Nula</h3><p>Platná číselná hodnota, pokud skutečně znamená nulový výsledek.</p></article><article><h3>Prázdná hodnota</h3><p>Chybějící pozorování. Nezaměňujte je s nulou.</p></article><article><h3>Extrém</h3><p>Prověřte zdroj. Platný extrém patří do dat nebo musí být transparentně vysvětlen.</p></article><article><h3>Duplicitní řádek</h3><p>Nechtěná duplicita dává hodnotě vyšší váhu a může výsledek posunout.</p></article></div></section>
+<section class="container seo-card"><p class="eyebrow">Kdy průměr nepoužívat samotný</p><h2>Data mohou mít více skupin nebo nerovnoměrné rozdělení</h2><p>Soubor může obsahovat dvě odlišné skupiny, například levné a prémiové produkty. Společný průměr pak nemusí dobře popisovat ani jednu. U hodnot 10, 11, 12, 90, 91 a 92 je průměr 51, ale žádná hodnota se mu nepodobá. Vhodnější je skupiny analyzovat odděleně.</p><p>Průměr také nemusí být vhodný pro kategoriální údaje, například barvy nebo názvy. U pořadových kategorií může být sporné, zda jsou vzdálenosti mezi stupni stejné. Matematický výsledek může existovat, ale nemusí mít věcný význam.</p><p>U poměrů a sazeb zkontrolujte správnou váhu. Průměrná spotřeba, rychlost, procentní úspěšnost nebo kurz mohou vyžadovat vážení množstvím, časem, vzdáleností nebo velikostí základu. Než použijete aritmetický průměr, pojmenujte, co jeden řádek představuje.</p></section>
+<section class="container seo-card"><p class="eyebrow">Zaokrouhlení a prezentace</p><h2>Kolik desetinných míst zobrazit</h2><p>Zaokrouhlení mění pouze zobrazení, nikoli vnitřní výpočet. Pro běžnou orientaci obvykle stačí dvě desetinná místa. U počtu osob nebo kusů může být vhodné celé číslo, ale takový výsledek už nemusí přesně zachovat součet.</p><p>Při publikování průměru uveďte také počet hodnot a jednotku. Samotné číslo 17,5 bez informace, zda jde o stupně, koruny, body nebo minuty, nemá dostatečný kontext. U citlivých rozhodnutí doplňte medián a rozptýlení.</p></section>
+<section class="container seo-card"><p class="eyebrow">Kontrolní postup</p><h2>Jak výsledek ověřit před dalším rozhodnutím</h2><div class="check-process"><article><b>01</b><div><h3>Zkontrolujte počet hodnot</h3><p>Počet v panelu musí odpovídat položkám, které chcete započítat. Chybějící nebo duplicitní údaj mění váhu celého souboru.</p></div></article><article><b>02</b><div><h3>Porovnejte minimum a maximum</h3><p>Průměr s nezápornými vahami musí ležet mezi nimi. Pokud neleží, zadání nebo výpočet je chybný.</p></div></article><article><b>03</b><div><h3>Podívejte se na medián</h3><p>Velký rozdíl proti průměru upozorňuje na asymetrii, extrémy nebo smíšené skupiny.</p></div></article><article><b>04</b><div><h3>Ověřte váhy</h3><p>Ve váženém režimu musí vyšší číslo skutečně znamenat větší četnost nebo důležitost.</p></div></article></div><p>U aritmetického průměru můžete provést jednoduchou zpětnou kontrolu: výsledný průměr vynásobte počtem hodnot. Měli byste získat původní součet, s výjimkou malého rozdílu způsobeného zobrazeným zaokrouhlením.</p><p>U váženého průměru vynásobte výsledek součtem vah. Získáte vážený součet. Pokud výsledek používáte v reportu, uchovejte nezaokrouhlenou hodnotu pro další výpočty a zaokrouhlenou pouze pro prezentaci.</p></section>
+<section class="container seo-card"><p class="eyebrow">Aktualizace dat</p><h2>Kdy průměr přepočítat</h2><p>Průměr přepočítejte pokaždé, když přibude nové pozorování, změní se váha nebo zjistíte chybný údaj. U průběžných statistik si hlídejte, zda všechny hodnoty používají stejné období a metodiku. Průměr za jeden měsíc nelze bez správných vah jednoduše spojit s průměrem za čtvrtletí.</p><p>Pokud porovnáváte vývoj v čase, ukládejte vedle výsledku také počet hodnot, minimum, maximum a způsob výpočtu. Změna průměru může vzniknout skutečným posunem dat, ale také změnou velikosti souboru nebo složení sledované skupiny.</p><p>U automatických reportů pravidelně kontrolujte vstupní zdroj, duplicity a chybějící záznamy. Přesný vzorec nemůže napravit nekvalitní data. Kalkulačka pomůže s matematickou kontrolou, odpovědnost za výběr a význam hodnot zůstává na uživateli.</p></section>
+<section class="container seo-card"><p class="eyebrow">Soukromí výpočtu</p><h2>Data zůstávají ve vašem prohlížeči</h2><p>Zadané hodnoty ani váhy se neodesílají na server. Po zavření nebo obnovení stránky se neukládají jako účetní či statistický záznam, proto si důležité výsledky zaznamenejte samostatně.</p></section>
+<section class="container seo-card" id="faq">
+<p class="eyebrow">FAQ</p>
+<h2>Časté otázky k průměru</h2>
+<div class="faq-list">
+<details>
+<summary>Jak se počítá aritmetický průměr?</summary>
+<p>Sečtěte hodnoty a vydělte je jejich počtem.</p>
+</details>
+<details>
+<summary>Kdy použít vážený průměr?</summary>
+<p>Když hodnoty mají různou důležitost, četnost nebo zastoupení.</p>
+</details>
+<details>
+<summary>Jaký je rozdíl mezi průměrem a mediánem?</summary>
+<p>Medián je prostřední hodnota a extrémy jej ovlivňují méně.</p>
+</details>
+<details>
+<summary>Může být průměr mimo minimum a maximum?</summary>
+<p>Při běžném průměru a nezáporných vahách ne.</p>
+</details>
+<details>
+<summary>Co znamená směrodatná odchylka?</summary>
+<p>Popisuje rozptýlení hodnot kolem průměru.</p>
+</details>
+<details>
+<summary>Jak zadat desetinná čísla?</summary>
+<p>Oddělte hodnoty středníkem a desetinnou část zapisujte čárkou nebo tečkou.</p>
+</details>
+</div>
+</section>
+<section class="container related-tools">
+<p class="eyebrow">Navazující nástroje</p>
+<h2>Co spočítat dál</h2>
+<div class="related-grid">
+<a class="related-card" href="procenta-kalkulacka.html">
+<strong>Procenta</strong>
+<small>Část, podíl a změna.</small>
+</a>
+<a class="related-card" href="trojclenka-kalkulacka.html">
+<strong>Trojčlenka</strong>
+<small>Přímá a nepřímá úměra.</small>
+</a>
+<a class="related-card" href="jednotkova-cena-kalkulacka.html">
+<strong>Jednotková cena</strong>
+<small>Porovnání balení a množství.</small>
+</a>
+<a class="related-card" href="kalkulacky.html">
+<strong>Všechny kalkulačky</strong>
+<small>Přehled nástrojů.</small>
+</a>
+</div>
+</section>
 </main>
-  <footer class="footer"><div class="container footer-grid"><div><img src="logo-rychlevypocty-footer.svg" alt="RychléVýpočty.cz" width="190" height="38"><p>Praktické online kalkulačky pro finance, podnikání, mzdy, bydlení i provoz domácnosti.</p></div><div><h3>Matematika</h3><div class="footer-links"><a href="matematika-a-prevody.html">Matematika a převody</a><a href="procenta-kalkulacka.html">Procenta</a><a href="trojclenka-kalkulacka.html">Trojčlenka</a></div></div><div><h3>Nástroje</h3><div class="footer-links"><a href="jednotkova-cena-kalkulacka.html">Jednotková cena</a><a href="prevodnik-jednotek.html">Převodník jednotek</a><a href="kalkulacky.html">Všechny kalkulačky</a></div></div><div><h3>Web</h3><div class="footer-links"><a href="/jak-pocitame.html">Jak počítáme</a><a href="kontakt.html">Kontakt</a><a href="podminky-pouziti.html">Podmínky použití</a><a href="ochrana-osobnich-udaju.html">Ochrana osobních údajů</a></div></div></div><div class="container footer-bottom"><p>© 2026 RychléVýpočty.cz. Výsledky jsou orientační a slouží pro rychlou kontrolu výpočtu.</p></div></footer>
-  <script src="rv-tool-core.js"></script>
-  <script src="prumer.js?v=2"></script>
+<footer class="footer">
+<div class="container footer-grid">
+<div>
+<img src="logo-rychlevypocty-footer.svg" alt="RychléVýpočty.cz" width="190" height="38">
+<p>Praktické online kalkulačky pro finance, podnikání, mzdy, bydlení i provoz domácnosti.</p>
+</div>
+<div>
+<h3>Matematika</h3>
+<div class="footer-links">
+<a href="matematika-a-prevody.html">Matematika a převody</a>
+<a href="procenta-kalkulacka.html">Procenta</a>
+<a href="trojclenka-kalkulacka.html">Trojčlenka</a>
+<a href="prevodnik-jednotek.html">Převodník jednotek</a>
+</div>
+</div>
+<div>
+<h3>Nástroje</h3>
+<div class="footer-links">
+<a href="jednotkova-cena-kalkulacka.html">Jednotková cena</a>
+<a href="kalkulacky.html">Všechny kalkulačky</a>
+</div>
+</div>
+<div>
+<h3>Web</h3>
+<div class="footer-links">
+<a href="jak-pocitame.html">Jak počítáme</a>
+<a href="kontakt.html">Kontakt</a>
+<a href="podminky-pouziti.html">Podmínky použití</a>
+<a href="ochrana-osobnich-udaju.html">Ochrana osobních údajů</a>
+</div>
+</div>
+</div>
+<div class="container footer-bottom">
+<p>© 2026 RychléVýpočty.cz. Výsledky jsou orientační matematické výpočty.</p>
+</div>
+</footer>
+<script src="rv-tool-core.js">
+</script>
+<script src="prumer.js?v=20260706-1">
+</script>
 </body>
 </html>
