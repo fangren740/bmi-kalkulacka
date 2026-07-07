@@ -1,108 +1,517 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="cs">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="format-detection" content="telephone=no">
-  <link rel="icon" href="favicon.ico?v=2" sizes="any">
-  <link rel="icon" href="favicon-32x32.png?v=2" sizes="32x32" type="image/png">
-  <link rel="icon" href="favicon-16x16.png?v=2" sizes="16x16" type="image/png">
-  <link rel="apple-touch-icon" href="apple-touch-icon.png?v=2" sizes="180x180">
-  <link rel="manifest" href="site.webmanifest?v=2">
-  <meta name="theme-color" content="#14253d">
-  <title>Kalkulačka potřebné rezervy podnikání | RychléVýpočty.cz</title>
-  <meta name="description" content="Spočítejte doporučenou podnikatelskou rezervu podle měsíčních nákladů, osobních výdajů, daní, rizika, aktuální rezervy a tempa spoření.">
-  <meta name="robots" content="index,follow">
-  <link rel="canonical" href="https://rychlevypocty.cz/kalkulacka-potrebne-rezervy-podnikani.html">
-  <meta property="og:title" content="Kalkulačka potřebné rezervy podnikání">
-  <meta property="og:description" content="Zjistěte, kolik držet stranou pro klidnější provoz podnikání a výpadky příjmů.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://rychlevypocty.cz/kalkulacka-potrebne-rezervy-podnikani.html">
-  <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg">
-  <meta property="og:site_name" content="RychléVýpočty.cz">
-  <meta property="og:locale" content="cs_CZ">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Kalkulačka potřebné rezervy podnikání">
-  <meta name="twitter:description" content="Spočítejte doporučenou finanční rezervu pro podnikání.">
-  <meta name="twitter:image" content="https://rychlevypocty.cz/og-image.jpg">
-  <link rel="stylesheet" href="rv-tool-v2.css">
-  <link rel="stylesheet" href="business-v2.css">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"RychléVýpočty.cz","item":"https://rychlevypocty.cz/"},{"@type":"ListItem","position":2,"name":"OSVČ a freelancing","item":"https://rychlevypocty.cz/osvc-a-freelancing.html"},{"@type":"ListItem","position":3,"name":"Podnikatelská rezerva","item":"https://rychlevypocty.cz/kalkulacka-potrebne-rezervy-podnikani.html"}]}</script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Kalkulačka potřebné rezervy podnikání","url":"https://rychlevypocty.cz/kalkulacka-potrebne-rezervy-podnikani.html","applicationCategory":"FinanceApplication","operatingSystem":"All","inLanguage":"cs-CZ","offers":{"@type":"Offer","price":"0","priceCurrency":"CZK"}}</script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Kolik rezervy má mít OSVČ nebo malá firma?","acceptedAnswer":{"@type":"Answer","text":"Často se používá několik měsíců základních výdajů. Konkrétní částka závisí na stabilitě příjmů, nákladech a riziku oboru."}},{"@type":"Question","name":"Co do rezervy započítat?","acceptedAnswer":{"@type":"Answer","text":"Provozní náklady, osobní výdaje, daňovou rezervu, odvody a nepravidelné náklady."}},{"@type":"Question","name":"Je výsledek závazný?","acceptedAnswer":{"@type":"Answer","text":"Ne. Jde o orientační pomůcku pro plánování bezpečnostního polštáře."}}]}</script>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7745758285259522" crossorigin="anonymous"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kalkulačka podnikatelské rezervy | Runway OSVČ a firmy</title>
+<meta name="description" content="Spočítejte potřebnou rezervu podnikání, současný runway, chybějící částku a dobu doplnění podle výdajů, příjmu při propadu a dostupných peněz.">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<link rel="canonical" href="https://rychlevypocty.cz/kalkulacka-potrebne-rezervy-podnikani.html">
+<meta property="og:title" content="Kalkulačka podnikatelské rezervy a runway">
+<meta property="og:description" content="Stress-test provozu, osobních výdajů, pohledávek a likvidní rezervy.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://rychlevypocty.cz/kalkulacka-potrebne-rezervy-podnikani.html">
+<meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg">
+<meta property="og:site_name" content="RychléVýpočty.cz">
+<meta property="og:locale" content="cs_CZ">
+<link rel="icon" href="favicon.ico?v=2">
+<link rel="apple-touch-icon" href="apple-touch-icon.png?v=2">
+<link rel="manifest" href="site.webmanifest?v=2">
+<meta name="theme-color" content="#081b34">
+<link rel="stylesheet" href="rv-tool-v2.css">
+<link rel="stylesheet" href="podnikatelska-rezerva-v2.css?v=20260707-1">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"RychléVýpočty.cz","item":"https://rychlevypocty.cz/"},{"@type":"ListItem","position":2,"name":"OSVČ a freelancing","item":"https://rychlevypocty.cz/osvc-a-freelancing.html"},{"@type":"ListItem","position":3,"name":"Podnikatelská rezerva","item":"https://rychlevypocty.cz/kalkulacka-potrebne-rezervy-podnikani.html"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Kalkulačka podnikatelské rezervy","url":"https://rychlevypocty.cz/kalkulacka-potrebne-rezervy-podnikani.html","description":"Výpočet potřebné rezervy, runway a doby doplnění pro OSVČ a malé firmy.","applicationCategory":"FinanceApplication","operatingSystem":"All","inLanguage":"cs-CZ","dateModified":"2026-07-07","offers":{"@type":"Offer","price":"0","priceCurrency":"CZK"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Kolik měsíců má pokrýt podnikatelská rezerva?","acceptedAnswer":{"@type":"Answer","text":"Záleží na stabilitě příjmů, koncentraci klientů, splatnosti faktur a rychlosti snížení nákladů. Kalkulačka umožňuje porovnat více horizontů."}},{"@type":"Question","name":"Patří do rezervy také osobní výdaje OSVČ?","acceptedAnswer":{"@type":"Answer","text":"Ano, pokud je podnikání hlavním zdrojem příjmů domácnosti. Započítejte nezbytnou část, nikoli celý běžný životní standard."}},{"@type":"Question","name":"Lze do rezervy započítat pohledávky?","acceptedAnswer":{"@type":"Answer","text":"Pouze konzervativní část pohledávek, u kterých je vysoká pravděpodobnost a blízký termín úhrady. Neuhrazená faktura není totéž co hotovost."}},{"@type":"Question","name":"Co znamená runway podnikání?","acceptedAnswer":{"@type":"Answer","text":"Počet měsíců, po které dostupné zdroje pokryjí měsíční deficit při zadaném krizovém příjmu."}},{"@type":"Question","name":"Je daňová rezerva součástí provozní rezervy?","acceptedAnswer":{"@type":"Answer","text":"Peníze již určené na daň nebo jiné splatné povinnosti nepovažujte za volnou krizovou rezervu."}},{"@type":"Question","name":"Kde podnikatelskou rezervu držet?","acceptedAnswer":{"@type":"Answer","text":"Měla by být bezpečně a rychle dostupná, oddělená od běžného provozu a peněz určených na daně či jiné závazky."}}]}</script>
 </head>
-<body class="rv-renovation-tool rv-business-tool rv-business-reserve-page">
-  <a class="skip-link" href="#kalkulacka">Přejít na kalkulačku</a>
-  <header class="site-header">
-    <div class="container header-inner">
-      <a class="brand-logo" href="index.html" aria-label="RychléVýpočty.cz"><img class="brand-logo-img" src="logo-rychlevypocty.svg" alt="RychléVýpočty.cz" width="190" height="38"></a>
-      <nav class="main-nav"><a href="index.html">Domů</a><a href="kalkulacky.html">Kalkulačky</a><a href="osvc-a-freelancing.html" aria-current="page">OSVČ</a><a href="business-a-cenotvorba.html">Cenotvorba</a></nav>
-      <a class="header-cta" href="#kalkulacka">Spočítat rezervu</a>
-    </div>
-  </header>
-  <main id="main-content">
-    <section class="tool-hero">
-      <div class="container hero-grid">
-        <div class="hero-copy">
-          <nav class="breadcrumb"><a href="index.html">Domů</a><span>/</span><a href="kalkulacky.html">Kalkulačky</a><span>/</span><strong>Podnikatelská rezerva</strong></nav>
-          <p class="eyebrow">Finanční rezerva</p>
-          <h1>Spočítejte potřebnou rezervu pro podnikání</h1>
-          <p>Zadejte pravidelné náklady, osobní výdaje, daňovou rezervu a rizikový násobek. Výsledek ukáže doporučenou rezervu i chybějící částku.</p>
-          <div class="hero-actions"><a class="btn-primary" href="#kalkulacka">Začít výpočet</a><a class="btn-secondary" href="#jak-cist-vysledek">Jak číst výsledek</a></div>
-          <div class="hero-points"><span>Rezerva v Kč</span><span>Pokrytí v měsících</span><span>Tempo doplnění</span></div>
-        </div>
-        <div class="hero-visual" aria-hidden="true">
-          <div class="reno-dashboard">
-            <span>Doporučená rezerva</span>
-            <div class="reno-number">511 tis. Kč</div>
-            <div class="reno-sub">Rezerva chrání provoz firmy při výpadku příjmů, opožděných fakturách nebo sezonním propadu.</div>
-            <div class="reno-metrics"><div><span>Měsíční základ</span><b>71 tis. Kč</b></div><div><span>Horizont</span><b>6 měs.</b></div><div><span>Riziko</span><b>1,2×</b></div></div>
-          </div>
-          <div class="reno-product"><div class="product-card"><div><span>Bezpečnostní polštář</span><strong>náklady × čas</strong></div><i></i></div></div>
-          <div class="hero-mini-strip"><span>provoz</span><span>daně</span><span>rezerva</span></div>
-        </div>
-      </div>
-    </section>
-    <div class="anchor-nav"><div class="container anchor-scroll"><a href="#kalkulacka">Kalkulačka</a><a href="#vysledek">Výsledek</a><a href="#jak-cist-vysledek">Metodika</a><a href="#souvisejici-kalkulacky">Související</a><a href="#faq">FAQ</a></div></div>
-    <section class="container tool-stage" id="kalkulacka">
-      <form class="calculator-card" id="reserveForm">
-        <h2>Zadejte měsíční výdaje a riziko</h2>
-        <p>Kalkulačka sečte podnikatelské a osobní náklady, přidá daňovou rezervu, zohlední horizont a upraví výsledek podle rizikovosti příjmů.</p>
-        <div class="form-grid">
-          <div class="input-group"><label for="fixedBusinessCosts">Fixní náklady podnikání</label><div class="input-shell"><input id="fixedBusinessCosts" type="number" min="0" step="1" value="28000"><span>Kč</span></div></div>
-          <div class="input-group"><label for="personalExpenses">Osobní výdaje</label><div class="input-shell"><input id="personalExpenses" type="number" min="0" step="1" value="32000"><span>Kč</span></div></div>
-          <div class="input-group"><label for="taxReserve">Daňová rezerva</label><div class="input-shell"><input id="taxReserve" type="number" min="0" step="1" value="7000"><span>Kč</span></div></div>
-          <div class="input-group"><label for="irregularCosts">Nepravidelné náklady</label><div class="input-shell"><input id="irregularCosts" type="number" min="0" step="1" value="4000"><span>Kč</span></div></div>
-          <div class="input-group"><label for="monthsCoverage">Počet měsíců krytí</label><div class="input-shell"><input id="monthsCoverage" type="number" min="1" max="24" step="1" value="6"><span>měs.</span></div></div>
-          <div class="input-group"><label for="riskLevel">Rizikový násobek</label><select id="riskLevel"><option value="1">Stabilní příjmy 1,0×</option><option value="1.2" selected>Kolísavé příjmy 1,2×</option><option value="1.5">Vyšší riziko 1,5×</option></select></div>
-          <div class="input-group"><label for="currentReserve">Aktuální rezerva</label><div class="input-shell"><input id="currentReserve" type="number" min="0" step="1" value="180000"><span>Kč</span></div></div>
-          <div class="input-group"><label for="monthlySaving">Měsíční doplňování</label><div class="input-shell"><input id="monthlySaving" type="number" min="0" step="1" value="25000"><span>Kč</span></div></div>
-        </div>
-        <div class="form-actions"><button class="btn-primary" type="submit">Spočítat rezervu</button><button class="btn-secondary" id="resetBtn" type="button">Obnovit hodnoty</button></div>
-      </form>
-      <aside class="result-panel" id="vysledek">
-        <p class="eyebrow">Výsledek</p>
-        <h2>Doporučená rezerva</h2>
-        <p>Výsledek ukazuje, jak velký polštář držet pro provoz, osobní výdaje a povinnosti v podnikání.</p>
-        <div class="primary-result"><span>Doporučená rezerva</span><strong id="recommendedReserve">0 Kč</strong><small id="reserveBadge">Výpočet se načítá</small></div>
-        <div class="result-metrics"><div><span>Základní rezerva</span><strong id="baseReserve">0 Kč</strong></div><div><span>Chybí doplnit</span><strong id="missingReserve">0 Kč</strong></div><div><span>Doba doplnění</span><strong id="monthsToBuild">0 měsíců</strong></div></div>
-        <div class="rv-output-summary"><p><strong id="decisionHeadline">Orientační výsledek</strong></p><p id="decisionText">Po zadání hodnot se doplní interpretace.</p><p id="nextStepText">Další krok se zobrazí po výpočtu.</p></div>
-        <div class="info-list"><div class="info-row"><span>Měsíční základ</span><strong id="monthlyBase">0 Kč</strong></div><div class="info-row"><span>Zvolený horizont</span><strong id="coverageSummary">0 měs.</strong></div><div class="info-row"><span>Rizikový násobek</span><strong id="riskSummary">0×</strong></div><div class="info-row"><span>Aktuální rezerva</span><strong id="currentReserveSummary">0 Kč</strong></div><div class="info-row"><span>Současné pokrytí</span><strong id="coverageNow">0 měs.</strong></div></div>
-        <div class="table-wrap"><table><thead><tr><th>Položka</th><th>Hodnota</th><th>Význam</th></tr></thead><tbody id="breakdownBody"></tbody></table></div>
-      </aside>
-    </section>
-    <section class="container content-grid" id="jak-cist-vysledek">
-      <article class="content-card"><p class="eyebrow">Metodika</p><h2>Jak se počítá podnikatelská rezerva</h2><p>Výpočet nejprve sečte měsíční základ: provozní náklady, osobní výdaje, daňovou rezervu a nepravidelné položky. Tento základ se vynásobí počtem měsíců a rizikovým násobkem.</p><div class="formula"><code>rezerva = měsíční základ × počet měsíců × rizikový násobek</code></div><p>Vyšší rizikový násobek dává smysl u nepravidelných příjmů, dlouhé splatnosti faktur nebo podnikání závislého na několika klientech.</p></article>
-      <article class="content-card"><p class="eyebrow">Praxe</p><h2>Co výsledek říká</h2><p>Rezerva není investice na výnos, ale klid na rozhodování. Pomáhá nepřijmout nevýhodnou zakázku jen kvůli krátkodobému tlaku a zvládnout opožděné platby.</p><p>Dobré je držet rezervu odděleně od běžného účtu a po růstu nákladů ji přepočítat.</p></article>
-      <article class="content-card"><p class="eyebrow">Příklad</p><h2>Kdy rezervu navýšit</h2><p>Pokud vám významnou část obratu tvoří jeden klient, máte drahé vybavení nebo pracujete v sezonním oboru, základní tříměsíční polštář může být málo. V takovém případě je bezpečnější šest až dvanáct měsíců.</p></article>
-      <article class="content-card"><p class="eyebrow">Limit</p><h2>Co kalkulačka nezahrnuje</h2><p>Výpočet neřeší investiční portfolio, inflaci, úvěrové splátky ani přesný daňový režim. Pro detailní plán cash-flow je vhodné doplnit skutečné termíny faktur a splatností.</p></article>
-    </section>
-    <section class="container related-tools" id="souvisejici-kalkulacky"><p class="eyebrow">Související kalkulačky</p><h2>Další výpočty pro OSVČ</h2><div class="related-grid"><a class="related-card" href="kalkulacka-minimalni-fakturace-osvc.html"><span>F</span><strong>Minimální fakturace OSVČ</strong><small>Kolik fakturovat pro čistý příjem.</small></a><a class="related-card" href="kalkulacka-hodinove-sazby-freelancera.html"><span>H</span><strong>Hodinová sazba freelancera</strong><small>Vypočítejte férovou sazbu.</small></a><a class="related-card" href="obrat-pro-cilovy-zisk-kalkulacka.html"><span>Z</span><strong>Obrat pro cílový zisk</strong><small>Kolik obratu potřebujete.</small></a><a class="related-card" href="bod-zvratu-kalkulacka.html"><span>B</span><strong>Bod zvratu</strong><small>Kdy se podnikání dostane na nulu.</small></a></div></section>
-    <section class="container faq-section" id="faq"><p class="eyebrow">FAQ</p><h2>Časté otázky</h2><div class="faq-grid"><details><summary>Kolik rezervy má mít OSVČ?</summary><p>Záleží na stabilitě příjmů a výdajích. Často se počítá několik měsíců základních nákladů, u nejistých příjmů více.</p></details><details><summary>Patří do rezervy i osobní výdaje?</summary><p>Ano, pokud podnikání živí domácnost. Rezerva má krýt nejen firmu, ale i období bez příjmu.</p></details><details><summary>Co když už mám rezervu vyšší?</summary><p>Výsledek můžete použít jako kontrolní hranici. Přebytek pak lze řešit podle investičního plánu a rizik.</p></details><details><summary>Je výpočet závazný?</summary><p>Ne. Jde o orientační pomůcku pro plánování bezpečnostního polštáře.</p></details></div></section>
-  </main>
-  <footer class="footer"><div class="container footer-grid"><div><img src="logo-rychlevypocty-footer.svg" alt="RychléVýpočty.cz" width="190" height="38"><p>Praktické online kalkulačky pro finance, podnikání, mzdy, bydlení i provoz domácnosti.</p></div><div><h3>OSVČ</h3><div class="footer-links"><a href="osvc-a-freelancing.html">OSVČ a freelancing</a><a href="kalkulacka-minimalni-fakturace-osvc.html">Minimální fakturace</a><a href="kalkulacka-hodinove-sazby-freelancera.html">Hodinová sazba</a></div></div><div><h3>Podnikání</h3><div class="footer-links"><a href="business-a-cenotvorba.html">Business a cenotvorba</a><a href="bod-zvratu-kalkulacka.html">Bod zvratu</a><a href="obrat-pro-cilovy-zisk-kalkulacka.html">Obrat pro zisk</a></div></div><div><h3>Web</h3><div class="footer-links"><a href="/jak-pocitame.html">Jak počítáme</a><a href="kontakt.html">Kontakt</a><a href="podminky-pouziti.html">Podmínky použití</a><a href="ochrana-osobnich-udaju.html">Ochrana osobních údajů</a></div></div></div><div class="container footer-bottom"><p>© 2026 RychléVýpočty.cz. Výsledky jsou orientační a nenahrazují účetní ani podnikatelské poradenství.</p></div></footer>
-  <script src="rv-tool-core.js"></script>
-  <script src="podnikatelska-rezerva.js"></script>
+<body class="rv-renovation-tool freelancer-pro reserve-pro">
+<a class="skip-link" href="#kalkulacka">Přejít na kalkulačku</a>
+<header class="site-header">
+<div class="container header-inner">
+<a class="brand-logo" href="index.html">
+<img src="logo-rychlevypocty.svg" alt="RychléVýpočty.cz" width="190" height="38">
+</a>
+<nav class="main-nav">
+<a href="index.html">Domů</a>
+<a href="kalkulacky.html">Kalkulačky</a>
+<a href="osvc-a-freelancing.html" aria-current="page">OSVČ</a>
+<a href="business-a-cenotvorba.html">Cenotvorba</a>
+</nav>
+<a class="header-cta" href="#kalkulacka">Spočítat rezervu</a>
+</div>
+</header>
+<main>
+<section class="rate-hero">
+<div class="container rate-hero-grid">
+<div class="rate-hero-copy">
+<nav class="breadcrumb">
+<a href="index.html">Domů</a>
+<span>/</span>
+<a href="kalkulacky.html">Kalkulačky</a>
+<span>/</span>
+<strong>Podnikatelská rezerva</strong>
+</nav>
+<p class="eyebrow">Runway a stress test</p>
+<h1>Jak dlouho podnikání ustojí výpadek příjmů</h1>
+<p class="lead">Spočítejte cílovou rezervu, aktuální runway a chybějící částku. Model odděluje hotovost, bezpečnou část pohledávek, krizový příjem a jednorázový šok.</p>
+<div class="hero-actions">
+<a class="btn-primary" href="#kalkulacka">Otestovat svou rezervu</a>
+<a class="btn-secondary" href="#metodika">Jak model funguje</a>
+</div>
+<div class="hero-trust">
+<span>Tři základní vstupy</span>
+<span>Scénáře 3–12 měsíců</span>
+<span>Bez registrace</span>
+</div>
+</div>
+<div class="rate-preview" aria-hidden="true">
+<div class="preview-head">
+<span>Doporučená rezerva</span>
+<b>429 000 Kč</b>
+<em>šestiměsíční stress test</em>
+</div>
+<div class="preview-capacity">
+<div>
+<strong>3,1 měs.</strong>
+<span>současný runway</span>
+</div>
+<i>
+</i>
+<div>
+<strong>209 000 Kč</strong>
+<span>chybí doplnit</span>
+</div>
+</div>
+<div class="preview-footer">
+<span>Měsíční krizový deficit</span>
+<strong>65 000 Kč</strong>
+<small>Jednorázový šok a bezpečnostní polštář započteny</small>
+</div>
+</div>
+</div>
+</section>
+
+<section class="container rate-work" id="kalkulacka">
+<form class="rate-form" id="reserveForm" novalidate>
+<div class="form-heading">
+<div>
+<p class="eyebrow">Základ rezervy</p>
+<h2>Začněte třemi údaji</h2>
+</div>
+<span>Jednoduchý režim</span>
+</div>
+<p class="form-intro">Zadejte jen výdaje, které během krize skutečně musí pokračovat, a požadovaný horizont ochrany.</p>
+<div class="field-stack">
+<label>
+<span>Nezbytné měsíční náklady podnikání</span>
+<small>Nájem, software, splátky, účetnictví a minimum nutné pro provoz.</small>
+<div class="rate-input">
+<input id="businessCosts" type="number" min="0" step="500" value="30000" inputmode="decimal">
+<b>Kč</b>
+</div>
+</label>
+<label>
+<span>Nezbytné osobní výdaje</span>
+<small>Část domácího rozpočtu, kterou musí podnikání během výpadku pokrýt.</small>
+<div class="rate-input">
+<input id="personalCosts" type="number" min="0" step="500" value="35000" inputmode="decimal">
+<b>Kč</b>
+</div>
+</label>
+<label>
+<span>Požadovaná délka ochrany</span>
+<small>Počet měsíců, na které chcete být připraveni.</small>
+<div class="rate-input">
+<input id="targetMonths" type="number" min="1" max="24" step="1" value="6" inputmode="decimal">
+<b>měs.</b>
+</div>
+</label>
+</div>
+<details class="rate-advanced">
+<summary>
+<span>
+<strong>Zpřesnit stress test</strong>
+<small>Příjem při propadu, dostupné zdroje a doplňování</small>
+</span>
+<b>Volitelné</b>
+</summary>
+<div class="advanced-grid">
+<label>
+<span>Očekávaný měsíční příjem při propadu</span>
+<small>Pouze část, na kterou lze realisticky spoléhat.</small>
+<div class="rate-input">
+<input id="crisisIncome" type="number" min="0" step="500" value="0" inputmode="decimal">
+<b>Kč</b>
+</div>
+</label>
+<label>
+<span>Jednorázový krizový náklad</span>
+<small>Oprava, spoluúčast, právní služba nebo nutná náhrada techniky.</small>
+<div class="rate-input">
+<input id="oneOffShock" type="number" min="0" step="1000" value="0" inputmode="decimal">
+<b>Kč</b>
+</div>
+</label>
+<label>
+<span>Bezpečnostní polštář</span>
+<small>Pro nepřesnost odhadu a delší výpadek.</small>
+<div class="rate-input">
+<input id="safetyBuffer" type="number" min="0" max="100" step="1" value="10" inputmode="decimal">
+<b>%</b>
+</div>
+</label>
+<label>
+<span>Okamžitě dostupná rezerva</span>
+<small>Volné peníze, nikoli částky určené na daň nebo splatné závazky.</small>
+<div class="rate-input">
+<input id="liquidReserve" type="number" min="0" step="1000" value="200000" inputmode="decimal">
+<b>Kč</b>
+</div>
+</label>
+<label>
+<span>Bezpečně použitelná část pohledávek</span>
+<small>Konzervativní část blízkých a pravděpodobných úhrad.</small>
+<div class="rate-input">
+<input id="usableReceivables" type="number" min="0" step="1000" value="20000" inputmode="decimal">
+<b>Kč</b>
+</div>
+</label>
+<label>
+<span>Měsíční doplňování rezervy</span>
+<small>Částka pravidelně odkládaná z inkasa.</small>
+<div class="rate-input">
+<input id="monthlySaving" type="number" min="0" step="500" value="15000" inputmode="decimal">
+<b>Kč</b>
+</div>
+</label>
+</div>
+</details>
+<div class="rate-error" id="reserveError" role="alert" hidden>
+</div>
+<div class="form-actions">
+<button class="btn-primary" type="submit">Spočítat rezervu</button>
+<button class="btn-secondary" id="resetBtn" type="button">Obnovit příklad</button>
+</div>
+<p class="privacy-note">Zadané hodnoty zůstávají ve vašem prohlížeči.</p>
+</form>
+
+<aside class="rate-result" id="vysledek" aria-live="polite">
+<div class="result-heading">
+<div>
+<p class="eyebrow">Výsledek</p>
+<h2>Doporučená rezerva</h2>
+</div>
+<span id="resultStatus">Stress test připraven</span>
+</div>
+<div class="rate-answer">
+<span>Cílový bezpečnostní polštář</span>
+<strong id="recommendedReserve">0 Kč</strong>
+<p id="answerSentence">
+</p>
+</div>
+<div class="rate-metrics">
+<div>
+<span>Současný runway</span>
+<strong id="currentRunway">0 měs.</strong>
+</div>
+<div>
+<span>Chybí doplnit</span>
+<strong id="missingReserve">0 Kč</strong>
+</div>
+<div>
+<span>Doba doplnění</span>
+<strong id="monthsToBuild">—</strong>
+</div>
+<div>
+<span>Měsíční krizový deficit</span>
+<strong id="monthlyGap">0 Kč</strong>
+</div>
+</div>
+<div class="capacity-panel">
+<div class="capacity-copy">
+<span>Pokrytí cílové rezervy</span>
+<strong id="coverageLabel">0 %</strong>
+</div>
+<div class="capacity-track">
+<i id="coverageFill">
+</i>
+</div>
+<p id="coverageText">
+</p>
+</div>
+<div class="rate-interpretation">
+<span id="interpretationBadge">Interpretace</span>
+<h3 id="interpretationTitle">Jak výsledek číst</h3>
+<p id="interpretationText">
+</p>
+<strong id="nextStepText">
+</strong>
+</div>
+<details class="calculation-detail">
+<summary>Rozpad výpočtu</summary>
+<div id="calculationRows">
+</div>
+</details>
+</aside>
+</section>
+
+<section class="container scenario-section">
+<div class="section-heading">
+<div>
+<p class="eyebrow">Scénáře odolnosti</p>
+<h2>Jak se cíl mění s délkou výpadku</h2>
+</div>
+<p>Výdaje, krizový příjem, jednorázový šok a polštář zůstávají stejné. Mění se pouze požadovaný počet měsíců ochrany.</p>
+</div>
+<div class="scenario-table">
+<table>
+<thead>
+<tr>
+<th>Horizont</th>
+<th>Cílová rezerva</th>
+<th>Současné zdroje</th>
+<th>Chybějící částka</th>
+<th>Doba doplnění</th>
+</tr>
+</thead>
+<tbody id="scenarioBody">
+</tbody>
+</table>
+</div>
+</section>
+
+<section class="container seo-card" id="metodika">
+<p class="eyebrow">Metodika</p>
+<h2>Jak se počítá podnikatelská rezerva a runway</h2>
+<p>Kalkulačka nejprve sečte nezbytné podnikatelské a osobní výdaje. Od této částky odečte příjem, který pravděpodobně zůstane i během propadu. Výsledkem je měsíční krizový deficit. Ten se násobí požadovaným počtem měsíců, přičte se jednorázový krizový náklad a nakonec bezpečnostní polštář.</p>
+<div class="formula-grid">
+<code>měsíční deficit = max(0, nezbytné výdaje − krizový příjem)</code>
+<code>základ rezervy = měsíční deficit × horizont + jednorázový šok</code>
+<code>doporučená rezerva = základ × (1 + bezpečnostní polštář)</code>
+<code>runway = dostupné zdroje ÷ měsíční deficit</code>
+</div>
+<p>Dostupné zdroje tvoří okamžitě volná rezerva a uživatelem zadaná bezpečná část pohledávek. Kalkulačka automaticky nepovažuje všechny vystavené faktury za peníze. Runway ukazuje dobu krytí pravidelného deficitu; jednorázový šok je proto při interpretaci cílové rezervy sledován zvlášť.</p>
+</section>
+
+<section class="container seo-dark">
+<p class="eyebrow">Co je skutečně dostupné</p>
+<h2>Hotovost, pohledávka a daňová rezerva mají jinou kvalitu</h2>
+<div class="decision-grid">
+<article>
+<span>Likvidní rezerva</span>
+<h3>Peníze použitelné okamžitě</h3>
+<p>Oddělený účet nebo jiný bezpečný a rychle dostupný zdroj bez významného rizika ztráty.</p>
+</article>
+<article>
+<span>Pohledávky</span>
+<h3>Peníze s termínem a rizikem</h3>
+<p>Do stress testu patří jen konzervativní část, u které je blízká úhrada opravdu pravděpodobná.</p>
+</article>
+<article>
+<span>Účelové peníze</span>
+<h3>Nejsou volnou rezervou</h3>
+<p>DPH, zálohy na povinné platby, mzdy nebo prostředky na splatný závazek už mají určeného příjemce.</p>
+</article>
+</div>
+<p>Investice s kolísavou cenou nebo dlouhou dobou prodeje nejsou ideální první vrstvou krizové rezervy. Mohou tvořit další majetek, ale při výpadku potřebujete financovat provoz včas a bez nuceného prodeje v nevhodný okamžik.</p>
+</section>
+
+<section class="container seo-card">
+<p class="eyebrow">Co vložit do výdajů</p>
+<h2>Počítejte krizové minimum, ne automaticky celý běžný rozpočet</h2>
+<div class="cost-grid">
+<article>
+<h3>Podnikání</h3>
+<ul>
+<li>nájem a nezbytný software,</li>
+<li>splátky, pojištění a účetnictví,</li>
+<li>minimální mzdy a klíčové služby,</li>
+<li>provoz nutný k udržení schopnosti vydělávat.</li>
+</ul>
+</article>
+<article>
+<h3>Osobní část OSVČ</h3>
+<ul>
+<li>bydlení a základní domácnost,</li>
+<li>nezbytná doprava a pojištění,</li>
+<li>splátky a rodinné závazky,</li>
+<li>výdaje, které nelze rychle omezit.</li>
+</ul>
+</article>
+<article>
+<h3>Co oddělit</h3>
+<ul>
+<li>volitelné investice a expanzi,</li>
+<li>peníze na už známou daň,</li>
+<li>běžnou spotřebu, kterou lze odložit,</li>
+<li>výdaje kryté jiným jistým příjmem.</li>
+</ul>
+</article>
+</div>
+<p>Smyslem není vytvořit pohodlný rozpočet pro běžný rok, ale určit částku, která zachová provozuschopnost a základní osobní stabilitu. Příliš vysoký základ váže zbytečně mnoho peněz, příliš nízký vytváří falešný pocit bezpečí.</p>
+</section>
+
+<section class="container seo-card">
+<p class="eyebrow">Praktický příklad</p>
+<h2>Šest měsíců ochrany při nulovém příjmu</h2>
+<p>Podnikání potřebuje 30 000 Kč měsíčně a domácnost OSVČ dalších 35 000 Kč. Při úplném výpadku je měsíční deficit 65 000 Kč. Šestiměsíční základ činí 390 000 Kč. Desetiprocentní bezpečnostní polštář zvýší doporučenou rezervu na 429 000 Kč.</p>
+<p>Okamžitě dostupných 200 000 Kč a konzervativně započtených 20 000 Kč pohledávek tvoří 220 000 Kč zdrojů. Chybí tedy 209 000 Kč. Při pravidelném odkládání 15 000 Kč měsíčně se mezera uzavře přibližně za čtrnáct měsíců. Současné zdroje bez jednorázového šoku pokryjí asi 3,4 měsíce pravidelného deficitu.</p>
+<p>Pokud i v krizi zůstane stabilní příjem 20 000 Kč, měsíční deficit klesne na 45 000 Kč a potřebný polštář se výrazně sníží. Příjem ale zadávejte konzervativně: zakázka, kterou teprve očekáváte, není stejná jako smluvně opakované inkaso.</p>
+</section>
+
+<section class="container seo-dark">
+<p class="eyebrow">Riziko podnikání</p>
+<h2>Stejné náklady neznamenají stejnou potřebnou rezervu</h2>
+<p>Delší horizont dává větší smysl tam, kde je obrat soustředěný do jednoho klienta, zakázky se získávají dlouho, faktury mají dlouhou splatnost nebo obnovení příjmu vyžaduje drahé vybavení. Kratší horizont může stačit u rozloženého portfolia zákazníků, rychlé poptávky a nákladů, které lze bez sankce rychle snížit.</p>
+<div class="checklist">
+<div>
+<strong>Koncentrace klientů</strong>
+<p>Odchod jednoho zákazníka je nebezpečnější, pokud tvoří podstatnou část inkasa.</p>
+</div>
+<div>
+<strong>Doba obnovení tržeb</strong>
+<p>Čím déle trvá nový obchodní cyklus, tím více měsíců musí rezerva překlenout.</p>
+</div>
+<div>
+<strong>Pružnost nákladů</strong>
+<p>Dlouhé smlouvy, zaměstnanci a splátky se během propadu snižují obtížněji.</p>
+</div>
+</div>
+</section>
+
+<section class="container seo-card">
+<p class="eyebrow">Jak rezervu budovat</p>
+<h2>Odkládejte z inkasa, ne z účetního přání</h2>
+<p>Nastavte automatický převod po každé přijaté platbě nebo pevnou částku po uzavření měsíce. Důležité je, aby doplňování rezervy neohrozilo splatné závazky. Pokud výpočet ukazuje dlouhou dobu tvorby, pracujte současně s náklady, cenou a stabilitou příjmů; samotné šetření nemusí být dostatečně rychlé.</p>
+<p>Po použití rezervy vytvořte plán obnovy. Nemusí se doplnit jedním skokem, ale měla by mít prioritu před výdaji, které lze odložit. Cíl přepočítejte po růstu fixních nákladů, přijetí zaměstnance, ztrátě velkého klienta nebo významné změně osobních závazků.</p>
+</section>
+
+<section class="container seo-card">
+<p class="eyebrow">Nejčastější chyby</p>
+<h2>Co vytváří falešný pocit bezpečí</h2>
+<div class="mistake-grid">
+<article>
+<h3>Všechny pohledávky jako hotovost</h3>
+<p>Část může přijít pozdě, jen částečně nebo vůbec.</p>
+</article>
+<article>
+<h3>Peníze na daně v rezervě</h3>
+<p>Účelově odložená částka už není volná pro krytí provozu.</p>
+</article>
+<article>
+<h3>Příliš optimistický krizový příjem</h3>
+<p>Stress test má fungovat i při horším, ne pouze očekávaném scénáři.</p>
+</article>
+<article>
+<h3>Zapomenutá domácnost OSVČ</h3>
+<p>Pokud je podnikání hlavním příjmem, výpadek zasáhne také nezbytné osobní výdaje.</p>
+</article>
+<article>
+<h3>Ignorovaný jednorázový šok</h3>
+<p>Porucha techniky nebo právní výdaj může spotřebovat několik měsíců běžného polštáře.</p>
+</article>
+<article>
+<h3>Rezerva bez pravidel použití</h3>
+<p>Bez odděleného účtu a jasného účelu se snadno rozpustí v běžné spotřebě.</p>
+</article>
+</div>
+</section>
+
+<section class="container seo-card"><p class="eyebrow">Krizový plán</p><h2>Rezerva funguje lépe, když předem víte, co uděláte</h2><p>Peníze prodlužují čas na rozhodnutí, ale samy neobnoví příjmy. Sepište si postup pro první týden, první měsíc a delší propad. V prvním týdnu ověřte stav účtů, splatné závazky, očekávané inkaso a zakázky, které lze dokončit. Zastavte volitelné výdaje, ale nešetřete bez rozmyslu na činnostech, které přímo udržují schopnost získat nebo dodat práci.</p><p>V prvním měsíci rozdělte náklady podle rychlosti, s jakou je lze změnit. Některé předplatné zrušíte okamžitě, nájem, zaměstnance nebo leasing nikoli. Kontaktujte klienty s blížící se splatností dříve, než vznikne problém, a aktualizujte obchodní plán. Rezerva má zabránit panickému přijímání ztrátových zakázek, ne odkládat komunikaci.</p><div class="checklist"><div><strong>První signály</strong><p>Sledujte pokles poptávek, prodlužování schvalování, opožděné úhrady a rostoucí podíl jednoho klienta dříve, než se projeví na účtu.</p></div><div><strong>Pořadí škrtů</strong><p>Nejdříve omezte výdaje bez dopadu na schopnost vydělávat. Kritickou techniku, distribuci a péči o dobré klienty posuzujte opatrně.</p></div><div><strong>Spouštěcí hranice</strong><p>Stanovte úroveň runway, při které aktivujete úspory, posílíte obchod nebo hledáte financování. Rozhodnutí pak nebude záviset jen na momentálním stresu.</p></div></div><p>Stress test opakujte při významné změně nákladů, příjmů nebo koncentrace klientů. Sledujte také, zda pohledávky započtené jako bezpečný zdroj skutečně přicházejí v očekávaném termínu. Pokud ne, snižte jejich uznatelnou část a pracujte s konzervativnějším runway.</p></section>
+<section class="container seo-card" id="faq">
+<p class="eyebrow">FAQ</p>
+<h2>Časté otázky k podnikatelské rezervě</h2>
+<div class="faq-list">
+<details>
+<summary>Kolik měsíců má rezerva pokrýt?</summary>
+<p>Záleží na stabilitě příjmů, koncentraci klientů, splatnosti faktur a rychlosti snížení nákladů. Porovnejte více horizontů.</p>
+</details>
+<details>
+<summary>Patří sem osobní výdaje OSVČ?</summary>
+<p>Ano, pokud je podnikání hlavním zdrojem domácnosti. Započítejte nezbytnou část, nikoli automaticky celý standard.</p>
+</details>
+<details>
+<summary>Lze započítat pohledávky?</summary>
+<p>Jen konzervativní část blízkých a pravděpodobných úhrad. Faktura není totéž co hotovost.</p>
+</details>
+<details>
+<summary>Co znamená runway?</summary>
+<p>Počet měsíců, po které dostupné zdroje pokryjí měsíční deficit při zadaném krizovém příjmu.</p>
+</details>
+<details>
+<summary>Patří sem daňová rezerva?</summary>
+<p>Peníze již určené na daň nebo splatné povinnosti nepovažujte za volnou krizovou rezervu.</p>
+</details>
+<details>
+<summary>Kde rezervu držet?</summary>
+<p>Bezpečně, odděleně od provozu a rychle dostupnou. Konkrétní řešení přizpůsobte své situaci.</p>
+</details>
+</div>
+</section>
+<section class="container related-tools">
+<p class="eyebrow">Navazující nástroje</p>
+<h2>Propojte odolnost s cenotvorbou</h2>
+<div class="related-grid">
+<a class="related-card" href="kalkulacka-minimalni-fakturace-osvc.html">
+<strong>Minimální fakturace</strong>
+<small>Obrat potřebný pro celý rok.</small>
+</a>
+<a class="related-card" href="kalkulacka-hodinove-sazby-freelancera.html">
+<strong>Hodinová sazba</strong>
+<small>Cena času a fakturovatelná kapacita.</small>
+</a>
+<a class="related-card" href="bod-zvratu-kalkulacka.html">
+<strong>Bod zvratu</strong>
+<small>Objem pro pokrytí nákladů.</small>
+</a>
+<a class="related-card" href="obrat-pro-cilovy-zisk-kalkulacka.html">
+<strong>Obrat pro zisk</strong>
+<small>Prodejní cíl nad bodem zvratu.</small>
+</a>
+</div>
+</section>
+</main>
+<footer class="footer">
+<div class="container footer-grid">
+<div>
+<img src="logo-rychlevypocty-footer.svg" alt="RychléVýpočty.cz" width="190" height="38">
+<p>Praktické online kalkulačky pro finance, podnikání, mzdy, bydlení i provoz domácnosti.</p>
+</div>
+<div>
+<h3>OSVČ a podnikání</h3>
+<div class="footer-links">
+<a href="osvc-a-freelancing.html">OSVČ a freelancing</a>
+<a href="kalkulacka-minimalni-fakturace-osvc.html">Minimální fakturace</a>
+<a href="kalkulacka-hodinove-sazby-freelancera.html">Hodinová sazba</a>
+<a href="business-a-cenotvorba.html">Business a cenotvorba</a>
+</div>
+</div>
+<div>
+<h3>Plánování</h3>
+<div class="footer-links">
+<a href="bod-zvratu-kalkulacka.html">Bod zvratu</a>
+<a href="obrat-pro-cilovy-zisk-kalkulacka.html">Obrat pro zisk</a>
+<a href="minimalni-prodejni-cena-kalkulacka.html">Minimální cena</a>
+<a href="kalkulacky.html">Všechny kalkulačky</a>
+</div>
+</div>
+<div>
+<h3>Web</h3>
+<div class="footer-links">
+<a href="jak-pocitame.html">Jak počítáme</a>
+<a href="kontakt.html">Kontakt</a>
+<a href="podminky-pouziti.html">Podmínky použití</a>
+<a href="ochrana-osobnich-udaju.html">Ochrana osobních údajů</a>
+</div>
+</div>
+</div>
+<div class="container footer-bottom">
+<p>© 2026 RychléVýpočty.cz. Výsledky jsou orientační a nenahrazují individuální finanční, účetní ani podnikatelské posouzení.</p>
+</div>
+</footer>
+<script src="rv-tool-core.js">
+</script>
+<script src="podnikatelska-rezerva.js?v=20260707-1">
+</script>
 </body>
 </html>
