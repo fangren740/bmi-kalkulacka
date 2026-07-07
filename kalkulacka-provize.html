@@ -1,53 +1,496 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="cs">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="format-detection" content="telephone=no">
-  <link rel="icon" href="favicon.ico?v=2" sizes="any">
-  <link rel="icon" href="favicon-32x32.png?v=2" sizes="32x32" type="image/png">
-  <link rel="icon" href="favicon-16x16.png?v=2" sizes="16x16" type="image/png">
-  <link rel="apple-touch-icon" href="apple-touch-icon.png?v=2" sizes="180x180">
-  <link rel="manifest" href="site.webmanifest?v=2">
-  <meta name="theme-color" content="#14253d">
-  <title>Kalkulačka provize | RychléVýpočty.cz</title>
-  <meta name="description" content="Spočítejte provizi z částky, procentní i pevnou složku, částku po provizi a efektivní sazbu. Praktická kalkulačka pro obchod, služby i provizní modely.">
-  <meta name="robots" content="index,follow">
-  <link rel="canonical" href="https://rychlevypocty.cz/kalkulacka-provize.html">
-  <meta property="og:title" content="Kalkulačka provize">
-  <meta property="og:description" content="Spočítejte výši provize, čistou částku po provizi a efektivní sazbu.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://rychlevypocty.cz/kalkulacka-provize.html">
-  <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg">
-  <meta property="og:site_name" content="RychléVýpočty.cz">
-  <meta property="og:locale" content="cs_CZ">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Kalkulačka provize">
-  <meta name="twitter:description" content="Spočítejte provizi z částky nebo částku po provizi.">
-  <meta name="twitter:image" content="https://rychlevypocty.cz/og-image.jpg">
-  <link rel="stylesheet" href="rv-tool-v2.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kalkulačka provize | Odměna, čistý obrat a cílový prodej</title>
+<meta name="description" content="Spočítejte procentní i pevnou provizi, částku po odečtení, efektivní sazbu, provizi na osobu a obrat potřebný pro cílovou odměnu.">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<link rel="canonical" href="https://rychlevypocty.cz/kalkulacka-provize.html">
+<meta property="og:title" content="Kalkulačka provize a cílového obratu">
+<meta property="og:description" content="Provize, zůstatek, týmové dělení a potřebný obrat bez nejasného základu.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://rychlevypocty.cz/kalkulacka-provize.html">
+<meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg">
+<meta property="og:site_name" content="RychléVýpočty.cz">
+<meta property="og:locale" content="cs_CZ">
+<link rel="icon" href="favicon.ico?v=2">
+<link rel="apple-touch-icon" href="apple-touch-icon.png?v=2">
+<link rel="manifest" href="site.webmanifest?v=2">
+<meta name="theme-color" content="#081b34">
+<link rel="stylesheet" href="rv-tool-v2.css">
 <link rel="stylesheet" href="business-v2.css">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"RychléVýpočty.cz","item":"https://rychlevypocty.cz/"},{"@type":"ListItem","position":2,"name":"Business a cenotvorba","item":"https://rychlevypocty.cz/business-a-cenotvorba.html"},{"@type":"ListItem","position":3,"name":"Kalkulačka provize","item":"https://rychlevypocty.cz/kalkulacka-provize.html"}]}</script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Kalkulačka provize","url":"https://rychlevypocty.cz/kalkulacka-provize.html","applicationCategory":"FinanceApplication","operatingSystem":"All","inLanguage":"cs-CZ","offers":{"@type":"Offer","price":"0","priceCurrency":"CZK"}}</script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Jak se počítá provize z částky?","acceptedAnswer":{"@type":"Answer","text":"Provize se obvykle počítá jako procento ze základní částky a případně se přičte pevná složka."}},{"@type":"Question","name":"Co znamená provize zahrnutá v částce?","acceptedAnswer":{"@type":"Answer","text":"Zadaná částka už obsahuje provizi a kalkulačka ji dopočítá zpětně koeficientem sazby."}},{"@type":"Question","name":"Co je efektivní sazba provize?","acceptedAnswer":{"@type":"Answer","text":"Ukazuje skutečný podíl celkové provize včetně pevné složky vůči celé částce."}}]}</script>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7745758285259522" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="commission-pro.css?v=20260707-1">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"RychléVýpočty.cz","item":"https://rychlevypocty.cz/"},{"@type":"ListItem","position":2,"name":"Business a cenotvorba","item":"https://rychlevypocty.cz/business-a-cenotvorba.html"},{"@type":"ListItem","position":3,"name":"Kalkulačka provize","item":"https://rychlevypocty.cz/kalkulacka-provize.html"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Kalkulačka provize","url":"https://rychlevypocty.cz/kalkulacka-provize.html","description":"Výpočet provize, čistého obratu, týmového podílu a obratu pro cílovou provizi.","applicationCategory":"FinanceApplication","operatingSystem":"All","inLanguage":"cs-CZ","dateModified":"2026-07-07","offers":{"@type":"Offer","price":"0","priceCurrency":"CZK"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Jak se počítá provize z obratu?","acceptedAnswer":{"@type":"Answer","text":"Obrat se vynásobí procentní sazbou a přičte se případná pevná složka."}},{"@type":"Question","name":"Jak zjistit obrat pro cílovou provizi?","acceptedAnswer":{"@type":"Answer","text":"Od cílové provize odečtěte pevnou složku a výsledek vydělte procentní sazbou převedenou na desetinné číslo."}},{"@type":"Question","name":"Co je efektivní sazba provize?","acceptedAnswer":{"@type":"Answer","text":"Celková provize včetně pevné složky vydělená obratem."}},{"@type":"Question","name":"Jak funguje pásmová provize?","acceptedAnswer":{"@type":"Answer","text":"V progresivním modelu se část obratu do hranice počítá první sazbou a pouze část nad hranicí vyšší sazbou."}},{"@type":"Question","name":"Je provize počítaná s DPH nebo bez DPH?","acceptedAnswer":{"@type":"Answer","text":"Záleží na smlouvě. Kalkulačka používá zadanou částku a sama daňový základ neurčuje."}},{"@type":"Question","name":"Je provize stejná jako čistý příjem?","acceptedAnswer":{"@type":"Answer","text":"Ne. Provize může dále podléhat daním, odvodům, stornům, nákladům nebo internímu dělení."}}]}</script>
 </head>
-<body class="rv-renovation-tool rv-business-tool rv-commission-page">
-  <a class="skip-link" href="#kalkulacka">Přejít na kalkulačku</a>
-  <header class="site-header"><div class="container header-inner"><a class="brand-logo" href="index.html" aria-label="RychléVýpočty.cz"><img class="brand-logo-img" src="logo-rychlevypocty.svg" alt="RychléVýpočty.cz" width="190" height="38"></a><nav class="main-nav"><a href="index.html">Domů</a><a href="kalkulacky.html">Kalkulačky</a><a href="business-a-cenotvorba.html" aria-current="page">Cenotvorba</a><a href="minimalni-prodejni-cena-kalkulacka.html">Minimální cena</a></nav><a class="header-cta" href="#kalkulacka">Spočítat provizi</a></div></header>
-  <main id="main-content">
-    <section class="tool-hero"><div class="container hero-grid"><div class="hero-copy"><nav class="breadcrumb"><a href="index.html">Domů</a><span>/</span><a href="kalkulacky.html">Kalkulačky</a><span>/</span><strong>Provize</strong></nav><p class="eyebrow">Provizní model</p><h1>Spočítejte provizi z částky i částku po provizi</h1><p>Zadejte základní částku, procentní sazbu a případnou pevnou provizi. Výsledek ukáže celkovou provizi, čistou částku po odečtení a efektivní sazbu.</p><div class="hero-actions"><a class="btn-primary" href="#kalkulacka">Začít výpočet</a><a class="btn-secondary" href="#jak-cist-vysledek">Jak výsledek číst</a></div><div class="hero-points"><span>Procentní i pevná složka</span><span>Částka po provizi</span><span>Efektivní sazba</span></div></div><div class="hero-visual" aria-hidden="true"><div class="reno-dashboard"><span>Celková provize</span><div class="reno-number">8 000 Kč</div><div class="reno-sub">Při částce 100 000 Kč a sazbě 8 % zůstává po provizi 92 000 Kč.</div><div class="reno-metrics"><div><span>Základ</span><b>100 tis. Kč</b></div><div><span>Sazba</span><b>8 %</b></div><div><span>Po provizi</span><b>92 tis. Kč</b></div></div></div><div class="reno-product"><div class="product-card"><div><span>Provizní karta</span><strong>částka × sazba</strong></div><i></i></div></div><div class="hero-mini-strip"><span>částka</span><span>provize</span><span>zůstatek</span></div></div></div></section>
-    <div class="anchor-nav"><div class="container anchor-scroll"><a href="#kalkulacka">Kalkulačka</a><a href="#vysledek">Výsledek</a><a href="#jak-cist-vysledek">Metodika</a><a href="#souvisejici-kalkulacky">Související</a><a href="#faq">FAQ</a></div></div>
-    <section class="container tool-stage" id="kalkulacka">
-      <form class="calculator-card" id="commissionForm"><h2>Zadejte provizní parametry</h2><p>Výpočet umí běžný model provize z částky i zpětný výpočet, kdy už je provize zahrnutá v zadané částce.</p><div class="form-grid"><div class="input-group"><label for="baseAmount">Základní částka</label><div class="input-shell"><input id="baseAmount" type="number" min="0" step="1" value="100000"><span>Kč</span></div></div><div class="input-group"><label for="commissionRate">Provizní sazba</label><div class="input-shell"><input id="commissionRate" type="number" min="0" step="0.01" value="8"><span>%</span></div></div><div class="input-group"><label for="fixedCommission">Pevná provize</label><div class="input-shell"><input id="fixedCommission" type="number" min="0" step="1" value="0"><span>Kč</span></div></div><div class="input-group"><label for="calculationMode">Způsob výpočtu</label><select id="calculationMode"><option value="fromBase" selected>Provize navíc z částky</option><option value="included">Provize už je v částce</option></select></div></div><div class="form-actions"><button class="btn-primary" type="submit">Spočítat provizi</button><button class="btn-secondary" id="resetBtn" type="button">Obnovit hodnoty</button></div></form>
-      <aside class="result-panel" id="vysledek"><p class="eyebrow">Výsledek</p><h2>Výše provize</h2><p>Výsledek ukazuje celkovou odměnu, čistou částku po provizi a skutečný podíl provize na obchodě.</p><div class="primary-result"><span>Celková provize</span><strong id="totalCommissionResult">0 Kč</strong><small id="resultBadge">Výpočet se načítá</small></div><div class="result-metrics"><div><span>Částka po provizi</span><strong id="netAmountResult">0 Kč</strong></div><div><span>Procentní provize</span><strong id="percentCommissionResult">0 Kč</strong></div><div><span>Efektivní sazba</span><strong id="effectiveRateResult">0 %</strong></div></div><div class="rv-output-summary"><p><strong id="decisionHeadline">Orientační výsledek</strong></p><p id="decisionText">Po zadání hodnot se doplní interpretace.</p><p id="nextStepText">Další krok se zobrazí po výpočtu.</p></div><div class="info-list"><div class="info-row"><span>Základní částka</span><strong id="baseAmountResult">0 Kč</strong></div><div class="info-row"><span>Provizní sazba</span><strong id="commissionRateResult">0 %</strong></div><div class="info-row"><span>Pevná provize</span><strong id="fixedCommissionResult">0 Kč</strong></div><div class="info-row"><span>Hrubá částka</span><strong id="grossAmountResult">0 Kč</strong></div><div class="info-row"><span>Po provizi</span><strong id="afterCommissionResult">0 Kč</strong></div><div class="info-row"><span>Rozdíl</span><strong id="differenceResult">0 Kč</strong></div></div><div class="rv-output-summary"><p id="resultNote">Interpretace se doplní po výpočtu.</p></div><div class="table-wrap"><table><thead><tr><th>Položka</th><th>Hodnota</th><th>Význam</th></tr></thead><tbody id="summaryTableBody"></tbody></table></div></aside>
-    </section>
-    <section class="container content-grid" id="jak-cist-vysledek"><article class="content-card"><p class="eyebrow">Metodika</p><h2>Jak se provize počítá</h2><p>V základním režimu se provize vypočítá jako procento ze zadané částky a přičte se případná pevná složka. Výsledek pak ukáže, kolik zůstane po odečtení provize.</p><div class="formula"><code>provize = částka × sazba + pevná složka</code></div></article><article class="content-card"><p class="eyebrow">Zpětný výpočet</p><h2>Kdy je provize už v částce</h2><p>U některých dohod je konečná částka už včetně provize. V takovém případě se procentní provize nedělá prostým násobením, ale dopočítává se zpětně z celku.</p><p>To pomáhá při kontrole marketplace poplatků, zprostředkování nebo provizní fakturace.</p></article><article class="content-card"><p class="eyebrow">Praxe</p><h2>Proč sledovat efektivní sazbu</h2><p>Pevná provize může u menších obchodů výrazně zvýšit skutečnou sazbu. Proto je dobré sledovat nejen procento ve smlouvě, ale i celkovou odměnu vůči částce.</p></article><article class="content-card"><p class="eyebrow">Limit</p><h2>Co výpočet nezahrnuje</h2><p>Kalkulačka neřeší DPH, daně, storna, bonusy ani vícestupňové provizní tabulky. Pro cenotvorbu výslednou provizi porovnejte s marží a minimální cenou.</p></article></section>
-    <section class="container related-tools" id="souvisejici-kalkulacky"><p class="eyebrow">Související kalkulačky</p><h2>Další obchodní výpočty</h2><div class="related-grid"><a class="related-card" href="minimalni-prodejni-cena-kalkulacka.html"><span>C</span><strong>Minimální prodejní cena</strong><small>Zapracujte provizi do ceny.</small></a><a class="related-card" href="kalkulacka-marze-a-prirazky.html"><span>M</span><strong>Marže a přirážka</strong><small>Ověřte dopad na zisk.</small></a><a class="related-card" href="obrat-pro-cilovy-zisk-kalkulacka.html"><span>Z</span><strong>Obrat pro cílový zisk</strong><small>Kolik obratu potřebujete.</small></a><a class="related-card" href="bod-zvratu-kalkulacka.html"><span>B</span><strong>Bod zvratu</strong><small>Kdy obchod pokrývá náklady.</small></a></div></section>
-    <section class="container faq-section" id="faq"><p class="eyebrow">FAQ</p><h2>Časté otázky</h2><div class="faq-grid"><details><summary>Jak se počítá provize z částky?</summary><p>Obvykle jako procento ze základní částky. Pokud je zadána i pevná složka, přičte se k procentní provizi.</p></details><details><summary>Co znamená provize zahrnutá v částce?</summary><p>Zadaná částka už obsahuje provizi a kalkulačka ji dopočítá zpětně koeficientem sazby.</p></details><details><summary>Proč sledovat efektivní sazbu?</summary><p>Protože pevná provize může změnit skutečný podíl provize, hlavně u menších částek.</p></details><details><summary>Je výsledek závazný?</summary><p>Ne. Jde o orientační výpočet pro kontrolu provizního modelu.</p></details></div></section>
+<body class="rv-renovation-tool rv-business-tool commission-pro">
+<a class="skip-link" href="#kalkulacka">Přejít na kalkulačku</a>
+<header class="site-header">
+<div class="container header-inner">
+<a class="brand-logo" href="index.html">
+<img src="logo-rychlevypocty.svg" alt="RychléVýpočty.cz" width="190" height="38">
+</a>
+<nav class="main-nav">
+<a href="index.html">Domů</a>
+<a href="kalkulacky.html">Kalkulačky</a>
+<a href="business-a-cenotvorba.html">Cenotvorba</a>
+<a href="kalkulacka-marze-a-prirazky.html">Marže</a>
+</nav>
+<a class="header-cta" href="#kalkulacka">Spočítat provizi</a>
+</div>
+</header>
+<main>
+<section class="commission-hero">
+<div class="container commission-hero-grid">
+<div>
+<nav class="breadcrumb">
+<a href="index.html">Domů</a>
+<span>/</span>
+<a href="kalkulacky.html">Kalkulačky</a>
+<span>/</span>
+<strong>Provize</strong>
+</nav>
+<p class="eyebrow">Odměna, zůstatek i cílový obrat</p>
+<h1>Provize bez nejasného základu</h1>
+<p class="lead">Spočítejte odměnu z obchodu nebo zjistěte, jaký obrat potřebujete pro cílovou provizi. Pevná složka, týmové dělení a pásma jsou volitelné.</p>
+<a class="btn-primary" href="#kalkulacka">Spočítat provizi</a>
+</div>
+<div class="commission-dash" aria-hidden="true">
+<span>Provize z obchodu</span>
+<strong>8 000 Kč</strong>
+<div>
+<p>
+<b>100 000 Kč</b>
+<small>obrat</small>
+</p>
+<i>
+</i>
+<p>
+<b>8 %</b>
+<small>sazba</small>
+</p>
+</div>
+<em>Po odečtení zbývá 92 000 Kč</em>
+</div>
+</div>
+</section>
+<section class="container commission-work" id="kalkulacka">
+<form class="commission-form" id="commissionForm" data-mode="earn" novalidate>
+<p class="eyebrow">Co potřebujete zjistit?</p>
+<div class="commission-modes">
+<button type="button" data-mode="earn">
+<strong>Výši provize</strong>
+<span>Znám obrat a sazbu</span>
+</button>
+<button type="button" data-mode="target">
+<strong>Potřebný obrat</strong>
+<span>Znám cílovou provizi</span>
+</button>
+</div>
+<section data-panel="earn">
+<h2>Spočítejte provizi z obchodu</h2>
+<label>
+<span>Obrat nebo základ provize</span>
+<div class="commission-input">
+<input id="baseAmount" type="number" min="0" step=".01" value="100000" inputmode="decimal">
+<b>Kč</b>
+</div>
+</label>
+</section>
+<section data-panel="target" hidden>
+<h2>Kolik musíte prodat?</h2>
+<label>
+<span>Cílová celková provize</span>
+<div class="commission-input">
+<input id="targetCommission" type="number" min="0" step=".01" value="20000" inputmode="decimal">
+<b>Kč</b>
+</div>
+</label>
+</section>
+<div class="commission-grid">
+<label>
+<span>Základní sazba</span>
+<div class="commission-input">
+<input id="commissionRate" type="number" min="0" max="100" step=".01" value="8" inputmode="decimal">
+<b>%</b>
+</div>
+</label>
+<label>
+<span>Pevná složka</span>
+<div class="commission-input">
+<input id="fixedCommission" type="number" min="0" step=".01" value="0" inputmode="decimal">
+<b>Kč</b>
+</div>
+</label>
+</div>
+<label class="settlement" data-earn-only>
+<span>Jak se provize vypořádá?</span>
+<select id="settlementMode">
+<option value="deduct">Odečte se ze zadaného obratu</option>
+<option value="add">Přičte se zákazníkovi navíc</option>
+</select>
+</label>
+<details class="advanced">
+<summary>Pokročilé nastavení <span>Volitelné</span>
+</summary>
+<div>
+<label data-earn-only>
+<span>Pásmová provize</span>
+<select id="tierEnabled">
+<option value="no">Bez pásma</option>
+<option value="yes">Vyšší sazba nad hranicí</option>
+</select>
+</label>
+<label data-earn-only>
+<span>Hranice obratu</span>
+<div class="commission-input">
+<input id="tierThreshold" type="number" min="0" step="1" value="100000" inputmode="decimal">
+<b>Kč</b>
+</div>
+</label>
+<label data-earn-only>
+<span>Sazba nad hranicí</span>
+<div class="commission-input">
+<input id="tierRate" type="number" min="0" max="100" step=".01" value="12" inputmode="decimal">
+<b>%</b>
+</div>
+</label>
+<label>
+<span>Počet lidí pro rozdělení</span>
+<div class="commission-input">
+<input id="teamSize" type="number" min="1" step="1" value="1" inputmode="numeric">
+<b>os.</b>
+</div>
+</label>
+</div>
+</details>
+<div class="commission-error" id="commissionError" role="alert" hidden>
+</div>
+<div class="actions">
+<button class="btn-primary" type="submit">Spočítat výsledek</button>
+<button class="btn-secondary" id="resetBtn" type="button">Obnovit příklad</button>
+</div>
+<p class="privacy">Výpočet probíhá pouze ve vašem prohlížeči.</p>
+</form>
+<aside class="commission-result" id="vysledek" aria-live="polite">
+<div class="result-head">
+<div>
+<p class="eyebrow">Výsledek</p>
+<h2 id="resultTitle">Celková provize</h2>
+</div>
+<span id="statusBadge">Výpočet hotový</span>
+</div>
+<div class="commission-answer">
+<span id="answerLabel">Provize činí</span>
+<strong id="answerValue">0 Kč</strong>
+<p id="resultSentence">
+</p>
+</div>
+<div class="commission-metrics">
+<div>
+<span>Procentní složka</span>
+<strong id="percentPart">0 Kč</strong>
+</div>
+<div>
+<span>Pevná složka</span>
+<strong id="fixedPart">0 Kč</strong>
+</div>
+<div>
+<span>Efektivní sazba</span>
+<strong id="effectiveRate">0 %</strong>
+</div>
+<div>
+<span>Provize na osobu</span>
+<strong id="perPerson">0 Kč</strong>
+</div>
+</div>
+<div class="settlement-card">
+<span id="settlementLabel">Po odečtení provize zbývá</span>
+<strong id="settlementValue">0 Kč</strong>
+<p id="settlementText">
+</p>
+</div>
+<div class="tier-breakdown" id="tierBreakdown">
+</div>
+<div class="commission-decision">
+<h3 id="decisionHeadline">Jak výsledek číst</h3>
+<p id="decisionText">
+</p>
+<strong id="nextStepText">
+</strong>
+</div>
+</aside>
+</section>
+<section class="container scenario-card">
+<p class="eyebrow">Citlivost provize</p>
+<h2>Jak se odměna mění s obratem</h2>
+<div class="scenario-table">
+<table>
+<thead>
+<tr>
+<th>Obrat</th>
+<th>Procentní provize</th>
+<th>Celková provize</th>
+<th>Efektivní sazba</th>
+<th>Na osobu</th>
+</tr>
+</thead>
+<tbody id="scenarioBody">
+</tbody>
+</table>
+</div>
+<p>Scénáře používají aktuální sazbu, pevnou složku a týmové dělení. Pásmový model se započítá pouze v režimu výpočtu provize.</p>
+</section>
+<section class="container seo-card">
+<p class="eyebrow">Základní vzorec</p>
+<h2>Jak se počítá provize z obratu</h2>
+<p>Procentní provize je obrat vynásobený sazbou převedenou na desetinné číslo. Při obratu 100 000 Kč a sazbě 8 % činí 8 000 Kč. Pokud smlouva obsahuje pevnou složku 500 Kč, celková provize je 8 500 Kč.</p>
+<div class="formula-grid">
+<code>procentní provize = obrat × sazba ÷ 100</code>
+<code>celková provize = procentní provize + pevná složka</code>
+<code>efektivní sazba = celková provize ÷ obrat × 100</code>
+</div>
+<p>Pevná složka zvyšuje efektivní sazbu zejména u malých obchodů. Provize 5 % plus 500 Kč z obratu 5 000 Kč není efektivně 5 %, ale 15 %. Proto hlavní výsledek vždy doplňuje skutečný podíl celkové odměny.</p>
+</section>
+<section class="container seo-dark">
+<p class="eyebrow">Dva způsoby vypořádání</p>
+<h2>Provize odečtená z obratu versus přičtená navíc</h2>
+<p>Když se provize odečte z obratu, z částky 100 000 Kč po provizi 8 000 Kč zbývá 92 000 Kč. Tento pohled odpovídá například poplatku platformy nebo odměně zprostředkovatele odečtené z inkasa.</p>
+<p>Když se provize přičte zákazníkovi navíc, základ zůstává 100 000 Kč a zákazník zaplatí 108 000 Kč. Ekonomický a smluvní význam je odlišný, přestože samotná provize je stejná. Kalkulačka proto oba modely jasně odděluje.</p>
+<div class="settlement-grid">
+<article>
+<h3>Odečtení</h3>
+<strong>100 000 − 8 000 = 92 000 Kč</strong>
+<p>Provize snižuje částku, která zůstane z obratu.</p>
+</article>
+<article>
+<h3>Přičtení</h3>
+<strong>100 000 + 8 000 = 108 000 Kč</strong>
+<p>Provize zvyšuje celkovou částku účtovanou zákazníkovi.</p>
+</article>
+</div>
+</section>
+<section class="container seo-card">
+<p class="eyebrow">Cílová provize</p>
+<h2>Jak dopočítat potřebný obrat</h2>
+<p>Pokud chcete získat provizi 20 000 Kč při sazbě 8 %, potřebujete obrat 250 000 Kč. Je-li součástí cílové provize také pevná odměna, nejprve ji odečtete. Cíl 20 000 Kč s pevnou složkou 2 000 Kč a sazbou 8 % vyžaduje procentní část 18 000 Kč, tedy obrat 225 000 Kč.</p>
+<div class="formula-grid">
+<code>potřebný obrat = (cíl − pevná složka) ÷ (sazba ÷ 100)</code>
+<code>(20 000 − 2 000) ÷ 0,08 = 225 000 Kč</code>
+<code>kontrola: 225 000 × 8 % + 2 000 = 20 000 Kč</code>
+</div>
+<p>Režim cílového obratu používá základní sazbu bez pásmového modelu, aby byl výsledek jednoznačný. Pokud smlouva používá více pásem, sestavte plán po jednotlivých pásmech nebo použijte scénáře jako orientaci.</p>
+</section>
+<section class="container seo-card">
+<p class="eyebrow">Pásmová provize</p>
+<h2>Vyšší sazba pouze z obratu nad hranicí</h2>
+<p>V progresivním modelu se základní sazba použije do stanovené hranice a vyšší sazba jen na část nad ní. Při sazbě 5 % do 100 000 Kč a 10 % nad tuto hranici vytvoří obrat 150 000 Kč provizi 5 000 Kč z prvního pásma a 5 000 Kč z druhého. Celkem 10 000 Kč před pevnou složkou.</p>
+<p>Nejde o totéž jako zpětné přepočítání celé částky vyšší sazbou po překročení hranice. Některé smlouvy používají právě takový retroaktivní model, jiné progresivní. Kalkulačka používá progresivní variantu a tuto logiku zobrazuje ve výsledku.</p>
+<div class="formula-grid">
+<code>1. pásmo = minimum(obrat, hranice) × sazba 1</code>
+<code>2. pásmo = maximum(0, obrat − hranice) × sazba 2</code>
+<code>provize = pásmo 1 + pásmo 2 + pevná část</code>
+</div>
+</section>
+<section class="container seo-dark">
+<p class="eyebrow">Provize v týmu</p>
+<h2>Rovné rozdělení je jen jeden model</h2>
+<p>Kalkulačka může celkovou provizi rozdělit rovným dílem mezi zadaný počet lidí. Provize 12 000 Kč rozdělená mezi tři osoby dává 4 000 Kč na osobu. Tento výpočet je vhodný pouze tehdy, když smlouva skutečně stanoví stejné podíly.</p>
+<p>V praxi může mít obchodník, vedoucí, doporučitel nebo partnerská platforma odlišné procento. Víceúrovňový model je potřeba počítat podle konkrétních podílů a pořadí. Rovné dělení také nezohledňuje daně, odvody ani interní náklady jednotlivých členů.</p>
+</section>
+<section class="container seo-card">
+<p class="eyebrow">Obchod a reality</p>
+<h2>Co tvoří správný základ provize</h2>
+<p>Provize může být sjednána z prodejní ceny, obratu bez DPH, hrubé marže, inkasované částky nebo jiné smluvní veličiny. Kalkulačka sama neurčuje správný základ. Do pole vložte přesně tu částku, kterou smlouva označuje jako základ provize.</p>
+<p>U realit může být provize zahrnuta v kupní ceně, přičtena navíc nebo hrazena jinou stranou. U obchodního zástupce může vzniknout nárok až zaplacením faktury. Matematický výsledek proto vždy porovnejte s provizní smlouvou a podmínkami vzniku nároku.</p>
+</section>
+<section class="container seo-card">
+<p class="eyebrow">Marketplace a platební platformy</p>
+<h2>Procentní poplatek nemusí být jediný náklad</h2>
+<p>Platformy mohou kombinovat procento, pevný poplatek za transakci, měnovou konverzi, reklamu, logistiku a další služby. Pevnou transakční složku vložte jako pevnou provizi, ale ostatní náklady počítejte samostatně, pokud nemají stejný základ.</p>
+<p>U vrácení objednávky může platforma část poplatku vrátit, ponechat nebo účtovat další storno. Jednoduchá kalkulačka tyto podmíněné události nemodeluje. Pro cenotvorbu pracujte s očekávaným průměrem poplatků a vratkovosti.</p>
+</section>
+<section class="container seo-card">
+<p class="eyebrow">DPH, daně a čistý příjem</p>
+<h2>Provize není automaticky částka „na ruku“</h2>
+<p>Výsledek je matematická provize podle zadaného základu. Neurčuje, zda je základ s DPH nebo bez DPH, zda se k provizi DPH připočítává ani jak se příjem daní. Tyto otázky závisí na smluvním a daňovém postavení stran.</p>
+<p>Z provize mohou být hrazeny odvody, daň z příjmů, náklady na získání zakázky, cestovné nebo podíl týmu. Pro osobní čistý příjem je proto potřeba další výpočet.</p>
+</section>
+<section class="container seo-card">
+<p class="eyebrow">Storna a vratky</p>
+<h2>Kdy se provize může změnit po výpočtu</h2>
+<p>Provizní smlouva může obsahovat storno období, vrácení odměny při nezaplacení zákazníka nebo korekci při reklamaci. Provize vypočtená v okamžiku obchodu pak nemusí být konečná.</p>
+<p>Pro plánování sledujte nejen přiznanou, ale také skutečně vyplacenou provizi. Rozdíl pomůže odhadnout průměrnou míru storen a realistický příjem. Kalkulačka automatickou pravděpodobnost storna nezapočítává.</p>
+</section>
+<section class="container seo-card">
+<p class="eyebrow">Nejčastější chyby</p>
+<h2>Co před použitím výsledku zkontrolovat</h2>
+<div class="mistake-grid">
+<article>
+<h3>Nesprávný základ</h3>
+<p>Ověřte, zda smlouva používá obrat, cenu bez DPH, marži nebo inkaso.</p>
+</article>
+<article>
+<h3>Záměna odečtení a přičtení</h3>
+<p>Provize může snižovat zůstatek nebo navyšovat účet zákazníka.</p>
+</article>
+<article>
+<h3>Retroaktivní versus progresivní pásmo</h3>
+<p>Kalkulačka používá vyšší sazbu jen na část nad hranicí.</p>
+</article>
+<article>
+<h3>Ignorování pevné složky</h3>
+<p>U malých obchodů výrazně zvyšuje efektivní sazbu.</p>
+</article>
+<article>
+<h3>Záměna provize a čistého příjmu</h3>
+<p>Výsledek nezahrnuje daně, odvody ani osobní náklady.</p>
+</article>
+<article>
+<h3>Předčasné zaokrouhlení</h3>
+<p>Kalkulačka počítá na haléře; smlouva může stanovit vlastní pravidla.</p>
+</article>
+</div>
+</section>
+<section class="container seo-card">
+<p class="eyebrow">Příklady z praxe</p>
+<h2>Čtyři situace, ve kterých stejné procento znamená něco jiného</h2>
+<div class="mistake-grid">
+<article><h3>Obchodní zástupce</h3><p>Při měsíčním obratu 350 000 Kč, sazbě 4 % a pevné odměně 1 500 Kč vychází procentní část na 14 000 Kč a celková provize na 15 500 Kč. Pokud je odměna rozdělena mezi obchodníka a vedoucího, nelze automaticky použít rovné dělení; rozhoduje provizní plán.</p></article>
+<article><h3>Realitní zprostředkování</h3><p>Provize 3 % z ceny nemovitosti 6 000 000 Kč představuje 180 000 Kč. Výpočet však ještě neříká, zda je provize v ceně, připočtena navíc, uvedena s DPH nebo bez DPH ani kdo ji hradí. To musí být jednoznačně popsáno ve smlouvě.</p></article>
+<article><h3>Affiliate spolupráce</h3><p>Partner, který přivede objednávky za 120 000 Kč při sazbě 10 %, má před případnými korekcemi provizi 12 000 Kč. Jestli se základ počítá jen z uhrazených a nevrácených objednávek, je nutné po skončení storno lhůty výsledek přepočítat.</p></article>
+<article><h3>Online tržiště</h3><p>Platforma si může z inkasa 80 000 Kč strhnout 7 %, tedy 5 600 Kč. Pokud navíc účtuje pevný poplatek za každou objednávku, nejde o jedinou pevnou složku za celé období. Nejprve sečtěte všechny transakční poplatky a až jejich součet vložte do kalkulačky.</p></article>
+</div>
+<p>Příklady ukazují, proč nestačí znát jen procento. Pro spolehlivý výpočet potřebujete také správné období, základ, okamžik vzniku nároku, pravidla storen a způsob vypořádání. Výsledek kalkulačky je přesný vůči zadaným číslům; obchodní význam těchto čísel určuje smlouva.</p>
+</section>
+<section class="container seo-dark">
+<p class="eyebrow">Kontrola smlouvy</p>
+<h2>Co si vyjasnit ještě před prvním výpočtem</h2>
+<p>Provizní pravidla by měla odpovědět na několik praktických otázek. Základem může být podepsaná objednávka, vystavená faktura, skutečně přijatá platba, cena bez daně nebo dosažená marže. Každá varianta může při stejném obchodu vytvořit jinou odměnu. Zkontrolujte také, zda se procento počítá z celé částky, jen z nového obchodu nebo pouze z části nad stanoveným limitem.</p>
+<div class="mistake-grid">
+<article><h3>Vznik nároku</h3><p>Je provize přiznána podpisem smlouvy, dodáním služby, úhradou zákazníka, nebo až po skončení lhůty pro vrácení? Časový okamžik ovlivňuje měsíc, do kterého odměna patří, i riziko jejího pozdějšího odebrání.</p></article>
+<article><h3>Definice základu</h3><p>Uveďte, zda jde o cenu s DPH, cenu bez DPH, tržbu po slevách, hrubou marži nebo inkaso po odečtení poplatků. Označení „obrat“ bez dalšího vysvětlení může být pro vyúčtování příliš neurčité.</p></article>
+<article><h3>Pásma a limity</h3><p>Ověřte, zda vyšší sazba platí pouze pro část nad hranicí, nebo zpětně pro celý obrat. Důležité je také období: hranice může být měsíční, čtvrtletní, roční či stanovená pro konkrétní zakázku.</p></article>
+<article><h3>Storno a splatnost</h3><p>Smlouva by měla popsat vratky, nezaplacené faktury, částečné úhrady, dobropisy i termín výplaty. Bez těchto pravidel může matematicky správná provize působit jako konečný příjem, přestože ještě konečná není.</p></article>
+</div>
+<p>Pro pravidelné vyúčtování uchovávejte vedle výsledku také zdrojové částky a použitou sazbu. Při změně smlouvy pak snadno zjistíte, podle jakých pravidel byl konkrétní měsíc spočítán. Samotný screenshot výsledku bez vstupů a období není dostatečný podklad.</p>
+</section>
+<section class="container seo-card">
+<p class="eyebrow">Plánování výkonu</p>
+<h2>Od cílové provize k realistickému obchodnímu plánu</h2>
+<p>Režim „Potřebný obrat“ převádí požadovanou odměnu na prodejní cíl. Tím ale plánování nekončí. Jestli potřebujete obrat 250 000 Kč a průměrná objednávka je 10 000 Kč, odpovídá to 25 úspěšným objednávkám. Při úspěšnosti 20 % je pro získání 25 objednávek potřeba přibližně 125 relevantních obchodních příležitostí.</p>
+<p>Tento postup spojuje provizní cíl s kapacitou obchodníka. U dlouhého prodejního cyklu rozlišujte nové příležitosti, rozjednané zakázky a skutečně zaplacené objednávky. Provize může být navázána až na poslední krok, takže aktivita v jednom měsíci vytvoří příjem teprve v některém z následujících období.</p>
+<div class="formula-grid"><code>počet objednávek = potřebný obrat ÷ průměrná objednávka</code><code>potřebné příležitosti = počet objednávek ÷ míra úspěchu</code><code>rezerva plánu = realistický cíl − minimální potřebný obrat</code></div>
+<p>Do plánu přidejte rezervu na slevy, sezónnost, nezaplacené faktury a storna. Rezerva nemá zakrývat nereálný cíl; má vyrovnat běžné odchylky. Pokud potřebný obrat dlouhodobě převyšuje kapacitu trhu nebo týmu, je vhodnější upravit sazbu, průměrnou hodnotu zakázky či strukturu odměny než pouze zvyšovat počet kontaktů.</p>
+</section>
+<section class="container seo-card">
+<p class="eyebrow">Progresivní a retroaktivní model</p>
+<h2>Rozdíl, který je nejvíce vidět těsně nad hranicí</h2>
+<p>Představte si základní sazbu 5 % do 100 000 Kč a vyšší sazbu 10 % nad tuto hranici. Při progresivním modelu a obratu 110 000 Kč získáte 5 000 Kč z prvního pásma a 1 000 Kč z částky nad hranicí, celkem 6 000 Kč. Kalkulačka používá právě tento způsob.</p>
+<p>V retroaktivním modelu by překročení hranice mohlo aktivovat 10% sazbu na celý obrat. Ze 110 000 Kč by pak vyšla provize 11 000 Kč. Skok o 5 000 Kč mezi obratem těsně pod a těsně nad hranicí může výrazně ovlivňovat načasování obchodů a motivaci týmu. Proto musí být ve smlouvě výslovně uvedeno, který způsob platí.</p>
+<p>Existují také kumulativní plány s několika hranicemi, bonus za splnění cíle nebo sazba odvozená od marže. Tyto varianty nelze bezpečně nahradit jedinou vyšší sazbou. Rozdělte výpočet na jednotlivé části a výsledky sečtěte, případně použijte specializovaný firemní model.</p>
+</section>
+<section class="container seo-dark">
+<p class="eyebrow">Provize, marže a zisk</p>
+<h2>Vysoký obrat ještě nemusí znamenat výhodný obchod</h2>
+<p>Provize motivuje k prodeji, ale firma musí současně hlídat, kolik z obchodu zůstane po nákladech. Pokud se odměna počítá pouze z obratu, může být stejně vysoká u zakázky s dobrou i velmi nízkou marží. Sleva, doprava zdarma, nákladná instalace nebo reklamace přitom mohou hospodářský výsledek zásadně změnit.</p>
+<p>Příklad: výrobek se prodá za 10 000 Kč, přímé náklady jsou 8 000 Kč a provize činí 10 % z prodejní ceny. Provize 1 000 Kč spotřebuje polovinu původní marže 2 000 Kč. Po jejím odečtení zbývá 1 000 Kč před fixními náklady. Desetiprocentní provize z obratu tedy v tomto případě není deset procent ze zisku, ale padesát procent hrubé marže.</p>
+<p>Pro cenotvorbu proto propojte výsledek s kalkulačkou marže a minimální prodejní ceny. Jestli provize patří mezi variabilní náklady, zahrňte ji do ceny nebo do požadované marže už před zveřejněním nabídky. U více produktů sledujte každou skupinu zvlášť; průměrný obrat může skrýt položky, které se po započtení odměny prodávají se ztrátou.</p>
+</section>
+<section class="container seo-card" id="faq">
+<p class="eyebrow">FAQ</p>
+<h2>Časté otázky k provizi</h2>
+<div class="faq-list">
+<details>
+<summary>Jak se počítá provize z obratu?</summary>
+<p>Obrat vynásobte sazbou a přičtěte pevnou složku.</p>
+</details>
+<details>
+<summary>Jak zjistit obrat pro cílovou provizi?</summary>
+<p>Od cíle odečtěte pevnou část a vydělte procentní sazbou.</p>
+</details>
+<details>
+<summary>Co je efektivní sazba?</summary>
+<p>Celková provize včetně pevné části vydělená obratem.</p>
+</details>
+<details>
+<summary>Jak funguje pásmová provize?</summary>
+<p>Vyšší sazba se v tomto nástroji použije pouze na část obratu nad hranicí.</p>
+</details>
+<details>
+<summary>Počítat s DPH, nebo bez DPH?</summary>
+<p>Použijte základ definovaný ve smlouvě. Kalkulačka daňový režim neurčuje.</p>
+</details>
+<details>
+<summary>Je provize čistý příjem?</summary>
+<p>Ne. Mohou následovat daně, odvody, náklady, storna a dělení.</p>
+</details>
+</div>
+</section>
+<section class="container related-tools">
+<p class="eyebrow">Navazující nástroje</p>
+<h2>Co spočítat dál</h2>
+<div class="related-grid">
+<a class="related-card" href="minimalni-prodejni-cena-kalkulacka.html">
+<strong>Minimální cena</strong>
+<small>Zapracujte provizi do ceny.</small>
+</a>
+<a class="related-card" href="kalkulacka-marze-a-prirazky.html">
+<strong>Marže a přirážka</strong>
+<small>Ověřte dopad na zisk.</small>
+</a>
+<a class="related-card" href="obrat-pro-cilovy-zisk-kalkulacka.html">
+<strong>Obrat pro zisk</strong>
+<small>Naplánujte potřebný prodej.</small>
+</a>
+<a class="related-card" href="bod-zvratu-kalkulacka.html">
+<strong>Bod zvratu</strong>
+<small>Pokrytí fixních nákladů.</small>
+</a>
+</div>
+</section>
 </main>
-  <footer class="footer"><div class="container footer-grid"><div><img src="logo-rychlevypocty-footer.svg" alt="RychléVýpočty.cz" width="190" height="38"><p>Praktické online kalkulačky pro finance, podnikání, mzdy, bydlení i provoz domácnosti.</p></div><div><h3>Cenotvorba</h3><div class="footer-links"><a href="business-a-cenotvorba.html">Business a cenotvorba</a><a href="minimalni-prodejni-cena-kalkulacka.html">Minimální cena</a><a href="kalkulacka-marze-a-prirazky.html">Marže a přirážka</a></div></div><div><h3>Podnikání</h3><div class="footer-links"><a href="bod-zvratu-kalkulacka.html">Bod zvratu</a><a href="obrat-pro-cilovy-zisk-kalkulacka.html">Obrat pro zisk</a><a href="kalkulacky.html">Všechny kalkulačky</a></div></div><div><h3>Web</h3><div class="footer-links"><a href="/jak-pocitame.html">Jak počítáme</a><a href="kontakt.html">Kontakt</a><a href="podminky-pouziti.html">Podmínky použití</a><a href="ochrana-osobnich-udaju.html">Ochrana osobních údajů</a></div></div></div><div class="container footer-bottom"><p>© 2026 RychléVýpočty.cz. Výsledky jsou orientační a nenahrazují účetní ani daňové poradenství.</p></div></footer>
-  <script src="rv-tool-core.js"></script>
-  <script src="provize.js"></script>
+<footer class="footer">
+<div class="container footer-grid">
+<div>
+<img src="logo-rychlevypocty-footer.svg" alt="RychléVýpočty.cz" width="190" height="38">
+<p>Praktické online kalkulačky pro finance, podnikání, mzdy, bydlení i provoz domácnosti.</p>
+</div>
+<div>
+<h3>Cenotvorba</h3>
+<div class="footer-links">
+<a href="business-a-cenotvorba.html">Business a cenotvorba</a>
+<a href="minimalni-prodejni-cena-kalkulacka.html">Minimální cena</a>
+<a href="kalkulacka-marze-a-prirazky.html">Marže a přirážka</a>
+<a href="bod-zvratu-kalkulacka.html">Bod zvratu</a>
+</div>
+</div>
+<div>
+<h3>Podnikání</h3>
+<div class="footer-links">
+<a href="obrat-pro-cilovy-zisk-kalkulacka.html">Obrat pro zisk</a>
+<a href="kalkulacky.html">Všechny kalkulačky</a>
+</div>
+</div>
+<div>
+<h3>Web</h3>
+<div class="footer-links">
+<a href="jak-pocitame.html">Jak počítáme</a>
+<a href="kontakt.html">Kontakt</a>
+<a href="podminky-pouziti.html">Podmínky použití</a>
+<a href="ochrana-osobnich-udaju.html">Ochrana osobních údajů</a>
+</div>
+</div>
+</div>
+<div class="container footer-bottom">
+<p>© 2026 RychléVýpočty.cz. Výsledky jsou orientační a nenahrazují smluvní, účetní ani daňové posouzení.</p>
+</div>
+</footer>
+<script src="rv-tool-core.js">
+</script>
+<script src="provize.js?v=20260707-1">
+</script>
 </body>
 </html>
