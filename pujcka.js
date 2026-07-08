@@ -1,356 +1,148 @@
-(function () {
-  const form = document.getElementById("loanForm");
+(() => {
+  "use strict";
+
+  const form = document.querySelector("#loanForm");
   if (!form) return;
 
-  const $ = (id) => document.getElementById(id);
-  const resetBtn = $("resetBtn");
-  const presetButtons = Array.from(document.querySelectorAll(".scenario-chip"));
-  const outputs = {
-    monthlyPayment: $("monthlyPayment"),
-    monthlyWithFees: $("monthlyWithFees"),
-    totalPaid: $("totalPaid"),
-    totalOverpayment: $("totalOverpayment"),
-    summaryLoan: $("summaryLoan"),
-    summaryYears: $("summaryYears"),
-    summaryRate: $("summaryRate"),
-    summaryInstallments: $("summaryInstallments"),
-    neededIncome: $("neededIncome"),
-    neededIncomeKpi: $("neededIncomeKpi"),
-    monthlyWithFeesDetail: $("monthlyWithFeesDetail"),
-    summaryInstallmentsCompact: $("summaryInstallmentsCompact"),
-    incomeBurden: $("incomeBurden"),
-    cockpitHeadline: $("cockpitHeadline"),
-    burdenFill: $("burdenFill"),
-    burdenLabel: $("burdenLabel"),
-    overpayFill: $("overpayFill"),
-    overpayLabel: $("overpayLabel"),
-    principalPart: $("principalPart"),
-    interestPart: $("interestPart"),
-    feePart: $("feePart"),
-    stageShortPayment: $("stageShortPayment"),
-    stageBasePayment: $("stageBasePayment"),
-    stageLongPayment: $("stageLongPayment"),
-    stageShortMeta: $("stageShortMeta"),
-    stageBaseMeta: $("stageBaseMeta"),
-    stageLongMeta: $("stageLongMeta"),
-    stageShortBar: $("stageShortBar"),
-    stageBaseBar: $("stageBaseBar"),
-    stageLongBar: $("stageLongBar"),
-    stageBiggestDifference: $("stageBiggestDifference"),
-    stageWatch: $("stageWatch"),
-    stressRatePayment: $("stressRatePayment"),
-    shorterTotalSaving: $("shorterTotalSaving"),
-    longerTotalCost: $("longerTotalCost"),
-    feesTotal: $("feesTotal"),
-    loanBadge: $("loanBadge"),
-    scheduleBody: $("scheduleBody"),
-    affordabilityStatus: $("affordabilityStatus"),
-    affordabilityText: $("affordabilityText"),
-    actionStatus: $("actionStatus"),
-    decisionSummary: $("decisionSummary"),
-    nextActionText: $("nextActionText"),
-    primaryNextCta: $("primaryNextCta"),
-    secondaryNextCta: $("secondaryNextCta"),
-    heroMonthly: $("heroMonthly"),
-    heroAmount: $("heroAmount"),
-    heroPaid: $("heroPaid"),
-    heroOverpayment: $("heroOverpayment"),
-    heroRate: $("heroRate"),
-    heroBarPaid: $("heroBarPaid"),
-    heroBarOverpay: $("heroBarOverpay"),
-    heroHealthScore: $("heroHealthScore"),
-    heroHealthBar: $("heroHealthBar"),
-    heroScenarioBase: $("heroScenarioBase"),
-    heroScenarioShort: $("heroScenarioShort"),
-    heroScenarioLong: $("heroScenarioLong"),
-    heroOverpayShare: $("heroOverpayShare"),
-    heroInsight: $("heroInsight")
+  const byId = id => document.getElementById(id);
+  const fields = {
+    amount: byId("loanAmount"), rate: byId("interestRate"), years: byId("loanYears"),
+    monthlyFee: byId("monthlyFee"), upfrontFee: byId("upfrontFee"),
+    extra: byId("extraPayment"), income: byId("monthlyIncome")
   };
+  const errorBox = byId("loanError");
+  const currency = new Intl.NumberFormat("cs-CZ", { style: "currency", currency: "CZK", maximumFractionDigits: 0 });
+  const number = new Intl.NumberFormat("cs-CZ", { maximumFractionDigits: 2 });
 
-  function formatCurrency(value) {
-    return new Intl.NumberFormat("cs-CZ", { style: "currency", currency: "CZK", maximumFractionDigits: 0 }).format(Number(value) || 0);
+  const value = input => Number(String(input.value).replace(",", "."));
+  const money = value => currency.format(Math.round(value));
+  const percent = value => `${number.format(value)} %`;
+
+  function annuity(principal, annualRate, months) {
+    const monthlyRate = annualRate / 1200;
+    if (monthlyRate === 0) return principal / months;
+    return principal * monthlyRate / (1 - Math.pow(1 + monthlyRate, -months));
   }
 
-  function formatPercent(value, digits = 1) {
-    return `${new Intl.NumberFormat("cs-CZ", { minimumFractionDigits: 0, maximumFractionDigits: digits }).format(Number(value) || 0)} %`;
-  }
-
-  function pluralYears(years) {
-    return `${years}${years === 1 ? " rok" : years >= 2 && years <= 4 ? " roky" : " let"}`;
-  }
-
-  function ensureNextLinks() {
-    if (document.querySelector(".rv-loan-next-grid")) return;
-    const actions = document.querySelector(".rv-next-actions .hero-actions");
-    if (!actions) return;
-    actions.insertAdjacentHTML("beforebegin", '<div class="rv-loan-next-grid" aria-label="Co spočítat dál"><strong>Co spočítat dál</strong><a href="kolik-muzu-splacet-kalkulacka.html">Ověřit bezpečnou splátku</a><a href="domaci-rozpocet.html">Zkontrolovat rozpočet domácnosti</a><a href="kalkulacka-financni-rezervy.html">Spočítat finanční rezervu</a></div>');
-  }
-
-  function getValues() {
-    return {
-      loanAmount: Number($("loanAmount").value) || 0,
-      interestRate: Number($("interestRate").value) || 0,
-      years: Number($("years").value) || 0,
-      monthlyFee: Number($("monthlyFee").value) || 0,
-      upfrontFee: Number($("upfrontFee")?.value) || 0,
-      incomeShare: Number($("incomeShare").value) || 0,
-      monthlyIncome: Number($("monthlyIncome")?.value) || 0
+  function modelApr(principal, upfrontFee, monthlyPayment, months) {
+    const net = principal - upfrontFee;
+    if (net <= 0 || monthlyPayment <= 0) return NaN;
+    const pv = rate => {
+      if (Math.abs(rate) < 1e-12) return monthlyPayment * months;
+      return monthlyPayment * (1 - Math.pow(1 + rate, -months)) / rate;
     };
-  }
-
-  function validate(values) {
-    if (!values.loanAmount || values.loanAmount <= 0) return "Zadejte platnou výši půjčky.";
-    if (values.interestRate < 0) return "Zadejte platnou úrokovou sazbu.";
-    if (!values.years || values.years <= 0) return "Zadejte platnou dobu splácení.";
-    if (values.monthlyFee < 0 || values.upfrontFee < 0) return "Poplatky nemohou být záporné.";
-    if (!values.incomeShare || values.incomeShare <= 0) return "Zadejte platný podíl splátky na příjmu.";
-    return "";
-  }
-
-  function calculateLoan(values) {
-    const months = Math.round(values.years * 12);
-    const monthlyRate = values.interestRate / 100 / 12;
-    let monthlyPayment = 0;
-    if (monthlyRate === 0) {
-      monthlyPayment = values.loanAmount / months;
-    } else {
-      monthlyPayment = values.loanAmount * (monthlyRate * Math.pow(1 + monthlyRate, months)) / (Math.pow(1 + monthlyRate, months) - 1);
+    let low = 0, high = 1;
+    if (pv(0) < net) return 0;
+    for (let i = 0; i < 100; i += 1) {
+      const mid = (low + high) / 2;
+      if (pv(mid) > net) low = mid; else high = mid;
     }
-
-    const totalPaidWithoutFees = monthlyPayment * months;
-    const monthlyFeesTotal = values.monthlyFee * months;
-    const totalFees = monthlyFeesTotal + values.upfrontFee;
-    const totalPaid = totalPaidWithoutFees + totalFees;
-    const totalOverpayment = totalPaid - values.loanAmount;
-    const monthlyWithFees = monthlyPayment + values.monthlyFee;
-    const neededIncome = monthlyWithFees / (values.incomeShare / 100);
-    const overpaymentRatio = values.loanAmount > 0 ? totalOverpayment / values.loanAmount * 100 : 0;
-    const actualIncomeShare = values.monthlyIncome > 0 ? monthlyWithFees / values.monthlyIncome * 100 : 0;
-    const interestPaid = totalPaidWithoutFees - values.loanAmount;
-
-    return {
-      months,
-      monthlyPayment,
-      monthlyWithFees,
-      monthlyFeesTotal,
-      totalFees,
-      totalPaid,
-      totalOverpayment,
-      interestPaid,
-      neededIncome,
-      overpaymentRatio,
-      actualIncomeShare
-    };
+    return (Math.pow(1 + (low + high) / 2, 12) - 1) * 100;
   }
 
-  function scenarioPayment(values, years) {
-    return calculateLoan({ ...values, years }).monthlyWithFees;
-  }
-
-  function scenarioTotal(values, years, rate = values.interestRate) {
-    return calculateLoan({ ...values, years, interestRate: rate }).totalPaid;
-  }
-
-  function buildSchedule(values, monthlyPayment, months) {
-    const monthlyRate = values.interestRate / 100 / 12;
-    let balance = values.loanAmount;
+  function simulate(principal, annualRate, scheduledAnnuity, monthlyFee, extraPayment, maxMonths = 1200) {
+    const monthlyRate = annualRate / 1200;
+    let balance = principal, interestTotal = 0, paidTotal = 0, month = 0;
     const rows = [];
-    for (let i = 1; i <= months; i++) {
-      const interestPart = monthlyRate === 0 ? 0 : balance * monthlyRate;
-      const principalPart = monthlyPayment - interestPart;
+    while (balance > 0.005 && month < maxMonths) {
+      month += 1;
+      const interest = balance * monthlyRate;
+      const principalPart = Math.min(balance, Math.max(0, scheduledAnnuity + extraPayment - interest));
+      const payment = principalPart + interest;
       balance = Math.max(0, balance - principalPart);
-      rows.push({ month: i, payment: monthlyPayment + values.monthlyFee, interest: interestPart, principal: principalPart, balance });
+      interestTotal += interest;
+      paidTotal += payment + monthlyFee;
+      if (month <= 12 || month % 12 === 0 || balance === 0) rows.push({ month, payment: payment + monthlyFee, principalPart, interest, balance });
+      if (principalPart <= 0) break;
     }
-    const preview = rows.slice(0, 4);
-    if (rows.length > 8) preview.push({ separator: true });
-    return preview.concat(rows.slice(-4));
+    return { months: month, interestTotal, paidTotal, rows, finished: balance <= 0.005 };
   }
 
-  function renderSchedule(schedule) {
-    if (!schedule.length) {
-      outputs.scheduleBody.innerHTML = '<tr><td colspan="5">Po zadání údajů se zobrazí orientační přehled splátek.</td></tr>';
-      return;
-    }
-    outputs.scheduleBody.innerHTML = schedule.map((row) => row.separator
-      ? '<tr><td colspan="5">…</td></tr>'
-      : `<tr><td>${row.month}.</td><td>${formatCurrency(row.payment)}</td><td>${formatCurrency(row.interest)}</td><td>${formatCurrency(row.principal)}</td><td>${formatCurrency(row.balance)}</td></tr>`
-    ).join("");
+  function validate(data) {
+    const messages = [];
+    if (!Number.isFinite(data.amount) || data.amount < 1000 || data.amount > 100000000) messages.push("Výše půjčky musí být od 1 000 do 100 000 000 Kč.");
+    if (!Number.isFinite(data.rate) || data.rate < 0 || data.rate > 100) messages.push("Roční úrok musí být od 0 do 100 %.");
+    if (!Number.isInteger(data.years) || data.years < 1 || data.years > 40) messages.push("Doba splácení musí být celé číslo od 1 do 40 let.");
+    if (!Number.isFinite(data.monthlyFee) || data.monthlyFee < 0 || data.monthlyFee > 100000) messages.push("Měsíční poplatek musí být od 0 do 100 000 Kč.");
+    if (!Number.isFinite(data.upfrontFee) || data.upfrontFee < 0 || data.upfrontFee >= data.amount) messages.push("Počáteční poplatek musí být nezáporný a nižší než půjčená částka.");
+    if (!Number.isFinite(data.extra) || data.extra < 0 || data.extra > 10000000) messages.push("Pravidelná platba navíc musí být nezáporná.");
+    if (!Number.isFinite(data.income) || data.income < 0 || data.income > 100000000) messages.push("Čistý měsíční příjem musí být nezáporný.");
+    return messages;
   }
 
-  function getAffordabilityMessage(values, result) {
-    const overpay = result.overpaymentRatio;
-    const burden = result.actualIncomeShare;
-    let data = {
-      statusClass: "caution",
-      statusLabel: "Na hraně",
-      statusText: "Splátka může být zvládnutelná, ale je potřeba ověřit rezervu na bydlení, energie, jídlo, dopravu a neočekávané výdaje.",
-      actionLabel: "Další krok",
-      summaryText: "Porovnejte kratší a delší splatnost a sledujte nejen měsíční splátku, ale i celkové přeplacení.",
-      nextActionText: "Pokud vychází splátka těsně vůči příjmu, zkuste nižší částku, kratší rozumnou splatnost nebo výsledek porovnejte s rozpočtem domácnosti.",
-      primaryHref: "kolik-muzu-splacet-kalkulacka.html",
-      primaryText: "Ověřit bezpečnou splátku",
-      secondaryHref: "domaci-rozpocet.html",
-      secondaryText: "Zkontrolovat rozpočet"
-    };
-
-    if ((values.monthlyIncome > 0 && burden <= 20 && overpay <= 30) || (values.monthlyIncome <= 0 && overpay <= 25)) {
-      data = {
-        statusClass: "safe",
-        statusLabel: "Spíše bezpečné",
-        statusText: "V tomto modelu splátka nepůsobí přestřeleně. Přesto má smysl ověřit rezervu a porovnat nabídky podle RPSN, ne jen podle úroku.",
-        actionLabel: "Dobrá pozice",
-        summaryText: "Scénář vypadá relativně zdravě. Největší přínos teď má srovnání více nabídek a kontrola celkové ceny půjčky.",
-        nextActionText: "Ověřte ještě bezpečnou splátku a finanční rezervu. Pokud kratší splatnost moc nezvedne splátku, může snížit přeplacení.",
-        primaryHref: "kolik-muzu-splacet-kalkulacka.html",
-        primaryText: "Bezpečná splátka",
-        secondaryHref: "kalkulacka-financni-rezervy.html",
-        secondaryText: "Finanční rezerva"
-      };
-    }
-
-    if ((values.monthlyIncome > 0 && burden > values.incomeShare) || overpay > 55) {
-      data = {
-        statusClass: "risk",
-        statusLabel: "Rizikovější varianta",
-        statusText: "Splátka nebo celkové přeplacení jsou v tomto scénáři citlivé. Nižší měsíční splátka může vypadat příjemně, ale celková cena půjčky roste.",
-        actionLabel: "Pozor",
-        summaryText: "Tento scénář by měl projít rozpočtem domácnosti. Zvažte nižší částku, jinou splatnost nebo levnější nabídku.",
-        nextActionText: "Než by dávalo smysl pokračovat, ověřte rozpočet, rezervu a RPSN. U dražší půjčky je největší riziko dlouhá splatnost a poplatky.",
-        primaryHref: "domaci-rozpocet.html",
-        primaryText: "Zkontrolovat rozpočet",
-        secondaryHref: "kolik-muzu-splacet-kalkulacka.html",
-        secondaryText: "Bezpečná splátka"
-      };
-    }
-
-    return data;
+  function emptyResult(message) {
+    errorBox.hidden = false;
+    errorBox.textContent = message;
+    ["monthlyResult", "totalResult", "overpaymentResult", "aprResult", "interestResult", "feeResult", "incomeResult", "ratioResult"].forEach(id => { byId(id).textContent = "—"; });
   }
 
-  function render(values, result) {
-    outputs.monthlyPayment.textContent = formatCurrency(result.monthlyPayment);
-    outputs.monthlyWithFees.textContent = formatCurrency(result.monthlyWithFees);
-    outputs.monthlyWithFeesDetail.textContent = formatCurrency(result.monthlyWithFees);
-    outputs.neededIncomeKpi.textContent = formatCurrency(result.neededIncome);
-    outputs.totalPaid.textContent = formatCurrency(result.totalPaid);
-    outputs.totalOverpayment.textContent = formatCurrency(result.totalOverpayment);
-    if (outputs.principalPart) outputs.principalPart.textContent = formatCurrency(values.loanAmount);
-    if (outputs.interestPart) outputs.interestPart.textContent = formatCurrency(result.interestPaid);
-    if (outputs.feePart) outputs.feePart.textContent = formatCurrency(result.totalFees);
-    outputs.summaryLoan.textContent = formatCurrency(values.loanAmount);
-    outputs.summaryYears.textContent = pluralYears(values.years);
-    outputs.summaryRate.textContent = formatPercent(values.interestRate, 2);
-    outputs.summaryInstallments.textContent = String(result.months);
-    outputs.summaryInstallmentsCompact.textContent = String(result.months);
-    outputs.neededIncome.textContent = formatCurrency(result.neededIncome);
-    if (outputs.incomeBurden) outputs.incomeBurden.textContent = values.monthlyIncome > 0 ? formatPercent(result.actualIncomeShare, 1) : "nezadáno";
-
-    const shorterYears = Math.max(1, values.years - 2);
-    const longerYears = values.years + 2;
-    const rateStress = calculateLoan({ ...values, interestRate: values.interestRate + 2 });
-    const shorterDiff = scenarioTotal(values, shorterYears) - result.totalPaid;
-    const longerDiff = scenarioTotal(values, longerYears) - result.totalPaid;
-    const shortScenario = calculateLoan({ ...values, years: shorterYears });
-    const longScenario = calculateLoan({ ...values, years: longerYears });
-    if (outputs.stressRatePayment) outputs.stressRatePayment.textContent = formatCurrency(rateStress.monthlyWithFees);
-    if (outputs.shorterTotalSaving) outputs.shorterTotalSaving.textContent = `${shorterDiff <= 0 ? "− " : "+ "}${formatCurrency(Math.abs(shorterDiff))}`;
-    if (outputs.longerTotalCost) outputs.longerTotalCost.textContent = `${longerDiff >= 0 ? "+ " : "− "}${formatCurrency(Math.abs(longerDiff))}`;
-    if (outputs.feesTotal) outputs.feesTotal.textContent = formatCurrency(result.totalFees);
-    if (outputs.stageShortPayment) outputs.stageShortPayment.textContent = formatCurrency(shortScenario.monthlyWithFees);
-    if (outputs.stageBasePayment) outputs.stageBasePayment.textContent = formatCurrency(result.monthlyWithFees);
-    if (outputs.stageLongPayment) outputs.stageLongPayment.textContent = formatCurrency(longScenario.monthlyWithFees);
-    if (outputs.stageShortMeta) outputs.stageShortMeta.textContent = `${pluralYears(shorterYears)}, rozdíl celkem ${shorterDiff <= 0 ? "− " : "+ "}${formatCurrency(Math.abs(shorterDiff))}`;
-    if (outputs.stageBaseMeta) outputs.stageBaseMeta.textContent = `${pluralYears(values.years)}, celkem ${formatCurrency(result.totalPaid)}`;
-    if (outputs.stageLongMeta) outputs.stageLongMeta.textContent = `${pluralYears(longerYears)}, rozdíl celkem ${longerDiff >= 0 ? "+ " : "− "}${formatCurrency(Math.abs(longerDiff))}`;
-    const maxScenarioPayment = Math.max(shortScenario.monthlyWithFees, result.monthlyWithFees, longScenario.monthlyWithFees, 1);
-    if (outputs.stageShortBar) outputs.stageShortBar.style.width = `${Math.max(8, shortScenario.monthlyWithFees / maxScenarioPayment * 100)}%`;
-    if (outputs.stageBaseBar) outputs.stageBaseBar.style.width = `${Math.max(8, result.monthlyWithFees / maxScenarioPayment * 100)}%`;
-    if (outputs.stageLongBar) outputs.stageLongBar.style.width = `${Math.max(8, longScenario.monthlyWithFees / maxScenarioPayment * 100)}%`;
-    if (outputs.stageBiggestDifference) outputs.stageBiggestDifference.textContent = formatCurrency(Math.max(Math.abs(shorterDiff), Math.abs(longerDiff)));
-    if (outputs.stageWatch) outputs.stageWatch.textContent = result.overpaymentRatio > 45 ? "celkové přeplacení" : result.actualIncomeShare > values.incomeShare ? "měsíční rozpočet" : "RPSN a rezervu";
-
-    const affordability = getAffordabilityMessage(values, result);
-    if (outputs.cockpitHeadline) outputs.cockpitHeadline.textContent = affordability.statusText.split(".")[0] + ".";
-    if (outputs.burdenFill) outputs.burdenFill.style.width = `${Math.max(4, Math.min(100, result.actualIncomeShare || 0))}%`;
-    if (outputs.overpayFill) outputs.overpayFill.style.width = `${Math.max(4, Math.min(100, result.overpaymentRatio))}%`;
-    if (outputs.burdenLabel) outputs.burdenLabel.textContent = values.monthlyIncome > 0 ? formatPercent(result.actualIncomeShare, 1) : "nezadáno";
-    if (outputs.overpayLabel) outputs.overpayLabel.textContent = formatPercent(result.overpaymentRatio, 1);
-    outputs.loanBadge.className = `badge ${affordability.statusClass === "safe" ? "success" : affordability.statusClass === "risk" ? "risk" : "warning"}`;
-    outputs.loanBadge.textContent = affordability.statusLabel;
-    outputs.affordabilityStatus.textContent = affordability.statusLabel;
-    outputs.affordabilityStatus.className = `decision-status ${affordability.statusClass}`;
-    outputs.affordabilityText.textContent = `${affordability.statusText} Splátka tvoří ${values.monthlyIncome > 0 ? formatPercent(result.actualIncomeShare, 1) : "nezadaný podíl"} příjmu a celkové přeplacení je ${formatPercent(result.overpaymentRatio, 1)} z půjčené částky.`;
-    outputs.actionStatus.textContent = affordability.actionLabel;
-    outputs.actionStatus.className = `decision-status ${affordability.statusClass}`;
-    outputs.decisionSummary.textContent = affordability.summaryText;
-    outputs.nextActionText.textContent = affordability.nextActionText;
-    outputs.primaryNextCta.href = affordability.primaryHref;
-    outputs.primaryNextCta.textContent = affordability.primaryText;
-    outputs.secondaryNextCta.href = affordability.secondaryHref;
-    outputs.secondaryNextCta.textContent = affordability.secondaryText;
-
-    outputs.heroMonthly.textContent = formatCurrency(result.monthlyWithFees);
-    outputs.heroAmount.textContent = formatCurrency(values.loanAmount);
-    outputs.heroPaid.textContent = formatCurrency(result.totalPaid);
-    outputs.heroOverpayment.textContent = formatCurrency(result.totalOverpayment);
-    outputs.heroRate.textContent = `${formatPercent(values.interestRate, 1)} na ${pluralYears(values.years)}`;
-    const principalShare = Math.min(94, Math.max(10, values.loanAmount / Math.max(result.totalPaid, 1) * 100));
-    const overpayShare = Math.min(90, Math.max(6, result.totalOverpayment / Math.max(result.totalPaid, 1) * 100));
-    outputs.heroBarPaid.style.width = `${principalShare}%`;
-    outputs.heroBarOverpay.style.width = `${overpayShare}%`;
-    if (outputs.heroHealthScore) {
-      outputs.heroHealthScore.textContent = affordability.statusLabel;
-      outputs.heroHealthBar.style.width = `${affordability.statusClass === "safe" ? 82 : affordability.statusClass === "risk" ? 32 : 58}%`;
-      outputs.heroScenarioBase.textContent = formatCurrency(result.monthlyWithFees);
-      outputs.heroScenarioShort.textContent = formatCurrency(scenarioPayment(values, Math.max(1, values.years - 2)));
-      outputs.heroScenarioLong.textContent = formatCurrency(scenarioPayment(values, values.years + 2));
-      outputs.heroOverpayShare.textContent = `${formatPercent(result.overpaymentRatio, 0)} přeplacení`;
-      outputs.heroInsight.textContent = result.totalFees > 0 ? "Poplatky, RPSN, rezerva" : result.overpaymentRatio > 50 ? "Zkraťte splatnost" : "RPSN, poplatky, rezerva";
-    }
-
-    renderSchedule(buildSchedule(values, result.monthlyPayment, result.months));
+  function scenarioRow(principal, rate, years, monthlyFee, currentYears) {
+    const months = years * 12;
+    const payment = annuity(principal, rate, months) + monthlyFee;
+    const total = payment * months;
+    return `<tr class="${years === currentYears ? "is-current" : ""}"><td>${years} ${years === 1 ? "rok" : years < 5 ? "roky" : "let"}</td><td>${money(payment)}</td><td>${money(total)}</td><td>${money(total - principal)}</td></tr>`;
   }
 
-  function runCalculation() {
-    const values = getValues();
-    const error = validate(values);
-    if (error) return;
-    render(values, calculateLoan(values));
+  function render() {
+    const data = Object.fromEntries(Object.entries(fields).map(([key, input]) => [key, value(input)]));
+    const errors = validate(data);
+    if (errors.length) { emptyResult(errors[0]); return; }
+    errorBox.hidden = true;
+
+    const months = data.years * 12;
+    const baseAnnuity = annuity(data.amount, data.rate, months);
+    const monthlyOutflow = baseAnnuity + data.monthlyFee;
+    const interestTotal = baseAnnuity * months - data.amount;
+    const feesTotal = data.upfrontFee + data.monthlyFee * months;
+    const totalPaid = data.amount + interestTotal + feesTotal;
+    const overpayment = totalPaid - data.amount;
+    const apr = modelApr(data.amount, data.upfrontFee, monthlyOutflow, months);
+    const incomeRatio = data.income > 0 ? monthlyOutflow / data.income * 100 : NaN;
+    const recommendedIncome = monthlyOutflow / 0.3;
+    const accelerated = simulate(data.amount, data.rate, baseAnnuity, data.monthlyFee, data.extra);
+    const acceleratedTotal = accelerated.paidTotal + data.upfrontFee;
+    const savings = Math.max(0, totalPaid - acceleratedTotal);
+    const monthsSaved = Math.max(0, months - accelerated.months);
+
+    byId("monthlyResult").textContent = money(monthlyOutflow);
+    byId("totalResult").textContent = money(totalPaid);
+    byId("overpaymentResult").textContent = money(overpayment);
+    byId("aprResult").textContent = Number.isFinite(apr) ? percent(apr) : "—";
+    byId("interestResult").textContent = money(interestTotal);
+    byId("feeResult").textContent = money(feesTotal);
+    byId("incomeResult").textContent = money(recommendedIncome);
+    byId("ratioResult").textContent = Number.isFinite(incomeRatio) ? percent(incomeRatio) : "Nezadáno";
+    byId("answerSentence").textContent = `Při ${percent(data.rate)} ročně a splatnosti ${data.years} let zaplatíte celkem přibližně ${money(totalPaid)}.`;
+
+    const share = Math.min(100, Math.max(0, overpayment / totalPaid * 100));
+    byId("costFill").style.width = `${share}%`;
+    byId("costShare").textContent = `${percent(share)} z plateb tvoří úroky a zadané poplatky.`;
+
+    let badge = "Rozpočet";
+    let title = "Splátku porovnejte s volným cashflow";
+    let text = `Orientačně by splátka odpovídala ${Number.isFinite(incomeRatio) ? percent(incomeRatio) : "nezadanému podílu"} čistého příjmu. Počítejte i s ostatními závazky a rezervou.`;
+    if (Number.isFinite(incomeRatio) && incomeRatio <= 20) { badge = "Nižší zatížení"; title = "Splátka má vůči zadanému příjmu větší prostor"; }
+    if (Number.isFinite(incomeRatio) && incomeRatio > 35) { badge = "Vyšší zatížení"; title = "Splátka výrazně zatěžuje zadaný příjem"; text = `Podíl ${percent(incomeRatio)} je pouze orientační signál. Prověřte kratší částku půjčky, delší splatnost i celkové náklady a hlavně vlastní měsíční rezervu.`; }
+    byId("interpretationBadge").textContent = badge;
+    byId("interpretationTitle").textContent = title;
+    byId("interpretationText").textContent = text;
+    byId("extraSummary").hidden = data.extra <= 0;
+    if (data.extra > 0) byId("extraSummary").innerHTML = `<strong>Platba navíc ${money(data.extra)} měsíčně</strong><span>Modelové splacení za ${accelerated.months} měsíců, o ${monthsSaved} měsíců dříve. Úspora proti základnímu scénáři přibližně ${money(savings)}.</span>`;
+
+    const variants = [...new Set([Math.max(1, data.years - 2), data.years, Math.min(40, data.years + 2)])];
+    byId("loanScenarioBody").innerHTML = variants.map(years => scenarioRow(data.amount, data.rate, years, data.monthlyFee, data.years)).join("");
+    const baseSchedule = simulate(data.amount, data.rate, baseAnnuity, data.monthlyFee, 0, months + 2);
+    byId("scheduleRows").innerHTML = baseSchedule.rows.map(row => `<div><span>${row.month}. měsíc</span><b>${money(row.payment)}</b><small>jistina ${money(row.principalPart)} · úrok ${money(row.interest)} · zůstatek ${money(row.balance)}</small></div>`).join("");
+
+    byId("heroMonthly").textContent = money(monthlyOutflow);
+    byId("heroAmount").textContent = money(data.amount);
+    byId("heroPaid").textContent = money(totalPaid);
+    byId("heroOverpayment").textContent = money(overpayment);
+    byId("heroMeta").textContent = `${percent(data.rate)} · ${data.years} let`;
   }
 
-  function setPreset(name) {
-    const presets = {
-      standard: { loanAmount: 250000, interestRate: 7.9, years: 5, monthlyFee: 0, upfrontFee: 0, incomeShare: 30, monthlyIncome: 45000 },
-      safe: { loanAmount: 180000, interestRate: 7.9, years: 4, monthlyFee: 0, upfrontFee: 0, incomeShare: 25, monthlyIncome: 50000 },
-      "higher-loan": { loanAmount: 400000, interestRate: 8.9, years: 7, monthlyFee: 99, upfrontFee: 2500, incomeShare: 30, monthlyIncome: 52000 },
-      shorter: { loanAmount: 250000, interestRate: 7.9, years: 3, monthlyFee: 0, upfrontFee: 0, incomeShare: 30, monthlyIncome: 50000 }
-    };
-    const preset = presets[name];
-    if (!preset) return;
-    Object.keys(preset).forEach((key) => {
-      const element = $(key);
-      if (element) element.value = preset[key];
-    });
-    presetButtons.forEach((btn) => {
-      const active = btn.dataset.preset === name;
-      btn.classList.toggle("active", active);
-      btn.setAttribute("aria-pressed", active ? "true" : "false");
-    });
-    runCalculation();
-  }
-
-  ensureNextLinks();
-  form.addEventListener("submit", (event) => {
-    event.preventDefault();
-    runCalculation();
-  });
-
-  ["loanAmount", "interestRate", "years", "monthlyFee", "upfrontFee", "incomeShare", "monthlyIncome"].forEach((id) => {
-    const element = $(id);
-    if (!element) return;
-    element.addEventListener("input", runCalculation);
-    element.addEventListener("change", runCalculation);
-  });
-  presetButtons.forEach((btn) => btn.addEventListener("click", () => setPreset(btn.dataset.preset)));
-  resetBtn.addEventListener("click", () => setPreset("standard"));
-  runCalculation();
+  form.addEventListener("input", render);
+  form.addEventListener("submit", event => { event.preventDefault(); render(); byId("vysledek").scrollIntoView({ behavior: "smooth", block: "start" }); });
+  byId("resetLoan").addEventListener("click", () => { form.reset(); render(); });
+  render();
 })();
