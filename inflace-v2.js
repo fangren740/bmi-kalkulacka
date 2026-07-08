@@ -1,96 +1,10 @@
-(function () {
-  const form = document.getElementById("inflationForm");
-  if (!form) return;
-
-  const $ = (id) => document.getElementById(id);
-  const money = (value) => new Intl.NumberFormat("cs-CZ", { style: "currency", currency: "CZK", maximumFractionDigits: 0 }).format(value);
-  const pct = (value) => `${new Intl.NumberFormat("cs-CZ", { maximumFractionDigits: 2 }).format(value)} %`;
-  const num = (value, digits) => new Intl.NumberFormat("cs-CZ", { maximumFractionDigits: digits ?? 2 }).format(value);
-
-  function values() {
-    return {
-      mode: $("inflationMode").value,
-      amount: Number($("inflationAmount").value) || 0,
-      rate: Number($("inflationRate").value) || 0,
-      years: Number($("inflationYears").value) || 0
-    };
-  }
-
-  function calculate(input) {
-    const factor = Math.pow(1 + input.rate / 100, input.years);
-    if (input.mode === "futureValue") {
-      const realValue = input.amount / factor;
-      return { main: realValue, secondary: input.amount, difference: input.amount - realValue, percent: (1 - 1 / factor) * 100, factor };
-    }
-    const future = input.amount * factor;
-    return { main: future, secondary: input.amount, difference: future - input.amount, percent: (factor - 1) * 100, factor };
-  }
-
-  function modeLabel(mode) {
-    if (mode === "futureValue") return "Reálná hodnota peněz";
-    if (mode === "requiredAmount") return "Částka pro zachování kupní síly";
-    return "Budoucí cena";
-  }
-
-  function renderTable(input, result) {
-    const rows = [];
-    for (let year = 1; year <= Math.min(input.years, 12); year++) {
-      const factor = Math.pow(1 + input.rate / 100, year);
-      const value = input.mode === "futureValue" ? input.amount / factor : input.amount * factor;
-      rows.push(`<tr><td>${year}. rok</td><td>${money(value)}</td><td>Faktor ${num(factor, 3)}×</td></tr>`);
-    }
-    $("summaryTableBody").innerHTML = rows.join("");
-  }
-
-  function render(input, result) {
-    $("mainResult").textContent = money(result.main);
-    $("differenceResult").textContent = money(result.difference);
-    $("percentResult").textContent = pct(result.percent);
-    $("factorResult").textContent = `${num(result.factor, 3)}×`;
-    $("inflationBadge").textContent = result.percent >= 30 ? "Výrazný dopad inflace" : "Orientační dopad inflace";
-    $("typeResult").textContent = modeLabel(input.mode);
-    $("baseAmountResult").textContent = money(input.amount);
-    $("rateResult").textContent = pct(input.rate);
-    $("yearsResult").textContent = `${input.years} let`;
-    $("secondaryResult").textContent = money(result.secondary);
-    $("resultNote").textContent = `Při inflaci ${pct(input.rate)} po dobu ${input.years} let je kumulovaný dopad přibližně ${pct(result.percent)}.`;
-    $("heroMain").textContent = money(result.main);
-    $("heroDifference").textContent = money(result.difference);
-    $("heroFactor").textContent = `${num(result.factor, 2)}×`;
-    $("heroYears").textContent = `${input.years} let`;
-    $("heroBar").style.width = `${Math.max(8, Math.min(100, result.percent))}%`;
-    renderTable(input, result);
-  }
-
-  function run() {
-    const input = values();
-    render(input, calculate(input));
-  }
-
-  document.querySelectorAll("[data-inflation-preset]").forEach((button) => {
-    button.addEventListener("click", () => {
-      $("inflationMode").value = button.dataset.inflationPreset;
-      run();
-    });
-  });
-
-  form.addEventListener("submit", (event) => {
-    event.preventDefault();
-    run();
-  });
-
-  ["inflationMode", "inflationAmount", "inflationRate", "inflationYears"].forEach((id) => {
-    $(id).addEventListener("input", run);
-    $(id).addEventListener("change", run);
-  });
-
-  $("resetBtn").addEventListener("click", () => {
-    $("inflationMode").value = "futurePrice";
-    $("inflationAmount").value = 100000;
-    $("inflationRate").value = 3;
-    $("inflationYears").value = 10;
-    run();
-  });
-
-  run();
-})();
+(()=>{"use strict";const $=id=>document.getElementById(id),form=$("inflationForm");if(!form)return;let mode="future";const mf=new Intl.NumberFormat("cs-CZ",{style:"currency",currency:"CZK",maximumFractionDigits:0}),nf=new Intl.NumberFormat("cs-CZ",{maximumFractionDigits:2}),money=v=>mf.format(Number.isFinite(v)?v:0),pct=v=>`${nf.format(Number.isFinite(v)?v:0)} %`,num=v=>nf.format(Number.isFinite(v)?v:0),set=(id,v)=>{const e=$(id);if(e)e.textContent=v},read=()=>({amount:Number($("inflationAmount").value),rate:Number($("inflationRate").value),years:Number($("inflationYears").value),nominalReturn:Number($("nominalReturn").value)});
+function validate(v){if(!Number.isFinite(v.amount)||v.amount<=0)return"Částka musí být vyšší než nula.";if(!Number.isFinite(v.rate)||v.rate<=-100||v.rate>100)return"Inflace musí být vyšší než −100 % a nejvýše 100 %.";if(!Number.isInteger(v.years)||v.years<1||v.years>100)return"Doba přepočtu musí být celé číslo od 1 do 100 let.";if(!Number.isFinite(v.nominalReturn)||v.nominalReturn<=-100||v.nominalReturn>100)return"Nominální zhodnocení musí být vyšší než −100 % a nejvýše 100 %.";return""}
+function calculate(v,rate=v.rate){const factor=Math.pow(1+rate/100,v.years),futurePrice=v.amount*factor,purchasingPower=v.amount/factor,cumulative=(factor-1)*100,realReturn=((1+v.nominalReturn/100)/(1+rate/100)-1)*100,result=mode==="future"?futurePrice:purchasingPower,difference=mode==="future"?futurePrice-v.amount:v.amount-purchasingPower;return{...v,rate,factor,futurePrice,purchasingPower,cumulative,realReturn,result,difference}}
+function insight(r){if(r.rate<0)return{b:"Deflační scénář",t:"Cenová hladina v modelu klesá",p:`Průměrná změna ${pct(r.rate)} ročně snižuje inflační faktor na ${num(r.factor)}×. Dlouhodobá konstantní deflace je pouze matematický scénář.`,n:"Pro běžné plánování porovnejte také nulovou a kladnou inflaci."};if(r.cumulative>100)return{b:"Cenová hladina více než dvojnásobná",t:"Dlouhý horizont výrazně násobí i střední inflaci",p:`Kumulovaný dopad dosahuje ${pct(r.cumulative)}. Jednorázová rezerva bez odpovídajícího růstu může ztratit velkou část kupní síly.`,n:"Důležitý cíl plánujte s více sazbami a pravidelně aktualizujte jeho skutečnou cenu."};if(r.realReturn<0)return{b:"Záporný reálný výnos",t:"Zadané zhodnocení nepřekonává inflaci",p:`Nominální výnos ${pct(r.nominalReturn)} odpovídá reálnému výnosu ${pct(r.realReturn)} ročně. Hodnota může nominálně růst, ale kupní síla klesat.`,n:"Ověřte poplatky, daně, riziko a vhodnost produktu pro daný finanční cíl."};return{b:"Kladný reálný výnos",t:"Zadané zhodnocení v modelu překonává inflaci",p:`Nominální výnos ${pct(r.nominalReturn)} odpovídá reálnému výnosu ${pct(r.realReturn)} ročně.`,n:"Výnos není garantovaný; porovnejte také nižší výnos a vyšší inflační scénář."}}
+function renderRows(v){const wanted=new Set([1,5,10,15,20,25,30,40,50,v.years].filter(y=>y<=v.years));if(v.years<=10)for(let y=1;y<=v.years;y++)wanted.add(y);$("calculationRows").replaceChildren(...[...wanted].sort((a,b)=>a-b).map(year=>{const factor=Math.pow(1+v.rate/100,year),value=mode==="future"?v.amount*factor:v.amount/factor,d=document.createElement("div"),s=document.createElement("span"),b=document.createElement("strong");s.textContent=`${year}. rok · faktor ${num(factor)}×`;b.textContent=money(value);d.append(s,b);return d}))}
+function scenarios(v){const rates=[v.rate-2,v.rate-1,v.rate,v.rate+1,v.rate+2].filter((x,i,a)=>x>-100&&a.indexOf(x)===i);$("inflationScenarioBody").replaceChildren(...rates.map(rate=>{const r=calculate(v,rate),tr=document.createElement("tr");if(rate===v.rate)tr.className="is-current";[pct(rate),money(r.futurePrice),money(r.purchasingPower),pct(r.cumulative),pct(r.realReturn)].forEach(value=>{const td=document.createElement("td");td.textContent=value;tr.append(td)});return tr}))}
+function updateMode(next){mode=next;form.dataset.mode=next;document.querySelectorAll(".inflation-modes [data-mode]").forEach(button=>{const active=button.dataset.mode===next;button.classList.toggle("is-active",active);button.setAttribute("aria-pressed",String(active))});if(next==="future"){set("amountLabel","Dnešní cena nebo částka");set("amountHelp","Částka, jejíž budoucí nominální ekvivalent chcete zjistit.");set("modeHelp","Zadejte dnešní cenu nebo finanční cíl. Výsledek ukáže částku potřebnou za zadaný počet let.")}else{set("amountLabel","Pevná částka v budoucnu");set("amountHelp","Nominální částka, jejíž kupní sílu chcete převést do dnešních cen.");set("modeHelp","Zadejte částku, která zůstane nominálně stejná. Výsledek ukáže její orientační dnešní kupní sílu.")}render()}
+function clear(){["mainResult","differenceResult","cumulativeResult","factorResult","realReturnResult"].forEach(id=>set(id,"—"));set("resultStatus","Zkontrolujte zadání")}
+function render(options={}){const v=read(),msg=validate(v),err=$("inflationError");if(msg){err.hidden=false;err.textContent=msg;clear();return false}err.hidden=true;const r=calculate(v),i=insight(r);set("resultTitle",mode==="future"?"Budoucí cena":"Kupní síla částky");set("answerLabel",mode==="future"?"Za stejný nákup budete potřebovat":"V dnešních cenách bude částka odpovídat");set("mainResult",money(r.result));set("differenceResult",money(r.difference));set("cumulativeResult",pct(r.cumulative));set("factorResult",`${num(r.factor)}×`);set("realReturnResult",pct(r.realReturn));set("answerSentence",`${money(v.amount)}, průměrná inflace ${pct(v.rate)} a horizont ${v.years} let.`);set("impactLabel",mode==="future"?"Navýšení cenové hladiny":"Ztráta kupní síly");const impact=mode==="future"?Math.max(0,r.cumulative):Math.max(0,(1-1/r.factor)*100);set("impactPercent",pct(impact));$("impactFill").style.width=`${Math.min(100,impact)}%`;set("impactText",mode==="future"?`Dnešní částka se násobí faktorem ${num(r.factor)}.`:`Pevná částka si zachová přibližně ${pct(100/r.factor)} dnešní kupní síly.`);set("interpretationBadge",i.b);set("interpretationTitle",i.t);set("interpretationText",i.p);set("nextStepText",i.n);set("resultStatus","Scénář přepočítán");renderRows(v);scenarios(v);if(options.scroll&&matchMedia("(max-width:720px)").matches)$("vysledek").scrollIntoView({behavior:"smooth",block:"start"});return true}
+form.addEventListener("submit",e=>{e.preventDefault();render({scroll:true})});["inflationAmount","inflationRate","inflationYears","nominalReturn"].forEach(id=>{const input=$(id);input.addEventListener("input",()=>render());input.addEventListener("change",()=>render())});document.querySelectorAll(".inflation-modes [data-mode]").forEach(button=>button.addEventListener("click",()=>updateMode(button.dataset.mode)));$("resetBtn").addEventListener("click",()=>{form.reset();updateMode("future")});updateMode("future")})();
