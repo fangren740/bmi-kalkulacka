@@ -1,206 +1,41 @@
-(function () {
-  const ids = {
-    scoreLabel: 'scoreLabel',
-    scoreValue: 'scoreValue',
-    remainingValue: 'remainingValue',
-    resultSummary: 'resultSummary',
-    totalIncome: 'totalIncome',
-    totalExpenses: 'totalExpenses',
-    fixedRatio: 'fixedRatio',
-    reserveMonths: 'reserveMonths',
-    nextStep: 'nextStep',
-    insightTitle: 'insightTitle',
-    insightText: 'insightText',
-    insightBullets: 'insightBullets',
-    heroRemaining: 'heroRemaining',
-    heroStatus: 'heroStatus',
-    breakdownList: 'breakdownList'
-  };
+(() => {
+  "use strict";
+  const form = document.querySelector("#budgetForm"); if (!form) return;
+  const el = id => document.getElementById(id);
+  const inputs = { income:el("budgetIncome"), fixed:el("fixedExpenses"), variable:el("variableExpenses"), annual:el("annualExpenses"), savings:el("currentSavings"), target:el("reserveMonths") };
+  const value = input => Number(String(input.value).replace(",", "."));
+  const money = new Intl.NumberFormat("cs-CZ",{style:"currency",currency:"CZK",maximumFractionDigits:0});
+  const number = new Intl.NumberFormat("cs-CZ",{maximumFractionDigits:1});
+  const czk = n => money.format(Math.round(n)); const pct = n => `${number.format(n)} %`;
+  const set = (id,text) => { el(id).textContent=text; };
 
-  const $ = (id) => document.getElementById(id);
-  const fmt = new Intl.NumberFormat('cs-CZ', { maximumFractionDigits: 0 });
-  const dec = new Intl.NumberFormat('cs-CZ', { maximumFractionDigits: 1 });
-  const money = (value) => `${fmt.format(Math.round(value || 0))} Kč`;
-  const num = (id) => Math.max(0, Number($(id)?.value || 0));
-  const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
-
-  const expenseMap = [
-    ['housing', 'Bydlení'],
-    ['utilities', 'Energie a služby'],
-    ['food', 'Jídlo a drogerie'],
-    ['transport', 'Doprava a auto'],
-    ['kids', 'Děti a domácnost'],
-    ['debt', 'Splátky'],
-    ['insurance', 'Pojištění a zdraví'],
-    ['otherExpenses', 'Ostatní a volný čas']
-  ];
-  const fixedIds = ['housing', 'utilities', 'debt', 'insurance'];
-
-  function text(id, value) {
-    const element = $(id);
-    if (element) element.textContent = value;
+  function validate(d){
+    if(!Number.isFinite(d.income)||d.income<=0||d.income>100000000)return "Čistý příjem musí být vyšší než 0 Kč.";
+    for(const key of ["fixed","variable","annual","savings"]){if(!Number.isFinite(d[key])||d[key]<0||d[key]>1000000000)return "Výdaje ani úspory nesmí být záporné.";}
+    if(!Number.isInteger(d.target)||d.target<1||d.target>24)return "Cíl rezervy musí být celé číslo od 1 do 24 měsíců.";
+    return "";
   }
-
-  function renderNextStep(copy) {
-    const element = $(ids.nextStep);
-    if (!element) return;
-    const [label, ...rest] = copy.split(':');
-    element.innerHTML = `<strong>${label}:</strong>${rest.length ? rest.join(':') : ''}`;
+  function classify(surplus,income,runway){
+    const rate=surplus/income*100;
+    if(surplus<0)return {badge:"Schodek",title:"Rozpočet každý měsíc spotřebovává úspory",text:"Nejdříve zastavte pravidelný schodek. Rozdělte výdaje podle nutnosti a řešte největší opakované položky."};
+    if(rate<5)return {badge:"Těsný rozpočet",title:"Malý výkyv může měsíční bilanci převrátit",text:"Přebytek je kladný, ale omezený. Nepravidelné výdaje a tvorbu rezervy plánujte jako pravidelnou položku."};
+    if(runway<3)return {badge:"Budujte rezervu",title:"Bilance je kladná, likvidní polštář je zatím nízký",text:"Směřujte část přebytku do snadno dostupné rezervy, dokud nepokryje zvolený počet měsíců výdajů."};
+    return {badge:"Stabilnější rozpočet",title:"Rozpočet vytváří prostor pro rezervu a cíle",text:"Pravidelně kontrolujte skutečné výdaje a rozdělte přebytek mezi rezervu, očekávané cíle a dlouhodobé priority."};
   }
-
-  function getDecision(data) {
-    const { score, remaining, remainingRatio, fixedRatio, reserveMonths } = data;
-
-    if (score < 45 || remaining < 0) {
-      return {
-        label: 'Rizikový rozpočet',
-        tone: 'risk',
-        summary: remaining < 0
-          ? 'Výdaje převyšují příjmy. Rozpočet potřebuje rychle snížit pravidelné náklady nebo navýšit příjem.'
-          : 'Rozpočet má velmi malý polštář. Nečekaný výdaj může rychle způsobit problém.',
-        next: 'Další krok: projděte největší položky, hlavně bydlení, energie a splátky. Nové závazky teď nedávají smysl.',
-        title: 'Rozpočet je rizikový',
-        text: 'Domácnost má příliš malý prostor po zaplacení nákladů. Prioritou je stabilizovat hotovostní tok a vytvořit alespoň minimální rezervu.',
-        bullets: [
-          'Snižte největší pravidelné položky.',
-          'Odložte novou půjčku nebo dražší bydlení.',
-          'Přepočítejte splátky a fixní náklady.'
-        ]
-      };
-    }
-
-    if (score < 70 || remainingRatio < 15 || fixedRatio > 50 || reserveMonths < 3) {
-      return {
-        label: 'Napjatý rozpočet',
-        tone: 'warning',
-        summary: 'Peníze vycházejí, ale rozpočet nemá velký prostor na chyby. Zaměřte se na rezervu, fixní výdaje a roční platby.',
-        next: 'Další krok: nastavte měsíční odkládání rezervy a otestujte, co se stane při poklesu příjmu nebo vyšších nákladech.',
-        title: 'Rozpočet je použitelný, ale napjatý',
-        text: 'Příjmy výdaje pokryjí, jenže větší roční platba, oprava auta nebo doplatek energií může rozpočet rozhodit.',
-        bullets: [
-          'Zkuste snížit fixní náklady pod bezpečnější úroveň.',
-          'Roční platby rozpočítejte do měsíčního průměru.',
-          'Rezervu budujte automaticky hned po výplatě.'
-        ]
-      };
-    }
-
-    return {
-      label: 'Zdravý rozpočet',
-      tone: 'healthy',
-      summary: 'Po běžných výdajích zůstává prostor na rezervu, nepravidelné platby i finanční cíle.',
-      next: 'Další krok: ověřte, zda máte rezervu alespoň na 3 měsíce výdajů, a přebytek rozdělte mezi cíle.',
-      title: 'Rozpočet má zdravou rezervu',
-      text: 'Domácnost má po zaplacení běžných výdajů rozumný prostor. Dává smysl rezervu držet odděleně a pravidelně kontrolovat největší položky.',
-      bullets: [
-        'Držte rezervu alespoň 3 měsíce výdajů.',
-        'Přebytek rozdělte mezi rezervu a cíle.',
-        'Před hypotékou nebo půjčkou otestujte horší scénář.'
-      ]
-    };
+  function scenario(label,income,expenses,current){const surplus=income-expenses;return `<tr class="${current?"is-current":""}"><td>${label}</td><td>${czk(income)}</td><td>${czk(expenses)}</td><td class="${surplus<0?"is-negative":""}">${czk(surplus)}</td></tr>`;}
+  function render(){
+    const d=Object.fromEntries(Object.entries(inputs).map(([k,v])=>[k,value(v)])); const error=validate(d);
+    if(error){el("budgetError").hidden=false;set("budgetError",error);["balanceResult","expensesResult","savingsRateResult","runwayResult","reserveTargetResult","reserveGapResult"].forEach(id=>set(id,"—"));return;}
+    el("budgetError").hidden=true;
+    const irregular=d.annual/12,total=d.fixed+d.variable+irregular,balance=d.income-total,rate=balance/d.income*100,expenseRate=total/d.income*100,runway=total>0?d.savings/total:Infinity,target=total*d.target,gap=Math.max(0,target-d.savings),monthsToTarget=balance>0?Math.ceil(gap/balance):Infinity,annualBalance=balance*12;
+    set("balanceResult",czk(balance));set("expensesResult",czk(total));set("savingsRateResult",pct(rate));set("runwayResult",Number.isFinite(runway)?`${number.format(runway)} měs.`:"Bez výdajů");set("reserveTargetResult",czk(target));set("reserveGapResult",czk(gap));set("fixedShareResult",pct(d.fixed/d.income*100));set("annualBalanceResult",czk(annualBalance));
+    set("answerSentence",`Po započtení ${czk(irregular)} měsíčně na nepravidelné platby domácnosti ${balance>=0?"zbývá":"chybí"} ${czk(Math.abs(balance))}.`);
+    el("balanceResult").classList.toggle("is-negative",balance<0);el("balanceFill").style.width=`${Math.min(100,Math.max(0,expenseRate))}%`;set("balanceShare",`${pct(expenseRate)} příjmu spotřebují modelované výdaje.`);
+    const c=classify(balance,d.income,runway);set("interpretationBadge",c.badge);set("interpretationTitle",c.title);set("interpretationText",c.text);set("nextStepText",gap===0?"Zvolený cíl rezervy je podle zadaných úspor pokrytý.":Number.isFinite(monthsToTarget)?`Při ukládání celého přebytku by do cíle zbývalo přibližně ${monthsToTarget} měsíců.`:"Bez kladného přebytku se rezerva sama nedoplňuje.");
+    el("budgetScenarioBody").innerHTML=[scenario("Příjem −10 %",d.income*.9,total,false),scenario("Základní plán",d.income,total,true),scenario("Výdaje +10 %",d.income,total*1.1,false)].join("");
+    const categories=[{name:"Fixní výdaje",value:d.fixed},{name:"Proměnlivé výdaje",value:d.variable},{name:"Nepravidelné / měsíc",value:irregular}];
+    el("categoryRows").innerHTML=categories.map(x=>`<div><span>${x.name}</span><b>${czk(x.value)}</b><i><em style="width:${total?Math.min(100,x.value/total*100):0}%"></em></i><small>${total?pct(x.value/total*100):"0 %"} výdajů</small></div>`).join("");
+    set("heroBalance",czk(balance));set("heroStatus",c.badge);set("heroIncome",czk(d.income));set("heroExpenses",czk(total));set("heroRunway",Number.isFinite(runway)?`${number.format(runway)} měs.`:"—");
   }
-
-  function calculateScore(data) {
-    let score = 100;
-    if (data.remaining < 0) score -= 45;
-    if (data.remainingRatio < 5) score -= 25;
-    else if (data.remainingRatio < 12) score -= 14;
-    else if (data.remainingRatio < 20) score -= 6;
-    if (data.fixedRatio > 60) score -= 22;
-    else if (data.fixedRatio > 50) score -= 14;
-    else if (data.fixedRatio > 40) score -= 6;
-    if (data.reserveMonths < 1) score -= 18;
-    else if (data.reserveMonths < 3) score -= 10;
-    else if (data.reserveMonths >= 6) score += 4;
-    if (num('debt') > 0 && data.income && num('debt') / data.income > 0.15) score -= 10;
-    return Math.round(clamp(score, 0, 100));
-  }
-
-  function updateHero(data, decision) {
-    text(ids.heroRemaining, money(data.remaining));
-    text(ids.heroStatus, decision.label.toLowerCase());
-
-    const rows = document.querySelectorAll('.rv-budget-bars div');
-    const heroItems = [
-      ['Příjem', data.income, 100],
-      ['Bydlení', num('housing'), data.income ? (num('housing') / data.income) * 100 : 0],
-      ['Jídlo', num('food'), data.income ? (num('food') / data.income) * 100 : 0],
-      ['Doprava', num('transport'), data.income ? (num('transport') / data.income) * 100 : 0]
-    ];
-
-    rows.forEach((row, index) => {
-      const item = heroItems[index];
-      if (!item) return;
-      const [label, value, ratio] = item;
-      const labelEl = row.querySelector('span');
-      const barEl = row.querySelector('b');
-      const valueEl = row.querySelector('em');
-      if (labelEl) labelEl.textContent = label;
-      if (barEl) barEl.style.width = `${clamp(Math.round(ratio), 4, 100)}%`;
-      if (valueEl) valueEl.textContent = money(value);
-    });
-
-    const floating = document.querySelector('.rv-budget-floating strong');
-    if (floating) {
-      floating.textContent = `${dec.format(data.reserveMonths)} měsíce rezervy · fixní výdaje ${Math.round(data.fixedRatio)} %`;
-    }
-  }
-
-  function renderBreakdown(data) {
-    const list = $(ids.breakdownList);
-    if (!list) return;
-    const max = Math.max(...expenseMap.map(([id]) => num(id)), 1);
-    list.innerHTML = expenseMap.map(([id, label]) => {
-      const value = num(id);
-      const width = Math.max(3, Math.round((value / max) * 100));
-      const pct = data.income ? Math.round((value / data.income) * 100) : 0;
-      return `<div class="rv-budget-breakdown-item"><span>${label}</span><b style="width:${width}%"></b><em>${money(value)} · ${pct}%</em></div>`;
-    }).join('');
-  }
-
-  function calculate() {
-    const income = num('incomeMain') + num('incomeSecond') + num('incomeOther');
-    const savings = num('savings');
-    const expenses = expenseMap.reduce((sum, [id]) => sum + num(id), 0);
-    const remaining = income - expenses;
-    const fixed = fixedIds.reduce((sum, id) => sum + num(id), 0);
-    const data = {
-      income,
-      savings,
-      expenses,
-      remaining,
-      fixedRatio: income ? (fixed / income) * 100 : 0,
-      expenseRatio: income ? (expenses / income) * 100 : 100,
-      reserveMonths: expenses ? savings / expenses : 0,
-      remainingRatio: income ? (remaining / income) * 100 : -100
-    };
-    data.score = calculateScore(data);
-    const decision = getDecision(data);
-
-    text(ids.scoreLabel, decision.label);
-    text(ids.scoreValue, `${data.score} / 100`);
-    text(ids.remainingValue, money(remaining));
-    text(ids.resultSummary, decision.summary);
-    text(ids.totalIncome, money(income));
-    text(ids.totalExpenses, money(expenses));
-    text(ids.fixedRatio, `${Math.round(data.fixedRatio)} %`);
-    text(ids.reserveMonths, `${dec.format(data.reserveMonths)} měsíce`);
-    renderNextStep(decision.next);
-    text(ids.insightTitle, decision.title);
-    text(ids.insightText, decision.text);
-
-    const bullets = $(ids.insightBullets);
-    if (bullets) bullets.innerHTML = decision.bullets.map((item) => `<li>${item}</li>`).join('');
-
-    document.querySelector('.rv-budget-result-card')?.setAttribute('data-tone', decision.tone);
-    document.querySelector('.rv-budget-visual')?.setAttribute('data-tone', decision.tone);
-    updateHero(data, decision);
-    renderBreakdown(data);
-  }
-
-  document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('#budgetForm input').forEach((input) => input.addEventListener('input', calculate));
-    $('calculateBudget')?.addEventListener('click', calculate);
-    calculate();
-  });
+  form.addEventListener("input",render);form.addEventListener("submit",e=>{e.preventDefault();render();el("vysledek").scrollIntoView({behavior:"smooth",block:"start"});});el("resetBudget").addEventListener("click",()=>{form.reset();render();});render();
 })();
