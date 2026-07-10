@@ -3,358 +3,288 @@
   if (!form) return;
 
   const $ = (id) => document.getElementById(id);
-  const optional = (id) => document.getElementById(id);
-
-  const elements = {
-    grossSalary: $("grossSalary"),
-    bonusSalary: optional("bonusSalary"),
-    otherDeductions: optional("otherDeductions"),
-    children: $("children"),
-    taxpayerDiscount: $("taxpayerDiscount"),
-    resetBtn: $("resetBtn"),
-    presets: Array.from(document.querySelectorAll("[data-preset]")),
-
-    netSalaryResult: $("netSalaryResult"),
-    grossSalaryResult: $("grossSalaryResult"),
-    totalCostResult: $("totalCostResult"),
-    employeeDeductionsResult: $("employeeDeductionsResult"),
-    taxResult: $("taxResult"),
-    discountsResult: $("discountsResult"),
-    netRatioResult: $("netRatioResult"),
-    resultBadge: $("resultBadge"),
-    resultNote: $("resultNote"),
-    meterPercent: $("meterPercent"),
-    netRatioBar: $("netRatioBar"),
-    breakdownBody: $("breakdownBody"),
-
-    heroNet: $("heroNet"),
-    heroGross: $("heroGross"),
-    heroCost: $("heroCost"),
-    heroRatio: $("heroRatio"),
-    heroCalcNet: $("heroCalcNet"),
-    heroNetBar: $("heroNetBar"),
-    heroDeductionsBar: $("heroDeductionsBar"),
-
-    decisionText: $("decisionText"),
-    decisionNetText: $("decisionNetText"),
-    decisionDeductionsText: $("decisionDeductionsText"),
-    decisionCostText: $("decisionCostText"),
-    decisionCostTag: $("decisionCostTag"),
-
-    salaryPremiumNet: $("salaryPremiumNet"),
-    salaryPremiumSentence: $("salaryPremiumSentence"),
-    salaryPremiumChecklist: $("salaryPremiumChecklist"),
-    salaryScenarioTableBody: $("salaryScenarioTableBody"),
-  };
+  const nf = new Intl.NumberFormat("cs-CZ", { maximumFractionDigits: 1 });
+  const money = (value) => `${Math.round(Number.isFinite(value) ? value : 0).toLocaleString("cs-CZ")} Kč`;
+  const pct = (value) => `${nf.format(Number.isFinite(value) ? value : 0)} %`;
+  const roundUp = (value) => Math.ceil(Math.max(0, Number(value) || 0));
+  const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 
   const CONFIG = {
-    socialRateEmployee: 0.071,
-    healthRateEmployee: 0.045,
-    socialRateEmployer: 0.248,
-    healthRateEmployer: 0.09,
-    taxRateBasic: 0.15,
-    taxRateHigh: 0.23,
-    monthlyHighTaxThreshold: 146901,
+    socialEmployee: 0.071,
+    healthEmployee: 0.045,
+    healthTotal: 0.135,
+    socialEmployer: 0.248,
+    healthEmployer: 0.09,
+    taxBasic: 0.15,
+    taxHigh: 0.23,
+    highTaxMonthlyThreshold: 146901,
     taxpayerDiscount: 2570,
-    child1: 1267,
-    child2: 1860,
-    child3plus: 2320,
+    childCredits: [1267, 1860, 2320],
+    annualSocialCap: 2350416,
+    healthMinimumBase: 22400
   };
 
-  const presetValues = {
-    standard: { gross: 45000, bonus: 0, otherDeductions: 0, children: 0, taxpayerDiscount: true },
-    entry: { gross: 32000, bonus: 0, otherDeductions: 0, children: 0, taxpayerDiscount: true },
-    family: { gross: 52000, bonus: 0, otherDeductions: 0, children: 2, taxpayerDiscount: true },
-    higher: { gross: 70000, bonus: 0, otherDeductions: 0, children: 0, taxpayerDiscount: true },
+  const PRESETS = {
+    standard: { grossSalary: 45000, bonusSalary: 0, otherDeductions: 0, children: 0, yearSocialBase: 0, healthMinimumMode: "off", taxpayerDiscount: true, applySocialCap: true },
+    entry: { grossSalary: 32000, bonusSalary: 0, otherDeductions: 0, children: 0, yearSocialBase: 0, healthMinimumMode: "off", taxpayerDiscount: true, applySocialCap: true },
+    family: { grossSalary: 52000, bonusSalary: 0, otherDeductions: 0, children: 2, yearSocialBase: 0, healthMinimumMode: "off", taxpayerDiscount: true, applySocialCap: true },
+    higher: { grossSalary: 90000, bonusSalary: 0, otherDeductions: 0, children: 0, yearSocialBase: 0, healthMinimumMode: "off", taxpayerDiscount: true, applySocialCap: true },
+    top: { grossSalary: 180000, bonusSalary: 0, otherDeductions: 0, children: 0, yearSocialBase: 0, healthMinimumMode: "off", taxpayerDiscount: true, applySocialCap: true }
   };
 
-  const round = (value) => Math.round(Number(value) || 0);
-  const roundUp = (value) => Math.ceil(Number(value) || 0);
-  const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
-  const formatCurrency = (value) => `${round(value).toLocaleString("cs-CZ")} Kč`;
-  const formatPlain = (value) => round(value).toLocaleString("cs-CZ");
-  const formatPercent = (value) =>
-    `${(Number(value) || 0).toLocaleString("cs-CZ", {
-      minimumFractionDigits: 1,
-      maximumFractionDigits: 1,
-    })} %`;
+  const inputIds = ["grossSalary", "bonusSalary", "otherDeductions", "children", "yearSocialBase", "healthMinimumMode", "taxpayerDiscount", "applySocialCap"];
 
-  function getChildCredit(children) {
-    if (children <= 0) return 0;
-    if (children === 1) return CONFIG.child1;
-    if (children === 2) return CONFIG.child1 + CONFIG.child2;
-    return CONFIG.child1 + CONFIG.child2 + (children - 2) * CONFIG.child3plus;
+  function numeric(id) {
+    return Math.max(0, Number($(id)?.value) || 0);
   }
 
-  function getTaxBase(gross) {
-    if (gross <= 100) return roundUp(gross);
+  function setText(id, value) {
+    const element = $(id);
+    if (element) element.textContent = value;
+  }
+
+  function setWidth(id, value) {
+    const element = $(id);
+    if (element) element.style.width = value;
+  }
+
+  function childCredit(children) {
+    let total = 0;
+    for (let i = 0; i < children; i += 1) {
+      total += CONFIG.childCredits[Math.min(i, 2)];
+    }
+    return total;
+  }
+
+  function taxBase(gross) {
+    if (gross <= 0) return 0;
     return Math.ceil(gross / 100) * 100;
   }
 
-  function progressiveTax(taxBase) {
-    const basicPart = Math.min(taxBase, CONFIG.monthlyHighTaxThreshold);
-    const highPart = Math.max(0, taxBase - CONFIG.monthlyHighTaxThreshold);
-    return roundUp(basicPart * CONFIG.taxRateBasic + highPart * CONFIG.taxRateHigh);
-  }
-
-  function calculate(input) {
-    const grossBase = Math.max(0, Number(input.gross) || 0);
-    const bonus = Math.max(0, Number(input.bonus) || 0);
-    const otherDeductions = Math.max(0, Number(input.otherDeductions) || 0);
-    const gross = grossBase + bonus;
-    const children = clamp(Math.round(Number(input.children) || 0), 0, 5);
-
-    const socialEmployee = roundUp(gross * CONFIG.socialRateEmployee);
-    const healthEmployee = roundUp(gross * CONFIG.healthRateEmployee);
-    const employeeDeductions = socialEmployee + healthEmployee;
-
-    const socialEmployer = roundUp(gross * CONFIG.socialRateEmployer);
-    const healthEmployer = roundUp(gross * CONFIG.healthRateEmployer);
-    const totalCost = round(gross + socialEmployer + healthEmployer);
-
-    const taxBase = getTaxBase(gross);
-    const taxBeforeDiscounts = progressiveTax(taxBase);
-    const highTaxBase = Math.max(0, taxBase - CONFIG.monthlyHighTaxThreshold);
-    const basicDiscount = input.withTaxpayerDiscount ? CONFIG.taxpayerDiscount : 0;
-    const childCredit = getChildCredit(children);
-    const taxAfterBasic = Math.max(0, taxBeforeDiscounts - basicDiscount);
-    const taxAfterChildrenRaw = taxAfterBasic - childCredit;
-    const taxAfterDiscounts = Math.max(0, taxAfterChildrenRaw);
-    const taxBonus = Math.max(0, -taxAfterChildrenRaw);
-    const netBeforeOtherDeductions = round(gross - employeeDeductions - taxAfterDiscounts + taxBonus);
-    const netSalary = Math.max(0, netBeforeOtherDeductions - otherDeductions);
-    const netRatio = gross > 0 ? (netSalary / gross) * 100 : 0;
-    const deductionsTotal = employeeDeductions + taxAfterDiscounts + otherDeductions - taxBonus;
-    const deductionsShare = gross > 0 ? (deductionsTotal / gross) * 100 : 0;
-
-    return {
-      grossBase,
-      bonus,
-      gross,
-      children,
-      withTaxpayerDiscount: !!input.withTaxpayerDiscount,
-      otherDeductions,
-      socialEmployee,
-      healthEmployee,
-      employeeDeductions,
-      socialEmployer,
-      healthEmployer,
-      totalCost,
-      taxBase,
-      taxBeforeDiscounts,
-      highTaxBase,
-      basicDiscount,
-      childCredit,
-      taxAfterDiscounts,
-      taxBonus,
-      netBeforeOtherDeductions,
-      netSalary,
-      netRatio,
-      deductionsTotal,
-      deductionsShare,
-      annualNet: netSalary * 12,
-      annualGross: gross * 12,
-      annualTotalCost: totalCost * 12,
-    };
+  function progressiveTax(base) {
+    const basic = Math.min(base, CONFIG.highTaxMonthlyThreshold);
+    const high = Math.max(0, base - CONFIG.highTaxMonthlyThreshold);
+    return roundUp(basic * CONFIG.taxBasic + high * CONFIG.taxHigh);
   }
 
   function readInput() {
     return {
-      gross: Number(elements.grossSalary.value) || 0,
-      bonus: elements.bonusSalary ? Number(elements.bonusSalary.value) || 0 : 0,
-      otherDeductions: elements.otherDeductions ? Number(elements.otherDeductions.value) || 0 : 0,
-      children: Number(elements.children.value) || 0,
-      withTaxpayerDiscount: elements.taxpayerDiscount.checked,
+      grossBase: numeric("grossSalary"),
+      bonus: numeric("bonusSalary"),
+      otherDeductions: numeric("otherDeductions"),
+      children: clamp(Math.round(numeric("children")), 0, 5),
+      yearSocialBase: numeric("yearSocialBase"),
+      healthMinimumMode: $("healthMinimumMode")?.value || "off",
+      taxpayerDiscount: $("taxpayerDiscount")?.checked ?? true,
+      applySocialCap: $("applySocialCap")?.checked ?? true
     };
   }
 
-  function ensureDeepResult() {
-    if (document.getElementById("salaryDeepGrid")) return;
-    const meter = document.querySelector(".result-panel .meter");
-    if (!meter) return;
-    meter.insertAdjacentHTML(
-      "afterend",
-      `<div class="salary-deep-grid" id="salaryDeepGrid">
-        <div><span>Ročně čistě</span><strong id="yearlyNetResult">0 Kč</strong></div>
-        <div><span>Roční cena práce</span><strong id="yearlyCostResult">0 Kč</strong></div>
-        <div><span>Daňové pásmo</span><strong id="taxBandResult">15 %</strong></div>
-        <div><span>Další krok</span><strong id="nextSalaryStep">Rozpočet</strong></div>
-      </div>`,
-    );
+  function socialBase(input, gross) {
+    if (!input.applySocialCap) return gross;
+    if (input.yearSocialBase > 0) {
+      return Math.max(0, Math.min(gross, CONFIG.annualSocialCap - input.yearSocialBase));
+    }
+    return Math.min(gross, CONFIG.annualSocialCap / 12);
   }
 
-  function buildBadge(result) {
-    const badge = elements.resultBadge;
-    badge.classList.remove("warning", "risk");
-    if (result.netRatio >= 82) {
-      badge.textContent = "Vysoký čistý podíl";
-    } else if (result.netRatio >= 74) {
-      badge.textContent = "Běžný čistý podíl";
-      badge.classList.add("warning");
+  function calculate(input) {
+    const gross = input.grossBase + input.bonus;
+    const socialAssessment = socialBase(input, gross);
+    const socialCapUsed = input.applySocialCap && socialAssessment < gross;
+    const socialEmployee = roundUp(socialAssessment * CONFIG.socialEmployee);
+    const socialEmployer = roundUp(socialAssessment * CONFIG.socialEmployer);
+
+    const healthBase = input.healthMinimumMode === "full" ? Math.max(gross, CONFIG.healthMinimumBase) : gross;
+    const healthSupplementBase = Math.max(0, healthBase - gross);
+    const healthEmployee = roundUp(gross * CONFIG.healthEmployee + healthSupplementBase * CONFIG.healthTotal);
+    const healthEmployer = roundUp(gross * CONFIG.healthEmployer);
+
+    const baseForTax = taxBase(gross);
+    const taxBeforeDiscounts = progressiveTax(baseForTax);
+    const taxpayerDiscount = input.taxpayerDiscount ? CONFIG.taxpayerDiscount : 0;
+    const childrenCredit = childCredit(input.children);
+    const taxAfterTaxpayer = Math.max(0, taxBeforeDiscounts - taxpayerDiscount);
+    const taxAfterChildrenRaw = taxAfterTaxpayer - childrenCredit;
+    const taxAfterDiscounts = Math.max(0, taxAfterChildrenRaw);
+    const taxBonus = Math.max(0, -taxAfterChildrenRaw);
+    const employeeDeductions = socialEmployee + healthEmployee;
+    const netBeforeOther = gross - employeeDeductions - taxAfterDiscounts + taxBonus;
+    const netSalary = Math.max(0, Math.round(netBeforeOther - input.otherDeductions));
+    const totalCost = Math.round(gross + socialEmployer + healthEmployer);
+    const discountsTotal = taxpayerDiscount + childrenCredit + taxBonus;
+    const netRatio = gross > 0 ? netSalary / gross * 100 : 0;
+    const deductionsTotal = employeeDeductions + taxAfterDiscounts + input.otherDeductions - taxBonus;
+    const deductionsShare = gross > 0 ? deductionsTotal / gross * 100 : 0;
+    const highTaxBase = Math.max(0, baseForTax - CONFIG.highTaxMonthlyThreshold);
+
+    return {
+      ...input,
+      gross,
+      socialAssessment,
+      socialCapUsed,
+      healthBase,
+      healthSupplementBase,
+      socialEmployee,
+      socialEmployer,
+      healthEmployee,
+      healthEmployer,
+      employeeDeductions,
+      baseForTax,
+      taxBeforeDiscounts,
+      taxpayerDiscount,
+      childrenCredit,
+      taxAfterDiscounts,
+      taxBonus,
+      netBeforeOther,
+      netSalary,
+      totalCost,
+      discountsTotal,
+      netRatio,
+      deductionsTotal,
+      deductionsShare,
+      highTaxBase,
+      annualNet: netSalary * 12,
+      annualGross: gross * 12,
+      annualCost: totalCost * 12
+    };
+  }
+
+  function buildNote(result) {
+    const notes = [];
+    notes.push(`Z hrubé mzdy ${money(result.gross)} vychází orientační čistá mzda ${money(result.netSalary)}.`);
+    notes.push(result.taxpayerDiscount ? "Je uplatněna sleva na poplatníka." : "Sleva na poplatníka není uplatněna.");
+    if (result.children > 0) notes.push(`Započítáno je daňové zvýhodnění na ${result.children} ${result.children === 1 ? "dítě" : "děti"}.`);
+    if (result.taxBonus > 0) notes.push(`Vzniká orientační daňový bonus ${money(result.taxBonus)}.`);
+    if (result.highTaxBase > 0) notes.push(`Část základu ${money(result.highTaxBase)} spadá do 23% pásma.`);
+    if (result.socialCapUsed) notes.push("Sociální pojištění je v modelu omezené ročním stropem.");
+    if (result.healthSupplementBase > 0) notes.push(`Zdravotní pojištění je dopočtené do minimálního základu ${money(CONFIG.healthMinimumBase)}.`);
+    if (result.otherDeductions > 0) notes.push(`Po výpočtu čisté mzdy se odečítají jiné srážky ${money(result.otherDeductions)}.`);
+    return notes.join(" ");
+  }
+
+  function badge(result) {
+    const el = $("resultBadge");
+    if (!el) return;
+    el.className = "badge";
+    if (result.netRatio >= 80) {
+      el.textContent = "Vyšší čistý podíl";
+    } else if (result.netRatio >= 72) {
+      el.textContent = "Běžný čistý podíl";
+      el.classList.add("warning");
     } else {
-      badge.textContent = "Vyšší zatížení srážkami";
-      badge.classList.add("risk");
+      el.textContent = "Vyšší zatížení";
+      el.classList.add("risk");
     }
   }
 
-  function describeChildren(result) {
-    if (result.children === 0) return "bez daňového zvýhodnění na děti";
-    if (result.children === 1) return "s daňovým zvýhodněním na 1 dítě";
-    return `s daňovým zvýhodněním na ${result.children} děti`;
-  }
-
-  function updateNote(result) {
-    const parts = [];
-    parts.push(result.withTaxpayerDiscount ? "Počítáme se slevou na poplatníka." : "Počítáme bez slevy na poplatníka.");
-    if (result.bonus > 0) parts.push(`Prémie ${formatCurrency(result.bonus)} je zahrnutá do zdanitelné hrubé mzdy.`);
-    if (result.children > 0) parts.push(`Zahrnuto je daňové zvýhodnění na ${result.children} ${result.children === 1 ? "dítě" : "děti"}.`);
-    if (result.highTaxBase > 0) parts.push(`Část mzdy nad ${formatCurrency(CONFIG.monthlyHighTaxThreshold)} počítáme ve vyšším 23% pásmu.`);
-    if (result.taxBonus > 0) parts.push(`Vychází daňový bonus ${formatCurrency(result.taxBonus)}.`);
-    if (result.otherDeductions > 0) parts.push(`Po čisté mzdě odečítáme další srážky ${formatCurrency(result.otherDeductions)}.`);
-    parts.push("Výsledek je orientační a nemusí odpovídat výplatní pásce s nemocí, dovolenou, exekucí, benefity nebo nepravidelnými složkami.");
-    elements.resultNote.textContent = parts.join(" ");
-  }
-
-  function updateDecisionTexts(result) {
-    const takeHomeAfterRaise = calculate({
-      ...readInput(),
-      gross: result.grossBase + 5000,
-    }).netSalary;
-    const raiseNet = Math.max(0, takeHomeAfterRaise - result.netSalary);
-    const deductions = Math.max(0, result.employeeDeductions + result.taxAfterDiscounts + result.otherDeductions - result.taxBonus);
-    elements.decisionText.textContent = `Z hrubé mzdy ${formatCurrency(result.gross)} vám orientačně zůstane ${formatCurrency(result.netSalary)}. To je ${formatPercent(result.netRatio)} z hrubé mzdy ${describeChildren(result)}.`;
-    elements.decisionNetText.textContent = `Na účet vychází přibližně ${formatCurrency(result.netSalary)} měsíčně, tedy ${formatCurrency(result.annualNet)} ročně. Tohle číslo používejte pro nájem, hypotéku, rezervu a běžné výdaje.`;
-    elements.decisionDeductionsText.textContent = `Sociální, zdravotní, daň po slevách a zadané srážky dělají přibližně ${formatCurrency(deductions)}. Zvýšení hrubé mzdy o 5 000 Kč by zde přidalo čistě asi ${formatCurrency(raiseNet)}.`;
-    elements.decisionCostText.textContent = `Celková cena práce je ${formatCurrency(result.totalCost)} měsíčně. Zaměstnavatele stojíte o ${formatCurrency(result.totalCost - result.gross)} víc než je hrubá mzda před benefity a další režií.`;
-    elements.decisionCostTag.classList.remove("risk", "warning");
-    elements.decisionCostTag.classList.add(result.highTaxBase > 0 ? "warning" : "safe");
-  }
-
-  function updateBreakdown(result) {
-    const rows = [
-      ["Smluvní hrubá mzda", formatCurrency(result.grossBase)],
-      ["Prémie a odměny", formatCurrency(result.bonus)],
-      ["Zdanitelná hrubá mzda", formatCurrency(result.gross)],
-      ["Sociální pojištění zaměstnance (7,1 %)", `− ${formatCurrency(result.socialEmployee)}`],
-      ["Zdravotní pojištění zaměstnance (4,5 %)", `− ${formatCurrency(result.healthEmployee)}`],
-      ["Základ pro zálohu na daň", formatCurrency(result.taxBase)],
-      ["Daň před slevami (15 % / 23 %)", formatCurrency(result.taxBeforeDiscounts)],
-      ["Sleva na poplatníka", `− ${formatCurrency(result.basicDiscount)}`],
-      ["Daňové zvýhodnění na děti", `− ${formatCurrency(result.childCredit)}`],
-      ["Daň po slevách", `− ${formatCurrency(result.taxAfterDiscounts)}`],
-      ["Daňový bonus", `+ ${formatCurrency(result.taxBonus)}`],
-      ["Čistá mzda před jinými srážkami", formatCurrency(result.netBeforeOtherDeductions)],
-      ["Jiné pravidelné srážky", `− ${formatCurrency(result.otherDeductions)}`],
-      ["Čistá mzda na účet", formatCurrency(result.netSalary)],
-      ["Sociální pojištění zaměstnavatele (24,8 %)", formatCurrency(result.socialEmployer)],
-      ["Zdravotní pojištění zaměstnavatele (9 %)", formatCurrency(result.healthEmployer)],
-      ["Cena práce", formatCurrency(result.totalCost)],
+  function rows(result) {
+    return [
+      ["Hrubá mzda", money(result.grossBase), "Smluvní hrubá měsíční mzda"],
+      ["Prémie a odměny", money(result.bonus), "Zdanitelná částka navíc v měsíci"],
+      ["Hrubá mzda celkem", money(result.gross), "Základ pro daň a pojistné"],
+      ["Sociální pojištění zaměstnance", `− ${money(result.socialEmployee)}`, `${pct(CONFIG.socialEmployee * 100)} ze základu ${money(result.socialAssessment)}`],
+      ["Zdravotní pojištění zaměstnance", `− ${money(result.healthEmployee)}`, result.healthSupplementBase > 0 ? "Včetně dopočtu do zdravotního minima" : "4,5 % z hrubé mzdy"],
+      ["Základ pro daň", money(result.baseForTax), "Hrubá mzda zaokrouhlená na stovky nahoru"],
+      ["Daň před slevami", money(result.taxBeforeDiscounts), result.highTaxBase > 0 ? "15 % + 23 % z části nad limit" : "15% pásmo"],
+      ["Sleva na poplatníka", `− ${money(result.taxpayerDiscount)}`, "Základní měsíční sleva, pokud ji uplatňujete"],
+      ["Daňové zvýhodnění na děti", `− ${money(result.childrenCredit)}`, "Podle zadaného počtu dětí"],
+      ["Daň po slevách", `− ${money(result.taxAfterDiscounts)}`, "Záloha po slevách a zvýhodnění"],
+      ["Daňový bonus", `+ ${money(result.taxBonus)}`, "Vzniká, pokud zvýhodnění na děti převýší daň"],
+      ["Jiné srážky", `− ${money(result.otherDeductions)}`, "Srážky po výpočtu čisté mzdy"],
+      ["Čistá mzda", money(result.netSalary), "Orientační částka na účet"],
+      ["Sociální pojištění zaměstnavatele", money(result.socialEmployer), "24,8 % pro běžný model zaměstnavatele"],
+      ["Zdravotní pojištění zaměstnavatele", money(result.healthEmployer), "9 % z hrubé mzdy"],
+      ["Cena práce", money(result.totalCost), "Hrubá mzda plus odvody zaměstnavatele"]
     ];
-    elements.breakdownBody.innerHTML = rows.map(([label, value]) => `<tr><td>${label}</td><td>${value}</td></tr>`).join("");
   }
 
-  function updateHero(result) {
-    elements.heroNet.textContent = formatCurrency(result.netSalary);
-    elements.heroGross.textContent = formatCurrency(result.gross);
-    elements.heroCost.textContent = formatCurrency(result.totalCost);
-    elements.heroRatio.textContent = formatPercent(result.netRatio);
-    elements.heroCalcNet.textContent = formatPlain(result.netSalary);
-    elements.heroNetBar.style.width = `${clamp(result.netRatio, 12, 100)}%`;
-    elements.heroDeductionsBar.style.width = `${clamp(result.deductionsShare, 8, 88)}%`;
+  function updateScenarios(input, result) {
+    const body = $("salaryScenarioTableBody");
+    if (!body) return;
+    const deltas = [-10000, -5000, 0, 5000, 10000];
+    body.innerHTML = deltas.map((delta) => {
+      const scenarioInput = { ...input, grossBase: Math.max(0, input.grossBase + delta) };
+      const scenario = calculate(scenarioInput);
+      const diff = scenario.netSalary - result.netSalary;
+      const label = delta === 0 ? "Zadaná mzda" : delta > 0 ? `Hrubá +${money(delta)}` : `Hrubá −${money(Math.abs(delta))}`;
+      const diffText = delta === 0 ? "—" : `${diff > 0 ? "+" : "−"} ${money(Math.abs(diff))}`;
+      return `<tr><td>${label}</td><td>${money(scenario.gross)}</td><td>${money(scenario.netSalary)}</td><td>${diffText}</td></tr>`;
+    }).join("");
   }
 
-  function updateDeepResult(result) {
-    const yearlyNet = optional("yearlyNetResult");
-    const yearlyCost = optional("yearlyCostResult");
-    const taxBand = optional("taxBandResult");
-    const nextStep = optional("nextSalaryStep");
-    if (yearlyNet) yearlyNet.textContent = formatCurrency(result.annualNet);
-    if (yearlyCost) yearlyCost.textContent = formatCurrency(result.annualTotalCost);
-    if (taxBand) taxBand.textContent = result.highTaxBase > 0 ? "15 % + 23 %" : "15 %";
-    if (nextStep) {
-      nextStep.textContent =
-        result.netSalary >= 45000 ? "Dostupnost bydlení" : result.children > 0 ? "Rodinný rozpočet" : "Hrubá z čisté";
-    }
+  function update(result, input) {
+    setText("netSalaryResult", money(result.netSalary));
+    setText("grossSalaryResult", money(result.gross));
+    setText("totalCostResult", money(result.totalCost));
+    setText("employeeDeductionsResult", money(result.employeeDeductions));
+    setText("taxResult", money(result.taxAfterDiscounts));
+    setText("discountsResult", money(result.discountsTotal));
+    setText("netRatioResult", pct(result.netRatio));
+    setText("annualNetResult", money(result.annualNet));
+    setText("annualCostResult", money(result.annualCost));
+    setText("meterPercent", pct(result.netRatio));
+    setText("resultNote", buildNote(result));
+    setWidth("netRatioBar", `${clamp(result.netRatio, 0, 100)}%`);
+
+    setText("heroNet", money(result.netSalary));
+    setText("heroGross", money(result.gross));
+    setText("heroCost", money(result.totalCost));
+    setText("heroRatio", `${pct(result.netRatio)} z hrubé mzdy`);
+    setWidth("heroNetBar", `${clamp(result.netRatio, 8, 100)}%`);
+    setWidth("heroDeductionsBar", `${clamp(result.deductionsShare, 8, 90)}%`);
+    setWidth("heroCostBar", "100%");
+
+    setText("decisionText", `Z hrubé mzdy ${money(result.gross)} zůstane na účet přibližně ${money(result.netSalary)}. To je ${pct(result.netRatio)} z hrubé mzdy.`);
+    setText("decisionTitle", result.netSalary >= 45000 ? "Ověřte dostupnost bydlení a rezervu" : result.children > 0 ? "Porovnejte čistý příjem celé domácnosti" : "Použijte čistou mzdu jako základ rozpočtu");
+    setText("decisionDetail", `Odvody zaměstnance a daň po slevách dělají ${money(result.employeeDeductions + result.taxAfterDiscounts)}. Cena práce pro zaměstnavatele vychází ${money(result.totalCost)}.`);
+
+    const body = $("breakdownBody");
+    if (body) body.innerHTML = rows(result).map((row) => `<tr><td>${row[0]}</td><td>${row[1]}</td><td>${row[2]}</td></tr>`).join("");
+    badge(result);
+    updateScenarios(input, result);
   }
 
-  function updatePremiumDecision(result) {
-    if (elements.salaryPremiumNet) elements.salaryPremiumNet.textContent = formatCurrency(result.netSalary);
-    if (elements.salaryPremiumSentence) {
-      elements.salaryPremiumSentence.textContent = `Z hrubé mzdy ${formatCurrency(result.gross)} vychází orientační čistá mzda ${formatCurrency(result.netSalary)}. Zaměstnanec na pojištění, dani a zadaných srážkách odevzdá přibližně ${formatCurrency(result.deductionsTotal)} a celková cena práce je ${formatCurrency(result.totalCost)}.`;
-    }
-    if (elements.salaryPremiumChecklist) {
-      const up = calculate({ ...readInput(), gross: result.grossBase + 5000 });
-      const items = [
-        `Pro domácí rozpočet používejte čistou mzdu ${formatCurrency(result.netSalary)}, ne hrubou částku ze smlouvy.`,
-        `Navýšení hrubé mzdy o 5 000 Kč by v tomto modelu zvýšilo čistou mzdu asi o ${formatCurrency(up.netSalary - result.netSalary)}.`,
-        result.highTaxBase > 0
-          ? "U vysokých mezd sledujte vyšší 23% daňové pásmo. Rozdíl mezi hrubou a čistou mzdou pak roste rychleji."
-          : "Pokud máte děti, prémie nebo pravidelné srážky, zadejte je. Umí změnit čistý příjem výrazně víc než samotná sazba daně.",
-      ];
-      elements.salaryPremiumChecklist.innerHTML = items.map((item) => `<li>${item}</li>`).join("");
-    }
-    if (elements.salaryScenarioTableBody) {
-      const up = calculate({ ...readInput(), gross: result.grossBase + 5000 });
-      const down = calculate({ ...readInput(), gross: Math.max(0, result.grossBase - 5000) });
-      elements.salaryScenarioTableBody.innerHTML = [
-        ["Zadaná mzda", formatCurrency(result.netSalary), "Aktuální čistý příjem pro rozpočet"],
-        ["Hrubá mzda +5 000 Kč", formatCurrency(up.netSalary), `Dopad čistě ${formatCurrency(up.netSalary - result.netSalary)}`],
-        ["Hrubá mzda −5 000 Kč", formatCurrency(down.netSalary), `Pokles čistě ${formatCurrency(result.netSalary - down.netSalary)}`],
-      ].map((row) => `<tr><td>${row[0]}</td><td>${row[1]}</td><td>${row[2]}</td></tr>`).join("");
-    }
+  function run() {
+    const input = readInput();
+    update(calculate(input), input);
   }
 
-  function updateUI() {
-    ensureDeepResult();
-    const result = calculate(readInput());
-
-    elements.netSalaryResult.textContent = formatCurrency(result.netSalary);
-    elements.grossSalaryResult.textContent = formatCurrency(result.gross);
-    elements.totalCostResult.textContent = formatCurrency(result.totalCost);
-    elements.employeeDeductionsResult.textContent = formatCurrency(result.employeeDeductions);
-    elements.taxResult.textContent = formatCurrency(result.taxAfterDiscounts);
-    elements.discountsResult.textContent = formatCurrency(result.basicDiscount + result.childCredit + result.taxBonus);
-    elements.netRatioResult.textContent = formatPercent(result.netRatio);
-    elements.meterPercent.textContent = formatPercent(result.netRatio);
-    elements.netRatioBar.style.width = `${clamp(result.netRatio, 0, 100)}%`;
-
-    buildBadge(result);
-    updateNote(result);
-    updateDecisionTexts(result);
-    updateBreakdown(result);
-    updateHero(result);
-    updateDeepResult(result);
-    updatePremiumDecision(result);
-  }
-
-  function setPreset(name) {
-    const preset = presetValues[name];
-    if (!preset) return;
-    elements.grossSalary.value = preset.gross;
-    if (elements.bonusSalary) elements.bonusSalary.value = preset.bonus;
-    if (elements.otherDeductions) elements.otherDeductions.value = preset.otherDeductions;
-    elements.children.value = String(preset.children);
-    elements.taxpayerDiscount.checked = preset.taxpayerDiscount;
-    elements.presets.forEach((button) => {
-      button.classList.toggle("active", button.dataset.preset === name);
+  function setPressed(name) {
+    document.querySelectorAll("[data-preset]").forEach((button) => {
+      button.setAttribute("aria-pressed", button.dataset.preset === name ? "true" : "false");
     });
-    updateUI();
+  }
+
+  function applyPreset(name) {
+    const preset = PRESETS[name] || PRESETS.standard;
+    Object.entries(preset).forEach(([key, value]) => {
+      const element = $(key);
+      if (!element) return;
+      if (element.type === "checkbox") element.checked = Boolean(value);
+      else element.value = value;
+    });
+    setPressed(name);
+    run();
   }
 
   form.addEventListener("submit", (event) => {
     event.preventDefault();
-    updateUI();
+    run();
   });
 
-  ["input", "change"].forEach((eventName) => {
-    form.addEventListener(eventName, updateUI);
+  inputIds.forEach((id) => {
+    const element = $(id);
+    if (!element) return;
+    element.addEventListener("input", run);
+    element.addEventListener("change", run);
   });
 
-  elements.presets.forEach((button) => {
-    button.addEventListener("click", () => setPreset(button.dataset.preset));
+  document.querySelectorAll("[data-preset]").forEach((button) => {
+    button.addEventListener("click", () => applyPreset(button.dataset.preset));
   });
 
-  elements.resetBtn.addEventListener("click", () => setPreset("standard"));
-
-  updateUI();
+  $("resetBtn")?.addEventListener("click", () => applyPreset("standard"));
+  setPressed("standard");
+  run();
 })();
