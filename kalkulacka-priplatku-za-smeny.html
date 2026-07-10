@@ -27,6 +27,7 @@
   <meta name="twitter:image" content="https://rychlevypocty.cz/og-image.jpg">
   <link rel="stylesheet" href="rv-tool-v2.css">
   <link rel="stylesheet" href="payroll-time-v2.css?v=10">
+  <link rel="stylesheet" href="shift-bonus-pro.css?v=20260710-2">
   <link rel="stylesheet" href="rv-top20-mobile-quality.css">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"RychléVýpočty.cz","item":"https://rychlevypocty.cz/"},{"@type":"ListItem","position":2,"name":"Mzdy a práce","item":"https://rychlevypocty.cz/mzdy-a-prace.html"},{"@type":"ListItem","position":3,"name":"Kalkulačka příplatků za směny","item":"https://rychlevypocty.cz/kalkulacka-priplatku-za-smeny.html"}]}</script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Kalkulačka příplatků za směny","url":"https://rychlevypocty.cz/kalkulacka-priplatku-za-smeny.html","applicationCategory":"FinanceApplication","operatingSystem":"All","inLanguage":"cs-CZ","description":"Online kalkulačka pro orientační výpočet příplatků za směny, noční práci, víkend, svátek a souběhy příplatků.","offers":{"@type":"Offer","price":"0","priceCurrency":"CZK"}}</script>
@@ -98,12 +99,15 @@
           <button type="button" data-shift-preset="night">Noční</button>
           <button type="button" data-shift-preset="weekendNight">Víkendová noční</button>
           <button type="button" data-shift-preset="holiday">Svátek</button>
+          <button type="button" data-shift-preset="publicPay">Veřejná sféra</button>
           <button type="button" data-shift-preset="custom">Vlastní bonus</button>
         </div>
         <div class="form-grid">
           <label class="input-group" for="hourlyRate"><span>Hodinová sazba</span><div class="input-shell"><input id="hourlyRate" type="number" inputmode="decimal" min="1" step="1" value="180"><span>Kč/h</span></div><small>Použijte hrubou hodinovou sazbu nebo průměrný výdělek.</small></label>
+          <label class="input-group" for="averageEarnings"><span>Průměrný výdělek pro příplatky</span><div class="input-shell"><input id="averageEarnings" type="number" inputmode="decimal" min="0" step="1" value="180"><span>Kč/h</span></div><small>Pokud neznáte průměrný hodinový výdělek, nechte stejnou hodnotu jako hodinovou sazbu.</small></label>
           <label class="input-group" for="hoursWorked"><span>Hodin ve směně</span><div class="input-shell"><input id="hoursWorked" type="number" inputmode="decimal" min="0.25" step="0.25" value="8"><span>h</span></div><small>Jen hodiny, za které příplatek řešíte.</small></label>
           <label class="input-group" for="shiftCount"><span>Počet stejných směn v měsíci</span><div class="input-shell"><input id="shiftCount" type="number" inputmode="numeric" min="1" step="1" value="10"><span>×</span></div><small>Pomůže odhadnout dopad na měsíční hrubou mzdu.</small></label>
+          <label class="input-group" for="payRegime"><span>Režim odměňování</span><div class="input-shell"><select id="payRegime"><option value="wage" selected>Mzda / soukromý sektor</option><option value="salary">Plat / veřejná sféra</option><option value="agreement">DPP / DPČ</option></select><span>typ</span></div><small>Režim slouží jako vodítko; rozhodující je smlouva, mzdový výměr a vnitřní pravidla.</small></label>
           <label class="input-group" for="nightPercent"><span>Noční příplatek</span><div class="input-shell"><input id="nightPercent" type="number" inputmode="decimal" min="0" step="0.5" value="10"><span>%</span></div><small>Orientačně zákonné minimum u mzdy bývá 10 %.</small></label>
           <label class="input-group" for="weekendPercent"><span>Víkendový příplatek</span><div class="input-shell"><input id="weekendPercent" type="number" inputmode="decimal" min="0" step="0.5" value="10"><span>%</span></div><small>Pro sobotu a neděli použijte sazbu ze smlouvy.</small></label>
           <label class="input-group" for="holidayPercent"><span>Příplatek za svátek</span><div class="input-shell"><input id="holidayPercent" type="number" inputmode="decimal" min="0" step="1" value="0"><span>%</span></div><small>Pokud místo volna řešíte příplatek, často se používá 100 %.</small></label>
@@ -112,6 +116,7 @@
           <label class="checkbox-line" for="includeNight"><input id="includeNight" type="checkbox" checked> Započítat noční práci</label>
           <label class="checkbox-line" for="includeWeekend"><input id="includeWeekend" type="checkbox" checked> Započítat víkend</label>
           <label class="checkbox-line" for="includeHoliday"><input id="includeHoliday" type="checkbox"> Započítat svátek</label>
+          <label class="checkbox-line" for="useAverageForBonus"><input id="useAverageForBonus" type="checkbox" checked> Procentní příplatky počítat z průměrného výdělku</label>
           <label class="checkbox-line" for="roundWhole"><input id="roundWhole" type="checkbox" checked> Zaokrouhlit na celé koruny</label>
         </div>
         <div class="form-actions"><button class="btn-primary" type="submit">Spočítat příplatky</button><button class="btn-secondary" id="resetBtn" type="button">Obnovit hodnoty</button></div>
@@ -251,6 +256,31 @@
       </div>
     </section>
 
+    <section class="container shift-trust-guide">
+      <div class="shift-trust-head">
+        <p class="eyebrow">TOP kontrola výpočtu</p>
+        <h2>Proč kalkulačka odděluje hodinovou sazbu a průměrný výdělek</h2>
+        <p>U příplatků za směny je častá chyba počítat všechno jen z běžné hodinové sazby. Pro rychlý odhad to může stačit, ale při kontrole výplatní pásky bývá důležitý průměrný hodinový výdělek. Ten se může lišit od aktuální hodinovky, protože vychází z pravidel pro průměrný výdělek a z předchozího období. Proto má kalkulačka samostatné pole pro sazbu běžné práce a samostatné pole pro základ procentních příplatků.</p>
+      </div>
+      <div class="shift-trust-grid">
+        <article>
+          <span>Mzda</span>
+          <h3>Soukromý sektor</h3>
+          <p>U mzdy se u noční práce a práce o víkendu běžně pracuje s minimem 10 % průměrného výdělku. Svátek se řeší primárně náhradním volnem, případně příplatkem místo volna. Pokud máte vyšší firemní sazby, zadejte je přímo do polí.</p>
+        </article>
+        <article>
+          <span>Plat</span>
+          <h3>Veřejná sféra</h3>
+          <p>U platu jsou některé sazby jiné než u mzdy. Proto je ve formuláři předvolba „Veřejná sféra“, která nastaví typicky vyšší procenta. Přesto vždy porovnejte výsledek s platovým výměrem a pravidly zaměstnavatele.</p>
+        </article>
+        <article>
+          <span>Dohody</span>
+          <h3>DPP a DPČ</h3>
+          <p>U dohod je potřeba hlídat nejen příplatky, ale také evidenci pracovní doby, limit hodin a celkový měsíční příjem. Kalkulačka spočítá hrubou odměnu za směny; čistý dopad ověřte samostatně.</p>
+        </article>
+      </div>
+    </section>
+
     <section class="container shift-longform">
       <div class="shift-longform-head">
         <p class="eyebrow">Příplatky 2026</p>
@@ -310,6 +340,35 @@
       </div>
     </section>
 
+    <section class="container shift-longform shift-payroll-audit">
+      <div class="shift-longform-head">
+        <p class="eyebrow">Kontrola výplatní pásky</p>
+        <h2>Jak postupovat, když výsledek nesedí s výplatou</h2>
+        <p>Rozdíl mezi kalkulačkou a výplatní páskou nemusí hned znamenat chybu. Nejdřív je potřeba ověřit, zda počítáte stejné hodiny, stejné období a stejný základ pro příplatky. Teprve potom má smysl řešit, zda je špatně výpočet, docházka nebo mzdová položka.</p>
+      </div>
+      <div class="shift-audit-steps">
+        <article><strong>01</strong><h3>Oddělte typy hodin</h3><p>Rozdělte směny na běžné hodiny, noční hodiny, víkendové hodiny, sváteční hodiny a případný přesčas. Jedna směna může spadat do více režimů, ale ne každá hodina ve směně musí mít stejný příplatek.</p></article>
+        <article><strong>02</strong><h3>Ověřte základ pro procenta</h3><p>Zkontrolujte, jestli se příplatek počítá z aktuální hodinové sazby, průměrného hodinového výdělku nebo smluvně sjednané částky. To bývá hlavní důvod rozdílu proti jednoduchému výpočtu.</p></article>
+        <article><strong>03</strong><h3>Porovnejte hrubé, ne čisté</h3><p>Kalkulačka ukazuje hrubou odměnu. Výplata na účet je až po odvodech, dani, slevách, srážkách a dalších složkách mzdy. Pro čistý dopad použijte navazující kalkulačku čisté mzdy.</p></article>
+        <article><strong>04</strong><h3>Hledejte souběhy</h3><p>Pokud je směna současně noční, víkendová a ve svátek, kontrolujte, zda mzdový systém započítal všechny nároky podle pravidel. Souběhy jsou nejčastější místo, kde se chyba schová.</p></article>
+      </div>
+    </section>
+
+    <section class="container shift-longform shift-model-cases">
+      <div class="shift-longform-head">
+        <p class="eyebrow">Modelové situace</p>
+        <h2>Které směny má smysl počítat zvlášť</h2>
+        <p>Nejlepší výsledek dostanete tehdy, když nesmícháte různé typy směn do jednoho průměru. Pokud máte část směn čistě denních, část nočních, část víkendových a část svátečních, spočítejte každou skupinu zvlášť. Teprve potom sečtěte měsíční dopad. Ušetříte si tím chybu, kdy se příplatek omylem počítá na všechny hodiny, i když patří jen malé části rozpisu.</p>
+      </div>
+      <div class="shift-audit-steps">
+        <article><strong>A</strong><h3>Noční směna přes půlnoc</h3><p>Směna například 18:00–6:00 nemá automaticky všechny hodiny jako noční. Do nočního příplatku typicky patří až část v noční době. Zadejte proto jen hodiny, za které příplatek skutečně náleží.</p></article>
+        <article><strong>B</strong><h3>Víkendová noční</h3><p>Pokud směna spadá do soboty nebo neděle a zároveň do noční doby, zapněte oba režimy. Výsledek dobře ukáže, jak velký je rozdíl proti stejné směně v běžný pracovní den.</p></article>
+        <article><strong>C</strong><h3>Svátek ve víkendu</h3><p>Svátek může běžet současně s víkendem. V takové situaci je potřeba zkontrolovat, zda výplatní páska řeší svátek, víkendový příplatek a případné náhradní volno správně odděleně.</p></article>
+        <article><strong>D</strong><h3>Firemní směnový bonus</h3><p>Pokud máte vedle zákonných příplatků ještě interní bonus, použijte vlastní procento nebo pevnou částku za hodinu. Do poznámek k pásce si pak oddělte zákonnou a firemní část.</p></article>
+      </div>
+      <p class="shift-model-note">U opakujících se směn sledujte hlavně měsíční příplatky. Jedna směna může působit jako drobný rozdíl, ale deset nebo patnáct stejných směn za měsíc už může být zásadní složka příjmu. Právě proto kalkulačka ukazuje nejen částku za směnu, ale i měsíční hrubý dopad a měsíční příplatky samostatně.</p>
+    </section>
+
     <section class="container related-tools" id="souvisejici-kalkulacky">
       <p class="eyebrow">Co spočítat dál</p>
       <h2>Navazující mzdové výpočty</h2>
@@ -336,13 +395,13 @@
   <footer class="footer">
     <div class="container footer-grid">
       <div><img src="logo-rychlevypocty-footer.svg" alt="RychléVýpočty.cz" width="190" height="38"><p>Praktické online kalkulačky pro mzdy, finance, bydlení, podnikání i každodenní rozhodování.</p></div>
-      <div><h3>Mzdy</h3><div class="footer-links"><a href="mzdy-a-prace.html">Mzdy a práce</a><a href="cista-mzda-kalkulacka.html">Čistá mzda</a><a href="kalkulacka-prescasu.html">Přesčasy</a></div></div>
-      <div><h3>Čas</h3><div class="footer-links"><a href="kalkulacka-odpracovanych-hodin.html">Odpracované hodiny</a><a href="kalkulacka-dovolene.html">Dovolená</a><a href="pracovni-dny-kalkulacka.html">Pracovní dny</a></div></div>
-      <div><h3>Web</h3><div class="footer-links"><a href="jak-pocitame.html">Jak počítáme</a><a href="kontakt.html">Kontakt</a><a href="podminky-pouziti.html">Podmínky použití</a><a href="ochrana-osobnich-udaju.html">Ochrana osobních údajů</a></div></div>
+      <div><h3>Mzdy</h3><div class="footer-links"><a href="mzdy-a-prace.html">Mzdy a práce</a><a href="cista-mzda-kalkulacka.html">Čistá mzda</a><a href="kalkulacka-hrube-mzdy-z-ciste.html">Hrubá mzda z čisté</a><a href="kalkulacka-prescasu.html">Přesčasy</a></div></div>
+      <div><h3>Čas a směny</h3><div class="footer-links"><a href="kalkulacka-priplatku-za-smeny.html">Příplatky za směny</a><a href="kalkulacka-odpracovanych-hodin.html">Odpracované hodiny</a><a href="kalkulacka-dovolene.html">Dovolená</a><a href="pracovni-dny-kalkulacka.html">Pracovní dny</a></div></div>
+      <div><h3>Web</h3><div class="footer-links"><a href="kalkulacky.html">Všechny kalkulačky</a><a href="jak-pocitame.html">Jak počítáme</a><a href="o-nas.html">O nás</a><a href="kontakt.html">Kontakt</a><a href="podminky-pouziti.html">Podmínky použití</a><a href="ochrana-osobnich-udaju.html">Ochrana osobních údajů</a></div></div>
     </div>
     <div class="container footer-bottom"><p>© 2026 RychléVýpočty.cz. Výpočty jsou orientační a nenahrazují účetní, právní ani personální posouzení.</p></div>
   </footer>
   <script src="rv-tool-core.js"></script>
-  <script src="priplatky-smeny.js?v=3"></script>
+  <script src="priplatky-smeny.js?v=20260710-1"></script>
 </body>
 </html>

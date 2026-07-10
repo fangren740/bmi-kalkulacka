@@ -14,8 +14,11 @@
   const PRESETS = {
     night: {
       hourlyRate: 180,
+      averageEarnings: 180,
       hoursWorked: 8,
       shiftCount: 8,
+      payRegime: "wage",
+      useAverageForBonus: true,
       includeNight: true,
       includeWeekend: false,
       includeHoliday: false,
@@ -27,8 +30,11 @@
     },
     weekendNight: {
       hourlyRate: 180,
+      averageEarnings: 180,
       hoursWorked: 8,
       shiftCount: 10,
+      payRegime: "wage",
+      useAverageForBonus: true,
       includeNight: true,
       includeWeekend: true,
       includeHoliday: false,
@@ -40,8 +46,11 @@
     },
     holiday: {
       hourlyRate: 220,
+      averageEarnings: 220,
       hoursWorked: 8,
       shiftCount: 2,
+      payRegime: "wage",
+      useAverageForBonus: true,
       includeNight: false,
       includeWeekend: false,
       includeHoliday: true,
@@ -53,8 +62,11 @@
     },
     custom: {
       hourlyRate: 210,
+      averageEarnings: 230,
       hoursWorked: 11,
       shiftCount: 6,
+      payRegime: "wage",
+      useAverageForBonus: true,
       includeNight: true,
       includeWeekend: false,
       includeHoliday: false,
@@ -63,13 +75,32 @@
       holidayPercent: 0,
       customPercent: 15,
       fixedRate: 20
+    },
+    publicPay: {
+      hourlyRate: 220,
+      averageEarnings: 240,
+      hoursWorked: 8,
+      shiftCount: 6,
+      payRegime: "salary",
+      useAverageForBonus: true,
+      includeNight: true,
+      includeWeekend: true,
+      includeHoliday: false,
+      nightPercent: 20,
+      weekendPercent: 25,
+      holidayPercent: 100,
+      customPercent: 0,
+      fixedRate: 0
     }
   };
 
   const inputIds = [
     "hourlyRate",
+    "averageEarnings",
     "hoursWorked",
     "shiftCount",
+    "payRegime",
+    "useAverageForBonus",
     "nightPercent",
     "weekendPercent",
     "holidayPercent",
@@ -88,8 +119,11 @@
   function readInput() {
     return {
       hourlyRate: numeric("hourlyRate"),
+      averageEarnings: numeric("averageEarnings"),
       hoursWorked: numeric("hoursWorked"),
       shiftCount: Math.max(1, Math.round(numeric("shiftCount") || 1)),
+      payRegime: $("payRegime")?.value || "wage",
+      useAverageForBonus: $("useAverageForBonus")?.checked ?? true,
       nightPercent: numeric("nightPercent"),
       weekendPercent: numeric("weekendPercent"),
       holidayPercent: numeric("holidayPercent"),
@@ -114,8 +148,10 @@
   function calculate(input) {
     const items = activeItems(input);
     const basePay = input.hourlyRate * input.hoursWorked;
+    const bonusBaseRate = input.useAverageForBonus && input.averageEarnings > 0 ? input.averageEarnings : input.hourlyRate;
+    const bonusBasePay = bonusBaseRate * input.hoursWorked;
     const percentTotal = items.reduce((sum, item) => sum + item.percent, 0);
-    const percentBonus = basePay * percentTotal / 100;
+    const percentBonus = bonusBasePay * percentTotal / 100;
     const fixedBonus = input.fixedRate * input.hoursWorked;
     const bonusPay = percentBonus + fixedBonus;
     const totalPay = basePay + bonusPay;
@@ -130,6 +166,8 @@
     return {
       items,
       basePay,
+      bonusBaseRate,
+      bonusBasePay,
       percentTotal,
       percentBonus,
       fixedBonus,
@@ -165,12 +203,13 @@
   function renderTable(input, result) {
     const rows = [
       ["Hodinová sazba", money(input.hourlyRate, input.roundWhole), "Základ pro výpočet hrubé odměny"],
+      ["Průměrný hodinový výdělek", money(result.bonusBaseRate, input.roundWhole), input.useAverageForBonus ? "Základ použitý pro procentní příplatky" : "Procentní příplatky počítáte ze stejné sazby jako základ"],
       ["Hodiny ve směně", `${nf.format(input.hoursWorked)} h`, "Počet hodin v příplatkovém režimu"],
       ["Základ za směnu", money(result.basePay, input.roundWhole), `${nf.format(input.hoursWorked)} × ${money(input.hourlyRate, input.roundWhole)}`]
     ];
 
     result.items.forEach((item) => {
-      rows.push([item.label, money(result.basePay * item.percent / 100, input.roundWhole), `${nf.format(item.percent)} % ze základu`]);
+      rows.push([item.label, money(result.bonusBasePay * item.percent / 100, input.roundWhole), `${nf.format(item.percent)} % z ${money(result.bonusBaseRate, input.roundWhole)} za hodinu`]);
     });
 
     if (result.fixedBonus > 0) rows.push(["Pevná částka", money(result.fixedBonus, input.roundWhole), `${money(input.fixedRate, input.roundWhole)} za hodinu`]);
@@ -212,7 +251,7 @@
     setText("decisionText", `${verdict} Pro další krok porovnejte měsíční příplatky ${money(result.monthlyBonus, input.roundWhole)} s čistou mzdou a s evidencí pracovní doby.`);
     setText("statusBadge", badge);
     $("statusBadge").className = badgeClass;
-    setText("resultNote", `Za ${nf.format(input.hoursWorked)} hodin v režimu ${active} vychází základ ${money(result.basePay, input.roundWhole)}, příplatky ${money(result.bonusPay, input.roundWhole)} a celkem ${money(result.totalPay, input.roundWhole)} hrubého za směnu. Výsledek berte jako orientační kontrolu, protože skutečná páska může pracovat s průměrným výdělkem, náhradním volnem nebo jinou smluvní sazbou.`);
+    setText("resultNote", `Za ${nf.format(input.hoursWorked)} hodin v režimu ${active} vychází základ ${money(result.basePay, input.roundWhole)}, příplatky ${money(result.bonusPay, input.roundWhole)} a celkem ${money(result.totalPay, input.roundWhole)} hrubého za směnu. Procentní příplatky jsou počítané ze sazby ${money(result.bonusBaseRate, input.roundWhole)} za hodinu. Výsledek berte jako orientační kontrolu, protože skutečná páska může pracovat s průměrným výdělkem, náhradním volnem nebo jinou smluvní sazbou.`);
     setText("payrollCheckFocus", focus);
   }
 
