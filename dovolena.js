@@ -102,8 +102,10 @@
   }
 
   function calculate(input) {
-    const annualHours = input.weeklyHours * input.annualWeeks;
-    const earnedHours = annualHours * (input.monthsWorked / 12);
+    const rawAnnualHours = input.weeklyHours * input.annualWeeks;
+    const rawEarnedHours = rawAnnualHours * (input.monthsWorked / 12);
+    const annualHours = Math.ceil(rawAnnualHours);
+    const earnedHours = Math.ceil(rawEarnedHours);
     const remainingHours = earnedHours - input.usedHours;
     const annualDays = annualHours / input.workdayHours;
     const earnedDays = earnedHours / input.workdayHours;
@@ -119,7 +121,9 @@
       earnedDays,
       remainingDays,
       usedShare,
-      remainingShare
+      remainingShare,
+      rawAnnualHours,
+      rawEarnedHours
     };
   }
 
@@ -155,8 +159,8 @@
 
   function renderTable(input, result) {
     const rows = [
-      ["Roční nárok", hours(result.annualHours), `${weeks(input.annualWeeks)} × ${hours(input.weeklyHours)} týdenního úvazku`],
-      ["Poměrná část", hours(result.earnedHours), `${input.monthsWorked} z 12 měsíců v modelu`],
+      ["Roční nárok", hours(result.annualHours), `${weeks(input.annualWeeks)} × ${hours(input.weeklyHours)} týdenního úvazku, zaokrouhleno nahoru na celé hodiny`],
+      ["Poměrná část", hours(result.earnedHours), `${input.monthsWorked} z 12 měsíců v modelu, zaokrouhleno nahoru na celé hodiny`],
       ["Vyčerpaná dovolená", hours(input.usedHours), "Už odečtené hodiny dovolené"],
       ["Zůstatek", hours(result.remainingHours), "Poměrná část minus vyčerpané hodiny"],
       ["Přepočet na dny", days(result.remainingDays), `Děleno délkou pracovního dne ${hours(input.workdayHours)}`],
