@@ -2,6 +2,7 @@
   const $ = (id) => document.getElementById(id);
   const form = $("workdaysForm");
   if (!form) return;
+  const advanced = $("workdaysAdvanced");
 
   const nf = new Intl.NumberFormat("cs-CZ");
   const fmtNum = (value, digits = 0) =>
@@ -72,6 +73,7 @@
     $("countMode").value = "inclusive";
     $("excludeWeekends").checked = true;
     $("excludeHolidays").checked = true;
+    if (advanced) advanced.open = false;
   }
 
   function applyPreset(type) {
