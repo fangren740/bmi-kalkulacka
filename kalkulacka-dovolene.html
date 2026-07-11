@@ -26,7 +26,7 @@
   <meta name="twitter:description" content="Spočítejte orientační zůstatek dovolené podle úvazku, roční výměry, odpracované části roku a vyčerpaných hodin.">
   <meta name="twitter:image" content="https://rychlevypocty.cz/og-image.jpg">
   <link rel="stylesheet" href="rv-tool-v2.css">
-  <link rel="stylesheet" href="vacation-pro.css?v=20260711-4">
+  <link rel="stylesheet" href="vacation-pro.css?v=20260711-5">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -168,7 +168,7 @@
       <form class="rate-form vacation-form" id="vacationForm" novalidate>
         <p class="eyebrow">Zadání</p>
         <h2>Zadejte úvazek, nárok a čerpání</h2>
-        <p class="form-intro">Stačí pět údajů. Pro běžný pracovní poměr použijte týdenní úvazek a roční výměru dovolené. U nepravidelných směn berte přepočet na dny jako orientační.</p>
+        <p class="form-intro">Začněte třemi základními údaji. Pokročilé volby otevřete jen tehdy, když řešíte poměrnou část roku nebo chcete změnit převod hodin na dny.</p>
 
         <div class="preset-row vacation-presets" aria-label="Rychlé scénáře">
           <button type="button" data-vacation-preset="full">Plný úvazek</button>
@@ -176,7 +176,12 @@
           <button type="button" data-vacation-preset="new">Nástup v roce</button>
         </div>
 
-        <div class="form-grid vacation-fields">
+        <div class="vacation-mode-note">
+          <strong>Basic režim</strong>
+          <span>Úvazek, roční výměra a už vyčerpané hodiny. Pro běžnou kontrolu zůstatku to stačí.</span>
+        </div>
+
+        <div class="form-grid vacation-fields vacation-basic-fields">
           <label class="input-group" for="weeklyHours">
             <span>Týdenní úvazek</span>
             <div class="input-shell">
@@ -199,15 +204,6 @@
             <small>Nejčastěji 4 týdny, u řady zaměstnavatelů 5 týdnů.</small>
           </label>
 
-          <label class="input-group" for="monthsWorked">
-            <span>Odpracovaná část roku</span>
-            <div class="input-shell">
-              <input id="monthsWorked" type="number" inputmode="numeric" min="1" max="12" step="1" value="12">
-              <span>měs.</span>
-            </div>
-            <small>Pro rychlý odhad poměrné části v daném roce.</small>
-          </label>
-
           <label class="input-group" for="usedHours">
             <span>Už vyčerpaná dovolená</span>
             <div class="input-shell">
@@ -216,16 +212,30 @@
             </div>
             <small>Zadejte hodiny, které jsou už odečtené z evidence.</small>
           </label>
-
-          <label class="input-group" for="workdayHours">
-            <span>Délka pracovního dne</span>
-            <div class="input-shell">
-              <input id="workdayHours" type="number" inputmode="decimal" min="1" max="16" step="0.5" value="8">
-              <span>h</span>
-            </div>
-            <small>Jen pro převod zůstatku z hodin na dny.</small>
-          </label>
         </div>
+
+        <details class="vacation-advanced" id="vacationAdvanced">
+          <summary><span>Advanced režim</span><small>Poměrná část roku, převod na dny a směnný provoz</small></summary>
+          <div class="form-grid vacation-fields">
+            <label class="input-group" for="monthsWorked">
+              <span>Odpracovaná část roku</span>
+              <div class="input-shell">
+                <input id="monthsWorked" type="number" inputmode="numeric" min="1" max="12" step="1" value="12">
+                <span>měs.</span>
+              </div>
+              <small>Pro nástup, odchod nebo rychlý odhad poměrné části v roce.</small>
+            </label>
+
+            <label class="input-group" for="workdayHours">
+              <span>Délka pracovního dne</span>
+              <div class="input-shell">
+                <input id="workdayHours" type="number" inputmode="decimal" min="1" max="16" step="0.5" value="8">
+                <span>h</span>
+              </div>
+              <small>Jen pro převod zůstatku z hodin na dny. U směn sledujte hlavně hodiny.</small>
+            </label>
+          </div>
+        </details>
 
         <div class="vacation-note">
           <strong>Tip:</strong> Pokud se vám během roku změnil úvazek, rozdělte si výpočet na období před změnou a po změně. Jedno průměrné číslo může být zavádějící.
@@ -235,6 +245,7 @@
           <button class="btn-primary" type="submit">Spočítat dovolenou</button>
           <button class="btn-secondary" id="resetBtn" type="button">Obnovit hodnoty</button>
         </div>
+        <p class="privacy-note">Zadané údaje neopouštějí váš prohlížeč.</p>
       </form>
 
       <aside class="rate-result vacation-result-panel" id="vysledek" aria-live="polite">
@@ -618,6 +629,6 @@
   </footer>
 
   <script src="rv-tool-core.js"></script>
-  <script src="dovolena.js?v=20260711-1"></script>
+  <script src="dovolena.js?v=20260711-2"></script>
 </body>
 </html>

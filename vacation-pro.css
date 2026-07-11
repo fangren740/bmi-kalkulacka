@@ -126,31 +126,6 @@
   line-height: 1.25;
 }
 
-.vacation-anchor {
-  border-top: 1px solid #d7e5f3;
-  border-bottom: 1px solid #d7e5f3;
-  background: rgba(239,247,252,.92);
-  backdrop-filter: blur(12px);
-}
-
-.vacation-anchor .anchor-scroll {
-  display: flex;
-  gap: 10px;
-  overflow-x: auto;
-  padding: 12px 0;
-}
-
-.vacation-anchor a {
-  flex: 0 0 auto;
-  padding: 10px 15px;
-  border: 1px solid #cbdced;
-  border-radius: 999px;
-  color: #314a67;
-  background: #fff;
-  font-weight: 900;
-  text-decoration: none;
-}
-
 .vacation-form > .eyebrow,
 .vacation-form > h2,
 .vacation-form > .form-intro { position: relative; z-index: 1; }
@@ -161,6 +136,26 @@
   letter-spacing: -.04em;
 }
 
+.vacation-mode-note {
+  display: grid;
+  gap: 3px;
+  margin: 18px 0 14px;
+  padding: 14px 16px;
+  border: 1px solid #cce7da;
+  border-radius: 16px;
+  color: #17334f;
+  background: linear-gradient(120deg,rgba(25,184,122,.10),rgba(85,183,255,.08));
+}
+
+.vacation-mode-note strong { color: #0d7a64; font-weight: 950; }
+
+.vacation-mode-note span {
+  color: #4f6680;
+  font-size: .9rem;
+  font-weight: 760;
+  line-height: 1.45;
+}
+
 .vacation-fields {
   display: grid;
   grid-template-columns: repeat(2,minmax(0,1fr));
@@ -168,7 +163,9 @@
   margin-top: 18px;
 }
 
+.vacation-basic-fields .input-group:first-child { grid-column: 1 / -1; }
 .vacation-fields .input-group:last-child { grid-column: 1 / -1; }
+.vacation-basic-fields .input-group:last-child { grid-column: auto; }
 
 .vacation-fields label > span {
   display: block;
@@ -213,6 +210,58 @@
   font-size: .86rem;
   font-weight: 900;
 }
+
+.vacation-advanced {
+  margin-top: 18px;
+  border: 1px solid #d6e3f0;
+  border-radius: 18px;
+  background: #f8fbfe;
+}
+
+.vacation-advanced summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: center;
+  padding: 15px 16px;
+  cursor: pointer;
+  list-style: none;
+  color: #071b35;
+  font-weight: 950;
+}
+
+.vacation-advanced summary::-webkit-details-marker { display: none; }
+
+.vacation-advanced summary::after {
+  content: "+";
+  display: grid;
+  place-items: center;
+  flex: 0 0 28px;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  color: #0b4e9b;
+  background: #edf6ff;
+  font-size: 1.1rem;
+  font-weight: 950;
+}
+
+.vacation-advanced[open] summary::after { content: "−"; }
+
+.vacation-advanced summary small {
+  display: block;
+  margin-top: 3px;
+  color: #5a7088;
+  font-size: .78rem;
+  line-height: 1.35;
+}
+
+.vacation-advanced .vacation-fields {
+  margin: 0;
+  padding: 0 16px 16px;
+}
+
+.vacation-advanced .input-group:last-child { grid-column: auto; }
 
 .vacation-presets {
   display: grid;
@@ -372,18 +421,31 @@
 .vacation-guide {
   display: grid;
   grid-template-columns: repeat(2,minmax(0,1fr));
-  gap: 14px;
+  gap: 16px;
 }
 
-.vacation-guide > .eyebrow,
-.vacation-guide > h2,
-.vacation-guide > p { grid-column: 1 / -1; }
-
 .vacation-guide article {
-  padding: 0;
-  box-shadow: none;
-  border: 0;
-  background: transparent;
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid #dbe6f0;
+  border-radius: 20px;
+  background: #fff;
+}
+
+.vacation-guide article h2,
+.vacation-split-section h2,
+.vacation-pro-guide h2 {
+  margin-top: 8px;
+  font-size: clamp(1.55rem,2.45vw,2.35rem);
+  line-height: 1.08;
+  letter-spacing: -.035em;
+}
+
+.vacation-guide article p,
+.vacation-long-card p,
+.vacation-pro-guide p {
+  color: #4b6380;
+  line-height: 1.72;
 }
 
 .vacation-formula {
@@ -418,6 +480,34 @@
   text-decoration: none;
 }
 
+.vacation-source-links a {
+  display: grid;
+  gap: 6px;
+}
+
+.vacation-source-links span {
+  justify-self: start;
+  padding: 5px 9px;
+  border-radius: 999px;
+  color: #32648a;
+  background: #edf6ff;
+  font-size: .72rem;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+.vacation-source-links strong,
+.vacation-source-links small {
+  display: block;
+  line-height: 1.45;
+}
+
+.vacation-source-links small {
+  color: #4b6380;
+  font-weight: 760;
+}
+
 .guide-grid span { color: #0d7a64; font-weight: 950; letter-spacing: .08em; }
 .guide-grid p,
 .audit-grid p { margin-bottom: 0; }
@@ -426,6 +516,7 @@
   display: grid;
   grid-template-columns: minmax(0,1.15fr) minmax(280px,.85fr);
   gap: 22px;
+  align-items: start;
 }
 
 .vacation-split-section.reverse {
@@ -440,6 +531,7 @@
 .vacation-side-note {
   padding: 18px;
   background: linear-gradient(120deg,rgba(25,184,122,.10),rgba(85,183,255,.08));
+  align-self: start;
 }
 
 .vacation-side-note.accent {
@@ -510,7 +602,6 @@
     background: #fff;
   }
   .vacation-mobile-snapshot strong { font-size: 1.8rem; letter-spacing: -.04em; }
-  .vacation-anchor { display: none; }
   .vacation-fields,
   .vacation-presets,
   .vacation-detail-layout,

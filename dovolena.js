@@ -3,6 +3,7 @@
   if (!form) return;
 
   const $ = (id) => document.getElementById(id);
+  const advancedPanel = $("vacationAdvanced");
   const nf = new Intl.NumberFormat("cs-CZ", { maximumFractionDigits: 1 });
   const pf = new Intl.NumberFormat("cs-CZ", { maximumFractionDigits: 0 });
 
@@ -232,6 +233,7 @@
         $("monthsWorked").value = 12;
         $("usedHours").value = 40;
         $("workdayHours").value = 8;
+        if (advancedPanel) advancedPanel.open = false;
       }
 
       if (preset === "part") {
@@ -240,6 +242,7 @@
         $("monthsWorked").value = 8;
         $("usedHours").value = 30;
         $("workdayHours").value = 6;
+        if (advancedPanel) advancedPanel.open = true;
       }
 
       if (preset === "new") {
@@ -248,6 +251,7 @@
         $("monthsWorked").value = 4;
         $("usedHours").value = 0;
         $("workdayHours").value = 8;
+        if (advancedPanel) advancedPanel.open = true;
       }
 
       run();
@@ -271,6 +275,7 @@
     $("monthsWorked").value = 12;
     $("usedHours").value = 40;
     $("workdayHours").value = 8;
+    if (advancedPanel) advancedPanel.open = false;
     run();
   });
 
