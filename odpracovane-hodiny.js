@@ -93,6 +93,12 @@
     return `${value} směn`;
   }
 
+  function dayLabelLocative(value) {
+    const absolute = Math.abs(value);
+    if (absolute === 1) return "1 směně";
+    return `${value} směnách`;
+  }
+
   function values() {
     return {
       startHour: Number($("startHour").value),
@@ -124,6 +130,10 @@
     return "součet za zadané období";
   }
 
+  function sentenceStart(value) {
+    return value.charAt(0).toUpperCase() + value.slice(1);
+  }
+
   function renderStatus(input, result) {
     if (result.equalTimes) {
       setText(outputs.statusBadge, "Začátek a konec jsou stejné");
@@ -153,11 +163,11 @@
     } else {
       setText(outputs.statusBadge, "Směna vypadá standardně");
       setText(outputs.readingTitle, "Směna vypadá standardně.");
-      setText(outputs.readingText, `Čistý čas směny je ${durationLabel(result.net)} a ${periodLabel(input)} při ${dayLabel(input.workDays)} vychází ${decimalHours(result.total)}.`);
+      setText(outputs.readingText, `Čistý čas směny je ${durationLabel(result.net)} a ${periodLabel(input)} při ${dayLabelLocative(input.workDays)} vychází ${decimalHours(result.total)}.`);
     }
 
     const midnight = result.crossesMidnight ? " Směna přechází přes půlnoc, proto se konec počítá jako následující den." : "";
-    setText(outputs.resultNote, `Čistý čas směny je ${durationLabel(result.net)}. ${periodLabel(input)} při ${dayLabel(input.workDays)} vychází ${decimalHours(result.total)}.${midnight}`);
+    setText(outputs.resultNote, `Čistý čas směny je ${durationLabel(result.net)}. ${sentenceStart(periodLabel(input))} při ${dayLabelLocative(input.workDays)} vychází ${decimalHours(result.total)}.${midnight}`);
     setText(outputs.detailText, `Výpočet: hrubá délka směny ${durationLabel(result.gross)} minus pauza ${input.breakMinutes} minut = čistý čas ${durationLabel(result.net)}.`);
   }
 
