@@ -1,75 +1,214 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="cs">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="format-detection" content="telephone=no" />
-  <meta name="theme-color" content="#081A33" />
-  <title>BMI kalkulačka: výpočet BMI, kategorie a zdravé rozmezí hmotnosti | RychléVýpočty.cz</title>
-  <meta name="description" content="Spočítejte si BMI online podle výšky a hmotnosti. Kalkulačka ukáže body mass index, orientační váhovou kategorii a běžné rozmezí hmotnosti." />
-  <meta name="robots" content="index,follow" />
-  <link rel="canonical" href="https://rychlevypocty.cz/bmi-kalkulacka.html" />
-  <meta property="og:locale" content="cs_CZ" />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://rychlevypocty.cz/bmi-kalkulacka.html" />
-  <meta property="og:site_name" content="RychléVýpočty.cz" />
-  <meta property="og:title" content="BMI kalkulačka: výpočet BMI a orientační kategorie" />
-  <meta property="og:description" content="Rychlý výpočet BMI podle výšky a hmotnosti včetně kategorie, rozdílu do běžného rozmezí a praktického vysvětlení." />
-  <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="BMI kalkulačka | RychléVýpočty.cz" />
-  <meta name="twitter:description" content="Spočítejte si BMI, kategorii a orientační rozmezí hmotnosti." />
-  <meta name="twitter:image" content="https://rychlevypocty.cz/og-image.jpg" />
-  <link rel="stylesheet" href="rv-tool-v2.css" />
-  <link rel="stylesheet" href="bmi-v2.css" />
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"RychléVýpočty.cz","item":"https://rychlevypocty.cz/"},{"@type":"ListItem","position":2,"name":"Rodina a rozpočet","item":"https://rychlevypocty.cz/rodina-a-rozpocet.html"},{"@type":"ListItem","position":3,"name":"BMI kalkulačka","item":"https://rychlevypocty.cz/bmi-kalkulacka.html"}]}</script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"BMI kalkulačka","url":"https://rychlevypocty.cz/bmi-kalkulacka.html","applicationCategory":"HealthApplication","operatingSystem":"Web","inLanguage":"cs-CZ","description":"Online BMI kalkulačka pro výpočet body mass index podle výšky a hmotnosti včetně orientační kategorie a rozmezí hmotnosti.","offers":{"@type":"Offer","price":"0","priceCurrency":"CZK"}}</script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Jak se počítá BMI?","acceptedAnswer":{"@type":"Answer","text":"BMI se počítá jako hmotnost v kilogramech dělená druhou mocninou výšky v metrech."}},{"@type":"Question","name":"Co znamená normální BMI?","acceptedAnswer":{"@type":"Answer","text":"Za běžné orientační rozmezí se u dospělých často považuje BMI 18,5 až 24,9. Nejde ale o zdravotní diagnózu."}},{"@type":"Question","name":"Je BMI přesné pro sportovce?","acceptedAnswer":{"@type":"Answer","text":"U sportovců a lidí s vyšším podílem svalové hmoty může BMI působit zavádějícím dojmem, protože nerozlišuje svaly a tuk."}},{"@type":"Question","name":"Může BMI nahradit lékařské posouzení?","acceptedAnswer":{"@type":"Answer","text":"Ne. BMI je jednoduchý orientační ukazatel. Zdravotní stav, složení těla a rizika je vhodné hodnotit v širším kontextu."}}]}</script>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7745758285259522" crossorigin="anonymous"></script>
-
-  <style>
-    .rv-method-note{padding:34px 0;background:linear-gradient(180deg,rgba(247,251,255,.65),rgba(255,255,255,.95))}
-    .rv-method-note__card{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px;align-items:center;padding:22px 24px;border-radius:28px;background:#fff;border:1px solid rgba(217,230,243,.95);box-shadow:0 16px 42px rgba(8,26,51,.07)}
-    .rv-method-note__card span{display:inline-flex;width:max-content;margin-bottom:8px;padding:6px 11px;border-radius:999px;background:#eaf9e6;color:#2d8f1d;font-size:.76rem;font-weight:950;letter-spacing:.05em;text-transform:uppercase}
-    .rv-method-note__card h2{margin:0 0 6px;color:#071d3b;font-size:clamp(1.35rem,2.4vw,2rem);line-height:1.08;letter-spacing:-.035em}
-    .rv-method-note__card p{margin:0;color:#62738b;line-height:1.62}
-    .rv-method-note__card a{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:11px 16px;border-radius:999px;background:linear-gradient(135deg,#7ae85f,#53bf39);color:#071d3b;font-weight:950;text-decoration:none;white-space:nowrap}
-    @media(max-width:760px){.rv-method-note__card{grid-template-columns:1fr;padding:18px;border-radius:24px}.rv-method-note__card a{width:100%}}
-  </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="format-detection" content="telephone=no">
+  <link rel="icon" href="favicon.ico?v=2" sizes="any">
+  <link rel="icon" href="favicon-32x32.png?v=2" sizes="32x32" type="image/png">
+  <link rel="icon" href="favicon-16x16.png?v=2" sizes="16x16" type="image/png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png?v=2" sizes="180x180">
+  <link rel="manifest" href="site.webmanifest?v=2">
+  <meta name="theme-color" content="#071b35">
+  <title>BMI kalkulačka – výpočet BMI, kategorie a obvod pasu</title>
+  <meta name="description" content="Spočítejte BMI podle výšky a hmotnosti, kategorii pro dospělé, referenční rozmezí i volitelný poměr pasu k výšce. Srozumitelně a zdarma.">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <link rel="canonical" href="https://rychlevypocty.cz/bmi-kalkulacka.html">
+  <meta property="og:title" content="BMI kalkulačka – výpočet BMI a srozumitelné vysvětlení">
+  <meta property="og:description" content="BMI, kategorie pro dospělé, referenční hmotnostní pásmo a volitelný poměr pasu k výšce v jednom přehledu.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rychlevypocty.cz/bmi-kalkulacka.html">
+  <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg">
+  <meta property="og:site_name" content="RychléVýpočty.cz">
+  <meta property="og:locale" content="cs_CZ">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="BMI kalkulačka – výpočet a interpretace">
+  <meta name="twitter:description" content="Spočítejte BMI a zjistěte, co výsledek u dospělého znamená a co naopak neříká.">
+  <meta name="twitter:image" content="https://rychlevypocty.cz/og-image.jpg">
+  <link rel="stylesheet" href="rv-tool-v2.css">
+  <link rel="stylesheet" href="bmi-pro.css?v=20260712-1">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"RychléVýpočty.cz","item":"https://rychlevypocty.cz/"},{"@type":"ListItem","position":2,"name":"Kalkulačky","item":"https://rychlevypocty.cz/kalkulacky.html"},{"@type":"ListItem","position":3,"name":"BMI kalkulačka","item":"https://rychlevypocty.cz/bmi-kalkulacka.html"}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"BMI kalkulačka","url":"https://rychlevypocty.cz/bmi-kalkulacka.html","description":"Online kalkulačka BMI pro dospělé s kategorií, referenčním rozmezím hmotnosti a volitelným poměrem pasu k výšce.","applicationCategory":"HealthApplication","operatingSystem":"All","browserRequirements":"JavaScript","inLanguage":"cs-CZ","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"CZK"},"featureList":["výpočet BMI","kategorie BMI pro dospělé","referenční hmotnostní pásmo","poměr pasu k výšce","převod imperiálních jednotek"]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Jak se počítá BMI?","acceptedAnswer":{"@type":"Answer","text":"BMI se vypočítá jako hmotnost v kilogramech dělená druhou mocninou výšky v metrech."}},{"@type":"Question","name":"Jaké BMI je u dospělého v referenčním pásmu?","acceptedAnswer":{"@type":"Answer","text":"Běžná klasifikace pro dospělé označuje BMI 18,5 až 24,9 jako pásmo zdravé hmotnosti. Jde o screeningové pásmo, nikoli osobní diagnózu nebo automatický cílový stav."}},{"@type":"Question","name":"Co znamená BMI 25 až 29,9?","acceptedAnswer":{"@type":"Answer","text":"U dospělých jde podle standardní klasifikace o pásmo nadváhy. Výsledek je vhodné číst spolu s obvodem pasu, tělesným složením a zdravotním kontextem."}},{"@type":"Question","name":"Je BMI vhodné pro děti?","acceptedAnswer":{"@type":"Answer","text":"Tato kalkulačka je určena dospělým. U dětí a dospívajících se BMI interpretuje podle věku a pohlaví pomocí růstových grafů nebo percentilů."}},{"@type":"Question","name":"Je BMI přesné pro sportovce?","acceptedAnswer":{"@type":"Answer","text":"BMI nerozlišuje tuk a svalovou hmotu, proto může u velmi svalnatých lidí nadhodnocovat význam vyšší hmotnosti."}},{"@type":"Question","name":"Proč kalkulačka počítá poměr pasu k výšce?","acceptedAnswer":{"@type":"Answer","text":"Poměr pasu k výšce doplňuje BMI o orientaci v centrální adipositě. NICE doporučuje u dospělých s BMI pod 35 usilovat o obvod pasu menší než polovina výšky."}},{"@type":"Question","name":"Co znamená referenční rozmezí hmotnosti?","acceptedAnswer":{"@type":"Answer","text":"Jde o přepočet BMI 18,5 až 24,9 na kilogramy pro zadanou výšku. Není to osobní léčebný cíl a nezohledňuje svaly, věk, těhotenství ani zdravotní historii."}},{"@type":"Question","name":"Může BMI nahradit lékařské posouzení?","acceptedAnswer":{"@type":"Answer","text":"Ne. BMI je jednoduchý screeningový ukazatel a samo o sobě neurčuje diagnózu ani vhodný postup."}}]}</script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7745758285259522" crossorigin="anonymous"></script>
 </head>
-<body class="rv-tool-page rv-bmi-page" data-theme="health">
-  <a class="skip-link" href="#main">Přejít na obsah</a>
-  <header class="site-header"><div class="container header-inner"><a class="brand" href="/" aria-label="RychléVýpočty.cz - domů"><img src="logo-rychlevypocty.svg" alt="RychléVýpočty.cz" class="brand-logo-img" width="220" height="40" decoding="async"></a><nav class="main-nav" aria-label="Hlavní navigace"><a href="/">Domů</a><a href="/kalkulacky.html">Kalkulačky</a><a href="/rodina-a-rozpocet.html" aria-current="page">Zdraví</a><a href="/finance-a-hypoteky.html">Finance</a></nav><div class="header-actions"><a class="btn btn-primary" href="#kalkulacka">Spočítat BMI</a></div></div></header>
-  <main id="main"><nav class="container breadcrumbs" aria-label="Drobečková navigace"><ol><li><a href="/">RychléVýpočty.cz</a></li><li><a href="/rodina-a-rozpocet.html">Rodina a rozpočet</a></li><li>BMI kalkulačka</li></ol></nav><section class="tool-hero" aria-labelledby="hero-title"><div class="container hero-grid"><div class="hero-copy"><p class="eyebrow">BMI kalkulačka</p><h1 id="hero-title">Spočítejte BMI a orientačně vyhodnoťte výsledek</h1><p class="lead">Zadejte výšku a hmotnost. Kalkulačka spočítá BMI, ukáže orientační kategorii, běžné rozmezí hmotnosti a vysvětlí, jak číslo číst s rozumem.</p><div class="hero-actions"><a class="btn btn-primary btn-lg" href="#kalkulacka">Spočítat BMI</a><a class="btn btn-secondary btn-lg" href="#jak-cist-vysledek">Jak výsledek číst</a></div><ul class="trust-pills"><li>BMI číslo</li><li>Kategorie</li><li>Běžné rozmezí</li><li>Orientační výsledek</li></ul></div><aside class="hero-visual" aria-label="Náhled výsledku BMI"><span class="visual-orb visual-orb-a"></span><span class="visual-orb visual-orb-b"></span><div class="rv-health-gauge"><div class="rv-gauge-ring"><div class="rv-gauge-inner"><span>Ukázkové BMI</span><strong id="heroBmi">24,7</strong></div></div></div><div class="rv-scale-row"><div class="mini-card"><span>Kategorie</span><strong id="heroCategory">Normální</strong></div><div class="mini-card"><span>Rozmezí</span><strong id="heroRange">60-80 kg</strong></div><div class="mini-card"><span>Status</span><strong>orientačně</strong></div></div><div class="rv-floating-card"><span>BMI je zkratka</span><strong>Čtěte ho společně s kontextem</strong></div></aside></div></section><div class="anchor-nav"><div class="container anchor-scroll"><a href="#kalkulacka">Kalkulačka</a><a href="#vysledek">Výsledek</a><a href="#jak-cist-vysledek">Jak číst výsledek</a><a href="#souvisejici-kalkulacky">Související</a><a href="#faq">FAQ</a></div></div><section class="container tool-stage" id="kalkulacka"><form class="calculator-card" id="bmiForm" novalidate><div class="section-heading compact"><p class="eyebrow">Zadání</p><h2>Zadejte výšku a hmotnost</h2><p>Výsledek se přepočítá okamžitě. Připravené scénáře slouží jen pro rychlé vyzkoušení kalkulačky.</p></div><div class="preset-row"><button class="chip scenario-chip" type="button" data-preset="normal" aria-pressed="true">Běžný příklad</button><button class="chip scenario-chip" type="button" data-preset="under">Podváha</button><button class="chip scenario-chip" type="button" data-preset="over">Nadváha</button><button class="chip scenario-chip" type="button" data-preset="athletic">Vyšší hmotnost</button></div><div class="form-grid"><label class="input-group" for="height"><span>Výška</span><span class="input-shell"><input id="height" inputmode="decimal" min="50" max="250" step="0.1" type="number" value="180" required><em>cm</em></span><small>Zadejte výšku v centimetrech.</small></label><label class="input-group" for="weight"><span>Hmotnost</span><span class="input-shell"><input id="weight" inputmode="decimal" min="10" max="400" step="0.1" type="number" value="80" required><em>kg</em></span><small>Zadejte aktuální hmotnost v kilogramech.</small></label><label class="input-group" for="displayPrecision"><span>Zaokrouhlení</span><span class="input-shell"><select id="displayPrecision"><option value="1" selected>Na 1 desetinné místo</option><option value="0">Na celé číslo</option><option value="2">Na 2 desetinná místa</option></select></span><small>Ovlivní jen zobrazení výsledku.</small></label></div><div class="form-actions"><button class="btn btn-primary" type="submit">Spočítat BMI</button><button class="btn btn-secondary" id="resetBtn" type="button">Obnovit hodnoty</button></div></form><aside class="result-panel" id="vysledek" aria-live="polite"><div class="result-header"><span>Výsledek</span><strong id="resultBadge">Výpočet připraven</strong></div><div class="primary-result"><small>Vaše BMI</small><output id="bmiResult">0</output><p id="resultNote">Po zadání hodnot uvidíte orientační kategorii a běžné rozmezí hmotnosti.</p></div><div class="result-metrics"><div class="metric-card"><span>Kategorie</span><strong id="categoryResult">-</strong></div><div class="metric-card"><span>Rozdíl do rozmezí</span><strong id="differenceResult">0 kg</strong></div><div class="metric-card"><span>Běžné rozmezí</span><strong id="rangeResult">-</strong></div><div class="metric-card"><span>Vzorec</span><strong id="formulaResult">kg / m²</strong></div></div><div class="rv-result-note"><p>Výška: <strong id="heightResult">0 cm</strong>, hmotnost: <strong id="weightResult">0 kg</strong>.</p><p>Dolní hranice rozmezí: <strong id="normalMinResult">0 kg</strong>. Horní hranice: <strong id="normalMaxResult">0 kg</strong>.</p><p><strong id="interpretStatus">Orientační výsledek</strong></p><p id="interpretText">BMI je rychlý ukazatel, ale nehodnotí celé složení těla ani zdravotní kontext.</p><p id="nextActionText">Výsledek berte jako orientační.</p></div><div class="hero-actions"><a class="btn btn-primary" id="primaryNextCta" href="#jak-cist-vysledek">Jak číst výsledek</a><a class="btn btn-secondary" id="secondaryNextCta" href="/kalkulacky.html">Další kalkulačky</a></div></aside></section><section class="container content-grid" id="jak-cist-vysledek"><article class="content-card"><p class="eyebrow">Metodika</p><h2>Jak se BMI počítá</h2><p>BMI je zkratka pro body mass index. Vypočítá se jako hmotnost v kilogramech dělená druhou mocninou výšky v metrech. Člověk vysoký 180 cm a vážící 80 kg má BMI přibližně 24,7.</p><div class="formula"><code>BMI = hmotnost / výška²</code></div><p>Výsledek je jednoduchý a rychlý, proto se hodí pro první orientaci. Zároveň je ale nutné vědět, že BMI nerozlišuje tuk, svaly, vodu, věk, pohlaví ani individuální zdravotní stav.</p></article><article class="content-card"><p class="eyebrow">Interpretace</p><h2>Jak číst kategorii BMI</h2><p>U dospělých se často používá rozmezí do 18,5 jako podváha, 18,5 až 24,9 jako běžné rozmezí, 25 až 29,9 jako nadváha a 30 a více jako obezita. Jde ale o orientační kategorie, ne o samostatnou diagnózu.</p><p>Nejužitečnější je sledovat změnu v čase. Jednorázové číslo může být ovlivněné tréninkem, stavbou těla nebo krátkodobou změnou hmotnosti. Pokud výsledek řešíte zdravotně, je vhodné ho spojit s dalšími údaji a odborným posouzením.</p></article><article class="content-card"><p class="eyebrow">Příklad</p><h2>Praktický příklad výpočtu</h2><p>Při výšce 175 cm a hmotnosti 88 kg vychází BMI přibližně 28,7. To spadá do pásma nadváhy. Kalkulačka zároveň ukáže, jaké běžné hmotnostní rozmezí odpovídá zadané výšce.</p><p>To neznamená, že jeden konkrétní kilogram je cílem pro každého. Rozmezí pomáhá chápat výsledek, ale praktické rozhodování by mělo zohlednit kondici, obvod pasu, pohyb, zdravotní historii a dlouhodobý trend.</p></article><article class="content-card"><p class="eyebrow">Limity</p><h2>Kdy BMI nestačí</h2><p>BMI může zkreslovat u sportovců, seniorů, dětí, těhotných žen a lidí s výrazně odlišným složením těla. Svalová hmota zvyšuje hmotnost, ale nemusí znamenat vyšší zdravotní riziko.</p><p>Proto kalkulačku berte jako rychlý orientační nástroj. Pokud výsledek vychází mimo běžné rozmezí nebo se hmotnost rychle mění, dává smysl řešit širší kontext a nespoléhat jen na jeden ukazatel.</p></article></section>
-<section class="container content-grid rv-bmi-extra" id="prakticke-tipy">
-  <article class="content-card">
-    <p class="eyebrow">Souvislosti</p>
-    <h2>Co sledovat vedle BMI</h2>
-    <p>Samotné BMI je dobrý začátek, ale pro lepší představu pomáhá sledovat také obvod pasu, dlouhodobý trend hmotnosti, kondici, pohybovou aktivitu a zdravotní omezení. Dva lidé se stejným BMI mohou mít velmi rozdílné složení těla i jinou míru zdravotního rizika.</p>
-    <p>Pokud BMI vychází mimo běžné rozmezí, neznamená to automaticky jeden konkrétní závěr. Užitečnější je podívat se, zda se hodnota mění postupně, jestli změnu doprovází únava, bolest, rychlé hubnutí nebo přibírání, a případně výsledek probrat s odborníkem.</p>
-  </article>
-  <article class="content-card">
-    <p class="eyebrow">Použití</p>
-    <h2>Kdy kalkulačku použít</h2>
-    <p>BMI kalkulačka se hodí pro rychlou orientaci při kontrole hmotnosti, při nastavování osobního cíle nebo při porovnání vývoje v čase. Největší smysl dává tehdy, když používáte stejné jednotky, podobný čas měření a sledujete trend místo jednotlivého výkyvu.</p>
-    <p>Výsledek neberte jako hodnocení vzhledu ani jako lékařskou diagnózu. Je to jednoduché číslo, které pomůže otevřít otázku, zda je hmotnost vzhledem k výšce přibližně v běžném pásmu a jestli má smysl dívat se na další ukazatele.</p>
-  </article>
-</section><section class="container related-tools" id="souvisejici-kalkulacky"><div class="section-heading compact"><p class="eyebrow">Související výpočty</p><h2>Další užitečné kalkulačky</h2></div><div class="related-grid"><a class="related-card" href="/kalkulacka-prumeru.html"><span>kg</span><strong>Průměr</strong><small>Rychlý výpočet průměru z více hodnot.</small></a><a class="related-card" href="/kalkulacka-hodinove-mzdy.html"><span>H</span><strong>Hodinová mzda</strong><small>Přepočet měsíční mzdy na hodinu.</small></a><a class="related-card" href="/kolik-dni-do-data.html"><span>D</span><strong>Dny do data</strong><small>Rychlý časový přehled pro plánování.</small></a><a class="related-card" href="/kolik-me-stoji-dite-kalkulacka.html"><span>R</span><strong>Rozpočet dítěte</strong><small>Orientační náklady v rodinném rozpočtu.</small></a></div></section><section class="container faq-section" id="faq"><div class="section-heading compact"><p class="eyebrow">FAQ</p><h2>Časté otázky k BMI</h2></div><div class="faq-grid"><details><summary>Jak se počítá BMI?</summary><p>BMI se počítá jako hmotnost v kilogramech dělená druhou mocninou výšky v metrech.</p></details><details><summary>Co znamená normální BMI?</summary><p>Za běžné orientační rozmezí se u dospělých často považuje BMI 18,5 až 24,9. Nejde ale o zdravotní diagnózu.</p></details><details><summary>Je BMI přesné pro sportovce?</summary><p>U sportovců a lidí s vyšším podílem svalové hmoty může BMI působit zavádějícím dojmem, protože nerozlišuje svaly a tuk.</p></details><details><summary>Může BMI nahradit lékařské posouzení?</summary><p>Ne. BMI je jednoduchý orientační ukazatel. Zdravotní stav, složení těla a rizika je vhodné hodnotit v širším kontextu.</p></details></div></section></main>
-  
-  <section class="rv-method-note" aria-label="Jak počítáme výsledek">
-    <div class="container">
-      <div class="rv-method-note__card">
-        <div>
-          <span>Metodika</span>
-          <h2>Výsledek berte jako rychlou orientaci, ne jako závazné posouzení.</h2>
-          <p>Kalkulačka ukazuje výpočet podle zadaných hodnot a zjednodušených pravidel. Důležité limity, zdroje nepřesností a způsob aktualizací popisujeme na metodické stránce.</p>
-        </div>
-        <a href="/jak-pocitame.html">Jak počítáme →</a>
-      </div>
+<body class="freelancer-pro worked-hours-pro-page bmi-pro-page">
+  <a class="skip-link" href="#kalkulacka">Přejít na BMI kalkulačku</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand-logo" href="index.html" aria-label="RychléVýpočty.cz – domů"><img class="brand-logo-img" src="logo-rychlevypocty.svg" alt="RychléVýpočty.cz" width="190" height="38"></a>
+      <nav class="main-nav" aria-label="Hlavní navigace"><a href="index.html">Domů</a><a href="kalkulacky.html" aria-current="page">Kalkulačky</a><a href="rodina-a-rozpocet.html">Rodina</a><a href="jak-pocitame.html">Jak počítáme</a></nav>
+      <a class="header-cta" href="#kalkulacka">Spočítat BMI</a>
     </div>
-  </section>
-<footer class="footer"><div class="container footer-grid"><div class="footer-intro"><a class="brand" href="/" aria-label="RychléVýpočty.cz - domů"><img src="logo-rychlevypocty-footer.svg" alt="RychléVýpočty.cz" class="brand-logo-img" width="220" height="40" decoding="async"></a><p>Online kalkulačky pro rychlou orientaci v běžných rozhodnutích. Výsledek berte jako pomocný přehled, ne jako závazné posouzení.</p></div><div><h3>Zdraví</h3><div class="footer-links"><a href="/rodina-a-rozpocet.html">Rodina a rozpočet</a><a href="/bmi-kalkulacka.html">BMI kalkulačka</a><a href="/rodina-a-rozpocet.html">Rodina a rozpočet</a></div></div><div><h3>Související</h3><div class="footer-links"><a href="/kalkulacky.html">Všechny kalkulačky</a><a href="/kalkulacka-prumeru.html">Průměr</a><a href="/kolik-dni-do-data.html">Dny do data</a></div></div><div><h3>Web</h3><div class="footer-links"><a href="/kontakt.html">Kontakt</a><a href="/ochrana-osobnich-udaju.html">Ochrana soukromí</a><a href="/podminky-pouziti.html">Podmínky použití</a></div></div></div><div class="container footer-bottom"><p>© 2026 RychléVýpočty.cz. Výpočty jsou orientační a slouží pro rychlé porovnání scénářů.</p></div></footer>
-  <script src="rv-tool-core.js" defer></script>
-  <script src="bmi.js" defer></script>
+  </header>
+
+  <main id="main-content">
+    <section class="rate-hero bmi-hero">
+      <div class="container rate-hero-grid hero-layout bmi-hero-grid">
+        <div class="hero-copy bmi-hero-copy">
+          <nav class="breadcrumb" aria-label="Drobečková navigace"><a href="index.html">Domů</a><span>/</span><a href="kalkulacky.html">Kalkulačky</a><span>/</span><strong>BMI</strong></nav>
+          <p class="eyebrow">Body mass index pro dospělé</p>
+          <h1>Spočítejte BMI a pochopte, co výsledek opravdu říká</h1>
+          <p class="lead">Stačí výška a hmotnost. Získáte BMI, kategorii pro dospělé, referenční hmotnostní pásmo a volitelně také poměr pasu k výšce.</p>
+          <div class="bmi-mobile-snapshot" aria-hidden="true"><span>Ukázkový výsledek</span><strong>24,7</strong><small>referenční pásmo</small><i><b></b></i></div>
+          <div class="hero-actions"><a class="btn-primary" href="#kalkulacka">Začít výpočet</a><a class="btn-secondary" href="#jak-cist-vysledek">Jak BMI číst</a></div>
+          <div class="hero-trust"><span>2 základní údaje</span><span>výpočet v prohlížeči</span><span>bez registrace</span></div>
+        </div>
+
+        <aside class="rate-preview bmi-preview" aria-label="Ukázkový výsledek BMI">
+          <div class="bmi-preview-head"><span>BMI dospělého</span><strong id="heroBmi">24,7</strong><em id="heroCategory">Referenční pásmo</em></div>
+          <div class="bmi-scale" aria-hidden="true"><div class="bmi-scale-labels"><span>18,5</span><span>25</span><span>30</span><span>40+</span></div><i><b id="heroNeedle"></b></i><div class="bmi-scale-names"><span>podváha</span><span>referenční</span><span>nadváha</span><span>obezita</span></div></div>
+          <div class="bmi-preview-metrics"><div><span>Výška</span><strong id="heroHeight">180 cm</strong></div><div><span>Hmotnost</span><strong id="heroWeight">80 kg</strong></div><div><span>Referenční pásmo</span><strong id="heroRange">59,9–80,7 kg</strong></div></div>
+          <div class="bmi-preview-note"><span>Důležitý kontext</span><strong id="heroWaist">BMI je screening, ne diagnóza</strong><small id="heroFormula">80 ÷ 1,80² = 24,7</small></div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="container rate-work bmi-stage" id="kalkulacka">
+      <form class="rate-form bmi-form" id="bmiForm" novalidate>
+        <p class="eyebrow">Basic režim</p>
+        <h2>Zadejte výšku a hmotnost</h2>
+        <p class="form-intro">Pro běžný výpočet potřebujete jen dva údaje. Výsledek se přepočítá okamžitě a zůstává pouze ve vašem prohlížeči.</p>
+        <div class="bmi-mode-note"><strong>Pro dospělé</strong><span>Standardní kategorie na této stránce jsou určené pro osoby od 20 let.</span></div>
+        <div class="bmi-basic-grid">
+          <label class="input-group" for="height"><span>Výška</span><span class="input-shell"><input id="height" type="number" inputmode="decimal" min="100" max="250" step="0.1" value="180" required><em>cm</em></span><small>Zadejte výšku bez bot v centimetrech.</small></label>
+          <label class="input-group" for="weight"><span>Hmotnost</span><span class="input-shell"><input id="weight" type="number" inputmode="decimal" min="25" max="350" step="0.1" value="80" required><em>kg</em></span><small>Zadejte aktuální hmotnost v kilogramech.</small></label>
+        </div>
+
+        <details class="bmi-advanced" id="bmiAdvanced">
+          <summary><span>Advanced režim</span><small>obvod pasu a převod britských či amerických jednotek</small></summary>
+          <div class="bmi-advanced-content">
+            <label class="input-group bmi-waist-field" for="waist"><span>Obvod pasu – volitelně</span><span class="input-shell"><input id="waist" type="number" inputmode="decimal" min="40" max="250" step="0.1" placeholder="např. 88"><em>cm</em></span><small>Měřte vodorovně v polovině mezi spodním žebrem a horním okrajem kyčle. Výsledek doplní poměr pasu k výšce.</small></label>
+            <div class="bmi-converter">
+              <div><span>Převod na metrické jednotky</span><small>Vyplňte stopy, palce a libry. Tlačítko přepíše základní výšku a hmotnost.</small></div>
+              <div class="bmi-converter-grid">
+                <label for="feetInput"><span>Stopy</span><input id="feetInput" type="number" inputmode="numeric" min="3" max="8" step="1" placeholder="5"></label>
+                <label for="inchesInput"><span>Palce</span><input id="inchesInput" type="number" inputmode="decimal" min="0" max="11.9" step="0.1" placeholder="9"></label>
+                <label for="poundsInput"><span>Libry</span><input id="poundsInput" type="number" inputmode="decimal" min="55" max="770" step="0.1" placeholder="150"></label>
+              </div>
+              <button type="button" id="convertImperialBtn">Převést do základního výpočtu</button>
+              <p id="conversionNote" aria-live="polite"></p>
+            </div>
+          </div>
+        </details>
+
+        <div class="bmi-tip"><strong>Důležité:</strong> BMI není vhodné pro dětskou interpretaci a samo nerozlišuje svalovou hmotu od tuku.</div>
+        <p class="bmi-error" id="inputError" hidden>Zkontrolujte zadanou výšku a hmotnost.</p>
+        <div class="form-actions"><button class="btn-primary" type="submit">Spočítat BMI</button><button class="btn-secondary" id="resetBtn" type="button">Obnovit hodnoty</button></div>
+        <p class="privacy-note">Zadané údaje se počítají pouze ve vašem zařízení a tato stránka je nikam neodesílá.</p>
+      </form>
+
+      <aside class="rate-result bmi-result" id="vysledek" aria-live="polite">
+        <div class="result-heading"><div><p class="eyebrow">Výsledek</p><h2>Vaše BMI</h2></div><span id="resultBadge" class="badge">Referenční pásmo</span></div>
+        <p>Hlavní číslo doplňuje kategorie pro dospělé, hmotnostní pásmo a případně obvod pasu.</p>
+        <div class="rate-answer bmi-primary"><span>Body mass index</span><strong id="bmiResult">24,7</strong><p id="resultNote">Výsledek spadá do referenčního pásma BMI pro dospělé.</p></div>
+        <div class="bmi-result-scale" aria-label="Pozice BMI na orientační stupnici"><div><span>18,5</span><span>25</span><span>30</span><span>40+</span></div><i><b id="bmiGaugeBar"></b></i></div>
+        <div class="rate-metrics bmi-metrics"><div><span>Kategorie</span><strong id="categoryResult">Referenční pásmo</strong></div><div><span>Referenční hmotnost</span><strong id="rangeResult">59,9–80,7 kg</strong></div><div><span>K nejbližší hranici</span><strong id="differenceResult">0,7 kg</strong></div><div><span>Pas / výška</span><strong id="waistRatioResult">nezadáno</strong></div></div>
+        <div class="rate-interpretation bmi-interpretation"><span>Jak výsledek číst</span><h3 id="interpretStatus">Screeningové pásmo, ne diagnóza</h3><p id="interpretText">BMI porovnává hmotnost s výškou. Neříká, kolik hmotnosti tvoří svaly nebo tuk.</p></div>
+        <div class="bmi-next-step"><span>Praktický další krok</span><p id="decisionSummary">Sledujte dlouhodobý trend a kontext, ne jediný izolovaný výpočet.</p><p id="nextActionText">Při zdravotních obavách, rychlé změně hmotnosti nebo těhotenství se nespoléhejte pouze na BMI.</p><div class="bmi-result-links"><a href="#metodika">Metodika</a><a href="#obvod-pasu">Obvod pasu</a><a href="#zdroje">Zdroje</a></div></div>
+      </aside>
+    </section>
+
+    <section class="container scenario-section bmi-detail" id="detail">
+      <div class="section-heading"><div><p class="eyebrow">Detail výsledku</p><h2>Rozpad výpočtu, který lze snadno zkontrolovat</h2></div><p>Všechny rozhodující hodnoty jsou vidět na jednom místě. Žádný skrytý koeficient ani osobní doporučení se do výsledku nepřidává.</p></div>
+      <div class="bmi-detail-layout">
+        <article class="bmi-reading-card"><span>Čtení výsledku</span><h3 id="readingTitle">BMI 24,7 leží v referenčním pásmu.</h3><p id="readingText">Pro zadanou výšku odpovídá standardnímu pásmu přibližně 59,9 až 80,7 kg.</p></article>
+        <div class="bmi-detail-stats"><div><span>Výška</span><strong id="heightResult">180 cm</strong></div><div><span>Hmotnost</span><strong id="weightResult">80 kg</strong></div><div><span>Dolní hranice</span><strong id="normalMinResult">59,9 kg</strong></div><div><span>Horní hranice</span><strong id="normalMaxResult">80,7 kg</strong></div><div><span>Vzorec</span><strong id="formulaResult">80 ÷ 1,80²</strong></div><div><span>Poměr pasu</span><strong id="waistDetailResult">nezadáno</strong></div></div>
+      </div>
+      <div class="scenario-table bmi-table-wrap"><table><thead><tr><th>Položka</th><th>Hodnota</th><th>Co znamená</th></tr></thead><tbody id="summaryTableBody"></tbody></table></div>
+    </section>
+
+    <section class="container seo-card bmi-method" id="metodika">
+      <div class="bmi-method-intro"><p class="eyebrow">Metodika bez zkratek</p><h2>Jak se BMI počítá a proč používá druhou mocninu výšky</h2><p>BMI neboli body mass index vyjadřuje poměr hmotnosti a druhé mocniny výšky. U metrických jednotek se hmotnost v kilogramech vydělí výškou v metrech umocněnou na druhou. Kalkulačka počítá s nezaokrouhlenými vstupy a teprve hotové BMI zobrazí na jedno desetinné místo.</p></div>
+      <div class="bmi-method-grid">
+        <article><p class="eyebrow">Krok 1</p><h3>Převeďte centimetry na metry</h3><p>Výška 180 cm se ve vzorci použije jako 1,80 metru. Záměna centimetrů za metry by výsledek zcela znehodnotila.</p></article>
+        <article><p class="eyebrow">Krok 2</p><h3>Výšku umocněte na druhou</h3><p>Hodnota 1,80 × 1,80 je 3,24. Právě tato část zohledňuje rozdíl mezi nižším a vyšším člověkem.</p></article>
+        <article><p class="eyebrow">Krok 3</p><h3>Hmotnost vydělte výsledkem</h3><p>Při 80 kg vychází 80 ÷ 3,24 = 24,69, tedy po zaokrouhlení BMI 24,7.</p><div class="bmi-formula">BMI = hmotnost (kg) ÷ výška² (m)</div></article>
+      </div>
+    </section>
+
+    <section class="container seo-card bmi-longform" id="jak-cist-vysledek" aria-labelledby="bmi-guide-title">
+      <header class="bmi-longform-intro"><p class="eyebrow">Podrobný průvodce</p><h2 id="bmi-guide-title">BMI kalkulačka pro dospělé: výpočet, kategorie, limity a praktická interpretace</h2><p>BMI je užitečný právě tím, že je jednoduchý. Ze dvou snadno dostupných údajů vytvoří číslo, které lze porovnat se standardní klasifikací pro dospělé. Jednoduchost však neznamená úplnost. Správné použití proto zahrnuje nejen výpočet, ale také pochopení hranic metody.</p><p>Následující části vysvětlují jednotlivá pásma, převod na kilogramy, význam obvodu pasu, zvláštní situace i časté chyby. Cílem není hodnotit vzhled ani předepisovat osobní postup, ale nabídnout přesný a srozumitelný screeningový přehled.</p></header>
+      <div class="bmi-longform-grid">
+        <article class="bmi-copy-card bmi-copy-featured"><p class="eyebrow">Základní význam</p><h3>Co BMI měří a co z něj lze rozumně vyčíst</h3><p>BMI porovnává tělesnou hmotnost s výškou. Nepracuje přímo s množstvím tuku, obvodem svalů ani rozložením hmoty v těle. Je proto vhodné jako rychlý screening na úrovni populace a jako první orientace jednotlivce, nikoli jako samostatná diagnóza. Číslo lze použít k zařazení do standardního pásma a ke sledování dlouhodobého trendu za stejných podmínek.</p><p>U jednoho člověka může být užitečná změna BMI v čase. Když se výška v dospělosti nemění, posun BMI odráží změnu hmotnosti. Ani trend však automaticky nevysvětluje příčinu. Změnu mohou ovlivnit svaly, tekutiny, onemocnění, léky, těhotenství nebo změna životního režimu.</p><p>Výsledek proto čtěte jako odpověď na úzkou otázku: jaký je poměr mé hmotnosti a výšky podle standardního vzorce? Na otázku, jaký je celkový zdravotní stav nebo vhodný osobní cíl, samotné BMI odpovědět neumí.</p><div class="bmi-callout"><strong>Rychlé pravidlo:</strong> BMI je výchozí bod pro další kontext, nikoli konečný verdikt o zdraví.</div></article>
+
+        <article class="bmi-copy-card"><p class="eyebrow">Kategorie</p><h3>Podváha: BMI nižší než 18,5</h3><p>Hodnota pod 18,5 se ve standardní klasifikaci dospělých označuje jako podváha. Kalkulačka ukáže, o kolik kilogramů leží zadaná hmotnost pod dolní hranicí přepočtenou pro danou výšku. Tento rozdíl není automatický pokyn k přibrání ani osobní léčebný cíl.</p><p>Nízké BMI může souviset s přirozeně drobnou stavbou těla, ale také s nedostatečným příjmem, rychlou změnou hmotnosti nebo zdravotním problémem. Význam proto závisí na vývoji, kondici, jídelních návycích a zdravotní historii. Zvláštní pozornost si zaslouží nechtěný nebo rychlý pokles hmotnosti.</p><p>Pokud je nízká hodnota dlouhodobá a bez obtíží, její interpretace může být jiná než u náhlého propadu. Kalkulačka tento rozdíl nepozná. Umí pouze správně spočítat index a pojmenovat standardní pásmo.</p></article>
+
+        <article class="bmi-copy-card"><p class="eyebrow">Kategorie</p><h3>Referenční pásmo: BMI 18,5 až 24,9</h3><p>Rozmezí od 18,5 do 24,9 se u dospělých běžně označuje jako pásmo zdravé hmotnosti. Na této stránce používáme neutrálnější výraz referenční pásmo, protože jedno číslo neurčuje celkové zdraví. Člověk v tomto pásmu může mít jiné rizikové faktory a člověk těsně mimo něj nemusí mít automaticky zdravotní problém.</p><p>Kalkulačka převádí obě hranice na kilogramy pro zadanou výšku. U výšky 180 cm vychází přibližně 59,9 až 80,7 kg. Široké rozpětí ukazuje, že metoda neurčuje jedinou správnou hmotnost. Osobní vhodnost ovlivňuje stavba těla, svalová hmota, věk i zdravotní stav.</p><p>Při sledování v čase je užitečnější stabilní trend než honba za konkrétním desetinným číslem. Rozdíl mezi BMI 24,8 a 25,0 je matematicky malý, přesto leží na opačných stranách klasifikační hranice.</p></article>
+
+        <article class="bmi-copy-card"><p class="eyebrow">Kategorie</p><h3>Nadváha: BMI 25,0 až 29,9</h3><p>BMI od 25,0 do 29,9 patří podle běžné klasifikace do pásma nadváhy. Jde o screeningovou kategorii, která říká, že poměr hmotnosti a výšky je nad referenčním pásmem. Neříká, jaký podíl hmotnosti tvoří tuk, kde je tuk uložen ani zda má člověk další rizikové faktory.</p><p>U této kategorie může být užitečný volitelný obvod pasu. Poměr pasu k výšce doplní informaci o centrální adipositě a pomůže odlišit situace, které mají stejné BMI, ale odlišné rozložení hmotnosti. Ani obvod pasu však nenahrazuje klinické vyšetření.</p><p>Pokud člověk pravidelně silově trénuje, vyšší hmotnost může zčásti tvořit svalová hmota. Naopak relativně nízký podíl svalů může být důležitý i při BMI, které nevypadá výrazně zvýšeně. Proto je vždy potřeba kontext.</p></article>
+
+        <article class="bmi-copy-card"><p class="eyebrow">Kategorie</p><h3>Obezita I., II. a III. třídy</h3><p>BMI 30 a více se ve standardní klasifikaci dospělých dělí na tři třídy. I. třída zahrnuje 30,0 až 34,9, II. třída 35,0 až 39,9 a III. třída začíná hodnotou 40. Kalkulačka tato pásma rozlišuje, aby výsledek nebyl zbytečně obecný.</p><p>Vyšší třída neznamená, že lze z BMI určit konkrétní diagnózu. Znamená pouze, že poměr hmotnosti a výšky leží v pásmu, u kterého se v populaci častěji sledují zdravotní rizika. Osobní posouzení vyžaduje další údaje, například anamnézu, krevní tlak, laboratorní výsledky, kondici a tělesné složení.</p><p>Při BMI 35 a vyšším NICE nepoužívá poměr pasu k výšce jako hlavní doplňkovou klasifikaci, protože samotné BMI už ukazuje výrazně zvýšenou hmotnost. Kalkulačka proto případný poměr zobrazí, ale přidá k němu vysvětlení.</p></article>
+
+        <article class="bmi-copy-card" id="obvod-pasu"><p class="eyebrow">Advanced údaj</p><h3>Poměr obvodu pasu k výšce</h3><p>Poměr pasu k výšce vznikne vydělením obvodu pasu výškou ve stejných jednotkách. Při pasu 88 cm a výšce 180 cm vychází 0,49. NICE u dospělých s BMI pod 35 používá hodnotu 0,4 až 0,49 jako pásmo bez zvýšené centrální adiposity, 0,5 až 0,59 jako zvýšenou a 0,6 a více jako vysokou.</p><p>Praktická pomůcka zní „držte pas pod polovinou výšky“. Nejde o absolutní pravidlo pro každou situaci, ale o dobře zapamatovatelnou orientaci. Hodnota pod 0,4 může také vyžadovat kontext, protože velmi nízký obvod není automaticky známkou optimálního stavu.</p><p>Pas měřte konzistentně a bez zatahování břicha. Jednorázová odchylka vznikne jiným místem měření, oblečením nebo napětím pásku. Pro sledování trendu používejte vždy podobný postup.</p></article>
+
+        <article class="bmi-copy-card"><p class="eyebrow">Přepočet</p><h3>Jak kalkulačka získá referenční hmotnostní pásmo</h3><p>Hmotnostní pásmo není samostatná tabulka. Kalkulačka obrátí původní vzorec BMI: zvolenou hranici BMI vynásobí druhou mocninou výšky. Dolní hranice používá BMI 18,5 a horní hranice 24,9. Proto se rozsah mění s každým centimetrem výšky.</p><p>Například pro 170 cm vychází přibližně 53,5 až 72,0 kg, zatímco pro 190 cm přibližně 66,8 až 89,9 kg. Výsledek je matematicky přesný vzhledem ke klasifikaci, ale není to personalizovaný předpis. Nezná kosterní stavbu, svaly, zdravotní historii ani individuální doporučení odborníka.</p><p>Položka „k nejbližší hranici“ pouze ukazuje matematickou vzdálenost. Uprostřed referenčního pásma míří k bližšímu okraji, nikoli k ideálnímu cíli. U podváhy nebo vyššího BMI ukazuje vzdálenost k návratu do pásma.</p></article>
+
+        <article class="bmi-copy-card"><p class="eyebrow">Svaly a sport</p><h3>Proč může BMI u sportovce zavádět</h3><p>Svalová tkáň přispívá k hmotnosti stejně jako jiná tkáň, ale vzorec BMI jejich podíl nerozlišuje. Silový sportovec může mít BMI v pásmu nadváhy, přestože má nízký podíl tělesného tuku. Opačně může člověk s menším množstvím svalů spadat do referenčního pásma a přitom mít jiné zdravotní riziko.</p><p>To neznamená, že je BMI pro aktivní lidi vždy zbytečné. Může sloužit jako rychlý dlouhodobý záznam, pokud se čte společně s výkonem, obvodem pasu a případně kvalitním měřením tělesného složení. Samostatné číslo však není vhodné pro hodnocení sportovní formy.</p><p>Domácí váhy s odhadem tuku mají také vlastní nepřesnost. Nejde tedy o volbu mezi dokonale přesným a nepřesným ukazatelem, ale o skládání více informací s vědomím jejich limitů.</p></article>
+
+        <article class="bmi-copy-card"><p class="eyebrow">Věk</p><h3>Děti, dospívající a starší dospělí</h3><p>Tato kalkulačka používá dospělou klasifikaci a je určená osobám od 20 let. U dětí a dospívajících se BMI nevyhodnocuje stejnými pevnými hranicemi. Výsledek se vztahuje k věku a pohlaví a porovnává se s růstovými grafy nebo percentily. Zadání dětské výšky a hmotnosti do tohoto nástroje by proto vytvořilo číslo bez správné interpretace.</p><p>U starších dospělých může význam BMI ovlivnit ztráta svalové hmoty, změna tělesného složení i zdravotní stav. NICE doporučuje u osob nad 65 let interpretovat BMI opatrně a zohlednit například funkční stav a sarcopenii.</p><p>Stejná desetinná hodnota tedy nemusí mít u mladého sportovce, běžného dospělého a seniora totožný praktický význam. Kalkulačka věk nezjišťuje, a proto tuto část kontextu musí doplnit uživatel.</p></article>
+
+        <article class="bmi-copy-card"><p class="eyebrow">Zvláštní situace</p><h3>Těhotenství, otoky a rychlá změna hmotnosti</h3><p>Běžná interpretace BMI není určená k hodnocení průběhu těhotenství. Hmotnost se v této době mění z důvodů, které jednoduchý poměr výšky a hmotnosti neumí rozlišit. Pro péči v těhotenství se používá výchozí stav a individuální doporučení zdravotnického odborníka.</p><p>Krátkodobou hmotnost mohou výrazně ovlivnit tekutiny, otoky, trávení nebo čas měření. Rozdíl během dne proto nemusí znamenat odpovídající změnu tělesného tuku. Pro smysluplný trend používejte podobný čas a podmínky a sledujte delší období.</p><p>Nechtěný rychlý úbytek nebo nárůst hmotnosti je důležitější signál než samotná kategorie BMI. Kalkulačka nedokáže určit příčinu a neměla by oddálit odborné posouzení, pokud změnu doprovázejí obtíže.</p></article>
+
+        <article class="bmi-copy-card"><p class="eyebrow">Populační rozdíly</p><h3>Proč nemusí být hranice stejné pro každého</h3><p>Standardní hranice 25 a 30 jsou široce používané, ale zdravotní riziko nemusí u všech populačních skupin růst stejným způsobem. NICE uvádí nižší prahy pro některé etnické skupiny, například zvýšené riziko od BMI 23 a obezitu od 27,5. Tato stránka ponechává hlavní výsledek ve standardní klasifikaci a na rozdíl upozorňuje v metodice.</p><p>Důvodem není změna matematického vzorce. BMI 24 se počítá vždy stejně, může však mít odlišný klinický význam podle původu a dalších faktorů. Univerzální kalkulačka bez osobních údajů proto nemůže vytvořit plně individualizovanou interpretaci.</p><p>Pokud se vás nižší prahy týkají nebo řešíte konkrétní zdravotní riziko, použijte výsledek jako podklad pro širší posouzení, ne jako definitivní hranici.</p></article>
+
+        <article class="bmi-copy-card"><p class="eyebrow">Měření</p><h3>Jak správně zadat výšku, hmotnost a pas</h3><p>Výšku měřte bez bot, vzpřímeně a na rovném povrchu. Hmotnost sledujte pokud možno na stejné váze a ve srovnatelnou dobu. Jednotlivé denní výkyvy jsou běžné, proto při dlouhodobém sledování dává větší smysl trend než náhodné minimum nebo maximum.</p><p>Obvod pasu měřte vodorovně přibližně v polovině mezi spodním okrajem posledního žebra a horním okrajem kyčelní kosti. Páska má přiléhat, ale nemá stlačovat kůži. Měřte po běžném výdechu a břicho vědomě nezatahujte.</p><p>Pokud používáte stopy, palce a libry, otevřete Advanced režim. Převodník nejprve převede hodnoty na centimetry a kilogramy a teprve potom spustí stejný metrický výpočet. Díky tomu je postup transparentní.</p></article>
+
+        <article class="bmi-copy-card"><p class="eyebrow">Trend</p><h3>Jak porovnávat BMI v čase bez zbytečného šumu</h3><p>U dospělého se stálou výškou se BMI mění přímo s hmotností. Má proto smysl porovnávat výsledky vypočtené stejným postupem. Zápis jednou týdně nebo jednou měsíčně bývá čitelnější než reakce na každý denní výkyv. Důležitý je směr a rychlost změny.</p><p>Zaokrouhlení na jedno desetinné místo brání dojmu falešné přesnosti. Rozdíl několika setin obvykle vzniká běžnou změnou hmotnosti nebo měřením. Kalkulačka počítá interně přesněji, ale uživateli zobrazuje praktickou hodnotu.</p><p>Při porovnávání myslete i na změnu svalové hmoty. Stejná hmotnost po delším tréninku nemusí znamenat stejné tělesné složení. Proto lze trend doplnit obvodem pasu, kondicí a dalšími relevantními údaji.</p></article>
+
+        <article class="bmi-copy-card"><p class="eyebrow">Časté chyby</p><h3>Co nejčastěji znehodnotí výpočet BMI</h3><p>První chybou je zadání výšky v metrech do pole pro centimetry nebo záměna liber za kilogramy. Druhou je použití dospělých kategorií pro dítě. Třetí je interpretace referenčního hmotnostního pásma jako přesného osobního cíle. Všechny tři chyby mohou vytvořit zavádějící závěr, i když samotná aritmetika funguje správně.</p><p>Další problém je přílišná důvěra v hranice kategorií. BMI 24,9 a 25,0 se prakticky téměř neliší, přesto se slovní štítek změní. Kategorie jsou intervaly pro orientaci, nikoli ostrý biologický přepínač.</p><p>Poslední častou chybou je ignorování nechtěného trendu. Stabilní hodnota a rychlá změna na stejný výsledek mají jiný význam. Kalkulačka zná jen aktuální vstup, nikoli vaši historii.</p></article>
+
+        <article class="bmi-copy-card"><p class="eyebrow">Rozhodování</p><h3>Kdy výsledek stačí a kdy hledat širší posouzení</h3><p>Pro rychlou orientaci dospělého bez zvláštní situace je BMI užitečný první krok. Pokud výsledek leží stabilně v referenčním pásmu a neřešíte zdravotní obtíže, často stačí chápat jeho omezení a sledovat běžný životní kontext. Kalkulačka může také posloužit k ověření ručního výpočtu.</p><p>Širší posouzení dává smysl při rychlé nebo nechtěné změně hmotnosti, velmi nízkém či vysokém výsledku, těhotenství, výrazné svalové hmotě, u seniorů nebo při konkrétním zdravotním riziku. Stejně tak pokud výsledek vyvolává obavy nebo vede k extrémnímu chování.</p><p>Online nástroj nesmí nahrazovat diagnostiku. Jeho nejlepší rolí je udělat výpočet správně, transparentně a vysvětlit, které otázky zůstávají otevřené.</p></article>
+      </div>
+    </section>
+
+    <section class="container seo-dark bmi-decision">
+      <p class="eyebrow">Bezpečné použití výsledku</p>
+      <h2>Jedno číslo použijte jako orientaci, ne jako nálepku</h2>
+      <p>BMI je rychlý screeningový nástroj. Pro smysluplné rozhodování ho spojte s trendem hmotnosti, obvodem pasu, tělesným složením, kondicí a zdravotním kontextem.</p>
+      <div class="bmi-decision-grid"><article><span>1</span><strong>Zkontrolujte vstupy</strong><p>Výška v centimetrech, hmotnost v kilogramech a konzistentní měření.</p></article><article><span>2</span><strong>Přečtěte kategorii</strong><p>Vnímejte ji jako interval standardní klasifikace, ne ostrou biologickou hranici.</p></article><article><span>3</span><strong>Doplňte kontext</strong><p>Volitelně pas, dlouhodobý trend a při potřebě odborné zdravotní posouzení.</p></article></div>
+    </section>
+
+    <section class="container related-tools" id="souvisejici-kalkulacky">
+      <div class="section-heading"><div><p class="eyebrow">Navazující nástroje</p><h2>Co můžete spočítat dál</h2></div><p>Další praktické nástroje pro převody, průměry, procenta a rodinné plánování.</p></div>
+      <div class="related-grid"><a class="related-card" href="prevodnik-jednotek.html"><span>J</span><strong>Převodník jednotek</strong><small>Délka, hmotnost a další jednotky.</small></a><a class="related-card" href="kalkulacka-prumeru.html"><span>P</span><strong>Kalkulačka průměru</strong><small>Průměr více naměřených hodnot.</small></a><a class="related-card" href="procenta-kalkulacka.html"><span>%</span><strong>Procenta</strong><small>Změny, podíly a procentní rozdíly.</small></a><a class="related-card" href="rodina-a-rozpocet.html"><span>R</span><strong>Rodina a rozpočet</strong><small>Praktické kalkulačky pro domácnost.</small></a></div>
+    </section>
+
+    <section class="container seo-card bmi-sources" id="zdroje">
+      <div class="section-heading"><div><p class="eyebrow">Zdroje a ověření</p><h2>Z čeho vychází vzorec a klasifikace</h2></div><p>Obsah stojí na veřejných metodikách autorit pro zdraví. Odkazy vedou přímo na použité zdroje.</p></div>
+      <div class="bmi-source-links">
+        <a href="https://www.cdc.gov/bmi/adult-calculator/index.html" target="_blank" rel="noopener noreferrer"><span>CDC</span><strong>Adult BMI Calculator</strong><small>Kategorie pro dospělé, omezení BMI a screeningový význam.</small><b>Otevřít zdroj →</b></a>
+        <a href="https://www.cdc.gov/growth-chart-training/hcp/using-bmi/calculating-bmi.html" target="_blank" rel="noopener noreferrer"><span>CDC</span><strong>Calculating BMI</strong><small>Metrický i imperiální vzorec a oddělení dětské interpretace.</small><b>Otevřít zdroj →</b></a>
+        <a href="https://www.who.int/news-room/fact-sheets/detail/obesity-and-overweight" target="_blank" rel="noopener noreferrer"><span>WHO</span><strong>Obesity and overweight</strong><small>Definice BMI, hranice nadváhy a obezity u dospělých.</small><b>Otevřít zdroj →</b></a>
+        <a href="https://www.nice.org.uk/guidance/ng246/chapter/Identifying-and-assessing-overweight-obesity-and-central-adiposity" target="_blank" rel="noopener noreferrer"><span>NICE</span><strong>BMI a centrální adiposita</strong><small>Třídy BMI, poměr pasu k výšce a důležité interpretační výjimky.</small><b>Otevřít zdroj →</b></a>
+      </div>
+      <p class="bmi-reviewed">Metodika a odkazy zkontrolovány 12. 7. 2026. Stránka neposkytuje diagnózu ani individuální léčebné doporučení.</p>
+    </section>
+
+    <section class="container seo-card bmi-faq" id="faq">
+      <div class="section-heading"><div><p class="eyebrow">FAQ</p><h2>Časté otázky k BMI kalkulačce</h2></div><p>Stručné odpovědi na nejčastější dotazy k výpočtu a jeho bezpečné interpretaci.</p></div>
+      <div class="bmi-faq-grid">
+        <details><summary>Jak se počítá BMI?</summary><p>Hmotnost v kilogramech vydělte druhou mocninou výšky v metrech. Příklad: 80 ÷ 1,80² = 24,7.</p></details>
+        <details><summary>Jaké BMI je v referenčním pásmu?</summary><p>Standardní klasifikace pro dospělé používá 18,5 až 24,9. Jde o screeningové pásmo, ne osobní diagnózu.</p></details>
+        <details><summary>Co znamená BMI 25 až 29,9?</summary><p>Jde o pásmo nadváhy. Význam je vhodné doplnit obvodem pasu, tělesným složením, trendem a zdravotním kontextem.</p></details>
+        <details><summary>Je BMI kalkulačka vhodná pro děti?</summary><p>Ne pro interpretaci touto tabulkou. Dětské BMI se hodnotí podle věku a pohlaví pomocí percentilů nebo růstových grafů.</p></details>
+        <details><summary>Je BMI přesné pro sportovce?</summary><p>Nerozlišuje svaly a tuk, takže u velmi svalnatých lidí může význam vyšší hmotnosti nadhodnotit.</p></details>
+        <details><summary>Proč zadávat obvod pasu?</summary><p>Poměr pasu k výšce přidává orientaci v centrální adipositě. U dospělých s BMI pod 35 se často používá pravidlo pasu pod polovinou výšky.</p></details>
+        <details><summary>Co znamená referenční rozmezí v kilogramech?</summary><p>Je to matematický přepočet BMI 18,5 až 24,9 pro vaši výšku. Nejde o individuální léčebný cíl.</p></details>
+        <details><summary>Může BMI nahradit lékaře?</summary><p>Ne. BMI je screeningový ukazatel. Diagnózu, zdravotní rizika a vhodný postup musí posoudit širší odborný kontext.</p></details>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer" id="footer">
+    <div class="container footer-grid">
+      <div><img src="logo-rychlevypocty-footer.svg" alt="RychléVýpočty.cz" width="190" height="38"><p>Praktické online kalkulačky pro zdraví, finance, práci, bydlení, podnikání i každodenní rozhodování.</p></div>
+      <div><h3>Kalkulačky</h3><div class="footer-links"><a href="bmi-kalkulacka.html">BMI kalkulačka</a><a href="procenta-kalkulacka.html">Procenta</a><a href="kalkulacka-prumeru.html">Průměr</a><a href="prevodnik-jednotek.html">Převodník jednotek</a><a href="kalkulacky.html">Všechny kalkulačky</a></div></div>
+      <div><h3>Hlavní sekce</h3><div class="footer-links"><a href="finance-a-hypoteky.html">Finance a hypotéky</a><a href="mzdy-a-prace.html">Mzdy a práce</a><a href="rodina-a-rozpocet.html">Rodina a rozpočet</a><a href="auto-a-provoz.html">Auto a provoz</a><a href="datum-a-cas.html">Datum a čas</a></div></div>
+      <div><h3>Web</h3><div class="footer-links"><a href="jak-pocitame.html">Jak počítáme</a><a href="o-nas.html">O nás</a><a href="kontakt.html">Kontakt</a><a href="podminky-pouziti.html">Podmínky použití</a><a href="ochrana-osobnich-udaju.html">Ochrana osobních údajů</a></div></div>
+    </div>
+    <div class="container footer-bottom"><p>© 2026 RychléVýpočty.cz. Výsledek BMI je orientační screeningový údaj a nenahrazuje zdravotní posouzení.</p></div>
+  </footer>
+  <script src="bmi.js?v=20260712-1"></script>
 </body>
 </html>
