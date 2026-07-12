@@ -26,8 +26,7 @@
   <meta name="twitter:description" content="Spočítejte pracovní dny, hodiny, víkendy a svátky mezi dvěma daty.">
   <meta name="twitter:image" content="https://rychlevypocty.cz/og-image.jpg">
   <link rel="stylesheet" href="rv-tool-v2.css">
-  <link rel="stylesheet" href="date-v2.css?v=8">
-  <link rel="stylesheet" href="workdays-pro.css?v=20260712-2">
+  <link rel="stylesheet" href="workdays-pro.css?v=20260712-3">
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"RychléVýpočty.cz","item":"https://rychlevypocty.cz/"},{"@type":"ListItem","position":2,"name":"Datum a čas","item":"https://rychlevypocty.cz/datum-a-cas.html"},{"@type":"ListItem","position":3,"name":"Pracovní dny","item":"https://rychlevypocty.cz/pracovni-dny-kalkulacka.html"}]}
   </script>
@@ -39,7 +38,7 @@
   </script>
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7745758285259522" crossorigin="anonymous"></script>
 </head>
-<body class="rv-date-tool rv-workdays-page workdays-pro-page">
+<body class="freelancer-pro worked-hours-pro-page workdays-pro-page">
   <a class="skip-link" href="#kalkulacka">Přejít na kalkulačku</a>
   <header class="site-header">
     <div class="container header-inner">
@@ -56,10 +55,11 @@
     </div>
   </header>
 
-  <main id="main-content">
-    <section class="workdays-hero">
-      <div class="container workdays-hero-grid">
-        <div class="workdays-hero-copy">
+  <main id="main">
+    <section class="rate-hero workdays-hero">
+      <div class="container">
+        <div class="rate-hero-grid hero-layout workdays-hero-grid">
+        <div class="hero-copy workdays-hero-copy">
           <nav class="breadcrumb" aria-label="Drobečková navigace">
             <a href="index.html">Domů</a><span>/</span><a href="kalkulacky.html">Kalkulačky</a><span>/</span><strong>Pracovní dny</strong>
           </nav>
@@ -83,7 +83,7 @@
           </div>
         </div>
 
-        <aside class="workdays-hero-visual" aria-label="Náhled výsledku pracovních dnů">
+        <aside class="rate-preview workdays-preview" aria-label="Náhled výsledku pracovních dnů">
           <div class="workdays-screen">
             <div class="screen-top">
               <span>Ukázka období</span>
@@ -107,25 +107,16 @@
             </div>
           </div>
         </aside>
-      </div>
-    </section>
-
-    <section class="workdays-proof" aria-label="Co výpočet hlídá">
-      <div class="container workdays-proof-grid">
-        <article><span>Pracovní dny</span><strong>Skutečně použitelný počet dnů pro termín, kapacitu nebo plán.</strong></article>
-        <article><span>Volné dny</span><strong>Víkendy a svátky odděleně, aby bylo vidět, proč se období krátí.</strong></article>
-        <article><span>Hodiny</span><strong>Rychlý přepočet na pracovní fond podle zadané délky dne.</strong></article>
-        <article><span>Další krok</span><strong>Dovolená, odpracované hodiny, hodinová mzda nebo dny do data.</strong></article>
-      </div>
-    </section>
-
-    <section class="container workdays-stage" id="kalkulacka">
-      <form class="workdays-card workdays-form" id="workdaysForm" novalidate>
-        <div class="section-heading compact">
-          <p class="eyebrow">Zadání</p>
-          <h2>Zadejte období a pracovní režim</h2>
-          <p>Kalkulačka projde každý den v období. Podle voleb odečte víkendy a české svátky, potom výsledek přepočítá na pracovní hodiny.</p>
         </div>
+      </div>
+    </section>
+
+    <section class="container rate-work workdays-stage" id="kalkulacka">
+      <form class="rate-form workdays-form" id="workdaysForm" novalidate>
+        <p class="eyebrow">Basic režim</p>
+        <h2>Zadejte období a pracovní režim</h2>
+        <p class="form-intro">Pro běžný výpočet stačí začátek, konec období a délka pracovního dne. Víkendy, svátky a způsob započítání posledního dne upravíte jen v Advanced režimu.</p>
+        <div class="workdays-mode-note"><strong>Rychlý výpočet</strong><span>Tři základní údaje, okamžitý výsledek a detail dnů pod kalkulačkou.</span></div>
         <div class="preset-row" aria-label="Rychlé předvolby">
           <button type="button" data-preset="month">Tento měsíc</button>
           <button type="button" data-preset="next-month">Příští měsíc</button>
@@ -151,7 +142,7 @@
         </div>
         <details class="workdays-advanced" id="workdaysAdvanced">
           <summary>
-            <span>Pokročilé nastavení</span>
+            <span>Advanced režim</span>
             <small>víkendy, svátky a poslední den období</small>
           </summary>
           <div class="workdays-advanced-grid">
@@ -173,18 +164,17 @@
           <button class="btn-primary" type="submit">Spočítat pracovní dny</button>
           <button class="btn-secondary" id="resetBtn" type="button">Obnovit hodnoty</button>
         </div>
+        <p class="privacy-note">Zadaná data se počítají pouze ve vašem prohlížeči.</p>
       </form>
 
-      <aside class="workdays-card workdays-result" id="vysledek" aria-live="polite">
-        <p class="eyebrow">Výsledek</p>
-        <h2>Kolik pracovních dnů v období vychází</h2>
+      <aside class="rate-result workdays-result" id="vysledek" aria-live="polite">
+        <div class="result-heading"><div><p class="eyebrow">Výsledek</p><h2>Kolik pracovních dnů vychází</h2></div><span id="periodBadge" class="badge success">Výpočet připraven</span></div>
         <p>Výsledek drží nahoře hlavní čísla. Detail níž ukazuje, které dny výpočet odečetl.</p>
-        <div class="workdays-primary">
+        <div class="rate-answer primary-result workdays-primary">
           <span>Pracovní dny</span>
           <output id="workingDays">0</output>
-          <small id="periodBadge">Výpočet připraven</small>
         </div>
-        <div class="workdays-metrics">
+        <div class="rate-metrics result-metrics workdays-metrics">
           <div><span>Pracovní hodiny</span><strong id="workingHours">0 h</strong></div>
           <div><span>Kalendářní dny</span><strong id="calendarDays">0</strong></div>
           <div><span>Víkendy</span><strong id="weekendDays">0</strong></div>
@@ -194,7 +184,7 @@
           <div><span>Práce</span><i><b id="workShareBar"></b></i><em id="workShareText">0 %</em></div>
           <div><span>Volno</span><i><b id="offShareBar"></b></i><em id="offShareText">0 %</em></div>
         </div>
-        <div class="result-reading">
+        <div class="rate-interpretation result-reading">
           <strong id="capacityStatus">Výsledek se dopočítá po zadání období.</strong>
           <p id="capacityText">Uvidíte rozdíl mezi kalendářním časem a reálně použitelnými pracovními dny.</p>
         </div>
@@ -210,10 +200,9 @@
       </aside>
     </section>
 
-    <section class="container workdays-detail" id="detail">
-      <div class="detail-head">
-        <p class="eyebrow">Detail výsledku</p>
-        <h2>Rozpad období, který se dá zkontrolovat</h2>
+    <section class="container scenario-section workdays-detail" id="detail">
+      <div class="section-heading detail-head">
+        <div><p class="eyebrow">Detail výsledku</p><h2>Rozpad období, který se dá zkontrolovat</h2></div>
         <p>Hlavní číslo samo o sobě nestačí. Tady vidíte, kolik dnů zůstalo pro práci, kolik se odečetlo a které první dny v období výpočet zařadil jako pracovní nebo volné.</p>
       </div>
       <div class="detail-layout">
@@ -234,7 +223,7 @@
       </div>
     </section>
 
-    <section class="container workdays-guide" id="jak-cist-vysledek">
+    <section class="container seo-card workdays-guide" id="jak-cist-vysledek">
       <article class="guide-intro">
         <p class="eyebrow">Pracovní dny 2026</p>
         <h2>Kdy počítat pracovní dny a kdy kalendářní</h2>
@@ -270,7 +259,7 @@
       </div>
     </section>
 
-    <section class="container workdays-longform" aria-labelledby="workdays-guide-title">
+    <section class="container seo-card workdays-longform" aria-labelledby="workdays-guide-title">
       <header class="longform-intro">
         <p class="eyebrow">Podrobný průvodce</p>
         <h2 id="workdays-guide-title">Pracovní dny mezi dvěma daty: výpočet, termíny a praktické použití</h2>
@@ -346,7 +335,7 @@
       </div>
     </section>
 
-    <section class="container workdays-decision">
+    <section class="container seo-dark workdays-decision">
       <div>
         <p class="eyebrow">Rozhodovací použití</p>
         <h2>Jak s výsledkem pracovat v praxi</h2>
@@ -370,7 +359,7 @@
       </div>
     </section>
 
-    <section class="container workdays-sources">
+    <section class="container seo-card workdays-sources">
       <div>
         <p class="eyebrow">Zdroje a ověření</p>
         <h2>Odkud vychází pravidla</h2>
@@ -398,7 +387,7 @@
       </div>
     </section>
 
-    <section class="container faq-section" id="faq">
+    <section class="container seo-card faq-section workdays-faq" id="faq">
       <p class="eyebrow">FAQ</p>
       <h2>Časté otázky k pracovním dnům</h2>
       <div class="faq-grid">
@@ -412,7 +401,7 @@
     </section>
 </main>
 
-  <footer class="site-footer">
+  <footer class="footer">
     <div class="container footer-grid">
       <div>
         <img src="logo-rychlevypocty-footer.svg" alt="RychléVýpočty.cz" width="190" height="38">
