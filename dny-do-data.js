@@ -1,112 +1,245 @@
 (() => {
+  "use strict";
+
   const $ = (id) => document.getElementById(id);
   const form = $("daysForm");
-  const resetBtn = $("resetBtn");
-  const msPerDay = 86400000;
-  const int = (value) => new Intl.NumberFormat("cs-CZ").format(Number.isFinite(value) ? value : 0);
-  const dec = (value) =>
-    new Intl.NumberFormat("cs-CZ", { maximumFractionDigits: 1 }).format(Number.isFinite(value) ? value : 0);
-  const dateValue = (date) =>
-    `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
-  const parse = (value) => {
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return null;
-    const [y, m, d] = value.split("-").map(Number);
-    const date = new Date(y, m - 1, d);
-    return date.getFullYear() === y && date.getMonth() === m - 1 && date.getDate() === d ? date : null;
-  };
-  const fmt = (date) => new Intl.DateTimeFormat("cs-CZ", { day: "numeric", month: "long", year: "numeric" }).format(date);
-  const diffDays = (a, b) =>
-    Math.round((Date.UTC(b.getFullYear(), b.getMonth(), b.getDate()) - Date.UTC(a.getFullYear(), a.getMonth(), a.getDate())) / msPerDay);
+  if (!form) return;
 
-  function calendarDiff(start, end) {
-    const sign = end >= start ? 1 : -1;
-    const a = sign === 1 ? start : end;
-    const b = sign === 1 ? end : start;
-    let years = b.getFullYear() - a.getFullYear();
-    let months = b.getMonth() - a.getMonth();
-    let days = b.getDate() - a.getDate();
-    if (days < 0) {
-      months -= 1;
-      days += new Date(b.getFullYear(), b.getMonth(), 0).getDate();
-    }
-    if (months < 0) {
-      years -= 1;
-      months += 12;
-    }
+  const MS_PER_DAY = 86400000;
+  const number = new Intl.NumberFormat("cs-CZ");
+  const decimal = new Intl.NumberFormat("cs-CZ", { maximumFractionDigits: 1 });
+  const dateFormatter = new Intl.DateTimeFormat("cs-CZ", {
+    day: "numeric",
+    month: "long",
+    year: "numeric"
+  });
+
+  const formatNumber = (value) => number.format(Number.isFinite(value) ? value : 0);
+  const formatDecimal = (value) => decimal.format(Number.isFinite(value) ? value : 0);
+  const pad = (value) => String(value).padStart(2, "0");
+  const toInputValue = (date) => `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+  const addDays = (date, days) => new Date(date.getFullYear(), date.getMonth(), date.getDate() + days);
+  const todayLocal = () => {
+    const now = new Date();
+    return new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  };
+  const parseDate = (value) => {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return null;
+    const [year, month, day] = value.split("-").map(Number);
+    const parsed = new Date(year, month - 1, day);
+    if (
+      parsed.getFullYear() !== year ||
+      parsed.getMonth() !== month - 1 ||
+      parsed.getDate() !== day
+    ) return null;
+    return parsed;
+  };
+  const utcDay = (date) => Date.UTC(date.getFullYear(), date.getMonth(), date.getDate());
+  const dayDifference = (start, target) => Math.round((utcDay(target) - utcDay(start)) / MS_PER_DAY);
+
+  function addMonthsClamped(date, months) {
+    const monthStart = new Date(date.getFullYear(), date.getMonth() + months, 1);
+    const lastDay = new Date(monthStart.getFullYear(), monthStart.getMonth() + 1, 0).getDate();
+    return new Date(monthStart.getFullYear(), monthStart.getMonth(), Math.min(date.getDate(), lastDay));
+  }
+
+  function calendarDifference(start, target) {
+    const first = start <= target ? start : target;
+    const last = start <= target ? target : start;
+    let totalMonths = (last.getFullYear() - first.getFullYear()) * 12 + last.getMonth() - first.getMonth();
+    if (addMonthsClamped(first, totalMonths) > last) totalMonths -= 1;
+    const anchor = addMonthsClamped(first, totalMonths);
+    const years = Math.floor(totalMonths / 12);
+    const months = totalMonths % 12;
+    const days = dayDifference(anchor, last);
     return { years, months, days };
   }
 
+  function daysLabel(value) {
+    const absolute = Math.abs(value);
+    if (absolute === 1) return "den";
+    if (absolute >= 2 && absolute <= 4) return "dny";
+    return "dní";
+  }
+
+  function yearsLabel(value) {
+    if (value === 1) return "rok";
+    if (value >= 2 && value <= 4) return "roky";
+    return "let";
+  }
+
+  function calendarText(parts) {
+    const chunks = [];
+    if (parts.years) chunks.push(`${formatNumber(parts.years)} ${yearsLabel(parts.years)}`);
+    if (parts.months) chunks.push(`${formatNumber(parts.months)} měs.`);
+    if (parts.days || !chunks.length) chunks.push(`${formatNumber(parts.days)} ${daysLabel(parts.days)}`);
+    return chunks.join(" ");
+  }
+
+  function setText(id, text) {
+    const element = $(id);
+    if (element) element.textContent = text;
+  }
+
   function setDefaults() {
-    const today = new Date();
-    const future = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 30);
-    $("startDate").value = dateValue(today);
-    $("targetDate").value = dateValue(future);
+    const today = todayLocal();
+    $("startDate").value = toInputValue(today);
+    $("targetDate").value = toInputValue(addDays(today, 30));
+    $("calculationMode").value = "absolute";
+    $("includeTargetDay").checked = false;
+    $("daysAdvanced").open = false;
+    $("inputError").hidden = true;
+  }
+
+  function setInvalidState() {
+    $("inputError").hidden = false;
+    setText("resultBadge", "Doplňte obě data");
+    setText("daysResult", "—");
+    setText("resultNote", "Výpočet potřebuje platné počáteční i cílové datum.");
+    setText("statusResult", "Neúplné zadání");
+    setText("timingStatus", "Výsledek zatím chybí");
+    setText("timingText", "Zkontrolujte obě datumová pole.");
   }
 
   function render() {
-    const start = parse($("startDate").value);
-    const target = parse($("targetDate").value);
+    const start = parseDate($("startDate").value);
+    const target = parseDate($("targetDate").value);
     if (!start || !target) {
-      $("daysResult").textContent = "—";
-      $("statusResult").textContent = "Doplňte obě data";
-      $("resultBadge").textContent = "Neúplné zadání";
-      $("resultNote").textContent = "Pro výpočet je potřeba platné počáteční i cílové datum.";
+      setInvalidState();
       return;
     }
-    const diff = diffDays(start, target);
-    const abs = Math.abs(diff);
-    const signed = $("calculationMode").value === "signed";
-    const shownDays = signed ? diff : abs;
-    const weeks = Math.floor(abs / 7);
-    const remaining = abs % 7;
-    const monthsApprox = abs / 30.44;
-    const calendar = calendarDiff(start, target);
-    const status = diff > 0 ? "Datum teprve přijde" : diff < 0 ? "Datum už proběhlo" : "Stejný den";
-    $("daysResult").textContent = `${shownDays > 0 && signed ? "+" : ""}${int(shownDays)} dní`;
-    $("statusResult").textContent = status;
-    $("weeksResult").textContent = `${int(weeks)} týdnů ${int(remaining)} dní`;
-    $("monthsResult").textContent = dec(monthsApprox);
-    $("resultBadge").textContent = status;
-    $("startDateResult").textContent = fmt(start);
-    $("targetDateResult").textContent = fmt(target);
-    $("directionResult").textContent = diff > 0 ? "do budoucna" : diff < 0 ? "do minulosti" : "bez rozdílu";
-    $("calendarMonthsResult").textContent = `${calendar.years * 12 + calendar.months} měs.`;
-    $("yearsResult").textContent = `${calendar.years} let`;
-    $("resultNote").textContent = signed
-      ? `Směrový rozdíl je ${shownDays > 0 ? "+" : ""}${int(shownDays)} kalendářních dní.`
-      : `Mezi daty je ${int(abs)} kalendářních dní.`;
-    $("timingStatus").textContent = status;
-    $("timingText").textContent =
-      diff > 0
-        ? `Do cílového data zbývá ${int(abs)} dní.`
-        : diff < 0
-          ? `Od cílového data uplynulo ${int(abs)} dní.`
-          : "Obě data jsou stejná.";
-    $("decisionSummary").textContent =
-      "Pokud jde o termín práce, dovolenou nebo dodání, ověřte kromě kalendářních dnů také pracovní dny.";
-    $("nextActionText").textContent =
-      "Kalendářní rozdíl zahrnuje víkendy i svátky. Pro plánování kapacity použijte kalkulačku pracovních dnů.";
-    $("summaryTableBody").innerHTML = [
-      ["Počáteční datum", fmt(start), "začátek"],
-      ["Cílové datum", fmt(target), "konec"],
-      ["Kalendářní dny", `${int(abs)} dní`, "absolutní rozdíl"],
-      ["Týdny", `${int(weeks)} týdnů ${int(remaining)} dní`, "přepočet"],
-      ["Přibližné měsíce", dec(monthsApprox), "orientačně"]
-    ].map((row) => `<tr><td>${row[0]}</td><td>${row[1]}</td><td>${row[2]}</td></tr>`).join("");
+
+    $("inputError").hidden = true;
+    const rawDifference = dayDifference(start, target);
+    const absoluteDifference = Math.abs(rawDifference);
+    const targetIncluded = $("includeTargetDay").checked;
+    const signedMode = $("calculationMode").value === "signed";
+    const countedAbsolute = absoluteDifference + (targetIncluded ? 1 : 0);
+    const directionSign = rawDifference === 0 ? 1 : Math.sign(rawDifference);
+    const displayedDays = signedMode ? countedAbsolute * directionSign : countedAbsolute;
+    const fullWeeks = Math.floor(countedAbsolute / 7);
+    const remainingDays = countedAbsolute % 7;
+    const approximateMonths = countedAbsolute / 30.436875;
+    const parts = calendarDifference(start, target);
+    const calendarBreakdown = calendarText(parts);
+    const direction = rawDifference > 0 ? "do budoucna" : rawDifference < 0 ? "do minulosti" : "stejný den";
+    const status = rawDifference > 0 ? "Datum teprve přijde" : rawDifference < 0 ? "Datum už proběhlo" : "Obě data jsou stejná";
+    const prefix = signedMode && displayedDays > 0 ? "+" : "";
+    const mainValue = `${prefix}${formatNumber(displayedDays)} ${daysLabel(displayedDays)}`;
+    const weekText = `${formatNumber(fullWeeks)} týd. ${formatNumber(remainingDays)} ${daysLabel(remainingDays)}`;
+    const targetMode = targetIncluded ? "započítán" : "nezapočítán";
+
+    setText("daysResult", mainValue);
+    setText("statusResult", status);
+    setText("weeksResult", weekText);
+    setText("monthsResult", formatDecimal(approximateMonths));
+    setText("calendarBreakdownResult", calendarBreakdown);
+    setText("resultBadge", rawDifference === 0 ? "Stejný kalendářní den" : `Výpočet ${direction}`);
+    setText("startDateResult", dateFormatter.format(start));
+    setText("targetDateResult", dateFormatter.format(target));
+    setText("directionResult", direction);
+    setText("yearsResult", `${formatNumber(parts.years)} ${yearsLabel(parts.years)}`);
+    setText("calendarMonthsResult", `${formatNumber(parts.years * 12 + parts.months)} měs.`);
+    setText("targetDayModeResult", targetMode);
+
+    const baseExplanation = targetIncluded
+      ? `Výsledek zahrnuje také cílový den, proto je o jeden den vyšší než čistá vzdálenost ${formatNumber(absoluteDifference)} ${daysLabel(absoluteDifference)}.`
+      : `Jde o čistou vzdálenost mezi daty; cílový den není přidaný jako další den období.`;
+    setText("resultNote", baseExplanation);
+    setText("timingStatus", status);
+
+    if (rawDifference > 0) {
+      setText("timingText", `Do cílového data zbývá ${formatNumber(countedAbsolute)} ${daysLabel(countedAbsolute)}. Výpočet zahrnuje víkendy i svátky.`);
+      setText("readingTitle", `Cílové datum je vzdálené ${formatNumber(countedAbsolute)} ${daysLabel(countedAbsolute)}.`);
+      setText("readingText", `Termín leží v budoucnosti. Kalendářní rozpad odpovídá hodnotě ${calendarBreakdown}.`);
+      setText("decisionSummary", countedAbsolute <= 14 ? "Termín je blízko; zkontrolujte, zda potřebujete kalendářní, nebo pracovní dny." : "Termín poskytuje delší horizont, ale pracovní kapacita může být kratší než kalendářní rozdíl.");
+      setText("nextActionText", "U zakázky nebo úředního termínu navazujte kontrolou pracovních dnů a konkrétních pravidel lhůty.");
+    } else if (rawDifference < 0) {
+      setText("timingText", `Od cílového data uplynulo ${formatNumber(countedAbsolute)} ${daysLabel(countedAbsolute)}. Ve směrovém režimu se minulost zobrazí záporně.`);
+      setText("readingTitle", `Od cílového data uplynulo ${formatNumber(countedAbsolute)} ${daysLabel(countedAbsolute)}.`);
+      setText("readingText", `Cíl leží před počátečním datem. Absolutní vzdálenost má kalendářní rozpad ${calendarBreakdown}.`);
+      setText("decisionSummary", "Záporný výsledek ve směrovém režimu není chyba; potvrzuje, že cíl leží v minulosti.");
+      setText("nextActionText", "Pro přesný věk použijte kalkulačku věku; pro obecnou událost zůstává vhodný tento datumový rozdíl.");
+    } else {
+      setText("timingText", targetIncluded ? "Data jsou stejná a započítání cílového dne vytváří jednodenní období." : "Mezi stejnými daty není žádný celý kalendářní krok.");
+      setText("readingTitle", targetIncluded ? "Stejné datum tvoří jednodenní období." : "Obě data označují stejný kalendářní den.");
+      setText("readingText", targetIncluded ? "Cílový den je zahrnut, proto výsledek činí 1 den." : "Čistá vzdálenost je 0 dní. Zapnutím cílového dne získáte jednodenní období.");
+      setText("decisionSummary", "Rozhodněte, zda chcete vzdálenost 0 dní, nebo období včetně jediného zadaného dne.");
+      setText("nextActionText", "Volba závisí na tom, zda počítáte časový odstup, nebo počet zahrnutých kalendářních dnů.");
+    }
+
+    setText("heroDays", `${formatNumber(countedAbsolute)} ${daysLabel(countedAbsolute)}`);
+    setText("heroDirection", status);
+    setText("heroStart", dateFormatter.format(start));
+    setText("heroTarget", dateFormatter.format(target));
+    setText("heroWeeks", `${formatNumber(fullWeeks)} týd. + ${formatNumber(remainingDays)} d.`);
+    setText("heroMonths", `${formatDecimal(approximateMonths)} měs.`);
+    setText("heroMode", targetIncluded ? "včetně cílového dne" : "čistá vzdálenost");
+    setText("directionStartLabel", toInputValue(start));
+    setText("directionTargetLabel", toInputValue(target));
+
+    const progress = Math.max(10, Math.min(96, 12 + Math.log10(countedAbsolute + 1) * 31));
+    $("heroProgress").style.width = `${progress}%`;
+    $("directionBar").style.width = `${progress}%`;
+
+    const rows = [
+      ["Počáteční datum", dateFormatter.format(start), "výchozí kalendářní den"],
+      ["Cílové datum", dateFormatter.format(target), "porovnávaný termín"],
+      ["Čistý rozdíl", `${formatNumber(absoluteDifference)} ${daysLabel(absoluteDifference)}`, "vzdálenost bez přidaného cílového dne"],
+      ["Zobrazený výsledek", mainValue, signedMode ? "směrový režim" : "absolutní režim"],
+      ["Týdenní rozpad", weekText, "celé týdny a zbývající dny"],
+      ["Kalendářní rozpad", calendarBreakdown, "skutečné roky, měsíce a dny"],
+      ["Cílový den", targetMode, targetIncluded ? "přidává jeden den" : "bez přidání dne"]
+    ];
+    $("summaryTableBody").replaceChildren(...rows.map((row) => {
+      const tr = document.createElement("tr");
+      row.forEach((cell) => {
+        const td = document.createElement("td");
+        td.textContent = cell;
+        tr.appendChild(td);
+      });
+      return tr;
+    }));
+  }
+
+  function applyPreset(preset) {
+    const today = todayLocal();
+    let target;
+    if (preset === "week") target = addDays(today, 7);
+    if (preset === "month") target = addDays(today, 30);
+    if (preset === "month-end") target = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+    if (preset === "year-end") target = new Date(today.getFullYear(), 11, 31);
+    if (!target) return;
+    $("startDate").value = toInputValue(today);
+    $("targetDate").value = toInputValue(target);
+    render();
   }
 
   form.addEventListener("submit", (event) => {
     event.preventDefault();
     render();
+    if (window.matchMedia("(max-width: 980px)").matches) {
+      $("vysledek").scrollIntoView({ behavior: "smooth", block: "start" });
+    }
   });
-  ["startDate", "targetDate", "calculationMode"].forEach((id) => {
+  ["startDate", "targetDate", "calculationMode", "includeTargetDay"].forEach((id) => {
     $(id).addEventListener("input", render);
     $(id).addEventListener("change", render);
   });
-  resetBtn.addEventListener("click", () => {
+  document.querySelectorAll("[data-days-preset]").forEach((button) => {
+    button.addEventListener("click", () => applyPreset(button.dataset.daysPreset));
+  });
+  $("swapDatesBtn").addEventListener("click", () => {
+    const start = $("startDate").value;
+    $("startDate").value = $("targetDate").value;
+    $("targetDate").value = start;
+    render();
+  });
+  $("resetBtn").addEventListener("click", () => {
     setDefaults();
     render();
   });
+
   setDefaults();
   render();
 })();
