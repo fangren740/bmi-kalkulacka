@@ -238,7 +238,10 @@
     });
 
     const scene = document.querySelector('.material-scene');
-    if (scene) scene.dataset.scene = shape;
+    if (scene) {
+      scene.dataset.scene = shape;
+      if (result?.materialKey) scene.dataset.material = result.materialKey;
+    }
     setText($$('[data-hero-shape]'), SHAPES[shape].badge);
 
     if (result?.geometry?.measures) {
@@ -368,6 +371,11 @@
 
   function setMode(nextMode) {
     mode = nextMode === 'advanced' ? 'advanced' : 'basic';
+    if (mode === 'basic') {
+      const layerRadio = document.querySelector('input[name="shape"][value="layer"]');
+      if (layerRadio) layerRadio.checked = true;
+      $('reservePercent').value = DEFAULTS.reserve;
+    }
     document.body.dataset.mode = mode;
     document.body.dataset.calculatorMode = mode;
     $$('[data-mode]').forEach((button) => {
@@ -377,6 +385,11 @@
     });
     $('advancedPanel').hidden = mode !== 'advanced';
     $('advancedResults').hidden = mode !== 'advanced';
+    setText('formTitle', mode === 'advanced' ? 'Zpřesněte geometrii a dopravu' : 'Tři údaje a máte hotovo');
+    setText('formIntro', mode === 'advanced'
+      ? 'Vyberte tvar prostoru a upravte rezervu, hustotu, cenu i kapacitu dopravy.'
+      : 'Vyberte příklad, nebo rovnou zadejte plochu, tloušťku a materiál.');
+    setText('calculateButton', mode === 'advanced' ? 'Přepočítat objednávku' : 'Ukázat výsledek');
     render();
   }
 
@@ -400,8 +413,12 @@
     setMaterial(preset.material);
     $('layerArea').value = preset.area;
     $('layerDepth').value = preset.depth;
-    $('reservePercent').value = preset.reserve;
-    $$('[data-preset]').forEach((button) => button.classList.toggle('is-active', button.dataset.preset === name));
+    $('reservePercent').value = mode === 'basic' ? DEFAULTS.reserve : preset.reserve;
+    $$('[data-preset]').forEach((button) => {
+      const active = button.dataset.preset === name;
+      button.classList.toggle('is-active', active);
+      button.setAttribute('aria-pressed', String(active));
+    });
     render();
   }
 
@@ -413,12 +430,16 @@
     setMaterial(DEFAULTS.material);
     setShape(DEFAULTS.shape);
     $('reservePercent').value = DEFAULTS.reserve;
-    $$('[data-preset]').forEach((button) => button.classList.remove('is-active'));
+    $$('[data-preset]').forEach((button) => {
+      button.classList.remove('is-active');
+      button.setAttribute('aria-pressed', 'false');
+    });
     setMode('basic');
   }
 
   function bindEvents() {
     $$('[data-mode]').forEach((button) => button.addEventListener('click', () => setMode(button.dataset.mode)));
+    $$('[data-open-advanced]').forEach((button) => button.addEventListener('click', () => setMode('advanced')));
     $$('input[name="shape"]').forEach((radio) => radio.addEventListener('change', render));
     $$('[data-preset]').forEach((button) => button.addEventListener('click', () => applyPreset(button.dataset.preset)));
     $$('[data-reserve]').forEach((button) => button.addEventListener('click', () => {
@@ -445,7 +466,11 @@
     $('materialForm')?.addEventListener('submit', (event) => {
       event.preventDefault();
       render();
-      if (!$('inputError').hidden) $('inputError').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      if (!$('inputError').hidden) {
+        $('inputError').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else if (window.matchMedia('(max-width: 1120px)').matches) {
+        $('vysledek').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     });
     $('resetBtn')?.addEventListener('click', reset);
   }

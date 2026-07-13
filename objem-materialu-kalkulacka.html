@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- DEPLOY: material-volume-pro-20260713-r2 -->
+<!-- DEPLOY: material-volume-pro-20260713-r3 -->
 <html lang="cs">
 <head>
 <meta charset="utf-8">
@@ -28,7 +28,7 @@
 <link rel="manifest" href="site.webmanifest?v=2">
 <meta name="theme-color" content="#082747">
 <link rel="stylesheet" href="rv-tool-v2.css">
-<link rel="stylesheet" href="material-volume-pro.css?v=20260713-2">
+<link rel="stylesheet" href="material-volume-pro.css?v=20260713-3">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"RychléVýpočty.cz","item":"https://rychlevypocty.cz/"},{"@type":"ListItem","position":2,"name":"Stavba domu","item":"https://rychlevypocty.cz/stavba-domu.html"},{"@type":"ListItem","position":3,"name":"Kalkulačka objemu materiálu","item":"https://rychlevypocty.cz/objem-materialu-kalkulacka.html"}]}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Kalkulačka objemu materiálu","url":"https://rychlevypocty.cz/objem-materialu-kalkulacka.html","description":"Výpočet objemu zeminy, písku, štěrku, mulče a vlastního materiálu podle geometrie včetně rezervy, hmotnosti, ceny a dopravy.","applicationCategory":"UtilitiesApplication","operatingSystem":"All","browserRequirements":"JavaScript","inLanguage":"cs-CZ","dateModified":"2026-07-13","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"CZK"},"featureList":["objem plochy a vrstvy","objem kvádru","objem válce","lichoběžníkový výkop","rezerva a hutnění","hmotnost v tunách","cena a počet jízd"]}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Jak spočítat objem materiálu v m³?","acceptedAnswer":{"@type":"Answer","text":"Vyberte geometrii a zadejte rozměry v metrech nebo centimetrech podle popisku. U vrstvy se násobí plocha a tloušťka převedená na metry; u kvádru délka, šířka a výška."}},{"@type":"Question","name":"Kolik litrů má jeden metr krychlový?","acceptedAnswer":{"@type":"Answer","text":"Jeden metr krychlový odpovídá 1000 litrům."}},{"@type":"Question","name":"Jak převést m³ materiálu na tuny?","acceptedAnswer":{"@type":"Answer","text":"Objem v metrech krychlových se násobí sypnou nebo objemovou hmotností v kilogramech na metr krychlový. Výsledek v kilogramech se vydělí tisícem."}},{"@type":"Question","name":"Kolik rezervy přidat k objednávce materiálu?","acceptedAnswer":{"@type":"Answer","text":"Rezerva závisí na přesnosti měření, nerovnostech a způsobu práce. Kalkulačka umožňuje zvolit vlastní procento; vyšší hodnota není automaticky správnější."}},{"@type":"Question","name":"Jak kalkulačka počítá hutnění nebo sesednutí?","acceptedAnswer":{"@type":"Answer","text":"V rozšířeném režimu lze zadat procentní navýšení volně sypaného objemu. Jde o zjednodušený plánovací koeficient, který je vhodné ověřit podle konkrétního materiálu a dodavatele."}},{"@type":"Question","name":"Proč se hmotnost materiálu může lišit?","acceptedAnswer":{"@type":"Answer","text":"Sypná hmotnost závisí na frakci, vlhkosti, pórovitosti, zhutnění i způsobu měření. Výchozí hustoty jsou proto editovatelné orientační hodnoty."}},{"@type":"Question","name":"Jak kalkulačka určí počet jízd?","acceptedAnswer":{"@type":"Answer","text":"Porovná požadovaný objem s objemovou kapacitou vozidla a orientační hmotnost s nosností. Použije vyšší počet jízd z obou omezení."}},{"@type":"Question","name":"Je tato kalkulačka vhodná pro přesnou objednávku betonu?","acceptedAnswer":{"@type":"Answer","text":"Pro betonáž použijte specializovanou kalkulačku betonu, která řeší konstrukce, objednávkové kroky, pytle, dopravu a čerpadlo podrobněji."}}]}</script>
@@ -58,7 +58,15 @@
     </div>
     <div class="material-visual" aria-hidden="true">
       <div class="visual-topline"><span>Živý model množství</span><b data-hero-shape>PLOCHA / VRSTVA</b></div>
-      <div class="material-scene" data-scene="layer"><div class="material-object"><i></i><span class="scene-measure scene-x">20 m²</span><span class="scene-measure scene-y">5 cm</span><span class="scene-measure scene-z">zemina</span></div></div>
+      <div class="material-scene" data-scene="layer" data-material="soil">
+        <div class="scene-story"><span><b>01</b> zaměřit</span><i></i><span><b>02</b> spočítat</span><i></i><span><b>03</b> objednat</span></div>
+        <div class="scene-stage">
+          <div class="scene-route"></div>
+          <div class="material-object"><i></i><span class="scene-measure scene-x">20 m²</span><span class="scene-measure scene-y">5 cm</span><span class="scene-measure scene-z">zemina</span></div>
+          <div class="material-pile"><i></i></div>
+          <div class="scene-truck"><span></span><i></i><b></b><em></em></div>
+        </div>
+      </div>
       <div class="visual-dashboard">
         <div class="visual-main"><span>Množství k objednání</span><strong data-hero-order>1,1 m³</strong><small>včetně zadané rezervy a zaokrouhlení</small></div>
         <div class="visual-mini"><span>Čistý objem</span><strong data-hero-net>1,0 m³</strong></div>
@@ -72,23 +80,28 @@
 
 <section class="container material-work" id="kalkulacka">
   <form class="material-form" id="materialForm" novalidate>
-    <div class="form-top"><div><p class="eyebrow">Kalkulačka materiálu</p><h2>Zadejte plochu nebo rozměry</h2></div><span class="live-badge"><i></i> Výpočet živě</span></div>
+    <div class="form-top"><div><p class="eyebrow">Kalkulačka materiálu</p><h2 id="formTitle">Tři údaje a máte hotovo</h2><p class="form-intro" id="formIntro">Vyberte příklad, nebo rovnou zadejte plochu, tloušťku a materiál.</p></div><span class="live-badge"><i></i> Výpočet živě</span></div>
 
     <div class="mode-switch" role="tablist" aria-label="Režim kalkulačky">
-      <button type="button" class="mode-button is-active" data-mode="basic" role="tab" aria-selected="true" aria-controls="advancedPanel"><span class="mode-number">01</span><span><strong>Basic</strong><small>Objem, rezerva a hmotnost</small></span></button>
-      <button type="button" class="mode-button" data-mode="advanced" role="tab" aria-selected="false" aria-controls="advancedPanel"><span class="mode-number">02</span><span><strong>Advanced</strong><small>Hutnění, cena a doprava</small></span></button>
+      <button type="button" class="mode-button is-active" data-mode="basic" role="tab" aria-selected="true" aria-controls="advancedPanel"><span class="mode-number">01</span><span><strong>Basic</strong><small>3 jednoduché údaje</small></span></button>
+      <button type="button" class="mode-button" data-mode="advanced" role="tab" aria-selected="false" aria-controls="advancedPanel"><span class="mode-number">02</span><span><strong>Advanced</strong><small>Tvary, cena a doprava</small></span></button>
     </div>
 
-    <div class="section-label"><span>1</span><div><strong>Geometrie prostoru</strong><small>Vyberte model, který nejlépe odpovídá měření</small></div></div>
-    <fieldset class="shape-picker">
-      <legend class="sr-only">Geometrie prostoru</legend>
-      <label class="shape-option"><input type="radio" name="shape" value="layer" checked><span class="shape-card"><i class="shape-icon shape-layer"></i><b>Plocha a vrstva</b><small>záhon, cesta, podsyp</small></span></label>
-      <label class="shape-option"><input type="radio" name="shape" value="rect"><span class="shape-card"><i class="shape-icon shape-cube"></i><b>Kvádr</b><small>výkop, zásyp, box</small></span></label>
-      <label class="shape-option"><input type="radio" name="shape" value="cylinder"><span class="shape-card"><i class="shape-icon shape-cylinder"></i><b>Válec</b><small>jáma, otvor, nádoba</small></span></label>
-      <label class="shape-option"><input type="radio" name="shape" value="trench"><span class="shape-card"><i class="shape-icon shape-trench"></i><b>Šikmý výkop</b><small>horní a spodní šířka</small></span></label>
-    </fieldset>
+    <div class="basic-start">
+      <div class="section-label"><span>1</span><div><strong>Co chcete pokrýt?</strong><small>Volitelné: příklad předvyplní běžné hodnoty, které můžete hned upravit</small></div></div>
+      <div class="preset-row" aria-label="Rychlé příklady"><button type="button" data-preset="garden" aria-pressed="false"><i class="preset-icon preset-garden"></i><span><strong>Záhon</strong><small>zemina · 8 cm</small></span></button><button type="button" data-preset="driveway" aria-pressed="false"><i class="preset-icon preset-driveway"></i><span><strong>Příjezd</strong><small>štěrk · 12 cm</small></span></button><button type="button" data-preset="sand" aria-pressed="false"><i class="preset-icon preset-sand"></i><span><strong>Pod dlažbu</strong><small>písek · 5 cm</small></span></button><button type="button" data-preset="mulch" aria-pressed="false"><i class="preset-icon preset-mulch"></i><span><strong>Mulč</strong><small>kůra · 7 cm</small></span></button></div>
+    </div>
 
-    <div class="preset-row" aria-label="Rychlé příklady"><button type="button" data-preset="garden">Zemina na záhon</button><button type="button" data-preset="driveway">Štěrk na příjezd</button><button type="button" data-preset="sand">Písek pod dlažbu</button><button type="button" data-preset="mulch">Mulčovací vrstva</button></div>
+    <div class="advanced-geometry">
+      <div class="section-label"><span>1</span><div><strong>Geometrie prostoru</strong><small>Vyberte model, který nejlépe odpovídá měření</small></div></div>
+      <fieldset class="shape-picker">
+        <legend class="sr-only">Geometrie prostoru</legend>
+        <label class="shape-option"><input type="radio" name="shape" value="layer" checked><span class="shape-card"><i class="shape-icon shape-layer"></i><b>Plocha a vrstva</b><small>záhon, cesta, podsyp</small></span></label>
+        <label class="shape-option"><input type="radio" name="shape" value="rect"><span class="shape-card"><i class="shape-icon shape-cube"></i><b>Kvádr</b><small>výkop, zásyp, box</small></span></label>
+        <label class="shape-option"><input type="radio" name="shape" value="cylinder"><span class="shape-card"><i class="shape-icon shape-cylinder"></i><b>Válec</b><small>jáma, otvor, nádoba</small></span></label>
+        <label class="shape-option"><input type="radio" name="shape" value="trench"><span class="shape-card"><i class="shape-icon shape-trench"></i><b>Šikmý výkop</b><small>horní a spodní šířka</small></span></label>
+      </fieldset>
+    </div>
 
     <div class="section-label"><span>2</span><div><strong>Rozměry</strong><small>Rozměry měřte ve více místech a použijte realistický průměr</small></div></div>
     <div class="shape-panel is-active" data-shape-panel="layer">
@@ -104,8 +117,8 @@
       <div class="field-grid"><label class="field"><span>Délka výkopu</span><small>součet všech stejných úseků</small><div class="input-wrap"><input id="trenchLength" type="number" min="0.01" step="0.1" value="10" inputmode="decimal"><em>m</em></div></label><label class="field"><span>Horní šířka</span><small>šířka u povrchu</small><div class="input-wrap"><input id="trenchTop" type="number" min="0.01" step="0.05" value="1.2" inputmode="decimal"><em>m</em></div></label><label class="field"><span>Spodní šířka</span><small>šířka na dně</small><div class="input-wrap"><input id="trenchBottom" type="number" min="0.01" step="0.05" value="0.6" inputmode="decimal"><em>m</em></div></label><label class="field"><span>Hloubka</span><small>průměrná hloubka výkopu</small><div class="input-wrap"><input id="trenchDepth" type="number" min="0.01" step="0.05" value="0.8" inputmode="decimal"><em>m</em></div></label></div>
     </div>
 
-    <div class="section-label"><span>3</span><div><strong>Materiál a rezerva</strong><small>Hustotu lze v Advanced režimu upravit podle nabídky dodavatele</small></div></div>
-    <div class="material-row"><label class="field"><span>Materiál</span><small>výběr nastaví orientační sypnou hmotnost</small><div class="input-wrap"><select id="materialType"><option value="soil" selected>Zemina</option><option value="sand">Písek</option><option value="gravel">Štěrk / kamenivo</option><option value="mulch">Mulč / kůra</option><option value="concrete">Beton – rychlá orientace</option><option value="custom">Vlastní materiál</option></select></div></label><div class="reserve-card"><div class="reserve-head"><span>Rezerva</span><strong id="reserveLabel">10 %</strong></div><input id="reservePercent" type="range" min="0" max="30" step="1" value="10" aria-label="Rezerva materiálu v procentech"><div class="reserve-presets"><button type="button" data-reserve="0">0 %</button><button type="button" data-reserve="5">5 %</button><button type="button" data-reserve="10" class="is-active">10 %</button><button type="button" data-reserve="15">15 %</button><button type="button" data-reserve="20">20 %</button></div></div></div>
+    <div class="section-label"><span>3</span><div><strong>Vyberte materiál</strong><small>Výběr slouží k orientačnímu přepočtu objemu na hmotnost</small></div></div>
+    <div class="material-row"><label class="field"><span>Materiál</span><small>výběr nastaví orientační sypnou hmotnost</small><div class="input-wrap"><select id="materialType"><option value="soil" selected>Zemina</option><option value="sand">Písek</option><option value="gravel">Štěrk / kamenivo</option><option value="mulch">Mulč / kůra</option><option value="concrete">Beton – rychlá orientace</option><option value="custom">Vlastní materiál</option></select></div></label><div class="basic-reserve-note"><i>✓</i><div><strong>Rezervu řešíme za vás</strong><small>Basic automaticky přidá 10 %. V Advanced ji můžete změnit.</small></div><button type="button" data-open-advanced>Upravit</button></div><div class="reserve-card"><div class="reserve-head"><span>Rezerva</span><strong id="reserveLabel">10 %</strong></div><input id="reservePercent" type="range" min="0" max="30" step="1" value="10" aria-label="Rezerva materiálu v procentech"><div class="reserve-presets"><button type="button" data-reserve="0">0 %</button><button type="button" data-reserve="5">5 %</button><button type="button" data-reserve="10" class="is-active">10 %</button><button type="button" data-reserve="15">15 %</button><button type="button" data-reserve="20">20 %</button></div></div></div>
 
     <div class="advanced-panel" id="advancedPanel" hidden>
       <div class="advanced-intro"><span>Advanced</span><div><strong>Zpřesněte skutečnou objednávku a dopravu</strong><small>Výchozí hodnoty jsou pouze praktický příklad. Nahraďte je konkrétní nabídkou a údaji dodavatele.</small></div></div>
@@ -122,7 +135,7 @@
     </div>
 
     <p class="form-error" id="inputError" hidden>Zkontrolujte zadané rozměry.</p>
-    <div class="form-actions"><button class="btn-primary" type="submit">Přepočítat materiál</button><button class="btn-secondary" id="resetBtn" type="button">Výchozí hodnoty</button></div>
+    <div class="form-actions"><button class="btn-primary" id="calculateButton" type="submit">Ukázat výsledek</button><button class="btn-secondary" id="resetBtn" type="button">Výchozí hodnoty</button></div>
     <p class="privacy-note"><span></span>Zadané údaje se počítají pouze ve vašem prohlížeči.</p>
   </form>
 
@@ -217,6 +230,6 @@
   </div>
   <div class="container footer-bottom"><p>© 2026 RychléVýpočty.cz. Výsledek je orientační; množství, hmotnost a dopravu potvrďte s konkrétním dodavatelem.</p></div>
 </footer>
-<script src="objem-materialu.js?v=20260713-2"></script>
+<script src="objem-materialu.js?v=20260713-3"></script>
 </body>
 </html>
