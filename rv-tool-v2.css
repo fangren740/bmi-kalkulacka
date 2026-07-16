@@ -215,7 +215,7 @@ h1 { max-width: 820px; margin-bottom: 18px; font-size: clamp(38px, 6vw, 72px); l
 .hero-line-chart { position: absolute; left: 22px; right: 22px; bottom: 24px; width: calc(100% - 44px); opacity: .82; }
 
 /* 7. Anchor nav */
-.anchor-nav { position: sticky; top: var(--header-height); z-index: 80; padding: 10px 0; background: rgba(244, 248, 252, .78); backdrop-filter: blur(18px); border-block: 1px solid rgba(220,231,242,.7); }
+.anchor-nav { position:relative; top:auto; z-index:auto; padding: 10px 0; background: rgba(244, 248, 252, .78); backdrop-filter: blur(18px); border-block: 1px solid rgba(220,231,242,.7); }
 .anchor-scroll { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; }
 .anchor-scroll::-webkit-scrollbar { display: none; }
 .anchor-nav a { flex: 0 0 auto; padding: 10px 14px; border-radius: 999px; background: white; border: 1px solid var(--line); color: var(--muted); font-size: 14px; font-weight: 850; }
@@ -387,3 +387,21 @@ body{padding-bottom:0!important}
 .mobile-result-bar,.mobile-sticky{display:none!important;visibility:hidden!important}
 body{padding-bottom:0!important}
 @media(max-width:760px){.site-header .brand-logo-img{width:190px!important}.site-footer .brand-logo-img{width:200px!important}.mobile-result-bar,.mobile-sticky{display:none!important;visibility:hidden!important}body{padding-bottom:0!important}}
+
+/* V7 stability patch: section navigation stays in document flow. */
+.anchor-nav{
+  position:relative!important;
+  top:auto!important;
+  z-index:auto!important;
+}
+
+/* V7 stability patch: wide result/scenario tables scroll inside their card. */
+.scenario-table,
+.vacation-table-wrap{
+  display:block;
+  width:100%;
+  max-width:100%;
+  overflow-x:auto!important;
+  overflow-y:hidden;
+  -webkit-overflow-scrolling:touch;
+}
