@@ -102,6 +102,7 @@
     const coveringKey = $("basicCovering").value;
     const region = clamp(parse($("basicRegion").value, 1), 0.8, 1.35);
     const reserveRate = clamp(parse($("basicReserve").value, 10), 0, 30);
+    const budget = Math.max(0, parse($("basicBudget").value, 1500000));
     const scope = scopePresets[scopeKey];
     const complexity = complexityFactors[complexityKey];
     const covering = coveringFactors[coveringKey];
@@ -121,6 +122,7 @@
     return finalize({
       mode: "basic",
       area,
+      budget,
       reserveRate,
       items,
       scopeKey,
@@ -140,6 +142,7 @@
     const accessFactor = accessFactors[$("proAccess").value] || 1;
     const region = clamp(parse($("proRegion").value, 1), 0.7, 1.5);
     const reserveRate = clamp(parse($("proReserve").value, 10), 0, 50);
+    const budget = Math.max(0, parse($("proBudget").value, 1500000));
     const workFactor = shapeFactor * slopeFactor * accessFactor * region;
     const softFactor = (1 + (workFactor / region - 1) * 0.65) * region;
     const detailFactor = (1 + (workFactor / region - 1) * 1.25) * region;
@@ -164,6 +167,7 @@
     return finalize({
       mode: "pro",
       area,
+      budget,
       reserveRate,
       items,
       scopeKey: "pro",
@@ -179,11 +183,15 @@
     const baseCost = model.items.reduce((sum, row) => sum + row.cost, 0);
     const reserveCost = baseCost * model.reserveRate / 100;
     const totalCost = baseCost + reserveCost;
+    const budgetGap = model.budget > 0 ? model.budget - totalCost : 0;
+    const budgetUse = model.budget > 0 ? totalCost / model.budget * 100 : 0;
     return {
       ...model,
       baseCost,
       reserveCost,
       totalCost,
+      budgetGap,
+      budgetUse,
       pricePerM2: model.area > 0 ? totalCost / model.area : 0,
     };
   }
@@ -193,6 +201,18 @@
       return {
         title: "Vyberte alespoň jednu rozpočtovou položku",
         text: "PRO režim neobsahuje žádnou aktivní část střechy. Zapněte konstrukci, střešní plášť, izolaci nebo jinou položku.",
+      };
+    }
+    if (model.budget > 0 && model.budgetGap < 0) {
+      return {
+        title: "Model překračuje zadaný rozpočet",
+        text: `Do limitu ${money(model.budget)} chybí ${money(Math.abs(model.budgetGap))}. Nejdřív ověřte úplnost a sazby největší etapy; nesnižujte rezervu jen proto, aby se číslo formálně vešlo.`,
+      };
+    }
+    if (model.budget > 0 && model.budgetUse >= 90) {
+      return {
+        title: "Rozpočtový prostor je už těsný",
+        text: `Model využívá ${number(model.budgetUse, 1)} % limitu a ponechává ${money(model.budgetGap)}. Před podpisem smlouvy prověřte platnost cen, DPH, vícepráce a platební milníky.`,
       };
     }
     const detailShare = model.items.filter((row) => ["details", "work", "other"].includes(row.category)).reduce((sum, row) => sum + row.cost, 0) / model.baseCost;
@@ -234,6 +254,56 @@
     $("scenarioCurrent").textContent = money(model.totalCost);
     scenario("scenarioPlusTen", 1.1);
     scenario("scenarioPlusTwenty", 1.2);
+  }
+
+  function renderBudget(model) {
+    const panel = $("budgetPanel");
+    panel.classList.remove("is-within", "is-close", "is-over", "is-empty");
+    if (model.budget <= 0) {
+      panel.classList.add("is-empty");
+      $("budgetStatus").textContent = "Limit není zadaný";
+      $("budgetGap").textContent = "volitelné";
+      $("budgetText").textContent = "Doplňte vlastní rozpočet v upřesnění Basic režimu nebo v PRO vstupu. Výpočet potom ukáže, zda máte rezervu.";
+      $("budgetProgress").style.width = "0%";
+      $("heroBudgetStatus").textContent = "nezadaný";
+      $("heroBudgetGap").textContent = "—";
+      return;
+    }
+    const over = model.budgetGap < 0;
+    const close = !over && model.budgetUse >= 90;
+    panel.classList.add(over ? "is-over" : close ? "is-close" : "is-within");
+    $("budgetStatus").textContent = over ? "Nad rozpočtem" : close ? "Těsně pod limitem" : "V limitu s rezervou";
+    $("budgetGap").textContent = over ? `chybí ${money(Math.abs(model.budgetGap))}` : `zbývá ${money(model.budgetGap)}`;
+    $("budgetText").textContent = over
+      ? `Model využívá ${number(model.budgetUse, 1)} % limitu ${money(model.budget)}. Ověřte největší etapu, rozsah nabídky a případnou změnu standardu.`
+      : `Model využívá ${number(model.budgetUse, 1)} % limitu ${money(model.budget)}. Volná částka není totéž co rezerva na chybějící položky.`;
+    $("budgetProgress").style.width = `${clamp(model.budgetUse, 0, 100)}%`;
+    $("heroBudgetStatus").textContent = over ? "nad limitem" : close ? "těsný" : "v limitu";
+    $("heroBudgetGap").textContent = over ? `−${compactMoney(Math.abs(model.budgetGap))}` : `+${compactMoney(model.budgetGap)}`;
+  }
+
+  function renderStages(model) {
+    const stages = [
+      { key: "Structure", label: "konstrukce", categories: ["structure"] },
+      { key: "Envelope", label: "funkční plášť", categories: ["envelope"] },
+      { key: "Details", label: "detaily", categories: ["details", "other"] },
+      { key: "Work", label: "práce a logistika", categories: ["work"] },
+    ].map((stage) => ({
+      ...stage,
+      value: model.items.filter((row) => stage.categories.includes(row.category)).reduce((sum, row) => sum + row.cost, 0),
+    }));
+    stages.forEach((stage) => {
+      const share = model.baseCost > 0 ? stage.value / model.baseCost * 100 : 0;
+      $(`stage${stage.key}Value`).textContent = money(stage.value);
+      $(`stage${stage.key}Bar`).style.width = `${clamp(share, 0, 100)}%`;
+      $(`stage${stage.key}Share`).textContent = `${number(share, 1)} % základu`;
+    });
+    const leader = stages.reduce((largest, stage) => stage.value > largest.value ? stage : largest, stages[0]);
+    const leaderShare = model.baseCost > 0 ? leader.value / model.baseCost * 100 : 0;
+    $("stageLeader").textContent = `${leader.label.charAt(0).toUpperCase()}${leader.label.slice(1)} · ${money(leader.value)}`;
+    $("stageAdvice").textContent = leader.value > 0
+      ? `Tato etapa tvoří ${number(leaderShare, 1)} % základu. V nabídce u ní nejdřív ověřte množství, jednotkové sazby, rozsah montáže a související doplňky.`
+      : "Zapněte alespoň jednu položku a dashboard označí část, kterou má největší smysl prověřit.";
   }
 
   function renderHero(model) {
@@ -282,6 +352,8 @@
 
     renderBreakdown(model);
     renderScenarios(model);
+    renderBudget(model);
+    renderStages(model);
     renderHero(model);
     form._lastModel = model;
   }
@@ -294,6 +366,7 @@
     $("proComplexity").value = basic.complexityKey;
     $("proRegion").value = $("basicRegion").value;
     $("proReserve").value = number(basic.reserveRate);
+    $("proBudget").value = number(basic.budget);
     $("proStructureRate").value = scope.rates.structure;
     $("proUnderlayRate").value = scope.rates.underlay;
     $("proCoveringRate").value = Math.round(scope.rates.covering * covering.factor);
@@ -334,7 +407,8 @@
   });
   $("copyResult").addEventListener("click", async () => {
     const model = form._lastModel || basicModel();
-    const text = `Kalkulačka ceny střechy – ${model.scopeLabel}: ${money(model.totalCost)} celkem, ${money(model.pricePerM2)} za m², plocha ${number(model.area)} m², rezerva ${number(model.reserveRate)} %. Výsledek je orientační.`;
+    const budgetText = model.budget > 0 ? ` Rozpočtový limit ${money(model.budget)}, ${model.budgetGap < 0 ? `chybí ${money(Math.abs(model.budgetGap))}` : `zbývá ${money(model.budgetGap)}`}.` : "";
+    const text = `Kalkulačka ceny střechy – ${model.scopeLabel}: ${money(model.totalCost)} celkem, ${money(model.pricePerM2)} za m², plocha ${number(model.area)} m², rezerva ${number(model.reserveRate)} %.${budgetText} Výsledek je orientační.`;
     try {
       await navigator.clipboard.writeText(text);
       $("copyResult").textContent = "Zkopírováno";
