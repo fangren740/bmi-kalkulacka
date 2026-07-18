@@ -1,153 +1,420 @@
+(() => {
+  'use strict';
 
-(function(){
   const $ = (id) => document.getElementById(id);
-  let activeTab = 'real';
-  const fmtNumber = (value, digits = 2) => new Intl.NumberFormat('cs-CZ', { minimumFractionDigits: 0, maximumFractionDigits: digits }).format(Number.isFinite(value) ? value : 0);
-  const fmtCurrency = (value) => new Intl.NumberFormat('cs-CZ', { style: 'currency', currency: 'CZK', maximumFractionDigits: 0 }).format(Number.isFinite(value) ? value : 0);
-  const fmtCurrencyFine = (value) => new Intl.NumberFormat('cs-CZ', { style: 'currency', currency: 'CZK', minimumFractionDigits: 0, maximumFractionDigits: 2 }).format(Number.isFinite(value) ? value : 0);
-  const fmtLiters = (value) => `${fmtNumber(value, 2)} l`;
-  const setText = (id, value) => { const el = $(id); if (el) el.textContent = value; };
-  const setHeroText = (selector, value) => { const el = document.querySelector(selector); if (el) el.textContent = value; };
+  const form = $('fuelCalculator');
+  if (!form) return;
+
+  let activeMode = 'basic';
+
+  const formatNumber = (value, digits = 2) => new Intl.NumberFormat('cs-CZ', {
+    maximumFractionDigits: digits,
+    minimumFractionDigits: 0
+  }).format(Number.isFinite(value) ? value : 0);
+
+  const formatCurrency = (value) => new Intl.NumberFormat('cs-CZ', {
+    style: 'currency',
+    currency: 'CZK',
+    maximumFractionDigits: 0
+  }).format(Number.isFinite(value) ? value : 0);
+
+  const formatCurrencyFine = (value) => new Intl.NumberFormat('cs-CZ', {
+    style: 'currency',
+    currency: 'CZK',
+    maximumFractionDigits: 2,
+    minimumFractionDigits: 0
+  }).format(Number.isFinite(value) ? value : 0);
+
+  const parseNumber = (id) => {
+    const element = $(id);
+    if (!element) return NaN;
+    const normalized = String(element.value).trim().replace(/\s/g, '').replace(',', '.');
+    return normalized === '' ? NaN : Number(normalized);
+  };
+
+  const setText = (id, value) => {
+    const element = $(id);
+    if (element) element.textContent = value;
+  };
+
+  const liters = (value) => `${formatNumber(value, 2)} l`;
+  const distance = (value) => `${formatNumber(value, 1)} km`;
+  const consumptionText = (value) => `${formatNumber(value, 2)} l/100 km`;
+  const costPerKmText = (value) => `${formatCurrencyFine(value)}/km`;
   const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
 
-  function ensureNextActions() {
-    if (document.querySelector('.rv-next-actions')) return;
-    const note = document.querySelector('.rv-result-note');
-    if (!note) return;
-    note.insertAdjacentHTML('afterend', `
-      <div class="rv-next-actions" aria-label="Co spočítat dál">
-        <strong>Co spočítat dál</strong>
-        <div class="rv-next-actions__grid">
-          <a href="/cena-za-km-kalkulacka.html">Přepočítat plné náklady na 1 km</a>
-          <a href="/naklady-na-provoz-auta-kalkulacka.html">Dopočítat měsíční provoz auta</a>
-          <a href="/amortizace-auta-kalkulacka.html">Zohlednit ztrátu hodnoty auta</a>
-        </div>
-      </div>
-    `);
+  function clearValidation() {
+    form.querySelectorAll('.is-invalid').forEach((element) => element.classList.remove('is-invalid'));
+    setText('basicMessage', '');
+    setText('proMessage', '');
   }
 
-  function updateHero(primary, metricValues, fuelShare, efficiencyShare, label) {
-    setHeroText('.rv-hero-number', primary);
-    document.querySelectorAll('.rv-hero-metrics b').forEach((el, index) => {
-      if (metricValues[index]) el.textContent = metricValues[index];
-    });
-    const bars = document.querySelectorAll('.rv-fuel-meter b');
-    const labels = document.querySelectorAll('.rv-fuel-meter strong');
-    if (bars[0]) bars[0].style.width = `${clamp(fuelShare, 8, 100)}%`;
-    if (labels[0]) labels[0].textContent = `${Math.round(clamp(fuelShare, 0, 100))} %`;
-    if (bars[1]) bars[1].style.width = `${clamp(efficiencyShare, 8, 100)}%`;
-    if (labels[1]) labels[1].textContent = label || `${Math.round(clamp(efficiencyShare, 0, 100))} %`;
+  function invalidate(id, message, mode) {
+    const input = $(id);
+    const wrapper = input?.closest('.vpc-input-wrap, .vpc-select-wrap');
+    if (wrapper) wrapper.classList.add('is-invalid');
+    setText(mode === 'pro' ? 'proMessage' : 'basicMessage', message);
   }
 
-  function setTab(tab) {
-    activeTab = tab;
-    document.querySelectorAll('.tab-button').forEach((button) => button.setAttribute('aria-selected', String(button.dataset.tab === tab)));
-    document.querySelectorAll('.tab-panel').forEach((panel) => { panel.hidden = panel.dataset.panel !== tab; });
-    tab === 'real' ? calculateReal() : calculateTrip();
+  function readRadio(name) {
+    return form.querySelector(`input[name="${name}"]:checked`)?.value || '';
   }
 
-  function renderRows(rows) {
+  function getBasicScenario() {
+    const routeDistance = parseNumber('basicDistance');
+    const consumption = parseNumber('basicConsumption');
+    const price = parseNumber('basicPrice');
+
+    if (!Number.isFinite(routeDistance) || routeDistance <= 0) {
+      invalidate('basicDistance', 'Zadejte kladnou délku celé cesty.', 'basic');
+      return null;
+    }
+    if (!Number.isFinite(consumption) || consumption <= 0) {
+      invalidate('basicConsumption', 'Zadejte kladnou průměrnou spotřebu.', 'basic');
+      return null;
+    }
+    if (!Number.isFinite(price) || price < 0) {
+      invalidate('basicPrice', 'Cena paliva musí být nula nebo kladné číslo.', 'basic');
+      return null;
+    }
+
+    const baseFuel = routeDistance * consumption / 100;
+    const fuelCost = baseFuel * price;
+
+    return {
+      mode: 'basic',
+      routeDistance,
+      directionLabel: 'celá zadaná trasa',
+      consumption,
+      sourceLabel: 'zadaný průměr',
+      price,
+      reservePercent: 0,
+      baseFuel,
+      reserveFuel: 0,
+      totalFuel: baseFuel,
+      fuelCost,
+      extraCosts: 0,
+      totalCost: fuelCost,
+      costPerKm: fuelCost / routeDistance,
+      passengers: 1,
+      perPerson: fuelCost,
+      comparisonConsumption: 0,
+      comparisonTotal: 0
+    };
+  }
+
+  function getProScenario() {
+    const oneWayDistance = parseNumber('proDistance');
+    const price = parseNumber('proPrice');
+    const directionMode = readRadio('direction');
+    const source = readRadio('consumptionSource');
+    const reservePercent = parseNumber('reservePercent');
+    const extraCosts = parseNumber('extraCosts');
+    const passengersRaw = parseNumber('passengers');
+    const comparisonConsumptionRaw = parseNumber('compareConsumption');
+
+    if (!Number.isFinite(oneWayDistance) || oneWayDistance <= 0) {
+      invalidate('proDistance', 'Zadejte kladnou vzdálenost jedním směrem.', 'pro');
+      return null;
+    }
+    if (!Number.isFinite(price) || price < 0) {
+      invalidate('proPrice', 'Cena paliva musí být nula nebo kladné číslo.', 'pro');
+      return null;
+    }
+
+    let consumption;
+    let sourceLabel;
+    if (source === 'tank') {
+      const tankDistance = parseNumber('tankDistance');
+      const tankLiters = parseNumber('tankLiters');
+      if (!Number.isFinite(tankDistance) || tankDistance <= 0) {
+        invalidate('tankDistance', 'Zadejte kladné kilometry mezi tankováními.', 'pro');
+        return null;
+      }
+      if (!Number.isFinite(tankLiters) || tankLiters <= 0) {
+        invalidate('tankLiters', 'Zadejte kladné množství doplněného paliva.', 'pro');
+        return null;
+      }
+      consumption = tankLiters / tankDistance * 100;
+      sourceLabel = `z tankování ${formatNumber(tankLiters, 2)} l / ${formatNumber(tankDistance, 1)} km`;
+    } else {
+      consumption = parseNumber('proConsumption');
+      sourceLabel = 'zadaný průměr';
+      if (!Number.isFinite(consumption) || consumption <= 0) {
+        invalidate('proConsumption', 'Zadejte kladnou průměrnou spotřebu.', 'pro');
+        return null;
+      }
+    }
+
+    if (!Number.isFinite(reservePercent) || reservePercent < 0 || reservePercent > 100) {
+      invalidate('reservePercent', 'Rezerva musí být mezi 0 a 100 %.', 'pro');
+      return null;
+    }
+    if (!Number.isFinite(extraCosts) || extraCosts < 0) {
+      invalidate('extraCosts', 'Další náklady musí být nula nebo kladné číslo.', 'pro');
+      return null;
+    }
+    if (!Number.isFinite(passengersRaw) || passengersRaw < 1 || passengersRaw > 99) {
+      invalidate('passengers', 'Počet platících osob musí být mezi 1 a 99.', 'pro');
+      return null;
+    }
+    if (!Number.isFinite(comparisonConsumptionRaw) || comparisonConsumptionRaw < 0) {
+      invalidate('compareConsumption', 'Srovnávací spotřeba musí být nula nebo kladné číslo.', 'pro');
+      return null;
+    }
+
+    const multiplier = directionMode === 'return' ? 2 : 1;
+    const routeDistance = oneWayDistance * multiplier;
+    const passengers = Math.max(1, Math.round(passengersRaw));
+    const baseFuel = routeDistance * consumption / 100;
+    const reserveFuel = baseFuel * reservePercent / 100;
+    const totalFuel = baseFuel + reserveFuel;
+    const fuelCost = totalFuel * price;
+    const totalCost = fuelCost + extraCosts;
+    const comparisonConsumption = comparisonConsumptionRaw;
+    const comparisonTotal = comparisonConsumption > 0
+      ? routeDistance * comparisonConsumption / 100 * (1 + reservePercent / 100) * price + extraCosts
+      : 0;
+
+    return {
+      mode: 'pro',
+      routeDistance,
+      directionLabel: directionMode === 'return' ? 'tam i zpět' : 'jeden směr',
+      consumption,
+      sourceLabel,
+      price,
+      reservePercent,
+      baseFuel,
+      reserveFuel,
+      totalFuel,
+      fuelCost,
+      extraCosts,
+      totalCost,
+      costPerKm: totalCost / routeDistance,
+      passengers,
+      perPerson: totalCost / passengers,
+      comparisonConsumption,
+      comparisonTotal
+    };
+  }
+
+  function renderRows(scenario) {
     const body = $('summaryTableBody');
     if (!body) return;
-    body.innerHTML = rows.map((row) => `<tr><td>${row.name}</td><td>${row.value}</td><td>${row.note}</td></tr>`).join('');
+
+    const rows = [
+      ['Celková vzdálenost', distance(scenario.routeDistance), scenario.directionLabel],
+      ['Použitá spotřeba', consumptionText(scenario.consumption), scenario.sourceLabel],
+      ['Základní palivo', liters(scenario.baseFuel), 'bez plánovací rezervy'],
+      ['Rezerva paliva', liters(scenario.reserveFuel), `${formatNumber(scenario.reservePercent, 1)} % ze základních litrů`],
+      ['Palivo celkem', liters(scenario.totalFuel), 'základ plus rezerva'],
+      ['Palivový náklad', formatCurrency(scenario.fuelCost), `${formatCurrencyFine(scenario.price)} za litr`],
+      ['Další náklady', formatCurrency(scenario.extraCosts), 'parkování, mýto a zadané poplatky'],
+      ['Cena celé cesty', formatCurrency(scenario.totalCost), `${costPerKmText(scenario.costPerKm)} při ${scenario.passengers} ${scenario.passengers === 1 ? 'osobě' : 'osobách'}`]
+    ];
+
+    body.innerHTML = rows.map(([name, value, note]) => `<tr><td data-label="Položka">${name}</td><td data-label="Hodnota"><strong>${value}</strong></td><td data-label="Co znamená">${note}</td></tr>`).join('');
   }
 
-  function renderEmpty(message) {
-    setText('mainResult', '0');
-    setText('costResult', '0 Kč');
-    setText('costPerKmResult', '0 Kč');
-    setText('fuelNeededResult', '0 l');
-    setText('resultNote', message);
-    setText('consumptionBadge', 'Chybí vstupní data');
-    updateHero('Doplňte data', ['- km', '- Kč', '- l'], 0, 0, 'čeká');
+  function renderComparison(scenario) {
+    const panel = $('comparisonPanel');
+    if (!panel) return;
+    if (scenario.mode !== 'pro' || scenario.comparisonConsumption <= 0) {
+      panel.hidden = true;
+      return;
+    }
+
+    panel.hidden = false;
+    const difference = scenario.comparisonTotal - scenario.totalCost;
+    setText('comparisonTitle', consumptionText(scenario.comparisonConsumption));
+    if (Math.abs(difference) < 0.5) {
+      setText('comparisonText', `Srovnávací scénář vychází prakticky stejně: ${formatCurrency(scenario.comparisonTotal)} za celou cestu.`);
+    } else if (difference > 0) {
+      setText('comparisonText', `Při srovnávací spotřebě by cesta stála ${formatCurrency(scenario.comparisonTotal)}, tedy přibližně o ${formatCurrency(difference)} více.`);
+    } else {
+      setText('comparisonText', `Při srovnávací spotřebě by cesta stála ${formatCurrency(scenario.comparisonTotal)}, tedy přibližně o ${formatCurrency(Math.abs(difference))} méně.`);
+    }
   }
 
-  function decision(costPerKm, consumption) {
-    if (costPerKm <= 2.5 || consumption <= 5.5) return ['Spíše úsporné', 'Výsledek působí úsporně. Přesto ho porovnejte s dlouhodobým průměrem, protože jedna cesta může zkreslit styl jízdy i provoz.', 'Sledujte delší období'];
-    if (costPerKm > 4.5 || consumption > 8) return ['Vyšší náklad', 'Spotřeba nebo cena za kilometr je vyšší. Zkontrolujte tlak v pneumatikách, styl jízdy, rychlost na dálnici a případné krátké městské trasy.', 'Porovnejte další trasu'];
-    return ['Běžný výsledek', 'Výsledek je v běžném pásmu. Největší smysl má sledovat změnu v čase a cenu za kilometr při různých trasách.', 'Uložte si srovnání'];
+  function renderScenario(scenario) {
+    const peopleLabel = scenario.passengers === 1 ? '1 platící osoba' : `${scenario.passengers} platící osoby`;
+    const fuelShare = scenario.totalCost > 0 ? clamp(scenario.fuelCost / scenario.totalCost * 100, 0, 100) : 0;
+    const extrasLabel = scenario.extraCosts > 0 ? `poplatky ${formatCurrency(scenario.extraCosts)}` : 'bez dalších nákladů';
+
+    setText('resultMode', scenario.mode === 'pro' ? 'PRO' : 'Basic');
+    setText('mainResult', formatCurrency(scenario.totalCost));
+    setText('mainSubResult', costPerKmText(scenario.costPerKm));
+    setText('resultSummary', `Na trasu ${distance(scenario.routeDistance)} potřebujete přibližně ${liters(scenario.totalFuel)} paliva${scenario.reservePercent > 0 ? ' včetně rezervy' : ''}.`);
+    $('resultBar').style.width = `${fuelShare}%`;
+    setText('resultBarLabel', extrasLabel);
+
+    setText('distanceResult', distance(scenario.routeDistance));
+    setText('directionResult', scenario.directionLabel);
+    setText('fuelResult', liters(scenario.totalFuel));
+    setText('reserveResult', scenario.reservePercent > 0 ? `rezerva ${formatNumber(scenario.reservePercent, 1)} %` : 'bez rezervy');
+    setText('fuelCostResult', formatCurrency(scenario.fuelCost));
+    setText('priceResult', `${formatCurrencyFine(scenario.price)}/l`);
+    setText('perPersonResult', formatCurrency(scenario.perPerson));
+    setText('peopleResult', peopleLabel);
+    setText('baseFuelResult', liters(scenario.baseFuel));
+    setText('reserveFuelResult', liters(scenario.reserveFuel));
+    setText('extraResult', formatCurrency(scenario.extraCosts));
+
+    const status = $('resultStatus');
+    status.classList.remove('is-warning', 'is-error');
+    if (scenario.mode === 'basic') {
+      setText('statusTitle', 'Rychlý plán bez skrytých doplňků');
+      setText('statusBadge', 'Basic odhad');
+      setText('statusText', 'Výsledek používá tři základní údaje. Pro reálnou cestu zvažte návrat, rezervu a poplatky.');
+    } else if (scenario.reservePercent > 30) {
+      status.classList.add('is-warning');
+      setText('statusTitle', 'Vysoká plánovací rezerva');
+      setText('statusBadge', 'Zkontrolujte vstup');
+      setText('statusText', 'Rezerva přesahuje 30 %. Může být záměrná, ale ověřte, zda už objížďky nejsou zahrnuté ve vzdálenosti.');
+    } else {
+      setText('statusTitle', scenario.sourceLabel.startsWith('z tankování') ? 'Spotřeba odvozena z tankování' : 'PRO scénář je rozpadnutý po položkách');
+      setText('statusBadge', 'Kontrolovatelný model');
+      setText('statusText', `Základní litry, rezerva a poplatky zůstávají oddělené. Použitá spotřeba: ${scenario.sourceLabel}.`);
+    }
+
+    setText('compareBaseFuel', liters(scenario.baseFuel));
+    setText('compareReserveFuel', liters(scenario.reserveFuel));
+    setText('compareFuelCost', formatCurrency(scenario.fuelCost));
+    setText('compareTotalCost', formatCurrency(scenario.totalCost));
+    setText('readingTitle', scenario.extraCosts > 0 ? 'Celkovou cenu netvoří jen palivo.' : 'Cesta má přehledný palivový rozpočet.');
+    setText('readingText', `Pro ${distance(scenario.routeDistance)} při spotřebě ${consumptionText(scenario.consumption)} vychází ${liters(scenario.baseFuel)} základního paliva. Celkový model je ${formatCurrency(scenario.totalCost)}.`);
+    setText('decisionConsumption', consumptionText(scenario.consumption));
+    setText('decisionRoute', `${distance(scenario.routeDistance)} · ${scenario.directionLabel}`);
+    setText('decisionPeople', peopleLabel);
+    setText('decisionCostKm', costPerKmText(scenario.costPerKm));
+
+    setText('heroCostKm', costPerKmText(scenario.costPerKm));
+    setText('heroSummary', `${distance(scenario.routeDistance)} · ${consumptionText(scenario.consumption)} · ${formatCurrencyFine(scenario.price)}/l`);
+    setText('heroDistance', distance(scenario.routeDistance));
+    setText('heroFuel', liters(scenario.totalFuel));
+    setText('heroTotal', formatCurrency(scenario.totalCost));
+    $('heroRouteBar').style.width = `${clamp(scenario.routeDistance / 700 * 100, 18, 100)}%`;
+
+    renderRows(scenario);
+    renderComparison(scenario);
   }
 
-  function calculateReal() {
-    const distance = Number($('distanceReal').value);
-    const fuelUsed = Number($('fuelUsed').value);
-    const fuelPrice = Number($('fuelPriceReal').value);
-    const fuelType = $('fuelTypeReal').value;
-    if (!distance || distance <= 0 || !fuelUsed || fuelUsed <= 0) return renderEmpty('Zadejte platnou vzdálenost a spotřebované palivo.');
-    const consumption = fuelUsed / distance * 100;
-    const totalFuelCost = fuelUsed * fuelPrice;
-    const costPerKm = totalFuelCost / distance;
-    setText('mainResult', `${fmtNumber(consumption, 2)} l / 100 km`);
-    setText('costResult', fmtCurrency(totalFuelCost));
-    setText('costPerKmResult', `${fmtCurrencyFine(costPerKm)}/km`);
-    setText('fuelNeededResult', fmtLiters(fuelUsed));
-    setText('calcTypeResult', 'Skutečná spotřeba');
-    setText('distanceResult', `${fmtNumber(distance, 1)} km`);
-    setText('contextResult', fuelType);
-    setText('pricePerLiterResult', fmtCurrency(fuelPrice));
-    setText('extraCostsResult', fmtCurrency(0));
-    setText('resultNote', 'Spotřeba je spočítaná z reálné vzdálenosti a spotřebovaného paliva. Hodí se pro dlouhodobé sledování auta.');
-    const [label, text, action] = decision(costPerKm, consumption);
-    setText('consumptionBadge', label);
-    setText('affordabilityStatus', label);
-    setText('affordabilityText', text);
-    setText('actionStatus', action);
-    setText('decisionSummary', `Palivový náklad vychází na ${fmtCurrencyFine(costPerKm)} za kilometr. To je dobré vodítko pro porovnání tras i aut, ale nezahrnuje servis, pojištění ani ztrátu hodnoty.`);
-    setText('nextActionText', 'Pro přesnější průměr zopakujte výpočet po několika tankováních a navazujte kalkulačkou celkové ceny za kilometr.');
-    updateHero(`${fmtNumber(consumption, 2)} l/100 km`, [`${fmtNumber(distance, 0)} km`, fmtCurrency(totalFuelCost), fmtLiters(fuelUsed)], Math.min(100, costPerKm / 5 * 100), Math.min(100, consumption / 9 * 100), `${fmtNumber(consumption, 1)} l`);
-    renderRows([
-      { name: 'Spotřeba', value: `${fmtNumber(consumption, 2)} l / 100 km`, note: 'Výpočet z reálného tankování' },
-      { name: 'Spotřebované palivo', value: fmtLiters(fuelUsed), note: 'Zadané množství' },
-      { name: 'Cena paliva', value: fmtCurrency(totalFuelCost), note: 'Pouze palivo' },
-      { name: 'Cena za km', value: `${fmtCurrencyFine(costPerKm)}/km`, note: 'Palivový náklad bez servisu a amortizace' }
-    ]);
+  function renderInvalid(mode) {
+    setText('resultMode', mode === 'pro' ? 'PRO' : 'Basic');
+    setText('mainResult', 'Doplňte údaje');
+    setText('mainSubResult', 'Výpočet čeká na platné vstupy');
+    setText('resultSummary', 'Opravte zvýrazněnou hodnotu. Ostatní údaje zůstávají v prohlížeči.');
+    const status = $('resultStatus');
+    status.classList.remove('is-warning');
+    status.classList.add('is-error');
+    setText('statusTitle', 'Výpočet nebyl dokončen');
+    setText('statusBadge', 'Neplatný vstup');
+    setText('statusText', 'Alespoň jedna hodnota chybí nebo je mimo povolený rozsah.');
   }
 
-  function calculateTrip() {
-    const distance = Number($('tripDistance').value);
-    const consumption = Number($('tripConsumption').value);
-    const fuelPrice = Number($('fuelPriceTrip').value);
-    const multiplier = $('tripMode').value === 'return' ? 2 : 1;
-    const extraCosts = Number($('extraCosts').value);
-    if (!distance || distance <= 0 || !consumption || consumption <= 0) return renderEmpty('Zadejte platnou délku trasy a průměrnou spotřebu.');
-    const totalDistance = distance * multiplier;
-    const fuelNeeded = totalDistance * consumption / 100;
-    const fuelCost = fuelNeeded * fuelPrice;
-    const totalCost = fuelCost + extraCosts;
-    const costPerKm = totalCost / totalDistance;
-    setText('mainResult', fmtCurrency(totalCost));
-    setText('costResult', fmtCurrency(fuelCost));
-    setText('costPerKmResult', `${fmtCurrencyFine(costPerKm)}/km`);
-    setText('fuelNeededResult', fmtLiters(fuelNeeded));
-    setText('calcTypeResult', 'Cena cesty');
-    setText('distanceResult', `${fmtNumber(totalDistance, 1)} km`);
-    setText('contextResult', $('tripMode').value === 'return' ? 'Tam i zpět' : 'Jedna cesta');
-    setText('pricePerLiterResult', fmtCurrency(fuelPrice));
-    setText('extraCostsResult', fmtCurrency(extraCosts));
-    setText('resultNote', 'Cena cesty je spočítaná ze spotřeby, trasy, ceny paliva a dalších přímých výdajů.');
-    const [label, text, action] = decision(costPerKm, consumption);
-    setText('consumptionBadge', label);
-    setText('affordabilityStatus', label);
-    setText('affordabilityText', text);
-    setText('actionStatus', action);
-    setText('decisionSummary', `Trasa potřebuje přibližně ${fmtLiters(fuelNeeded)} paliva a vychází na ${fmtCurrency(totalCost)}. Cena za kilometr je ${fmtCurrencyFine(costPerKm)}.`);
-    setText('nextActionText', 'U delších cest počítejte s rezervou na objížďky, parkování a změnu ceny paliva. Pokud cestu rozpočítáváte mezi lidi, navazujte výpočtem ceny za kilometr.');
-    updateHero(`${fmtCurrencyFine(costPerKm)}/km`, [`${fmtNumber(totalDistance, 0)} km`, fmtCurrency(totalCost), fmtLiters(fuelNeeded)], Math.min(100, costPerKm / 5 * 100), Math.min(100, fuelNeeded / 45 * 100), `${fmtNumber(fuelNeeded, 1)} l`);
-    renderRows([
-      { name: 'Celková cena', value: fmtCurrency(totalCost), note: 'Včetně dalších zadaných nákladů' },
-      { name: 'Palivo', value: fmtCurrency(fuelCost), note: 'Pouze spotřebované palivo' },
-      { name: 'Litry', value: fmtLiters(fuelNeeded), note: 'Odhad podle průměrné spotřeby' },
-      { name: 'Cena za km', value: `${fmtCurrencyFine(costPerKm)}/km`, note: 'Celkový náklad zadané trasy' }
-    ]);
+  function calculate() {
+    clearValidation();
+    const scenario = activeMode === 'pro' ? getProScenario() : getBasicScenario();
+    if (!scenario) {
+      renderInvalid(activeMode);
+      return null;
+    }
+    renderScenario(scenario);
+    return scenario;
   }
 
-  $('calcRealBtn').addEventListener('click', calculateReal);
-  $('calcTripBtn').addEventListener('click', calculateTrip);
-  $('resetRealBtn').addEventListener('click', () => { $('distanceReal').value = 520; $('fuelUsed').value = 34.8; $('fuelPriceReal').value = 38.9; $('fuelTypeReal').value = 'Benzín'; calculateReal(); });
-  $('resetTripBtn').addEventListener('click', () => { $('tripDistance').value = 250; $('tripConsumption').value = 6.7; $('fuelPriceTrip').value = 38.9; $('tripMode').value = 'oneway'; $('extraCosts').value = 0; calculateTrip(); });
-  ['distanceReal','fuelUsed','fuelPriceReal','fuelTypeReal'].forEach((id) => { $(id).addEventListener('input', calculateReal); $(id).addEventListener('change', calculateReal); });
-  ['tripDistance','tripConsumption','fuelPriceTrip','tripMode','extraCosts'].forEach((id) => { $(id).addEventListener('input', calculateTrip); $(id).addEventListener('change', calculateTrip); });
-  document.querySelectorAll('.tab-button').forEach((button) => button.addEventListener('click', () => setTab(button.dataset.tab)));
-  ensureNextActions();
-  calculateReal();
+  function setMode(mode) {
+    activeMode = mode;
+    document.body.dataset.mode = mode;
+    $('calcBasic').hidden = mode !== 'basic';
+    $('calcPro').hidden = mode !== 'pro';
+    document.querySelectorAll('.vpc-mode__button').forEach((button) => {
+      const active = button.dataset.mode === mode;
+      button.classList.toggle('is-active', active);
+      button.setAttribute('aria-selected', String(active));
+      button.tabIndex = active ? 0 : -1;
+    });
+    calculate();
+  }
+
+  function setConsumptionSource() {
+    const tank = readRadio('consumptionSource') === 'tank';
+    $('knownFields').hidden = tank;
+    $('tankFields').hidden = !tank;
+    calculate();
+  }
+
+  function copyBasicToPro() {
+    const basicDistance = parseNumber('basicDistance');
+    const basicConsumption = parseNumber('basicConsumption');
+    const basicPrice = parseNumber('basicPrice');
+    if (Number.isFinite(basicDistance) && basicDistance > 0) $('proDistance').value = formatNumber(basicDistance, 2);
+    if (Number.isFinite(basicConsumption) && basicConsumption > 0) $('proConsumption').value = formatNumber(basicConsumption, 2);
+    if (Number.isFinite(basicPrice) && basicPrice >= 0) $('proPrice').value = formatNumber(basicPrice, 2);
+  }
+
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    calculate();
+  });
+
+  document.querySelectorAll('.vpc-mode__button').forEach((button) => button.addEventListener('click', () => setMode(button.dataset.mode)));
+  document.querySelectorAll('[data-switch-pro]').forEach((button) => button.addEventListener('click', () => {
+    copyBasicToPro();
+    setMode('pro');
+    $('calcPro').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }));
+  document.querySelectorAll('[data-switch-basic]').forEach((button) => button.addEventListener('click', () => setMode('basic')));
+
+  document.querySelectorAll('[data-distance]').forEach((button) => button.addEventListener('click', () => {
+    $('basicDistance').value = button.dataset.distance;
+    document.querySelectorAll('[data-distance]').forEach((item) => item.classList.toggle('is-active', item === button));
+    calculate();
+  }));
+
+  form.querySelectorAll('input').forEach((input) => input.addEventListener('input', calculate));
+  form.querySelectorAll('input[name="direction"]').forEach((input) => input.addEventListener('change', calculate));
+  form.querySelectorAll('input[name="consumptionSource"]').forEach((input) => input.addEventListener('change', setConsumptionSource));
+
+  $('resetBasic').addEventListener('click', () => {
+    $('basicDistance').value = '250';
+    $('basicConsumption').value = '6,7';
+    $('basicPrice').value = '38,90';
+    document.querySelectorAll('[data-distance]').forEach((item) => item.classList.remove('is-active'));
+    calculate();
+  });
+
+  $('resetPro').addEventListener('click', () => {
+    $('proDistance').value = '250';
+    $('proPrice').value = '38,90';
+    $('proConsumption').value = '6,7';
+    $('tankDistance').value = '520';
+    $('tankLiters').value = '34,8';
+    $('reservePercent').value = '10';
+    $('extraCosts').value = '150';
+    $('passengers').value = '2';
+    $('compareConsumption').value = '8,0';
+    form.querySelector('input[name="direction"][value="return"]').checked = true;
+    form.querySelector('input[name="consumptionSource"][value="known"]').checked = true;
+    setConsumptionSource();
+  });
+
+  $('copyResult').addEventListener('click', async () => {
+    const scenario = calculate();
+    if (!scenario) return;
+    const text = `Cena cesty: ${formatCurrency(scenario.totalCost)} | ${costPerKmText(scenario.costPerKm)} | ${distance(scenario.routeDistance)} | ${liters(scenario.totalFuel)} paliva | ${consumptionText(scenario.consumption)}.`;
+    try {
+      await navigator.clipboard.writeText(text);
+      setText('copyResult', 'Zkopírováno');
+      window.setTimeout(() => setText('copyResult', 'Kopírovat výsledek'), 1600);
+    } catch (_) {
+      setText('copyResult', 'Kopírování se nezdařilo');
+      window.setTimeout(() => setText('copyResult', 'Kopírovat výsledek'), 1800);
+    }
+  });
+
+  $('printResult').addEventListener('click', () => window.print());
+
+  setConsumptionSource();
+  setMode('basic');
 })();
