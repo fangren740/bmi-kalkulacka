@@ -41,6 +41,9 @@
   var genitive = { petrol: 'benzínu', diesel: 'dieselu', ev: 'elektromobilu' };
   var colors = { petrol: '#e8a44a', diesel: '#62a9e8', ev: '#38c99b' };
   var lastResult = null;
+  var variantOrder = ['petrol', 'diesel', 'ev'];
+  var variantNames = { petrol: 'Benzínové auto', diesel: 'Dieselové auto', ev: 'Elektromobil' };
+  var activeVariant = 'petrol';
 
   function numberValue(id) {
     var value = Number(inputs[id] && inputs[id].value);
@@ -67,6 +70,42 @@
   function setWidth(id, value) {
     var node = document.getElementById(id);
     if (node) node.style.width = Math.max(0, Math.min(100, value)) + '%';
+  }
+
+  function shortMoney(value) {
+    return Math.round(value).toLocaleString('cs-CZ') + ' Kč';
+  }
+
+  function updateProMeta() {
+    setText('petrolTabMeta', shortMoney(numberValue('petrolPrice')) + ' · ' + decimal(numberValue('petrolConsumption'), 1) + ' l/100 km');
+    setText('dieselTabMeta', shortMoney(numberValue('dieselPrice')) + ' · ' + decimal(numberValue('dieselConsumption'), 1) + ' l/100 km');
+    setText('evTabMeta', shortMoney(numberValue('evPrice')) + ' · ' + decimal(numberValue('evConsumption'), 1) + ' kWh/100 km');
+  }
+
+  function selectVariant(key, moveFocus) {
+    if (variantOrder.indexOf(key) === -1) return;
+    activeVariant = key;
+    var activeIndex = variantOrder.indexOf(key);
+    document.querySelectorAll('[data-variant-tab]').forEach(function (button) {
+      var selected = button.getAttribute('data-variant-tab') === key;
+      button.classList.toggle('is-active', selected);
+      button.setAttribute('aria-selected', selected ? 'true' : 'false');
+      button.tabIndex = selected ? 0 : -1;
+      if (selected && moveFocus) button.focus();
+    });
+    document.querySelectorAll('[data-variant-panel]').forEach(function (panel) {
+      panel.hidden = panel.getAttribute('data-variant-panel') !== key;
+    });
+    setText('proStepLabel', 'KONFIGURACE ' + (activeIndex + 1) + ' ZE 3');
+    setText('proActiveName', variantNames[key]);
+    setText('proStepCount', (activeIndex + 1) + ' / 3');
+    var previous = document.getElementById('proPrev');
+    var next = document.getElementById('proNext');
+    if (previous) previous.disabled = activeIndex === 0;
+    if (next) {
+      next.disabled = activeIndex === variantOrder.length - 1;
+      next.textContent = activeIndex === variantOrder.length - 1 ? 'Vše nastaveno ✓' : 'Další pohon →';
+    }
   }
 
   function model() {
@@ -272,6 +311,7 @@
   }
 
   function calculate() {
+    updateProMeta();
     if (!validate()) return;
     render(model());
   }
@@ -292,6 +332,29 @@
     button.addEventListener('click', function () { applyPreset(button.getAttribute('data-preset')); });
   });
 
+  document.querySelectorAll('[data-variant-tab]').forEach(function (button) {
+    button.addEventListener('click', function () { selectVariant(button.getAttribute('data-variant-tab'), false); });
+    button.addEventListener('keydown', function (event) {
+      var index = variantOrder.indexOf(activeVariant);
+      if (event.key === 'ArrowRight') index = (index + 1) % variantOrder.length;
+      else if (event.key === 'ArrowLeft') index = (index - 1 + variantOrder.length) % variantOrder.length;
+      else return;
+      event.preventDefault();
+      selectVariant(variantOrder[index], true);
+    });
+  });
+
+  var proPrevious = document.getElementById('proPrev');
+  var proNext = document.getElementById('proNext');
+  if (proPrevious) proPrevious.addEventListener('click', function () {
+    var index = variantOrder.indexOf(activeVariant);
+    if (index > 0) selectVariant(variantOrder[index - 1], true);
+  });
+  if (proNext) proNext.addEventListener('click', function () {
+    var index = variantOrder.indexOf(activeVariant);
+    if (index < variantOrder.length - 1) selectVariant(variantOrder[index + 1], true);
+  });
+
   form.addEventListener('input', calculate);
   form.addEventListener('change', calculate);
   form.addEventListener('submit', function (event) { event.preventDefault(); calculate(); });
@@ -308,5 +371,6 @@
     if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(function () { copy.textContent = 'Zkopírováno'; setTimeout(function () { copy.textContent = 'Kopírovat výsledek'; }, 1800); });
   });
 
+  selectVariant('petrol', false);
   applyPreset('family');
 }());
