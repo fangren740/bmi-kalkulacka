@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Refinancování hypotéky 2026 – kalkulačka úspory a nové splátky</title>
-  <meta name="description" content="Porovnejte současnou a novou hypotéku. Kalkulačka refinancování ukáže novou splátku, úsporu úroků, celkové náklady, poplatky a dobu návratnosti.">
+  <title>Refinancování hypotéky 2026: úspora, návratnost a nová splátka | RychléVýpočty.cz</title>
+  <meta name="description" content="Porovnejte současnou a novou hypotéku včetně splátky, úroků, úplných nákladů, návratnosti, plánovaného horizontu a stresového scénáře. Basic i krokový PRO režim.">
   <meta name="robots" content="index,follow,max-image-preview:large">
   <meta name="author" content="RychléVýpočty.cz">
   <meta name="theme-color" content="#143f48">
@@ -25,6 +25,7 @@
   <meta name="twitter:description" content="Zjistěte, zda nová nabídka opravdu zlevní hypotéku, nebo jen sníží měsíční splátku delší splatností.">
   <link rel="stylesheet" href="mimoradna-splatka-hypoteky-v3.css?v=20260718-1">
   <link rel="stylesheet" href="refinancovani-hypoteky-v3.css?v=20260718-2">
+  <link rel="stylesheet" href="refinancovani-hypoteky-v4.css?v=20260721-1">
 
   <script type="application/ld+json">
   {
@@ -48,7 +49,7 @@
     "browserRequirements":"Requires JavaScript",
     "inLanguage":"cs-CZ",
     "isAccessibleForFree":true,
-    "dateModified":"2026-07-18",
+    "dateModified":"2026-07-21",
     "description":"Kalkulačka porovnává současnou a novou anuitní hypotéku podle splátky, úroků, délky, jednorázových a pravidelných nákladů a orientační doby návratnosti.",
     "offers":{"@type":"Offer","price":"0","priceCurrency":"CZK"},
     "provider":{"@type":"Organization","name":"RychléVýpočty.cz","url":"https://rychlevypocty.cz/"}
@@ -74,7 +75,7 @@
   </script>
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7745758285259522" crossorigin="anonymous"></script>
 </head>
-<body class="mrp-page refi-page">
+<body class="mrp-page refi-page refi-v4-page">
   <!-- REFI-PRO-20260718-2 -->
   <a class="mrp-skip" href="#kalkulacka">Přejít na kalkulačku</a>
 
@@ -111,7 +112,7 @@
       </div>
     </section>
 
-    <nav class="mrp-section-nav" aria-label="Navigace na stránce"><div class="mrp-container"><a href="#kalkulacka">Kalkulačka</a><a href="#vysledek">Výsledek</a><a href="#rozpad">Rozpad</a><a href="#metodika">Metodika</a><a href="#priklady">Příklady</a><a href="#faq">FAQ</a></div></nav>
+    <nav class="mrp-section-nav" aria-label="Navigace na stránce"><div class="mrp-container"><a href="#kalkulacka">Kalkulačka</a><a href="#vysledek">Výsledek</a><a href="#stres-test">Stres test</a><a href="#metodika">Metodika</a><a href="#overeni">Ověření</a><a href="#priklady">Příklady</a><a href="#faq">FAQ</a></div></nav>
 
     <section class="mrp-calc-section" id="kalkulacka">
       <div class="mrp-container">
@@ -141,29 +142,56 @@
               <div class="mrp-tip"><strong>Basic pravidlo:</strong> nová hypotéka má stejný zůstatek i stejnou dobu. Jednorázové a měsíční náklady jsou nulové. Výsledek proto rychle ukáže samotný dopad sazby.</div>
             </div>
 
-            <div class="mrp-fields" id="proFields" role="tabpanel" aria-labelledby="proTab" hidden>
-              <div class="mrp-step"><span>1</span><div><strong>Současná hypotéka</strong><small>Zadejte zůstatek, sazbu a přesnou zbývající dobu.</small></div></div>
-              <div class="mrp-input-grid">
-                <label class="mrp-field" for="proBalance"><span>Zůstatek hypotéky</span><span class="mrp-input"><input id="proBalance" type="number" inputmode="numeric" min="10000" step="10000" value="3200000"><em>Kč</em></span><small>Dnešní nesplacená jistina.</small></label>
-                <label class="mrp-field" for="proCurrentRate"><span>Současná sazba</span><span class="mrp-input"><input id="proCurrentRate" type="number" inputmode="decimal" min="0" max="30" step="0.01" value="5.69"><em>% p. a.</em></span><small>Roční nominální sazba současného úvěru.</small></label>
-                <label class="mrp-field" for="proCurrentYears"><span>Zbývající celé roky</span><span class="mrp-input"><input id="proCurrentYears" type="number" inputmode="numeric" min="0" max="50" step="1" value="24"><em>let</em></span><small>Celé roky do plánovaného konce.</small></label>
-                <label class="mrp-field" for="proCurrentMonths"><span>Další měsíce</span><span class="mrp-input"><input id="proCurrentMonths" type="number" inputmode="numeric" min="0" max="11" step="1" value="0"><em>měs.</em></span><small>Doplněk k celým rokům.</small></label>
+            <div class="mrp-fields refi-pro-fields" id="proFields" role="tabpanel" aria-labelledby="proTab" hidden>
+              <div class="refi-pro-progress" role="tablist" aria-label="Kroky PRO režimu">
+                <button class="refi-pro-step is-active" type="button" data-pro-step="0"><span>1</span><strong>Současný úvěr</strong><small>zůstatek a doba</small></button>
+                <button class="refi-pro-step" type="button" data-pro-step="1"><span>2</span><strong>Nová nabídka</strong><small>sazba a splatnost</small></button>
+                <button class="refi-pro-step" type="button" data-pro-step="2"><span>3</span><strong>Úplné náklady</strong><small>poplatky a služby</small></button>
+                <button class="refi-pro-step" type="button" data-pro-step="3"><span>4</span><strong>Odolnost</strong><small>horizont a stres</small></button>
               </div>
 
-              <div class="mrp-step"><span>2</span><div><strong>Nová nabídka</strong><small>Rozdílná splatnost mění splátku i celkovou cenu.</small></div></div>
-              <div class="mrp-input-grid">
-                <label class="mrp-field" for="proNewRate"><span>Nová sazba</span><span class="mrp-input"><input id="proNewRate" type="number" inputmode="decimal" min="0" max="30" step="0.01" value="4.29"><em>% p. a.</em></span><small>Sazba po splnění všech podmínek nabídky.</small></label>
-                <label class="mrp-field" for="proNewYears"><span>Nová splatnost – roky</span><span class="mrp-input"><input id="proNewYears" type="number" inputmode="numeric" min="0" max="50" step="1" value="24"><em>let</em></span><small>Pro čisté srovnání ponechte stejnou.</small></label>
-                <label class="mrp-field" for="proNewMonths"><span>Nová splatnost – měsíce</span><span class="mrp-input"><input id="proNewMonths" type="number" inputmode="numeric" min="0" max="11" step="1" value="0"><em>měs.</em></span><small>Doplněk k celým rokům nové hypotéky.</small></label>
-                <label class="mrp-field" for="proOneTimeCosts"><span>Jednorázové náklady</span><span class="mrp-input"><input id="proOneTimeCosts" type="number" inputmode="numeric" min="0" step="500" value="15000"><em>Kč</em></span><small>Součet povinných výdajů na změnu banky.</small></label>
-              </div>
+              <section class="refi-pro-panel is-active" data-pro-panel="0">
+                <div class="mrp-step"><span>1</span><div><strong>Současná hypotéka</strong><small>Zadejte dnešní nesplacenou jistinu, sazbu a přesnou zbývající dobu.</small></div></div>
+                <div class="mrp-input-grid">
+                  <label class="mrp-field" for="proBalance"><span>Zůstatek hypotéky</span><span class="mrp-input"><input id="proBalance" type="number" inputmode="numeric" min="10000" step="10000" value="3200000"><em>Kč</em></span><small>Dnešní nesplacená jistina, nikoli původní úvěr.</small></label>
+                  <label class="mrp-field" for="proCurrentRate"><span>Současná sazba</span><span class="mrp-input"><input id="proCurrentRate" type="number" inputmode="decimal" min="0" max="30" step="0.01" value="5.69"><em>% p. a.</em></span><small>Roční nominální sazba současného úvěru.</small></label>
+                  <label class="mrp-field" for="proCurrentYears"><span>Zbývající celé roky</span><span class="mrp-input"><input id="proCurrentYears" type="number" inputmode="numeric" min="0" max="50" step="1" value="24"><em>let</em></span><small>Celé roky do současného plánovaného konce.</small></label>
+                  <label class="mrp-field" for="proCurrentMonths"><span>Další měsíce</span><span class="mrp-input"><input id="proCurrentMonths" type="number" inputmode="numeric" min="0" max="11" step="1" value="0"><em>měs.</em></span><small>Doplněk k celým rokům.</small></label>
+                </div>
+                <div class="refi-stage-note"><strong>Proč začínáme zůstatkem?</strong><span>Refinancuje se dnešní nesplacená jistina. Historická výše původní hypotéky by nadhodnotila splátku i budoucí úroky.</span></div>
+              </section>
 
-              <div class="mrp-step"><span>3</span><div><strong>Pravidelné podmínky nabídky</strong><small>Započítejte jen náklady, bez kterých uvedenou sazbu nezískáte.</small></div></div>
-              <div class="mrp-input-grid">
-                <label class="mrp-field" for="proCurrentMonthlyCosts"><span>Měsíční náklady nyní</span><span class="mrp-input"><input id="proCurrentMonthlyCosts" type="number" inputmode="numeric" min="0" step="10" value="0"><em>Kč</em></span><small>Povinný účet, pojištění či další služby dnes.</small></label>
-                <label class="mrp-field" for="proNewMonthlyCosts"><span>Měsíční náklady nově</span><span class="mrp-input"><input id="proNewMonthlyCosts" type="number" inputmode="numeric" min="0" step="10" value="0"><em>Kč</em></span><small>Povinné služby spojené s novou sazbou.</small></label>
-              </div>
-              <div class="mrp-tip"><strong>PRO připomínka:</strong> jednorázový náklad může zahrnovat konkrétní vyčíslení předčasného splacení, odhad, katastr nebo administrativu. Nepoužívejte automatický odhad, pokud částku neznáte.</div>
+              <section class="refi-pro-panel" data-pro-panel="1">
+                <div class="mrp-step"><span>2</span><div><strong>Nová nabídka</strong><small>Nejdřív ponechte stejnou dobu. Teprve potom testujte prodloužení nebo zkrácení.</small></div></div>
+                <div class="mrp-input-grid">
+                  <label class="mrp-field" for="proNewRate"><span>Nová sazba</span><span class="mrp-input"><input id="proNewRate" type="number" inputmode="decimal" min="0" max="30" step="0.01" value="4.29"><em>% p. a.</em></span><small>Sazba po splnění všech podmínek nabídky.</small></label>
+                  <label class="mrp-field" for="proNewYears"><span>Nová splatnost – roky</span><span class="mrp-input"><input id="proNewYears" type="number" inputmode="numeric" min="0" max="50" step="1" value="24"><em>let</em></span><small>Pro férový základ ji ponechte stejnou jako dnes.</small></label>
+                  <label class="mrp-field" for="proNewMonths"><span>Nová splatnost – měsíce</span><span class="mrp-input"><input id="proNewMonths" type="number" inputmode="numeric" min="0" max="11" step="1" value="0"><em>měs.</em></span><small>Doplněk k celým rokům nové hypotéky.</small></label>
+                  <div class="refi-choice-card"><span>Férové pořadí</span><strong>Stejná jistina → stejná doba → úplné náklady</strong><small>Nižší splátka vytvořená delší dobou není automaticky levnější úvěr.</small></div>
+                </div>
+              </section>
+
+              <section class="refi-pro-panel" data-pro-panel="2">
+                <div class="mrp-step"><span>3</span><div><strong>Jednorázové a pravidelné náklady</strong><small>Započítejte pouze výdaje nutné k získání a udržení zadané sazby.</small></div></div>
+                <div class="mrp-input-grid">
+                  <label class="mrp-field" for="proOneTimeCosts"><span>Jednorázové náklady změny</span><span class="mrp-input"><input id="proOneTimeCosts" type="number" inputmode="numeric" min="0" step="500" value="15000"><em>Kč</em></span><small>Vyčíslení odchodu, odhad, katastr, administrativa a další čisté výdaje.</small></label>
+                  <label class="mrp-field" for="proCurrentMonthlyCosts"><span>Měsíční náklady nyní</span><span class="mrp-input"><input id="proCurrentMonthlyCosts" type="number" inputmode="numeric" min="0" step="10" value="0"><em>Kč</em></span><small>Povinný účet, pojištění nebo jiné služby dnes.</small></label>
+                  <label class="mrp-field" for="proNewMonthlyCosts"><span>Měsíční náklady nově</span><span class="mrp-input"><input id="proNewMonthlyCosts" type="number" inputmode="numeric" min="0" step="10" value="0"><em>Kč</em></span><small>Povinné služby podmiňující nabízenou sazbu.</small></label>
+                  <div class="refi-choice-card is-cost"><span>Nepoužívejte odhad naslepo</span><strong>Požádejte současnou banku o konkrétní vyčíslení</strong><small>Právní režim a skutečná částka se odvíjejí od smlouvy, termínu a okolností splacení.</small></div>
+                </div>
+              </section>
+
+              <section class="refi-pro-panel" data-pro-panel="3">
+                <div class="mrp-step"><span>4</span><div><strong>Plánovaný horizont a stresový test</strong><small>Ověřte, zda se náklady stihnou vrátit dřív, než úvěr prodáte, doplatíte nebo znovu změníte.</small></div></div>
+                <div class="mrp-input-grid">
+                  <label class="mrp-field" for="proHoldingYears"><span>Jak dlouho chcete nabídku držet?</span><span class="mrp-input"><input id="proHoldingYears" type="number" inputmode="decimal" min="0.1" max="50" step="0.5" value="5"><em>let</em></span><small>Pro horizontní srovnání se zohlední i zbývající jistina.</small></label>
+                  <label class="mrp-field" for="proStressDelta"><span>Stresové zvýšení nové sazby</span><span class="mrp-input"><input id="proStressDelta" type="number" inputmode="decimal" min="0" max="10" step="0.1" value="1.5"><em>p. b.</em></span><small>Ukáže orientační splátku při horší budoucí sazbě.</small></label>
+                  <div class="refi-choice-card is-horizon"><span>Rozhodovací horizont</span><strong>Platby + zbývající jistina</strong><small>Při kratším horizontu nestačí porovnat jen zaplacené splátky. Důležitý je i dluh, který v daném okamžiku zůstává.</small></div>
+                  <div class="refi-choice-card is-stress"><span>Stres není predikce</span><strong>Je to test odolnosti rozpočtu</strong><small>Budoucí sazbu kalkulačka nepředpovídá. Ukazuje, zda by domácnost zvládla horší variantu.</small></div>
+                </div>
+              </section>
+
+              <div class="refi-pro-nav"><button class="mrp-btn mrp-btn--ghost" id="proPrevStep" type="button">Zpět</button><span id="proStepCounter">Krok 1 ze 4</span><button class="mrp-btn mrp-btn--primary" id="proNextStep" type="button">Pokračovat</button></div>
             </div>
 
             <p class="mrp-error" id="formError" role="alert" hidden></p>
@@ -178,6 +206,10 @@
             <div class="mrp-result__metrics"><div><span>Současná splátka</span><strong id="currentPaymentResult">0 Kč</strong></div><div><span>Nová splátka</span><strong id="newPaymentResult">0 Kč</strong></div><div><span>Rozdíl měsíčně</span><strong id="monthlySavingResult">0 Kč</strong></div><div><span>Návratnost nákladů</span><strong id="breakEvenResult">ihned</strong></div></div>
             <div class="mrp-result__note"><strong id="decisionHeadline">Férové srovnání stejné doby</strong><p id="decisionText">Po výpočtu zde uvidíte, zda nižší splátku vytváří sazba, nebo prodloužená splatnost.</p><div class="mrp-reserve refi-term-check" id="termCheck"><span>Kontrola splatnosti</span><strong id="termStatus">Stejná doba</strong><small id="termText">Obě nabídky lze přímo porovnat.</small></div></div>
             <div class="mrp-comparison"><div><span>Úspora na úrocích</span><strong id="interestSavingResult">0 Kč</strong><small>před dalšími náklady</small></div><div><span>Jednorázové náklady</span><strong id="costsResult">0 Kč</strong><small id="monthlyCostsMeta">bez měsíčního rozdílu</small></div></div>
+            <div class="refi-decision-grid">
+              <div><span>Úspora do zvoleného horizontu</span><strong id="horizonSavingResult">0 Kč</strong><small id="horizonMeta">včetně zbývající jistiny</small></div>
+              <div><span>Stresová nová splátka</span><strong id="stressPaymentResult">0 Kč</strong><small id="stressDeltaResult">při vyšší sazbě</small></div>
+            </div>
             <div class="mrp-result__actions"><button type="button" id="copyResult">Kopírovat výsledek</button><button type="button" id="printResult">Vytisknout</button></div>
           </aside>
         </div>
@@ -188,6 +220,18 @@
       <div class="mrp-container">
         <div class="mrp-heading mrp-heading--split"><div><p class="mrp-kicker mrp-kicker--small">Rychlé čtení</p><h2>Čtyři rozdíly, které nesmí splynout</h2></div><p>Nová nabídka může mít nižší sazbu, nižší splátku, nižší úroky nebo nižší celkové náklady. Nejsou to automaticky stejné věci.</p></div>
         <div class="mrp-stat-grid"><article><span>01</span><strong>Rozdíl sazeb</strong><p>Ukazuje cenu peněz, ale ne všechny povinné výdaje.</p></article><article><span>02</span><strong>Rozdíl splátek</strong><p>Popisuje měsíční cashflow, které silně ovlivňuje délka.</p></article><article><span>03</span><strong>Rozdíl úroků</strong><p>Porovnává cenu úvěru bez jistiny a vedlejších nákladů.</p></article><article><span>04</span><strong>Čistá úspora</strong><p>Zohlední úroky, délku i zadané jednorázové a měsíční náklady.</p></article></div>
+      </div>
+    </section>
+
+    <section class="refi-stress-section" id="stres-test">
+      <div class="mrp-container">
+        <div class="mrp-heading mrp-heading--split"><div><p class="mrp-kicker mrp-kicker--small">Živý stres test</p><h2>Co udělá menší sazební nebo nákladový problém</h2></div><p>Čtyři scénáře se přepočítávají z vašich vstupů. Pomáhají odlišit robustní úsporu od výsledku, který zmizí po malém zhoršení podmínek.</p></div>
+        <div class="refi-stress-grid">
+          <article><span>Sazba +0,5 p. b.</span><strong id="stressRate05Payment">0 Kč</strong><small>nová měsíční splátka</small></article>
+          <article><span>Sazba +1,0 p. b.</span><strong id="stressRate10Payment">0 Kč</strong><small>nová měsíční splátka</small></article>
+          <article><span>Dalších 20 000 Kč nákladů</span><strong id="stressExtraCostsSaving">0 Kč</strong><small>čistá úspora po korekci</small></article>
+          <article class="is-fair"><span>Nová sazba při stejné době</span><strong id="sameTermSaving">0 Kč</strong><small>izolovaný dopad sazby a nákladů</small></article>
+        </div>
       </div>
     </section>
 
@@ -210,6 +254,37 @@
           <article><span>03 / verdikt</span><h3>Čistý rozdíl úplných modelů</h3><p>Kladná čistá úspora znamená, že současný scénář vychází dráž. Záporný výsledek upozorňuje, že nová nabídka je v modelu dražší. Rozdíl splátek se hodnotí zvlášť, protože může jít opačným směrem než celkové náklady.</p><code>čistá úspora = současné celkem − nové celkem</code></article>
         </div>
         <div class="mrp-explanation"><div><p class="mrp-kicker mrp-kicker--small">Doba návratnosti</p><h3>Nejde jen o poplatek dělený měsíční úsporou</h3><p>Kalkulačka skládá peněžní toky po měsících. Nová varianta začíná jednorázovým nákladem, poté přidává splátku a pravidelné služby. Současná varianta přidává vlastní měsíční výdaj. První měsíc, kdy kumulované nové výdaje klesnou pod současné, označí jako orientační návratnost.</p><p>Tento postup umí zachytit i situaci, kdy je nová splátka vyšší, ale nová hypotéka skončí dříve. Jednoduché dělení by takový scénář vyhodnotilo špatně. Pokud se nové kumulované výdaje během modelovaného horizontu nikdy nedostanou pod současné, kalkulačka zobrazí, že návratnost v daném modelu nenastane.</p></div><div class="mrp-formula-card"><span>FÉROVÉ POŘADÍ</span><strong>stejná jistina → stejná doba → úplné náklady</strong><p>Teprve po tomto základu má smysl hodnotit delší nebo kratší novou splatnost.</p></div></div>
+      </div>
+    </section>
+
+
+    <section class="refi-verification" id="overeni">
+      <div class="mrp-container">
+        <div class="mrp-heading mrp-heading--split"><div><p class="mrp-kicker mrp-kicker--small">Ověření metodiky výpočtu</p><h2>Vzorce, kontrolní scénáře a zdroje</h2></div><p>Referenční verze: 2026. Poslední kontrola metodiky a testů proběhla 21. 7. 2026. Výpočet je matematický model, nikoli právní vyčíslení banky.</p></div>
+        <div class="refi-verification-meta"><span>✓ anuitní model</span><span>✓ měsíční peněžní toky</span><span>✓ zbývající jistina v horizontu</span><span>✓ typické i hraniční testy</span></div>
+        <div class="refi-verification-grid">
+          <article><span>01</span><h3>Anuitní splátka</h3><p>Pro jistinu <em>P</em>, měsíční sazbu <em>r</em> a počet splátek <em>n</em> používá kalkulačka standardní anuitní vztah. Při nulové sazbě se jistina rozdělí rovnoměrně.</p><code>A = P × r / (1 − (1 + r)<sup>−n</sup>)</code></article>
+          <article><span>02</span><h3>Zbývající jistina</h3><p>Pro plánovaný horizont se neporovnávají pouze zaplacené splátky. Přičte se také nesplacený zůstatek, který by bylo nutné v daném okamžiku doplatit.</p><code>B<sub>k</sub> = P(1+r)<sup>k</sup> − A × ((1+r)<sup>k</sup>−1)/r</code></article>
+          <article><span>03</span><h3>Úplná cena varianty</h3><p>Celkový model zahrnuje všechny splátky, povinné měsíční služby a jednorázové náklady. Jistina je u obou variant stejná, proto čistý rozdíl ukazuje rozdíl financování.</p><code>celkem = splátky + pravidelné náklady + jednorázové náklady</code></article>
+          <article><span>04</span><h3>Návratnost</h3><p>Jednorázový náklad se započítá v prvním okamžiku. Kalkulačka následně hledá první měsíc, kdy kumulované výdaje nové varianty klesnou pod současnou variantu.</p><code>break-even = první měsíc, kdy nové kumulovaně ≤ současné kumulovaně</code></article>
+        </div>
+        <div class="refi-test-table">
+          <table><thead><tr><th>Kontrolní scénář</th><th>Očekávaný výsledek</th><th>Stav</th></tr></thead><tbody>
+            <tr><td>1 200 000 Kč, 0 %, 10 let</td><td>splátka přesně 10 000 Kč</td><td><strong>Ověřeno</strong></td></tr>
+            <tr><td>Stejná sazba, stejná doba, nulové náklady</td><td>čistý rozdíl 0 Kč</td><td><strong>Ověřeno</strong></td></tr>
+            <tr><td>3,2 mil. Kč, 5,69 % vs. 4,29 %, 24 let</td><td>splátky přibližně 20 396 Kč a 17 814 Kč</td><td><strong>Ověřeno</strong></td></tr>
+            <tr><td>Stejný scénář + jednorázově 15 000 Kč</td><td>návratnost přibližně v 6. měsíci</td><td><strong>Ověřeno</strong></td></tr>
+            <tr><td>Nová doba prodloužena na 30 let</td><td>splátka klesne, ale úspora úroků se výrazně sníží</td><td><strong>Ověřeno</strong></td></tr>
+            <tr><td>Nulová jistina nebo nulový počet měsíců</td><td>výpočet se neprovede a zobrazí validaci</td><td><strong>Ověřeno</strong></td></tr>
+          </tbody></table>
+        </div>
+        <div class="refi-source-grid">
+          <a href="https://www.cnb.cz/cs/dohled-financni-trh/ochrana-spotrebitele/rpsn/index.html" target="_blank" rel="noopener"><strong>ČNB – ukazatel RPSN</strong><span>Co RPSN zahrnuje a proč samotná sazba nestačí.</span></a>
+          <a href="https://www.cnb.cz/cs/casto-kladene-dotazy/Vyklad-ucelne-vynalozenych-nakladu-vzniklych-v-souvislosti-s-predcasnym-ukoncenim-hypotecniho-uveru-otazky-a-odpovedi" target="_blank" rel="noopener"><strong>ČNB – předčasné splacení</strong><span>Aktuální výklad nákladů a použití úpravy účinné od 1. 9. 2024.</span></a>
+          <a href="https://mf.gov.cz/cs/financni-trh/spotrebitelske-uvery/spotrebitelsky-uver/produktova-regulace" target="_blank" rel="noopener"><strong>Ministerstvo financí – pravidla úvěru</strong><span>Informace k úvěruschopnosti, předsmluvním informacím a předčasnému splacení.</span></a>
+          <a href="https://www.cnb.cz/cs/menova-politika/zpravy-o-menove-politice/boxy-a-clanky/Refixace-a-refinancovani-hypotek-a-jejich-dopady-do-struktury-vydaju-domacnosti/" target="_blank" rel="noopener"><strong>ČNB – refixace a refinancování</strong><span>Kontext dopadů změn sazeb do výdajů českých domácností.</span></a>
+        </div>
+        <p class="refi-verification-note"><strong>Omezení modelu:</strong> sazba je v každém scénáři po zadanou dobu konstantní, výpočet nezahrnuje přesný den čerpání, rozdílnou úrokovou konvenci, individuální bankovní zaokrouhlování ani budoucí nabídku po další fixaci. Právní náklady předčasného splacení vždy zadávejte podle konkrétního vyčíslení banky.</p>
       </div>
     </section>
 
@@ -368,6 +443,6 @@
     <div class="mrp-container mrp-footer__bottom">© 2026 RychléVýpočty.cz. Výpočty jsou orientační a nenahrazují nabídku banky, právní, daňové ani finanční poradenství.</div>
   </footer>
 
-  <script src="refinancovani-hypoteky-v3.js?v=20260718-1"></script>
+  <script src="refinancovani-hypoteky-v4.js?v=20260721-1"></script>
 </body>
 </html>
