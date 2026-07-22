@@ -22,6 +22,19 @@
     discountRate: 3
   });
 
+  const BASIC_ASSUMPTIONS = Object.freeze({
+    exportPrice: 1.5,
+    annualService: 2500,
+    degradation: 0.5,
+    electricityGrowth: 0,
+    analysisYears: 25,
+    inverterYear: 15,
+    inverterCost: 45000,
+    batteryYear: 0,
+    batteryCost: 100000,
+    discountRate: 3
+  });
+
   const FIELD_RULES = Object.freeze({
     systemPrice: { min: 0, max: 10000000, digits: 0 },
     supportAmount: { min: 0, max: 10000000, digits: 0 },
@@ -205,7 +218,7 @@
     };
   }
 
-  const api = Object.freeze({ DEFAULTS, FIELD_RULES, URL_MAP, parseLocaleNumber, valuesFromSearch, searchFromValues, calculate });
+  const api = Object.freeze({ DEFAULTS, BASIC_ASSUMPTIONS, FIELD_RULES, URL_MAP, parseLocaleNumber, valuesFromSearch, searchFromValues, calculate });
   if (global) global.RVSolarCalculator = api;
   if (typeof document === "undefined") return;
 
@@ -233,7 +246,12 @@
   const selectFieldIds = ["analysisYears", "inverterYear", "batteryYear"];
   const modeButtons = Array.from(document.querySelectorAll(".mode-button"));
   const profileInputs = Array.from(document.querySelectorAll('input[name="profile"]'));
+  const advancedStepButtons = Array.from(document.querySelectorAll("[data-advanced-step]"));
+  const advancedStages = Array.from(document.querySelectorAll("[data-advanced-stage]"));
+  const advancedPrev = document.querySelector(".advanced-prev");
+  const advancedNext = document.querySelector(".advanced-next");
   let currentMode = "basic";
+  let currentAdvancedStep = 0;
 
   function setText(id, value) {
     const element = $(id);
@@ -260,6 +278,11 @@
     numericFieldIds.forEach((id) => { values[id] = readField(id); });
     selectFieldIds.forEach((id) => { values[id] = Number($(id).value); });
     return values;
+  }
+
+  function effectiveValues(values) {
+    if (currentMode === "advanced") return { ...values };
+    return { ...values, ...BASIC_ASSUMPTIONS };
   }
 
   function validate(values) {
@@ -400,7 +423,7 @@
   }
 
   function render() {
-    const values = readValues();
+    const values = effectiveValues(readValues());
     const errors = validate(values);
     showValidation(errors);
     if (errors.length) return null;
@@ -421,7 +444,8 @@
     setText("selfUseKwh", kwh(result.firstYearSelfUse));
     setText("exportKwh", kwh(result.firstYearExports));
     setText("selfSufficiency", percent(result.selfSufficiency, 1));
-    setText("resultMode", currentMode === "advanced" ? "Rozšířený model" : "Základní model");
+    setText("resultMode", currentMode === "advanced" ? "Rozšířený model" : "Rychlý odhad");
+    setText("paybackTitle", currentMode === "advanced" ? "Dynamická doba návratnosti" : "Odhad doby návratnosti");
 
     const selfWidth = clamp(result.selfConsumptionActual, 0, 100);
     $("selfUseBar").style.width = `${selfWidth}%`;
@@ -439,10 +463,9 @@
     modeButtons.forEach((button) => {
       const active = button.dataset.mode === currentMode;
       button.classList.toggle("is-active", active);
-      button.setAttribute("aria-selected", String(active));
-      button.tabIndex = active ? 0 : -1;
+      button.setAttribute("aria-pressed", String(active));
     });
-    $("basicCalculation").hidden = currentMode === "advanced";
+    $("basicCalculation").hidden = false;
     $("advancedCalculation").hidden = currentMode !== "advanced";
     if (currentMode === "basic") {
       const currentSelf = readField("selfConsumption");
@@ -450,10 +473,35 @@
         const difference = Math.abs(Number(input.value) - currentSelf);
         return difference < best.difference ? { input, difference } : best;
       }, { input: profileInputs[0], difference: Infinity });
-      if (nearest.input && !profileInputs.some((input) => input.checked)) nearest.input.checked = true;
+      if (nearest.input) nearest.input.checked = true;
       if (nearest.input && options.syncProfile !== false) setFieldValue("selfConsumption", Number(nearest.input.value));
+    } else if (options.resetStep !== false) {
+      setAdvancedStep(0);
     }
     render();
+  }
+
+  function setAdvancedStep(index) {
+    if (!advancedStages.length) return;
+    currentAdvancedStep = clamp(Math.round(Number(index) || 0), 0, advancedStages.length - 1);
+    advancedStepButtons.forEach((button, buttonIndex) => {
+      const active = buttonIndex === currentAdvancedStep;
+      button.classList.toggle("is-active", active);
+      if (active) button.setAttribute("aria-current", "step");
+      else button.removeAttribute("aria-current");
+    });
+    advancedStages.forEach((stage, stageIndex) => {
+      const active = stageIndex === currentAdvancedStep;
+      stage.hidden = !active;
+      stage.classList.toggle("is-active", active);
+    });
+    if (advancedPrev) advancedPrev.disabled = currentAdvancedStep === 0;
+    if (advancedNext) {
+      const last = currentAdvancedStep === advancedStages.length - 1;
+      advancedNext.disabled = last;
+      advancedNext.textContent = last ? "Všechny kroky hotové" : "Další krok →";
+    }
+    setText("advancedStepStatus", `Krok ${currentAdvancedStep + 1} ze ${advancedStages.length}`);
   }
 
   function formatInput(id) {
@@ -466,6 +514,7 @@
     selectFieldIds.forEach((id) => setFieldValue(id, DEFAULTS[id], false));
     profileInputs.forEach((input) => { input.checked = Number(input.value) === DEFAULTS.selfConsumption; });
     setText("copyStatus", "");
+    setAdvancedStep(0);
     setMode("basic", { syncProfile: false });
   }
 
@@ -488,7 +537,7 @@
   }
 
   function buildShareUrl() {
-    const values = readValues();
+    const values = effectiveValues(readValues());
     const errors = validate(values);
     if (errors.length) return null;
     const url = new URL(global.location.href);
@@ -527,7 +576,10 @@
 
   form.addEventListener("submit", (event) => {
     event.preventDefault();
-    render();
+    const result = render();
+    if (result && global.matchMedia && global.matchMedia("(max-width: 960px)").matches) {
+      $("vysledek").scrollIntoView({ behavior: "smooth", block: "start" });
+    }
   });
   numericFieldIds.forEach((id) => {
     const element = $(id);
@@ -550,6 +602,11 @@
   modeButtons.forEach((button) => {
     button.addEventListener("click", () => setMode(button.dataset.mode));
   });
+  advancedStepButtons.forEach((button) => {
+    button.addEventListener("click", () => setAdvancedStep(Number(button.dataset.advancedStep)));
+  });
+  if (advancedPrev) advancedPrev.addEventListener("click", () => setAdvancedStep(currentAdvancedStep - 1));
+  if (advancedNext) advancedNext.addEventListener("click", () => setAdvancedStep(currentAdvancedStep + 1));
   $("selfConsumption").addEventListener("input", () => {
     const value = readField("selfConsumption");
     profileInputs.forEach((input) => { input.checked = Number(input.value) === value; });
@@ -557,5 +614,6 @@
   $("resetBtn").addEventListener("click", resetForm);
   $("copyLinkBtn").addEventListener("click", copyShareUrl);
 
+  setAdvancedStep(0);
   loadFromUrl();
 })(typeof window !== "undefined" ? window : globalThis);
