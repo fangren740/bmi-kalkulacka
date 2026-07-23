@@ -366,26 +366,26 @@
     const container = $("breakdownList");
     if (!container) return;
     const rows = [
-      ["Stavební práce a pokládka", result.coreLaborCost * result.regionFactor * result.adjustmentMultiplier, `${money(result.baseRate)} / m²`],
-      ["Materiál obkladů a dlažby", result.tileMaterialCost * result.regionFactor * result.adjustmentMultiplier, `${number(result.surfaceArea)} m²`],
-      ["Demontáž a odvoz", result.values.customTechnical > 0 ? 0 : (result.technicalModel.demolition || 0) * result.regionFactor * result.adjustmentMultiplier, result.values.customTechnical > 0 ? "nahrazeno součtem" : "technika"],
-      ["Voda a odpady", result.values.customTechnical > 0 ? 0 : (result.technicalModel.water || 0) * result.regionFactor * result.adjustmentMultiplier, result.values.customTechnical > 0 ? "nahrazeno součtem" : "rozvody"],
-      ["Elektroinstalace", result.values.customTechnical > 0 ? 0 : (result.technicalModel.electro || 0) * result.regionFactor * result.adjustmentMultiplier, result.values.customTechnical > 0 ? "nahrazeno součtem" : "rozvody"],
-      ["Podklad, dispozice a větrání", result.values.customTechnical > 0 ? result.technicalCost : ((result.technicalModel.substrate || 0) + (result.technicalModel.layout || 0) + (result.technicalModel.ventilation || 0)) * result.regionFactor * result.adjustmentMultiplier, result.values.customTechnical > 0 ? "vlastní technický součet" : "příprava"],
-      ["Sprcha nebo vana", result.values.customEquipment > 0 ? 0 : result.sanitaryCost * result.regionFactor * result.adjustmentMultiplier, result.values.customEquipment > 0 ? "nahrazeno součtem" : LABELS.sanitary[result.values.sanitary]],
-      ["WC, topení, nábytek a doplňky", result.values.customEquipment > 0 ? result.equipmentCost : (result.toiletCost + result.heatCost + result.furnitureCost + result.accessoriesCost) * result.regionFactor * result.adjustmentMultiplier, result.values.customEquipment > 0 ? "vlastní vybavení" : "vybavení"],
-      ["Rozpočtová rezerva", result.reserveCost, `${number(result.values.reserveRate)} %`],
+      { name: "Stavební práce a pokládka", value: result.coreLaborCost * result.regionFactor * result.adjustmentMultiplier, note: `${money(result.baseRate)} / m²`, classes: [] },
+      { name: "Materiál obkladů a dlažby", value: result.tileMaterialCost * result.regionFactor * result.adjustmentMultiplier, note: `${number(result.surfaceArea)} m² obkladů a dlažby`, classes: [] },
+      { name: "Demontáž a odvoz", value: result.values.customTechnical > 0 ? 0 : (result.technicalModel.demolition || 0) * result.regionFactor * result.adjustmentMultiplier, note: result.values.customTechnical > 0 ? "vlastní technický součet nahradil modelovou položku" : "bourání, odvoz a základní příprava", classes: result.values.customTechnical > 0 ? ["is-replaced"] : [] },
+      { name: "Voda a odpady", value: result.values.customTechnical > 0 ? 0 : (result.technicalModel.water || 0) * result.regionFactor * result.adjustmentMultiplier, note: result.values.customTechnical > 0 ? "vlastní technický součet nahradil modelovou položku" : "nové rozvody vody a odpadů", classes: result.values.customTechnical > 0 ? ["is-replaced"] : [] },
+      { name: "Elektroinstalace", value: result.values.customTechnical > 0 ? 0 : (result.technicalModel.electro || 0) * result.regionFactor * result.adjustmentMultiplier, note: result.values.customTechnical > 0 ? "vlastní technický součet nahradil modelovou položku" : "zásuvky, světla a elektrické přípravy", classes: result.values.customTechnical > 0 ? ["is-replaced"] : [] },
+      { name: "Podklad, dispozice a větrání", value: result.values.customTechnical > 0 ? result.technicalCost : ((result.technicalModel.substrate || 0) + (result.technicalModel.layout || 0) + (result.technicalModel.ventilation || 0)) * result.regionFactor * result.adjustmentMultiplier, note: result.values.customTechnical > 0 ? "uživatel zadal vlastní technický součet" : "hydroizolace, podklad, drobná dispozice a ventilace", classes: result.values.customTechnical > 0 ? ["is-total"] : [] },
+      { name: "Sprcha nebo vana", value: result.values.customEquipment > 0 ? 0 : result.sanitaryCost * result.regionFactor * result.adjustmentMultiplier, note: result.values.customEquipment > 0 ? "vlastní součet vybavení nahradil modelovou položku" : LABELS.sanitary[result.values.sanitary], classes: result.values.customEquipment > 0 ? ["is-replaced"] : [] },
+      { name: "WC, topení, nábytek a doplňky", value: result.values.customEquipment > 0 ? result.equipmentCost : (result.toiletCost + result.heatCost + result.furnitureCost + result.accessoriesCost) * result.regionFactor * result.adjustmentMultiplier, note: result.values.customEquipment > 0 ? "uživatel zadal vlastní součet vybavení" : "WC, topení, nábytek, umyvadlo, baterie a doplňky", classes: result.values.customEquipment > 0 ? ["is-total"] : [] },
+      { name: "Rozpočtová rezerva", value: result.reserveCost, note: `${number(result.values.reserveRate)} % z upraveného mezisoučtu`, classes: ["is-total"] },
     ];
-    container.replaceChildren(...rows.map(([name, value, note]) => {
+    container.replaceChildren(...rows.map((item) => {
       const row = doc.createElement("div");
-      row.className = "bathroom-breakdown-row";
+      row.className = ["bathroom-breakdown-row", ...(item.classes || [])].join(" ").trim();
       const copy = doc.createElement("div");
       const strong = doc.createElement("strong");
       const small = doc.createElement("small");
       const amount = doc.createElement("b");
-      strong.textContent = name;
-      small.textContent = note;
-      amount.textContent = money(value);
+      strong.textContent = item.name;
+      small.textContent = item.note;
+      amount.textContent = money(item.value);
       copy.append(strong, small);
       row.append(copy, amount);
       return row;
@@ -636,6 +636,14 @@
   $("resetBtn")?.addEventListener("click", resetAll);
   $("copyResultBtn")?.addEventListener("click", () => copyText(resultText(), "Výsledek byl zkopírován."));
   $("copyLinkBtn")?.addEventListener("click", () => copyText(shareUrl(), "Odkaz s nastavením byl zkopírován."));
+  const initialBreakdownWrap = $("breakdownWrap");
+  const initialBreakdownButton = $("toggleBreakdown");
+  if (initialBreakdownWrap && initialBreakdownButton && !initialBreakdownWrap.classList.contains("is-collapsed")) {
+    initialBreakdownWrap.classList.add("is-collapsed");
+    initialBreakdownButton.setAttribute("aria-expanded", "false");
+    initialBreakdownButton.textContent = "Zobrazit rozpad";
+  }
+
   $("toggleBreakdown")?.addEventListener("click", (event) => {
     const wrap = $("breakdownWrap");
     if (!wrap) return;
