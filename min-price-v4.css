@@ -31,3 +31,176 @@ body.rv-min-price-v4{--ink:#10243d;--blue:#2468e8;--cyan:#35c8e8;--mint:#38c993;
 
 .mp-form-actions .btn,.mp-result-actions .btn{width:100%;cursor:pointer}.mp-actions .btn{text-decoration:none}.mp-form-actions .btn-primary{box-shadow:0 15px 30px rgba(36,104,232,.2)}
 @media(max-width:390px){.mp-actions .btn-secondary{display:none}.mp-trust span:nth-child(2){display:none}}
+
+
+/* Q2 integrity fix — complete-page components and sticky offset */
+.rv-min-price-v4 .mp-result{
+  top:calc(var(--header-height, 76px) + 18px);
+}
+
+.rv-min-price-v4 .mp-faq{
+  padding-top:18px;
+  padding-bottom:88px;
+}
+.rv-min-price-v4 .mp-faq .faq-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+  margin-top:22px;
+}
+.rv-min-price-v4 .mp-faq details{
+  min-width:0;
+  border:1px solid #d5e1ec;
+  border-radius:20px;
+  background:#fff;
+  box-shadow:0 14px 34px rgba(16,36,61,.055);
+  overflow:hidden;
+  transition:border-color .2s ease,box-shadow .2s ease,transform .2s ease;
+}
+.rv-min-price-v4 .mp-faq details:hover{
+  border-color:#a9c5e2;
+  box-shadow:0 18px 42px rgba(16,36,61,.085);
+  transform:translateY(-1px);
+}
+.rv-min-price-v4 .mp-faq details[open]{
+  border-color:#8ebce5;
+  box-shadow:0 18px 42px rgba(30,94,157,.10);
+}
+.rv-min-price-v4 .mp-faq summary{
+  position:relative;
+  display:flex;
+  align-items:center;
+  min-height:64px;
+  padding:17px 56px 17px 18px;
+  list-style:none;
+  color:#102b47;
+  cursor:pointer;
+  font-size:.92rem;
+  font-weight:950;
+  line-height:1.42;
+}
+.rv-min-price-v4 .mp-faq summary::-webkit-details-marker{display:none}
+.rv-min-price-v4 .mp-faq summary::after{
+  content:"+";
+  position:absolute;
+  right:16px;
+  top:50%;
+  display:grid;
+  place-items:center;
+  width:30px;
+  height:30px;
+  border-radius:10px;
+  background:#edf5fb;
+  color:#1f67aa;
+  font-size:1.2rem;
+  line-height:1;
+  transform:translateY(-50%);
+}
+.rv-min-price-v4 .mp-faq details[open] summary::after{
+  content:"−";
+  background:#173c67;
+  color:#fff;
+}
+.rv-min-price-v4 .mp-faq details p{
+  margin:0;
+  padding:0 18px 19px;
+  border-top:1px solid #edf2f6;
+  color:#5a7084;
+  font-size:.88rem;
+  font-weight:650;
+  line-height:1.68;
+}
+
+.rv-min-price-v4 .mp-footer{
+  margin-top:0;
+  padding:58px 0 24px;
+  color:#fff;
+  background:
+    radial-gradient(circle at 10% 0%,rgba(53,200,232,.20),transparent 30%),
+    radial-gradient(circle at 90% 10%,rgba(242,184,71,.13),transparent 24%),
+    linear-gradient(135deg,#10243d,#071524 72%);
+}
+.rv-min-price-v4 .mp-footer .footer-grid{
+  align-items:start;
+}
+.rv-min-price-v4 .mp-footer .footer-brand p{
+  max-width:360px;
+  margin:17px 0 16px;
+  color:rgba(255,255,255,.70);
+  font-size:.9rem;
+  font-weight:650;
+  line-height:1.65;
+}
+.rv-min-price-v4 .mp-footer .brand-logo-img{
+  width:205px!important;
+  max-width:100%;
+  height:auto;
+}
+.rv-min-price-v4 .mp-footer .footer-col h2{
+  margin:4px 0 13px;
+  color:rgba(255,255,255,.54);
+  font-size:.72rem;
+  font-weight:950;
+  letter-spacing:.11em;
+  text-transform:uppercase;
+}
+.rv-min-price-v4 .mp-footer .footer-links{
+  display:grid;
+  gap:3px;
+}
+.rv-min-price-v4 .mp-footer .footer-links a{
+  display:block;
+  padding:7px 0;
+  color:rgba(255,255,255,.78);
+  font-size:.88rem;
+  font-weight:750;
+  line-height:1.35;
+}
+.rv-min-price-v4 .mp-footer .footer-links a:hover{
+  color:#fff;
+  text-decoration:underline;
+  text-underline-offset:4px;
+}
+.rv-min-price-v4 .mp-footer .footer-bottom{
+  margin-top:34px;
+  padding-top:20px;
+  border-top:1px solid rgba(255,255,255,.12);
+  color:rgba(255,255,255,.52);
+  font-size:.77rem;
+  line-height:1.6;
+}
+.rv-min-price-v4 .mp-footer .footer-bottom p{margin:0}
+
+/* Improve readability of the calculator at standard desktop widths. */
+@media (min-width:901px){
+  .rv-min-price-v4 .mp-workspace{
+    grid-template-columns:minmax(0,1.18fr) minmax(405px,.82fr);
+  }
+  .rv-min-price-v4 .mp-fields label>span,
+  .rv-min-price-v4 .mp-equations label>span{
+    font-size:.82rem;
+  }
+  .rv-min-price-v4 .mp-fields small{
+    font-size:.71rem;
+  }
+}
+
+@media(max-width:900px){
+  .rv-min-price-v4 .mp-result{top:auto}
+  .rv-min-price-v4 .mp-faq .faq-grid{grid-template-columns:1fr}
+}
+@media(max-width:720px){
+  .rv-min-price-v4 .mp-faq{padding-top:8px;padding-bottom:58px}
+  .rv-min-price-v4 .mp-faq summary{min-height:58px;padding:15px 52px 15px 16px;font-size:.88rem}
+  .rv-min-price-v4 .mp-faq details p{padding:0 16px 17px;font-size:.84rem}
+  .rv-min-price-v4 .mp-footer{padding:46px 0 28px}
+  .rv-min-price-v4 .mp-footer .footer-grid{gap:25px}
+  .rv-min-price-v4 .mp-footer .footer-bottom{margin-top:26px}
+}
+
+/* Q2 follow-up: the result card can exceed the viewport height in advanced mode.
+   Keeping it in normal document flow prevents the heading from sliding under the sticky header. */
+.rv-min-price-v4 .mp-result{
+  position:static;
+  top:auto;
+}
