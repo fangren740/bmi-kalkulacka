@@ -20,7 +20,8 @@
   <meta name="twitter:title" content="Porovnání fixace hypotéky | RychléVýpočty.cz">
   <meta name="twitter:description" content="Zjistěte, při jaké budoucí sazbě přestává být kratší fixace výhodná.">
   <meta name="twitter:image" content="https://rychlevypocty.cz/og-image.jpg">
-  <link rel="stylesheet" href="fixace-hypoteky-v5.css?v=20260727-1">
+  <link rel="stylesheet" href="rv-tool-v2.css">
+  <link rel="stylesheet" href="fixace-hypoteky-v6.css?v=20260727-2">
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"RychléVýpočty.cz","item":"https://rychlevypocty.cz/"},{"@type":"ListItem","position":2,"name":"Finance a hypotéky","item":"https://rychlevypocty.cz/finance-a-hypoteky.html"},{"@type":"ListItem","position":3,"name":"Porovnání fixace hypotéky","item":"https://rychlevypocty.cz/porovnani-fixace-hypoteky-kalkulacka.html"}]}
   </script>
@@ -41,12 +42,13 @@
   </script>
   <script async crossorigin="anonymous" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7745758285259522"></script>
 </head>
-<body class="fixation-v5">
-  <a class="skip-link" href="#main">Přejít na obsah</a>
+
+<body class="fixation-pro" data-calculator-mode="basic">
+  <a class="skip-link" href="#kalkulacka">Přejít na kalkulačku</a>
   <header class="site-header">
     <div class="container header-inner">
-      <a class="brand" href="index.html" aria-label="RychléVýpočty.cz – domů">
-        <img src="logo-rychlevypocty.svg" width="220" height="40" alt="RychléVýpočty.cz" decoding="async">
+      <a class="brand-logo" href="index.html" aria-label="RychléVýpočty.cz – domů">
+        <img src="logo-rychlevypocty.svg" width="190" height="38" alt="RychléVýpočty.cz" decoding="async">
       </a>
       <nav class="main-nav" aria-label="Hlavní navigace">
         <a href="index.html">Domů</a>
@@ -59,253 +61,165 @@
   </header>
 
   <main id="main">
-    <div class="container breadcrumbs" aria-label="Drobečková navigace">
-      <a href="index.html">RychléVýpočty.cz</a><span>/</span>
-      <a href="finance-a-hypoteky.html">Finance a hypotéky</a><span>/</span>
-      <strong>Porovnání fixace</strong>
-    </div>
-
     <section class="fix-hero">
-      <div class="container hero-shell">
-        <div class="hero-copy">
-          <p class="eyebrow">HYPOTÉKA · FIXACE · REFIXACE · ODOLNOST SPLÁTKY</p>
-          <h1>Kratší, nebo delší fixace hypotéky?</h1>
-          <p class="hero-lead">Kratší fixace může začít levněji, delší kupuje delší jistotu. Uvidíte dnešní splátku, náklady ve společném horizontu, možný splátkový šok a hlavně sazbu, při které se výhoda kratší varianty láme.</p>
+      <div class="container fix-hero-grid">
+        <div class="fix-hero-copy">
+          <nav class="breadcrumb" aria-label="Drobečková navigace">
+            <a href="index.html">Domů</a><span>/</span><a href="finance-a-hypoteky.html">Finance a hypotéky</a><span>/</span><strong>Porovnání fixace</strong>
+          </nav>
+          <p class="eyebrow">Hypotéka a refixace</p>
+          <h1>Porovnejte fixace hypotéky. Nejen dnešní sazbu.</h1>
+          <p class="lead">Postavte vedle sebe kratší a delší fixaci. Kalkulačka ukáže splátku, úroky ve stejném horizontu, možný skok po refixaci a sazbu, při které se cenová výhoda kratší varianty láme.</p>
           <div class="hero-actions">
-            <a class="btn btn-primary" href="#kalkulacka">Spustit srovnání</a>
-            <a class="btn btn-secondary" href="#metodika">Jak model počítá</a>
+            <a class="btn-primary" href="#kalkulacka">Spustit porovnání</a>
+            <a class="btn-secondary" href="#metodika">Jak počítáme</a>
           </div>
-          <div class="hero-proof" aria-label="Vlastnosti kalkulačky">
-            <span>Stejný horizont</span>
-            <span>Bod zvratu sazby</span>
-            <span>Splátkový stres</span>
-            <span>Data zůstávají v prohlížeči</span>
+          <div class="fix-trust">
+            <span>Dvě reálné nabídky</span><span>Stejný horizont</span><span>Bod zvratu sazby</span><span>Bez registrace</span>
           </div>
         </div>
 
-        <div class="hero-model" aria-label="Živý model srovnání">
-          <div class="model-topline">
-            <span>Živý fixační kompas</span>
-            <b><i></i> přepočet okamžitě</b>
-          </div>
-          <div class="model-verdict">
-            <small>Levnější ve zvoleném horizontu</small>
-            <strong id="heroWinner">Kratší fixace</strong>
-            <span id="heroDifference">o 34 800 Kč</span>
-          </div>
-          <div class="model-lanes">
-            <div class="lane lane-a">
-              <div><b>A</b><span id="heroFixA">3 roky</span></div>
-              <strong id="heroPaymentA">20 050 Kč</strong>
-              <small>měsíční splátka</small>
+        <div class="fix-visual" aria-hidden="true">
+          <div class="visual-topline"><span>Živý náhled porovnání</span><b>FIXACE / REFIXACE</b></div>
+          <div class="fixation-scene">
+            <div class="scene-offer scene-a">
+              <span>Varianta A</span><b id="heroFixA">3 roky</b><strong id="heroPaymentA">19 434 Kč</strong><small>první splátka</small>
             </div>
-            <div class="lane lane-b">
-              <div><b>B</b><span id="heroFixB">5 let</span></div>
-              <strong id="heroPaymentB">20 460 Kč</strong>
-              <small>měsíční splátka</small>
+            <div class="scene-axis"><i></i><span id="heroThreshold">5,29 %</span><small>bod zvratu</small></div>
+            <div class="scene-offer scene-b">
+              <span>Varianta B</span><b id="heroFixB">5 let</b><strong id="heroPaymentB">20 035 Kč</strong><small>první splátka</small>
             </div>
           </div>
-          <div class="threshold-preview">
-            <span>Bod zvratu budoucí sazby</span>
-            <strong id="heroThreshold">5,08 %</strong>
-            <div class="threshold-track"><i id="heroThresholdBar"></i></div>
-            <small>pod hranicí drží kratší fixace cenovou výhodu</small>
+          <div class="visual-dashboard">
+            <div class="visual-main"><span>Levnější ve zvoleném horizontu</span><strong id="heroWinner">Kratší fixace</strong><small id="heroDifference">o 76 404 Kč</small></div>
+            <div class="visual-mini"><span>Hranice budoucí sazby</span><strong id="heroThresholdMini">5,29 %</strong></div>
+            <div class="visual-mini"><span>Společný horizont</span><strong>5 let</strong></div>
           </div>
+          <div class="visual-threshold"><i id="heroThresholdBar"></i></div>
         </div>
       </div>
     </section>
 
-    <section class="calculator-band" id="kalkulacka">
-      <div class="container workspace">
-        <form class="input-panel" id="fixationForm" novalidate>
-          <div class="panel-head">
-            <div>
-              <p class="section-tag">RYCHLÉ ZADÁNÍ</p>
-              <h2>Postavte proti sobě dvě reálné nabídky</h2>
-              <p>Základní režim drží pouze údaje, které rozhodují o první odpovědi. Podrobný režim přidá poplatky, rezervu a stresový scénář.</p>
-            </div>
-            <button type="button" class="text-button" id="resetForm">Obnovit hodnoty</button>
-          </div>
-
-          <div class="mode-switch" role="group" aria-label="Režim kalkulačky">
-            <button type="button" class="mode-button active" data-mode="basic" aria-pressed="true">
-              <strong>Základní</strong><span>rychlé srovnání</span>
-            </button>
-            <button type="button" class="mode-button" data-mode="advanced" aria-pressed="false">
-              <strong>Podrobný</strong><span>poplatky a odolnost</span>
-            </button>
-          </div>
-
-          <fieldset class="loan-foundation">
-            <legend>01 · Společný základ hypotéky</legend>
-            <div class="foundation-grid">
-              <label class="field">
-                <span>Zůstatek hypotéky</span>
-                <span class="field-shell"><input id="principal" name="principal" type="text" inputmode="decimal" value="3500000" autocomplete="off"><em>Kč</em></span>
-                <small>Aktuální jistina, nikoliv původní výše úvěru.</small>
-              </label>
-              <label class="field">
-                <span>Zbývající splatnost</span>
-                <span class="field-shell"><input id="remainingYears" name="remainingYears" type="text" inputmode="decimal" value="25" autocomplete="off"><em>let</em></span>
-                <small>Doba do úplného splacení při řádném splácení.</small>
-              </label>
-              <label class="field">
-                <span>Horizont porovnání</span>
-                <span class="field-shell"><input id="horizonYears" name="horizonYears" type="text" inputmode="decimal" value="5" autocomplete="off"><em>let</em></span>
-                <small>Obě varianty se hodnotí ve stejně dlouhém období.</small>
-              </label>
-            </div>
-          </fieldset>
-
-          <div class="offer-grid">
-            <fieldset class="offer-card offer-a">
-              <legend><b>A</b><span>Kratší fixace</span></legend>
-              <p class="offer-intro">Nižší dnešní sazba, ale dřívější rozhodnutí o nové sazbě.</p>
-              <div class="offer-fields">
-                <label class="field compact">
-                  <span>Délka fixace A</span>
-                  <span class="field-shell"><input id="fixYearsA" name="fixYearsA" type="text" inputmode="decimal" value="3" autocomplete="off"><em>roky</em></span>
-                </label>
-                <label class="field compact">
-                  <span>Sazba během fixace</span>
-                  <span class="field-shell"><input id="rateA" name="rateA" type="text" inputmode="decimal" value="4,49" autocomplete="off"><em>% p. a.</em></span>
-                </label>
-                <label class="field compact full">
-                  <span>Pracovní sazba po refixaci</span>
-                  <span class="field-shell"><input id="followRateA" name="followRateA" type="text" inputmode="decimal" value="4,10" autocomplete="off"><em>% p. a.</em></span>
-                  <small>Není to předpověď. Otestujte pokles, stabilitu i růst.</small>
-                </label>
-              </div>
-              <div class="scenario-row" aria-label="Scénáře sazby po kratší fixaci">
-                <button type="button" data-scenario="down">Pokles</button>
-                <button type="button" data-scenario="flat" class="active">Podobná</button>
-                <button type="button" data-scenario="up">Růst</button>
-              </div>
-            </fieldset>
-
-            <fieldset class="offer-card offer-b">
-              <legend><b>B</b><span>Delší fixace</span></legend>
-              <p class="offer-intro">Delší cenová jistota a méně brzkých rozhodnutí o refixaci.</p>
-              <div class="offer-fields">
-                <label class="field compact">
-                  <span>Délka fixace B</span>
-                  <span class="field-shell"><input id="fixYearsB" name="fixYearsB" type="text" inputmode="decimal" value="5" autocomplete="off"><em>let</em></span>
-                </label>
-                <label class="field compact">
-                  <span>Sazba během fixace</span>
-                  <span class="field-shell"><input id="rateB" name="rateB" type="text" inputmode="decimal" value="4,79" autocomplete="off"><em>% p. a.</em></span>
-                </label>
-                <label class="field compact full">
-                  <span>Sazba po případné refixaci</span>
-                  <span class="field-shell"><input id="followRateB" name="followRateB" type="text" inputmode="decimal" value="4,79" autocomplete="off"><em>% p. a.</em></span>
-                  <small>U horizontu shodného s fixací se tato hodnota neuplatní.</small>
-                </label>
-              </div>
-              <div class="certainty-note">
-                <strong>Co kupujete navíc?</strong>
-                <span id="certaintyText">O 24 měsíců delší jistotu první sazby.</span>
-              </div>
-            </fieldset>
-          </div>
-
-          <div class="advanced-zone" id="advancedZone" hidden>
-            <div class="advanced-head">
-              <div>
-                <p class="section-tag">PODROBNÉ ZPŘESNĚNÍ</p>
-                <h3>Náklady nabídky a odolnost rozpočtu</h3>
-              </div>
-              <span>Skryté hodnoty základní režim neovlivňují.</span>
-            </div>
-            <div class="advanced-grid">
-              <label class="field compact"><span>Jednorázové náklady A</span><span class="field-shell"><input id="feeA" name="feeA" type="text" inputmode="decimal" value="0"><em>Kč</em></span></label>
-              <label class="field compact"><span>Jednorázové náklady B</span><span class="field-shell"><input id="feeB" name="feeB" type="text" inputmode="decimal" value="0"><em>Kč</em></span></label>
-              <label class="field compact"><span>Měsíční balíček A</span><span class="field-shell"><input id="monthlyFeeA" name="monthlyFeeA" type="text" inputmode="decimal" value="0"><em>Kč/měs.</em></span></label>
-              <label class="field compact"><span>Měsíční balíček B</span><span class="field-shell"><input id="monthlyFeeB" name="monthlyFeeB" type="text" inputmode="decimal" value="0"><em>Kč/měs.</em></span></label>
-              <label class="field compact"><span>Likvidní rezerva domácnosti</span><span class="field-shell"><input id="cashReserve" name="cashReserve" type="text" inputmode="decimal" value="300000"><em>Kč</em></span></label>
-              <label class="field compact"><span>Čistý příjem domácnosti</span><span class="field-shell"><input id="netIncome" name="netIncome" type="text" inputmode="decimal" value="70000"><em>Kč/měs.</em></span></label>
-              <label class="field compact"><span>Stresové zvýšení sazby</span><span class="field-shell"><input id="stressShock" name="stressShock" type="text" inputmode="decimal" value="2"><em>p. b.</em></span></label>
-              <label class="field compact"><span>Vlastní limit splátky</span><span class="field-shell"><input id="paymentLimit" name="paymentLimit" type="text" inputmode="decimal" value="26000"><em>Kč/měs.</em></span></label>
-            </div>
-          </div>
-
-          <div class="form-message" id="formMessage" role="alert" aria-live="polite"></div>
-          <div class="form-actions">
-            <button class="btn btn-primary" type="submit">Přepočítat rozhodnutí</button>
-            <button class="btn btn-ghost" type="button" id="copyLink">Kopírovat odkaz</button>
-          </div>
-          <p class="privacy-note">Výpočet probíhá pouze ve vašem zařízení. Zadané hodnoty se nikam neodesílají.</p>
-        </form>
-
-        <aside class="result-panel" id="vysledek" aria-live="polite">
-          <div class="result-head">
-            <div>
-              <p class="section-tag light">ROZHODOVACÍ VÝSLEDEK</p>
-              <h2 id="winnerTitle">Kratší fixace vychází levněji</h2>
-              <p id="winnerReason">Ve společném pětiletém horizontu má nižší modelované úroky a poplatky.</p>
-            </div>
-            <span class="result-status" id="resultStatus">cenová výhoda</span>
-          </div>
-
-          <div class="headline-saving">
-            <span>Rozdíl nákladů ve zvoleném horizontu</span>
-            <strong id="costDifference">34 800 Kč</strong>
-            <small id="differenceDirection">ve prospěch varianty A</small>
-          </div>
-
-          <div class="payment-duel">
-            <div class="duel-side side-a"><span>Splátka A</span><strong id="paymentA">20 050 Kč</strong><small id="afterPaymentA">po refixaci 19 380 Kč</small></div>
-            <div class="duel-axis"><span>měsíčně</span><i></i><b id="paymentGap">410 Kč</b></div>
-            <div class="duel-side side-b"><span>Splátka B</span><strong id="paymentB">20 460 Kč</strong><small id="afterPaymentB">po refixaci 20 460 Kč</small></div>
-          </div>
-
-          <div class="break-even-card">
-            <div class="break-even-copy">
-              <span>Nejdůležitější kontrolní číslo</span>
-              <h3>Bod zvratu sazby při refixaci</h3>
-              <p id="breakEvenText">Kratší fixace si drží cenovou výhodu, pokud její nová sazba zůstane přibližně pod uvedenou hranicí.</p>
-            </div>
-            <strong id="breakEvenRate">5,08 %</strong>
-            <div class="break-even-scale"><span>nižší sazba</span><i><b id="breakEvenMarker"></b></i><span>vyšší sazba</span></div>
-          </div>
-
-          <div class="result-timeline" aria-label="Časová osa fixací">
-            <div class="timeline-row"><span><b>A</b> kratší</span><i class="timeline-track"><em id="timelineA"></em></i><strong id="timelineLabelA">3 roky fix + 2 roky refix</strong></div>
-            <div class="timeline-row"><span><b>B</b> delší</span><i class="timeline-track"><em id="timelineB"></em></i><strong id="timelineLabelB">5 let fix</strong></div>
-          </div>
-
-          <div class="result-facts">
-            <div><span>Úroky a poplatky A</span><strong id="costA">729 000 Kč</strong></div>
-            <div><span>Úroky a poplatky B</span><strong id="costB">764 000 Kč</strong></div>
-            <div><span>Zůstatek jistiny A</span><strong id="balanceA">3 063 000 Kč</strong></div>
-            <div><span>Zůstatek jistiny B</span><strong id="balanceB">3 057 000 Kč</strong></div>
-          </div>
-
-          <div class="stress-card">
-            <div><span>Splátkový šok kratší fixace</span><strong id="stressPayment">+3 420 Kč/měs.</strong></div>
-            <p id="stressInterpretation">Při sazbě vyšší o dva procentní body by nová splátka spotřebovala větší část měsíční rezervy.</p>
-            <div class="stress-meter"><i id="stressMeter"></i></div>
-          </div>
-
-          <details class="result-details" id="resultDetails">
-            <summary>Podrobný rozpad výpočtu</summary>
-            <div class="details-grid">
-              <div><span>Zaplacená jistina A</span><strong id="principalPaidA">437 000 Kč</strong></div>
-              <div><span>Zaplacená jistina B</span><strong id="principalPaidB">443 000 Kč</strong></div>
-              <div><span>Úrok A</span><strong id="interestA">729 000 Kč</strong></div>
-              <div><span>Úrok B</span><strong id="interestB">764 000 Kč</strong></div>
-              <div><span>Poplatky A</span><strong id="feesTotalA">0 Kč</strong></div>
-              <div><span>Poplatky B</span><strong id="feesTotalB">0 Kč</strong></div>
-            </div>
-          </details>
-
-          <div class="result-actions">
-            <button type="button" class="btn btn-light" id="copyResult">Kopírovat výsledek</button>
-            <a class="btn btn-outline-light" href="refinancovani-hypoteky-kalkulacka.html">Řešit refinancování</a>
-          </div>
-        </aside>
+    <nav class="anchor-nav" aria-label="Obsah stránky">
+      <div class="container anchor-scroll">
+        <a href="#kalkulacka">Kalkulačka</a><a href="#vysledek">Výsledek</a><a href="#scenare">Scénáře</a><a href="#metodika">Metodika</a><a href="#faq">FAQ</a>
       </div>
-    </section>
+    </nav>
 
+    <section class="container fix-work" id="kalkulacka">
+      <form class="fix-form" id="fixationForm" novalidate>
+        <div class="form-top">
+          <div><p class="eyebrow">Porovnání fixace hypotéky</p><h2>Zadejte dvě nabídky banky</h2></div>
+          <span class="live-badge"><i></i> Výsledek se mění živě</span>
+        </div>
+
+        <div class="mode-switch" role="tablist" aria-label="Režim kalkulačky">
+          <button type="button" class="mode-button active" data-mode="basic" aria-pressed="true">
+            <span class="mode-number">01</span><span><strong>Základní</strong><small>Sazby, fixace a splátka</small></span>
+          </button>
+          <button type="button" class="mode-button" data-mode="advanced" aria-pressed="false">
+            <span class="mode-number">02</span><span><strong>Rozšířený</strong><small>Poplatky, rezerva a stres</small></span>
+          </button>
+        </div>
+
+        <div class="calculation-panel">
+          <div class="section-label"><span>1</span><div><strong>Společný základ hypotéky</strong><small>Obě varianty hodnotíme nad stejným úvěrem a horizontem</small></div></div>
+          <div class="field-grid foundation-fields">
+            <label class="field"><span>Zůstatek hypotéky</span><small>aktuální jistina, ne původní úvěr</small><div class="input-wrap"><input id="principal" name="principal" type="text" inputmode="decimal" value="3500000" autocomplete="off"><em>Kč</em></div></label>
+            <label class="field"><span>Zbývající splatnost</span><small>doba do úplného splacení</small><div class="input-wrap"><input id="remainingYears" name="remainingYears" type="text" inputmode="decimal" value="25" autocomplete="off"><em>let</em></div></label>
+            <label class="field"><span>Horizont porovnání</span><small>stejné období pro obě nabídky</small><div class="input-wrap"><input id="horizonYears" name="horizonYears" type="text" inputmode="decimal" value="5" autocomplete="off"><em>let</em></div></label>
+          </div>
+
+          <div class="section-label"><span>2</span><div><strong>Kratší fixace</strong><small>Dnešní sazba a pracovní scénář po refixaci</small></div></div>
+          <div class="offer-panel offer-a-panel">
+            <div class="offer-heading"><span>A</span><div><strong>Kratší fixace</strong><small>dřívější nové rozhodnutí o sazbě</small></div></div>
+            <div class="field-grid offer-fields">
+              <label class="field"><span>Délka fixace A</span><small>první garantované období</small><div class="input-wrap"><input id="fixYearsA" name="fixYearsA" type="text" inputmode="decimal" value="3" autocomplete="off"><em>roky</em></div></label>
+              <label class="field"><span>Sazba během fixace</span><small>nabídka banky pro první období</small><div class="input-wrap"><input id="rateA" name="rateA" type="text" inputmode="decimal" value="4,49" autocomplete="off"><em>% p. a.</em></div></label>
+              <label class="field"><span>Sazba po refixaci</span><small>pracovní scénář, nikoliv předpověď</small><div class="input-wrap"><input id="followRateA" name="followRateA" type="text" inputmode="decimal" value="4,10" autocomplete="off"><em>% p. a.</em></div></label>
+            </div>
+            <div class="scenario-row" aria-label="Scénáře sazby po kratší fixaci"><button type="button" data-scenario="down">Pokles</button><button type="button" data-scenario="flat" class="active">Podobná</button><button type="button" data-scenario="up">Růst</button></div>
+          </div>
+
+          <div class="section-label"><span>3</span><div><strong>Delší fixace</strong><small>Delší jistota první sazby a pozdější refixace</small></div></div>
+          <div class="offer-panel offer-b-panel">
+            <div class="offer-heading"><span>B</span><div><strong>Delší fixace</strong><small>delší cenová jistota splátky</small></div></div>
+            <div class="field-grid offer-fields">
+              <label class="field"><span>Délka fixace B</span><small>druhé garantované období</small><div class="input-wrap"><input id="fixYearsB" name="fixYearsB" type="text" inputmode="decimal" value="5" autocomplete="off"><em>let</em></div></label>
+              <label class="field"><span>Sazba během fixace</span><small>nabídka banky pro delší období</small><div class="input-wrap"><input id="rateB" name="rateB" type="text" inputmode="decimal" value="4,79" autocomplete="off"><em>% p. a.</em></div></label>
+              <label class="field"><span>Sazba po refixaci</span><small>u shodného horizontu se neuplatní</small><div class="input-wrap"><input id="followRateB" name="followRateB" type="text" inputmode="decimal" value="4,79" autocomplete="off"><em>% p. a.</em></div></label>
+            </div>
+            <div class="certainty-note"><strong>Delší jistota sazby</strong><span id="certaintyText">O 24 měsíců delší jistotu první sazby.</span></div>
+          </div>
+        </div>
+
+        <div class="advanced-zone" id="advancedZone" hidden>
+          <div class="advanced-intro"><span>Rozšířený režim</span><div><strong>Započítejte cenu nabídky a odolnost rozpočtu</strong><small>Skryté hodnoty základní režim neovlivňují.</small></div></div>
+          <div class="advanced-group">
+            <div class="advanced-heading"><span>A</span><div><strong>Poplatky obou nabídek</strong><small>Jednorázové náklady a povinné měsíční produkty</small></div></div>
+            <div class="field-grid advanced-fields">
+              <label class="field"><span>Jednorázové náklady A</span><small>odhad, změna banky nebo administrativa</small><div class="input-wrap"><input id="feeA" name="feeA" type="text" inputmode="decimal" value="0"><em>Kč</em></div></label>
+              <label class="field"><span>Jednorázové náklady B</span><small>odhad, změna banky nebo administrativa</small><div class="input-wrap"><input id="feeB" name="feeB" type="text" inputmode="decimal" value="0"><em>Kč</em></div></label>
+              <label class="field"><span>Měsíční balíček A</span><small>účet, pojištění nebo další podmínka</small><div class="input-wrap"><input id="monthlyFeeA" name="monthlyFeeA" type="text" inputmode="decimal" value="0"><em>Kč/měs.</em></div></label>
+              <label class="field"><span>Měsíční balíček B</span><small>účet, pojištění nebo další podmínka</small><div class="input-wrap"><input id="monthlyFeeB" name="monthlyFeeB" type="text" inputmode="decimal" value="0"><em>Kč/měs.</em></div></label>
+            </div>
+          </div>
+          <div class="advanced-group">
+            <div class="advanced-heading"><span>B</span><div><strong>Odolnost domácího rozpočtu</strong><small>Rezerva, příjem a vlastní strop splátky</small></div></div>
+            <div class="field-grid advanced-fields">
+              <label class="field"><span>Likvidní rezerva</span><small>skutečně dostupná hotovost domácnosti</small><div class="input-wrap"><input id="cashReserve" name="cashReserve" type="text" inputmode="decimal" value="300000"><em>Kč</em></div></label>
+              <label class="field"><span>Čistý příjem domácnosti</span><small>pravidelný čistý měsíční příjem</small><div class="input-wrap"><input id="netIncome" name="netIncome" type="text" inputmode="decimal" value="70000"><em>Kč/měs.</em></div></label>
+              <label class="field"><span>Stresové zvýšení sazby</span><small>pracovní navýšení pro kontrolu splátky</small><div class="input-wrap"><input id="stressShock" name="stressShock" type="text" inputmode="decimal" value="2"><em>p. b.</em></div></label>
+              <label class="field"><span>Vlastní limit splátky</span><small>hranice, kterou nechcete překročit</small><div class="input-wrap"><input id="paymentLimit" name="paymentLimit" type="text" inputmode="decimal" value="26000"><em>Kč/měs.</em></div></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-message" id="formMessage" role="alert" aria-live="polite"></div>
+        <div class="form-actions"><button class="btn-primary" type="submit">Přepočítat fixace</button><button class="btn-secondary" type="button" id="resetForm">Obnovit příklad</button><button class="btn-secondary" type="button" id="copyLink">Kopírovat odkaz</button></div>
+        <p class="privacy-note"><span></span> Výpočet probíhá pouze ve vašem prohlížeči. Zadané hodnoty se nikam neodesílají.</p>
+      </form>
+
+      <aside class="fix-result" id="vysledek" aria-live="polite">
+        <div class="result-top"><div><p class="eyebrow">Výsledek porovnání</p><h2 id="winnerTitle">Kratší fixace vychází levněji</h2></div><span id="resultStatus">cenová výhoda A</span></div>
+        <div class="result-main">
+          <div class="result-main-label"><span>Rozdíl nákladů ve zvoleném horizontu</span><b id="differenceDirection">ve prospěch varianty A</b></div>
+          <output id="costDifference">76 404 Kč</output>
+          <p id="winnerReason">Ve společném horizontu 5 let má nižší modelované úroky a započtené poplatky.</p>
+        </div>
+
+        <div class="payment-compare">
+          <div class="payment-card is-a"><span>Splátka A</span><strong id="paymentA">19 434 Kč</strong><small id="afterPaymentA">po refixaci 18 754 Kč</small></div>
+          <div class="payment-gap"><span>rozdíl</span><strong id="paymentGap">601 Kč</strong></div>
+          <div class="payment-card is-b"><span>Splátka B</span><strong id="paymentB">20 035 Kč</strong><small id="afterPaymentB">bez refixace v horizontu</small></div>
+        </div>
+
+        <div class="break-even-card">
+          <div><span>Nejdůležitější kontrolní číslo</span><strong>Bod zvratu sazby po kratší fixaci</strong><p id="breakEvenText">Kratší fixace si drží cenovou výhodu, pokud její nová sazba zůstane přibližně pod uvedenou hranicí.</p></div>
+          <output id="breakEvenRate">5,29 %</output>
+          <div class="break-even-scale"><span>nižší</span><i><b id="breakEvenMarker"></b></i><span>vyšší</span></div>
+        </div>
+
+        <div class="result-metrics">
+          <div><span>Náklady A</span><strong id="costA">613 000 Kč</strong><small>úroky a poplatky</small></div>
+          <div><span>Náklady B</span><strong id="costB">689 000 Kč</strong><small>úroky a poplatky</small></div>
+          <div><span>Zůstatek A</span><strong id="balanceA">3 063 000 Kč</strong><small>po horizontu</small></div>
+          <div><span>Zůstatek B</span><strong id="balanceB">3 057 000 Kč</strong><small>po horizontu</small></div>
+        </div>
+
+        <div class="result-timeline" aria-label="Časová osa fixací">
+          <div class="timeline-row"><span><b>A</b> kratší</span><i class="timeline-track"><em id="timelineA"></em></i><strong id="timelineLabelA">3 roky fix + 2 roky refix</strong></div>
+          <div class="timeline-row"><span><b>B</b> delší</span><i class="timeline-track"><em id="timelineB"></em></i><strong id="timelineLabelB">5 let v první fixaci</strong></div>
+        </div>
+
+        <div class="stress-card"><div><span>Splátkový stres kratší fixace</span><strong id="stressPayment">+3 420 Kč/měs.</strong></div><p id="stressInterpretation">Při vyšší sazbě se nová splátka může přiblížit hranici rodinného rozpočtu.</p><div class="stress-meter"><i id="stressMeter"></i></div></div>
+
+        <details class="result-details" id="resultDetails"><summary>Podrobný rozpad výpočtu</summary><div class="details-grid">
+          <div><span>Zaplacená jistina A</span><strong id="principalPaidA">437 000 Kč</strong></div><div><span>Zaplacená jistina B</span><strong id="principalPaidB">443 000 Kč</strong></div><div><span>Úrok A</span><strong id="interestA">613 000 Kč</strong></div><div><span>Úrok B</span><strong id="interestB">689 000 Kč</strong></div><div><span>Poplatky A</span><strong id="feesTotalA">0 Kč</strong></div><div><span>Poplatky B</span><strong id="feesTotalB">0 Kč</strong></div>
+        </div></details>
+        <div class="result-actions"><button id="copyResult" type="button">Kopírovat výsledek</button><a href="refinancovani-hypoteky-kalkulacka.html">Řešit refinancování</a></div>
+      </aside>
+    </section>
     <section class="decision-lenses" id="jak-vybrat">
       <div class="container">
         <div class="section-heading centered">
@@ -577,6 +491,6 @@
     </div>
     <div class="container footer-bottom"><span>© 2026 RychléVýpočty.cz</span><span>Výpočty jsou orientační a nenahrazují závaznou nabídku banky ani individuální finanční poradenství.</span></div>
   </footer>
-  <script src="fixace-hypoteky-v5.js?v=20260727-1"></script>
+  <script src="fixace-hypoteky-v6.js?v=20260727-2"></script>
 </body>
 </html>
