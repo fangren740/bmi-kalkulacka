@@ -22,7 +22,7 @@
 <meta content="Zjistěte, při jaké budoucí sazbě přestává být kratší fixace výhodná." name="twitter:description"/>
 <meta content="https://rychlevypocty.cz/og-image.jpg" name="twitter:image"/>
 <link href="rv-tool-v2.css" rel="stylesheet"/>
-<link href="fixace-hypoteky-v8.css?v=20260727-1" rel="stylesheet"/>
+<link href="fixace-hypoteky-v9.css?v=20260728-1" rel="stylesheet"/>
 <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"RychléVýpočty.cz","item":"https://rychlevypocty.cz/"},{"@type":"ListItem","position":2,"name":"Finance a hypotéky","item":"https://rychlevypocty.cz/finance-a-hypoteky.html"},{"@type":"ListItem","position":3,"name":"Porovnání fixace hypotéky","item":"https://rychlevypocty.cz/porovnani-fixace-hypoteky-kalkulacka.html"}]}
   </script>
@@ -55,7 +55,7 @@
 .fixation-pro .fix-stress-section{padding:16px 0 0}.fixation-pro .fix-stress-grid,.fixation-pro .fix-stress-rail{display:grid}.fixation-pro .fix-stress-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.fixation-pro .fix-stress-rail{grid-template-columns:repeat(3,minmax(0,1fr))}@media(max-width:900px){.fixation-pro .fix-stress-grid,.fixation-pro .fix-stress-rail{grid-template-columns:1fr}}
 .fixation-pro .fix-decision-notes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}@media(max-width:900px){.fixation-pro .fix-decision-notes{grid-template-columns:1fr}}
 .fixation-pro .fix-reading-layout,.fixation-pro .fix-reading-grid{display:grid}.fixation-pro .fix-reading-layout{grid-template-columns:minmax(0,1.35fr) minmax(300px,.65fr)}.fixation-pro .fix-reading-grid{grid-template-columns:repeat(2,minmax(0,1fr))}@media(max-width:900px){.fixation-pro .fix-reading-layout,.fixation-pro .fix-reading-grid{grid-template-columns:1fr}}</style></head>
-<body class="fixation-pro" data-calculator-mode="basic">
+<body class="fixation-pro fixation-v9" data-calculation-state="ready" data-calculator-mode="basic">
 <a class="skip-link" href="#kalkulacka">Přejít na kalkulačku</a>
 <header class="site-header">
 <div class="container header-inner">
@@ -79,8 +79,8 @@
 <a href="index.html">Domů</a><span>/</span><a href="finance-a-hypoteky.html">Finance a hypotéky</a><span>/</span><strong>Porovnání fixace</strong>
 </nav>
 <p class="eyebrow">Hypotéka a refixace</p>
-<h1>Porovnejte fixace hypotéky. Nejen dnešní sazbu.</h1>
-<p class="lead">Postavte vedle sebe kratší a delší fixaci. Kalkulačka ukáže splátku, úroky ve stejném horizontu, možný skok po refixaci a sazbu, při které se cenová výhoda kratší varianty láme.</p>
+<h1>Která fixace hypotéky vyjde lépe?</h1>
+<p class="lead">Zadejte dvě nabídky banky. Uvidíte splátku, úroky ve stejném horizontu, bod zvratu i možný skok po refixaci.</p>
 <div class="hero-actions">
 <a class="btn-primary" href="#kalkulacka">Spustit porovnání</a>
 <a class="btn-secondary" href="#metodika">Jak počítáme</a>
@@ -121,10 +121,10 @@
 <span class="live-badge"><i></i> Výsledek se mění živě</span>
 </div>
 <div aria-label="Režim kalkulačky" class="mode-switch" role="tablist">
-<button aria-pressed="true" class="mode-button active" data-mode="basic" type="button">
+<button aria-controls="advancedZone" aria-pressed="true" aria-selected="true" class="mode-button active" data-mode="basic" id="modeBasic" role="tab" type="button">
 <span class="mode-number">01</span><span><strong>Základní</strong><small>Sazby, fixace a splátka</small></span>
 </button>
-<button aria-pressed="false" class="mode-button" data-mode="advanced" type="button">
+<button aria-controls="advancedZone" aria-pressed="false" aria-selected="false" class="mode-button" data-mode="advanced" id="modeAdvanced" role="tab" type="button">
 <span class="mode-number">02</span><span><strong>Rozšířený</strong><small>Poplatky, rezerva a stres</small></span>
 </button>
 </div>
@@ -156,7 +156,7 @@
 <div class="certainty-note"><strong>Delší jistota sazby</strong><span id="certaintyText">O 24 měsíců delší jistotu první sazby.</span></div>
 </div>
 </div>
-<div class="advanced-zone" hidden="" id="advancedZone">
+<div aria-labelledby="modeAdvanced" class="advanced-zone" hidden="" id="advancedZone" role="tabpanel">
 <div class="advanced-intro"><span>Rozšířený režim</span><div><strong>Započítejte cenu nabídky a odolnost rozpočtu</strong><small>Skryté hodnoty základní režim neovlivňují.</small></div></div>
 <div class="advanced-group">
 <div class="advanced-heading"><span>A</span><div><strong>Poplatky obou nabídek</strong><small>Jednorázové náklady a povinné měsíční produkty</small></div></div>
@@ -429,10 +429,11 @@
 <p>RPSN může být užitečným kontrolním údajem, ale při porovnání rozdílných délek fixace samo neřeší sazbu po skončení kratšího období. Proto používejte předsmluvní dokumentaci banky jako zdroj poplatků a podmínek, zatímco kalkulačku použijte pro sjednocený scénář stejné jistiny, splatnosti a horizontu. Pokud se nabídky liší odkladem splátky, způsobem čerpání, pojištěním nebo postupným uvolňováním úvěru, nejprve tyto rozdíly převeďte na srovnatelné peněžní toky. Jinak může přesný výpočet odpovídat na dvě odlišné otázky a vytvořit pouze zdání objektivního vítěze.</p></div>
 </div>
 <aside aria-label="Vzorce a zdroje metodiky" class="fix-formula-panel">
-<div class="fix-formula-title"><span>METODICKÁ KARTA</span><b>Kontrola 27. 7. 2026</b></div>
+<div class="fix-formula-title"><span>METODICKÁ KARTA</span><b>Kontrola 28. 7. 2026</b></div>
 <div class="fix-formula-row"><small>Anuitní splátka</small><code>S = J × r / (1 − (1 + r)<sup>−n</sup>)</code></div>
 <div class="fix-formula-row"><small>Měsíční úrok</small><code>U = zůstatek × sazba / 12</code></div>
 <div class="fix-formula-row"><small>Náklad horizontu</small><code>úroky + jednorázové náklady + měsíční poplatky</code></div>
+<div class="fix-formula-row"><small>Stresová sazba</small><code>zadaná sazba po refixaci + stresové zvýšení</code></div>
 <div class="fix-source-list">
 <a href="https://www.cnb.cz/cs/statistika/menova_bankovni_stat/harm_stat_data/komentar-k-urokovym-sazbam-menovych-financnich-instituci/index.html" rel="noopener noreferrer">ČNB · úrokové sazby</a>
 <a href="https://www.cnb.cz/cs/o_cnb/cnblog/Refixace-a-refinancovani-hypotek-nove-odhady-dopadu-do-vydaju-domacnosti/" rel="noopener noreferrer">ČNB · refixace hypoték</a>
@@ -567,6 +568,6 @@
 </div>
 <div class="container footer-bottom"><span>© 2026 RychléVýpočty.cz</span><span>Výpočty jsou orientační a nenahrazují závaznou nabídku banky ani individuální finanční poradenství.</span></div>
 </footer>
-<script src="fixace-hypoteky-v8.js?v=20260727-1"></script>
+<script src="fixace-hypoteky-v9.js?v=20260728-1"></script>
 </body>
 </html>
