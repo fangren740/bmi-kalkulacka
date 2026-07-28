@@ -1,10 +1,10 @@
 <?php
 /**
  * Same-origin proxy pro kurzovní lístek ČNB.
- * Řeší omezení CORS v prohlížeči, validuje vstup a používá krátkou serverovou cache.
+ * Kompatibilní i se starší konfigurací sdíleného hostingu.
+ * Zkouší oba běžné transporty (PHP stream i cURL), JSON API i oficiální TXT.
  */
 
-declare(strict_types=1);
 date_default_timezone_set('Europe/Prague');
 
 header('Content-Type: application/json; charset=utf-8');
@@ -12,11 +12,11 @@ header('X-Content-Type-Options: nosniff');
 header("Content-Security-Policy: default-src 'none'");
 header('Referrer-Policy: no-referrer');
 
-if (($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'GET') {
+$method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'GET';
+if ($method !== 'GET') {
     http_response_code(405);
     header('Allow: GET');
-    echo json_encode(['error' => 'Povolena je pouze metoda GET.'], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-    exit;
+    send_json(array('error' => 'Povolena je pouze metoda GET.'));
 }
 
 $date = isset($_GET['date']) ? trim((string) $_GET['date']) : date('Y-m-d');
@@ -25,24 +25,27 @@ if ($lang !== 'CS' && $lang !== 'EN') {
     $lang = 'CS';
 }
 
-$parsedDate = DateTimeImmutable::createFromFormat('!Y-m-d', $date);
-$dateErrors = DateTimeImmutable::getLastErrors();
-$isValidDate = $parsedDate instanceof DateTimeImmutable
-    && ($dateErrors === false || ($dateErrors['warning_count'] === 0 && $dateErrors['error_count'] === 0))
-    && $parsedDate->format('Y-m-d') === $date;
-
-$today = new DateTimeImmutable('today');
-if (!$isValidDate || $parsedDate < new DateTimeImmutable('1991-01-01') || $parsedDate > $today) {
+if (!preg_match('/^(\d{4})-(\d{2})-(\d{2})$/', $date, $parts)
+    || !checkdate((int) $parts[2], (int) $parts[3], (int) $parts[1])) {
     http_response_code(400);
-    echo json_encode(['error' => 'Neplatné datum. Použijte formát RRRR-MM-DD a datum od roku 1991 do dneška.'], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-    exit;
+    send_json(array('error' => 'Neplatné datum. Použijte formát RRRR-MM-DD.'));
 }
 
-$cacheFile = rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'rychlevypocty-cnb-' . $date . '-' . strtolower($lang) . '.json';
-$isToday = $date === $today->format('Y-m-d');
-$cacheTtl = $isToday ? 900 : 2592000;
+$requestedTs = strtotime($date . ' 00:00:00');
+$minTs = strtotime('1991-01-01 00:00:00');
+$todayTs = strtotime(date('Y-m-d') . ' 00:00:00');
+if ($requestedTs === false || $requestedTs < $minTs || $requestedTs > $todayTs) {
+    http_response_code(400);
+    send_json(array('error' => 'Datum musí být od roku 1991 do dneška.'));
+}
 
-$cached = readCache($cacheFile);
+$cacheFile = rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR)
+    . DIRECTORY_SEPARATOR
+    . 'rychlevypocty-cnb-' . $date . '-' . strtolower($lang) . '.json';
+$isToday = $date === date('Y-m-d');
+$cacheTtl = $isToday ? 900 : 2592000;
+$cached = read_cache($cacheFile);
+
 if ($cached !== null && (time() - $cached['mtime']) <= $cacheTtl) {
     header('Cache-Control: public, max-age=300, stale-while-revalidate=86400');
     header('X-RV-Rate-Source: server-cache');
@@ -50,35 +53,54 @@ if ($cached !== null && (time() - $cached['mtime']) <= $cacheTtl) {
     exit;
 }
 
-$apiBase = getenv('RV_CNB_API_URL') ?: 'https://api.cnb.cz/cnbapi/exrates/daily';
-$txtBase = getenv('RV_CNB_TXT_URL') ?: 'https://www.cnb.cz/cs/financni-trhy/devizovy-trh/kurzy-devizoveho-trhu/kurzy-devizoveho-trhu/denni_kurz.txt';
+$apiBase = getenv('RV_CNB_API_URL');
+if (!$apiBase) {
+    $apiBase = 'https://api.cnb.cz/cnbapi/exrates/daily';
+}
+$txtBase = getenv('RV_CNB_TXT_URL');
+if (!$txtBase) {
+    $txtBase = 'https://www.cnb.cz/cs/financni-trhy/devizovy-trh/kurzy-devizoveho-trhu/kurzy-devizoveho-trhu/denni_kurz.txt';
+}
 
 $payload = null;
-$apiUrl = $apiBase . (strpos($apiBase, '?') === false ? '?' : '&') . http_build_query(['date' => $date, 'lang' => $lang], '', '&', PHP_QUERY_RFC3986);
-$apiBody = fetchRemote($apiUrl);
+$source = null;
+
+$apiUrl = append_query($apiBase, array('date' => $date, 'lang' => $lang));
+$apiBody = fetch_remote($apiUrl);
 if ($apiBody !== null) {
     $decoded = json_decode($apiBody, true);
-    if (is_array($decoded) && isset($decoded['rates']) && is_array($decoded['rates'])) {
-        $payload = normalizeApiPayload($decoded, $date);
-    } elseif (is_array($decoded) && array_is_list_compat($decoded)) {
-        $payload = normalizeApiPayload(['rates' => $decoded], $date);
+    if (is_array($decoded)) {
+        if (isset($decoded['rates']) && is_array($decoded['rates'])) {
+            $payload = normalize_api_payload($decoded, $date);
+        } elseif (is_list_array($decoded)) {
+            $payload = normalize_api_payload(array('rates' => $decoded), $date);
+        }
+        if ($payload !== null) {
+            $source = 'cnb-api';
+        }
     }
 }
 
 if ($payload === null) {
-    $txtUrl = $txtBase . (strpos($txtBase, '?') === false ? '?' : '&') . http_build_query(['date' => $parsedDate->format('d.m.Y')], '', '&', PHP_QUERY_RFC3986);
-    $txtBody = fetchRemote($txtUrl);
+    $txtDate = date('d.m.Y', $requestedTs);
+    $txtUrl = append_query($txtBase, array('date' => $txtDate));
+    $txtBody = fetch_remote($txtUrl);
     if ($txtBody !== null) {
-        $payload = parseTxtPayload($txtBody, $date);
+        $payload = parse_txt_payload($txtBody, $date);
+        if ($payload !== null) {
+            $source = 'cnb-txt';
+        }
     }
 }
 
-if ($payload !== null && count($payload['rates']) >= 10) {
-    $json = json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRESERVE_ZERO_FRACTION);
+if ($payload !== null && isset($payload['rates']) && count($payload['rates']) >= 10) {
+    $payload['source'] = $source;
+    $payload['requestedDate'] = $date;
+    $json = json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     if ($json !== false) {
         @file_put_contents($cacheFile, $json, LOCK_EX);
         header('Cache-Control: public, max-age=300, stale-while-revalidate=86400');
-        header('X-RV-Rate-Source: cnb');
+        header('X-RV-Rate-Source: ' . $source);
         echo $json;
         exit;
     }
@@ -94,91 +116,169 @@ if ($cached !== null) {
 
 http_response_code(502);
 header('Cache-Control: no-store');
-echo json_encode(['error' => 'Kurzovní lístek ČNB se nyní nepodařilo načíst.'], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+send_json(array('error' => 'Kurzovní lístek ČNB se nyní nepodařilo načíst.'));
 
-function fetchRemote(string $url): ?string
+function send_json($data)
 {
-    if (function_exists('curl_init')) {
-        $ch = curl_init($url);
-        if ($ch === false) {
-            return null;
-        }
-        curl_setopt_array($ch, [
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_MAXREDIRS => 3,
-            CURLOPT_CONNECTTIMEOUT => 4,
-            CURLOPT_TIMEOUT => 8,
-            CURLOPT_USERAGENT => 'RychleVypocty.cz/1.0 (+https://www.rychlevypocty.cz/)',
-            CURLOPT_HTTPHEADER => ['Accept: application/json, text/plain;q=0.9'],
-            CURLOPT_SSL_VERIFYPEER => true,
-            CURLOPT_SSL_VERIFYHOST => 2,
-        ]);
-        $body = curl_exec($ch);
-        $status = (int) curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
-        curl_close($ch);
-        return is_string($body) && $status >= 200 && $status < 300 ? $body : null;
-    }
-
-    if (!filter_var((string) ini_get('allow_url_fopen'), FILTER_VALIDATE_BOOLEAN)) {
-        return null;
-    }
-    $context = stream_context_create([
-        'http' => [
-            'method' => 'GET',
-            'timeout' => 8,
-            'ignore_errors' => true,
-            'header' => "Accept: application/json, text/plain;q=0.9\r\nUser-Agent: RychleVypocty.cz/1.0\r\n",
-        ],
-        'ssl' => ['verify_peer' => true, 'verify_peer_name' => true],
-    ]);
-    $body = @file_get_contents($url, false, $context);
-    return is_string($body) && $body !== '' ? $body : null;
+    $json = json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    echo $json !== false ? $json : '{"error":"Chyba odpovědi."}';
+    exit;
 }
 
-function normalizeApiPayload(array $decoded, string $requestedDate): ?array
+function append_query($url, $params)
 {
-    $rates = [];
+    return $url . (strpos($url, '?') === false ? '?' : '&')
+        . http_build_query($params, '', '&');
+}
+
+/**
+ * Nejprve používá PHP stream (na sdíleném hostingu bývá aktuálnější TLS vrstva),
+ * potom cURL. Selhání jednoho transportu proto už nezablokuje druhý.
+ */
+function fetch_remote($url)
+{
+    $body = fetch_via_stream($url);
+    if ($body !== null) {
+        return $body;
+    }
+    return fetch_via_curl($url);
+}
+
+function fetch_via_stream($url)
+{
+    $allow = strtolower(trim((string) ini_get('allow_url_fopen')));
+    if (!in_array($allow, array('1', 'on', 'yes', 'true'), true)) {
+        return null;
+    }
+
+    $context = stream_context_create(array(
+        'http' => array(
+            'method' => 'GET',
+            'timeout' => 12,
+            'ignore_errors' => true,
+            'follow_location' => 1,
+            'max_redirects' => 3,
+            'protocol_version' => 1.1,
+            'header' => "Accept: application/json, text/plain;q=0.9\r\n"
+                . "User-Agent: RychleVypocty.cz/1.1 (+https://www.rychlevypocty.cz/)\r\n"
+                . "Connection: close\r\n"
+        ),
+        'ssl' => array(
+            'verify_peer' => true,
+            'verify_peer_name' => true,
+            'SNI_enabled' => true
+        )
+    ));
+
+    $body = @file_get_contents($url, false, $context);
+    if (!is_string($body) || $body === '') {
+        return null;
+    }
+
+    $status = 0;
+    if (isset($http_response_header) && is_array($http_response_header)) {
+        foreach ($http_response_header as $headerLine) {
+            if (preg_match('#^HTTP/\S+\s+(\d{3})#i', $headerLine, $match)) {
+                $status = (int) $match[1];
+            }
+        }
+    }
+    if ($status !== 0 && ($status < 200 || $status >= 300)) {
+        return null;
+    }
+    return $body;
+}
+
+function fetch_via_curl($url)
+{
+    if (!function_exists('curl_init')) {
+        return null;
+    }
+
+    $ch = curl_init($url);
+    if ($ch === false) {
+        return null;
+    }
+
+    $options = array(
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_MAXREDIRS => 3,
+        CURLOPT_CONNECTTIMEOUT => 5,
+        CURLOPT_TIMEOUT => 12,
+        CURLOPT_USERAGENT => 'RychleVypocty.cz/1.1 (+https://www.rychlevypocty.cz/)',
+        CURLOPT_HTTPHEADER => array('Accept: application/json, text/plain;q=0.9'),
+        CURLOPT_SSL_VERIFYPEER => true,
+        CURLOPT_SSL_VERIFYHOST => 2
+    );
+    if (defined('CURLOPT_ENCODING')) {
+        $options[CURLOPT_ENCODING] = '';
+    }
+    if (defined('CURLOPT_IPRESOLVE') && defined('CURL_IPRESOLVE_V4')) {
+        $options[CURLOPT_IPRESOLVE] = CURL_IPRESOLVE_V4;
+    }
+    if (defined('CURLOPT_HTTP_VERSION') && defined('CURL_HTTP_VERSION_1_1')) {
+        $options[CURLOPT_HTTP_VERSION] = CURL_HTTP_VERSION_1_1;
+    }
+
+    curl_setopt_array($ch, $options);
+    $body = curl_exec($ch);
+    $status = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    return is_string($body) && $body !== '' && $status >= 200 && $status < 300
+        ? $body
+        : null;
+}
+
+function normalize_api_payload($decoded, $requestedDate)
+{
+    $rates = array();
     foreach ($decoded['rates'] as $item) {
         if (!is_array($item)) {
             continue;
         }
-        $code = strtoupper(trim((string) ($item['currencyCode'] ?? $item['code'] ?? '')));
-        $amount = (float) ($item['amount'] ?? 0);
-        $rate = (float) ($item['rate'] ?? 0);
+        $code = strtoupper(trim((string) (isset($item['currencyCode']) ? $item['currencyCode'] : (isset($item['code']) ? $item['code'] : ''))));
+        $amount = isset($item['amount']) ? (float) $item['amount'] : 0.0;
+        $rate = isset($item['rate']) ? (float) $item['rate'] : 0.0;
         if (!preg_match('/^[A-Z]{3}$/', $code) || $amount <= 0 || $rate <= 0) {
             continue;
         }
-        $validFor = normalizeIsoDate((string) ($item['validFor'] ?? $requestedDate)) ?: $requestedDate;
-        $rates[] = [
+        $validForRaw = isset($item['validFor']) ? (string) $item['validFor'] : $requestedDate;
+        $validFor = normalize_iso_date($validForRaw);
+        if ($validFor === null) {
+            $validFor = $requestedDate;
+        }
+        $rates[] = array(
             'validFor' => $validFor,
             'order' => isset($item['order']) ? (int) $item['order'] : null,
-            'country' => trim((string) ($item['country'] ?? '')),
-            'currency' => trim((string) ($item['currency'] ?? $code)),
+            'country' => isset($item['country']) ? trim((string) $item['country']) : '',
+            'currency' => isset($item['currency']) ? trim((string) $item['currency']) : $code,
             'amount' => $amount,
             'currencyCode' => $code,
-            'rate' => $rate,
-        ];
+            'rate' => $rate
+        );
     }
-    return count($rates) >= 10 ? ['rates' => $rates] : null;
+    return count($rates) >= 10 ? array('rates' => $rates) : null;
 }
 
-function parseTxtPayload(string $body, string $requestedDate): ?array
+function parse_txt_payload($body, $requestedDate)
 {
-    $body = preg_replace('/^\xEF\xBB\xBF/', '', $body) ?? $body;
+    $body = preg_replace('/^\xEF\xBB\xBF/', '', $body);
     $lines = preg_split('/\r\n|\r|\n/', trim($body));
     if (!is_array($lines) || count($lines) < 3) {
         return null;
     }
 
     $validFor = $requestedDate;
-    if (preg_match('/^(\d{2})\.(\d{2})\.(\d{4})/', trim($lines[0]), $m)) {
-        $validFor = $m[3] . '-' . $m[2] . '-' . $m[1];
+    if (preg_match('/^(\d{2})\.(\d{2})\.(\d{4})/', trim($lines[0]), $match)) {
+        $validFor = $match[3] . '-' . $match[2] . '-' . $match[1];
     }
 
-    $rates = [];
-    foreach (array_slice($lines, 2) as $line) {
-        $line = trim($line);
+    $rates = array();
+    $count = count($lines);
+    for ($i = 2; $i < $count; $i++) {
+        $line = trim($lines[$i]);
         if ($line === '') {
             break;
         }
@@ -192,26 +292,28 @@ function parseTxtPayload(string $body, string $requestedDate): ?array
         if (!preg_match('/^[A-Z]{3}$/', $code) || $amount <= 0 || $rate <= 0) {
             continue;
         }
-        $rates[] = [
+        $rates[] = array(
             'validFor' => $validFor,
             'order' => null,
             'country' => trim($parts[0]),
             'currency' => trim($parts[1]),
             'amount' => $amount,
             'currencyCode' => $code,
-            'rate' => $rate,
-        ];
+            'rate' => $rate
+        );
     }
-    return count($rates) >= 10 ? ['rates' => $rates] : null;
+    return count($rates) >= 10 ? array('rates' => $rates) : null;
 }
 
-function normalizeIsoDate(string $value): ?string
+function normalize_iso_date($value)
 {
-    $date = DateTimeImmutable::createFromFormat('!Y-m-d', $value);
-    return $date instanceof DateTimeImmutable && $date->format('Y-m-d') === $value ? $value : null;
+    if (!preg_match('/^(\d{4})-(\d{2})-(\d{2})$/', $value, $parts)) {
+        return null;
+    }
+    return checkdate((int) $parts[2], (int) $parts[3], (int) $parts[1]) ? $value : null;
 }
 
-function readCache(string $file): ?array
+function read_cache($file)
 {
     if (!is_file($file) || !is_readable($file)) {
         return null;
@@ -224,13 +326,20 @@ function readCache(string $file): ?array
     if (!is_array($decoded) || !isset($decoded['rates']) || !is_array($decoded['rates']) || count($decoded['rates']) < 10) {
         return null;
     }
-    return ['body' => $body, 'mtime' => (int) @filemtime($file)];
+    return array('body' => $body, 'mtime' => (int) @filemtime($file));
 }
 
-function array_is_list_compat(array $array): bool
+function is_list_array($array)
 {
-    if (function_exists('array_is_list')) {
-        return array_is_list($array);
+    if (!is_array($array)) {
+        return false;
     }
-    return array_keys($array) === range(0, count($array) - 1);
+    $expected = 0;
+    foreach ($array as $key => $unused) {
+        if ($key !== $expected) {
+            return false;
+        }
+        $expected++;
+    }
+    return true;
 }
