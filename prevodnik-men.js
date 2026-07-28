@@ -1,6 +1,7 @@
 (() => {
   'use strict';
-  const API_URL = 'https://api.cnb.cz/cnbapi/exrates/daily';
+  const API_URL = 'cnb-kurzy.php';
+  const DIRECT_API_URL = 'https://api.cnb.cz/cnbapi/exrates/daily';
   const FALLBACK_DATE = '2026-07-28';
   const FALLBACK = [
     ['AUD','Australský dolar',1,14.830],['BRL','Brazilský real',1,4.156],['CNY','Čínský jüan',1,3.143],['DKK','Dánská koruna',1,3.236],['EUR','Euro',1,24.190],['PHP','Filipínské peso',100,34.530],['HKD','Hongkongský dolar',1,2.714],['INR','Indická rupie',100,22.203],['IDR','Indonéská rupie',1000,1.178],['ISK','Islandská koruna',100,16.987],['ILS','Izraelský nový šekel',1,6.963],['JPY','Japonský jen',100,12.984],['ZAR','Jihoafrický rand',1,1.268],['CAD','Kanadský dolar',1,15.083],['KRW','Jihokorejský won',100,1.458],['HUF','Maďarský forint',100,6.702],['MYR','Malajsijský ringgit',1,5.201],['MXN','Mexické peso',1,1.218],['XDR','Zvláštní práva čerpání',1,28.871],['NOK','Norská koruna',1,2.198],['NZD','Novozélandský dolar',1,12.283],['PLN','Polský zlotý',1,5.592],['RON','Rumunský leu',1,4.622],['SGD','Singapurský dolar',1,16.456],['SEK','Švédská koruna',1,2.187],['CHF','Švýcarský frank',1,25.957],['THB','Thajský baht',100,63.326],['TRY','Turecká lira',100,44.932],['USD','Americký dolar',1,21.284],['GBP','Britská libra',1,28.276]
@@ -24,16 +25,33 @@
   const readCache=(date)=>{try{const raw=localStorage.getItem(cacheKey(date));if(!raw)return null;const data=JSON.parse(raw);if(!Array.isArray(data.rates)||!data.validFor)return null;return data}catch{return null}};
   const writeCache=(date,data)=>{try{localStorage.setItem(cacheKey(date),JSON.stringify({validFor:data.validFor,rates:data.rates,savedAt:Date.now()}))}catch{}}
 
+
+  async function fetchJson(url,timeoutMs){
+    const controller=new AbortController();
+    const timer=setTimeout(()=>controller.abort(),timeoutMs);
+    try{
+      const response=await fetch(url,{signal:controller.signal,credentials:'same-origin',referrerPolicy:'same-origin',cache:'no-cache',headers:{Accept:'application/json'}});
+      if(!response.ok)throw new Error(`HTTP ${response.status}`);
+      return await response.json();
+    }finally{clearTimeout(timer)}
+  }
+  async function fetchRatesPayload(requested){
+    const query=`?date=${encodeURIComponent(requested)}&lang=CS`;
+    try{return await fetchJson(`${API_URL}${query}`,9000)}
+    catch(proxyError){
+      try{return await fetchJson(`${DIRECT_API_URL}${query}`,7000)}
+      catch(directError){throw new Error(`Kurz ČNB se nepodařilo načíst: ${proxyError.message}; ${directError.message}`)}
+    }
+  }
+
   async function loadRates({force=false}={}){
     const requested=els.date.value||isoToday();
     setLoading(true);
     const cached=!force&&readCache(requested);
     if(cached){const entries=cached.rates.map(normalizeEntry).filter(Boolean);if(entries.length){applyEntries(entries,cached.validFor,'cache');setLoading(false);return;}}
     try{
-      const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),7000);
-      const response=await fetch(`${API_URL}?date=${encodeURIComponent(requested)}&lang=CS`,{signal:controller.signal,credentials:'omit',referrerPolicy:'no-referrer'});clearTimeout(timer);
-      if(!response.ok)throw new Error(`HTTP ${response.status}`);
-      const data=await response.json();const raw=Array.isArray(data)?data:(Array.isArray(data.rates)?data.rates:[]);const entries=raw.map(normalizeEntry).filter(Boolean);
+      const data=await fetchRatesPayload(requested);
+      const raw=Array.isArray(data)?data:(Array.isArray(data.rates)?data.rates:[]);const entries=raw.map(normalizeEntry).filter(Boolean);
       if(entries.length<10)throw new Error('Neúplný kurzovní lístek');
       const validFor=entries[0].validFor||requested;writeCache(requested,{validFor,rates:raw});applyEntries(entries,validFor,'live');
     }catch(err){
@@ -45,7 +63,7 @@
   function findLatestCache(){try{let best=null;for(let i=0;i<localStorage.length;i++){const key=localStorage.key(i);if(!key?.startsWith('rv-cnb-rates-'))continue;const data=JSON.parse(localStorage.getItem(key));if(Array.isArray(data.rates)&&(!best||Number(data.savedAt)>Number(best.savedAt)))best=data;}return best}catch{return null}}
   function setLoading(on){$('refreshRates').disabled=on;$('refreshHint').textContent=on?'Načítám…':'ČNB API';if(on){$('sourceStatus').textContent='Načítám kurzovní lístek ČNB';$('sourceDetail').textContent='Jeden požadavek pro zvolené datum.'}}
   function updateSourceUI(){const source=$('sourceStrip');const dot=source.querySelector('.status-dot');dot.className='status-dot';$('heroStatusDot').className='status-dot';let title,detail,badge;
-    if(state.source==='live'){dot.classList.add('is-live');$('heroStatusDot').classList.add('is-live');title='Aktuální data z API ČNB';detail=`Platnost kurzu: ${formatDate(state.validFor)}.`;badge='Živá data ČNB';}
+    if(state.source==='live'){const requested=els.date.value||isoToday();const historical=requested!==isoToday();dot.classList.add('is-live');$('heroStatusDot').classList.add('is-live');title=historical?'Historický kurzovní lístek ČNB':'Nejnovější dostupná data z ČNB';detail=`Platnost kurzu: ${formatDate(state.validFor)}.`;badge=historical?'Historický kurz ČNB':'Data ČNB';}
     else if(state.source==='cache'){dot.classList.add('is-live');$('heroStatusDot').classList.add('is-live');title='Kurz z místní cache ČNB';detail=`Dříve načtená data s platností ${formatDate(state.validFor)}.`;badge='Uložená data ČNB';}
     else if(state.source==='cache-fallback'){dot.classList.add('is-error');$('heroStatusDot').classList.add('is-error');title='API není dostupné – použit poslední uložený kurz';detail=`Data mají platnost ${formatDate(state.validFor)}.`;badge='Poslední uložený kurz';}
     else{dot.classList.add('is-error');$('heroStatusDot').classList.add('is-error');title='API není dostupné – použita záložní sada';detail=`Záložní data mají platnost ${formatDate(state.validFor)}. Pro důležitou transakci kurz ověřte.`;badge='Záložní data';}
