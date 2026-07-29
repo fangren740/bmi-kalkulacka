@@ -15,6 +15,8 @@
   const els = Object.fromEntries(fieldIds.map((id) => [id, $(id)]));
   els.vatPayer = $('vatPayer');
   els.advancedPanel = $('advancedPanel');
+  els.basicAssumptions = $('basicAssumptions');
+  els.modeDescription = $('modeDescription');
 
   const currency = new Intl.NumberFormat('cs-CZ', {
     style: 'currency', currency: 'CZK', maximumFractionDigits: 0
@@ -328,14 +330,23 @@
   }
 
   function setMode(mode) {
-    state.mode = mode;
+    const advanced = mode === 'advanced';
+    state.mode = advanced ? 'advanced' : 'basic';
+    document.documentElement.dataset.calculatorMode = state.mode;
     document.querySelectorAll('[data-mode]').forEach((button) => {
-      const active = button.dataset.mode === mode;
+      const active = button.dataset.mode === state.mode;
       button.classList.toggle('is-active', active);
       button.setAttribute('aria-pressed', String(active));
+      button.setAttribute('aria-expanded', String(active && advanced));
     });
-    els.advancedPanel.hidden = mode !== 'advanced';
-    if (mode === 'advanced') {
+    els.advancedPanel.toggleAttribute('hidden', !advanced);
+    els.basicAssumptions.toggleAttribute('hidden', advanced);
+    if (els.modeDescription) {
+      els.modeDescription.textContent = advanced
+        ? 'Pokročilý režim zpřístupňuje odvody, investice, rizikové rezervy, kapacitu, DPH a porovnání se současnou fakturací.'
+        : 'Základní režim používá čtyři hlavní vstupy a bezpečné výchozí předpoklady.';
+    }
+    if (advanced) {
       window.setTimeout(() => els.socialMonthly.focus({ preventScroll: true }), 0);
     }
   }
