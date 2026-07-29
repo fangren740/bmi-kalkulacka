@@ -23,7 +23,7 @@
   <link rel="apple-touch-icon" href="apple-touch-icon.png?v=2">
   <link rel="manifest" href="site.webmanifest?v=2">
   <meta name="theme-color" content="#09223f">
-  <link rel="stylesheet" href="dpp-dpc.css?v=20260729">
+  <link rel="stylesheet" href="dpp-dpc.css?v=20260729-2">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"DPP / DPČ kalkulačka 2026","url":"https://rychlevypocty.cz/dpp-dpc-kalkulacka.html","applicationCategory":"FinanceApplication","operatingSystem":"All","inLanguage":"cs-CZ","dateModified":"2026-07-29","description":"Kalkulačka čisté odměny z dohody o provedení práce nebo dohody o pracovní činnosti včetně pojistného, daně, limitů a ceny práce.","offers":{"@type":"Offer","price":"0","priceCurrency":"CZK"}}
   </script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Domů","item":"https://rychlevypocty.cz/"},{"@type":"ListItem","position":2,"name":"Mzdy a práce","item":"https://rychlevypocty.cz/mzdy-a-prace.html"},{"@type":"ListItem","position":3,"name":"DPP / DPČ kalkulačka","item":"https://rychlevypocty.cz/dpp-dpc-kalkulacka.html"}]}
@@ -75,15 +75,47 @@
         <form class="input-panel" id="dppDpcForm" novalidate>
           <section class="step-card">
             <div class="step-heading"><span>1</span><div><h3>Dohoda a měsíční odměna</h3><p>Pro pojistné se sčítají dohody stejného typu u jednoho zaměstnavatele. DPP a DPČ se mezi sebou do rozhodné částky nesčítají.</p></div></div>
-            <div class="field-grid two">
-              <label class="field" for="agreementType"><span>Typ dohody</span><small>Rozhodná částka i pracovní limit jsou jiné.</small><span class="control select"><select id="agreementType"><option value="dpp">DPP – provedení práce</option><option value="dpc">DPČ – pracovní činnost</option></select></span></label>
-              <label class="field" for="grossReward"><span>Hrubá odměna z této dohody</span><small>Měsíční odměna před daní a pojistným.</small><span class="control suffix"><input id="grossReward" value="10 000" inputmode="decimal" autocomplete="off"><b>Kč</b></span><em class="field-error" id="grossRewardError"></em></label>
-              <label class="field" for="sameEmployerReward"><span>Další odměny stejného typu</span><small>Jen další DPP nebo DPČ u stejného zaměstnavatele v témže měsíci.</small><span class="control suffix"><input id="sameEmployerReward" value="0" inputmode="decimal" autocomplete="off"><b>Kč</b></span><em class="field-error" id="sameEmployerRewardError"></em></label>
-              <label class="field" for="hoursWorked"><span>Odpracované hodiny v měsíci</span><small>Slouží ke kontrole hodinové odměny a pracovního rozsahu.</small><span class="control suffix"><input id="hoursWorked" value="60" inputmode="decimal" autocomplete="off"><b>h</b></span><em class="field-error" id="hoursWorkedError"></em></label>
+            <div class="agreement-workspace">
+              <fieldset class="agreement-picker">
+                <legend>Vyberte typ dohody</legend>
+                <p>Volba mění rozhodnou částku pro pojistné i kontrolu pracovního rozsahu.</p>
+                <div class="agreement-options" role="group" aria-label="Typ dohody">
+                  <button class="agreement-option is-active" type="button" data-agreement="dpp" aria-pressed="true">
+                    <span class="agreement-code">DPP</span>
+                    <span><strong>Dohoda o provedení práce</strong><small>Pojistné od 12 000 Kč · max. 300 hodin ročně</small></span>
+                  </button>
+                  <button class="agreement-option" type="button" data-agreement="dpc" aria-pressed="false">
+                    <span class="agreement-code">DPČ</span>
+                    <span><strong>Dohoda o pracovní činnosti</strong><small>Pojistné od 4 500 Kč · průměrně nejvýše 20 h týdně</small></span>
+                  </button>
+                </div>
+                <label class="visually-hidden" for="agreementType">Typ dohody</label>
+                <select class="visually-hidden" id="agreementType" tabindex="-1" aria-hidden="true"><option value="dpp">DPP – provedení práce</option><option value="dpc">DPČ – pracovní činnost</option></select>
+              </fieldset>
+
+              <div class="primary-input-grid">
+                <label class="field featured-field" for="grossReward">
+                  <span class="field-label-row"><span><b>Hrubá měsíční odměna</b><small>Hlavní částka před daní a pojistným.</small></span><i>01</i></span>
+                  <span class="control suffix"><input id="grossReward" value="10 000" inputmode="decimal" autocomplete="off"><b>Kč</b></span>
+                  <em class="field-error" id="grossRewardError"></em>
+                </label>
+                <label class="field featured-field" for="hoursWorked">
+                  <span class="field-label-row"><span><b>Odpracované hodiny</b><small>Pro hodinovou odměnu a pracovní limit.</small></span><i>02</i></span>
+                  <span class="control suffix"><input id="hoursWorked" value="60" inputmode="decimal" autocomplete="off"><b>h</b></span>
+                  <em class="field-error" id="hoursWorkedError"></em>
+                </label>
+              </div>
+
+              <label class="field supplementary-field" for="sameEmployerReward">
+                <span class="supplementary-copy"><b>Máte u stejného zaměstnavatele další dohodu stejného typu?</b><small>Zadejte její měsíční odměnu. DPP a DPČ se mezi sebou nesčítají.</small></span>
+                <span class="control suffix"><input id="sameEmployerReward" value="0" inputmode="decimal" autocomplete="off"><b>Kč</b></span>
+                <em class="field-error" id="sameEmployerRewardError"></em>
+              </label>
             </div>
             <div class="quick-scenarios" aria-label="Modelové scénáře">
+              <span>Rychlý model:</span>
               <button type="button" data-preset="dpp-low">DPP 10 000 Kč</button>
-              <button type="button" data-preset="dpp-threshold">DPP 12 000 Kč</button>
+              <button type="button" data-preset="dpp-threshold">DPP na hranici</button>
               <button type="button" data-preset="dpc">DPČ 8 000 Kč</button>
             </div>
           </section>
@@ -297,6 +329,6 @@
     </div>
     <div class="shell footer-bottom"><p>© 2026 RychléVýpočty.cz. Výpočty jsou orientační a nenahrazují mzdové, daňové ani právní posouzení.</p></div>
   </footer>
-  <script src="dpp-dpc.js?v=20260729" defer></script>
+  <script src="dpp-dpc.js?v=20260729-2" defer></script>
 </body>
 </html>

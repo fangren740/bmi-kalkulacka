@@ -281,6 +281,15 @@
     setText('heroSentence', minimumGap > 0 ? `Hodinová odměna je pod minimem; chybí přibližně ${money(minimumGap)}.` : model.insured ? `Součet ${money(totalGross)} dosáhl rozhodné částky a vstupuje do odvodů.` : `Součet ${money(totalGross)} je pod rozhodnou částkou pro pojistné.`);
   }
 
+
+  function syncAgreementPicker() {
+    document.querySelectorAll('[data-agreement]').forEach((button) => {
+      const active = button.dataset.agreement === els.agreement.value;
+      button.classList.toggle('is-active', active);
+      button.setAttribute('aria-pressed', String(active));
+    });
+  }
+
   function setMode(mode) {
     state.mode = mode;
     document.querySelectorAll('[data-mode]').forEach((button) => {
@@ -301,11 +310,12 @@
     const preset = presets[name];
     if (!preset) return;
     els.agreement.value = preset.agreement; els.gross.value = preset.gross; els.same.value = preset.same; els.hours.value = preset.hours; els.declaration.checked = preset.declaration;
+    syncAgreementPicker();
     calculate();
   }
 
   function reset() {
-    els.agreement.value = 'dpp'; els.gross.value = '10 000'; els.same.value = '0'; els.hours.value = '60'; els.declaration.checked = true;
+    els.agreement.value = 'dpp'; syncAgreementPicker(); els.gross.value = '10 000'; els.same.value = '0'; els.hours.value = '60'; els.declaration.checked = true;
     els.healthMode.value = 'unknown'; els.additionalCredit.value = '0'; els.hoursBefore.value = '0'; els.relationshipDays.value = '30'; els.dpcWeekly.value = '15';
     els.dppThreshold.value = '12 000'; els.dpcThreshold.value = '4 500'; els.minimumHourly.value = '134,40'; els.employeeSocialRate.value = '7,1'; els.employeeHealthRate.value = '4,5'; els.employerSocialRate.value = '24,8'; els.employerHealthRate.value = '9'; els.minimumHealthBase.value = '22 400'; els.personalCredit.value = '2 570';
     setMode('basic');
@@ -318,6 +328,7 @@
   }
 
   function bind() {
+    document.querySelectorAll('[data-agreement]').forEach((button) => button.addEventListener('click', () => { els.agreement.value = button.dataset.agreement; syncAgreementPicker(); calculate(); }));
     document.querySelectorAll('[data-mode]').forEach((button) => button.addEventListener('click', () => setMode(button.dataset.mode)));
     document.querySelectorAll('[data-preset]').forEach((button) => button.addEventListener('click', () => applyPreset(button.dataset.preset)));
     $('resetButton').addEventListener('click', reset);
@@ -328,6 +339,6 @@
     });
   }
 
-  function init() { bind(); setMode('basic'); }
+  function init() { bind(); syncAgreementPicker(); setMode('basic'); }
   document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', init) : init();
 })();
