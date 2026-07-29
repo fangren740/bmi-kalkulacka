@@ -1,305 +1,235 @@
 (() => {
-  "use strict";
-
-  const $ = id => document.getElementById(id);
-  const form = $("breakEvenForm");
-  if (!form) return;
-
+  'use strict';
+  const $ = (id) => document.getElementById(id);
+  const form = $('breakEvenForm');
   const fields = {
-    sellingPrice: $("sellingPrice"),
-    variableCost: $("variableCost"),
-    fixedCosts: $("fixedCosts"),
-    plannedSales: $("plannedSales"),
-    targetProfit: $("targetProfit"),
-    unitLabel: $("unitLabel"),
-    periodLabel: $("periodLabel")
+    price: $('sellingPrice'),
+    variable: $('variableCost'),
+    fixed: $('fixedCosts'),
+    period: $('periodLabel'),
+    plan: $('plannedSales'),
+    target: $('targetProfit'),
+    capacity: $('capacity'),
+    unit: $('unitLabel')
   };
-
+  const state = { mode: 'basic' };
   const presets = {
-    product: { sellingPrice: 1200, variableCost: 450, fixedCosts: 180000, plannedSales: 300, targetProfit: 0, unitLabel: "ks", periodLabel: "měsíc" },
-    service: { sellingPrice: 2500, variableCost: 400, fixedCosts: 120000, plannedSales: 80, targetProfit: 0, unitLabel: "zakázek", periodLabel: "měsíc" },
-    gastro: { sellingPrice: 220, variableCost: 85, fixedCosts: 250000, plannedSales: 2200, targetProfit: 0, unitLabel: "porcí", periodLabel: "měsíc" },
-    eshop: { sellingPrice: 899, variableCost: 520, fixedCosts: 160000, plannedSales: 500, targetProfit: 0, unitLabel: "objednávek", periodLabel: "měsíc" }
+    product: { price: 1200, variable: 450, fixed: 180000, plan: 300, target: 50000, capacity: 360, unit: 'ks', period: 'měsíc' },
+    service: { price: 18000, variable: 3500, fixed: 145000, plan: 14, target: 80000, capacity: 18, unit: 'zakázek', period: 'měsíc' },
+    gastro: { price: 195, variable: 72, fixed: 310000, plan: 3200, target: 90000, capacity: 4200, unit: 'porcí', period: 'měsíc' },
+    eshop: { price: 890, variable: 510, fixed: 125000, plan: 450, target: 60000, capacity: 650, unit: 'objednávek', period: 'měsíc' }
   };
 
-  const numberFormat = new Intl.NumberFormat("cs-CZ", { maximumFractionDigits: 1 });
-  const integerFormat = new Intl.NumberFormat("cs-CZ", { maximumFractionDigits: 0 });
-  const moneyFormat = new Intl.NumberFormat("cs-CZ", { style: "currency", currency: "CZK", maximumFractionDigits: 0 });
+  const parseNumber = (value) => {
+    const cleaned = String(value ?? '').trim().replace(/\s+/g, '').replace(',', '.').replace(/[^0-9.+-]/g, '');
+    const number = Number(cleaned);
+    return Number.isFinite(number) ? number : NaN;
+  };
+  const format = (number, max = 0, min = 0) => new Intl.NumberFormat('cs-CZ', { minimumFractionDigits: min, maximumFractionDigits: max }).format(Number.isFinite(number) ? number : 0);
+  const money = (number, max = 0) => `${format(number, max)} Kč`;
+  const roundUnits = (number) => Math.ceil(number - 1e-12);
+  const unitLabel = () => fields.unit.value || 'ks';
+  const singularUnit = () => ({ ks: 'kus', objednávek: 'objednávku', zakázek: 'zakázku', porcí: 'porci', hodin: 'hodinu', návštěv: 'návštěvu' }[unitLabel()] || 'jednotku');
+  const periodText = () => ({ měsíc: 'za měsíc', rok: 'za rok', projekt: 'za projekt', sezónu: 'za sezónu' }[fields.period.value] || 'za období');
+  const setError = (field, message) => {
+    const holder = field.closest('.field');
+    if (holder) holder.classList.toggle('has-error', Boolean(message));
+    const error = $(`${field.id}Error`);
+    if (error) error.textContent = message || '';
+  };
+  const deltaText = (value) => `${value > 0 ? '+' : value < 0 ? '−' : ''}${format(Math.abs(value))} ${unitLabel()}`;
 
-  const formatNumber = value => integerFormat.format(Number.isFinite(value) ? value : 0);
-  const formatMoney = value => moneyFormat.format(Number.isFinite(value) ? value : 0);
-  const formatPercent = value => `${numberFormat.format(Number.isFinite(value) ? value : 0)} %`;
-  const unitText = (value, unit) => `${formatNumber(value)} ${unit}`;
-
-  function readValues() {
-    return {
-      sellingPrice: Number(fields.sellingPrice.value),
-      variableCost: Number(fields.variableCost.value),
-      fixedCosts: Number(fields.fixedCosts.value),
-      plannedSales: Number(fields.plannedSales.value),
-      targetProfit: Number(fields.targetProfit.value),
-      unitLabel: fields.unitLabel.value,
-      periodLabel: fields.periodLabel.value
+  function validate() {
+    const data = {
+      price: parseNumber(fields.price.value),
+      variable: parseNumber(fields.variable.value),
+      fixed: parseNumber(fields.fixed.value),
+      plan: parseNumber(fields.plan.value),
+      target: parseNumber(fields.target.value),
+      capacity: parseNumber(fields.capacity.value)
     };
-  }
-
-  function validate(values) {
-    const numeric = [values.sellingPrice, values.variableCost, values.fixedCosts, values.plannedSales, values.targetProfit];
-    if (numeric.some(value => !Number.isFinite(value))) return "Vyplňte prosím všechna číselná pole.";
-    if (numeric.some(value => value < 0)) return "Zadané hodnoty nemohou být záporné.";
-    if (values.sellingPrice <= 0) return "Prodejní cena musí být vyšší než nula.";
-    if (values.sellingPrice <= values.variableCost) return "Prodejní cena musí být vyšší než variabilní náklad. Jinak každý další prodej vytváří ztrátu.";
-    return "";
-  }
-
-  function calculate(values) {
-    const unitContribution = values.sellingPrice - values.variableCost;
-    const contributionRate = unitContribution / values.sellingPrice * 100;
-    const breakEvenExact = values.fixedCosts / unitContribution;
-    const breakEvenUnits = Math.ceil(breakEvenExact);
-    const breakEvenRevenue = breakEvenUnits * values.sellingPrice;
-    const plannedProfit = values.plannedSales * unitContribution - values.fixedCosts;
-    const safetyUnits = values.plannedSales - breakEvenUnits;
-    const safetyRate = values.plannedSales > 0 ? safetyUnits / values.plannedSales * 100 : NaN;
-    const targetUnits = values.targetProfit > 0
-      ? Math.ceil((values.fixedCosts + values.targetProfit) / unitContribution)
-      : 0;
-    const targetRevenue = targetUnits * values.sellingPrice;
-    return { unitContribution, contributionRate, breakEvenExact, breakEvenUnits, breakEvenRevenue, plannedProfit, safetyUnits, safetyRate, targetUnits, targetRevenue };
-  }
-
-  function setText(id, value) {
-    const element = $(id);
-    if (element) element.textContent = value;
-  }
-
-  function setInvalidState(message) {
-    const error = $("breakEvenError");
-    error.textContent = message;
-    error.hidden = false;
-    setText("resultBadge", "Opravte zadání");
-    $("resultBadge").className = "break-even-status is-danger";
-    setText("breakEvenUnitsResult", "—");
-    setText("breakEvenRevenueResult", "—");
-    setText("unitContributionResult", "—");
-    setText("plannedProfitResult", "—");
-    setText("safetyMarginResult", "—");
-    setText("decisionKicker", "Výpočet nelze dokončit");
-    setText("decisionHeadline", "Cena nepokrývá náklad na prodej");
-    setText("decisionText", message);
-    setText("nextStepText", "Upravte cenu nebo variabilní náklad a výsledek se ihned přepočítá.");
-    $("decisionHeadline").parentElement.className = "break-even-decision is-danger";
-    $("targetProfitResultBox").hidden = true;
-    setText("heroBreakEvenUnits", "—");
-    setText("heroVerdict", "Opravte zadané hodnoty");
-    setText("heroContribution", "—");
-    setText("heroRevenue", "—");
-    setText("heroProfit", "—");
-    $("heroPlanBar").style.width = "0%";
-    $("heroBreakMarker").style.left = "0%";
-    clearChart();
-    $("scenarioList").replaceChildren();
-  }
-
-  function decisionFor(values, result) {
-    if (values.plannedSales === 0) {
-      return {
-        type: "neutral",
-        badge: "Bod zvratu spočítán",
-        headline: "Doplňte plánovaný prodej",
-        text: `Pro pokrytí nákladů potřebujete alespoň ${unitText(result.breakEvenUnits, values.unitLabel)}. Bez plánu prodeje nelze vyhodnotit rezervu.`,
-        next: "Další krok: zadejte realistický plán prodeje a porovnejte ho s hranicí zisku."
-      };
+    let valid = true;
+    const priceMessage = !Number.isFinite(data.price) || data.price <= 0 ? 'Zadejte cenu větší než 0.' : '';
+    setError(fields.price, priceMessage); if (priceMessage) valid = false;
+    const variableMessage = !Number.isFinite(data.variable) || data.variable < 0 ? 'Náklad nesmí být záporný.' : Number.isFinite(data.price) && data.variable >= data.price ? 'Variabilní náklad musí být nižší než prodejní cena.' : '';
+    setError(fields.variable, variableMessage); if (variableMessage) valid = false;
+    const fixedMessage = !Number.isFinite(data.fixed) || data.fixed < 0 ? 'Fixní náklady nesmí být záporné.' : '';
+    setError(fields.fixed, fixedMessage); if (fixedMessage) valid = false;
+    if (state.mode === 'advanced') {
+      const planMessage = !Number.isFinite(data.plan) || data.plan < 0 ? 'Plánovaný prodej nesmí být záporný.' : '';
+      setError(fields.plan, planMessage); if (planMessage) valid = false;
+      const targetMessage = !Number.isFinite(data.target) || data.target < 0 ? 'Cílový zisk nesmí být záporný.' : '';
+      setError(fields.target, targetMessage); if (targetMessage) valid = false;
+      const capacityMessage = !Number.isFinite(data.capacity) || data.capacity <= 0 ? 'Kapacita musí být větší než 0.' : '';
+      setError(fields.capacity, capacityMessage); if (capacityMessage) valid = false;
+    } else {
+      setError(fields.plan, ''); setError(fields.target, ''); setError(fields.capacity, '');
     }
-    if (values.plannedSales < result.breakEvenUnits) {
-      return {
-        type: "danger",
-        badge: "Plán je ve ztrátě",
-        headline: `Chybí ${unitText(Math.abs(result.safetyUnits), values.unitLabel)} do bodu zvratu`,
-        text: `Při plánu ${unitText(values.plannedSales, values.unitLabel)} vychází ztráta ${formatMoney(Math.abs(result.plannedProfit))}.`,
-        next: "Další krok: zvyšte cenu či objem prodeje, nebo snižte náklady."
-      };
-    }
-    if (result.safetyRate < 10) {
-      return {
-        type: "warning",
-        badge: "Velmi těsná rezerva",
-        headline: "Plán je jen těsně nad bodem zvratu",
-        text: `Rezerva je ${unitText(result.safetyUnits, values.unitLabel)}, tedy ${formatPercent(result.safetyRate)} plánovaného prodeje.`,
-        next: "Další krok: ověřte slabší scénář ceny a vyšších nákladů."
-      };
-    }
-    if (result.safetyRate < 25) {
-      return {
-        type: "warning",
-        badge: "Střední rezerva",
-        headline: "Plán je v zisku, ale má omezený polštář",
-        text: `Rezerva činí ${unitText(result.safetyUnits, values.unitLabel)} neboli ${formatPercent(result.safetyRate)} plánovaného prodeje.`,
-        next: "Další krok: pracujte i s konzervativní variantou prodeje."
-      };
-    }
-    return {
-      type: "healthy",
-      badge: "Zdravá rezerva",
-      headline: "Plán je bezpečně nad bodem zvratu",
-      text: `Rezerva činí ${unitText(result.safetyUnits, values.unitLabel)} neboli ${formatPercent(result.safetyRate)} plánovaného prodeje.`,
-      next: "Další krok: nastavte si cílový zisk a ověřte potřebný prodej."
-    };
+    return { ...data, valid };
   }
 
-  function renderDecision(values, result) {
-    const decision = decisionFor(values, result);
-    setText("resultBadge", decision.badge);
-    $("resultBadge").className = `break-even-status${decision.type === "danger" ? " is-danger" : decision.type === "warning" ? " is-warning" : ""}`;
-    setText("decisionKicker", "Vyhodnocení plánu");
-    setText("decisionHeadline", decision.headline);
-    setText("decisionText", decision.text);
-    setText("nextStepText", decision.next);
-    $("decisionHeadline").parentElement.className = `break-even-decision${decision.type === "danger" ? " is-danger" : decision.type === "warning" ? " is-warning" : ""}`;
-    return decision;
+  function renderInvalid() {
+    $('resultBadge').textContent = 'Opravte vstupy';
+    $('breakEvenUnitsResult').textContent = '—';
+    $('heroBreakEvenUnits').textContent = '—';
+    ['breakEvenRevenueResult','unitContributionResult','fixedCostsResult','exactBreakEvenResult'].forEach(id => $(id).textContent = '—');
+    $('decisionCard').className = 'decision-card is-danger';
+    $('decisionLabel').textContent = 'Výpočet nelze dokončit';
+    $('decisionTitle').textContent = 'Cena musí být vyšší než variabilní náklad';
+    $('decisionText').textContent = 'Jinak každá další prodaná jednotka ztrátu zvětšuje a konečný bod zvratu neexistuje.';
   }
 
-  function renderHero(values, result, decision) {
-    setText("heroBreakEvenUnits", unitText(result.breakEvenUnits, values.unitLabel));
-    setText("heroVerdict", decision.badge);
-    setText("heroContribution", formatMoney(result.unitContribution));
-    setText("heroRevenue", formatMoney(result.breakEvenRevenue));
-    setText("heroProfit", formatMoney(result.plannedProfit));
-    setText("heroPlanLabel", `Plán ${formatNumber(values.plannedSales)}`);
-    const max = Math.max(values.plannedSales, result.breakEvenUnits, 1);
-    $("heroPlanBar").style.width = `${Math.min(100, values.plannedSales / max * 100)}%`;
-    $("heroBreakMarker").style.left = `${Math.min(100, result.breakEvenUnits / max * 100)}%`;
+  function scenarioUnits(fixed, price, variable) {
+    const contribution = price - variable;
+    return contribution > 0 ? roundUnits(fixed / contribution) : Infinity;
   }
 
-  function clearChart() {
-    $("totalCostPath").setAttribute("d", "");
-    $("revenuePath").setAttribute("d", "");
-    $("breakEvenLine").setAttribute("x1", "44");
-    $("breakEvenLine").setAttribute("x2", "44");
-    $("breakEvenPoint").setAttribute("cx", "44");
-    $("breakEvenPoint").setAttribute("cy", "224");
-    $("planPoint").setAttribute("cx", "44");
-    $("planPoint").setAttribute("cy", "224");
-    setText("chartMaxLabel", "—");
-    setText("chartBreakLabel", "bod zvratu");
-    setText("chartSummary", "Graf se zobrazí po opravě hodnot.");
-  }
+  function calculate() {
+    const data = validate();
+    if (!data.valid) { renderInvalid(); return; }
+    const contribution = data.price - data.variable;
+    const contributionRate = contribution / data.price * 100;
+    const exactBreakEven = data.fixed / contribution;
+    const breakEvenUnits = roundUnits(exactBreakEven);
+    const breakEvenRevenue = exactBreakEven * data.price;
+    const unit = unitLabel();
+    const period = periodText();
 
-  function renderChart(values, result) {
-    const maxUnits = Math.max(10, Math.ceil(Math.max(values.plannedSales, result.breakEvenUnits, result.targetUnits || 0) * 1.2));
-    const maxMoney = Math.max(
-      values.sellingPrice * maxUnits,
-      values.fixedCosts + values.variableCost * maxUnits,
-      1
-    ) * 1.08;
-    const left = 44, right = 620, top = 30, bottom = 224;
-    const x = units => left + units / maxUnits * (right - left);
-    const y = amount => bottom - amount / maxMoney * (bottom - top);
-    $("revenuePath").setAttribute("d", `M ${x(0)} ${y(0)} L ${x(maxUnits)} ${y(values.sellingPrice * maxUnits)}`);
-    $("totalCostPath").setAttribute("d", `M ${x(0)} ${y(values.fixedCosts)} L ${x(maxUnits)} ${y(values.fixedCosts + values.variableCost * maxUnits)}`);
-    const breakX = x(Math.min(result.breakEvenExact, maxUnits));
-    const breakY = y(result.breakEvenExact * values.sellingPrice);
-    $("breakEvenLine").setAttribute("x1", breakX);
-    $("breakEvenLine").setAttribute("x2", breakX);
-    $("breakEvenPoint").setAttribute("cx", breakX);
-    $("breakEvenPoint").setAttribute("cy", breakY);
-    const planX = x(Math.min(values.plannedSales, maxUnits));
-    const planY = y(Math.min(values.plannedSales, maxUnits) * values.sellingPrice);
-    $("planPoint").setAttribute("cx", planX);
-    $("planPoint").setAttribute("cy", planY);
-    $("planPoint").style.display = values.plannedSales > 0 ? "block" : "none";
-    setText("chartMaxLabel", unitText(maxUnits, values.unitLabel));
-    $("chartBreakLabel").setAttribute("x", breakX);
-    setText("chartBreakLabel", `bod zvratu ${formatNumber(result.breakEvenUnits)}`);
-    setText("chartSummary", `Křivky se protínají přibližně při ${unitText(result.breakEvenUnits, values.unitLabel)}.`);
-    setText("chartDesc", `Tržby a celkové náklady se protínají v bodu zvratu ${unitText(result.breakEvenUnits, values.unitLabel)}. Plánovaný prodej je ${unitText(values.plannedSales, values.unitLabel)}.`);
-  }
+    $('resultBadge').textContent = 'Spočítáno';
+    $('resultTitle').textContent = 'Hranice nuly';
+    $('breakEvenUnitsResult').textContent = `${format(breakEvenUnits)} ${unit}`;
+    $('answerPeriod').textContent = period;
+    $('breakEvenRevenueResult').textContent = money(breakEvenRevenue);
+    $('unitContributionResult').textContent = money(contribution, 2);
+    $('contributionRateResult').textContent = `${format(contributionRate, 1)} % z ceny`;
+    $('fixedCostsResult').textContent = money(data.fixed);
+    $('exactBreakEvenResult').textContent = `${format(exactBreakEven, 2, 2)} ${unit}`;
+    $('inlineContribution').textContent = money(contribution, 2);
+    $('inlineContributionNote').textContent = `Z každé ${singularUnit()} jde ${format(contributionRate, 1)} % ceny na režii a zisk.`;
 
-  function renderScenarios(values, result) {
+    $('heroBreakEvenUnits').textContent = `${format(breakEvenUnits)} ${unit}`;
+    $('heroPeriod').textContent = period;
+    $('heroRevenue').textContent = money(breakEvenRevenue);
+    $('heroContribution').textContent = money(contribution, 2);
+    $('heroMargin').textContent = `${format(contributionRate, 1)} %`;
+    $('heroMarginBar').style.width = `${Math.max(0, Math.min(100, contributionRate))}%`;
+    $('heroAnswerNote').textContent = `Každá další ${singularUnit()} nad hranicí přidává přibližně ${money(contribution, 2)} k výsledku.`;
+
+    $('decisionCard').className = 'decision-card';
+    $('decisionLabel').textContent = 'Co výsledek znamená';
+    $('decisionTitle').textContent = `${format(breakEvenUnits)}. prodej pokryje všechny náklady`;
+    $('decisionText').textContent = `V bodu zvratu je zisk přesně nula. Pro bezpečný plán potřebujete prodej nad ${format(breakEvenUnits)} ${unit} a prostor pro slevy, vratky nebo slabší období.`;
+
+    const priceDown = scenarioUnits(data.fixed, data.price * .95, data.variable);
+    const costUp = scenarioUnits(data.fixed, data.price, data.variable * 1.10);
+    const fixedUp = scenarioUnits(data.fixed * 1.15, data.price, data.variable);
+    const priceUp = scenarioUnits(data.fixed, data.price * 1.05, data.variable);
     const scenarios = [
-      ["Cena +10 %", { ...values, sellingPrice: values.sellingPrice * 1.1 }],
-      ["Cena −10 %", { ...values, sellingPrice: values.sellingPrice * .9 }],
-      ["Variabilní náklad +10 %", { ...values, variableCost: values.variableCost * 1.1 }],
-      ["Fixní náklady +20 %", { ...values, fixedCosts: values.fixedCosts * 1.2 }]
+      ['scenarioPriceDown','scenarioPriceDownDelta',priceDown],
+      ['scenarioCostUp','scenarioCostUpDelta',costUp],
+      ['scenarioFixedUp','scenarioFixedUpDelta',fixedUp],
+      ['scenarioPriceUp','scenarioPriceUpDelta',priceUp]
     ];
-    const fragment = document.createDocumentFragment();
-    scenarios.forEach(([label, scenario]) => {
-      const card = document.createElement("div");
-      card.className = "break-even-scenario-card";
-      const contribution = scenario.sellingPrice - scenario.variableCost;
-      if (contribution <= 0) {
-        card.innerHTML = `<span>${label}</span><strong>Nevychází</strong><small>Cena nepokrývá variabilní náklad.</small>`;
+    scenarios.forEach(([valueId, deltaId, value]) => {
+      $(valueId).textContent = Number.isFinite(value) ? `${format(value)} ${unit}` : 'Bod zvratu nevznikne';
+      $(deltaId).textContent = Number.isFinite(value) ? deltaText(value - breakEvenUnits) : 'záporný příspěvek';
+    });
+
+    if (state.mode === 'advanced') {
+      const plannedProfit = data.plan * contribution - data.fixed;
+      const safetyUnits = data.plan - exactBreakEven;
+      const safetyPercent = data.plan > 0 ? safetyUnits / data.plan * 100 : 0;
+      const targetExact = (data.fixed + data.target) / contribution;
+      const targetUnits = roundUnits(targetExact);
+      const targetRevenue = targetUnits * data.price;
+      const capacityUse = data.capacity > 0 ? targetUnits / data.capacity * 100 : 0;
+
+      $('plannedProfitResult').textContent = money(plannedProfit);
+      $('plannedProfitNote').textContent = `Při prodeji ${format(data.plan)} ${unit}.`;
+      $('safetyMarginResult').textContent = `${format(safetyPercent, 1)} %`;
+      $('safetyMarginNote').textContent = `${safetyUnits >= 0 ? 'Plán je o' : 'Do bodu zvratu chybí'} ${format(Math.abs(safetyUnits), 1)} ${unit}.`;
+      $('targetUnitsResult').textContent = `${format(targetUnits)} ${unit}`;
+      $('targetRevenueResult').textContent = `Obrat ${money(targetRevenue)}.`;
+      $('capacityUseResult').textContent = `${format(capacityUse, 1)} %`;
+      $('capacityUseNote').textContent = targetUnits <= data.capacity ? 'Cíl se do zadané kapacity vejde.' : `Cíl překračuje kapacitu o ${format(targetUnits - data.capacity)} ${unit}.`;
+      $('plannedUnit').textContent = unit;
+      $('capacityUnit').textContent = unit;
+
+      if (data.plan < exactBreakEven) {
+        $('decisionCard').className = 'decision-card is-danger';
+        $('decisionLabel').textContent = 'Plán je pod hranicí';
+        $('decisionTitle').textContent = `Chybí přibližně ${format(exactBreakEven - data.plan, 1)} ${unit}`;
+        $('decisionText').textContent = `Při zadaném plánu vzniká výsledek ${money(plannedProfit)}. Nejdřív ověřte cenu, přímé náklady a realistický objem prodeje.`;
+      } else if (safetyPercent < 10) {
+        $('decisionCard').className = 'decision-card';
+        $('decisionLabel').textContent = 'Těsně nad bodem zvratu';
+        $('decisionTitle').textContent = `Rezerva je pouze ${format(safetyPercent, 1)} %`;
+        $('decisionText').textContent = 'Malý pokles prodeje nebo růst nákladů může plán vrátit do ztráty. Stress test níže ukazuje citlivost.';
       } else {
-        const units = Math.ceil(scenario.fixedCosts / contribution);
-        const difference = units - result.breakEvenUnits;
-        const change = difference === 0 ? "beze změny" : `${difference > 0 ? "+" : "−"}${formatNumber(Math.abs(difference))} ${values.unitLabel}`;
-        card.innerHTML = `<span>${label}</span><strong>${unitText(units, values.unitLabel)}</strong><small>${change} proti základnímu výpočtu</small>`;
+        $('decisionCard').className = 'decision-card is-good';
+        $('decisionLabel').textContent = 'Plán je nad hranicí';
+        $('decisionTitle').textContent = `Bezpečnostní rezerva ${format(safetyPercent, 1)} %`;
+        $('decisionText').textContent = 'Plán má odstup od bodu zvratu. Ověřte ještě, zda je prodej dosažitelný a zda se cílový zisk vejde do kapacity.';
       }
-      fragment.appendChild(card);
+
+      const scale = Math.max(data.capacity, data.plan, targetUnits, breakEvenUnits, 1);
+      $('breakMarker').style.left = `${Math.min(100, exactBreakEven / scale * 100)}%`;
+      $('planBar').style.width = `${Math.min(100, data.plan / scale * 100)}%`;
+      $('targetMarker').style.left = `${Math.min(100, targetUnits / scale * 100)}%`;
+      $('trackBreakLabel').textContent = `Bod zvratu ${format(breakEvenUnits)}`;
+      $('trackPlanLabel').textContent = `Plán ${format(data.plan)}`;
+      $('trackCapacityLabel').textContent = `Kapacita ${format(data.capacity)}`;
+    }
+  }
+
+  function setMode(mode) {
+    state.mode = mode;
+    document.querySelectorAll('[data-mode]').forEach(button => {
+      const active = button.dataset.mode === mode;
+      button.classList.toggle('is-active', active);
+      button.setAttribute('aria-pressed', String(active));
     });
-    $("scenarioList").replaceChildren(fragment);
+    $('advancedPanel').hidden = mode !== 'advanced';
+    $('advancedResults').hidden = mode !== 'advanced';
+    calculate();
+    if (mode === 'advanced') setTimeout(() => fields.plan.focus({ preventScroll: true }), 0);
   }
 
-  function render(options = {}) {
-    const values = readValues();
-    const message = validate(values);
-    if (message) {
-      setInvalidState(message);
-      return false;
-    }
-    $("breakEvenError").hidden = true;
-    const result = calculate(values);
-    setText("breakEvenUnitsResult", unitText(result.breakEvenUnits, values.unitLabel));
-    setText("answerPeriod", `za ${values.periodLabel}`);
-    setText("breakEvenRevenueResult", formatMoney(result.breakEvenRevenue));
-    setText("unitContributionResult", formatMoney(result.unitContribution));
-    setText("plannedProfitResult", formatMoney(result.plannedProfit));
-    setText("safetyMarginResult", values.plannedSales > 0
-      ? `${formatPercent(result.safetyRate)} (${result.safetyUnits >= 0 ? "+" : "−"}${unitText(Math.abs(result.safetyUnits), values.unitLabel)})`
-      : "Bez plánu");
-    setText("fixedCostsResult", formatMoney(values.fixedCosts));
-    setText("variableCostResult", formatMoney(values.variableCost));
-    setText("contributionRateResult", formatPercent(result.contributionRate));
-    setText("plannedSalesResult", unitText(values.plannedSales, values.unitLabel));
-    setText("plannedSalesUnit", values.unitLabel);
-    const decision = renderDecision(values, result);
-    const targetBox = $("targetProfitResultBox");
-    targetBox.hidden = values.targetProfit <= 0;
-    if (values.targetProfit > 0) {
-      setText("targetProfitLabel", formatMoney(values.targetProfit));
-      setText("targetUnitsResult", unitText(result.targetUnits, values.unitLabel));
-      setText("targetRevenueResult", `Obrat alespoň ${formatMoney(result.targetRevenue)} za ${values.periodLabel}`);
-    }
-    renderHero(values, result, decision);
-    renderChart(values, result);
-    renderScenarios(values, result);
-    if (options.scroll && window.matchMedia("(max-width: 720px)").matches) {
-      $("vysledek").scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-    return true;
-  }
-
-  function applyPreset(name) {
-    const preset = presets[name];
+  function applyPreset(key) {
+    const preset = presets[key];
     if (!preset) return;
-    Object.entries(preset).forEach(([key, value]) => { fields[key].value = value; });
-    document.querySelectorAll("[data-break-preset]").forEach(button => {
-      button.classList.toggle("is-active", button.dataset.breakPreset === name);
-    });
-    render();
+    fields.price.value = format(preset.price);
+    fields.variable.value = format(preset.variable);
+    fields.fixed.value = format(preset.fixed);
+    fields.plan.value = format(preset.plan);
+    fields.target.value = format(preset.target);
+    fields.capacity.value = format(preset.capacity);
+    fields.unit.value = preset.unit;
+    fields.period.value = preset.period;
+    calculate();
   }
 
-  form.addEventListener("submit", event => {
-    event.preventDefault();
-    render({ scroll: true });
-  });
-  Object.values(fields).forEach(field => {
-    field.addEventListener("input", () => render());
-    field.addEventListener("change", () => render());
-  });
-  document.querySelectorAll("[data-break-preset]").forEach(button => {
-    button.addEventListener("click", () => applyPreset(button.dataset.breakPreset));
-  });
-  $("resetBtn").addEventListener("click", () => applyPreset("product"));
-  applyPreset("product");
+  function reset() { applyPreset('product'); setMode('basic'); }
+
+  async function copyResult() {
+    const text = `Bod zvratu: ${$('breakEvenUnitsResult').textContent}; potřebný obrat: ${$('breakEvenRevenueResult').textContent}; příspěvek na úhradu: ${$('unitContributionResult').textContent}.`;
+    try {
+      await navigator.clipboard.writeText(text);
+      $('copyResult').textContent = 'Zkopírováno';
+      setTimeout(() => { $('copyResult').textContent = 'Kopírovat stručný výsledek'; }, 1400);
+    } catch {
+      $('copyResult').textContent = 'Kopírování selhalo';
+    }
+  }
+
+  document.querySelectorAll('[data-mode]').forEach(button => button.addEventListener('click', () => setMode(button.dataset.mode)));
+  document.querySelectorAll('[data-preset]').forEach(button => button.addEventListener('click', () => applyPreset(button.dataset.preset)));
+  Object.values(fields).forEach(field => field.addEventListener(field.tagName === 'SELECT' ? 'change' : 'input', calculate));
+  form.addEventListener('submit', event => { event.preventDefault(); calculate(); });
+  $('resetButton').addEventListener('click', reset);
+  $('copyResult').addEventListener('click', copyResult);
+  const back = $('backToTop');
+  window.addEventListener('scroll', () => back.classList.toggle('is-visible', window.scrollY > 650), { passive: true });
+  back.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  calculate();
 })();
