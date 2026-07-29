@@ -1,148 +1,59 @@
 (() => {
-  "use strict";
-
-  const form = document.querySelector("#loanForm");
+  'use strict';
+  const $ = id => document.getElementById(id);
+  const form = $('loanForm');
   if (!form) return;
-
-  const byId = id => document.getElementById(id);
   const fields = {
-    amount: byId("loanAmount"), rate: byId("interestRate"), years: byId("loanYears"),
-    monthlyFee: byId("monthlyFee"), upfrontFee: byId("upfrontFee"),
-    extra: byId("extraPayment"), income: byId("monthlyIncome")
+    amount: $('loanAmount'), rate: $('interestRate'), years: $('loanYears'), upfront: $('upfrontFee'),
+    monthlyFee: $('monthlyFee'), insurance: $('insuranceFee'), extra: $('extraPayment'),
+    income: $('monthlyIncome'), other: $('otherPayments')
   };
-  const errorBox = byId("loanError");
-  const currency = new Intl.NumberFormat("cs-CZ", { style: "currency", currency: "CZK", maximumFractionDigits: 0 });
-  const number = new Intl.NumberFormat("cs-CZ", { maximumFractionDigits: 2 });
-
-  const value = input => Number(String(input.value).replace(",", "."));
-  const money = value => currency.format(Math.round(value));
-  const percent = value => `${number.format(value)} %`;
-
-  function annuity(principal, annualRate, months) {
-    const monthlyRate = annualRate / 1200;
-    if (monthlyRate === 0) return principal / months;
-    return principal * monthlyRate / (1 - Math.pow(1 + monthlyRate, -months));
+  const state = { mode: 'basic', last: null };
+  const moneyFmt = new Intl.NumberFormat('cs-CZ',{style:'currency',currency:'CZK',maximumFractionDigits:0});
+  const numFmt = new Intl.NumberFormat('cs-CZ',{maximumFractionDigits:2});
+  const parse = value => { const n=Number(String(value??'').trim().replace(/\s+/g,'').replace(',','.').replace(/[^0-9.+-]/g,'')); return Number.isFinite(n)?n:NaN; };
+  const money = n => moneyFmt.format(Math.round(Number.isFinite(n)?n:0));
+  const pct = n => `${numFmt.format(Number.isFinite(n)?n:0)} %`;
+  const setError = (input,message) => { const field=input.closest('.field'); if(field) field.classList.toggle('has-error',Boolean(message)); const e=$(input.id+'Error'); if(e) e.textContent=message||''; };
+  function annuity(principal,annualRate,months){ const r=annualRate/1200; if(months<=0)return NaN; if(Math.abs(r)<1e-12)return principal/months; return principal*r/(1-Math.pow(1+r,-months)); }
+  function modelApr(principal,upfront,monthlyPayment,months){ const net=principal-upfront; if(net<=0||monthlyPayment<=0||months<=0)return NaN; const pv=r=>Math.abs(r)<1e-12?monthlyPayment*months:monthlyPayment*(1-Math.pow(1+r,-months))/r; if(pv(0)<net)return 0; let lo=0,hi=1; for(let i=0;i<120;i++){const mid=(lo+hi)/2;if(pv(mid)>net)lo=mid;else hi=mid;} return (Math.pow(1+(lo+hi)/2,12)-1)*100; }
+  function simulate(principal,annualRate,scheduled,monthlyCosts,extra,maxMonths=1200){ const r=annualRate/1200; let balance=principal,interestTotal=0,paid=0,month=0,firstInterest=0,firstPrincipal=0; while(balance>0.005&&month<maxMonths){ month++; const interest=balance*r; const plannedPrincipal=Math.max(0,scheduled-interest); const principalPart=Math.min(balance,plannedPrincipal+extra); if(month===1){firstInterest=interest;firstPrincipal=Math.min(balance,plannedPrincipal);} const corePayment=interest+principalPart; balance=Math.max(0,balance-principalPart); interestTotal+=interest; paid+=corePayment+monthlyCosts; if(principalPart<=0&&balance>0)break; } return {months:month,interestTotal,paid,finished:balance<=0.005,firstInterest,firstPrincipal}; }
+  function validate(){ const d=Object.fromEntries(Object.entries(fields).map(([k,v])=>[k,parse(v.value)])); let ok=true;
+    const rules={amount:[1000,100000000,'Výše půjčky musí být od 1 000 do 100 000 000 Kč.'],rate:[0,100,'Úroková sazba musí být od 0 do 100 %.'],years:[1,40,'Doba musí být celé číslo od 1 do 40 let.'],upfront:[0,100000000,'Poplatek nesmí být záporný.'],monthlyFee:[0,100000,'Měsíční poplatek musí být od 0 do 100 000 Kč.'],insurance:[0,100000,'Pojištění musí být od 0 do 100 000 Kč.'],extra:[0,10000000,'Platba navíc nesmí být záporná.'],income:[0,100000000,'Příjem nesmí být záporný.'],other:[0,10000000,'Ostatní splátky nesmějí být záporné.']};
+    Object.entries(rules).forEach(([key,[min,max,msg]])=>{let invalid=!Number.isFinite(d[key])||d[key]<min||d[key]>max;if(key==='years'&&Number.isFinite(d[key])&&!Number.isInteger(d[key]))invalid=true;setError(fields[key],invalid?msg:'');if(invalid)ok=false;});
+    if(Number.isFinite(d.upfront)&&Number.isFinite(d.amount)&&d.upfront>=d.amount){setError(fields.upfront,'Jednorázový poplatek musí být nižší než čerpaná částka.');ok=false;}
+    return {ok,...d};
   }
-
-  function modelApr(principal, upfrontFee, monthlyPayment, months) {
-    const net = principal - upfrontFee;
-    if (net <= 0 || monthlyPayment <= 0) return NaN;
-    const pv = rate => {
-      if (Math.abs(rate) < 1e-12) return monthlyPayment * months;
-      return monthlyPayment * (1 - Math.pow(1 + rate, -months)) / rate;
-    };
-    let low = 0, high = 1;
-    if (pv(0) < net) return 0;
-    for (let i = 0; i < 100; i += 1) {
-      const mid = (low + high) / 2;
-      if (pv(mid) > net) low = mid; else high = mid;
-    }
-    return (Math.pow(1 + (low + high) / 2, 12) - 1) * 100;
+  function addMonths(date,months){const d=new Date(date.getFullYear(),date.getMonth()+months,1);return new Intl.DateTimeFormat('cs-CZ',{month:'long',year:'numeric'}).format(d);}
+  function createScenario(title,label,principal,rate,years,monthlyCosts,extra,upfront=0,current=false,note=''){const months=Math.max(12,Math.round(years*12));const a=annuity(principal,rate,months);const sim=simulate(principal,rate,a,monthlyCosts,extra,1200);const card=document.createElement('article');card.className='scenario-card'+(current?' is-current':'');const badge=document.createElement('span');badge.textContent=label;const h=document.createElement('h3');h.textContent=title;const strong=document.createElement('strong');strong.textContent=money(a+monthlyCosts+extra);const scenarioTotal=sim.paid+upfront;const dl=document.createElement('dl');[['Doba',`${sim.months} měsíců`],['Celkem',money(scenarioTotal)],['Úroky',money(sim.interestTotal)]].forEach(([k,v])=>{const row=document.createElement('div'),dt=document.createElement('dt'),dd=document.createElement('dd');dt.textContent=k;dd.textContent=v;row.append(dt,dd);dl.append(row);});const p=document.createElement('p');p.textContent=note;card.append(badge,h,strong,dl,p);return card;}
+  function renderScenarios(d,baseAnnuity,monthlyCosts){const grid=$('scenarioGrid');grid.replaceChildren();const shorter=Math.max(1,d.years-2),longer=Math.min(40,d.years+2);grid.append(
+    createScenario('Kratší splatnost','Méně úroků',d.amount,d.rate,shorter,monthlyCosts,0,d.upfront,false,'Vyšší povinná splátka, rychlejší pokles jistiny.'),
+    createScenario('Zadaná varianta','Aktuální',d.amount,d.rate,d.years,monthlyCosts,0,d.upfront,true,'Výchozí scénář podle zadané sazby a doby.'),
+    createScenario('Delší splatnost','Více prostoru',d.amount,d.rate,longer,monthlyCosts,0,d.upfront,false,'Nižší splátka, ale delší závazek a více úroků.'),
+    d.extra>0?createScenario('Pravidelně navíc','Rychleji',d.amount,d.rate,d.years,monthlyCosts,d.extra,d.upfront,false,'Zadaná platba navíc se každý měsíc používá na jistinu.'):createScenario('Sazba +2 p. b.','Stress test',d.amount,Math.min(100,d.rate+2),d.years,monthlyCosts,0,d.upfront,false,'Ukazuje citlivost rozpočtu na dražší sazbu.')
+  );}
+  function render(){const d=validate();if(!d.ok){['monthlyResult','totalResult','overpaymentResult','aprResult','endDateResult'].forEach(id=>$(id).textContent='—');$('answerSentence').textContent='Opravte označené vstupy.';return;}
+    const months=d.years*12,monthlyCosts=d.monthlyFee+d.insurance,base=annuity(d.amount,d.rate,months),monthlyOutflow=base+monthlyCosts;
+    const standard=simulate(d.amount,d.rate,base,monthlyCosts,0,months+5);const total=standard.paid+d.upfront,totalCosts=total-d.amount,fees=d.upfront+monthlyCosts*standard.months,apr=modelApr(d.amount,d.upfront,monthlyOutflow,months);
+    const accelerated=simulate(d.amount,d.rate,base,monthlyCosts,d.extra,1200),acceleratedTotal=accelerated.paid+d.upfront,savings=Math.max(0,total-acceleratedTotal),monthsSaved=Math.max(0,months-accelerated.months);
+    const loanRatio=d.income>0?monthlyOutflow/d.income*100:NaN,totalRatio=d.income>0?(monthlyOutflow+d.other)/d.income*100:NaN;
+    $('monthlyResult').textContent=money(monthlyOutflow);$('totalResult').textContent=money(total);$('overpaymentResult').textContent=money(totalCosts);$('aprResult').textContent=Number.isFinite(apr)?pct(apr):'—';$('endDateResult').textContent=addMonths(new Date(),months);$('termDetail').textContent=`${months} pravidelných splátek`;
+    $('answerSentence').textContent=`Při ${pct(d.rate)} ročně a splatnosti ${d.years} let zaplatíte celkem přibližně ${money(total)}.`;
+    $('firstInterest').textContent=money(standard.firstInterest);$('firstPrincipal').textContent=money(standard.firstPrincipal);
+    const principalShare=Math.max(0,Math.min(100,d.amount/total*100)),interest=Math.max(0,standard.interestTotal),interestShare=Math.max(0,Math.min(100,interest/total*100)),feesShare=Math.max(0,100-principalShare-interestShare);
+    $('principalFill').style.width=`${principalShare}%`;$('interestFill').style.width=`${interestShare}%`;$('feesFill').style.width=`${feesShare}%`;$('principalLegend').textContent=money(d.amount);$('interestLegend').textContent=money(interest);$('feesLegend').textContent=money(fees);$('costShare').textContent=`${pct(totalCosts/total*100)} tvoří náklady`;
+    $('heroMonthly').textContent=money(monthlyOutflow);$('heroTotal').textContent=money(total);$('heroCost').textContent=money(totalCosts);$('heroApr').textContent=Number.isFinite(apr)?pct(apr):'—';$('heroStatus').textContent=`${money(d.amount)} · ${d.years} ${d.years===1?'rok':d.years<5?'roky':'let'}`;$('heroNote').textContent=d.extra>0?`Platba navíc ${money(d.extra)} měsíčně může modelově ušetřit ${money(savings)}.`:'Nižší splátka může znamenat delší závazek a vyšší celkovou cenu.';$('heroPrincipalBar').style.width=`${principalShare}%`;$('heroCostBar').style.width=`${100-principalShare}%`;
+    const card=$('decisionCard');card.className='decision-card';let badge='Kontrola ceny',title='Splátka je únosná jen tehdy, když zůstane rezerva',text='Nezadali jste příjem. Porovnejte splátku s částkou, která vám po všech nezbytných výdajích běžně zbývá.';
+    if(Number.isFinite(totalRatio)){if(totalRatio<=25){card.classList.add('is-safe');badge='Nižší zatížení';title='Zadané splátky mají vůči příjmu větší prostor';text=`Nová splátka tvoří ${pct(loanRatio)} a všechny zadané splátky ${pct(totalRatio)} čistého příjmu. Stále ověřte nezbytné výdaje a rezervu.`;}else if(totalRatio<=40){badge='Napjatější rozpočet';title='Splátky už vyžadují pečlivý měsíční plán';text=`Všechny zadané splátky tvoří ${pct(totalRatio)} čistého příjmu. Jde o orientační signál, nikoli univerzální bezpečnou hranici.`;}else{card.classList.add('is-risk');badge='Vysoké zatížení';title='Součet splátek výrazně zatěžuje zadaný příjem';text=`Zadané splátky tvoří ${pct(totalRatio)} čistého příjmu. Prověřte nižší částku, alternativu bez dluhu a skutečné volné cashflow.`;}}
+    $('interpretationBadge').textContent=badge;$('interpretationTitle').textContent=title;$('interpretationText').textContent=text;
+    $('ratioResult').textContent=Number.isFinite(loanRatio)?pct(loanRatio):'Nezadáno';$('budgetFill').style.width=`${Number.isFinite(totalRatio)?Math.min(100,totalRatio*2):0}%`;$('budgetText').textContent=Number.isFinite(totalRatio)?`Všechny zadané splátky tvoří ${pct(totalRatio)} čistého příjmu. Pásmo je pouze plánovací vizualizace.`:'V pokročilém režimu zadejte čistý příjem a ostatní splátky.';
+    $('extraSummary').hidden=!(d.extra>0);if(d.extra>0){$('extraTitle').textContent=`Modelově o ${monthsSaved} měsíců dříve`;$('extraText').textContent=`Celkem byste zaplatili přibližně ${money(acceleratedTotal)} a proti základnímu scénáři ušetřili asi ${money(savings)}. Ověřte smluvní podmínky mimořádných splátek.`;}
+    $('resultBadge').textContent=state.mode==='advanced'?'Rozšířený model':'Základní model';renderScenarios(d,base,monthlyCosts);state.last={d,monthlyOutflow,total,totalCosts,apr};
   }
-
-  function simulate(principal, annualRate, scheduledAnnuity, monthlyFee, extraPayment, maxMonths = 1200) {
-    const monthlyRate = annualRate / 1200;
-    let balance = principal, interestTotal = 0, paidTotal = 0, month = 0;
-    const rows = [];
-    while (balance > 0.005 && month < maxMonths) {
-      month += 1;
-      const interest = balance * monthlyRate;
-      const principalPart = Math.min(balance, Math.max(0, scheduledAnnuity + extraPayment - interest));
-      const payment = principalPart + interest;
-      balance = Math.max(0, balance - principalPart);
-      interestTotal += interest;
-      paidTotal += payment + monthlyFee;
-      if (month <= 12 || month % 12 === 0 || balance === 0) rows.push({ month, payment: payment + monthlyFee, principalPart, interest, balance });
-      if (principalPart <= 0) break;
-    }
-    return { months: month, interestTotal, paidTotal, rows, finished: balance <= 0.005 };
-  }
-
-  function validate(data) {
-    const messages = [];
-    if (!Number.isFinite(data.amount) || data.amount < 1000 || data.amount > 100000000) messages.push("Výše půjčky musí být od 1 000 do 100 000 000 Kč.");
-    if (!Number.isFinite(data.rate) || data.rate < 0 || data.rate > 100) messages.push("Roční úrok musí být od 0 do 100 %.");
-    if (!Number.isInteger(data.years) || data.years < 1 || data.years > 40) messages.push("Doba splácení musí být celé číslo od 1 do 40 let.");
-    if (!Number.isFinite(data.monthlyFee) || data.monthlyFee < 0 || data.monthlyFee > 100000) messages.push("Měsíční poplatek musí být od 0 do 100 000 Kč.");
-    if (!Number.isFinite(data.upfrontFee) || data.upfrontFee < 0 || data.upfrontFee >= data.amount) messages.push("Počáteční poplatek musí být nezáporný a nižší než půjčená částka.");
-    if (!Number.isFinite(data.extra) || data.extra < 0 || data.extra > 10000000) messages.push("Pravidelná platba navíc musí být nezáporná.");
-    if (!Number.isFinite(data.income) || data.income < 0 || data.income > 100000000) messages.push("Čistý měsíční příjem musí být nezáporný.");
-    return messages;
-  }
-
-  function emptyResult(message) {
-    errorBox.hidden = false;
-    errorBox.textContent = message;
-    ["monthlyResult", "totalResult", "overpaymentResult", "aprResult", "interestResult", "feeResult", "incomeResult", "ratioResult"].forEach(id => { byId(id).textContent = "—"; });
-  }
-
-  function scenarioRow(principal, rate, years, monthlyFee, currentYears) {
-    const months = years * 12;
-    const payment = annuity(principal, rate, months) + monthlyFee;
-    const total = payment * months;
-    return `<tr class="${years === currentYears ? "is-current" : ""}"><td>${years} ${years === 1 ? "rok" : years < 5 ? "roky" : "let"}</td><td>${money(payment)}</td><td>${money(total)}</td><td>${money(total - principal)}</td></tr>`;
-  }
-
-  function render() {
-    const data = Object.fromEntries(Object.entries(fields).map(([key, input]) => [key, value(input)]));
-    const errors = validate(data);
-    if (errors.length) { emptyResult(errors[0]); return; }
-    errorBox.hidden = true;
-
-    const months = data.years * 12;
-    const baseAnnuity = annuity(data.amount, data.rate, months);
-    const monthlyOutflow = baseAnnuity + data.monthlyFee;
-    const interestTotal = baseAnnuity * months - data.amount;
-    const feesTotal = data.upfrontFee + data.monthlyFee * months;
-    const totalPaid = data.amount + interestTotal + feesTotal;
-    const overpayment = totalPaid - data.amount;
-    const apr = modelApr(data.amount, data.upfrontFee, monthlyOutflow, months);
-    const incomeRatio = data.income > 0 ? monthlyOutflow / data.income * 100 : NaN;
-    const recommendedIncome = monthlyOutflow / 0.3;
-    const accelerated = simulate(data.amount, data.rate, baseAnnuity, data.monthlyFee, data.extra);
-    const acceleratedTotal = accelerated.paidTotal + data.upfrontFee;
-    const savings = Math.max(0, totalPaid - acceleratedTotal);
-    const monthsSaved = Math.max(0, months - accelerated.months);
-
-    byId("monthlyResult").textContent = money(monthlyOutflow);
-    byId("totalResult").textContent = money(totalPaid);
-    byId("overpaymentResult").textContent = money(overpayment);
-    byId("aprResult").textContent = Number.isFinite(apr) ? percent(apr) : "—";
-    byId("interestResult").textContent = money(interestTotal);
-    byId("feeResult").textContent = money(feesTotal);
-    byId("incomeResult").textContent = money(recommendedIncome);
-    byId("ratioResult").textContent = Number.isFinite(incomeRatio) ? percent(incomeRatio) : "Nezadáno";
-    byId("answerSentence").textContent = `Při ${percent(data.rate)} ročně a splatnosti ${data.years} let zaplatíte celkem přibližně ${money(totalPaid)}.`;
-
-    const share = Math.min(100, Math.max(0, overpayment / totalPaid * 100));
-    byId("costFill").style.width = `${share}%`;
-    byId("costShare").textContent = `${percent(share)} z plateb tvoří úroky a zadané poplatky.`;
-
-    let badge = "Rozpočet";
-    let title = "Splátku porovnejte s volným cashflow";
-    let text = `Orientačně by splátka odpovídala ${Number.isFinite(incomeRatio) ? percent(incomeRatio) : "nezadanému podílu"} čistého příjmu. Počítejte i s ostatními závazky a rezervou.`;
-    if (Number.isFinite(incomeRatio) && incomeRatio <= 20) { badge = "Nižší zatížení"; title = "Splátka má vůči zadanému příjmu větší prostor"; }
-    if (Number.isFinite(incomeRatio) && incomeRatio > 35) { badge = "Vyšší zatížení"; title = "Splátka výrazně zatěžuje zadaný příjem"; text = `Podíl ${percent(incomeRatio)} je pouze orientační signál. Prověřte kratší částku půjčky, delší splatnost i celkové náklady a hlavně vlastní měsíční rezervu.`; }
-    byId("interpretationBadge").textContent = badge;
-    byId("interpretationTitle").textContent = title;
-    byId("interpretationText").textContent = text;
-    byId("extraSummary").hidden = data.extra <= 0;
-    if (data.extra > 0) byId("extraSummary").innerHTML = `<strong>Platba navíc ${money(data.extra)} měsíčně</strong><span>Modelové splacení za ${accelerated.months} měsíců, o ${monthsSaved} měsíců dříve. Úspora proti základnímu scénáři přibližně ${money(savings)}.</span>`;
-
-    const variants = [...new Set([Math.max(1, data.years - 2), data.years, Math.min(40, data.years + 2)])];
-    byId("loanScenarioBody").innerHTML = variants.map(years => scenarioRow(data.amount, data.rate, years, data.monthlyFee, data.years)).join("");
-    const baseSchedule = simulate(data.amount, data.rate, baseAnnuity, data.monthlyFee, 0, months + 2);
-    byId("scheduleRows").innerHTML = baseSchedule.rows.map(row => `<div><span>${row.month}. měsíc</span><b>${money(row.payment)}</b><small>jistina ${money(row.principalPart)} · úrok ${money(row.interest)} · zůstatek ${money(row.balance)}</small></div>`).join("");
-
-    byId("heroMonthly").textContent = money(monthlyOutflow);
-    byId("heroAmount").textContent = money(data.amount);
-    byId("heroPaid").textContent = money(totalPaid);
-    byId("heroOverpayment").textContent = money(overpayment);
-    byId("heroMeta").textContent = `${percent(data.rate)} · ${data.years} let`;
-  }
-
-  form.addEventListener("input", render);
-  form.addEventListener("submit", event => { event.preventDefault(); render(); byId("vysledek").scrollIntoView({ behavior: "smooth", block: "start" }); });
-  byId("resetLoan").addEventListener("click", () => { form.reset(); render(); });
-  render();
+  function setMode(mode){state.mode=mode;document.addEventListener('keydown',e=>{if(e.key==='Tab')document.body.classList.add('keyboard-user')},{once:true});document.addEventListener('pointerdown',()=>document.body.classList.remove('keyboard-user'));document.querySelectorAll('[data-mode]').forEach(b=>{const active=b.dataset.mode===mode;b.classList.toggle('is-active',active);b.setAttribute('aria-pressed',String(active));});$('advancedPanel').hidden=mode!=='advanced';$('basicAssumptions').hidden=mode==='advanced';$('modeDescription').textContent=mode==='advanced'?'Pokročilý režim přidává skutečné poplatky, pojištění, rozpočet a pravidelnou platbu navíc.':'Základní režim používá jen částku, úrokovou sazbu a dobu splácení.';render();if(mode==='advanced')setTimeout(()=>fields.upfront.focus({preventScroll:true}),0);}
+  const presets={small:{amount:'80 000',rate:'9,9',years:'3'},standard:{amount:'250 000',rate:'7,9',years:'5'},large:{amount:'600 000',rate:'6,9',years:'8'}};
+  function applyPreset(name){const p=presets[name];if(!p)return;fields.amount.value=p.amount;fields.rate.value=p.rate;fields.years.value=p.years;render();}
+  function reset(){form.reset();fields.amount.value='250 000';fields.rate.value='7,9';fields.years.value='5';['upfront','monthlyFee','insurance','extra','income','other'].forEach(k=>fields[k].value='0');setMode('basic');}
+  async function copyResult(){if(!state.last)return;const x=state.last;const text=`Půjčka ${money(x.d.amount)}: měsíční výdaj ${money(x.monthlyOutflow)}, celkem ${money(x.total)}, náklady ${money(x.totalCosts)}, modelová RPSN ${Number.isFinite(x.apr)?pct(x.apr):'—'}.`;try{await navigator.clipboard.writeText(text);$('copyResult').textContent='Zkopírováno';setTimeout(()=>$('copyResult').textContent='Kopírovat výsledek',1500);}catch{$('copyResult').textContent='Kopírování selhalo';}}
+  document.addEventListener('keydown',e=>{if(e.key==='Tab')document.body.classList.add('keyboard-user')},{once:true});document.addEventListener('pointerdown',()=>document.body.classList.remove('keyboard-user'));document.querySelectorAll('[data-mode]').forEach(b=>b.addEventListener('click',()=>setMode(b.dataset.mode)));document.querySelectorAll('[data-preset]').forEach(b=>b.addEventListener('click',()=>applyPreset(b.dataset.preset)));$('openAdvanced').addEventListener('click',()=>setMode('advanced'));Object.values(fields).forEach(el=>el.addEventListener('input',render));form.addEventListener('submit',e=>{e.preventDefault();render();$('vysledek').scrollIntoView({behavior:'smooth',block:'start'});});$('resetLoan').addEventListener('click',reset);$('copyResult').addEventListener('click',copyResult);const top=$('backToTop');window.addEventListener('scroll',()=>top.classList.toggle('is-visible',window.scrollY>650),{passive:true});top.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));render();
 })();
