@@ -1,283 +1,98 @@
-(function () {
-  const form = document.getElementById("vacationForm");
-  if (!form) return;
+(function(){
+  'use strict';
+  const form=document.getElementById('vacationForm');
+  if(!form)return;
+  const $=id=>document.getElementById(id);
+  const fmt1=new Intl.NumberFormat('cs-CZ',{maximumFractionDigits:1});
+  const fmt2=new Intl.NumberFormat('cs-CZ',{maximumFractionDigits:2});
+  let mode='basic';
 
-  const $ = (id) => document.getElementById(id);
-  const advancedPanel = $("vacationAdvanced");
-  const nf = new Intl.NumberFormat("cs-CZ", { maximumFractionDigits: 1 });
-  const pf = new Intl.NumberFormat("cs-CZ", { maximumFractionDigits: 0 });
+  function num(id,fallback=0){const el=$(id);const value=Number(String(el&&el.value||'').replace(',','.'));return Number.isFinite(value)?value:fallback}
+  function clamp(v,min,max){return Math.min(max,Math.max(min,v))}
+  function hours(v){return `${fmt1.format(v)} h`}
+  function days(v,shift){return `${fmt1.format(v/shift)} ${Math.abs(v/shift-1)<.001?'den':'dnů'}`}
+  function setText(id,value){const el=$(id);if(el)el.textContent=value}
+  function setWidth(id,value){const el=$(id);if(el)el.style.width=`${clamp(value,0,100)}%`}
 
-  const outputs = {
-    remainingHours: $("remainingHours"),
-    remainingSummary: $("remainingSummary"),
-    decisionSummary: $("decisionSummary"),
-    statusBadge: $("statusBadge"),
-    annualHours: $("annualHours"),
-    earnedHours: $("earnedHours"),
-    usedOutput: $("usedOutput"),
-    remainingDays: $("remainingDays"),
-    annualDays: $("annualDays"),
-    earnedDays: $("earnedDays"),
-    summaryWeeks: $("summaryWeeks"),
-    summaryWeeklyHours: $("summaryWeeklyHours"),
-    summaryTableBody: $("summaryTableBody"),
-    resultReadingTitle: $("resultReadingTitle"),
-    resultReadingText: $("resultReadingText"),
-    usedShareBar: $("usedShareBar"),
-    remainingShareBar: $("remainingShareBar"),
-    usedShareText: $("usedShareText"),
-    remainingShareText: $("remainingShareText"),
-    heroRemaining: $("heroRemaining"),
-    heroEarned: $("heroEarned"),
-    heroUsed: $("heroUsed"),
-    heroDays: $("heroDays"),
-    heroUsedBar: $("heroUsedBar"),
-    heroRemainingBar: $("heroRemainingBar"),
-    heroWeekly: $("heroWeekly"),
-    heroWeeks: $("heroWeeks"),
-    heroMonths: $("heroMonths")
-  };
-
-  function number(id) {
-    const field = $(id);
-    return field ? Number(field.value.toString().replace(",", ".")) || 0 : 0;
-  }
-
-  function unit(value, one, few, many) {
-    const absolute = Math.abs(value);
-    const integer = Number.isInteger(absolute);
-    if (integer && absolute === 1) return one;
-    if (integer && absolute >= 2 && absolute <= 4) return few;
-    return many;
-  }
-
-  function hours(value) {
-    return `${nf.format(value)} h`;
-  }
-
-  function days(value) {
-    return `${nf.format(value)} ${unit(value, "den", "dny", "dnů")}`;
-  }
-
-  function weeks(value) {
-    return `${nf.format(value)} ${unit(value, "týden", "týdny", "týdnů")}`;
-  }
-
-  function moneylessPercent(value) {
-    return `${pf.format(value)} %`;
-  }
-
-  function setText(target, value) {
-    if (target) target.textContent = value;
-  }
-
-  function setClass(target, value) {
-    if (target) target.className = value;
-  }
-
-  function setWidth(target, value) {
-    if (target) target.style.width = value;
-  }
-
-  function clamp(value, min, max) {
-    return Math.max(min, Math.min(max, value));
-  }
-
-  function values() {
-    return {
-      weeklyHours: number("weeklyHours"),
-      annualWeeks: number("annualWeeks"),
-      monthsWorked: number("monthsWorked"),
-      usedHours: number("usedHours"),
-      workdayHours: number("workdayHours")
-    };
-  }
-
-  function validate(input) {
-    if (input.weeklyHours <= 0 || input.weeklyHours > 80) return "Zadejte platný týdenní úvazek.";
-    if (input.annualWeeks <= 0 || input.annualWeeks > 10) return "Zadejte platnou roční výměru dovolené.";
-    if (input.monthsWorked <= 0 || input.monthsWorked > 12) return "Počet měsíců musí být 1 až 12.";
-    if (input.usedHours < 0) return "Vyčerpaná dovolená nemůže být záporná.";
-    if (input.workdayHours <= 0 || input.workdayHours > 16) return "Zadejte platnou délku pracovního dne.";
-    return "";
-  }
-
-  function calculate(input) {
-    const rawAnnualHours = input.weeklyHours * input.annualWeeks;
-    const rawEarnedHours = rawAnnualHours * (input.monthsWorked / 12);
-    const annualHours = Math.ceil(rawAnnualHours);
-    const earnedHours = Math.ceil(rawEarnedHours);
-    const remainingHours = earnedHours - input.usedHours;
-    const annualDays = annualHours / input.workdayHours;
-    const earnedDays = earnedHours / input.workdayHours;
-    const remainingDays = remainingHours / input.workdayHours;
-    const usedShare = earnedHours > 0 ? (input.usedHours / earnedHours) * 100 : 0;
-    const remainingShare = earnedHours > 0 ? (remainingHours / earnedHours) * 100 : 0;
-
-    return {
-      annualHours,
-      earnedHours,
-      remainingHours,
-      annualDays,
-      earnedDays,
-      remainingDays,
-      usedShare,
-      remainingShare,
-      rawAnnualHours,
-      rawEarnedHours
-    };
-  }
-
-  function setStatus(result, input) {
-    setClass(outputs.statusBadge, "badge success");
-
-    if (result.remainingHours < 0) {
-      setText(outputs.statusBadge, "Zůstatek vychází přečerpaný");
-      setClass(outputs.statusBadge, "badge warning");
-      setText(outputs.remainingSummary, `Podle zadaných hodnot je vyčerpáno o ${hours(Math.abs(result.remainingHours))} více, než odpovídá poměrné části. Ověřte evidenci dovolené, převody a případnou změnu úvazku.`);
-      setText(outputs.decisionSummary, "Tohle je rizikový signál pro kontrolu s personalistikou. Nejdřív ověřte vyčerpané hodiny a období, za které poměrnou část počítáte.");
-      setText(outputs.resultReadingTitle, "Výsledek ukazuje přečerpání dovolené.");
-      setText(outputs.resultReadingText, `Přečerpání o ${hours(Math.abs(result.remainingHours))} nemusí automaticky znamenat chybu, ale je potřeba ho porovnat s interní evidencí, převodem dovolené a pravidly zaměstnavatele.`);
-      return;
+  function inputs(){
+    if(mode==='basic'){
+      return{mode,relation:'employment',weekly:clamp(num('basicWeeklyHours',40),1,80),leaveWeeks:clamp(num('basicLeaveWeeks',5),1,12),multiples:Math.floor(clamp(num('basicMultiples',52),0,80)),used:Math.max(0,num('basicUsedHours',40)),carry:0,reduction:0,shift:8,relationDays:365,countedHours:null};
     }
-
-    if (result.remainingHours <= input.workdayHours) {
-      setText(outputs.statusBadge, "Zbývá už jen malá rezerva");
-      setClass(outputs.statusBadge, "badge warning");
-      setText(outputs.remainingSummary, `Zbývá přibližně ${hours(result.remainingHours)}, tedy ${days(result.remainingDays)} při délce dne ${hours(input.workdayHours)}. Další volno už plánujte proti přesné evidenci směn.`);
-      setText(outputs.decisionSummary, "Rezerva je nízká. Před žádostí o delší volno zkontrolujte, zda se do evidence nepromítá jiná délka směny.");
-      setText(outputs.resultReadingTitle, "Zůstatek je nízký a vyplatí se ho ověřit.");
-      setText(outputs.resultReadingText, "Když zbývá zhruba jeden pracovní den nebo méně, i drobný rozdíl v hodinách, směně nebo zaokrouhlení může změnit praktické plánování volna.");
-      return;
-    }
-
-    setText(outputs.statusBadge, "Zůstatek je orientačně v pořádku");
-    setText(outputs.remainingSummary, `Zbývá přibližně ${hours(result.remainingHours)}, tedy ${days(result.remainingDays)} při délce pracovního dne ${hours(input.workdayHours)}. Výsledek je vhodný jako rychlá kontrola proti evidenci zaměstnavatele.`);
-    setText(outputs.decisionSummary, "Číslo působí bezpečně pro běžné plánování. U směnného provozu nebo změny úvazku si přesto ověřte, kolik hodin se odečte za konkrétní dny volna.");
-    setText(outputs.resultReadingTitle, "Zůstatek dovoluje plánovat další volno.");
-    setText(outputs.resultReadingText, `Poměrná část vychází ${hours(result.earnedHours)} a po odečtení čerpání zbývá ${hours(result.remainingHours)}. Přepočet na dny používejte hlavně pro orientaci v kalendáři.`);
+    const relation=$('relationType').value;
+    const weekly=relation==='agreement'?20:clamp(num('advancedWeeklyHours',40),1,80);
+    const counted=Math.max(0,num('countedHours',0));
+    return{mode,relation,weekly,leaveWeeks:clamp(num('advancedLeaveWeeks',5),1,12),multiples:Math.floor(counted/weekly),used:Math.max(0,num('advancedUsedHours',0)),carry:Math.max(0,num('carryHours',0)),reduction:Math.max(0,num('reductionHours',0)),shift:clamp(num('shiftHours',8),1,24),relationDays:clamp(num('relationDays',365),1,366),countedHours:counted};
   }
 
-  function renderTable(input, result) {
-    const rows = [
-      ["Roční nárok", hours(result.annualHours), `${weeks(input.annualWeeks)} × ${hours(input.weeklyHours)} týdenního úvazku, zaokrouhleno nahoru na celé hodiny`],
-      ["Poměrná část", hours(result.earnedHours), `${input.monthsWorked} z 12 měsíců v modelu, zaokrouhleno nahoru na celé hodiny`],
-      ["Vyčerpaná dovolená", hours(input.usedHours), "Už odečtené hodiny dovolené"],
-      ["Zůstatek", hours(result.remainingHours), "Poměrná část minus vyčerpané hodiny"],
-      ["Přepočet na dny", days(result.remainingDays), `Děleno délkou pracovního dne ${hours(input.workdayHours)}`],
-      ["Podíl čerpání", moneylessPercent(result.usedShare), "Kolik z poměrné části je už vyčerpáno"]
+  function calculate(input,overrideWeeks){
+    const leaveWeeks=overrideWeeks||input.leaveWeeks;
+    const eligible=input.relationDays>=28&&input.multiples>=4;
+    const annualBase=input.weekly*leaveWeeks;
+    const raw=eligible?annualBase*input.multiples/52:0;
+    const earned=raw>0?Math.ceil(raw-1e-9):0;
+    let corrected=Math.max(0,earned-input.reduction);
+    if(input.relation==='employment'&&input.relationDays>=365&&input.multiples>=52&&input.reduction>0){corrected=Math.max(input.weekly*2,corrected)}
+    const available=corrected+input.carry;
+    const remaining=available-input.used;
+    return{...input,leaveWeeks,eligible,annualBase,raw,earned,corrected,available,remaining,onePart:annualBase/52,usedShare:available>0?input.used/available*100:0};
+  }
+
+  function decision(r){
+    if(!r.eligible){
+      return{title:'Podmínky pro vznik nároku zatím nejsou splněné',text:r.relation==='agreement'?'U DPP/DPČ musí vztah trvat alespoň 28 dnů a být započteno nejméně 80 hodin.':'Pracovní vztah musí trvat alespoň 4 týdny a musí být započteny nejméně 4 násobky týdenní pracovní doby.'};
+    }
+    if(r.remaining<0)return{title:'Evidence ukazuje přečerpání dovolené',text:`Vyčerpané hodiny převyšují dostupný zůstatek o ${hours(Math.abs(r.remaining))}. Ověřte převod, korekce a údaje zaměstnavatele.`};
+    if(r.multiples<52)return{title:'Jde o poměrnou část dovolené',text:`Nárok vznikl za ${r.multiples} celých násobků týdenní pracovní doby. Výsledek ${hours(r.earned)} je zaokrouhlen nahoru na celé hodiny.`};
+    if(r.multiples>52)return{title:'Výpočet zahrnuje více než 52 násobků',text:'Při skutečně započtených hodinách nad 52násobek může nárok růst o další dvaapadesátiny. Ověřte, že počet hodin odpovídá evidenci.'};
+    return{title:'Nárok odpovídá plnému roku',text:`Základ činí ${hours(r.annualBase)}. Po čerpání zbývá ${hours(r.remaining)}; přepočet na dny je pouze orientační.`};
+  }
+
+  function renderTable(r){
+    const rows=[
+      ['Roční základ',hours(r.annualBase),`${fmt1.format(r.weekly)} h × ${fmt1.format(r.leaveWeeks)} týdne`],
+      ['Započtené násobky',`${r.multiples}×`,r.countedHours===null?'zadaný rychlý odhad':`${hours(r.countedHours)} / ${hours(r.weekly)}`],
+      ['Nárok 2026',hours(r.earned),`${hours(r.annualBase)} × ${r.multiples}/52, zaokrouhleno nahoru`],
+      ['Přenesená dovolená',hours(r.carry),'samostatně zadaný převod'],
+      ['Korekce',`− ${hours(r.reduction)}`,'odečtená úprava evidence'],
+      ['Vyčerpáno',`− ${hours(r.used)}`,'již čerpané hodiny'],
+      ['Zůstatek',hours(r.remaining),'dostupné hodiny po odečtení čerpání']
     ];
-
-    if (!outputs.summaryTableBody) return;
-    outputs.summaryTableBody.innerHTML = rows.map((row) => (
-      `<tr><td>${row[0]}</td><td>${row[1]}</td><td>${row[2]}</td></tr>`
-    )).join("");
+    $('summaryTable').innerHTML=rows.map(x=>`<tr><td>${x[0]}</td><td>${x[1]}</td><td>${x[2]}</td></tr>`).join('');
   }
 
-  function renderBars(result) {
-    const usedShare = clamp(result.usedShare, 0, 100);
-    const remainingShare = clamp(result.remainingShare, 0, 100);
-
-    setText(outputs.usedShareText, moneylessPercent(usedShare));
-    setText(outputs.remainingShareText, moneylessPercent(remainingShare));
-    setWidth(outputs.usedShareBar, `${Math.max(4, usedShare)}%`);
-    setWidth(outputs.remainingShareBar, `${Math.max(4, remainingShare)}%`);
-    setWidth(outputs.heroUsedBar, `${Math.max(5, usedShare)}%`);
-    setWidth(outputs.heroRemainingBar, `${Math.max(5, remainingShare)}%`);
+  function render(){
+    const input=inputs();
+    const r=calculate(input);
+    const d=decision(r);
+    const remainingPositive=Math.max(0,r.remaining);
+    setText('remainingHours',hours(r.remaining));
+    setText('remainingDays',`${days(remainingPositive,r.shift)} při směně ${fmt1.format(r.shift)} h`);
+    setText('earnedHours',hours(r.earned));
+    setText('earnedFormula',`${r.multiples} započtených násobků`);
+    setText('availableHours',hours(r.available));
+    setText('usedHoursResult',hours(r.used));
+    setText('usedShare',`${fmt1.format(r.usedShare)} % dostupné dovolené`);
+    setText('multiplesResult',`${r.multiples}×`);
+    setText('eligibilityText',r.eligible?'podmínky splněny':'nárok zatím nevznikl');
+    setText('resultMode',mode==='basic'?'Rychlý režim':r.relation==='agreement'?'Přesný režim · DPP/DPČ':'Přesný režim · pracovní poměr');
+    setText('usedProgressLabel',hours(r.used));
+    setWidth('usedProgressBar',r.usedShare);
+    setText('decisionTitle',d.title);setText('decisionText',d.text);
+    setText('annualBase',hours(r.annualBase));setText('oneFiftySecond',hours(r.onePart));setText('carryResult',hours(r.carry));setText('reductionResult',hours(r.reduction));
+    setText('heroRemaining',hours(r.remaining));setText('heroRemainSmall',hours(r.remaining));setText('heroDays',`${days(remainingPositive,r.shift)} při směně ${fmt1.format(r.shift)} h`);setText('heroUsed',hours(r.used));setText('heroEarned',hours(r.earned));setText('heroWeekly',hours(r.weekly));setText('heroMultiples',`${r.multiples}×`);
+    const heroUsedShare=r.available>0?clamp(r.used/r.available*100,0,100):0;setWidth('heroUsedBar',heroUsedShare);setWidth('heroRemainingBar',100-heroUsedShare);
+    [4,5,6].forEach(w=>{const s=calculate(input,w);setText(`scenario${w}`,hours(s.earned));setText(`scenario${w}days`,`${days(s.earned,r.shift)} při směně ${fmt1.format(r.shift)} h`)});
+    renderTable(r);
   }
 
-  function render(input, result) {
-    setText(outputs.remainingHours, hours(result.remainingHours));
-    setText(outputs.annualHours, hours(result.annualHours));
-    setText(outputs.earnedHours, hours(result.earnedHours));
-    setText(outputs.usedOutput, hours(input.usedHours));
-    setText(outputs.remainingDays, days(result.remainingDays));
-    setText(outputs.annualDays, days(result.annualDays));
-    setText(outputs.earnedDays, days(result.earnedDays));
-    setText(outputs.summaryWeeks, weeks(input.annualWeeks));
-    setText(outputs.summaryWeeklyHours, hours(input.weeklyHours));
+  function setMode(next){mode=next;const basic=next==='basic';$('basicPanel').hidden=!basic;$('advancedPanel').hidden=basic;form.classList.toggle('mode-basic',basic);form.classList.toggle('mode-advanced',!basic);document.querySelectorAll('.mode-card').forEach(btn=>{const active=btn.dataset.mode===next;btn.classList.toggle('is-active',active);btn.setAttribute('aria-pressed',String(active))});render()}
+  function relationChange(){const agreement=$('relationType').value==='agreement';$('advancedWeeklyField').classList.toggle('is-disabled',agreement);$('advancedWeeklyHours').disabled=agreement;setText('advancedNote',agreement?'U DPP/DPČ používá kalkulačka fiktivní týdenní pracovní dobu 20 hodin. Nárok vzniká při trvání alespoň 28 dnů a započtení alespoň 80 hodin.':'Počet započtených násobků vznikne vydělením evidovaných hodin týdenní pracovní dobou a zaokrouhlením dolů.');render()}
+  function reset(){form.reset();$('basicWeeklyHours').value=40;$('basicLeaveWeeks').value=5;$('basicMultiples').value=52;$('basicUsedHours').value=40;$('advancedWeeklyHours').value=40;$('advancedLeaveWeeks').value=5;$('countedHours').value=2080;$('relationDays').value=365;$('advancedUsedHours').value=40;$('carryHours').value=0;$('reductionHours').value=0;$('shiftHours').value=8;$('relationType').value='employment';relationChange();setMode('basic')}
 
-    setText(outputs.heroRemaining, hours(result.remainingHours));
-    setText(outputs.heroEarned, hours(result.earnedHours));
-    setText(outputs.heroUsed, hours(input.usedHours));
-    setText(outputs.heroDays, days(result.remainingDays));
-    setText(outputs.heroWeekly, hours(input.weeklyHours));
-    setText(outputs.heroWeeks, weeks(input.annualWeeks));
-    setText(outputs.heroMonths, `${input.monthsWorked}/12`);
-
-    setStatus(result, input);
-    renderBars(result);
-    renderTable(input, result);
-  }
-
-  function run() {
-    const input = values();
-    const error = validate(input);
-
-    if (error) {
-      setText(outputs.statusBadge, error);
-      setClass(outputs.statusBadge, "badge warning");
-      return;
-    }
-
-    render(input, calculate(input));
-  }
-
-  document.querySelectorAll("[data-vacation-preset]").forEach((button) => {
-    button.addEventListener("click", () => {
-      const preset = button.dataset.vacationPreset;
-
-      if (preset === "full") {
-        $("weeklyHours").value = 40;
-        $("annualWeeks").value = 5;
-        $("monthsWorked").value = 12;
-        $("usedHours").value = 40;
-        $("workdayHours").value = 8;
-        if (advancedPanel) advancedPanel.open = false;
-      }
-
-      if (preset === "part") {
-        $("weeklyHours").value = 30;
-        $("annualWeeks").value = 5;
-        $("monthsWorked").value = 8;
-        $("usedHours").value = 30;
-        $("workdayHours").value = 6;
-        if (advancedPanel) advancedPanel.open = true;
-      }
-
-      if (preset === "new") {
-        $("weeklyHours").value = 40;
-        $("annualWeeks").value = 5;
-        $("monthsWorked").value = 4;
-        $("usedHours").value = 0;
-        $("workdayHours").value = 8;
-        if (advancedPanel) advancedPanel.open = true;
-      }
-
-      run();
-    });
-  });
-
-  form.addEventListener("submit", (event) => {
-    event.preventDefault();
-    run();
-  });
-
-  ["weeklyHours", "annualWeeks", "monthsWorked", "usedHours", "workdayHours"].forEach((id) => {
-    const field = $(id);
-    field.addEventListener("input", run);
-    field.addEventListener("change", run);
-  });
-
-  $("resetBtn").addEventListener("click", () => {
-    $("weeklyHours").value = 40;
-    $("annualWeeks").value = 5;
-    $("monthsWorked").value = 12;
-    $("usedHours").value = 40;
-    $("workdayHours").value = 8;
-    if (advancedPanel) advancedPanel.open = false;
-    run();
-  });
-
-  run();
+  document.querySelectorAll('.mode-card').forEach(btn=>btn.addEventListener('click',()=>setMode(btn.dataset.mode)));
+  form.addEventListener('submit',e=>{e.preventDefault();render()});
+  form.addEventListener('input',render);
+  form.addEventListener('change',e=>{if(e.target.id==='relationType')relationChange();else render()});
+  $('resetButton').addEventListener('click',reset);
+  relationChange();setMode('basic');
 })();
