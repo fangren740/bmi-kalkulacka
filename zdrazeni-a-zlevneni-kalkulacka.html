@@ -18,11 +18,9 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png?v=2">
 <link rel="manifest" href="site.webmanifest?v=2">
 <meta name="theme-color" content="#081b34">
-<link rel="stylesheet" href="rv-tool-v2.css">
-<link rel="stylesheet" href="business-v2.css">
-<link rel="stylesheet" href="price-change-pro.css?v=20260706-1">
+<link rel="stylesheet" href="price-change-pro.css?v=20260730-2">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"RychléVýpočty.cz","item":"https://rychlevypocty.cz/"},{"@type":"ListItem","position":2,"name":"Kalkulačky","item":"https://rychlevypocty.cz/kalkulacky.html"},{"@type":"ListItem","position":3,"name":"Zdražení a zlevnění","item":"https://rychlevypocty.cz/zdrazeni-a-zlevneni-kalkulacka.html"}]}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Kalkulačka zdražení a zlevnění","url":"https://rychlevypocty.cz/zdrazeni-a-zlevneni-kalkulacka.html","description":"Výpočet procentní změny, nové ceny, původní ceny a dopadu opakovaného výdaje.","applicationCategory":"FinanceApplication","operatingSystem":"All","inLanguage":"cs-CZ","dateModified":"2026-07-06","offers":{"@type":"Offer","price":"0","priceCurrency":"CZK"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Kalkulačka zdražení a zlevnění","url":"https://rychlevypocty.cz/zdrazeni-a-zlevneni-kalkulacka.html","description":"Výpočet procentní změny, nové ceny, původní ceny a dopadu opakovaného výdaje.","applicationCategory":"FinanceApplication","operatingSystem":"All","inLanguage":"cs-CZ","dateModified":"2026-07-30","offers":{"@type":"Offer","price":"0","priceCurrency":"CZK"}}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Jak vypočítat zdražení v procentech?","acceptedAnswer":{"@type":"Answer","text":"Od nové ceny odečtěte původní cenu, rozdíl vydělte původní cenou a výsledek vynásobte stem."}},{"@type":"Question","name":"Jak vypočítat cenu po zdražení?","acceptedAnswer":{"@type":"Answer","text":"Původní cenu vynásobte číslem jedna plus procento zdražení dělené stem."}},{"@type":"Question","name":"Jak zjistit původní cenu před zdražením?","acceptedAnswer":{"@type":"Answer","text":"Současnou cenu vydělte číslem jedna plus procento zdražení dělené stem."}},{"@type":"Question","name":"Proč zdražení a stejné procentní zlevnění nevrátí původní cenu?","acceptedAnswer":{"@type":"Answer","text":"Druhá změna se počítá z jiné základny. Po zdražení o 20 % je pro návrat nutné zlevnit přibližně o 16,67 %."}},{"@type":"Question","name":"Jaký je rozdíl mezi procentem a procentním bodem?","acceptedAnswer":{"@type":"Answer","text":"Procento vyjadřuje relativní změnu hodnoty. Procentní bod vyjadřuje prostý rozdíl mezi dvěma procentními sazbami."}},{"@type":"Question","name":"Zahrnuje kalkulačka inflaci?","acceptedAnswer":{"@type":"Answer","text":"Ne. Porovnává nominální ceny. Reálnou změnu kupní síly je potřeba posoudit samostatně pomocí inflace."}}]}</script>
 </head>
 <body class="freelancer-pro rv-renovation-tool rv-business-tool price-change-pro">
@@ -85,11 +83,30 @@
 </div>
 </div>
 </section>
+<nav class="page-nav" aria-label="Navigace na stránce">
+  <div class="container page-nav-inner">
+    <a href="#kalkulacka">Kalkulačka</a>
+    <a href="#vysledek">Výsledek</a>
+    <a href="#dopad">Dopad na rozpočet</a>
+    <a href="#interpretace">Interpretace</a>
+    <a href="#metodika">Metodika</a>
+    <a href="#faq">FAQ</a>
+  </div>
+</nav>
 <section class="container change-work" id="kalkulacka">
 <form class="change-form" id="priceChangeForm" data-mode="compare" novalidate>
-<p class="eyebrow">Vyberte, co znáte</p>
+<p class="eyebrow">Výpočet krok za krokem</p>
 <h2>Jaký výpočet potřebujete?</h2>
-<div class="mode-tabs">
+<p class="form-intro">Pro běžné porovnání stačí dvě ceny. Pokročilý režim zpřístupní dopočet ceny z procenta, zpětný výpočet původní ceny a dopad opakovaného výdaje.</p>
+<div class="depth-switch" role="group" aria-label="Podrobnost výpočtu">
+  <button type="button" class="depth-card is-active" data-depth="basic" aria-pressed="true">
+    <span>Základní</span><strong>Porovnám dvě ceny</strong><small>Nejrychlejší cesta k procentnímu a korunovému rozdílu.</small>
+  </button>
+  <button type="button" class="depth-card" data-depth="advanced" aria-pressed="false">
+    <span>Pokročilý</span><strong>Chci dopočítat další varianty</strong><small>Nová nebo původní cena, scénáře a dopad za celé období.</small>
+  </button>
+</div>
+<div class="mode-tabs advanced-only" aria-label="Typ pokročilého výpočtu">
 <button type="button" data-mode="compare">Porovnám dvě ceny</button>
 <button type="button" data-mode="forward">Znám cenu a procento</button>
 <button type="button" data-mode="reverse">Hledám původní cenu</button>
@@ -121,7 +138,7 @@
 <label>
 <span>Změna ceny</span>
 <div class="change-input">
-<input id="changePercent" type="number" min="0" max="100" step="0.01" value="20" inputmode="decimal">
+<input id="changePercent" type="number" min="0" max="1000" step="0.01" value="20" inputmode="decimal">
 <b>%</b>
 </div>
 </label>
@@ -144,7 +161,7 @@
 <label>
 <span>Předchozí změna</span>
 <div class="change-input">
-<input id="previousPercent" type="number" min="0" max="100" step="0.01" value="20" inputmode="decimal">
+<input id="previousPercent" type="number" min="0" max="1000" step="0.01" value="20" inputmode="decimal">
 <b>%</b>
 </div>
 </label>
@@ -156,7 +173,7 @@
 </select>
 </label>
 </div>
-<div class="quick-presets">
+<div class="quick-presets advanced-only">
 <button type="button" data-preset="energy">Energie +15 %</button>
 <button type="button" data-preset="rent">Nájem +8 %</button>
 <button type="button" data-preset="sale">Cena −25 %</button>
@@ -217,7 +234,7 @@
 </div>
 </aside>
 </section>
-<section class="container budget-impact">
+<section class="container budget-impact advanced-only" id="dopad">
 <div class="section-head">
 <p class="eyebrow">Volitelný dopad na rozpočet</p>
 <h2>Kolik změna udělá za delší období?</h2>
@@ -283,6 +300,23 @@
 </table>
 </div>
 <p>Tabulka používá původní cenu z aktuálního výpočtu. Slouží k rychlému porovnání, ne jako předpověď budoucího vývoje.</p>
+</section>
+<section class="container interpretation-section" id="interpretace">
+  <div class="section-head split-head">
+    <div><p class="eyebrow">Jak výsledek použít</p><h2>Procento je začátek, ne celé rozhodnutí</h2></div>
+    <p>Správně vypočtená změna ceny odpovídá pouze na otázku, jak velký je relativní rozdíl proti původní hodnotě. Pro nákup, rozpočet nebo cenotvorbu je potřeba výsledek spojit s množstvím, časem a srovnatelným rozsahem nabídky.</p>
+  </div>
+  <div class="interpret-grid">
+    <article><span>01</span><h3>Nejdřív ověřte základ</h3><p>Původní cena musí být skutečná výchozí hodnota, nikoli doporučená cena, krátkodobá akce nebo částka bez položek, které nová cena už obsahuje. Pokud porovnáváte nesrovnatelné základy, matematika bude správná, ale závěr zavádějící.</p></article>
+    <article><span>02</span><h3>Převeďte procento na koruny</h3><p>Rozdíl 8 % může být několik korun u drobného nákupu nebo desítky tisíc u bydlení a firemních služeb. Proto výsledkový panel vždy ukazuje procento i absolutní částku a pokročilý režim umí dopad rozložit do měsíců.</p></article>
+    <article><span>03</span><h3>Zkontrolujte množství a období</h3><p>U energií, paliva, licencí nebo materiálu rozhoduje počet jednotek. Zdražení na kus se násobí spotřebou. U nájmu a předplatného se stejný rozdíl opakuje každý měsíc. Jednorázový pohled proto často podhodnotí skutečný dopad.</p></article>
+    <article><span>04</span><h3>Oddělte cenu od hodnoty</h3><p>Vyšší cena nemusí znamenat horší nabídku, pokud se zlepšila kvalita, záruka, rozsah služby nebo množství. Kalkulačka záměrně nehodnotí užitek. Pomáhá vytvořit přesný cenový základ, na kterém lze rozhodnutí postavit.</p></article>
+  </div>
+  <div class="reading-band">
+    <div><strong>Malá změna</strong><span>Do 5 %</span><p>U jednorázové položky může být okrajová, u pravidelného výdaje ji přepočítejte za rok.</p></div>
+    <div><strong>Znatelné zdražení</strong><span>5–20 %</span><p>Prověřte alternativu, rozsah nabídky a dopad na rozpočet nebo marži.</p></div>
+    <div><strong>Výrazná změna</strong><span>Nad 20 %</span><p>Zkontrolujte srovnatelnost cen, skrytou změnu balení a případné jednorázové poplatky.</p></div>
+  </div>
 </section>
 <section class="container seo-card">
 <p class="eyebrow">Základní metodika</p>
@@ -444,6 +478,43 @@
 </div></section>
 <section class="container seo-dark"><p class="eyebrow">Více změn za sebou</p><h2>Postupná procenta se nesčítají</h2><p>Když se cena změní vícekrát, každá další změna pracuje s aktuální hodnotou. Dvě zdražení o 10 % proto nevytvoří růst 20 %, ale 21 %. Cena 1 000 Kč nejprve vzroste na 1 100 Kč a podruhé o dalších 110 Kč na 1 210 Kč. Rozdíl proti začátku je 210 Kč.</p><p>Stejně fungují postupná zlevnění. Dvě slevy po 10 % sníží cenu na 81 % původní hodnoty, tedy celkem o 19 %. Koeficienty se násobí: 0,90 krát 0,90 je 0,81. Kombinace růstu a poklesu se také nevyruší. Zdražení o 10 % a následné zlevnění o 10 % skončí na 99 % původní ceny.</p><div class="compound-grid"><article><h3>Dvě zdražení</h3><strong>+10 % a +10 % = +21 %</strong><p>Násobíte 1,10 × 1,10.</p></article><article><h3>Dvě zlevnění</h3><strong>−10 % a −10 % = −19 %</strong><p>Násobíte 0,90 × 0,90.</p></article><article><h3>Růst a pokles</h3><strong>+10 % a −10 % = −1 %</strong><p>Násobíte 1,10 × 0,90.</p></article></div><p>Při delší řadě změn je nejspolehlivější porovnat konečnou cenu přímo s úplně první cenou. Tím získáte celkovou procentní změnu bez nutnosti ručně spojovat mezikroky. Jednotlivé změny si ale ponechte, pokud potřebujete vysvětlit, ve kterém období nebo rozhodnutí vznikla největší část rozdílu.</p></section>
 <section class="container seo-card"><p class="eyebrow">Srovnatelný základ</p><h2>Hlídejte jednotkovou cenu a změnu balení</h2><p>Stejná cena na cenovce nemusí znamenat cenu beze změny. Pokud se balení zmenší z 500 gramů na 450 gramů a zůstane za 50 Kč, cena za kilogram vzroste ze 100 Kč na 111,11 Kč. Skutečné jednotkové zdražení je 11,11 %, přestože absolutní cena balení vypadá stejně. Tento jev se běžně označuje jako zmenšování balení nebo shrinkflace.</p><p>Před zadáním do kalkulačky proto převeďte obě nabídky na stejnou jednotku: kilogram, litr, kus, hodinu, kilometr nebo jednotku spotřeby. U předplatného porovnejte stejný počet uživatelů, funkcí a délku závazku. U energií oddělte cenu za odebranou jednotku od stálého měsíčního platu. U úvěru nestačí porovnat pouze splátku, protože se může změnit doba splácení nebo celkově zaplacená částka.</p><div class="unit-process"><article><b>01</b><div><h3>Sjednoťte množství</h3><p>Přepočítejte obě ceny na stejný objem, hmotnost, čas nebo počet použití.</p></div></article><article><b>02</b><div><h3>Sjednoťte rozsah služby</h3><p>Ověřte, zda cena zahrnuje stejné funkce, podporu, dopravu a smluvní podmínky.</p></div></article><article><b>03</b><div><h3>Teprve potom porovnejte ceny</h3><p>Do kalkulačky vložte dvě skutečně srovnatelné jednotkové částky.</p></div></article></div><p>Pokud se změnila kvalita, nelze její hodnotu převést na jedno univerzální procento. Kalkulačka ukáže cenový rozdíl, ale rozhodnutí, zda lepší materiál, delší záruka nebo širší služba rozdíl ospravedlňuje, zůstává na uživateli. Proto je výsledná interpretace záměrně oddělena od matematického výpočtu.</p></section>
+<section class="method-section" id="metodika">
+  <div class="container method-wrap">
+    <div class="method-head">
+      <p class="eyebrow">Ověření metodiky výpočtu</p>
+      <h2>Vzorce, logika, předpoklady a zdroje</h2>
+      <p>Kalkulačka pracuje s relativní změnou mezi dvěma srovnatelnými cenami. Nejde o předpověď inflace ani o automatické hodnocení výhodnosti nabídky. Všechny výpočty probíhají lokálně v prohlížeči a mezivýsledky se počítají s plnou přesností.</p>
+    </div>
+    <div class="method-meta">
+      <div><span>Referenční verze</span><strong>Matematická metodika 2026</strong></div>
+      <div><span>Poslední kontrola</span><strong>30. 7. 2026</strong></div>
+      <div><span>Zaokrouhlení</span><strong>Až při zobrazení výsledku</strong></div>
+    </div>
+    <div class="method-body">
+      <div class="method-copy">
+        <h3>1. Porovnání původní a nové ceny</h3>
+        <p>Korunový rozdíl vzniká odečtením původní ceny od nové ceny. Relativní změna se počítá vůči původní ceně, protože ta představuje výchozí základ. Kladné procento znamená zdražení, záporné procento zlevnění. Pokud je původní cena nulová, běžná procentní změna není definovaná a kalkulačka vstup nepřijme.</p>
+        <div class="method-formulas"><code>rozdíl = nová cena − původní cena</code><code>změna v % = rozdíl ÷ původní cena × 100</code><code>cenový index = nová cena ÷ původní cena × 100</code></div>
+        <h3>2. Cena po zadané procentní změně</h3>
+        <p>Při zdražení se původní cena násobí koeficientem větším než jedna, při zlevnění koeficientem menším než jedna. Hodnota procenta se v tomto režimu omezuje na 0–100 %. Zlevnění o 100 % vede k nulové ceně, zatímco zdražení o 100 % cenu zdvojnásobí.</p>
+        <div class="method-formulas"><code>po zdražení = původní cena × (1 + p ÷ 100)</code><code>po zlevnění = původní cena × (1 − p ÷ 100)</code></div>
+        <h3>3. Zpětný výpočet původní ceny</h3>
+        <p>Současná cena se nedopočítává odečtením stejného procenta, ale dělením změnovým koeficientem. Důvodem je rozdílný základ obou změn. Po předchozím zlevnění o 100 % nelze z nulové současné ceny původní cenu jednoznačně určit.</p>
+        <div class="method-formulas"><code>před zdražením = současná cena ÷ (1 + p ÷ 100)</code><code>před zlevněním = současná cena ÷ (1 − p ÷ 100)</code></div>
+        <h3>4. Dopad opakovaného výdaje</h3>
+        <p>Pokročilý režim násobí obě jednotkové ceny zadaným počtem jednotek za měsíc a počtem měsíců. Předpokládá stejné množství i cenu po celé období. Nezohledňuje sezónnost, další poplatky, změnu spotřeby, daně ani různé cenové stupně. Tyto položky je potřeba modelovat samostatně.</p>
+        <div class="method-note"><strong>Omezení:</strong> Nástroj neposuzuje kvalitu, velikost balení, DPH, marži, inflaci ani kupní sílu automaticky. Před výpočtem musí být obě ceny ve stejné měně, za stejné množství a na stejné bázi včetně či bez daně.</div>
+      </div>
+      <aside class="method-sources">
+        <h3>Kontrolní zdroje a souvislosti</h3>
+        <a href="https://www.cnb.cz/cs/casto-kladene-dotazy/Co-to-je-inflace" rel="noopener noreferrer">ČNB – co je inflace</a>
+        <a href="https://www.cnb.cz/cs/statistika/inflace/" rel="noopener noreferrer">ČNB – statistika inflace</a>
+        <a href="https://ec.europa.eu/eurostat/web/hicp/methodology" rel="noopener noreferrer">Eurostat – metodika cenových indexů HICP</a>
+        <p>Tyto zdroje vysvětlují rozdíl mezi změnou jednotlivé ceny a změnou obecné cenové hladiny. Samotné vzorce procentní změny jsou čistě matematické a nemění se podle roku.</p>
+      </aside>
+    </div>
+  </div>
+</section>
 <section class="container seo-card" id="faq">
 <p class="eyebrow">FAQ</p>
 <h2>Časté otázky ke změně ceny</h2>
@@ -472,6 +543,9 @@
 <summary>Zahrnuje výpočet inflaci?</summary>
 <p>Ne. Porovnává nominální ceny. Změnu kupní síly posuzujte samostatně.</p>
 </details>
+<details><summary>Lze porovnávat cenu s DPH a bez DPH?</summary><p>Ne přímo. Obě částky musí být na stejné bázi. Nejprve je převeďte obě s DPH nebo obě bez DPH.</p></details>
+<details><summary>Jak spočítat změnu při menším balení?</summary><p>Nejdřív převeďte obě ceny na stejnou jednotku, například Kč za kilogram nebo litr, a teprve jednotkové ceny porovnejte.</p></details>
+<details><summary>Jak se počítají dvě změny za sebou?</summary><p>Procentní koeficienty se násobí. Dvě zdražení o 10 % znamenají násobek 1,10 × 1,10, tedy celkový růst 21 %.</p></details>
 </div>
 </section>
 <section class="container related-tools">
@@ -535,9 +609,6 @@
 <p>© 2026 RychléVýpočty.cz. Výsledky jsou orientační a nenahrazují účetní, daňové ani finanční poradenství.</p>
 </div>
 </footer>
-<script src="rv-tool-core.js">
-</script>
-<script src="zdrazeni-zlevneni.js?v=20260706-1">
-</script>
+<script defer src="zdrazeni-zlevneni.js?v=20260730-2"></script>
 </body>
 </html>

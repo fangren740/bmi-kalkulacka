@@ -1,1 +1,327 @@
-(()=>{"use strict";const $=id=>document.getElementById(id),form=$("priceChangeForm");if(!form)return;let mode="compare",result=null;const mf=new Intl.NumberFormat("cs-CZ",{style:"currency",currency:"CZK",minimumFractionDigits:2,maximumFractionDigits:2}),nf=new Intl.NumberFormat("cs-CZ",{maximumFractionDigits:2}),money=v=>mf.format(Number.isFinite(v)?v:0),pct=v=>`${nf.format(Number.isFinite(v)?v:0)} %`,num=v=>nf.format(Number.isFinite(v)?v:0),text=(id,v)=>{const e=$(id);if(e)e.textContent=v};const modeFields={compare:["oldPrice","newPrice"],forward:["basePrice","changePercent","forwardDirection"],reverse:["currentPrice","previousPercent","reverseDirection"]};const presets={energy:{mode:"compare",old:5.2,new:5.98,units:250,months:12},rent:{mode:"compare",old:18000,new:19440,units:1,months:12},sale:{mode:"forward",base:2490,percent:25,direction:"decrease",units:1,months:1},reverse:{mode:"reverse",current:1200,percent:20,direction:"increase",units:1,months:12}};function read(){if(mode==="compare")return{mode,old:Number($("oldPrice").value),now:Number($("newPrice").value)};if(mode==="forward")return{mode,base:Number($("basePrice").value),percent:Number($("changePercent").value),direction:$("forwardDirection").value};return{mode,current:Number($("currentPrice").value),percent:Number($("previousPercent").value),direction:$("reverseDirection").value}}function validate(v){if(v.mode==="compare"){if(!Number.isFinite(v.old)||v.old<=0)return"Původní cena musí být vyšší než nula.";if(!Number.isFinite(v.now)||v.now<0)return"Nová cena nemůže být záporná."}else if(v.mode==="forward"){if(!Number.isFinite(v.base)||v.base<=0)return"Výchozí cena musí být vyšší než nula.";if(!Number.isFinite(v.percent)||v.percent<0||v.percent>100)return"Změna musí být v rozmezí 0 až 100 %."}else{if(!Number.isFinite(v.current)||v.current<0)return"Současná cena nemůže být záporná.";if(!Number.isFinite(v.percent)||v.percent<0||v.percent>100)return"Předchozí změna musí být v rozmezí 0 až 100 %.";if(v.direction==="decrease"&&v.percent===100)return"Po zlevnění o 100 % nelze z nulové ceny určit původní cenu."}return""}function calculate(v){let oldPrice,newPrice;if(v.mode==="compare"){oldPrice=v.old;newPrice=v.now}else if(v.mode==="forward"){oldPrice=v.base;newPrice=v.direction==="increase"?v.base*(1+v.percent/100):v.base*(1-v.percent/100)}else{newPrice=v.current;oldPrice=v.direction==="increase"?v.current/(1+v.percent/100):v.current/(1-v.percent/100)}const diff=newPrice-oldPrice,percent=diff/oldPrice*100,index=newPrice/oldPrice*100,returnPct=newPrice===0?null:Math.abs(diff)/newPrice*100;return{oldPrice,newPrice,diff,percent,index,returnPct,mode:v.mode}}function render(opts={}){const v=read(),msg=validate(v),err=$("changeError");if(msg){err.hidden=false;err.textContent=msg;["answerValue","oldPriceResult","newPriceResult","difference","priceIndex","returnPercent","oldPeriodCost","newPeriodCost","periodDifference","monthlyDifference"].forEach(id=>text(id,"—"));text("resultTitle","Zkontrolujte zadání");text("statusBadge","Neplatný vstup");text("resultSentence",msg);text("impactNote","Dopad lze spočítat až po opravě hlavního zadání.");$("scenarioBody").replaceChildren();result=null;return false}err.hidden=true;result=calculate(v);const r=result,isUp=r.diff>0,isDown=r.diff<0,type=isUp?"Cena zdražila":isDown?"Cena zlevnila":"Cena se nezměnila",signed=r.percent>0?`+${pct(r.percent)}`:pct(r.percent);text("resultTitle",type);text("statusBadge",signed);text("answerLabel",mode==="reverse"?"Dopočítaná původní cena":mode==="forward"?"Vypočítaná nová cena":"Procentní změna");text("answerValue",mode==="reverse"?money(r.oldPrice):mode==="forward"?money(r.newPrice):signed);text("oldPriceResult",money(r.oldPrice));text("newPriceResult",money(r.newPrice));text("difference",`${r.diff>0?"+":""}${money(r.diff)}`);text("priceIndex",num(r.index));text("resultSentence",`Změna z ${money(r.oldPrice)} na ${money(r.newPrice)} představuje ${isUp?"zdražení":isDown?"zlevnění":"nulovou změnu"} o ${pct(Math.abs(r.percent))}.`);text("returnLabel",isUp?"Nutné zlevnění pro návrat":isDown?"Nutné zdražení pro návrat":"Návrat k původní ceně");text("returnPercent",r.returnPct===null?"Nedefinováno":pct(r.returnPct));text("returnText",isUp?`Z nové ceny je potřeba odečíst ${money(Math.abs(r.diff))}, tedy ${pct(r.returnPct)}.`:isDown?`K nové ceně je potřeba přidat ${money(Math.abs(r.diff))}, tedy ${r.returnPct===null?"nedefinované procento":pct(r.returnPct)}.`:"Cena už odpovídá původní hodnotě.");const impact=Math.abs(r.percent);text("decisionHeadline",impact>=20?"Výrazná cenová změna":impact>=5?"Změna je dobře znatelná":"Menší relativní změna");text("decisionText",`Cenový index je ${num(r.index)}. To znamená, že nová cena odpovídá ${pct(r.index)} původní hodnoty.`);text("nextStepText",isUp?"U pravidelného výdaje zkontrolujte dopad za celý rok.":isDown?"Ověřte, zda se nezměnilo množství, kvalita nebo podmínky nabídky.":"Obě porovnávané ceny jsou stejné.");renderImpact();renderScenarios();if(opts.scroll&&matchMedia("(max-width:720px)").matches)$("vysledek").scrollIntoView({behavior:"smooth",block:"start"});return true}function setMode(next){mode=next;form.dataset.mode=next;document.querySelectorAll(".mode-tabs [data-mode]").forEach(b=>{const active=b.dataset.mode===next;b.classList.toggle("is-active",active);b.setAttribute("aria-pressed",String(active))});document.querySelectorAll("[data-panel]").forEach(p=>p.hidden=p.dataset.panel!==next);render()}function setPreset(name){const p=presets[name];if(!p)return;setMode(p.mode);if(p.mode==="compare"){$("oldPrice").value=p.old;$("newPrice").value=p.new}else if(p.mode==="forward"){$("basePrice").value=p.base;$("changePercent").value=p.percent;$("forwardDirection").value=p.direction}else{$("currentPrice").value=p.current;$("previousPercent").value=p.percent;$("reverseDirection").value=p.direction}$("unitsPerMonth").value=p.units;$("periodMonths").value=p.months;document.querySelectorAll("[data-preset]").forEach(b=>b.classList.toggle("is-active",b.dataset.preset===name));render()}function renderImpact(){if(!result)return;const units=Number($("unitsPerMonth").value),months=Number($("periodMonths").value),err=$("impactError");if(!Number.isFinite(units)||units<0||!Number.isInteger(months)||months<1||months>120){err.hidden=false;err.textContent="Zadejte nezáporné množství a celé období od 1 do 120 měsíců.";return}err.hidden=true;const oldCost=result.oldPrice*units*months,newCost=result.newPrice*units*months,diff=newCost-oldCost;text("oldPeriodCost",money(oldCost));text("newPeriodCost",money(newCost));text("periodDifference",`${diff>0?"+":""}${money(diff)}`);text("monthlyDifference",`${diff>0?"+":""}${money(diff/months)}`);text("impactNote",diff>0?`Za ${months} měsíců zaplatíte při stejném množství o ${money(diff)} více.`:diff<0?`Za ${months} měsíců ušetříte při stejném množství ${money(Math.abs(diff))}.`:"Výdaj za období se nemění.")}function renderScenarios(){if(!result)return;const body=$("scenarioBody");body.replaceChildren();[-25,-10,-5,5,10,25].forEach(change=>{const price=result.oldPrice*(1+change/100),diff=price-result.oldPrice,tr=document.createElement("tr");tr.className=change<0?"down":"up";tr.innerHTML=`<td><strong>${change>0?"+":""}${change} %</strong></td><td>${money(price)}</td><td>${diff>0?"+":""}${money(diff)}</td><td>${num(100+change)}</td>`;body.appendChild(tr)})}form.addEventListener("submit",e=>{e.preventDefault();render({scroll:true})});Object.values(modeFields).flat().map($).forEach(e=>{e.addEventListener("input",()=>render());e.addEventListener("change",()=>render())});document.querySelectorAll(".mode-tabs [data-mode]").forEach(b=>b.addEventListener("click",()=>setMode(b.dataset.mode)));document.querySelectorAll("[data-preset]").forEach(b=>b.addEventListener("click",()=>setPreset(b.dataset.preset)));$("impactForm").addEventListener("submit",e=>{e.preventDefault();renderImpact()});["unitsPerMonth","periodMonths"].map($).forEach(e=>e.addEventListener("input",renderImpact));$("resetBtn").addEventListener("click",()=>setPreset("energy"));setPreset("energy")})();
+(() => {
+  "use strict";
+
+  const form = document.getElementById("priceChangeForm");
+  if (!form) return;
+
+  const $ = (id) => document.getElementById(id);
+  const moneyFormatter = new Intl.NumberFormat("cs-CZ", {
+    style: "currency",
+    currency: "CZK",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+  const numberFormatter = new Intl.NumberFormat("cs-CZ", { maximumFractionDigits: 2 });
+
+  let depth = "basic";
+  let mode = "compare";
+  let result = null;
+
+  const presets = {
+    energy: { mode: "compare", old: 5.2, new: 5.98, units: 250, months: 12 },
+    rent: { mode: "compare", old: 18000, new: 19440, units: 1, months: 12 },
+    sale: { mode: "forward", base: 2490, percent: 25, direction: "decrease", units: 1, months: 1 },
+    reverse: { mode: "reverse", current: 1200, percent: 20, direction: "increase", units: 1, months: 12 },
+  };
+
+  const text = (id, value) => {
+    const element = $(id);
+    if (element) element.textContent = value;
+  };
+  const money = (value) => moneyFormatter.format(Number.isFinite(value) ? value : 0);
+  const percent = (value) => `${numberFormatter.format(Number.isFinite(value) ? value : 0)} %`;
+  const number = (value) => numberFormatter.format(Number.isFinite(value) ? value : 0);
+
+  function readValues() {
+    if (mode === "compare") {
+      return { mode, old: Number($("oldPrice").value), now: Number($("newPrice").value) };
+    }
+    if (mode === "forward") {
+      return {
+        mode,
+        base: Number($("basePrice").value),
+        change: Number($("changePercent").value),
+        direction: $("forwardDirection").value,
+      };
+    }
+    return {
+      mode,
+      current: Number($("currentPrice").value),
+      change: Number($("previousPercent").value),
+      direction: $("reverseDirection").value,
+    };
+  }
+
+  function validate(values) {
+    if (values.mode === "compare") {
+      if (!Number.isFinite(values.old) || values.old <= 0) return "Původní cena musí být vyšší než nula.";
+      if (!Number.isFinite(values.now) || values.now < 0) return "Nová cena nemůže být záporná.";
+      return "";
+    }
+
+    if (values.mode === "forward") {
+      if (!Number.isFinite(values.base) || values.base <= 0) return "Výchozí cena musí být vyšší než nula.";
+      if (!Number.isFinite(values.change) || values.change < 0) return "Změna ceny nemůže být záporná.";
+      if (values.direction === "decrease" && values.change > 100) return "Zlevnění nemůže být vyšší než 100 %.";
+      if (values.direction === "increase" && values.change > 1000) return "Zadejte zdražení nejvýše 1 000 %.";
+      return "";
+    }
+
+    if (!Number.isFinite(values.current) || values.current <= 0) return "Současná cena musí být vyšší než nula.";
+    if (!Number.isFinite(values.change) || values.change < 0) return "Předchozí změna nemůže být záporná.";
+    if (values.direction === "decrease" && values.change >= 100) return "Po zlevnění o 100 % nelze původní cenu jednoznačně určit.";
+    if (values.direction === "increase" && values.change > 1000) return "Zadejte předchozí zdražení nejvýše 1 000 %.";
+    return "";
+  }
+
+  function calculate(values) {
+    let oldPrice;
+    let newPrice;
+
+    if (values.mode === "compare") {
+      oldPrice = values.old;
+      newPrice = values.now;
+    } else if (values.mode === "forward") {
+      oldPrice = values.base;
+      const coefficient = values.direction === "increase" ? 1 + values.change / 100 : 1 - values.change / 100;
+      newPrice = oldPrice * coefficient;
+    } else {
+      newPrice = values.current;
+      const coefficient = values.direction === "increase" ? 1 + values.change / 100 : 1 - values.change / 100;
+      oldPrice = newPrice / coefficient;
+    }
+
+    const difference = newPrice - oldPrice;
+    const relativeChange = (difference / oldPrice) * 100;
+    const priceIndex = (newPrice / oldPrice) * 100;
+    const returnPercent = newPrice === 0 ? null : (Math.abs(difference) / newPrice) * 100;
+
+    return { oldPrice, newPrice, difference, relativeChange, priceIndex, returnPercent };
+  }
+
+  function clearResult(message) {
+    const error = $("changeError");
+    error.hidden = false;
+    error.textContent = message;
+    [
+      "answerValue", "oldPriceResult", "newPriceResult", "difference", "priceIndex", "returnPercent",
+      "oldPeriodCost", "newPeriodCost", "periodDifference", "monthlyDifference",
+    ].forEach((id) => text(id, "—"));
+    text("resultTitle", "Zkontrolujte zadání");
+    text("statusBadge", "Neplatný vstup");
+    text("resultSentence", message);
+    text("impactNote", "Dopad lze spočítat až po opravě hlavního zadání.");
+    $("scenarioBody").replaceChildren();
+    result = null;
+  }
+
+  function renderMain(options = {}) {
+    const values = readValues();
+    const validationMessage = validate(values);
+    if (validationMessage) {
+      clearResult(validationMessage);
+      return false;
+    }
+
+    $("changeError").hidden = true;
+    result = calculate(values);
+
+    const isUp = result.difference > 0;
+    const isDown = result.difference < 0;
+    const signedPercent = result.relativeChange > 0 ? `+${percent(result.relativeChange)}` : percent(result.relativeChange);
+
+    text("resultTitle", isUp ? "Cena zdražila" : isDown ? "Cena zlevnila" : "Cena se nezměnila");
+    text("statusBadge", signedPercent);
+    text("answerLabel", mode === "reverse" ? "Dopočítaná původní cena" : mode === "forward" ? "Vypočítaná nová cena" : "Procentní změna");
+    text("answerValue", mode === "reverse" ? money(result.oldPrice) : mode === "forward" ? money(result.newPrice) : signedPercent);
+    text("oldPriceResult", money(result.oldPrice));
+    text("newPriceResult", money(result.newPrice));
+    text("difference", `${result.difference > 0 ? "+" : ""}${money(result.difference)}`);
+    text("priceIndex", number(result.priceIndex));
+    text(
+      "resultSentence",
+      `Změna z ${money(result.oldPrice)} na ${money(result.newPrice)} představuje ${isUp ? "zdražení" : isDown ? "zlevnění" : "nulovou změnu"} o ${percent(Math.abs(result.relativeChange))}.`,
+    );
+
+    text("returnLabel", isUp ? "Nutné zlevnění pro návrat" : isDown ? "Nutné zdražení pro návrat" : "Návrat k původní ceně");
+    text("returnPercent", result.returnPercent === null ? "Nedefinováno" : percent(result.returnPercent));
+    text(
+      "returnText",
+      isUp
+        ? `Z nové ceny je potřeba odečíst ${money(Math.abs(result.difference))}, tedy ${percent(result.returnPercent)}.`
+        : isDown
+          ? `K nové ceně je potřeba přidat ${money(Math.abs(result.difference))}, tedy ${result.returnPercent === null ? "nedefinované procento" : percent(result.returnPercent)}.`
+          : "Cena už odpovídá původní hodnotě.",
+    );
+
+    const intensity = Math.abs(result.relativeChange);
+    text("decisionHeadline", intensity >= 20 ? "Výrazná cenová změna" : intensity >= 5 ? "Změna je dobře znatelná" : "Menší relativní změna");
+    text("decisionText", `Cenový index je ${number(result.priceIndex)}. Nová cena tedy odpovídá ${percent(result.priceIndex)} původní hodnoty.`);
+    text(
+      "nextStepText",
+      isUp
+        ? depth === "advanced" ? "Zkontrolujte dopad za celé období a porovnejte alternativní scénáře." : "U pravidelného výdaje přepněte na pokročilý režim a spočítejte roční dopad."
+        : isDown
+          ? "Ověřte, zda se nezměnilo množství, kvalita nebo podmínky nabídky."
+          : "Obě porovnávané ceny jsou stejné.",
+    );
+
+    renderImpact();
+    renderScenarios();
+    updateHeroPreview();
+
+    if (options.scroll && window.matchMedia("(max-width: 760px)").matches) {
+      $("vysledek").scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+    return true;
+  }
+
+  function renderImpact() {
+    if (!result) return;
+    const units = Number($("unitsPerMonth").value);
+    const months = Number($("periodMonths").value);
+    const error = $("impactError");
+
+    if (!Number.isFinite(units) || units < 0 || !Number.isInteger(months) || months < 1 || months > 120) {
+      error.hidden = false;
+      error.textContent = "Zadejte nezáporné množství a celé období od 1 do 120 měsíců.";
+      return;
+    }
+
+    error.hidden = true;
+    const oldCost = result.oldPrice * units * months;
+    const newCost = result.newPrice * units * months;
+    const difference = newCost - oldCost;
+
+    text("oldPeriodCost", money(oldCost));
+    text("newPeriodCost", money(newCost));
+    text("periodDifference", `${difference > 0 ? "+" : ""}${money(difference)}`);
+    text("monthlyDifference", `${difference > 0 ? "+" : ""}${money(difference / months)}`);
+    text(
+      "impactNote",
+      difference > 0
+        ? `Za ${months} měsíců zaplatíte při stejném množství o ${money(difference)} více.`
+        : difference < 0
+          ? `Za ${months} měsíců ušetříte při stejném množství ${money(Math.abs(difference))}.`
+          : "Výdaj za období se nemění.",
+    );
+  }
+
+  function renderScenarios() {
+    if (!result) return;
+    const body = $("scenarioBody");
+    body.replaceChildren();
+
+    [-25, -10, -5, 5, 10, 25].forEach((change) => {
+      const price = result.oldPrice * (1 + change / 100);
+      const difference = price - result.oldPrice;
+      const row = document.createElement("tr");
+      row.className = change < 0 ? "down" : "up";
+      row.innerHTML = `<td><strong>${change > 0 ? "+" : ""}${change} %</strong></td><td>${money(price)}</td><td>${difference > 0 ? "+" : ""}${money(difference)}</td><td>${number(100 + change)}</td>`;
+      body.appendChild(row);
+    });
+  }
+
+  function updateHeroPreview() {
+    if (!result) return;
+    const badge = document.querySelector(".chart-head b");
+    const value = document.querySelector(".chart-value strong");
+    const labels = document.querySelectorAll(".chart-bars span");
+    const bars = document.querySelectorAll(".chart-bars u");
+    if (badge) badge.textContent = `${result.relativeChange > 0 ? "+" : ""}${percent(result.relativeChange)}`;
+    if (value) value.textContent = money(result.newPrice);
+    if (labels[0]) labels[0].textContent = money(result.oldPrice);
+    if (labels[1]) labels[1].textContent = money(result.newPrice);
+    if (bars.length === 2) {
+      const max = Math.max(result.oldPrice, result.newPrice, 1);
+      bars[0].style.height = `${Math.max(12, (result.oldPrice / max) * 88)}%`;
+      bars[1].style.height = `${Math.max(12, (result.newPrice / max) * 88)}%`;
+    }
+  }
+
+  function setMode(nextMode) {
+    mode = depth === "basic" ? "compare" : nextMode;
+    form.dataset.mode = mode;
+
+    document.querySelectorAll(".mode-tabs [data-mode]").forEach((button) => {
+      const active = button.dataset.mode === mode;
+      button.classList.toggle("is-active", active);
+      button.setAttribute("aria-pressed", String(active));
+    });
+    document.querySelectorAll("[data-panel]").forEach((panel) => {
+      panel.hidden = panel.dataset.panel !== mode;
+    });
+    renderMain();
+  }
+
+  function setDepth(nextDepth) {
+    depth = nextDepth;
+    form.dataset.depth = depth;
+    document.querySelectorAll("[data-depth]").forEach((button) => {
+      const active = button.dataset.depth === depth;
+      button.classList.toggle("is-active", active);
+      button.setAttribute("aria-pressed", String(active));
+    });
+    document.querySelectorAll(".advanced-only").forEach((element) => {
+      element.hidden = depth !== "advanced";
+    });
+    if (depth === "basic") setMode("compare");
+    else setMode(mode || "compare");
+  }
+
+  function setPreset(name) {
+    const preset = presets[name];
+    if (!preset) return;
+    if (depth !== "advanced") setDepth("advanced");
+    setMode(preset.mode);
+
+    if (preset.mode === "compare") {
+      $("oldPrice").value = preset.old;
+      $("newPrice").value = preset.new;
+    } else if (preset.mode === "forward") {
+      $("basePrice").value = preset.base;
+      $("changePercent").value = preset.percent;
+      $("forwardDirection").value = preset.direction;
+    } else {
+      $("currentPrice").value = preset.current;
+      $("previousPercent").value = preset.percent;
+      $("reverseDirection").value = preset.direction;
+    }
+
+    $("unitsPerMonth").value = preset.units;
+    $("periodMonths").value = preset.months;
+    document.querySelectorAll("[data-preset]").forEach((button) => {
+      button.classList.toggle("is-active", button.dataset.preset === name);
+    });
+    renderMain();
+  }
+
+  function reset() {
+    form.reset();
+    $("oldPrice").value = 1000;
+    $("newPrice").value = 1200;
+    $("unitsPerMonth").value = 1;
+    $("periodMonths").value = 12;
+    document.querySelectorAll("[data-preset]").forEach((button) => button.classList.remove("is-active"));
+    mode = "compare";
+    setDepth("basic");
+  }
+
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    renderMain({ scroll: true });
+  });
+  form.addEventListener("input", () => renderMain());
+  form.addEventListener("change", () => renderMain());
+  document.querySelectorAll("[data-depth]").forEach((button) => button.addEventListener("click", () => setDepth(button.dataset.depth)));
+  document.querySelectorAll(".mode-tabs [data-mode]").forEach((button) => button.addEventListener("click", () => setMode(button.dataset.mode)));
+  document.querySelectorAll("[data-preset]").forEach((button) => button.addEventListener("click", () => setPreset(button.dataset.preset)));
+  $("impactForm").addEventListener("submit", (event) => {
+    event.preventDefault();
+    renderImpact();
+  });
+  ["unitsPerMonth", "periodMonths"].forEach((id) => $(id).addEventListener("input", renderImpact));
+  $("resetBtn").addEventListener("click", reset);
+
+  setDepth("basic");
+})();
