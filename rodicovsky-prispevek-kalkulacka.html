@@ -22,7 +22,7 @@
   <meta property="og:description" content="Zůstatek, délka čerpání, měsíční limit, termín dočerpání a praktické varianty pro rodinný rozpočet.">
   <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg">
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="stylesheet" href="rodicovsky-prispevek-v2.css?v=20260730-6">
+  <link rel="stylesheet" href="rodicovsky-prispevek-v2.css?v=20260730-7">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Kalkulačka rodičovského příspěvku 2026","url":"https://rychlevypocty.cz/rodicovsky-prispevek-kalkulacka.html","applicationCategory":"FinanceApplication","operatingSystem":"All","inLanguage":"cs-CZ","dateModified":"2026-07-30","description":"Kalkulačka zůstatku, měsíčního čerpání, limitu a termínu vyčerpání rodičovského příspěvku podle pravidel roku 2026.","offers":{"@type":"Offer","price":"0","priceCurrency":"CZK"}}</script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Domů","item":"https://rychlevypocty.cz/"},{"@type":"ListItem","position":2,"name":"Rodina a rozpočet","item":"https://rychlevypocty.cz/rodina-a-rozpocet.html"},{"@type":"ListItem","position":3,"name":"Rodičovský příspěvek","item":"https://rychlevypocty.cz/rodicovsky-prispevek-kalkulacka.html"}]}</script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Kolik činí rodičovský příspěvek v roce 2026?","acceptedAnswer":{"@type":"Answer","text":"Na jedno dítě narozené od 1. ledna 2024 činí celkový nárok 350 000 Kč. U současně narozených vícerčat je pro děti narozené od 1. ledna 2026 celková částka 700 000 Kč; pro vícerčata narozená v letech 2024 a 2025 činí 525 000 Kč."}},{"@type":"Question","name":"Jaký je měsíční limit rodičovského příspěvku bez DVZ?","acceptedAnswer":{"@type":"Answer","text":"Od roku 2026 lze bez stanoveného nebo při nízkém denním vyměřovacím základu volit nejvýše 15 000 Kč měsíčně na jedno dítě a 30 000 Kč u současně narozených vícerčat."}},{"@type":"Question","name":"Jak často lze měnit měsíční částku?","acceptedAnswer":{"@type":"Answer","text":"Volbu měsíční výše lze podle informací Úřadu práce měnit jednou za tři měsíce. Změnu nelze provést zpětně."}},{"@type":"Question","name":"Mohu při rodičovském příspěvku pracovat?","acceptedAnswer":{"@type":"Answer","text":"Ano. Rodičovský příspěvek není závislý na příjmu rodiny. Musí však být zajištěna řádná péče o nejmladší dítě a u dítěte mladšího dvou let se sleduje docházka do zařízení v zákonném rozsahu."}},{"@type":"Question","name":"Do jakého věku dítěte je nutné rodičovský příspěvek vyčerpat?","acceptedAnswer":{"@type":"Answer","text":"U dětí narozených od 1. ledna 2024 nárok končí nejpozději dosažením tří let věku dítěte. U dětí narozených do 31. prosince 2023 platí nejzazší hranice čtyř let."}},{"@type":"Question","name":"Je výsledek kalkulačky závazný pro Úřad práce?","acceptedAnswer":{"@type":"Answer","text":"Ne. Kalkulačka je orientační plánovací nástroj. Nárok, dostupný DVZ, měsíční maximum i konkrétní výplatu posuzuje Úřad práce podle doložených údajů."}}]}</script>
@@ -81,19 +81,51 @@
     <section class="workspace" id="kalkulacka">
       <div class="site-shell workspace-grid">
         <form class="calculator-card" id="parentalForm" novalidate>
-          <div class="panel-heading"><div><p class="panel-kicker">Vstupy</p><h2>Nastavte svůj plán čerpání</h2></div><span class="live-label">výsledek živě</span></div>
+          <div class="panel-heading"><div><p class="panel-kicker">Kalkulačka krok za krokem</p><h2>Nastavte svůj plán čerpání</h2></div><span class="live-label">výsledek živě</span></div>
+          <p class="panel-intro">Nejdřív vyberte, jakou odpověď potřebujete. Potom zvolte jednoduchý nebo podrobný plán a doplňte údaje.</p>
 
-          <fieldset class="goal-switch" aria-label="Co chcete spočítat">
-            <legend>Co chcete zjistit?</legend>
-            <div>
-              <button type="button" id="durationGoalBtn" class="is-active" aria-pressed="true"><strong>Jak dlouho vydrží</strong><span>Zadám měsíční částku</span></button>
-              <button type="button" id="targetGoalBtn" aria-pressed="false"><strong>Kolik čerpat do cíle</strong><span>Zadám cílový měsíc</span></button>
+          <section class="planner-step" aria-labelledby="goalStepTitle">
+            <div class="planner-step-head">
+              <span aria-hidden="true">1</span>
+              <div><p>Výsledek výpočtu</p><h3 id="goalStepTitle">Co má kalkulačka spočítat?</h3></div>
             </div>
-          </fieldset>
+            <fieldset class="goal-switch" aria-label="Co má kalkulačka spočítat">
+              <legend class="sr-only">Vyberte požadovaný výsledek</legend>
+              <div>
+                <button type="button" id="durationGoalBtn" class="is-active" aria-pressed="true">
+                  <span class="choice-icon" aria-hidden="true">→</span>
+                  <span class="choice-copy"><strong>Kdy bude příspěvek vyčerpán</strong><small>Znáte měsíční částku. Spočítáme počet měsíců a konec čerpání.</small><em>Vstup: měsíční částka</em></span>
+                  <span class="choice-state" aria-hidden="true"><i class="state-default">Vybrat</i><i class="state-active">Zvoleno</i></span>
+                </button>
+                <button type="button" id="targetGoalBtn" aria-pressed="false">
+                  <span class="choice-icon" aria-hidden="true">←</span>
+                  <span class="choice-copy"><strong>Jakou částku zvolit do cílového měsíce</strong><small>Znáte cílový měsíc. Spočítáme potřebné měsíční čerpání.</small><em>Vstup: cílový měsíc</em></span>
+                  <span class="choice-state" aria-hidden="true"><i class="state-default">Vybrat</i><i class="state-active">Zvoleno</i></span>
+                </button>
+              </div>
+            </fieldset>
+          </section>
 
-          <div class="mode-switch" role="tablist" aria-label="Režim kalkulačky">
-            <button type="button" id="basicModeBtn" class="is-active" role="tab" aria-selected="true" aria-controls="basicMode"><strong>Základní</strong><span>Rychlý plán ze čtyř údajů</span></button>
-            <button type="button" id="advancedModeBtn" role="tab" aria-selected="false" aria-controls="advancedMode"><strong>Pokročilý</strong><span>DVZ, vlastní start a dvě fáze</span></button>
+          <section class="planner-step planner-step-mode" aria-labelledby="modeStepTitle">
+            <div class="planner-step-head">
+              <span aria-hidden="true">2</span>
+              <div><p>Podrobnost plánu</p><h3 id="modeStepTitle">Jak přesný plán potřebujete?</h3></div>
+            </div>
+            <div class="mode-switch" role="tablist" aria-label="Podrobnost plánu">
+              <button type="button" id="basicModeBtn" class="is-active" role="tab" aria-selected="true" aria-controls="basicMode">
+                <span class="mode-tag">Rychlý odhad</span><strong>Základní plán</strong><small>Čtyři hlavní údaje. Vhodné pro rychlé ověření částky a termínu.</small>
+                <span class="choice-state" aria-hidden="true"><i class="state-default">Vybrat</i><i class="state-active">Zvoleno</i></span>
+              </button>
+              <button type="button" id="advancedModeBtn" role="tab" aria-selected="false" aria-controls="advancedMode">
+                <span class="mode-tag">Detailní plán</span><strong>Pokročilé nastavení</strong><small>Přidá DVZ, vlastní začátek a změnu částky ve dvou fázích.</small>
+                <span class="choice-state" aria-hidden="true"><i class="state-default">Vybrat</i><i class="state-active">Zvoleno</i></span>
+              </button>
+            </div>
+          </section>
+
+          <div class="input-step-heading">
+            <span aria-hidden="true">3</span>
+            <div><p>Doplňte údaje</p><h3>Údaje o dítěti a dosavadním čerpání</h3><small>Začněte datem narození. Výsledek vpravo se aktualizuje průběžně.</small></div>
           </div>
 
           <div id="basicMode" role="tabpanel" aria-labelledby="basicModeBtn">
