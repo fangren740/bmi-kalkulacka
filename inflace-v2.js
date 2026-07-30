@@ -277,9 +277,18 @@
     return true;
   }
 
+  function updateTaskButtons(task){
+    qsa('[data-task]').forEach(btn=>{
+      const active=btn.dataset.task===task;
+      btn.classList.toggle('is-active',active);
+      btn.setAttribute('aria-pressed',String(active));
+      const status=btn.querySelector(':scope > i');
+      if(status)status.textContent=active?'Vybráno':'Vybrat';
+    });
+  }
   function setTask(task){
     state.task=task;
-    qsa('[data-task]').forEach(btn=>{const active=btn.dataset.task===task;btn.classList.toggle('is-active',active);btn.setAttribute('aria-pressed',String(active))});
+    updateTaskButtons(task);
     modeText();render();
   }
   function setMode(mode){
@@ -294,7 +303,7 @@
     form.reset();
     fields.amount.value='100 000';fields.rate.value='3';fields.years.value='10';fields.phaseYears.value='3';fields.phaseRate.value='5';fields.nominal.value='0';fields.fee.value='0';
     state.task='future';modeText();
-    qsa('[data-task]').forEach(btn=>{const active=btn.dataset.task==='future';btn.classList.toggle('is-active',active);btn.setAttribute('aria-pressed',String(active))});
+    updateTaskButtons('future');
     setMode('basic');
   }
 
