@@ -113,6 +113,8 @@
     document.body.classList.toggle('is-advanced',next==='advanced');
     document.querySelectorAll('[data-mode]').forEach(button=>{const active=button.dataset.mode===next;button.classList.toggle('is-active',active);button.setAttribute('aria-pressed',String(active))});
     $('advancedSettings').hidden=next!=='advanced';
+    const choiceCount=$('choiceCount');
+    if(choiceCount)choiceCount.textContent=next==='advanced'?'7 možností včetně pokročilých':'3 nejčastější možnosti';
     if(next==='basic'&&!['part','share','adjust'].includes(task))setTask('part');else render();
   }
   function applyExample(name){const item=examples[name];if(!item)return;if(!['part','share','adjust'].includes(item.task))setMode('advanced');setTask(item.task);Object.entries(item.values).forEach(([id,value])=>{$(id).value=value});render({scroll:true})}

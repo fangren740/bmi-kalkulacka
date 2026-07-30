@@ -24,7 +24,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png?v=2">
 <link rel="manifest" href="site.webmanifest?v=2">
 <meta name="theme-color" content="#091d3b">
-<link rel="stylesheet" href="percentage-pro.css?v=20260730">
+<link rel="stylesheet" href="percentage-pro.css?v=20260730-2">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"RychléVýpočty.cz","item":"https://rychlevypocty.cz/"},{"@type":"ListItem","position":2,"name":"Kalkulačky","item":"https://rychlevypocty.cz/kalkulacky.html"},{"@type":"ListItem","position":3,"name":"Kalkulačka procent","item":"https://rychlevypocty.cz/procenta-kalkulacka.html"}]}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Kalkulačka procent","url":"https://rychlevypocty.cz/procenta-kalkulacka.html","description":"Výpočet procenta z čísla, podílu části z celku, změny, základu, procentních bodů a dvou navazujících změn.","applicationCategory":"UtilitiesApplication","operatingSystem":"All","inLanguage":"cs-CZ","dateModified":"2026-07-30","offers":{"@type":"Offer","price":"0","priceCurrency":"CZK"}}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Jak vypočítat procento z čísla?","acceptedAnswer":{"@type":"Answer","text":"Procento vydělte stem a vynásobte základem. Například 15 % z 200 je 30."}},{"@type":"Question","name":"Jak zjistit, kolik procent tvoří část z celku?","acceptedAnswer":{"@type":"Answer","text":"Část vydělte celkem a výsledek vynásobte stem. Část i celek musí být ve stejné jednotce."}},{"@type":"Question","name":"Jak dopočítat celý základ?","acceptedAnswer":{"@type":"Answer","text":"Známou část vydělte procentem převedeným na desetinný koeficient. Pokud je 30 hodnotou 15 % ze základu, základ je 200."}},{"@type":"Question","name":"Jak se počítá procentní změna?","acceptedAnswer":{"@type":"Answer","text":"Rozdíl nové a původní hodnoty vydělte původní hodnotou a vynásobte stem."}},{"@type":"Question","name":"Jaký je rozdíl mezi procentem a procentním bodem?","acceptedAnswer":{"@type":"Answer","text":"Procentní bod je prostý rozdíl dvou procentních hodnot. Relativní procentní změna vztahuje rozdíl k původní hodnotě."}},{"@type":"Question","name":"Proč zvýšení o 10 % a snížení o 10 % nedá původní hodnotu?","acceptedAnswer":{"@type":"Answer","text":"Druhá změna se počítá z nového základu. Hodnota 100 zvýšená na 110 a následně snížená o 10 % skončí na 99."}},{"@type":"Question","name":"Mohou procenta překročit 100 %?","acceptedAnswer":{"@type":"Answer","text":"Ano. Podíl může být vyšší než 100 %, pokud je část větší než zvolený celek, a růst může překročit původní hodnotu."}},{"@type":"Question","name":"Kdy je procentní změna nedefinovaná?","acceptedAnswer":{"@type":"Answer","text":"Standardní relativní změnu nelze vypočítat z původní hodnoty nula, protože by se dělilo nulou."}}]}</script>
@@ -64,9 +64,21 @@
         <div class="mode-switch" role="group" aria-label="Režim kalkulačky"><button type="button" class="is-active" data-mode="basic" aria-pressed="true">Základní</button><button type="button" data-mode="advanced" aria-pressed="false">Pokročilý</button></div>
       </div>
 
-      <div class="quick-flow" aria-label="Postup výpočtu"><article><span>1</span><div><b>Vyberte otázku</b><small>Která věta nejlépe odpovídá vašemu zadání?</small></div></article><article><span>2</span><div><b>Doplňte dvě hodnoty</b><small>Kalkulačka průběžně hlídá neplatné zadání.</small></div></article><article><span>3</span><div><b>Přečtěte výsledek</b><small>Uvidíte číslo, vzorec, význam i kontrolu.</small></div></article></div>
+      <div class="quick-flow" aria-label="Jak kalkulačku použít">
+        <strong>Jak na to:</strong>
+        <ol>
+          <li><span>1</span>Vyberte otázku</li>
+          <li><span>2</span>Doplňte dvě hodnoty</li>
+          <li><span>3</span>Přečtěte výsledek a kontrolu</li>
+        </ol>
+      </div>
 
-      <div class="task-grid" id="taskGrid" role="group" aria-label="Typ procentního výpočtu">
+      <section class="task-chooser" aria-labelledby="taskChooserTitle">
+        <div class="task-chooser-head">
+          <div><span class="choice-kicker">Krok 1</span><h3 id="taskChooserTitle">Vyberte typ výpočtu</h3><p>Klikněte na větu, která nejlépe odpovídá vašemu zadání. Když si nejste jistí, začněte první možností a zkontrolujte modelový příklad pod názvem.</p></div>
+          <span class="choice-count" id="choiceCount">3 nejčastější možnosti</span>
+        </div>
+        <div class="task-grid" id="taskGrid" role="group" aria-label="Typ procentního výpočtu">
         <button type="button" class="task-button is-active" data-task="part" aria-pressed="true"><span>01</span><b>Kolik je procent z čísla?</b><small>Například 15 % z 200</small></button>
         <button type="button" class="task-button" data-task="share" aria-pressed="false"><span>02</span><b>Kolik procent je část z celku?</b><small>Například 45 z 180</small></button>
         <button type="button" class="task-button" data-task="adjust" aria-pressed="false"><span>03</span><b>Zvýšit nebo snížit hodnotu</b><small>Například 800 o 12 %</small></button>
@@ -74,7 +86,8 @@
         <button type="button" class="task-button advanced-only" data-task="change" aria-pressed="false"><span>05</span><b>Procentní změna mezi hodnotami</b><small>Z 100 na 125</small></button>
         <button type="button" class="task-button advanced-only" data-task="points" aria-pressed="false"><span>06</span><b>Rozdíl v procentních bodech</b><small>Z 20 % na 25 %</small></button>
         <button type="button" class="task-button advanced-only" data-task="chain" aria-pressed="false"><span>07</span><b>Dvě změny po sobě</b><small>Například +10 % a −10 %</small></button>
-      </div>
+        </div>
+      </section>
 
       <div class="calculator-grid">
         <form class="input-panel" id="percentageForm" novalidate>
@@ -226,6 +239,6 @@
 </main>
 <footer class="site-footer"><div class="shell footer-grid"><div class="footer-brand"><img src="logo-rychlevypocty-footer.svg" width="205" height="38" alt="RychléVýpočty.cz"><p>Praktické české kalkulačky s transparentním postupem, interpretací a ověřenou metodikou.</p></div><div><h3>Kalkulačky</h3><a href="kalkulacky.html">Všechny kalkulačky</a><a href="matematika-a-prevody.html">Matematika a převody</a><a href="business-a-cenotvorba.html">Business a cenotvorba</a></div><div><h3>Projekt</h3><a href="jak-pocitame.html">Jak počítáme</a><a href="o-nas.html">O projektu</a><a href="kontakt.html">Kontakt</a></div><div><h3>Pravidla</h3><a href="podminky-pouziti.html">Podmínky použití</a><a href="ochrana-osobnich-udaju.html">Ochrana soukromí</a></div></div><div class="shell footer-bottom"><p>© 2026 RychléVýpočty.cz. Výpočty jsou informativní a nenahrazují odborné posouzení.</p></div></footer>
 <button class="back-to-top" id="backToTop" type="button" aria-label="Zpět nahoru">↑</button>
-<script src="procenta.js?v=20260730"></script>
+<script src="procenta.js?v=20260730-2"></script>
 </body>
 </html>
