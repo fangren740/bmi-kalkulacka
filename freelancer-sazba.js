@@ -16,6 +16,15 @@
     "hoursPerDay",
     "currentRate"
   ];
+  const BASIC_DEFAULTS = Object.freeze({
+    monthsOff: 2,
+    obligationReserve: 30,
+    safetyReserve: 10,
+    pricingBuffer: 10,
+    hoursPerDay: 6,
+    currentRate: 0
+  });
+  let mode = "basic";
 
   const moneyFormat = new Intl.NumberFormat("cs-CZ", {
     style: "currency",
@@ -33,7 +42,9 @@
   }
 
   function readValues() {
-    return Object.fromEntries(fieldIds.map((id) => [id, Number($(id).value)]));
+    const values = Object.fromEntries(fieldIds.map((id) => [id, Number($(id).value)]));
+    if (mode === "basic") Object.assign(values, BASIC_DEFAULTS);
+    return values;
   }
 
   function validate(v) {
@@ -41,12 +52,14 @@
     if (!Number.isFinite(v.businessCosts) || v.businessCosts < 0) return "Náklady podnikání nemohou být záporné.";
     if (v.targetIncome + v.businessCosts <= 0) return "Zadejte osobní cíl nebo náklady vyšší než nula.";
     if (!Number.isFinite(v.billableHours) || v.billableHours < 1 || v.billableHours > 300) return "Fakturovatelné hodiny musí být v rozmezí 1 až 300 za měsíc.";
-    if (!Number.isFinite(v.monthsOff) || v.monthsOff < 0 || v.monthsOff > 11) return "Počet měsíců bez plné fakturace musí být od 0 do 11.";
-    if (!Number.isFinite(v.obligationReserve) || v.obligationReserve < 0 || v.obligationReserve >= 90) return "Rezerva na povinné platby musí být od 0 do méně než 90 %.";
-    if (!Number.isFinite(v.safetyReserve) || v.safetyReserve < 0 || v.safetyReserve > 100) return "Provozní rezerva musí být v rozmezí 0 až 100 %.";
-    if (!Number.isFinite(v.pricingBuffer) || v.pricingBuffer < 0 || v.pricingBuffer > 100) return "Cenový prostor musí být v rozmezí 0 až 100 %.";
-    if (!Number.isFinite(v.hoursPerDay) || v.hoursPerDay < 1 || v.hoursPerDay > 24) return "Počet fakturovatelných hodin za den musí být v rozmezí 1 až 24.";
-    if (!Number.isFinite(v.currentRate) || v.currentRate < 0) return "Současná sazba nemůže být záporná.";
+    if (mode === "advanced") {
+      if (!Number.isFinite(v.monthsOff) || v.monthsOff < 0 || v.monthsOff > 11) return "Počet měsíců bez plné fakturace musí být od 0 do 11.";
+      if (!Number.isFinite(v.obligationReserve) || v.obligationReserve < 0 || v.obligationReserve >= 90) return "Rezerva na povinné platby musí být od 0 do méně než 90 %.";
+      if (!Number.isFinite(v.safetyReserve) || v.safetyReserve < 0 || v.safetyReserve > 100) return "Provozní rezerva musí být v rozmezí 0 až 100 %.";
+      if (!Number.isFinite(v.pricingBuffer) || v.pricingBuffer < 0 || v.pricingBuffer > 100) return "Cenový prostor musí být v rozmezí 0 až 100 %.";
+      if (!Number.isFinite(v.hoursPerDay) || v.hoursPerDay < 1 || v.hoursPerDay > 24) return "Počet fakturovatelných hodin za den musí být v rozmezí 1 až 24.";
+      if (!Number.isFinite(v.currentRate) || v.currentRate < 0) return "Současná sazba nemůže být záporná.";
+    }
     return "";
   }
 
@@ -119,8 +132,13 @@
   }
 
   function renderComparison(result) {
+    if (mode === "basic") {
+      setText("currentRateText", "Přepněte na přesný model a doplňte svou současnou sazbu pro přímé porovnání.");
+      $("currentComparison").dataset.state = "neutral";
+      return;
+    }
     if (!result.currentRate) {
-      setText("currentRateText", "Doplňte ji v pokročilém nastavení pro porovnání.");
+      setText("currentRateText", "Doplňte současnou sazbu v přesném modelu pro porovnání.");
       $("currentComparison").dataset.state = "neutral";
       return;
     }
@@ -221,7 +239,7 @@
     setText("interpretationTitle", insight.title);
     setText("interpretationText", insight.text);
     setText("nextStepText", insight.next);
-    setText("resultStatus", "Model přepočítán");
+    setText("resultStatus", mode === "basic" ? "Rychlý model" : "Přesný model");
     renderComparison(result);
     renderBreakdown(result);
     renderScenarios(values);
@@ -231,6 +249,26 @@
     }
     return true;
   }
+
+  function setMode(nextMode) {
+    mode = nextMode === "advanced" ? "advanced" : "basic";
+    const advanced = $("advancedFields");
+    if (advanced) advanced.hidden = mode !== "advanced";
+    document.querySelectorAll("[data-rate-mode]").forEach((button) => {
+      const active = button.dataset.rateMode === mode;
+      button.classList.toggle("is-active", active);
+      button.setAttribute("aria-pressed", String(active));
+    });
+    setText("modeStatus", mode === "basic" ? "Rychlý model" : "Přesný model");
+    setText("modeExplainer", mode === "basic"
+      ? "Co právě počítáme: konzervativní rychlý model s 2 měsíci bez plné fakturace, 30% rezervou na povinné platby, 10% provozní rezervou a 10% cenovým prostorem. Pokročilé vstupy do výsledku nevstupují."
+      : "Co právě počítáme: přesný model podle vašich vlastních hodnot. Zkontrolujte hlavně měsíce bez plné fakturace a skutečně prodané hodiny, protože mají na sazbu největší vliv.");
+    render();
+  }
+
+  document.querySelectorAll("[data-rate-mode]").forEach((button) => {
+    button.addEventListener("click", () => setMode(button.dataset.rateMode));
+  });
 
   form.addEventListener("submit", (event) => {
     event.preventDefault();
@@ -243,7 +281,7 @@
   });
   $("resetBtn").addEventListener("click", () => {
     form.reset();
-    render();
+    setMode("basic");
   });
-  render();
+  setMode("basic");
 })();
