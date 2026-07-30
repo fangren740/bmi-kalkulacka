@@ -1,166 +1,88 @@
-
 (function(){
-  const $ = (id) => document.getElementById(id);
-  const form = $("maternityForm");
-  if(!form) return;
+  "use strict";
+  const form=document.getElementById("maternityForm");
+  if(!form)return;
+  const $=id=>document.getElementById(id);
+  const RH1=1633,RH2=2449,RH3=4897;
+  const money=new Intl.NumberFormat("cs-CZ",{maximumFractionDigits:0});
+  const shortDate=new Intl.DateTimeFormat("cs-CZ",{day:"numeric",month:"short",year:"numeric"});
+  const fmt=n=>`${money.format(Math.round(Number.isFinite(n)?n:0))} Kč`;
+  const pct=n=>`${money.format(Math.round(Number.isFinite(n)?n:0))} %`;
+  let mode="basic";
 
-  const RH1 = 1633, RH2 = 2449, RH3 = 4897;
-  const fmt = new Intl.NumberFormat("cs-CZ", { maximumFractionDigits: 0 });
-  const czk = n => `${fmt.format(Math.round(Number.isFinite(n) ? n : 0))} Kč`;
-  const pct = n => `${Math.round((Number.isFinite(n) ? n : 0))} %`;
-  const dayText = n => {
-    n = Math.round(n);
-    if(n === 1) return "1 den";
-    if(n >= 2 && n <= 4) return `${n} dny`;
-    return `${n} dnů`;
-  };
-  const monthFmt = new Intl.DateTimeFormat("cs-CZ", { month:"long", year:"numeric" });
-
-  let mode = "monthly";
-  const modeBtns = Array.from(document.querySelectorAll(".mt-mode"));
-
-  function val(id){
-    const el = $(id);
-    const n = Number(String(el.value || "").replace(",", "."));
-    return Number.isFinite(n) ? n : 0;
+  function number(id){const el=$(id);const n=Number(String(el&&el.value||"").replace(",","."));return Number.isFinite(n)?n:0}
+  function addDays(date,days){const d=new Date(date.getTime());d.setDate(d.getDate()+Math.max(0,Math.round(days))-1);return d}
+  function dateValue(id){const el=$(id);return el&&el.value?new Date(`${el.value}T12:00:00`):null}
+  function duration(type){return({motherSingle:196,motherMultiple:259,takeoverSingle:154,takeoverMultiple:217})[type]||196}
+  function durationWeeks(type){return({motherSingle:28,motherMultiple:37,takeoverSingle:22,takeoverMultiple:31})[type]||28}
+  function reduceDvz(dvz){
+    const p1=Math.min(Math.max(dvz,0),RH1);
+    const p2=Math.min(Math.max(dvz-RH1,0),RH2-RH1)*.60;
+    const p3=Math.min(Math.max(dvz-RH2,0),RH3-RH2)*.30;
+    return Math.ceil(p1+p2+p3);
   }
-
-  function addDays(date, days){
-    const d = new Date(date.getTime());
-    d.setDate(d.getDate() + Math.max(0, Math.round(days)) - 1);
-    return d;
+  function dailyBenefit(dvz){return Math.ceil(reduceDvz(dvz)*.70)}
+  function inputs(){
+    const source=$("incomeSource").value;
+    const monthly=Math.max(0,number("monthlyIncome"));
+    const total=mode==="basic"?monthly*12:Math.max(0,number("periodIncome"));
+    const days=mode==="basic"?365:Math.max(1,number("periodDays"));
+    return{source,monthly:mode==="basic"?monthly:total/12,total,days,dvz:total/days};
   }
-
-  function reducedDVZ(dvz){
-    let r = 0;
-    r += Math.min(dvz, RH1);
-    if(dvz > RH1) r += Math.min(dvz - RH1, RH2 - RH1) * 0.60;
-    if(dvz > RH2) r += Math.min(dvz - RH2, RH3 - RH2) * 0.30;
-    return Math.max(0, r);
-  }
-
-  function durationByCase(type){
-    if(type === "motherMultiple") return 259;
-    if(type === "fatherSingle") return 154;
-    if(type === "fatherMultiple") return 217;
-    return 196;
-  }
-
+  function setText(id,value){const el=$(id);if(el)el.textContent=value}
   function calculate(){
-    const monthlyIncome = Math.max(0, val("monthlyIncome"));
-    const totalIncome = Math.max(0, val("totalIncome"));
-    const days = Math.max(1, val("periodDays"));
-    const insuranceDays = Math.max(0, val("insuranceDays"));
-    const caseType = $("caseType").value;
-    const duration = durationByCase(caseType);
+    const data=inputs();
+    const rdvz=reduceDvz(data.dvz);
+    const daily=Math.ceil(rdvz*.70);
+    const type=$("caseType").value;
+    const daysTotal=duration(type);
+    const weeks=durationWeeks(type);
+    const total=daily*daysTotal;
+    const m28=daily*28,m30=daily*30,m31=daily*31;
+    const replacement=data.monthly>0?m30/data.monthly*100:0;
+    const retained=data.dvz>0?rdvz/data.dvz*100:0;
+    const start=dateValue("startDate");
+    const end=start?addDays(start,daysTotal):null;
 
-    if(mode === "monthly"){
-      $("totalIncome").value = Math.round(monthlyIncome * 12);
-    } else {
-      $("monthlyIncome").value = Math.round(totalIncome / 12);
-    }
-
-    const effectiveTotal = mode === "monthly" ? monthlyIncome * 12 : Math.max(0, val("totalIncome"));
-    const dvz = effectiveTotal / days;
-    const rdvz = reducedDVZ(dvz);
-    const daily = rdvz * 0.70;
-    const monthly31 = daily * 31;
-    const total = daily * duration;
-    const replacement = monthlyIncome > 0 ? monthly31 / monthlyIncome * 100 : 0;
-
-    $("monthlyResult").textContent = czk(monthly31);
-    $("dailyResult").textContent = czk(daily);
-    $("totalResult").textContent = czk(total);
-    $("durationResult").textContent = dayText(duration);
-    $("dvzResult").textContent = czk(dvz);
-    $("reducedDvzResult").textContent = czk(rdvz);
-    $("replacementResult").textContent = pct(replacement);
-    $("primarySub").textContent = `Přibližná měsíční částka při 31 dnech. Denní dávka vychází ${czk(daily)}.`;
-
-    const start = $("startDate").value;
-    if(start){
-      const d = new Date(start + "T00:00:00");
-      $("endResult").textContent = monthFmt.format(addDays(d, duration));
-    } else {
-      $("endResult").textContent = "zadejte datum";
-    }
-
-    const insured = $("currentlyInsured").checked;
-    const protection = $("pregnancyProtection").checked;
-    let status = "Orientační nárok OK";
-    let title = "Výpočet vypadá realisticky";
-    let text = "Podle zadaných údajů máte splněnou základní kontrolu pojištění a výsledek lze použít pro orientační plánování.";
-    let next = "Spočítejte si hned i rodičovský příspěvek, který obvykle navazuje po skončení mateřské.";
-
-    if(insuranceDays < 270){
-      status = "Pozor na nárok";
-      title = "Nemusí být splněna doba pojištění";
-      text = `Zadali jste ${Math.round(insuranceDays)} dnů nemocenského pojištění. Pro nárok na PPM se orientačně sleduje alespoň 270 dnů v posledních dvou letech.`;
-      next = "Ověřte nárok u OSSZ. Pokud PPM nevznikne, řešte rodičovský příspěvek od narození dítěte.";
-    } else if(!insured || !protection){
-      status = "Nutné ověřit";
-      title = "Zkontrolujte pojištění nebo ochrannou lhůtu";
-      text = "Výše dávky může vycházet dobře, ale nárok závisí i na tom, zda trvá nemocenské pojištění nebo ochranná lhůta.";
-      next = "Ověřte konkrétní situaci u OSSZ podle pracovního poměru, ochranné lhůty a data nástupu.";
-    } else if(replacement < 55 && monthlyIncome > 0){
-      status = "Vyšší příjem se redukuje";
-      title = "Mateřská je výrazně nižší než mzda";
-      text = "U vyšších příjmů se projevují redukční hranice. Mateřská pak neroste stejně rychle jako hrubá mzda.";
-      next = "Doporučuji zkontrolovat rozpočet domácnosti a plán po přechodu na rodičovský příspěvek.";
-    }
-
-    $("statusPill").textContent = status;
-    $("decisionTitle").textContent = title;
-    $("decisionText").textContent = text;
-    $("nextActionText").textContent = next;
+    setText("monthlyResult",fmt(m30));setText("dailyResult",fmt(daily));setText("totalResult",fmt(total));setText("durationResult",`${daysTotal} dnů`);setText("endResult",end?shortDate.format(end):"zadejte datum");
+    setText("month28",fmt(m28));setText("month30",fmt(m30));setText("month31",fmt(m31));
+    setText("dvzResult",fmt(data.dvz));setText("reducedDvzResult",fmt(rdvz));setText("retainedResult",pct(retained));setText("replacementResult",pct(replacement));
+    setText("modeResultLabel",mode==="basic"?"odhad z měsíční mzdy":"výpočet z rozhodného období");
+    setText("resultStatus",mode==="basic"?"Rychlý odhad PPM":"Přesnější výpočet PPM");
+    setText("heroMonthly",fmt(m30));setText("heroDaily",fmt(daily));setText("heroTotal",fmt(total));setText("heroDuration",`${weeks} týdnů`);setText("heroIncome",data.source==="osvc"?"z měsíčních základů pojištění":`při průměru ${fmt(data.monthly)}`);setText("heroStart",start?shortDate.format(start):"—");setText("heroEnd",end?shortDate.format(end):"—");
+    const max=m31||1;[["bar28",m28],["bar30",m30],["bar31",m31]].forEach(([id,val])=>{const el=$(id);if(el)el.style.width=`${Math.max(5,val/max*100)}%`});
+    updateEligibility();
   }
-
-  function updateModeUi(){
-    form.classList.toggle("is-monthly-mode", mode === "monthly");
-    form.classList.toggle("is-total-mode", mode === "total");
-
-    const monthlyInput = $("monthlyIncome");
-    const totalInput = $("totalIncome");
-    const hint = $("modeHint");
-
-    if(monthlyInput && totalInput){
-      monthlyInput.readOnly = mode !== "monthly";
-      totalInput.readOnly = mode !== "total";
+  function updateEligibility(){
+    const card=$("eligibilityCard");card.classList.remove("is-warning","is-success");
+    if(mode==="basic"){
+      setText("eligibilityIcon","i");setText("eligibilityTitle","Výši máte spočítanou. Nárok ještě ověřte.");setText("eligibilityText","Rychlý režim neověřuje dobu pojištění ani ochrannou lhůtu. Pro orientační kontrolu přepněte na přesnější výpočet.");return;
     }
-
-    if(hint){
-      hint.textContent = mode === "monthly"
-        ? "Zadejte běžnou průměrnou hrubou mzdu. Roční příjem si kalkulačka dopočítá."
-        : "Zadejte celkový hrubý příjem za rozhodné období. Měsíční průměr se dopočítá.";
-    }
+    const insurance=number("insuranceDays");const active=$("insuredAtStart").checked;const osvc=$("incomeSource").value==="osvc";const osvcDays=number("osvcInsuranceDays");
+    const ok=insurance>=270&&active&&(!osvc||osvcDays>=180);
+    if(ok){card.classList.add("is-success");setText("eligibilityIcon","✓");setText("eligibilityTitle","Základní kontrola podmínek vychází kladně.");setText("eligibilityText","Zadané dny pojištění a stav při nástupu splňují orientační minimum. Konečný nárok a částku potvrzuje ČSSZ.");}
+    else{card.classList.add("is-warning");setText("eligibilityIcon","!");setText("eligibilityTitle","Některá základní podmínka nemusí být splněna.");let reason=[];if(insurance<270)reason.push(`pojištění ${Math.round(insurance)} z požadovaných 270 dnů`);if(!active)reason.push("netrvá pojištění ani označená ochranná lhůta");if(osvc&&osvcDays<180)reason.push(`OSVČ pojištění ${Math.round(osvcDays)} z požadovaných 180 dnů`);setText("eligibilityText",`Zkontrolujte: ${reason.join(", ")}. Konkrétní situaci ověřte u OSSZ.`);}
   }
-
-  function setMode(nextMode){
-    mode = nextMode;
-    modeBtns.forEach(btn => {
-      const active = btn.dataset.mode === mode;
-      btn.classList.toggle("is-active", active);
-      btn.setAttribute("aria-pressed", String(active));
-    });
-    updateModeUi();
+  function updateSource(){
+    const osvc=$("incomeSource").value==="osvc";
+    document.querySelectorAll(".osvc-only").forEach(el=>el.hidden=!osvc);
+    setText("periodIncomeLabel",osvc?"Úhrn měsíčních základů za období":"Započitatelný příjem za období");
+    setText("periodIncomeHelp",osvc?"Součet měsíčních základů, z nichž bylo zaplaceno nemocenské pojištění OSVČ.":"Obvykle součet započitatelné hrubé mzdy za 12 měsíců před nástupem.");
+    setText("incomeSourceHelp",osvc?"Nezadávejte obrat ani daňový zisk. Použijte základy nemocenského pojištění.":"Zadejte příjem, ze kterého bylo odvedeno nemocenské pojištění.");
+  }
+  function setMode(next){
+    mode=next;form.classList.toggle("is-basic",mode==="basic");form.classList.toggle("is-advanced",mode==="advanced");
+    $("basicFields").hidden=mode!=="basic";$("advancedFields").hidden=mode!=="advanced";
+    document.querySelectorAll(".mode-card").forEach(btn=>{const active=btn.dataset.mode===mode;btn.classList.toggle("is-active",active);btn.setAttribute("aria-pressed",String(active))});
     calculate();
   }
-
-  modeBtns.forEach(btn => btn.addEventListener("click", () => setMode(btn.dataset.mode)));
-  ["monthlyIncome","totalIncome","periodDays","insuranceDays","startDate","caseType","currentlyInsured","pregnancyProtection"].forEach(id => {
-    const el = $(id);
-    if(el) el.addEventListener("input", calculate);
-    if(el) el.addEventListener("change", calculate);
-  });
-
-  // Set a reasonable default start date 6 weeks from today
-  const start = $("startDate");
-  if(start && !start.value){
-    const d = new Date();
-    d.setDate(d.getDate() + 42);
-    start.value = d.toISOString().slice(0,10);
+  function fillExamples(){
+    const tbody=$("exampleTableBody");if(!tbody)return;
+    tbody.innerHTML=[30000,45000,60000,90000,140000].map(monthly=>{const dvz=monthly*12/365;const daily=dailyBenefit(dvz);return`<tr><td>${fmt(monthly)}</td><td>${fmt(daily)}</td><td>${fmt(daily*30)}</td><td>${fmt(daily*196)}</td><td>${pct(daily*30/monthly*100)}</td></tr>`}).join("");
   }
-
-  updateModeUi();
-  calculate();
+  document.querySelectorAll(".mode-card").forEach(btn=>btn.addEventListener("click",()=>setMode(btn.dataset.mode)));
+  ["monthlyIncome","periodIncome","periodDays","insuranceDays","osvcInsuranceDays","insuredAtStart","caseType","startDate"].forEach(id=>{const el=$(id);if(el){el.addEventListener("input",calculate);el.addEventListener("change",calculate)}});
+  $("incomeSource").addEventListener("change",()=>{updateSource();calculate()});
+  const start=$("startDate");if(start&&!start.value){const d=new Date();d.setDate(d.getDate()+42);start.value=d.toISOString().slice(0,10)}
+  updateSource();fillExamples();setMode("basic");
 })();
