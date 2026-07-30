@@ -135,6 +135,66 @@
     return{badge:'Omezený dopad v zadaném horizontu',title:'Výsledek je stále scénář, ne přesná cenová prognóza.',text:`Kumulovaný dopad je ${pct(r.cumulative)}. U krátkého horizontu mohou být konkrétní ceníky a nabídky důležitější než obecná inflace.`,next:'Ověřte skutečnou cenu dané položky a plán přepočítejte při změně podmínek.'};
   }
 
+  function chartSeries(v, task='future', segments=12){
+    const total=Math.max(1,v.years);
+    const years=[...new Set(Array.from({length:Math.min(segments,total)+1},(_,i)=>Math.round(i*total/Math.min(segments,total))))].sort((a,b)=>a-b);
+    return years.map(year=>{
+      const factor=factorFor(v,year);
+      return{year,value:task==='future'?v.amount*factor:v.amount/factor};
+    });
+  }
+
+  function buildChart(points,width,height,padX,padY){
+    const values=points.map(p=>p.value);
+    let min=Math.min(...values),max=Math.max(...values);
+    if(Math.abs(max-min)<1e-9){max+=1;min-=1}
+    const spread=max-min;
+    min-=spread*.12;max+=spread*.12;
+    const coords=points.map((point,index)=>({
+      x:padX+(points.length===1?0:index/(points.length-1))*(width-padX*2),
+      y:padY+(max-point.value)/(max-min)*(height-padY*2),
+      ...point
+    }));
+    const line=coords.map((p,i)=>`${i?'L':'M'}${p.x.toFixed(2)} ${p.y.toFixed(2)}`).join('');
+    const base=height-padY;
+    const area=`${line}L${coords.at(-1).x.toFixed(2)} ${base}L${coords[0].x.toFixed(2)} ${base}Z`;
+    return{coords,line,area};
+  }
+
+  function renderDots(groupId,coords,indexes){
+    const group=$(groupId);if(!group)return;
+    const ns='http://www.w3.org/2000/svg';
+    group.replaceChildren(...indexes.filter(i=>coords[i]).map(i=>{
+      const circle=document.createElementNS(ns,'circle');
+      circle.setAttribute('cx',coords[i].x.toFixed(2));
+      circle.setAttribute('cy',coords[i].y.toFixed(2));
+      circle.setAttribute('r',i===coords.length-1?'4.6':'3.4');
+      return circle;
+    }));
+  }
+
+  function renderCharts(v,r){
+    const resultPoints=chartSeries(v,state.task,14);
+    const resultChart=buildChart(resultPoints,620,190,14,14);
+    $('resultLine')?.setAttribute('d',resultChart.line);
+    $('resultArea')?.setAttribute('d',resultChart.area);
+    renderDots('resultDots',resultChart.coords,[0,Math.floor((resultChart.coords.length-1)/2),resultChart.coords.length-1]);
+
+    const heroPoints=chartSeries(v,'future',10);
+    const heroChart=buildChart(heroPoints,420,112,8,8);
+    $('heroLine')?.setAttribute('d',heroChart.line);
+    $('heroArea')?.setAttribute('d',heroChart.area);
+    renderDots('heroDots',heroChart.coords,[0,heroChart.coords.length-1]);
+
+    const trend=state.task==='future'?r.cumulative:100-r.preserved;
+    set('chartTrend',`${state.task==='future'&&trend>=0?'+':state.task==='power'?'−':''}${pct1(Math.abs(trend))}`);
+    set('chartCaption',state.task==='future'?'Složený růst cenové hladiny':'Pokles dnešní kupní síly pevné částky');
+    set('chartMid',`${Math.max(1,Math.round(v.years/2))}. rok`);
+    set('chartEnd',`${v.years}. rok`);
+    set('heroAxisEnd',`Za ${v.years} let`);
+    set('heroChartDelta',`${r.cumulative>=0?'+':''}${pct1(r.cumulative)}`);
+  }
+
   function renderTimeline(v,r){
     const years=new Set([1,v.years]);
     [3,5,10,15,20,25,30,40,50].filter(y=>y<v.years).forEach(y=>years.add(y));
@@ -211,7 +271,7 @@
     set('heroMeterText',`Pevná částka si zachová ${pct1(r.preserved)} dnešní kupní síly`);
 
     $('advancedMetric').hidden=state.mode!=='advanced';
-    renderTimeline(v,r);renderScenarios(v);
+    renderTimeline(v,r);renderScenarios(v);renderCharts(v,r);
     qsa('[data-rate]').forEach(b=>b.classList.toggle('is-active',Math.abs(parse(b.dataset.rate)-v.rate)<1e-9));
     if(options.scroll&&matchMedia('(max-width:820px)').matches)$('vysledek').scrollIntoView({behavior:'smooth',block:'start'});
     return true;
