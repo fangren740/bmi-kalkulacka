@@ -27,6 +27,7 @@
     budget: ['Finance a domácnost','Přidejte pouze cenu financování a orientačně zkontrolujte podíl auta na příjmu.']
   };
   var activePro = 'running';
+  var activeMode = 'basic';
   var lastResult = null;
 
   function numberValue(id) {
@@ -55,6 +56,21 @@
     setText('consumptionUnit', config.consumptionUnit);
     setText('energyPriceUnit', config.priceUnit);
     setText('energyPriceLabel', config.priceLabel);
+  }
+
+
+  function selectCalcMode(mode, moveFocus) {
+    if (mode !== 'basic' && mode !== 'advanced') return;
+    activeMode = mode;
+    document.querySelectorAll('[data-calc-mode]').forEach(function (button) {
+      var selected = button.getAttribute('data-calc-mode') === mode;
+      button.classList.toggle('is-active', selected);
+      button.setAttribute('aria-pressed', selected ? 'true' : 'false');
+      if (selected && moveFocus) button.focus();
+    });
+    var advanced = document.getElementById('proSettings');
+    if (advanced) advanced.hidden = mode !== 'advanced';
+    setText('modeBadge', mode === 'advanced' ? 'Pokročilý režim' : 'Základní režim');
   }
 
   function selectPro(key, moveFocus) {
@@ -151,7 +167,9 @@
     setText('cashMonthly', money(result.operatingMonthly));
     setText('fullAnnual', money(result.fullAnnual));
     setText('fullPerKm', decimal(result.perKm,2) + ' Kč/km');
-    setText('driveSummary', config.name + ' · ' + Math.round(result.annualKm).toLocaleString('cs-CZ') + ' km/rok');
+    var driveSummary = config.name + ' · ' + Math.round(result.annualKm).toLocaleString('cs-CZ') + ' km/rok';
+    setText('driveSummary', driveSummary);
+    setText('heroDriveSummary', driveSummary);
     setText('resultStatus', result.incomeShare === null ? 'modelový průměr' : decimal(result.incomeShare,1) + ' % příjmu');
     setText('incomeShare', result.incomeShare === null ? '—' : decimal(result.incomeShare,1) + ' %');
     setText('incomeShareText', result.incomeShare === null ? 'doplňte čistý příjem' : 'orientační podíl plného nákladu');
@@ -207,6 +225,11 @@
     calculate();
   }
 
+
+  document.querySelectorAll('[data-calc-mode]').forEach(function (button) {
+    button.addEventListener('click', function () { selectCalcMode(button.getAttribute('data-calc-mode'), false); });
+  });
+
   document.querySelectorAll('[data-preset]').forEach(function (button) { button.addEventListener('click',function () { applyPreset(button.getAttribute('data-preset')); }); });
   document.querySelectorAll('[data-drive]').forEach(function (button) { button.addEventListener('click',function () { selectDrive(button.getAttribute('data-drive'),true); calculate(); }); });
   document.querySelectorAll('[data-pro-tab]').forEach(function (button) {
@@ -217,9 +240,9 @@
   document.getElementById('proNext').addEventListener('click',function () { var index=proOrder.indexOf(activePro); if(index<proOrder.length-1) selectPro(proOrder[index+1],true); });
   form.addEventListener('input',calculate); form.addEventListener('change',calculate); form.addEventListener('submit',function (event) { event.preventDefault(); calculate(); });
   document.getElementById('resetBtn').addEventListener('click',function () { applyPreset('family'); });
-  document.getElementById('proSettings').addEventListener('toggle',function () { setText('modeBadge',this.open?'PRO režim':'BASIC režim'); });
   document.getElementById('copyResult').addEventListener('click',function () { if(!lastResult) return; var text='Náklady auta: '+money(lastResult.fullMonthly)+'/měs., '+money(lastResult.fullAnnual)+'/rok a '+decimal(lastResult.perKm,2)+' Kč/km. Orientační model RychléVýpočty.cz.'; var button=this; if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(function () { button.textContent='Zkopírováno'; setTimeout(function () { button.textContent='Kopírovat výsledek'; },1800); }); });
 
+  selectCalcMode('basic',false);
   selectPro('running',false);
   applyPreset('family');
 }());
