@@ -1,251 +1,46 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="cs">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="format-detection" content="telephone=no" />
-  <link rel="icon" href="/favicon.ico?v=2" sizes="any" />
-  <link rel="icon" href="/favicon-32x32.png?v=2" sizes="32x32" type="image/png" />
-  <link rel="icon" href="/favicon-16x16.png?v=2" sizes="16x16" type="image/png" />
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2" sizes="180x180" />
-  <link rel="manifest" href="/site.webmanifest?v=2" />
-  <meta name="theme-color" content="#071d3b" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="theme-color" content="#071a33">
   <title>Jak počítáme | RychléVýpočty.cz</title>
-  <meta name="description" content="Jak vznikají výpočty na RychléVýpočty.cz, z čeho kalkulačky vycházejí, kdy jsou výsledky orientační a jak hlásit chybu nebo nepřesnost." />
-  <meta name="robots" content="index,follow" />
-  <link rel="canonical" href="https://rychlevypocty.cz/jak-pocitame.html" />
-  <meta property="og:locale" content="cs_CZ"/>
-  <meta property="og:title" content="Jak počítáme | RychléVýpočty.cz"/>
-  <meta property="og:description" content="Metodika, limity a aktualizace výpočtů na RychléVýpočty.cz. Zjistěte, jak číst výsledky a kdy je ověřit podle konkrétní situace."/>
-  <meta property="og:type" content="website"/>
-  <meta property="og:url" content="https://rychlevypocty.cz/jak-pocitame.html"/>
-  <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg"/>
-  <meta property="og:site_name" content="RychléVýpočty.cz"/>
-  <meta name="twitter:card" content="summary_large_image"/>
-  <meta name="twitter:title" content="Jak počítáme | RychléVýpočty.cz"/>
-  <meta name="twitter:description" content="Jak vznikají výpočty, kdy jsou výsledky orientační a jak s nimi pracovat před důležitým rozhodnutím."/>
-  <meta name="twitter:image" content="https://rychlevypocty.cz/og-image.jpg"/>
-  <link rel="stylesheet" href="/rv-enhancements.css?v=1" />
-  <style>
-    :root{--ink:#071d3b;--ink-2:#0d2b56;--blue:#256dff;--green:#59d63a;--green-dark:#2d8f1d;--text:#1b2c44;--muted:#62738b;--line:#d9e6f3;--bg:#f7fbff;--card:#fff;--shadow:0 28px 80px rgba(8,26,51,.10);--shadow-soft:0 16px 40px rgba(8,26,51,.06);--container:min(1180px,calc(100% - 32px))}
-    *{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:104px}body{margin:0;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;color:var(--text);background:radial-gradient(circle at 10% 0%,rgba(89,214,58,.14),transparent 28%),radial-gradient(circle at 96% 4%,rgba(37,109,255,.15),transparent 28%),linear-gradient(180deg,#fbfdff 0%,#f2f7fd 42%,#fff 100%);line-height:1.65}a{color:inherit;text-decoration:none}img{max-width:100%;display:block}.container{width:var(--container);margin:0 auto}.skip-link{position:absolute;left:18px;top:-80px;z-index:999;padding:12px 16px;border-radius:14px;background:#071d3b;color:#fff;font-weight:900;transition:top .18s ease}.skip-link:focus{top:18px}:focus-visible{outline:3px solid rgba(37,109,255,.45);outline-offset:3px;border-radius:12px}
-    .site-header{position:sticky;top:0;z-index:90;background:rgba(255,255,255,.82);backdrop-filter:blur(18px);border-bottom:1px solid rgba(217,230,243,.75)}.header-inner{min-height:78px;display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{display:inline-flex;align-items:center;min-width:max-content}.brand img{width:190px;height:auto}.nav{display:flex;gap:6px;align-items:center;color:#415773;font-size:.93rem;font-weight:850}.nav a{padding:10px 12px;border-radius:999px;white-space:nowrap}.nav a:hover,.nav a[aria-current="page"]{color:var(--ink);background:rgba(15,90,168,.08)}.header-cta,.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:46px;padding:12px 20px;border-radius:999px;font-weight:950;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}.header-cta,.btn-primary{color:#071d3b;background:linear-gradient(135deg,#7ae85f,#53bf39);box-shadow:0 18px 34px rgba(83,191,57,.26)}.header-cta:hover,.btn-primary:hover{transform:translateY(-2px);box-shadow:0 22px 40px rgba(83,191,57,.32)}.btn-secondary{color:var(--ink);background:#fff;border:1px solid rgba(197,213,230,.95);box-shadow:0 14px 28px rgba(8,26,51,.07)}.btn-secondary:hover{transform:translateY(-2px);border-color:rgba(89,214,58,.45)}.header-cta{min-height:42px;padding:10px 16px;font-size:.9rem}
-    h1,h2,h3,p{margin-top:0}h1{margin:0 0 22px;max-width:760px;font-size:clamp(2.9rem,5.1vw,5rem);line-height:1.01;letter-spacing:-.055em;font-weight:950;color:#fff;text-wrap:balance}h2{margin:0;color:var(--ink);font-size:clamp(2.05rem,4vw,3.4rem);line-height:1.03;letter-spacing:-.055em;font-weight:950}h3{margin:0 0 10px;color:var(--ink);font-size:1.2rem;line-height:1.16;letter-spacing:-.03em;font-weight:900}.lead{max-width:710px;margin-bottom:0;color:rgba(255,255,255,.82);font-size:1.18rem;line-height:1.75}
-    .hero{padding:38px 0 30px}.hero-grid{display:grid;grid-template-columns:1.02fr .98fr;gap:24px;align-items:stretch}.hero-copy{position:relative;min-height:560px;padding:46px;border-radius:44px;overflow:hidden;color:#fff;background:radial-gradient(circle at 14% 12%,rgba(122,232,95,.22),transparent 26%),radial-gradient(circle at 88% 24%,rgba(37,109,255,.24),transparent 34%),linear-gradient(145deg,#06172f 0%,#08234a 45%,#133d78 100%);box-shadow:0 34px 110px rgba(8,26,51,.24)}.hero-copy::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);background-size:56px 56px;mask-image:linear-gradient(180deg,rgba(0,0,0,.95),transparent 86%);pointer-events:none}.hero-copy>*{position:relative;z-index:1}.hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}.eyebrow,.section-kicker,.mini-tag{display:inline-flex;align-items:center;gap:8px;min-height:32px;padding:7px 13px;border-radius:999px;font-size:.77rem;font-weight:950;letter-spacing:.05em;text-transform:uppercase}.eyebrow{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.12);color:#e8ffe0;margin-bottom:18px}.section-kicker{background:rgba(232,255,226,.95);border:1px solid rgba(89,214,58,.18);color:var(--green-dark)}.mini-tag{background:#eff7ff;color:#4f657f;border:1px solid rgba(217,230,243,.95)}.hero-points{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:28px}.hero-pill{padding:16px;border-radius:22px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12)}.hero-pill strong{display:block;margin-bottom:4px;color:#fff}.hero-pill span{display:block;color:rgba(255,255,255,.74);font-size:.92rem;line-height:1.45}
-    .method-board{position:relative;min-height:560px;padding:24px;border-radius:44px;background:linear-gradient(160deg,rgba(255,255,255,.96),rgba(237,246,255,.92));border:1px solid rgba(255,255,255,.7);box-shadow:var(--shadow);overflow:hidden}.method-board::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 84% 12%,rgba(89,214,58,.24),transparent 30%),radial-gradient(circle at 8% 90%,rgba(37,109,255,.16),transparent 30%)}.method-board>*{position:relative;z-index:1}.board-card{padding:22px;border-radius:30px;background:#fff;border:1px solid rgba(217,230,243,.95);box-shadow:0 16px 36px rgba(8,26,51,.06)}.board-card h3{font-size:1.45rem}.signal-list{display:grid;gap:12px;margin-top:18px}.signal{display:grid;grid-template-columns:52px 1fr;gap:14px;align-items:flex-start;padding:16px;border-radius:24px;background:#fff;border:1px solid rgba(217,230,243,.92)}.signal b{width:52px;height:52px;border-radius:18px;display:grid;place-items:center;background:linear-gradient(135deg,#0f5aa8,#071d3b);color:#fff;font-weight:950}.signal strong{display:block;color:var(--ink)}.signal span{display:block;color:var(--muted);font-size:.94rem;line-height:1.5}
-    .anchor-nav{padding:10px 0 0}.anchor-list{display:flex;flex-wrap:wrap;gap:10px}.anchor-list a{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:10px 16px;border-radius:999px;background:#fff;border:1px solid rgba(217,230,243,.95);box-shadow:0 8px 18px rgba(8,26,51,.04);font-weight:850;color:#49607c}.anchor-list a:hover{color:var(--ink);border-color:rgba(89,214,58,.35)}.section{padding:72px 0}.section.tight{padding-top:34px}.section-head{display:flex;align-items:end;justify-content:space-between;gap:28px;margin-bottom:26px}.section-head p{max-width:650px;margin:12px 0 0;color:var(--muted);font-size:1.05rem}
-    .principles{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.principle{padding:26px;border-radius:30px;background:linear-gradient(180deg,#fff,#f8fcff);border:1px solid rgba(217,230,243,.95);box-shadow:var(--shadow-soft)}.principle .num{display:inline-grid;place-items:center;width:44px;height:44px;margin-bottom:18px;border-radius:15px;background:#eaf4ff;color:var(--blue);font-weight:950}.principle p{margin:0;color:var(--muted)}.story-grid{display:grid;grid-template-columns:.95fr 1.05fr;gap:24px;align-items:stretch}.story-panel{padding:32px;border-radius:38px;color:#fff;background:radial-gradient(circle at 16% 8%,rgba(122,232,95,.2),transparent 28%),linear-gradient(145deg,#06172f,#0a2d59);box-shadow:0 28px 76px rgba(8,26,51,.16)}.story-panel h2,.story-panel h3{color:#fff}.story-panel p{color:rgba(255,255,255,.78)}.story-steps{display:grid;gap:14px;margin-top:22px}.story-step{display:grid;grid-template-columns:52px 1fr;gap:14px;align-items:flex-start;padding:16px;border-radius:24px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1)}.story-step b{width:52px;height:52px;border-radius:18px;display:grid;place-items:center;background:linear-gradient(135deg,#7ae85f,#53bf39);color:#071d3b;font-weight:950}.story-step span{display:block;color:rgba(255,255,255,.73)}.trust-panel{padding:32px;border-radius:38px;background:#fff;border:1px solid rgba(217,230,243,.95);box-shadow:var(--shadow-soft)}.trust-panel p{color:var(--muted)}.check-list{display:grid;gap:12px;margin:20px 0 0;padding:0;list-style:none}.check-list li{display:grid;grid-template-columns:28px 1fr;gap:12px;color:var(--muted)}.check-list li::before{content:"✓";width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:#eaf9e6;color:var(--green-dark);font-weight:950}
-    .limits-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}.limit-card{padding:24px;border-radius:28px;background:#fff;border:1px solid rgba(217,230,243,.95);box-shadow:var(--shadow-soft)}.limit-card p{margin:0;color:var(--muted)}.area-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}.area-card{padding:24px;border-radius:28px;background:#fff;border:1px solid rgba(217,230,243,.95);box-shadow:var(--shadow-soft)}.area-icon{display:grid;place-items:center;width:48px;height:48px;margin-bottom:16px;border-radius:16px;background:#eef6ff;color:var(--blue);font-weight:950}.area-card p{margin:0;color:var(--muted)}.faq-list{display:grid;gap:12px}.faq-item{padding:0;border-radius:24px;background:#fff;border:1px solid rgba(217,230,243,.95);box-shadow:0 12px 28px rgba(8,26,51,.05);overflow:hidden}.faq-item summary{cursor:pointer;padding:18px 22px;font-weight:900;color:var(--ink)}.faq-content{padding:0 22px 20px;color:var(--muted)}.cta-band{padding:26px 0 84px}.cta-card{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:30px;border-radius:34px;background:linear-gradient(135deg,#071d3b,#0a3268);color:#fff;box-shadow:0 28px 80px rgba(8,26,51,.18)}.cta-card h2{color:#fff;font-size:clamp(1.8rem,3.2vw,2.8rem)}.cta-card p{margin:10px 0 0;color:rgba(255,255,255,.74);max-width:670px}.cta-actions{display:flex;flex-wrap:wrap;gap:10px}
-    .footer{padding:68px 0 28px;color:rgba(255,255,255,.75);background:linear-gradient(180deg,#06172f,#041224)}.footer-grid{display:grid;grid-template-columns:1.35fr .9fr .9fr .9fr;gap:34px;padding-bottom:34px;border-bottom:1px solid rgba(255,255,255,.12)}.footer-logo img{width:220px;height:auto}.footer p{margin:18px 0 0;max-width:430px}.footer h3{color:#fff;font-size:1rem;margin-bottom:12px}.footer-links{display:grid;gap:10px}.footer-links a{color:rgba(255,255,255,.72);font-weight:700}.footer-links a:hover{color:#fff}.footer-bottom{display:flex;justify-content:space-between;gap:24px;padding-top:24px;font-size:.86rem}.footer-bottom p{margin:0;max-width:720px}.footer-badges{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}.footer-badge{display:inline-flex;align-items:center;gap:8px;padding:9px 12px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.10);color:rgba(255,255,255,.82);font-size:.82rem;font-weight:820}
-    @media(max-width:1080px){.header-inner{flex-wrap:wrap;gap:10px 18px;padding:12px 0}.nav{order:3;width:100%;justify-content:flex-start;overflow-x:auto;padding-bottom:4px}.hero-grid,.story-grid{grid-template-columns:1fr}.method-board,.hero-copy{min-height:auto}.principles,.area-grid{grid-template-columns:repeat(2,1fr)}.footer-grid{grid-template-columns:repeat(2,1fr)}}
-    @media(max-width:760px){:root{--container:min(100% - 24px,1180px)}html{scroll-padding-top:136px}.header-inner{min-height:66px}.brand img{width:168px}.header-cta{display:none}.nav{font-size:.86rem}.nav a{padding:8px 10px}.hero{padding:24px 0 30px}.hero-copy,.method-board{padding:24px;border-radius:30px}h1{font-size:clamp(2.35rem,10.4vw,3.55rem);line-height:1.03;letter-spacing:-.045em;max-width:100%}.lead{font-size:1.04rem;line-height:1.68}.hero-actions{margin-top:24px}.hero-points,.principles,.area-grid,.limits-grid,.footer-grid{grid-template-columns:1fr}.section{padding:56px 0}.section-head{display:block}.cta-card{display:block;padding:22px;border-radius:28px}.cta-actions{margin-top:18px}.footer-bottom{display:block}.footer-bottom p+p{margin-top:14px}}
-  </style>
-  <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"WebPage","name":"Jak počítáme","url":"https://rychlevypocty.cz/jak-pocitame.html","description":"Metodika, limity a aktualizace výpočtů na RychléVýpočty.cz.","inLanguage":"cs-CZ"}
-  </script>
-  <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"RychléVýpočty.cz","item":"https://rychlevypocty.cz/"},{"@type":"ListItem","position":2,"name":"Jak počítáme","item":"https://rychlevypocty.cz/jak-pocitame.html"}]}
-  </script>
-  <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
-    {"@type":"Question","name":"Jsou výsledky kalkulaček přesné?","acceptedAnswer":{"@type":"Answer","text":"Výsledky jsou orientační. Slouží pro rychlé porovnání variant a základní rozhodování, ale u důležitých finančních, daňových, právních, zdravotních nebo stavebních situací je vhodné ověřit konkrétní podmínky."}},
-    {"@type":"Question","name":"Z čeho kalkulačky vycházejí?","acceptedAnswer":{"@type":"Answer","text":"Kalkulačky vycházejí ze zadaných hodnot, obecných vzorců, typických scénářů a u vybraných témat také z aktuálních sazeb nebo pravidel uvedených přímo u výpočtu."}},
-    {"@type":"Question","name":"Jak nahlásit chybu ve výpočtu?","acceptedAnswer":{"@type":"Answer","text":"Napište na rychlevypocty@seznam.cz a přiložte URL stránky, zadané hodnoty a stručný popis toho, co podle vás nesedí."}}
-  ]}
-  </script>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7745758285259522" crossorigin="anonymous"></script>
+  <meta name="description" content="Metodika výpočtů, práce se zdroji, referenčními roky, testy a limity kalkulaček.">
+  <meta name="robots" content="index,follow">
+  <link rel="canonical" href="https://rychlevypocty.cz/jak-pocitame.html">
+  <link rel="icon" href="/favicon.ico?v=2" sizes="any">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2">
+  <link rel="manifest" href="/site.webmanifest?v=2">
+  <meta property="og:locale" content="cs_CZ">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="RychléVýpočty.cz">
+  <meta property="og:title" content="Jak počítáme | RychléVýpočty.cz">
+  <meta property="og:description" content="Metodika výpočtů, práce se zdroji, referenčními roky, testy a limity kalkulaček.">
+  <meta property="og:url" content="https://rychlevypocty.cz/jak-pocitame.html">
+  <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="/rv-trust-v7.css?v=20260804-b11">
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebPage","name":"Jak počítáme","url":"https://rychlevypocty.cz/jak-pocitame.html","inLanguage":"cs-CZ","dateModified":"2026-08-04","isPartOf":{"@type":"WebSite","name":"RychléVýpočty.cz","url":"https://rychlevypocty.cz/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Domů","item":"https://rychlevypocty.cz/"},{"@type":"ListItem","position":2,"name":"Jak počítáme","item":"https://rychlevypocty.cz/jak-pocitame.html"}]}]}</script>
 </head>
 <body>
-  <a class="skip-link" href="#main">Přeskočit na obsah</a>
-  <header class="site-header">
-    <div class="container header-inner">
-      <a class="brand" href="/" aria-label="RychléVýpočty.cz – domů"><img src="/logo-rychlevypocty.svg" alt="RychléVýpočty.cz" /></a>
-      <nav class="nav" aria-label="Hlavní navigace">
-        <a href="/">Domů</a>
-        <a href="/kalkulacky.html">Kalkulačky</a>
-        <a href="/jak-pocitame.html" aria-current="page">Jak počítáme</a>
-        <a href="/o-nas.html">O nás</a>
-        <a href="/kontakt.html">Kontakt</a>
-      </nav>
-      <a class="header-cta" href="/kalkulacky.html">Prohlédnout kalkulačky</a>
-    </div>
-  </header>
-
-  <main id="main">
-    <section class="hero" aria-labelledby="hero-title">
-      <div class="container hero-grid">
-        <div class="hero-copy">
-          <span class="eyebrow">Metodika výpočtů</span>
-          <h1 id="hero-title">Jak vznikají naše výpočty</h1>
-          <p class="lead">Na RychléVýpočty.cz nechceme ukázat jen jedno číslo. Vysvětlujeme, co výsledek znamená, z čeho vychází, kde má limity a kdy je lepší ověřit konkrétní podmínky.</p>
-          <div class="hero-actions">
-            <a class="btn btn-primary" href="#principy">Principy výpočtů</a>
-            <a class="btn btn-secondary" href="/kontakt.html">Nahlásit chybu</a>
-          </div>
-          <div class="hero-points" aria-label="Hlavní principy">
-            <div class="hero-pill"><strong>Orientačně</strong><span>rychlý odhad a porovnání variant</span></div>
-            <div class="hero-pill"><strong>Srozumitelně</strong><span>výsledek, výklad a další krok</span></div>
-            <div class="hero-pill"><strong>Opatrně</strong><span>limity u daní, financí, zdraví a práva</span></div>
-          </div>
-        </div>
-        <div class="method-board" aria-label="Jak vzniká kalkulačka">
-          <div class="board-card">
-            <span class="section-kicker">Od situace k výsledku</span>
-            <h3>Kalkulačku stavíme jako rozhodovací pomůcku, ne jako slepý vzorec.</h3>
-            <p>Nejdřív řešíme, co člověk potřebuje zjistit. Teprve potom navrhujeme vstupy, výpočet, interpretaci a odkazy na navazující nástroje.</p>
-          </div>
-          <div class="signal-list">
-            <div class="signal"><b>1</b><div><strong>Vyjasníme otázku</strong><span>Například „kolik můžu splácet“, „kolik dostanu čistého“ nebo „kolik mě bude stát provoz“.</span></div></div>
-            <div class="signal"><b>2</b><div><strong>Zvolíme nutné vstupy</strong><span>Držíme se hodnot, které má uživatel reálně po ruce, aby výpočet nezačínal dlouhým formulářem.</span></div></div>
-            <div class="signal"><b>3</b><div><strong>Ukážeme kontext</strong><span>Výsledek doplňujeme rozpadem, upozorněním, doporučeným dalším krokem nebo související kalkulačkou.</span></div></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <nav class="anchor-nav" aria-label="Obsah stránky">
-      <div class="container anchor-list">
-        <a href="#principy">Principy</a>
-        <a href="#data">Z čeho vycházíme</a>
-        <a href="#limity">Kdy výsledek nestačí</a>
-        <a href="#oblasti">Citlivé oblasti</a>
-        <a href="#chyby">Nahlášení chyby</a>
-        <a href="#faq">FAQ</a>
-      </div>
-    </nav>
-
-    <section class="section" id="principy" aria-labelledby="principy-title">
-      <div class="container">
-        <div class="section-head">
-          <div>
-            <span class="section-kicker">Základní principy</span>
-            <h2 id="principy-title">Výsledek má být rychlý, ale ne bez kontextu.</h2>
-          </div>
-          <p>Kalkulačka má ušetřit čas. Zároveň ale nesmí vzbudit falešný dojem, že jeden online výpočet automaticky pokrývá všechny výjimky, sazby, smlouvy a osobní situace.</p>
-        </div>
-        <div class="principles">
-          <article class="principle"><div class="num">01</div><h3>Počítáme z toho, co zadáte</h3><p>Výpočet vychází z hodnot ve formuláři. Když se změní vstup, změní se i výsledek. U některých témat může mít velký vliv i malá změna sazby, ceny, doby nebo spotřeby.</p></article>
-          <article class="principle"><div class="num">02</div><h3>Zjednodušujeme realitu</h3><p>Online kalkulačka obvykle pracuje s typickým scénářem. Ne vždy umí pokrýt individuální výjimku, nestandardní smlouvu, speciální slevu nebo místní podmínky.</p></article>
-          <article class="principle"><div class="num">03</div><h3>Vysvětlujeme další krok</h3><p>U důležitých kalkulaček doplňujeme interpretaci, rozpad výsledku, upozornění na rizika a odkazy na navazující výpočty nebo související návody.</p></article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="data" aria-labelledby="data-title">
-      <div class="container story-grid">
-        <div class="story-panel">
-          <span class="eyebrow">Vstupy a pravidla</span>
-          <h2 id="data-title">Z čeho výpočty vycházejí</h2>
-          <p>Podle typu kalkulačky používáme jednoduché matematické vzorce, obecné finanční vztahy, uživatelské vstupy, typické scénáře a u vybraných témat také sazby nebo pravidla uvedená přímo na stránce.</p>
-          <div class="story-steps">
-            <div class="story-step"><b>01</b><div><h3>Uživatelské hodnoty</h3><span>Částka, sazba, doba, spotřeba, cena, mzda, počet osob nebo jiné hodnoty zadané ve formuláři.</span></div></div>
-            <div class="story-step"><b>02</b><div><h3>Výpočetní logika</h3><span>Vzorec, převod, procentní vztah, splátkový model, odhad nákladů nebo jiné pravidlo podle účelu kalkulačky.</span></div></div>
-            <div class="story-step"><b>03</b><div><h3>Interpretace</h3><span>Slovní vysvětlení, orientační rozpad a upozornění, co může výsledek v praxi změnit.</span></div></div>
-          </div>
-        </div>
-        <div class="trust-panel">
-          <span class="section-kicker">Aktualizace a kontrola</span>
-          <h2>U proměnlivých témat je důležité datum, sazba a konkrétní pravidlo.</h2>
-          <p>U oblastí jako mzdy, daně, dávky, hypotéky nebo energie se pravidla a sazby mohou měnit. Proto je dobré sledovat, jaké hodnoty kalkulačka používá a zda odpovídají situaci, kterou právě řešíte.</p>
-          <ul class="check-list">
-            <li>Když stránka pracuje s konkrétní sazbou nebo obdobím, má to být z textu srozumitelné.</li>
-            <li>U složitějších témat berte výsledek jako první filtr, ne jako konečné stanovisko.</li>
-            <li>Když narazíte na neaktuální údaj, napište nám konkrétní stránku a hodnotu, kterou máme prověřit.</li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="limity" aria-labelledby="limity-title">
-      <div class="container">
-        <div class="section-head">
-          <div><span class="section-kicker">Limity výpočtů</span><h2 id="limity-title">Kdy výsledek brát jen jako první orientaci</h2></div>
-          <p>Čím víc záleží na individuálních okolnostech, smlouvě, legislativě nebo zdravotním stavu, tím opatrněji je potřeba výsledek číst.</p>
-        </div>
-        <div class="limits-grid">
-          <article class="limit-card"><h3>Když rozhodují individuální podmínky</h3><p>Hypotéka, úvěr, pojištění, nájem, pracovní smlouva nebo cenová nabídka může mít konkrétní pravidla, která obecná kalkulačka nezohlední.</p></article>
-          <article class="limit-card"><h3>Když se mění sazby a legislativa</h3><p>U mezd, daní, dávek, OSVČ nebo energií mohou změny pravidel ovlivnit výsledek. Ověření aktuálních podmínek je u těchto témat důležité.</p></article>
-          <article class="limit-card"><h3>Když jde o zdravotní výsledek</h3><p>BMI a podobné ukazatele jsou orientační. Neříkají celkový zdravotní stav a nenahrazují posouzení lékařem nebo odborníkem.</p></article>
-          <article class="limit-card"><h3>Když výsledek používáte pro velké rozhodnutí</h3><p>Před podpisem smlouvy, investicí, rekonstrukcí nebo změnou práce je vhodné výsledek porovnat s reálnými nabídkami a ověřit u odborníka.</p></article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="oblasti" aria-labelledby="oblasti-title">
-      <div class="container">
-        <div class="section-head">
-          <div><span class="section-kicker">Citlivé oblasti</span><h2 id="oblasti-title">U některých témat výslovně počítáme s opatrností.</h2></div>
-          <p>Smyslem webu je rychlá orientace. U těchto oblastí proto klademe větší důraz na limity, kontext a ověření konkrétní situace.</p>
-        </div>
-        <div class="area-grid">
-          <article class="area-card"><div class="area-icon">Kč</div><h3>Finance a hypotéky</h3><p>Splátky, dostupnost a porovnání variant jsou citlivé na sazbu, dobu, poplatky a bonitu.</p></article>
-          <article class="area-card"><div class="area-icon">%</div><h3>Mzdy, daně a OSVČ</h3><p>Výsledek může ovlivnit legislativa, slevy, odvody, druh příjmu a konkrétní období.</p></article>
-          <article class="area-card"><div class="area-icon">⌂</div><h3>Bydlení a stavba</h3><p>Rozpočty ovlivňuje lokalita, standard, stav nemovitosti, práce řemeslníků a rozsah zakázky.</p></article>
-          <article class="area-card"><div class="area-icon">BMI</div><h3>Zdraví a tělo</h3><p>Jednoduché indexy nejsou diagnóza. Slouží jako orientační signál, ne jako zdravotní posudek.</p></article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="chyby" aria-labelledby="chyby-title">
-      <div class="container story-grid">
-        <div class="trust-panel">
-          <span class="section-kicker">Nahlášení chyby</span>
-          <h2 id="chyby-title">Našli jste nepřesnost? Pošlete konkrétní příklad.</h2>
-          <p>Nejrychleji pomůže, když nám napíšete URL stránky, zadané hodnoty a stručně popíšete, co podle vás nesedí. U proměnlivých témat přidejte i období nebo sazbu, se kterou výsledek porovnáváte.</p>
-          <ul class="check-list">
-            <li>URL konkrétní kalkulačky nebo návodu.</li>
-            <li>Hodnoty, které jste do formuláře zadali.</li>
-            <li>Jaký výsledek jste čekali a proč.</li>
-          </ul>
-        </div>
-        <div class="story-panel">
-          <span class="eyebrow">Kontakt</span>
-          <h2>Chceme, aby výpočty byly praktické a srozumitelné.</h2>
-          <p>RychléVýpočty.cz průběžně rozšiřujeme. Zpětná vazba od uživatelů pomáhá odhalit nejasné texty, chybějící scénáře i situace, kde by se hodila nová kalkulačka.</p>
-          <div class="hero-actions">
-            <a class="btn btn-primary" href="mailto:rychlevypocty@seznam.cz">rychlevypocty@seznam.cz</a>
-            <a class="btn btn-secondary" href="/kontakt.html">Kontakt</a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="faq" aria-labelledby="faq-title">
-      <div class="container">
-        <div class="section-head"><div><span class="section-kicker">FAQ</span><h2 id="faq-title">Časté otázky k metodice</h2></div></div>
-        <div class="faq-list">
-          <details class="faq-item"><summary>Jsou výsledky kalkulaček závazné?</summary><div class="faq-content"><p>Ne. Výsledky jsou orientační a slouží pro rychlé porovnání scénářů. U důležitých rozhodnutí je ověřte podle konkrétních podmínek.</p></div></details>
-          <details class="faq-item"><summary>Proč kalkulačka někdy nezahrnuje všechny výjimky?</summary><div class="faq-content"><p>Protože cílem je rychlá a použitelná orientace. Některé výjimky závisí na smlouvě, období, legislativě, lokalitě nebo individuálních údajích, které nelze jednoduše pokrýt univerzálním formulářem.</p></div></details>
-          <details class="faq-item"><summary>Jak poznám, že mám výsledek ověřit?</summary><div class="faq-content"><p>Ověření doporučujeme vždy, když na výsledku stojí podpis smlouvy, větší výdaj, daňové rozhodnutí, zdravotní závěr nebo dlouhodobý finanční závazek.</p></div></details>
-          <details class="faq-item"><summary>Můžu navrhnout úpravu kalkulačky?</summary><div class="faq-content"><p>Ano. Napište nám na <a href="mailto:rychlevypocty@seznam.cz">rychlevypocty@seznam.cz</a>. Ideální je poslat konkrétní URL, vstupy a návrh, co by stránka měla vysvětlit lépe.</p></div></details>
-        </div>
-      </div>
-    </section>
-
-    <section class="cta-band" aria-label="Další krok">
-      <div class="container">
-        <div class="cta-card">
-          <div><h2>Chcete si výsledek rovnou vyzkoušet?</h2><p>Otevřete katalog kalkulaček, zadejte vlastní hodnoty a berte výsledek jako první přehled pro další rozhodnutí.</p></div>
-          <div class="cta-actions"><a class="btn btn-primary" href="/kalkulacky.html">Najít kalkulačku</a><a class="btn btn-secondary" href="/o-nas.html">O projektu</a></div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-grid">
-        <div>
-          <a class="footer-logo" href="/" aria-label="RychléVýpočty.cz – domů"><img src="/logo-rychlevypocty-footer.svg" alt="RychléVýpočty.cz" /></a>
-          <p>Online kalkulačky a praktické nástroje zdarma pro finance, bydlení, hypotéky, mzdy, podnikání, energie, auto, rekonstrukce a další situace, které dává smysl si předem spočítat.</p>
-          <div class="footer-badges"><span class="footer-badge">Zdarma</span><span class="footer-badge">Bez registrace</span><span class="footer-badge">Orientační výpočty</span></div>
-        </div>
-        <div><h3>Hlavní sekce</h3><div class="footer-links"><a href="/kalkulacky.html">Všechny kalkulačky</a><a href="/finance-a-hypoteky.html">Finance a hypotéky</a><a href="/mzdy-a-prace.html">Mzdy a práce</a><a href="/energie-a-domacnost.html">Energie a domácnost</a></div></div>
-        <div><h3>Metodika</h3><div class="footer-links"><a href="/jak-pocitame.html">Jak počítáme</a><a href="/o-nas.html">O nás</a><a href="/kontakt.html">Kontakt</a><a href="/navody.html">Návody</a></div></div>
-        <div><h3>Informace</h3><div class="footer-links"><a href="/ochrana-osobnich-udaju.html">Ochrana osobních údajů</a><a href="/podminky-pouziti.html">Podmínky použití</a><a href="mailto:rychlevypocty@seznam.cz">rychlevypocty@seznam.cz</a></div></div>
-      </div>
-      <div class="footer-bottom"><p>© RychléVýpočty.cz – online kalkulačky a praktické nástroje zdarma. Výsledky mají orientační charakter a nenahrazují individuální odborné poradenství.</p><p><a href="/kalkulacky.html">Katalog kalkulaček</a></p></div>
-    </div>
-  </footer>
-</body>
-</html>
+<a class="skip-link" href="#obsah">Přejít na obsah</a>
+<header class="site-header"><div class="container header-inner">
+  <a class="brand" href="/" aria-label="RychléVýpočty.cz – domů"><img src="/logo-rv-v32.svg?v=1" width="295" height="48" alt="RychléVýpočty.cz"></a>
+  <nav class="main-nav" aria-label="Hlavní navigace"><a href="/kalkulacky.html">Kalkulačky</a><a href="/o-nas.html">O projektu</a><a href="/jak-pocitame.html" aria-current="page">Jak počítáme</a><a href="/kontakt.html">Kontakt</a></nav>
+</div></header>
+<nav class="container crumbs" aria-label="Drobečková navigace"><ol><li><a href="/">Domů</a></li><li aria-current="page">Jak počítáme</li></ol></nav>
+<main id="obsah">
+  <section class="hero"><div class="container hero-panel"><div class="hero-copy"><span class="eyebrow">Metodika</span><h1>Jak počítáme</h1><p class="lead">Ne každý výsledek má stejnou míru jistoty. Proto rozlišujeme matematicky přesné převody, modelové scénáře a orientační odhady a u proměnlivých témat uvádíme zdroje a verzi pravidel.</p></div><div class="hero-facts"><div class="fact"><strong>Přesný výpočet</strong><span>Jednoznačný vzorec a vstupy</span></div><div class="fact"><strong>Modelový výpočet</strong><span>Výsledek závisí na předpokladech</span></div><div class="fact"><strong>Orientační výpočet</strong><span>Rychlý odhad s popsanými limity</span></div></div></div></section>
+  <div class="container page-shell"><aside class="trust-nav" aria-label="Trust a právní stránky"><strong>Informace o projektu</strong><a href="/o-nas.html">O projektu</a><a href="/kontakt.html">Kontakt</a><a href="/jak-pocitame.html" aria-current="page">Jak počítáme</a><a href="/redakcni-zasady.html">Redakční zásady</a><a href="/ochrana-osobnich-udaju.html">Ochrana údajů</a><a href="/cookies.html">Cookies a úložiště</a><a href="/reklama-a-spoluprace.html">Reklama a spolupráce</a><a href="/podminky-pouziti.html">Podmínky použití</a></aside><div class="content"><section class="card"><span class="section-label">Tři typy výsledků</span><h2>Přesný, modelový a orientační není totéž</h2><div class="grid-3"><article class="mini-card"><h3>Přesný výpočet</h3><p>Při správných vstupech dává jednoznačný matematický výsledek, například převod jednotek. Přesnost stále závisí na správném zadání a zaokrouhlení.</p></article><article class="mini-card"><h3>Modelový výpočet</h3><p>Pracuje se scénářem, sazbami nebo odhady. Je užitečný pro porovnání variant, nikoli jako záruka budoucího výsledku.</p></article><article class="mini-card"><h3>Orientační výpočet</h3><p>Zjednodušuje realitu, aby poskytl rychlý rámec. Před důležitým krokem je nutné ověřit konkrétní podmínky.</p></article></div></section>
+<section class="card"><span class="section-label">Zdroje a verze</span><h2>Proměnlivé údaje potřebují datum</h2><p>U daní, mezd, dávek, právních pravidel, cen energií nebo zdravotních doporučení mají přednost primární zdroje: právní předpisy, úřady, veřejné instituce a původní metodiky. Sekundární zdroj může pomoci s vysvětlením, ale nemá nahrazovat dostupný primární podklad.</p><ul><li>Referenční rok nebo verze sazby se uvádí tam, kde se hodnota v čase mění.</li><li>Odkaz má vést co nejblíže k pravidlu nebo datu, které výpočet používá.</li><li>Není-li aktuální hodnota ověřitelná, musí být předpoklad viditelný a upravitelný nebo výsledek označen jako orientační.</li></ul></section>
+<section class="card"><span class="section-label">Kontrola vzorce</span><h2>Praktické testovací scénáře před zveřejněním</h2><ol><li>Kontrola běžného příkladu ručním výpočtem nebo nezávislou referencí.</li><li>Kontrola nulových, minimálních, maximálních a hraničních vstupů.</li><li>Kontrola jednotek, období, zaokrouhlení a formátu výsledku.</li><li>Porovnání základního a pokročilého režimu, pokud je nástroj má.</li><li>Kontrola, že text metodiky odpovídá skutečnému JavaScriptu.</li></ol></section>
+<section class="card"><span class="section-label">Aktualizace a limity</span><h2>Co se kontroluje znovu</h2><p>Aktualizaci vyvolává změna právního pravidla, sazby, primárního zdroje, výpočetní logiky nebo nahlášená chyba. Datum aktualizace samo o sobě neprokazuje věcnou správnost; rozhodující je kontrola zdroje, vzorce a testů.</p><div class="note warning"><strong>Citlivá témata</strong><br>U finančních, právních, pracovních, rodinných a zdravotních témat výsledek nenahrazuje individuální posouzení odborníkem, úřadem, smluvní stranou nebo poskytovatelem zdravotní péče.</div></section></div></div>
+</main>
+<footer class="site-footer"><div class="container"><div class="footer-grid">
+  <div class="footer-brand"><a href="/" aria-label="RychléVýpočty.cz – domů"><img src="/logo-rv-v32-inverse.svg?v=1" width="295" height="48" alt="RychléVýpočty.cz"></a><p>Nezávislý projekt praktických online kalkulaček. Provozuje Martin Šilinger jako fyzická osoba bez přiděleného IČO.</p></div>
+  <div class="footer-col"><h2>Projekt</h2><a href="/o-nas.html">O projektu</a><a href="/jak-pocitame.html">Jak počítáme</a><a href="/redakcni-zasady.html">Redakční zásady</a><a href="/kontakt.html">Kontakt</a></div>
+  <div class="footer-col"><h2>Pravidla a soukromí</h2><a href="/ochrana-osobnich-udaju.html">Ochrana osobních údajů</a><a href="/cookies.html">Cookies a úložiště</a><a href="/reklama-a-spoluprace.html">Reklama a spolupráce</a><a href="/podminky-pouziti.html">Podmínky použití</a></div>
+</div><div class="footer-bottom"><p>© 2026 RychléVýpočty.cz. Aktualizováno 4. 8. 2026.</p><p><a href="mailto:rychlevypocty@seznam.cz">rychlevypocty@seznam.cz</a></p></div></div></footer>
+</body></html>

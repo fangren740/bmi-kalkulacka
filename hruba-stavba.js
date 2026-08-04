@@ -18,6 +18,7 @@
   const presets = [...document.querySelectorAll("[data-preset]")];
   let mode = "basic";
   let lastResult = null;
+  let storageControl;
 
   const money = new Intl.NumberFormat("cs-CZ", {
     style: "currency",
@@ -340,6 +341,7 @@
   }
 
   function saveState() {
+    if (!storageControl.enabled()) return;
     try {
       const values = Object.fromEntries(formIds.map((id) => {
         const el = elements[id];
@@ -352,6 +354,7 @@
   }
 
   function restoreState() {
+    if (!storageControl.enabled()) return false;
     try {
       const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
       if (!saved || !saved.values) return false;
@@ -397,12 +400,12 @@
   });
 
   output("resetBtn").addEventListener("click", () => {
+    storageControl.disable();
     formIds.forEach((id) => {
       const el = elements[id];
       if (el.type === "checkbox") el.checked = Boolean(defaultState[id]);
       else el.value = defaultState[id];
     });
-    try { localStorage.removeItem(STORAGE_KEY); } catch (_) {}
     markPreset("family");
     setMode("basic", false);
   });
@@ -439,6 +442,7 @@
     setTimeout(() => { button.textContent = original; button.classList.remove("copy-feedback"); }, 1600);
   });
 
+  storageControl = window.RVStorageChoice.create({ scope:"roughBuild", dataKey:STORAGE_KEY, inputId:"rememberRoughBuildSettings", statusId:"roughBuildStorageStatus", onEnable:saveState });
   const restored = restoreState();
   setMode(mode, false);
   if (!restored) markPreset("family");
