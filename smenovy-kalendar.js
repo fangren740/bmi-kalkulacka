@@ -53,6 +53,7 @@
     },
     compare: { enabled: false, preset: 'shortlong', anchor: todayValue, phase: 0 }
   };
+  let storageControl;
 
   function utcDate(year, month, day) { return new Date(Date.UTC(year, month, day)); }
   function addDays(date, amount) { return new Date(date.getTime() + amount * DAY_MS); }
@@ -155,7 +156,9 @@
 
   function loadState() {
     let stored = null;
-    try { stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null'); } catch (_) { stored = null; }
+    if (storageControl.enabled()) {
+      try { stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null'); } catch (_) { stored = null; }
+    }
     if (stored && typeof stored === 'object') {
       if (validYear(stored.year)) state.year = Number(stored.year);
       if (presets[stored.preset]) state.preset = stored.preset;
@@ -197,9 +200,9 @@
   }
 
   function saveState() {
+    if (!storageControl.enabled()) return;
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify({ year: state.year, preset: state.preset, anchor: state.anchor, phase: state.phase, customCycle: state.customCycle, settings: state.settings, compare: state.compare }));
-      $('saveBadge').classList.add('is-saved');
     } catch (_) { /* local storage can be unavailable */ }
   }
 
@@ -643,6 +646,7 @@
       }
     });
     $('resetCustomBtn').addEventListener('click',() => { state.customCycle=['R','R','O','O','N','N','V','V','V','V']; state.phase=0; renderAll(); });
+    $('resetCalendarBtn').addEventListener('click',() => { storageControl.disable(); location.replace(location.pathname); });
     $('prevYearBtn').addEventListener('click',() => setYear(state.year-1)); $('nextYearBtn').addEventListener('click',() => setYear(state.year+1));
     $('yearInput').addEventListener('change',(event) => setYear(event.target.value));
     $('todayBtn').addEventListener('click',() => { state.year=today.getUTCFullYear();state.selectedDate=todayValue;state.mobileMonth=today.getUTCMonth();renderAll(); });
@@ -665,6 +669,7 @@
     $('partnerPhase').addEventListener('change',(event) => { state.compare.phase=Number(event.target.value);renderAll(); });
   }
 
+  storageControl = window.RVStorageChoice.create({ scope:'shiftCalendar', dataKey:STORAGE_KEY, inputId:'rememberShiftSettings', statusId:'shiftStorageStatus', onEnable:saveState });
   loadState();
   bindEvents();
   renderAll({save:false});

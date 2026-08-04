@@ -49,6 +49,7 @@
   };
 
   const els = {};
+  let storageControl;
   const state = {
     year: 2026,
     budget: 20,
@@ -366,7 +367,6 @@
     state.results = chooseResults(candidates, budget);
     renderAll(ctx);
     saveState();
-    updateUrl(false);
     if (announce) {
       els.liveStatus.textContent = `Plán pro rok ${year} byl přepočítán. ${summarySentence(state.results.annual)}`;
       els.resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -783,7 +783,7 @@
   }
 
   function resetPlanner() {
-    localStorage.removeItem(STORAGE_KEY);
+    storageControl.disable();
     state.year = 2026;
     state.budget = 20;
     state.profile = 'balanced';
@@ -806,6 +806,7 @@
   }
 
   function saveState() {
+    if (!storageControl.enabled()) return;
     const payload = {
       year: state.year, budget: state.budget, profile: state.profile,
       minBreak: state.minBreak, maxBreak: state.maxBreak,
@@ -829,7 +830,7 @@
       if (params.get('vyjimky')) {
         try { payload.exceptions = JSON.parse(decodeURIComponent(escape(atob(params.get('vyjimky'))))); } catch { payload.exceptions = []; }
       }
-    } else {
+    } else if (storageControl.enabled()) {
       try { payload = JSON.parse(localStorage.getItem(STORAGE_KEY)); } catch { payload = null; }
     }
     if (!payload) return;
@@ -869,6 +870,13 @@
 
   function init() {
     cacheElements();
+    storageControl = window.RVStorageChoice.create({
+      scope: 'vacationPlanner',
+      dataKey: STORAGE_KEY,
+      inputId: 'rememberVacationSettings',
+      statusId: 'vacationStorageStatus',
+      onEnable: saveState
+    });
     loadState();
     populateDistricts();
     renderMonthToggles();

@@ -28,10 +28,11 @@
 <meta name="theme-color" content="#0b1f3a">
 <link rel="stylesheet" href="rv-tool-v2.css">
 <link rel="stylesheet" href="smenovy-kalendar-v2.css?v=20260716-2">
+<link rel="stylesheet" href="/rv-storage-choice-v1.css?v=20260804-b11">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"RychléVýpočty.cz","item":"https://rychlevypocty.cz/"},{"@type":"ListItem","position":2,"name":"Datum a čas","item":"https://rychlevypocty.cz/datum-a-cas.html"},{"@type":"ListItem","position":3,"name":"Směnový kalendář","item":"https://rychlevypocty.cz/smenovy-kalendar.html"}]}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Směnový kalendář a generátor turnusů","url":"https://rychlevypocty.cz/smenovy-kalendar.html","description":"Generátor směnového kalendáře pro běžné i vlastní turnusy se statistikami, porovnáním společného volna a exportem do PDF, CSV a ICS.","applicationCategory":"UtilitiesApplication","operatingSystem":"All","inLanguage":"cs-CZ","datePublished":"2026-07-16","dateModified":"2026-07-16","author":{"@type":"Organization","name":"RychléVýpočty.cz","url":"https://rychlevypocty.cz/"},"offers":{"@type":"Offer","price":"0","priceCurrency":"CZK"},"featureList":["Krátký a dlouhý týden","Ranní, odpolední a noční směny","12hodinové a 24hodinové turnusy","Vlastní směnový cyklus","Roční statistiky","Společné volno dvou lidí","PDF, CSV a ICS export"]}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Jak vytvořit směnový kalendář na celý rok?","acceptedAnswer":{"@type":"Answer","text":"Vyberte turnus, nastavte referenční datum a označte konkrétní pozici cyklu, která v tento den platí. Kalendář okamžitě dopočítá všechny dny zvoleného roku."}},{"@type":"Question","name":"Co je referenční datum směnového cyklu?","acceptedAnswer":{"@type":"Answer","text":"Je to den, u kterého bezpečně znáte svou směnu nebo volno. Společně s vybranou pozicí v cyklu určuje posunutí celého turnusu."}},{"@type":"Question","name":"Lze zadat vlastní pořadí směn?","acceptedAnswer":{"@type":"Answer","text":"Ano. Ve vlastním cyklu můžete skládat ranní, odpolední, noční, dvanáctihodinové, čtyřiadvacetihodinové směny a volno v libovolném pořadí."}},{"@type":"Question","name":"Umí kalendář krátký a dlouhý týden?","acceptedAnswer":{"@type":"Answer","text":"Ano. Obsahuje předvolbu pro denní dvanáctihodinový krátký a dlouhý týden i kombinovaný cyklus denních a nočních směn."}},{"@type":"Question","name":"Jak zjistit, kdy máme s partnerem oba volno?","acceptedAnswer":{"@type":"Answer","text":"Zapněte porovnání dvou turnusů a nastavte druhý cyklus. Nástroj označí společné volné dny, společné víkendy a nejdelší souvislé volno."}},{"@type":"Question","name":"Mohu směny přidat do Google nebo Apple Kalendáře?","acceptedAnswer":{"@type":"Answer","text":"Ano. Export ICS vytvoří soubor s pracovními směnami, který lze importovat do Google Kalendáře, Apple Kalendáře i Outlooku."}},{"@type":"Question","name":"Započítává nástroj české státní svátky?","acceptedAnswer":{"@type":"Answer","text":"Ano. Kalendář označuje české státní a ostatní svátky včetně Velkého pátku a Velikonočního pondělí a ve statistikách počítá směny připadající na svátek."}},{"@type":"Question","name":"Je výpočet fondu pracovní doby právně závazný?","acceptedAnswer":{"@type":"Answer","text":"Ne. Statistiky vycházejí z uživatelem nastaveného cyklu a délky směn. Rozhodující je skutečný rozvrh zaměstnavatele, evidence pracovní doby a příslušná pravidla."}},{"@type":"Question","name":"Ukládá se moje nastavení?","acceptedAnswer":{"@type":"Answer","text":"Ano, poslední nastavení se ukládá pouze lokálně v prohlížeči. Sdílený odkaz obsahuje parametry turnusu, aby šel otevřít na jiném zařízení."}},{"@type":"Question","name":"Lze směnový kalendář vytisknout nebo stáhnout jako PDF?","acceptedAnswer":{"@type":"Answer","text":"Ano. Nástroj nabízí tiskovou verzi i přímé vytvoření vícestránkového PDF s přehledem všech měsíců."}}]}</script>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7745758285259522" crossorigin="anonymous"></script>
+
 </head>
 <body class="shift-page" data-theme="date">
 <a class="skip-link" href="#nastaveni">Přejít na nastavení směn</a>
@@ -68,7 +69,8 @@
 
   <section class="container setup-section" id="nastaveni">
     <div class="setup-shell">
-      <div class="setup-heading"><div><p class="eyebrow">Rychlý start</p><h2>Nastavte svůj turnus ve třech krocích</h2><p>Předvolby jsou výchozí šablony. Rozhodující je referenční datum a konkrétní pozice v cyklu, kterou v daný den opravdu máte.</p></div><span class="saved-badge" id="saveBadge"><i></i> Nastavení se ukládá v prohlížeči</span></div>
+      <div class="setup-heading"><div><p class="eyebrow">Rychlý start</p><h2>Nastavte svůj turnus ve třech krocích</h2><p>Předvolby jsou výchozí šablony. Rozhodující je referenční datum a konkrétní pozice v cyklu, kterou v daný den opravdu máte.</p></div></div>
+      <div class="rv-storage-choice"><label class="rv-storage-choice__label" for="rememberShiftSettings"><input id="rememberShiftSettings" type="checkbox"><span class="rv-storage-choice__copy"><strong>Zapamatovat nastavení v tomto prohlížeči</strong><small>Bez zapnutí zůstane turnus pouze v aktuální návštěvě.</small></span></label><p class="rv-storage-choice__status" id="shiftStorageStatus" role="status"></p><button class="rv-storage-choice__reset" id="resetCalendarBtn" type="button">Obnovit výchozí nastavení</button></div>
 
       <div class="step-label"><span>1</span><div><strong>Vyberte typ směnového cyklu</strong><small>Začněte nejbližší předvolbou, případně sestavte vlastní turnus.</small></div></div>
       <div class="preset-grid" id="presetGrid" role="radiogroup" aria-label="Typ směnového cyklu">
@@ -294,6 +296,7 @@
   </div>
   <div class="container footer-bottom"><p>© 2026 RychléVýpočty.cz. Směnový kalendář je plánovací pomůcka; rozhodující je aktuální rozpis zaměstnavatele.</p></div>
 </footer>
-<script src="smenovy-kalendar.js?v=20260716-2"></script>
+<script src="/rv-storage-choice-v1.js?v=20260804-b11"></script>
+<script src="smenovy-kalendar.js?v=20260804-b11"></script>
 </body>
 </html>

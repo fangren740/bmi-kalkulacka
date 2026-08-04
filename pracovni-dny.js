@@ -10,6 +10,8 @@
   const shortDateFormatter = new Intl.DateTimeFormat('cs-CZ',{day:'numeric',month:'short',year:'numeric'});
   const weekdayFormatter = new Intl.DateTimeFormat('cs-CZ',{weekday:'long'});
   const numberFormatter = new Intl.NumberFormat('cs-CZ',{maximumFractionDigits:2});
+  const STORAGE_KEY = 'rv-workdays-v2';
+  let storageControl;
 
   const state = {
     mode: 'between',
@@ -302,7 +304,7 @@
   function renderWeekdayButtons(){ $$('[data-day]').forEach(btn=>btn.classList.toggle('is-on',state.weekdays.has(Number(btn.dataset.day)))); }
 
   function refresh() {
-    updateSettingsSummary(); renderResult(calculateCurrent()); renderYearOverview(Number($('yearInput').value)||new Date().getFullYear()); saveState(); updateUrl(false);
+    updateSettingsSummary(); renderResult(calculateCurrent()); renderYearOverview(Number($('yearInput').value)||new Date().getFullYear()); saveState();
   }
   function showToast(message){const toast=$('toast');toast.textContent=message;toast.hidden=false;clearTimeout(showToast.timer);showToast.timer=setTimeout(()=>toast.hidden=true,2600);}
   async function copyText(text){try{await navigator.clipboard.writeText(text);}catch(e){const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();}}
@@ -330,8 +332,8 @@
     if(p.get('datum')&&parseDate(p.get('datum')))$('anchorDate').value=p.get('datum');if(p.get('dny'))$('workdayAmount').value=p.get('dny');if(p.get('smer'))$('direction').value=p.get('smer');if(p.get('vcetne')==='1')$('countAnchor').checked=true;
     if(p.get('rok'))$('yearInput').value=p.get('rok'); renderWeekdayButtons(); if(mode)state.mode=mode;
   }
-  function saveState(){try{localStorage.setItem('rv-workdays-v2',JSON.stringify({weekdays:Array.from(state.weekdays),exceptions:state.exceptions,holidays:$('excludeHolidays').checked,hours:getHours()}));}catch(e){}}
-  function loadState(){try{const data=JSON.parse(localStorage.getItem('rv-workdays-v2')||'null');if(!data)return;if(Array.isArray(data.weekdays)&&data.weekdays.length)state.weekdays=new Set(data.weekdays);if(Array.isArray(data.exceptions))state.exceptions=data.exceptions;if(typeof data.holidays==='boolean')$('excludeHolidays').checked=data.holidays;if(data.hours)$('hoursPerDay').value=data.hours;}catch(e){}}
+  function saveState(){if(!storageControl.enabled())return;try{localStorage.setItem(STORAGE_KEY,JSON.stringify({weekdays:Array.from(state.weekdays),exceptions:state.exceptions,holidays:$('excludeHolidays').checked,hours:getHours()}));}catch(e){}}
+  function loadState(){if(!storageControl.enabled())return;try{const data=JSON.parse(localStorage.getItem(STORAGE_KEY)||'null');if(!data)return;if(Array.isArray(data.weekdays)&&data.weekdays.length)state.weekdays=new Set(data.weekdays);if(Array.isArray(data.exceptions))state.exceptions=data.exceptions;if(typeof data.holidays==='boolean')$('excludeHolidays').checked=data.holidays;if(data.hours)$('hoursPerDay').value=data.hours;}catch(e){}}
   function downloadBlob(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},1000);}
   function exportCsv(){const d=state.result;if(!d||!d.valid)return;const rows=[['Datum','Den','Pracovní','Důvod','Svátek','Vlastní výjimka','Hodiny']];d.days.forEach(day=>rows.push([day.key,capitalize(weekdayFormatter.format(day.date)),day.working?'Ano':'Ne',day.reason,day.holiday||'',day.exception?day.exception.label||day.exception.type:'',day.working?String(getHours()).replace('.',','):'0']));const csv='\uFEFF'+rows.map(row=>row.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(';')).join('\r\n');downloadBlob(new Blob([csv],{type:'text/csv;charset=utf-8'}),`pracovni-dny-${state.mode}-${new Date().toISOString().slice(0,10)}.csv`);showToast('CSV bylo staženo.');}
 
@@ -347,7 +349,7 @@
     $('useTodayBtn').addEventListener('click',()=>{const t=iso(cloneDate(new Date()));$('startDate').value=t;$('anchorDate').value=t;setMode(state.mode==='year'?'between':state.mode,true);});
     $('prevYearBtn').addEventListener('click',()=>{$('yearInput').value=Number($('yearInput').value)-1;refresh();});$('nextYearBtn').addEventListener('click',()=>{$('yearInput').value=Number($('yearInput').value)+1;refresh();});$('thisYearBtn').addEventListener('click',()=>{$('yearInput').value=new Date().getFullYear();refresh();});
     $('openYearModeBtn').addEventListener('click',()=>setMode('year',true));$('addExceptionBtn').addEventListener('click',addException);
-    $('resetBtn').addEventListener('click',()=>{setDefaults();updateTodayCard();showToast('Nastavení bylo obnoveno.');});
+    $('resetBtn').addEventListener('click',()=>{storageControl.disable();setDefaults();updateTodayCard();showToast('Nastavení bylo obnoveno.');});
     $('copyResultBtn').addEventListener('click',async()=>{await copyText(resultText());showToast('Výsledek byl zkopírován.');});
     $('shareResultBtn').addEventListener('click',async()=>{updateUrl(true);const share={title:'Kalkulačka pracovních dnů',text:resultText(),url:location.href};try{if(navigator.share)await navigator.share(share);else{await copyText(location.href);showToast('Odkaz byl zkopírován.');}}catch(e){}});
     $('csvBtn').addEventListener('click',exportCsv);$('printBtn').addEventListener('click',()=>window.print());
@@ -358,6 +360,7 @@
   function init(){
     const today=cloneDate(new Date());
     $('startDate').value=iso(localDate(today.getFullYear(),today.getMonth(),1));$('endDate').value=iso(localDate(today.getFullYear(),today.getMonth()+1,0));$('anchorDate').value=iso(today);$('yearInput').value=today.getFullYear();
+    storageControl=window.RVStorageChoice.create({scope:'workdays',dataKey:STORAGE_KEY,inputId:'rememberWorkdaySettings',statusId:'workdayStorageStatus',onEnable:saveState});
     loadState();loadUrl();renderWeekdayButtons();updateExceptionList();bind();setMode(state.mode);updateTodayCard();
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();

@@ -19,7 +19,8 @@
   const norm = value => (value || '').toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
   const toolWord = (count) => count === 1 ? 'nástroj' : count >= 2 && count <= 4 ? 'nástroje' : 'nástrojů';
   let favorites = new Set(read(FAVORITES_KEY, []).map(cleanHref));
-  let recent = read(RECENT_KEY, []).filter(item => item && item.href).slice(0, 6);
+  const recentEnabled = window.RVStorageChoice?.isEnabled('catalogRecent') === true;
+  let recent = recentEnabled ? read(RECENT_KEY, []).filter(item => item && item.href).slice(0, 6) : [];
 
   const toolData = (item) => {
     const link = item.querySelector('a[href]');
@@ -50,7 +51,7 @@
   }
   function addRecent(tool) {
     recent = [tool, ...recent.filter(item => cleanHref(item.href) !== tool.href)].slice(0, 6);
-    write(RECENT_KEY, recent);
+    if (recentEnabled) write(RECENT_KEY, recent);
   }
   function card(tool) {
     const safe = byHref.get(cleanHref(tool.href)) || tool;
@@ -218,7 +219,7 @@
   });
   document.getElementById('rvClearRecent')?.addEventListener('click', () => {
     recent = [];
-    write(RECENT_KEY, recent);
+    try { localStorage.removeItem(RECENT_KEY); } catch (_) {}
     renderWorkspace();
     renderSmartResults();
   });
