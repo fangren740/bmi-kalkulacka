@@ -220,7 +220,7 @@ button,input{font:inherit}a{color:inherit;text-decoration:none}button{cursor:poi
 {"@type":"ListItem","position":120,"name":"BMI kalkulačka","url":"https://rychlevypocty.cz/bmi-kalkulacka.html"},{"@type":"ListItem","position":121,"name":"Menstruační kalendář","url":"https://rychlevypocty.cz/menstruacni-kalendar.html"},{"@type":"ListItem","position":122,"name":"Kalkulačka přibírání v těhotenství","url":"https://rychlevypocty.cz/pribirani-v-tehotenstvi-kalkulacka.html"},{"@type":"ListItem","position":123,"name":"Kdy si udělat těhotenský test","url":"https://rychlevypocty.cz/kdy-si-udelat-tehotensky-test.html"},{"@type":"ListItem","position":124,"name":"Kalorická kalkulačka","url":"https://rychlevypocty.cz/kaloricka-kalkulacka.html"},{"@type":"ListItem","position":125,"name":"Kalkulačka nabíjení elektromobilu","url":"https://rychlevypocty.cz/nabijeni-elektromobilu-kalkulacka.html"}
 ]}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Jsou všechny kalkulačky zdarma?","acceptedAnswer":{"@type":"Answer","text":"Ano. Všechny kalkulačky jsou dostupné zdarma a bez registrace."}},{"@type":"Question","name":"Jak najdu kalkulačku, když neznám její název?","acceptedAnswer":{"@type":"Answer","text":"Napište běžnou otázku do vyhledávání nebo vyberte jednu z tematických oblastí katalogu."}},{"@type":"Question","name":"Jsou výsledky vhodné pro finální rozhodnutí?","acceptedAnswer":{"@type":"Answer","text":"Výsledky slouží pro rychlou orientaci a porovnání scénářů. U důležitých rozhodnutí je potřeba ověřit konkrétní podmínky a aktuální pravidla."}}]}</script>
-<link href="/rv-brand-v32.css?v=20260801-stable" rel="stylesheet"/><script defer="True" src="/rv-brand-v32.js?v=20260801"></script><link href="/favicon-rv-v32.svg?v=1" rel="icon" type="image/svg+xml"/><style>.fast-label span,.result-line,.group-count{color:#526579}.guidance-panel>.eyebrow,.guidance-step b{color:#315f34}</style></head>
+<link href="/rv-brand-v32.css?v=20260801-stable" rel="stylesheet"/><link href="/rv-storage-choice-v1.css?v=20260804-b11" rel="stylesheet"/><script defer="True" src="/rv-brand-v32.js?v=20260801"></script><link href="/favicon-rv-v32.svg?v=1" rel="icon" type="image/svg+xml"/><style>.fast-label span,.result-line,.group-count{color:#526579}.guidance-panel>.eyebrow,.guidance-step b{color:#315f34}.directory-panel>.rv-storage-choice{margin:14px 22px}</style></head>
 <body class="rv-page-catalog rv-brand-v3 rv-brand-v32">
 <a class="skip-link" href="#main">Přejít na obsah</a>
 
@@ -296,7 +296,7 @@ button,input{font:inherit}a{color:inherit;text-decoration:none}button{cursor:poi
 <button id="open-all" type="button">Rozbalit vše</button>
 
 <button id="close-all" type="button">Sbalit vše</button>
-</div></div><div aria-live="polite" class="result-line"><span>Zobrazeno 
+</div></div><div class="rv-storage-choice"><label class="rv-storage-choice__label" for="rememberCatalogRecent"><input id="rememberCatalogRecent" type="checkbox"><span class="rv-storage-choice__copy"><strong>Zapamatovat nastavení v tomto prohlížeči</strong><small>Volba se týká jen historie naposledy použitých nástrojů; bez zapnutí se historie trvale neukládá.</small></span></label><p class="rv-storage-choice__status" id="catalogStorageStatus" role="status"></p></div><div class="rv-recent-strip" id="rvRecentStrip" hidden><div class="rv-recent-strip__head"><strong>Naposledy použité nástroje</strong><button id="rvClearRecent" type="button">Vymazat historii</button></div><div class="rv-recent-strip__links" id="rvRecentLinks"></div></div><div aria-live="polite" class="result-line"><span>Zobrazeno
 <strong id="result-count">125</strong>
  nástrojů</span>
 <button class="reset-link" id="reset-filter" type="button">Zrušit filtr</button>
@@ -613,6 +613,7 @@ button,input{font:inherit}a{color:inherit;text-decoration:none}button{cursor:poi
 <a href="/podminky-pouziti.html">Podmínky použití</a>
 </div></div></div><div class="footer-bottom"><p>© <span id="current-year">2026</span> RychléVýpočty.cz. Výpočty jsou orientační a slouží pro rychlé porovnání scénářů před finálním rozhodnutím.</p><p><a href="/kalkulacky.html"><span>125</span> online nástrojů</a>
 </p></div></div></footer>
+<script src="/rv-storage-choice-v1.js?v=20260804-b11"></script>
 <script>
 (function(){
   const searchInput=document.getElementById('catalog-search');
@@ -631,6 +632,42 @@ button,input{font:inherit}a{color:inherit;text-decoration:none}button{cursor:poi
   const menuToggle=document.querySelector('.menu-toggle');
   const nav=document.getElementById('main-nav');
   let activeCategory='all';
+  const RECENT_KEY='rv_catalog_recent_v1';
+  let recent=[];
+  let recentStorage;
+
+  function recentRecord(item){
+    return {href:new URL(item.getAttribute('href'),location.origin).pathname,title:item.querySelector('strong')?.textContent.trim()||'Kalkulačka'};
+  }
+  function saveRecent(){
+    if(!recentStorage.enabled()) return;
+    try{localStorage.setItem(RECENT_KEY,JSON.stringify(recent));}catch(_){/* Katalog funguje i bez úložiště. */}
+  }
+  function renderRecent(){
+    const strip=document.getElementById('rvRecentStrip');
+    const list=document.getElementById('rvRecentLinks');
+    list.replaceChildren(...recent.map(record=>{
+      const link=document.createElement('a');
+      link.href=record.href;
+      link.textContent=record.title;
+      return link;
+    }));
+    strip.hidden=recent.length===0;
+  }
+  function addRecent(item){
+    const record=recentRecord(item);
+    recent=[record,...recent.filter(entry=>entry.href!==record.href)].slice(0,6);
+    saveRecent();
+    renderRecent();
+  }
+
+  recentStorage=window.RVStorageChoice.create({scope:'catalogRecent',dataKey:RECENT_KEY,inputId:'rememberCatalogRecent',statusId:'catalogStorageStatus',onEnable:saveRecent,onDisable:renderRecent});
+  if(recentStorage.enabled()){
+    try{const saved=JSON.parse(localStorage.getItem(RECENT_KEY)||'[]');if(Array.isArray(saved))recent=saved.filter(entry=>entry&&entry.href&&entry.title).slice(0,6);}catch(_){recent=[];}
+  }
+  renderRecent();
+  items.forEach(item=>item.addEventListener('click',()=>addRecent(item)));
+  document.getElementById('rvClearRecent').addEventListener('click',()=>{recent=[];recentStorage.removeData();renderRecent();});
 
   function normalize(value){return String(value||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' ').trim()}
   function queryParts(value){return normalize(value).split(' ').filter(Boolean)}
