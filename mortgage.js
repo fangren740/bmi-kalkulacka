@@ -1,8 +1,4 @@
 /* Calculator-specific V2 logic. Shared helpers live in rv-tool-core.js. */
-window.rvTrack = window.rvTrack || function(eventName, params) {
-  window.dataLayer = window.dataLayer || [];
-  window.dataLayer.push({ event: eventName, ...params });
-};
 
 (() => {
   const form = document.getElementById('mortgageForm');
@@ -292,7 +288,7 @@ window.rvTrack = window.rvTrack || function(eventName, params) {
     renderPremiumDecision(values, result, affordability);
   }
 
-  function runCalculation(track = false) {
+  function runCalculation() {
     const values = getValues();
     const error = validate(values);
 
@@ -307,14 +303,6 @@ window.rvTrack = window.rvTrack || function(eventName, params) {
     const result = calculateMortgage(values);
     render(values, result);
 
-    if (track) {
-      window.rvTrack('mortgage_calculated', {
-        loan_amount: values.loanAmount,
-        property_value: values.propertyValue,
-        ltv: Math.round(result.ltv),
-        years: values.years
-      });
-    }
   }
 
   function setPreset(name) {
@@ -333,13 +321,12 @@ window.rvTrack = window.rvTrack || function(eventName, params) {
     });
 
     presetButtons.forEach(button => button.classList.toggle('active', button.dataset.preset === name));
-    window.rvTrack('mortgage_preset_selected', { preset: name });
     runCalculation();
   }
 
   form.addEventListener('submit', event => {
     event.preventDefault();
-    runCalculation(true);
+    runCalculation();
   });
   form.addEventListener('input', () => runCalculation());
   resetBtn?.addEventListener('click', () => setPreset('standard'));
