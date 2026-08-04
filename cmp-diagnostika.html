@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <title>CMP diagnostika | RychléVýpočty.cz</title>
+
+  <script>
+    window.googlefc = window.googlefc || {};
+    window.googlefc.callbackQueue = window.googlefc.callbackQueue || [];
+
+    function rvLog(label, value) {
+      var row = document.createElement('pre');
+      row.textContent = label + "\n" + JSON.stringify(value, null, 2);
+      document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('log').appendChild(row);
+      });
+    }
+
+    window.googlefc.callbackQueue.push({
+      CONSENT_API_READY: function () {
+        rvLog('CONSENT_API_READY', {
+          googlefcKeys: Object.keys(window.googlefc || {}),
+          tcfApi: typeof window.__tcfapi,
+          consentModeApi: typeof window.googlefc.getGoogleConsentModeValues
+        });
+
+        if (typeof window.__tcfapi === 'function') {
+          window.__tcfapi('ping', 2, function (data, success) {
+            rvLog('TCF_PING', { success: success, data: data });
+          });
+          window.__tcfapi('addEventListener', 2, function (data, success) {
+            rvLog('TCF_EVENT', { success: success, data: data });
+          });
+        }
+      }
+    });
+
+    window.googlefc.callbackQueue.push({
+      CONSENT_DATA_READY: function () {
+        rvLog('CONSENT_DATA_READY', {
+          tcfApi: typeof window.__tcfapi
+        });
+      }
+    });
+
+    window.googlefc.callbackQueue.push({
+      CONSENT_MODE_DATA_READY: function () {
+        var values = null;
+        try {
+          values = typeof window.googlefc.getGoogleConsentModeValues === 'function'
+            ? window.googlefc.getGoogleConsentModeValues()
+            : 'API NENÍ DOSTUPNÉ';
+        } catch (error) {
+          values = String(error);
+        }
+        rvLog('CONSENT_MODE_DATA_READY', values);
+      }
+    });
+  </script>
+
+  <script async
+    src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7745758285259522"
+    crossorigin="anonymous"></script>
+
+  <style>
+    body{font-family:Arial,sans-serif;max-width:900px;margin:40px auto;padding:0 18px;line-height:1.55;color:#10243d}
+    h1{font-size:2rem}
+    .box{border:1px solid #ccd7e2;border-radius:12px;padding:18px;margin:18px 0;background:#f7f9fb}
+    button{padding:12px 16px;border:0;border-radius:8px;background:#0b5ed7;color:white;font-weight:700;cursor:pointer}
+    pre{white-space:pre-wrap;overflow-wrap:anywhere;border:1px solid #d9e2eb;border-radius:8px;padding:12px;background:white}
+  </style>
+</head>
+<body>
+  <h1>Google CMP diagnostika</h1>
+  <p>Tato dočasná stránka neobsahuje kalkulačky, GA4 ani jiné skripty projektu. Slouží jen k izolaci Google Privacy &amp; Messaging.</p>
+
+  <div class="box">
+    <strong>Očekávané chování:</strong>
+    <p>Při URL s <code>?fc=alwaysshow&amp;fctype=gdpr</code> se má zobrazit publikovaná evropská zpráva.</p>
+    <button type="button" onclick="window.googlefc.callbackQueue.push({CONSENT_API_READY:function(){if(typeof window.googlefc.showRevocationMessage==='function'){window.googlefc.showRevocationMessage();}}})">
+      Zkusit znovu zobrazit zprávu
+    </button>
+  </div>
+
+  <div id="log" class="box">
+    <strong>Diagnostický výstup</strong>
+  </div>
+</body>
+</html>
