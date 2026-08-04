@@ -65,6 +65,7 @@
     var status=goalValue==='lose'?'Snižování':goalValue==='gain'?'Zvyšování':'Udržování';
     var label=goalValue==='lose'?'Orientační příjem pro úbytek':goalValue==='gain'?'Orientační příjem pro nárůst':'Udržovací příjem';
     if(blockedLowBmi){status='Individuální posouzení';label='Udržovací orientace';displayTarget=tdee;}
+    else if(lowTarget){status='Nutná úprava';label='Bezpečnostní hranice, ne cíl';}
     document.getElementById('resultStatus').textContent=status;
     document.getElementById('mainLabel').textContent=label;
     document.getElementById('mainCalories').textContent=format(round10(displayTarget));
@@ -72,9 +73,13 @@
     document.getElementById('bmrValue').textContent=format(round10(bmr));
     document.getElementById('tdeeValue').textContent=format(round10(tdee));
     document.getElementById('activityLabel').textContent=activityNames[String(pal)];
-    document.getElementById('rangeValue').textContent=format(round10(tdee*.9))+'–'+format(round10(tdee*1.1))+' kcal';
-    document.getElementById('adjustmentValue').textContent=(adjustment>0?'+':'')+format(adjustment)+' kcal';
-    document.getElementById('goalLabel').textContent=blockedLowBmi?'hubnoucí scénář nepoužit':goalValue==='lose'?'proti vypočtenému TDEE':goalValue==='gain'?'proti vypočtenému TDEE':'udržovací scénář';
+    document.getElementById('rangeValue').textContent=format(round10(tdee*.9))+'–'+format(round10(tdee*1.1));
+    document.getElementById('adjustmentLabel').textContent=goalValue==='lose'&&!blockedLowBmi?'Denní deficit':goalValue==='gain'?'Denní navýšení':'Úprava cíle';
+    document.getElementById('adjustmentValue').textContent=format(Math.abs(adjustment));
+    document.getElementById('adjustmentUnit').textContent='kcal';
+    document.getElementById('goalTitle').textContent=blockedLowBmi?'Scénář nepoužit':goalValue==='lose'?'Méně než TDEE':goalValue==='gain'?'Více než TDEE':'Beze změny';
+    document.getElementById('goalLabel').textContent=blockedLowBmi?'kvůli nízkému BMI':'oproti TDEE';
+    if(lowTarget){document.getElementById('adjustmentLabel').textContent='Scénář zastaven';document.getElementById('adjustmentValue').textContent='—';document.getElementById('adjustmentUnit').textContent='';document.getElementById('goalTitle').textContent='Cíl není vhodný';document.getElementById('goalLabel').textContent='výpočet klesl pod 1 200 kcal';}
     document.getElementById('meal3').textContent=format(displayTarget/3)+' kcal';
     document.getElementById('meal4').textContent=format(displayTarget/4)+' kcal';
     document.getElementById('meal5').textContent=format(displayTarget/5)+' kcal';
