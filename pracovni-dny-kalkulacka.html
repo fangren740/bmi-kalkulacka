@@ -5,21 +5,21 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="referrer" content="strict-origin-when-cross-origin"/>
 <meta name="format-detection" content="telephone=no">
-<title>Kalkulačka pracovních dnů 2026 – počet dní mezi daty</title>
-<meta name="description" content="Spočítejte počet pracovních dnů mezi dvěma daty nebo datum za X pracovních dnů. Česká kalkulačka zohlední svátky, víkendy i vlastní volno.">
+<title>Kalkulačka pracovních dnů 2026 – termín, svátky a datum za X dní</title>
+<meta name="description" content="Spočítejte pracovní dny mezi daty nebo datum za X pracovních dnů. České svátky, vlastní volno, pracovní soboty, hodiny, měsíční rozpad, CSV a tisk/PDF.">
 <meta name="author" content="RychléVýpočty.cz">
 <meta name="robots" content="index,follow,max-image-preview:large">
 <link rel="canonical" href="https://rychlevypocty.cz/pracovni-dny-kalkulacka.html">
-<meta property="og:title" content="Kalkulačka pracovních dnů 2026 – počet dní mezi daty">
-<meta property="og:description" content="Spočítejte počet pracovních dnů mezi dvěma daty nebo datum za X pracovních dnů. České svátky, víkendy a vlastní výjimky.">
+<meta property="og:title" content="Kalkulačka pracovních dnů 2026 – termíny bez chyb">
+<meta property="og:description" content="Pracovní dny mezi daty, datum za X pracovních dnů, české svátky, vlastní výjimky a přehled celého roku.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://rychlevypocty.cz/pracovni-dny-kalkulacka.html">
 <meta property="og:image" content="https://rychlevypocty.cz/og-rv-pracovni-dny-v32.jpg">
 <meta property="og:site_name" content="RychléVýpočty.cz">
 <meta property="og:locale" content="cs_CZ">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Kalkulačka pracovních dnů 2026 – počet dní mezi daty">
-<meta name="twitter:description" content="Počet pracovních dnů mezi daty, datum za X pracovních dnů, české svátky a vlastní pracovní výjimky.">
+<meta name="twitter:title" content="Kalkulačka pracovních dnů a termínů">
+<meta name="twitter:description" content="Spočítejte reálný pracovní čas mezi daty nebo přesné datum po zadaném počtu pracovních dnů.">
 <meta name="twitter:image" content="https://rychlevypocty.cz/og-rv-pracovni-dny-v32.jpg">
 <link rel="icon" href="favicon.ico?v=2" sizes="any">
 <link rel="icon" href="favicon-32x32.png?v=2" sizes="32x32" type="image/png">
@@ -31,13 +31,66 @@
 <link rel="stylesheet" href="workdays-pro.css?v=20260716-8">
 <link rel="stylesheet" href="/rv-storage-choice-v1.css?v=20260804-b11">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"RychléVýpočty.cz","item":"https://rychlevypocty.cz/"},{"@type":"ListItem","position":2,"name":"Datum a čas","item":"https://rychlevypocty.cz/datum-a-cas.html"},{"@type":"ListItem","position":3,"name":"Pracovní dny","item":"https://rychlevypocty.cz/pracovni-dny-kalkulacka.html"}]}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Kalkulačka pracovních dnů 2026","url":"https://rychlevypocty.cz/pracovni-dny-kalkulacka.html","description":"Výpočet počtu pracovních dnů mezi dvěma daty, data po zadaném počtu pracovních dnů a pracovního kalendáře roku se svátky a vlastními výjimkami.","applicationCategory":"UtilitiesApplication","operatingSystem":"All","inLanguage":"cs-CZ","dateModified":"2026-08-10","author":{"@type":"Organization","name":"RychléVýpočty.cz","url":"https://rychlevypocty.cz/"},"offers":{"@type":"Offer","price":"0","priceCurrency":"CZK"},"featureList":["Pracovní dny mezi dvěma daty","Datum za X pracovních dnů","České svátky","Vlastní dny volna a pracovní výjimky","Měsíční rozpad","CSV export","Tisk a PDF"]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Kalkulačka pracovních dnů a termínů","url":"https://rychlevypocty.cz/pracovni-dny-kalkulacka.html","description":"Výpočet pracovních dnů mezi daty, data po zadaném počtu pracovních dnů a pracovního kalendáře roku se svátky a vlastními výjimkami.","applicationCategory":"UtilitiesApplication","operatingSystem":"All","inLanguage":"cs-CZ","dateModified":"2026-07-16","author":{"@type":"Organization","name":"RychléVýpočty.cz","url":"https://rychlevypocty.cz/"},"offers":{"@type":"Offer","price":"0","priceCurrency":"CZK"},"featureList":["Pracovní dny mezi dvěma daty","Datum za X pracovních dnů","České svátky","Vlastní dny volna a pracovní výjimky","Měsíční rozpad","CSV export","Tisk a PDF"]}</script>
 
 
 
 <link rel="stylesheet" href="/rv-brand-v32.css?v=20260801-stable">
 <script src="/rv-brand-v32.js?v=20260801" defer></script>
 <link rel="icon" type="image/svg+xml" href="/favicon-rv-v32.svg?v=1">
+<style>
+body.workdays-page .rv-identity-hero::before,
+body.workdays-page .rv-identity-hero::after,
+body.workdays-page .wd-intro::before,
+body.workdays-page .wd-today-card::after,
+body.workdays-page .rv-brand-footer::before{content:none!important;display:none!important}
+body.workdays-page .wd-intro{padding:34px 0 28px;background:linear-gradient(180deg,#f8fbfe 0%,#ffffff 100%)}
+body.workdays-page .wd-intro-grid{grid-template-columns:minmax(0,1.08fr) minmax(330px,.82fr);gap:34px;align-items:center}
+body.workdays-page .wd-intro-copy{padding:8px 0}
+body.workdays-page .wd-intro h1{max-width:780px;font-size:clamp(42px,4.8vw,64px);line-height:1.02;letter-spacing:-.05em}
+body.workdays-page .wd-lead{max-width:730px;margin-top:16px;color:#55687d;font-size:16px;line-height:1.72}
+body.workdays-page .wd-pills{margin-top:18px;gap:10px}
+body.workdays-page .wd-pills span{padding:9px 12px;border-color:#d5e2ee;background:#fff;color:#53697f;box-shadow:0 10px 24px rgba(17,39,74,.05)}
+body.workdays-page .wd-today-card{min-height:auto;padding:22px 22px 18px;border:1px solid #d5e4ef;border-radius:24px;color:#fff;background:linear-gradient(180deg,#0a2242 0%,#0d315d 100%);box-shadow:0 22px 48px rgba(9,31,61,.14)}
+body.workdays-page .wd-today-top button{border-color:rgba(255,255,255,.16);background:rgba(255,255,255,.1)}
+body.workdays-page .wd-today-main{margin:22px 0 18px}
+body.workdays-page .wd-today-main strong{font-size:28px}
+body.workdays-page .wd-jump-nav{background:#fff;border-bottom:1px solid #dbe6ef}
+body.workdays-page .wd-jump-scroll{gap:18px}
+body.workdays-page .wd-jump-scroll a{padding:14px 0}
+body.workdays-page .wd-tool-section{padding-top:28px}
+body.workdays-page .wd-tool-shell{padding-top:0}
+body.workdays-page .rv-brand-footer{background:linear-gradient(180deg,#081b35 0%,#0b2240 100%)}
+body.workdays-page .rv-brand-footer::after{height:3px;opacity:.92}
+body.workdays-page .footer-grid{grid-template-columns:minmax(0,1.25fr) repeat(3,minmax(0,.75fr));gap:28px;padding-top:24px}
+body.workdays-page .footer-brand{max-width:420px}
+body.workdays-page .footer-brand p{max-width:400px;color:rgba(255,255,255,.72);line-height:1.7;font-weight:650}
+body.workdays-page .footer-col h3{margin:0 0 10px;color:rgba(255,255,255,.9);font-size:13px;letter-spacing:.08em;text-transform:uppercase}
+body.workdays-page .footer-links a{display:block;padding:7px 0;color:rgba(255,255,255,.76);font-weight:700}
+body.workdays-page .footer-links a:hover,
+body.workdays-page .footer-links a:focus-visible{color:#fff}
+body.workdays-page .rv-footer-process{margin-top:16px}
+body.workdays-page .rv-footer-process span{padding:6px 9px;border-radius:10px;background:rgba(255,255,255,.04)}
+body.workdays-page .footer-bottom{margin-top:24px;padding-top:16px}
+@media (max-width: 980px){
+  body.workdays-page .wd-intro-grid{grid-template-columns:1fr;gap:18px}
+  body.workdays-page .wd-intro-copy{padding:0}
+  body.workdays-page .wd-today-card{max-width:640px}
+  body.workdays-page .footer-grid{grid-template-columns:1fr 1fr}
+}
+@media (max-width: 640px){
+  body.workdays-page .wd-intro{padding:24px 0 22px}
+  body.workdays-page .wd-intro h1{font-size:clamp(34px,11vw,48px);line-height:1.03}
+  body.workdays-page .wd-lead{font-size:15px}
+  body.workdays-page .wd-pills{gap:8px}
+  body.workdays-page .wd-pills span{font-size:10px}
+  body.workdays-page .wd-today-card{padding:18px;border-radius:22px}
+  body.workdays-page .wd-today-main{grid-template-columns:58px 1fr;gap:12px}
+  body.workdays-page .wd-today-icon{width:58px;height:58px;border-radius:18px;font-size:26px}
+  body.workdays-page .wd-today-main strong{font-size:24px}
+  body.workdays-page .footer-grid{grid-template-columns:1fr;gap:22px}
+}
+</style>
 </head>
 <body class="workdays-page rv-page-calculator rv-page-calculator--date rv-brand-v3 rv-brand-v32" data-theme="date">
 <a class="skip-link" href="#nastroj">Přejít na kalkulačku pracovních dnů</a>
@@ -56,10 +109,10 @@
         <div class="wd-intro-copy">
           <p class="eyebrow">Pracovní termíny · české svátky · vlastní režim</p>
           <h1>Kalkulačka pracovních dnů 2026: počet pracovních dnů mezi daty</h1>
-          <p class="wd-lead">Spočítejte počet pracovních dnů mezi dvěma daty, najděte datum za zadaný počet pracovních dnů nebo projděte pracovní kapacitu celého roku. Kalkulačka zohlední české svátky, víkendy, pracovní soboty i vlastní volno.</p>
+          <p class="wd-lead">Spočítejte počet pracovních dnů mezi dvěma daty, najděte datum za zadaný počet pracovních dnů nebo projděte pracovní kalendář celého roku. Kalkulačka zohlední víkendy, české svátky i vlastní výjimky.</p>
           <div class="wd-pills"><span>Počítá v prohlížeči</span><span>České svátky</span><span>Vlastní volno</span><span>CSV · tisk · PDF</span></div>
         </div>
-        <aside class="wd-today-card rv-brand-module rv-brand-display" aria-live="polite">
+        <aside class="wd-today-card" aria-live="polite">
           <div class="wd-today-top"><span><i></i>Dnešní pracovní orientace</span><button type="button" id="useTodayBtn">Použít dnešek</button></div>
           <div class="wd-today-main"><div class="wd-today-icon" id="todayWorkIcon">✓</div><div><small id="todayDateText">Dnes</small><strong id="todayWorkStatus">Pracovní den</strong><p id="todayWorkDetail">Další pracovní den: zítra</p></div></div>
           <div class="wd-today-bottom"><span>Číslo týdne</span><strong id="todayWeek">KT 29</strong></div>
@@ -209,7 +262,7 @@
         <p>Výsledné datum bývá matematicky nejbližší možné datum podle zadaného kalendáře. Pro zákaznický závazek je rozumné přidat rezervu. U krátké administrativní činnosti může stačit jeden pracovní den, u výroby nebo externího dodavatele je vhodná rezerva vyšší. Rezervu lze vytvořit přímo zvýšením počtu pracovních dnů nebo přidáním plánovaných rizikových dnů jako vlastního volna. Druhá možnost je transparentnější, protože v rozkladu zůstane vidět důvod, proč se termín posunul.</p>
         <p>Při zpětném plánování použijte režim Odečíst. Z cílového data odečtete výrobní, kontrolní nebo schvalovací dny a získáte nejzazší datum zahájení. Pro více navazujících kroků je vhodné počítat každý krok samostatně a mezi nimi přidat předávací rezervu. Jeden souhrnný počet dnů může skrýt, že různé části procesu používají jiný pracovní kalendář nebo jiný seznam výjimek.</p>
 
-        <section class="wd-sources" id="zdroje"><h2>Metodické zdroje</h2><p>Seznam českých státních a ostatních svátků vychází ze zákona č. 245/2000 Sb. v aktuálním znění. Metodiku a kalendář svátků jsme znovu věcně ověřili 10. 8. 2026 podle e-Sbírky; významné dny, které nejsou současně státním nebo ostatním svátkem, zůstávají pracovními dny. Princip práce s rozdílem dat lze porovnat také s dokumentací Microsoftu pro datumové výpočty. Zdroje slouží pro ověření metodiky, nikoli jako náhrada individuálního právního nebo pracovněprávního posouzení.</p><ul><li><a href="https://ppropo.mpsv.cz/zakon_245_2000" rel="noopener noreferrer">MPSV: zákon č. 245/2000 Sb. – státní a ostatní svátky</a></li><li><a href="https://e-sbirka.gov.cz/sb/2000/245" rel="noopener noreferrer">e-Sbírka: zákon č. 245/2000 Sb.</a></li><li><a href="https://support.microsoft.com/cs-cz/office/v%C3%BDpo%C4%8Det-rozd%C3%ADlu-mezi-dv%C4%9Bma-daty-8235e7c9-b430-44ca-9425-46100a162f38" rel="noopener noreferrer">Microsoft: výpočet rozdílu mezi dvěma daty</a></li></ul></section>
+        <section class="wd-sources" id="zdroje"><h2>Metodické zdroje</h2><p>Seznam českých státních a ostatních svátků vychází ze zákona č. 245/2000 Sb. a z veřejně dostupného přehledu Ministerstva práce a sociálních věcí. Princip práce s rozdílem dat a datumovými funkcemi lze porovnat také s dokumentací Microsoftu pro datumové výpočty. Zdroje slouží pro ověření metodiky, nikoli jako náhrada individuálního právního nebo pracovněprávního posouzení.</p><ul><li><a href="https://ppropo.mpsv.cz/zakon_245_2000" rel="noopener noreferrer">MPSV: zákon č. 245/2000 Sb. – státní a ostatní svátky</a></li><li><a href="https://e-sbirka.gov.cz/sb/2000/245" rel="noopener noreferrer">e-Sbírka: zákon č. 245/2000 Sb.</a></li><li><a href="https://support.microsoft.com/cs-cz/office/v%C3%BDpo%C4%8Det-rozd%C3%ADlu-mezi-dv%C4%9Bma-daty-8235e7c9-b430-44ca-9425-46100a162f38" rel="noopener noreferrer">Microsoft: výpočet rozdílu mezi dvěma daty</a></li></ul></section>
       </article>
 
       <aside class="wd-article-side">
@@ -241,10 +294,10 @@
 <div class="wd-toast" id="toast" role="status" aria-live="polite" hidden></div>
 <footer class="footer rv-brand-footer">
   <div class="container footer-grid">
-    <div><a class="rv-logo rv-logo--inverse" href="index.html" aria-label="RychléVýpočty.cz – domů"><img src="/logo-rv-v32-inverse.svg?v=1" alt="" width="295" height="48" class="rv-logo-image" decoding="async"></a><p>Praktické online kalkulačky pro datum, práci, finance, bydlení i podnikání. Výpočty probíhají přímo ve vašem prohlížeči.</p><div class="rv-footer-process"><span>Zadat</span><span>Spočítat</span><span>Pochopit</span><span>Rozhodnout</span></div></div>
-    <div><h3>Datum a čas</h3><div class="footer-links"><a href="cislo-tydne.html">Číslo týdne</a><a href="smenovy-kalendar.html">Směnový kalendář</a><a href="pracovni-dny-kalkulacka.html">Pracovní dny</a><a href="kolik-dni-do-data.html">Kolik dní do data</a></div></div>
-    <div><h3>Práce</h3><div class="footer-links"><a href="kalkulacka-odpracovanych-hodin.html">Odpracované hodiny</a><a href="kalkulacka-priplatku-za-smeny.html">Příplatky za směny</a><a href="kalkulacka-dovolene.html">Dovolená</a><a href="mzdy-a-prace.html">Mzdy a práce</a></div></div>
-    <div><h3>Web</h3><div class="footer-links"><a href="jak-pocitame.html">Jak počítáme</a><a href="o-nas.html">O projektu</a><a href="kontakt.html">Kontakt</a><a href="podminky-pouziti.html">Podmínky použití</a></div></div>
+    <div class="footer-brand"><a class="rv-logo rv-logo--inverse" href="index.html" aria-label="RychléVýpočty.cz – domů"><img src="/logo-rv-v32-inverse.svg?v=1" alt="" width="295" height="48" class="rv-logo-image" decoding="async"></a><p>Praktické online kalkulačky pro datum, práci, finance, bydlení i podnikání. Výpočty probíhají přímo ve vašem prohlížeči.</p><div class="rv-footer-process"><span>Zadat</span><span>Spočítat</span><span>Pochopit</span><span>Rozhodnout</span></div></div>
+    <div class="footer-col"><h3>Datum a čas</h3><div class="footer-links"><a href="cislo-tydne.html">Číslo týdne</a><a href="smenovy-kalendar.html">Směnový kalendář</a><a href="pracovni-dny-kalkulacka.html">Pracovní dny</a><a href="kolik-dni-do-data.html">Kolik dní do data</a></div></div>
+    <div class="footer-col"><h3>Práce</h3><div class="footer-links"><a href="kalkulacka-odpracovanych-hodin.html">Odpracované hodiny</a><a href="kalkulacka-priplatku-za-smeny.html">Příplatky za směny</a><a href="kalkulacka-dovolene.html">Dovolená</a><a href="mzdy-a-prace.html">Mzdy a práce</a></div></div>
+    <div class="footer-col"><h3>Web</h3><div class="footer-links"><a href="jak-pocitame.html">Jak počítáme</a><a href="o-nas.html">O projektu</a><a href="kontakt.html">Kontakt</a><a href="podminky-pouziti.html">Podmínky použití</a></div></div>
   </div>
   <div class="container footer-bottom"><p>© 2026 RychléVýpočty.cz. Výsledky pracovních dnů a termínů mají orientační charakter.</p></div>
 </footer>
