@@ -306,7 +306,7 @@
     $('heroLimit').textContent = shortMoney(result.threshold);
     $('heroNet').textContent = shortMoney(result.netCash);
 
-    $('resultPanel').dataset.state = below ? 'below' : 'above';
+    $('vysledek').dataset.state = below ? 'below' : 'above';
     $('advancedSettlement').hidden = result.mode !== 'advanced';
     renderScenarios(result);
     renderBreakdown(result);
