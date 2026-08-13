@@ -15,8 +15,7 @@
     socialRate: 0.292,
     socialBaseShare: 0.55,
     socialMaxBase: 2350416,
-    socialMainMinJanJun: 19587,
-    socialMainMinJulDec: 17139,
+    socialMainMin2026: 17139,
     socialSideMin: 5387,
     sideThreshold: 117521,
     healthRate: 0.135,
@@ -99,7 +98,7 @@
         social = ceil(base * CONFIG.socialRate);
       }
     } else {
-      const minimumBase = CONFIG.socialMainMinJanJun * 6 + CONFIG.socialMainMinJulDec * 6;
+      const minimumBase = CONFIG.socialMainMin2026 * 12;
       const base = Math.min(CONFIG.socialMaxBase, Math.max(socialActualBase, minimumBase));
       social = ceil(base * CONFIG.socialRate);
     }

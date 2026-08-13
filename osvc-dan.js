@@ -8,8 +8,7 @@
     socialRate: 0.292,
     socialBaseShare: 0.55,
     socialMaxBase: 2350416,
-    socialMainMinJanJun: 19587,
-    socialMainMinJulDec: 17139,
+    socialMainMin2026: 17139,
     socialNewMin: 12242,
     socialSideMin: 5387,
     sideThresholdFull: 117521,
@@ -42,16 +41,10 @@
     return Math.min(revenue * rate / 100, cap);
   }
 
-  function socialMinimumBase(activity, startMonth, months, isNew) {
+  function socialMinimumBase(activity, months, isNew) {
     if (activity === 'side') return CONFIG.socialSideMin * months;
     if (isNew) return CONFIG.socialNewMin * months;
-    let total = 0;
-    for (let i = 0; i < months; i += 1) {
-      const month = startMonth + i;
-      if (month > 12) break;
-      total += month <= 6 ? CONFIG.socialMainMinJanJun : CONFIG.socialMainMinJulDec;
-    }
-    return total;
+    return CONFIG.socialMainMin2026 * months;
   }
 
   function sideThreshold(months) {
@@ -76,7 +69,7 @@
     const threshold = sideThreshold(availableMonths);
     const socialRequired = input.activity === 'main' || taxProfit >= threshold || input.socialVoluntary;
     const socialActualBase = taxProfit * CONFIG.socialBaseShare;
-    const socialMinBase = socialMinimumBase(input.activity, startMonth, availableMonths, input.isNew);
+    const socialMinBase = socialMinimumBase(input.activity, availableMonths, input.isNew);
     let socialBase = 0;
     let social = 0;
     if (socialRequired) {

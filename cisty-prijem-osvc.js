@@ -8,8 +8,7 @@
     socialRate: 0.292,
     socialBaseShare: 0.55,
     socialMaxBase: 2350416,
-    socialMainMinJanJun: 19587,
-    socialMainMinJulDec: 17139,
+    socialMainMin2026: 17139,
     socialNewMin: 12242,
     socialSideMin: 5387,
     sideThresholdFull: 117521,
@@ -48,7 +47,7 @@
   function socialMinimumBase(activity, isNew) {
     if (activity === 'side') return CONFIG.socialSideMin * 12;
     if (isNew) return CONFIG.socialNewMin * 12;
-    return CONFIG.socialMainMinJanJun * 6 + CONFIG.socialMainMinJulDec * 6;
+    return CONFIG.socialMainMin2026 * 12;
   }
 
   function calculateAnnual(revenue, input) {
