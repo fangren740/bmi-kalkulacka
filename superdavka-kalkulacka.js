@@ -297,7 +297,6 @@
     if (ratio > 1.43) assetIssues.push('Složka na živobytí nevychází, protože příjem přesahuje 1,43násobek životního minima.');
     if (totalPeopleInDwelling > memberCount) assetIssues.push('Náklady na bydlení byly poměrně kráceny podle počtu všech osob v bytě nebo domě.');
     if (homes === 2 && secondHomeException) assetIssues.push('Druhá nemovitost je započtena jako možná tříletá výjimka; její splnění ověřuje Úřad práce.');
-    if ($('rulesDate').value === 'future') assetIssues.unshift('Od 1. 10. 2026 se mají změnit některé parametry. Výpočet používá pravidla platná do 30. 9. 2026.');
 
     assetIssues.slice(0, 6).forEach((issue) => {
       const li = document.createElement('li');
@@ -359,10 +358,6 @@
     event.preventDefault();
     calculate();
     $('vysledek').scrollIntoView({ behavior: 'smooth', block: 'start' });
-  });
-
-  $('rulesDate').addEventListener('change', () => {
-    $('futureNotice').hidden = $('rulesDate').value !== 'future';
   });
 
   const menu = $('menuToggle');
