@@ -229,7 +229,7 @@ function updateHeroExample(d){
 
 function setMode(mode){
   document.body.dataset.noticeMode=mode;
-  document.querySelectorAll('[data-notice-mode]').forEach(function(btn){
+  document.querySelectorAll('.notice-mode-switch [data-notice-mode]').forEach(function(btn){
     var active=btn.dataset.noticeMode===mode;
     btn.classList.toggle('is-active',active);btn.setAttribute('aria-selected',String(active));
   });
@@ -270,7 +270,7 @@ function copyText(text,button,ok){
 function flash(btn,text){var old=btn.textContent;btn.textContent=text;setTimeout(function(){btn.textContent=old;},1500);}
 
 form.addEventListener('input',render);form.addEventListener('change',render);
-document.querySelectorAll('[data-notice-mode]').forEach(function(btn){btn.addEventListener('click',function(){setMode(btn.dataset.noticeMode);});});
+document.querySelectorAll('.notice-mode-switch [data-notice-mode]').forEach(function(btn){btn.addEventListener('click',function(){setMode(btn.dataset.noticeMode);});});
 $('resetNotice').addEventListener('click',function(){
   form.reset();var today=new Date();$('deliveryDate').value=iso(today);document.body.dataset.noticeMode='basic';history.replaceState(null,'',location.pathname+'#kalkulacka');setMode('basic');
 });
