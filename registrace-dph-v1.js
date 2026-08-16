@@ -102,6 +102,33 @@ function render(r){
   $('crossOneResult').textContent=r.cross1?fmtDate(r.cross1):'—';$('crossTwoResult').textContent=r.cross2?fmtDate(r.cross2):'—';
   $('deadlineNote').textContent=dl?'10. pracovní den po překročení vychází na '+fmtDate(dl)+'.':'Pro přesný termín registrace potřebujeme datum skutečného překročení příslušné hranice.';
   $('trackerCount').textContent=r.source==='tracker'?(r.rows.length+' položek'):'rychlý stav';
+
+  // Progressive disclosure: show only information that matters in the current state.
+  var crossed=state==='lower'||state==='upper';
+  $('vatResultMeta').hidden=!crossed;
+  $('metaCross1').hidden=state!=='lower'&&state!=='upper';
+  $('metaCross2').hidden=state!=='upper';
+  $('metaDeadline').hidden=!crossed;
+  $('metaMode').hidden=!crossed;
+  $('deadlineNote').hidden=!crossed;
+
+  var pathDetails=$('vatPathDetails');
+  pathDetails.open=crossed;
+  $('pathDefault').hidden=state==='upper';
+  $('pathEarly').hidden=state==='upper';
+  $('pathUpper').hidden=false;
+
+  var forecastDetails=$('vatForecastDetails');
+  var forecastRequested=r.source==='tracker'||($('asOfDetails')&&$('asOfDetails').open);
+  forecastDetails.hidden=crossed||!forecastRequested;
+  forecastDetails.open=false;
+  var forecastLabel='Zobrazit orientační forecast';
+  if(state==='below'||state==='lower-equal'){
+    if(f1)forecastLabel='2 mil. kolem '+fmtDate(f1);
+    else if(f2)forecastLabel='vyšší limit kolem '+fmtDate(f2);
+    else forecastLabel='při aktuálním tempu letos ne';
+  }
+  $('forecastSummary').textContent=forecastLabel;
 }
 function addTx(date,amount){
   var row=document.createElement('div');row.className='tx-row';row.innerHTML='<label><span>Datum plnění</span><input class="tx-date" type="date" min="2026-01-01" max="2026-12-31" value="'+(date||'')+'"></label><label><span>Částka do obratu</span><span class="money-input"><input class="tx-amount" type="number" min="0" step="1" inputmode="decimal" value="'+(amount||'')+'"><em>Kč</em></span></label><button type="button" class="tx-remove" aria-label="Odstranit položku">×</button>';txRows.appendChild(row);return row;
@@ -113,6 +140,7 @@ function flash(btn,text){var old=btn.textContent;btn.textContent=text;setTimeout
 function copyText(text,btn,ok){if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(text).then(function(){flash(btn,ok)})}else{var t=document.createElement('textarea');t.value=text;document.body.appendChild(t);t.select();document.execCommand('copy');t.remove();flash(btn,ok)}}
 function summary(){var r=mode()==='tracker'?getTracker():getBasic(),state=stateFor(r);return 'Obrat pro DPH: '+fmtMoney(r.turnover)+' ('+statusText(state)+'). Překročení 2 mil.: '+(r.cross1?fmtDate(r.cross1):'nezadáno')+'. Překročení 2 536 500 Kč: '+(r.cross2?fmtDate(r.cross2):'nezadáno')+'.'}
 setDefaultDates();
+if($('asOfDetails'))$('asOfDetails').addEventListener('toggle',function(){render()});
 form.addEventListener('input',function(){render()});form.addEventListener('change',function(){render()});
 document.querySelectorAll('.vat-mode-btn').forEach(function(btn){btn.addEventListener('click',function(){setMode(btn.dataset.vatMode)})});
 $('addTx').addEventListener('click',function(){addTx('','');render(getTracker())});$('loadExample').addEventListener('click',loadExample);$('clearTx').addEventListener('click',function(){txRows.innerHTML='';addTx('','');render(getTracker())});
