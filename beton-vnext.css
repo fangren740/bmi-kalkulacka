@@ -5,59 +5,75 @@
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 
 /* ==========================================================================
-   BETON — targeted field-row fix only
-   Original VNEXT-06 composition is preserved.
+   BETON — FINAL INPUT LAYOUT
+   Geometry is a separate row. Dimensions form one exact equal-width row.
+   Original VNEXT-06 page/result layout is otherwise untouched.
    ========================================================================== */
 
-/* Geometry selector + dimensional inputs are equal-width peers in one row. */
 .component-type-row{
   display:grid;
-  grid-template-columns:repeat(4,minmax(0,1fr));
-  gap:10px;
-  align-items:end;
+  grid-template-columns:1fr;
+  gap:13px;
+  align-items:start;
 }
 
-.component-type-row:has(.component-fields>.field:nth-child(4)){
-  grid-template-columns:repeat(5,minmax(0,1fr));
+/* Geometry selector gets its own deliberate row. */
+.component-type-row>.field{
+  width:min(100%,280px);
+  min-width:0;
+  margin:0;
 }
 
+/* Dimensional controls share the complete available width equally. */
 .component-fields{
-  display:contents;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(118px,1fr));
+  gap:12px;
+  width:100%;
+  min-width:0;
 }
 
-.component-type-row>.field,
 .component-fields>.field{
   min-width:0;
   margin:0;
 }
 
-.component-type-row select,
-.component-type-row .input-unit{
+.component-fields .input-unit{
   width:100%;
-}
-
-.component-type-row .input-unit{
+  min-width:0;
   grid-template-columns:minmax(0,1fr) 42px;
 }
 
-.component-type-row .input-unit b{
+.component-fields .input-unit input{
+  width:100%;
+  min-width:0;
+}
+
+.component-fields .input-unit b{
   width:42px;
   min-width:42px;
   padding:0 5px;
 }
 
-/* On tablet the same fields form a clean two-column grid. */
+/* Keep the calculated sub-volume visually separate from the input row. */
+.component-volume{
+  margin-top:13px;
+}
+
+/* Tablet: dimensions become a clean two-column matrix. */
 @media(max-width:780px){
-  .component-type-row,
-  .component-type-row:has(.component-fields>.field:nth-child(4)){
+  .component-type-row>.field{
+    width:100%;
+  }
+
+  .component-fields{
     grid-template-columns:repeat(2,minmax(0,1fr));
   }
 }
 
-/* On phone they stack cleanly. */
+/* Phone: one input per row, no squeezing. */
 @media(max-width:560px){
-  .component-type-row,
-  .component-type-row:has(.component-fields>.field:nth-child(4)){
+  .component-fields{
     grid-template-columns:1fr;
   }
 }
