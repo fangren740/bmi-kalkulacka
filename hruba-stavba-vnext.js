@@ -4,6 +4,7 @@
   const $ = (id) => document.getElementById(id);
   const money = new Intl.NumberFormat("cs-CZ", { style: "currency", currency: "CZK", maximumFractionDigits: 0 });
   const number = new Intl.NumberFormat("cs-CZ", { maximumFractionDigits: 0 });
+  const decimal2 = new Intl.NumberFormat("cs-CZ", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
   const refs = [
     {
@@ -73,20 +74,28 @@
     return `${number.format(Math.round(min))} – ${number.format(Math.round(max))} Kč`;
   }
 
+  function headlineMoney(value) {
+    if (!Number.isFinite(value)) return "—";
+    if (Math.abs(value) >= 1000000) return `${decimal2.format(value / 1000000)} mil. Kč`;
+    return money.format(Math.round(value));
+  }
+
   function setResultValueRange(min, max) {
     const host = $("resultValue");
+    host.classList.remove("is-range");
     if (!Number.isFinite(min)) {
-      host.classList.remove("is-range");
       host.textContent = "—";
       return;
     }
     if (!Number.isFinite(max)) {
-      host.classList.remove("is-range");
-      host.textContent = `od ${money.format(Math.round(min))}`;
+      host.textContent = `od ${headlineMoney(min)}`;
       return;
     }
-    host.classList.add("is-range");
-    host.innerHTML = `<span class="range-amount">${number.format(Math.round(min))}</span><span class="range-separator">–</span><span class="range-amount">${number.format(Math.round(max))}</span><span class="range-currency">Kč</span>`;
+    if (Math.abs(min) >= 1000000 && Math.abs(max) >= 1000000) {
+      host.textContent = `${decimal2.format(min / 1000000)} – ${decimal2.format(max / 1000000)} mil. Kč`;
+      return;
+    }
+    host.textContent = `${number.format(Math.round(min))} – ${number.format(Math.round(max))} Kč`;
   }
 
   function setResultValueText(text) {
@@ -194,7 +203,7 @@
       const ref = matches[0];
       const low = area * ref.min;
       const high = ref.max ? area * ref.max : null;
-      if (high) { setResultValueRange(low, high); } else { setResultValueText(`od ${money.format(Math.round(low))}`); }
+      if (high) { setResultValueRange(low, high); } else { setResultValueText(`od ${headlineMoney(low)}`); }
       $("resultPerM2").textContent = `${formatPerM2(ref)} · ${ref.vat}`;
       $("resultExplain").textContent = `Přepočet používá zveřejněnou referenci „${ref.label}“ a stejnou definici plochy. Nejde o průměr trhu ani cenovou nabídku.`;
 
