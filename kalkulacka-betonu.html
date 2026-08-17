@@ -1,336 +1,130 @@
-<!DOCTYPE html>
-
+<!doctype html>
 <html lang="cs">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width,initial-scale=1" name="viewport"/>
-<meta name="referrer" content="strict-origin-when-cross-origin"/>
-<meta content="telephone=no" name="format-detection"/>
-<title>Kalkulačka betonu – objem, rezerva, pytle a cena</title>
-<meta content="Spočítejte objem betonu pro desku, pasy, patky nebo sloupy. Základní i rozšířený režim přidá rezervu, pytle, hmotnost, míchání a cenu." name="description"/>
-<meta content="RychléVýpočty.cz" name="author"/>
-<meta content="index,follow,max-image-preview:large" name="robots"/>
-<link href="https://rychlevypocty.cz/kalkulacka-betonu.html" rel="canonical"/>
-<meta content="Kalkulačka betonu – objem, rezerva, pytle a cena" property="og:title"/>
-<meta content="Objem betonu pro desku, základové pasy, patky a sloupy. Základní a rozšířený výpočet včetně cen a logistiky." property="og:description"/>
-<meta content="website" property="og:type"/>
-<meta content="https://rychlevypocty.cz/kalkulacka-betonu.html" property="og:url"/>
-<meta content="https://rychlevypocty.cz/og-rv-beton-v32.jpg" property="og:image"/>
-<meta content="RychléVýpočty.cz" property="og:site_name"/>
-<meta content="cs_CZ" property="og:locale"/>
-<meta content="summary_large_image" name="twitter:card"/>
-<meta content="Kalkulačka betonu – objem, rezerva, pytle a cena" name="twitter:title"/>
-<meta content="Základní i rozšířený výpočet množství betonu, pytlů, hmotnosti, práce a ceny." name="twitter:description"/>
-<meta content="https://rychlevypocty.cz/og-rv-beton-v32.jpg" name="twitter:image"/>
-<link href="favicon.ico?v=2" rel="icon" sizes="any"/>
-<link href="favicon-32x32.png?v=2" rel="icon" sizes="32x32" type="image/png"/>
-<link href="favicon-16x16.png?v=2" rel="icon" sizes="16x16" type="image/png"/>
-<link href="apple-touch-icon.png?v=2" rel="apple-touch-icon" sizes="180x180"/>
-<link href="site.webmanifest?v=2" rel="manifest"/>
-<meta content="#082747" name="theme-color"/>
-<link href="rv-tool-v2.css" rel="stylesheet"/>
-<link href="beton-v2.css?v=20260713-2" rel="stylesheet"/>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"RychléVýpočty.cz","item":"https://rychlevypocty.cz/"},{"@type":"ListItem","position":2,"name":"Stavba domu","item":"https://rychlevypocty.cz/stavba-domu.html"},{"@type":"ListItem","position":3,"name":"Kalkulačka betonu","item":"https://rychlevypocty.cz/kalkulacka-betonu.html"}]}</script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta name="format-detection" content="telephone=no">
+  <link rel="icon" href="/favicon.ico?v=2" sizes="any">
+  <link rel="icon" href="/favicon-32x32.png?v=2" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2" sizes="180x180">
+  <link rel="manifest" href="/site.webmanifest?v=2">
+  <meta name="theme-color" content="#071a33">
 
+  <title>Kalkulačka betonu – m³, rezerva, domíchávače a pytle | RychléVýpočty.cz</title>
+  <meta name="description" content="Spočítejte beton pro desku, pasy, patky, sloupy nebo stěny. Skládejte více částí do jedné betonáže a získejte čistý objem, rezervu, objednávku, odhad jízd domíchávače i počet pytlů podle technického listu.">
+  <meta name="author" content="RychléVýpočty.cz">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <link rel="canonical" href="https://rychlevypocty.cz/kalkulacka-betonu.html">
+  <meta property="og:title" content="Kalkulačka betonu – od rozměrů k betonážnímu plánu">
+  <meta property="og:description" content="Více konstrukcí v jedné betonáži, explicitní rezerva, objednávkové zaokrouhlení, logistika domíchávačů a pytlované směsi podle údajů výrobce.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rychlevypocty.cz/kalkulacka-betonu.html">
+  <meta property="og:image" content="https://rychlevypocty.cz/og-rv-beton-v32.jpg">
+  <meta property="og:site_name" content="RychléVýpočty.cz">
+  <meta property="og:locale" content="cs_CZ">
+  <meta name="twitter:card" content="summary_large_image">
 
-<link href="/rv-brand-v32.css?v=20260801-stable" rel="stylesheet"/><script defer="True" src="/rv-brand-v32.js?v=20260801"></script><link href="/favicon-rv-v32.svg?v=1" rel="icon" type="image/svg+xml"/></head>
-<body class="concrete-pro rv-page-calculator rv-brand-v3 rv-brand-v32" data-calculator-mode="basic">
+  <link rel="stylesheet" href="/rv-brand-v32.css?v=20260801-stable">
+  <link rel="stylesheet" href="/beton-vnext.css?v=20260817-1">
+
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"RychléVýpočty.cz","item":"https://rychlevypocty.cz/"},{"@type":"ListItem","position":2,"name":"Stavba domu","item":"https://rychlevypocty.cz/stavba-domu.html"},{"@type":"ListItem","position":3,"name":"Kalkulačka betonu","item":"https://rychlevypocty.cz/kalkulacka-betonu.html"}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Kalkulačka betonu","url":"https://rychlevypocty.cz/kalkulacka-betonu.html","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","isAccessibleForFree":true,"inLanguage":"cs-CZ","description":"Betonážní plán pro součet více geometrických částí, rezervu, objednávkové zaokrouhlení, orientační počet jízd domíchávače a přepočet pytlované směsi podle deklarované vydatnosti výrobku.","publisher":{"@type":"Organization","name":"RychléVýpočty.cz","url":"https://rychlevypocty.cz/","sameAs":["https://www.facebook.com/rychlevypocty","https://www.instagram.com/rychlevypocty/"]},"dateModified":"2026-08-17"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Dataset","name":"Beton 2026 – ověřené logistické a produktové reference","description":"Kurátorovaný přehled veřejných údajů dodavatelů transportbetonu a výrobců pytlovaných betonových směsí: minimální poptávkové či účtované množství, kapacita autodomíchávačů a vydatnost 25kg balení.","url":"https://rychlevypocty.cz/kalkulacka-betonu.html#benchmark","creator":{"@type":"Organization","name":"RychléVýpočty.cz","url":"https://rychlevypocty.cz/"},"publisher":{"@type":"Organization","name":"RychléVýpočty.cz","url":"https://rychlevypocty.cz/"},"inLanguage":"cs-CZ","isAccessibleForFree":true,"measurementTechnique":"Ruční ověření veřejných produktových a logistických údajů dne 17. 8. 2026; hodnoty jsou zachovány s kontextem konkrétního dodavatele nebo výrobku a nejsou vydávány za univerzální normu trhu.","variableMeasured":["minimální množství m³","kapacita autodomíchávače m³","vydatnost l/25 kg"],"dateModified":"2026-08-17","distribution":{"@type":"DataDownload","contentUrl":"https://rychlevypocty.cz/beton-2026-overene-logisticke-a-produktove-reference.csv","encodingFormat":"text/csv"}}</script>
+</head>
+<body class="rv-brand-v32 concrete-next-page">
 <a class="skip-link" href="#kalkulacka">Přejít na kalkulačku</a>
 <header class="site-header">
-<div class="container header-inner">
-<a aria-label="RychléVýpočty.cz – domů" class="rv-logo" href="/"><img alt="" class="rv-logo-image" decoding="async" height="48" src="/logo-rv-v32.svg?v=1" width="295"/></a>
-<nav aria-label="Hlavní navigace" class="main-nav"><a href="/">Domů</a><a href="kalkulacky.html">Kalkulačky</a><a aria-current="page" href="stavba-domu.html">Stavba</a><a href="rekonstrukce.html">Rekonstrukce</a></nav>
-<a class="header-cta" href="#kalkulacka">Spočítat beton</a>
-</div>
+  <div class="c-shell header-inner">
+    <a class="rv-logo" href="/" aria-label="RychléVýpočty.cz – domů"><img class="rv-logo-image" src="/logo-rv-v32.svg?v=1" width="295" height="48" alt="" decoding="async" fetchpriority="high"></a>
+    <nav class="main-nav" id="mainNav" aria-label="Hlavní navigace"><a href="/">Domů</a><a href="/kalkulacky.html">Kalkulačky</a><a href="/stavba-domu.html" aria-current="page">Stavba</a><a href="/rekonstrukce.html">Rekonstrukce</a></nav>
+    <a class="header-cta" href="#kalkulacka">Naplánovat betonáž</a>
+    <button class="menu-toggle" id="menuToggle" type="button" aria-label="Otevřít navigaci" aria-controls="mainNav" aria-expanded="false"><span></span><span></span><span></span></button>
+  </div>
 </header>
 <main>
-<section class="concrete-hero rv-identity-hero">
-<div class="container concrete-hero-grid">
-<div class="concrete-hero-copy">
-<nav aria-label="Drobečková navigace" class="breadcrumb"><a href="/">Domů</a><span>/</span><a href="kalkulacky.html">Kalkulačky</a><span>/</span><strong>Beton</strong></nav>
-<p class="eyebrow">Stavba a materiál</p>
-<h1>Přesný objem betonu. Bez odhadu od oka.</h1>
-<p class="lead">Nejdříve rychlý výpočet rozměrů a rezervy. Potom můžete jedním kliknutím přejít do rozšířeného režimu a porovnat pytle, vlastní míchání, transportbeton, dopravu i čerpadlo.</p>
-<div class="hero-actions"><a class="btn-primary" href="#kalkulacka">Spustit kalkulačku</a><a class="btn-secondary" href="#metodika">Jak počítáme</a></div>
-<div class="concrete-trust"><span>Základní + rozšířený režim</span><span>4 typy konstrukcí</span><span>Výpočet ihned</span><span>Bez registrace</span></div>
-</div>
-<div aria-hidden="true" class="concrete-visual rv-brand-module rv-brand-display"><span aria-hidden="true" class="rv-module-scan"></span>
-<div class="visual-topline"><span>Živý náhled projektu</span><b>BETON / m³</b></div>
-<div class="slab-scene">
-<div class="slab-object"><i></i><span class="measure measure-x">6,0 m</span><span class="measure measure-y">4,0 m</span><span class="measure measure-z">12 cm</span></div>
-</div>
-<div class="visual-dashboard">
-<div class="visual-main"><span>Doporučená objednávka</span><strong data-hero-volume="">3,2 m³</strong><small>včetně rezervy a zaokrouhlení</small></div>
-<div class="visual-mini"><span>Čistý objem</span><strong data-hero-net="">2,88 m³</strong></div>
-<div class="visual-mini"><span>Orientační hmotnost</span><strong data-hero-weight="">7,5 t</strong></div>
-</div>
-<span aria-hidden="true" class="rv-module-keybank"><i></i><i></i><i></i><i></i><i></i><i></i></span></div>
-</div>
+<section class="c-hero rv-identity-hero">
+  <div class="c-shell c-hero-grid">
+    <div>
+      <p class="eyebrow">Beton · objem · logistika</p>
+      <h1>Betonáž není jedno číslo. <em>Je to plán.</em></h1>
+      <p class="c-lead">Sečtěte desku, pasy, patky, sloupy nebo stěny do jedné betonáže. Kalkulačka oddělí <strong>čistý geometrický objem, vaši rezervu a skutečné množství k objednání</strong> — a připraví i logistický přepočet pro domíchávač nebo pytlovanou směs.</p>
+      <div class="c-hero-actions"><a class="c-btn c-btn-primary" href="#kalkulacka">Sestavit betonáž</a><a class="c-btn c-btn-ghost" href="#benchmark">Ověřit technická data</a></div>
+      <ul class="c-trust"><li>5 geometrických modelů</li><li>Více částí v jednom součtu</li><li>Bez doporučování třídy betonu</li></ul>
+    </div>
+    <aside class="pour-board rv-brand-module" aria-label="Ukázka betonážního plánu">
+      <div class="pour-head"><span>POUR PLAN / 01</span><small>objem → objednávka → logistika</small></div>
+      <div class="pour-scene" aria-hidden="true"><div class="truck"><i></i><b></b><em></em></div><div class="slab"><i></i></div><div class="pour-line"></div></div>
+      <div class="pour-kpis"><div><span>Čistý objem</span><strong id="heroNet">2,88 m³</strong></div><div><span>K objednání</span><strong id="heroOrder">3,10 m³</strong></div><div><span>6–8m³ vozy</span><strong id="heroTrips">1 jízda</strong></div></div>
+      <p>Kapacita autodomíchávače je pouze logistická reference. Konkrétní vozidlo, minimální odběr a účtování vždy potvrďte s vybranou betonárnou.</p>
+    </aside>
+  </div>
 </section>
-<nav aria-label="Obsah stránky" class="anchor-nav"><div class="container anchor-scroll"><a href="#kalkulacka">Kalkulačka</a><a href="#vysledek">Výsledek</a><a href="#porovnani">Porovnání</a><a href="#metodika">Metodika</a><a href="#priklady">Příklady</a><a href="#faq">FAQ</a></div></nav>
-<section class="container concrete-work rv-brand-calculator" data-rv-section="1" id="kalkulacka"><div class="rv-calculator-category"><span aria-hidden="true" class="rv-cat-shell rv-cat-shell--calculator"><svg class="rv-cat-icon" focusable="false" viewbox="0 0 32 32"><use href="/rv-category-icons-v32.svg?v=1#rv-icon-stavba-domu"></use></svg></span><span>Stavba a materiál · výpočetní jádro</span></div>
-<form class="concrete-form" data-mode="basic" id="concreteForm" novalidate="">
-<div class="form-top">
-<div><p class="eyebrow">Kalkulačka betonu</p><h2>Co potřebujete spočítat?</h2></div>
-<span class="live-badge"><i></i> Výsledek se mění živě</span>
-</div>
-<div aria-label="Režim kalkulačky" class="mode-switch" role="tablist">
-<button aria-controls="basicCalculation" aria-selected="true" class="mode-button is-active rv-brand-key" data-mode="basic" role="tab" type="button">
-<span class="mode-number">01</span><span><strong>Základní</strong><small>Rozměry, rezerva a množství</small></span>
-</button>
-<button aria-controls="advancedCalculation" aria-selected="false" class="mode-button rv-brand-key" data-mode="advanced" role="tab" type="button">
-<span class="mode-number">02</span><span><strong>Rozšířený</strong><small>Pytle, míchání, doprava a cena</small></span>
-</button>
-</div>
-<div class="calculation-panel" id="basicCalculation" role="tabpanel">
-<div class="section-label"><span>1</span><div><strong>Typ konstrukce</strong><small>Vyberte geometrický model</small></div></div>
-<fieldset class="shape-picker">
-<legend class="sr-only">Typ konstrukce</legend>
-<label class="shape-option rv-brand-key">
-<input checked="" name="shape" type="radio" value="slab"/>
-<span class="shape-card"><svg aria-hidden="true" viewbox="0 0 64 48"><path d="M8 26 27 12l29 9-20 15Z"></path><path d="M8 26v8l28 8 20-14v-7"></path><path d="m36 36 20-15"></path></svg><b>Deska</b><small>podlaha, terasa, základ</small></span>
-</label>
-<label class="shape-option rv-brand-key">
-<input name="shape" type="radio" value="strip"/>
-<span class="shape-card"><svg aria-hidden="true" viewbox="0 0 64 48"><path d="M6 27 38 9l20 7-32 19Z"></path><path d="M6 27v9l20 7 32-19v-8"></path><path d="M26 35v8"></path></svg><b>Pasy</b><small>součet všech úseků</small></span>
-</label>
-<label class="shape-option rv-brand-key">
-<input name="shape" type="radio" value="footing"/>
-<span class="shape-card"><svg aria-hidden="true" viewbox="0 0 64 48"><path d="m5 24 12-7 12 4-12 8Z"></path><path d="M5 24v9l12 4 12-8v-8"></path><path d="m35 17 11-7 13 4-12 8Z"></path><path d="M35 17v9l12 4 12-8v-8"></path></svg><b>Patky</b><small>stejné samostatné kusy</small></span>
-</label>
-<label class="shape-option rv-brand-key">
-<input name="shape" type="radio" value="column"/>
-<span class="shape-card"><svg aria-hidden="true" viewbox="0 0 64 48"><ellipse cx="32" cy="11" rx="15" ry="6"></ellipse><path d="M17 11v25c0 4 7 7 15 7s15-3 15-7V11"></path><ellipse cx="32" cy="36" rx="15" ry="7"></ellipse></svg><b>Sloupy</b><small>válcové pilíře a vrty</small></span>
-</label>
-</fieldset>
-<div aria-label="Rychlé příklady" class="preset-row">
-<button aria-pressed="false" class="preset-chip rv-brand-key" data-preset="terrace" type="button">Terasa 5 × 4 m</button>
-<button aria-pressed="false" class="preset-chip rv-brand-key" data-preset="garage" type="button">Garáž 6 × 4 m</button>
-<button aria-pressed="false" class="preset-chip rv-brand-key" data-preset="strips" type="button">Základové pasy</button>
-<button aria-pressed="false" class="preset-chip rv-brand-key" data-preset="footings" type="button">8 patek</button>
-</div>
-<div class="section-label"><span>2</span><div><strong>Rozměry konstrukce</strong><small>Zadávejte skutečný prostor vyplněný betonem</small></div></div>
-<div class="shape-panel is-active" data-shape="slab">
-<div class="field-grid">
-<label class="field"><span>Délka desky</span><small>nejdelší strana</small><div class="input-wrap"><input id="slabLength" inputmode="decimal" min="0.1" name="slabLength" step="0.1" type="number" value="6"/><em>m</em></div></label>
-<label class="field"><span>Šířka desky</span><small>druhá strana</small><div class="input-wrap"><input id="slabWidth" inputmode="decimal" min="0.1" name="slabWidth" step="0.1" type="number" value="4"/><em>m</em></div></label>
-<label class="field"><span>Tloušťka betonu</span><small>podle projektu nebo skladby</small><div class="input-wrap"><input id="slabThickness" inputmode="decimal" min="1" name="slabThickness" step="1" type="number" value="12"/><em>cm</em></div></label>
-</div>
-</div>
-<div class="shape-panel" data-shape="strip" hidden="">
-<div class="field-grid">
-<label class="field"><span>Celková délka pasů</span><small>sečtěte všechny úseky</small><div class="input-wrap"><input id="stripLength" inputmode="decimal" min="0.1" name="stripLength" step="0.1" type="number" value="48"/><em>m</em></div></label>
-<label class="field"><span>Šířka pasu</span><small>průměrná skutečná šířka</small><div class="input-wrap"><input id="stripWidth" inputmode="decimal" min="0.05" name="stripWidth" step="0.05" type="number" value="0.4"/><em>m</em></div></label>
-<label class="field"><span>Výška betonu</span><small>ne celková hloubka výkopu</small><div class="input-wrap"><input id="stripDepth" inputmode="decimal" min="1" name="stripDepth" step="1" type="number" value="80"/><em>cm</em></div></label>
-</div>
-</div>
-<div class="shape-panel" data-shape="footing" hidden="">
-<div class="field-grid">
-<label class="field"><span>Počet patek</span><small>stejně velké kusy</small><div class="input-wrap"><input id="footingCount" inputmode="numeric" min="1" name="footingCount" step="1" type="number" value="8"/><em>ks</em></div></label>
-<label class="field"><span>Délka patky</span><small>rozměr jednoho kusu</small><div class="input-wrap"><input id="footingLength" inputmode="decimal" min="0.05" name="footingLength" step="0.05" type="number" value="0.6"/><em>m</em></div></label>
-<label class="field"><span>Šířka patky</span><small>rozměr jednoho kusu</small><div class="input-wrap"><input id="footingWidth" inputmode="decimal" min="0.05" name="footingWidth" step="0.05" type="number" value="0.6"/><em>m</em></div></label>
-<label class="field"><span>Výška patky</span><small>betonovaná výška</small><div class="input-wrap"><input id="footingHeight" inputmode="decimal" min="0.05" name="footingHeight" step="0.05" type="number" value="0.8"/><em>m</em></div></label>
-</div>
-</div>
-<div class="shape-panel" data-shape="column" hidden="">
-<div class="field-grid">
-<label class="field"><span>Počet sloupů</span><small>stejný průměr a výška</small><div class="input-wrap"><input id="columnCount" inputmode="numeric" min="1" name="columnCount" step="1" type="number" value="6"/><em>ks</em></div></label>
-<label class="field"><span>Průměr sloupu</span><small>vnitřní průměr bednění</small><div class="input-wrap"><input id="columnDiameter" inputmode="decimal" min="1" name="columnDiameter" step="1" type="number" value="25"/><em>cm</em></div></label>
-<label class="field"><span>Výška sloupu</span><small>betonovaná výška</small><div class="input-wrap"><input id="columnHeight" inputmode="decimal" min="0.1" name="columnHeight" step="0.1" type="number" value="2.5"/><em>m</em></div></label>
-</div>
-</div>
-<div class="reserve-card">
-<div class="reserve-copy"><span class="section-label-inline">3</span><div><strong>Rezerva na beton</strong><small>Na nerovnosti, ztráty a nepřesnost měření</small></div></div>
-<div class="reserve-control"><input aria-label="Rezerva na beton v procentech" id="reserve" max="25" min="0" name="reserve" step="1" type="range" value="8"/><output for="reserve" id="reserveControlValue">8 %</output></div>
-<div aria-label="Doporučené rezervy" class="reserve-presets"><button data-reserve="5" type="button">5 %</button><button class="is-active" data-reserve="8" type="button">8 %</button><button data-reserve="10" type="button">10 %</button><button data-reserve="15" type="button">15 %</button></div>
-</div>
-</div>
-<div class="advanced-panel" hidden="" id="advancedCalculation" role="tabpanel">
-<div class="advanced-intro"><span>Rozšířený režim</span><div><strong>Zpřesněte nákup, dopravu a vlastní práci</strong><small>Výchozí hodnoty můžete ponechat nebo nahradit konkrétní nabídkou.</small></div></div>
-<div class="advanced-group">
-<div class="advanced-heading"><span>A</span><div><strong>Objednávka transportbetonu</strong><small>Cena směsi, doprava, služby a obchodní zaokrouhlení</small></div></div>
-<div class="field-grid advanced-fields">
-<label class="field"><span>Cena transportbetonu</span><small>nabídka za m³ bez dalších služeb</small><div class="input-wrap"><input id="readyPrice" inputmode="decimal" min="0" name="readyPrice" step="50" type="number" value="3500"/><em>Kč/m³</em></div></label>
-<label class="field"><span>Doprava</span><small>jednorázová cena za dodávku</small><div class="input-wrap"><input id="transportPrice" inputmode="decimal" min="0" name="transportPrice" step="100" type="number" value="2500"/><em>Kč</em></div></label>
-<label class="field"><span>Čerpadlo a služby</span><small>čerpadlo, pas, čekání nebo příplatky</small><div class="input-wrap"><input id="pumpPrice" inputmode="decimal" min="0" name="pumpPrice" step="100" type="number" value="0"/><em>Kč</em></div></label>
-<label class="field"><span>Objednávkový krok</span><small>zaokrouhlení podle podmínek dodavatele</small><div class="input-wrap"><select id="roundingStep" name="roundingStep"><option value="0.05">0,05 m³</option><option selected="" value="0.1">0,10 m³</option><option value="0.25">0,25 m³</option><option value="0.5">0,50 m³</option></select><em>m³</em></div></label>
-<label class="field"><span>Minimální účtovaný objem</span><small>ponechte 0, pokud dodavatel minimum nemá</small><div class="input-wrap"><input id="minimumOrder" inputmode="decimal" min="0" name="minimumOrder" step="0.1" type="number" value="0"/><em>m³</em></div></label>
-<label class="field"><span>Objemová hmotnost</span><small>pro orientační hmotnost materiálu</small><div class="input-wrap"><input id="density" inputmode="decimal" max="4000" min="500" name="density" step="50" type="number" value="2350"/><em>kg/m³</em></div></label>
-</div>
-</div>
-<div class="advanced-group">
-<div class="advanced-heading"><span>B</span><div><strong>Pytlovaná směs a vlastní míchání</strong><small>Materiál, kapacita míchačky a orientační hodnota práce</small></div></div>
-<div class="field-grid advanced-fields">
-<label class="field"><span>Vydatnost jednoho pytle</span><small>litry hotové směsi z technického listu</small><div class="input-wrap"><input id="bagYield" inputmode="decimal" min="0.1" name="bagYield" step="0.1" type="number" value="12.5"/><em>l</em></div></label>
-<label class="field"><span>Cena jednoho pytle</span><small>vaše skutečná nákupní cena</small><div class="input-wrap"><input id="bagPrice" inputmode="decimal" min="0" name="bagPrice" step="1" type="number" value="135"/><em>Kč</em></div></label>
-<label class="field"><span>Využitelná dávka míchačky</span><small>reálný objem jedné hotové dávky</small><div class="input-wrap"><input id="mixerLitres" inputmode="decimal" min="1" name="mixerLitres" step="5" type="number" value="100"/><em>l</em></div></label>
-<label class="field"><span>Čas na jednu dávku</span><small>míchání, převoz, vyprázdnění a návrat</small><div class="input-wrap"><input id="minutesPerBatch" inputmode="decimal" min="0" name="minutesPerBatch" step="1" type="number" value="8"/><em>min</em></div></label>
-<label class="field"><span>Hodnota práce za hodinu</span><small>orientační ocenění vlastního nebo placeného času</small><div class="input-wrap"><input id="labourRate" inputmode="decimal" min="0" name="labourRate" step="50" type="number" value="300"/><em>Kč/h</em></div></label>
-<label class="field"><span>Další náklady vlastního míchání</span><small>doprava pytlů, voda, elektřina a pronájem</small><div class="input-wrap"><input id="mixingExtras" inputmode="decimal" min="0" name="mixingExtras" step="100" type="number" value="0"/><em>Kč</em></div></label>
-</div>
-</div>
-</div>
-<div class="form-error" hidden="" id="formError" role="alert"></div>
-<div class="form-actions"><button class="btn-primary" type="submit">Přepočítat beton</button><button class="btn-secondary" id="resetBtn" type="button">Obnovit příklad</button></div>
-<p class="privacy-note"><span></span> Výpočet probíhá pouze ve vašem prohlížeči. Zadané hodnoty se nikam neodesílají.</p>
-</form>
-<aside aria-live="polite" class="concrete-result" id="vysledek">
-<div class="result-top"><div><p class="eyebrow">Výsledek projektu</p><h2>Množství k objednání</h2></div><span id="resultStatus">Běžná betonáž</span></div>
-<div class="result-main rv-brand-result"><span class="rv-result-caption">Doporučená objednávka</span>
-<div class="result-main-label"><span>Po rezervě a zaokrouhlení</span><b id="modeResultBadge">Základní režim</b></div>
-<output id="resultVolume">3,2 m³</output>
-<p id="resultSentence">Pro desku 6 × 4 m s tloušťkou 12 cm vychází doporučená objednávka 3,2 m³.</p>
-<div aria-label="Podíl čistého objemu a rezervy" class="volume-composition"><i id="netVolumeBar"></i><i id="reserveVolumeBar"></i></div>
-<div class="volume-legend"><span><i></i>Čistý objem <b id="netVolumeLegend">2,88 m³</b></span><span><i></i>Rezerva <b id="reserveVolumeLegend">0,23 m³</b></span></div>
-<div class="rv-order-summary"><div><span>Čistý objem</span><strong id="rv-order-net">2,88 m³</strong></div><div><span>Rezerva</span><strong id="rv-order-reserve">0,23 m³</strong></div><div><span>K objednání</span><strong id="rv-order-total">3,2 m³</strong></div><div class="rv-order-next"><span class="rv-status rv-status--info"><svg aria-hidden="true" class="rv-status-icon" focusable="false" viewBox="0 0 24 24"><use href="/rv-status-icons-v32.svg?v=1#rv-status-next"></use></svg>Další krok</span><p id="rv-order-advice">Ověřte minimální odběr, dopravu, přístup domíchávače a způsob ukládání betonu.</p></div></div>
-</div>
-<div class="result-metrics basic-metrics">
-<div><span>Čistý objem</span><strong id="netVolume">2,88 m³</strong><small>bez rezervy</small></div>
-<div><span>Přidaná rezerva</span><strong id="reserveVolume">0,23 m³</strong><small id="reservePercentMetric">8 %</small></div>
-<div><span>Objem v litrech</span><strong id="litresResult">3 200 l</strong><small>objednávané množství</small></div>
-<div><span>Orientační hmotnost</span><strong id="weightResult">7,52 t</strong><small>podle hustoty směsi</small></div>
-</div>
-<div class="scenario-strip">
-<div class="scenario-title"><span>Citlivost na rezervu</span><small>stejné rozměry, jiná rezerva</small></div>
-<div class="scenario-grid"><div><span>5 %</span><strong id="scenario5">3,1 m³</strong></div><div class="is-current"><span>8 %</span><strong id="scenario8">3,2 m³</strong></div><div><span>10 %</span><strong id="scenario10">3,2 m³</strong></div><div><span>15 %</span><strong id="scenario15">3,4 m³</strong></div></div>
-</div>
-<div class="advanced-results" data-advanced-result="" hidden="">
-<div class="advanced-result-grid">
-<div><span>Počet pytlů</span><strong id="bagCount">256 ks</strong><small id="bagYieldNote">12,5 l / pytel</small></div>
-<div><span>Dávek míchačky</span><strong id="mixerBatches">32</strong><small id="mixerCapacityNote">100 l / dávka</small></div>
-<div><span>Čas vlastního míchání</span><strong id="mixingTime">4 h 16 min</strong><small>orientační pracovní čas</small></div>
-<div><span>Cena práce</span><strong id="labourCost">1 280 Kč</strong><small>podle zadané sazby</small></div>
-</div>
-<div class="cost-compare" id="porovnani">
-<div class="cost-heading"><div><span>Porovnání variant</span><strong id="costWinner">Transportbeton vychází levněji</strong></div><b id="costDifference">o 22 140 Kč</b></div>
-<div class="cost-row"><div><span>Transportbeton + služby</span><div class="cost-track"><i id="readyBar"></i></div><small id="readyCostDetail">3,2 m³ × 3 500 Kč + doprava</small></div><strong id="readyCost">13 700 Kč</strong></div>
-<div class="cost-row"><div><span>Pytle + oceněná práce</span><div class="cost-track"><i id="bagBar"></i></div><small id="bagCostDetail">256 pytlů + 4 h 16 min práce</small></div><strong id="bagCost">35 840 Kč</strong></div>
-</div>
-</div>
-<div class="result-callout rv-brand-advice"><span class="callout-icon">→</span><div><strong id="recommendationTitle">Transportbeton je praktická výchozí varianta</strong><p id="recommendationText">Při větším objemu roste význam plynulé dodávky, stejnoměrnosti směsi a rychlosti ukládání.</p></div></div>
-<div class="result-actions"><button id="copyResult" type="button">Kopírovat výsledek</button><button id="printResult" type="button">Vytisknout</button></div>
-</aside>
+<nav class="anchor-nav" aria-label="Obsah stránky"><div class="c-shell anchor-scroll"><a href="#kalkulacka">Betonážní plán</a><a href="#objednavka">Objednávka</a><a href="#logistika">Logistika</a><a href="#benchmark">Ověřená data</a><a href="#metodika">Metodika</a><a href="#faq">FAQ</a></div></nav>
+
+<section class="c-tool-section" id="kalkulacka">
+  <div class="c-shell">
+    <div class="section-intro"><p class="eyebrow">01 · Betonážní plán</p><h2>Sečtěte skutečné části konstrukce, ne jen jednu ideální kostku</h2><p>Každá karta představuje jeden geometrický úsek. Přidejte tolik částí, kolik potřebujete. Pokud už máte objem z projektu nebo výkazu výměr, můžete geometrii úplně přeskočit.</p></div>
+    <div class="c-mode" role="tablist" aria-label="Způsob zadání"><button class="is-active" type="button" data-mode="geometry" aria-selected="true">Počítám z rozměrů<small>více konstrukcí v jednom součtu</small></button><button type="button" data-mode="direct" aria-selected="false">Mám objem z projektu<small>zadám hotové m³</small></button></div>
+
+    <div class="c-tool-grid">
+      <div class="c-input-card">
+        <div id="geometryPanel">
+          <div class="component-toolbar"><div><strong>Části betonáže</strong><small>Každou část lze pojmenovat, změnit nebo odebrat.</small></div><button class="text-action" id="addComponent" type="button">+ Přidat část</button></div>
+          <div class="component-list" id="componentList"></div>
+        </div>
+        <div id="directPanel" hidden>
+          <label class="field"><span>Čistý objem z projektu</span><div class="input-unit"><input id="directVolume" type="number" min="0.01" max="10000" step="0.01" value="3"><b>m³</b></div><small>Použijte hodnotu před objednávkovou rezervou, pokud ji projekt nebo výkaz už obsahuje.</small></label>
+          <label class="field"><span>Poznámka k objemu</span><input class="plain-input" id="directNote" type="text" maxlength="80" value="Objem podle výkazu výměr" aria-label="Poznámka k objemu"></label>
+        </div>
+
+        <div class="input-divider" id="objednavka"><span>02</span><div><strong>Nastavte objednávku</strong><small>Rezervu i obchodní zaokrouhlení držíme viditelně oddělené od geometrie.</small></div></div>
+        <div class="field-grid-2">
+          <label class="field"><span>Pracovní rezerva</span><div class="input-unit"><input id="reservePct" type="number" min="0" max="30" step="0.5" value="5"><b>%</b></div><small>Výchozích 5 % je pouze pracovní scénář, nikoli norma. Upravte podle skutečnosti a projektu.</small></label>
+          <label class="field"><span>Objednávkový krok</span><select id="orderStep"><option value="0.05">0,05 m³</option><option value="0.1" selected>0,10 m³</option><option value="0.25">0,25 m³</option><option value="0.5">0,50 m³</option></select><small>Ověřte u dodavatele, v jakých krocích skutečně objednávku přijímá.</small></label>
+        </div>
+        <div class="reserve-chips" aria-label="Rychlá volba rezervy"><button type="button" data-reserve="0">0 %</button><button type="button" data-reserve="5" class="is-active">5 %</button><button type="button" data-reserve="8">8 %</button><button type="button" data-reserve="10">10 %</button></div>
+
+        <details class="own-price"><summary>Volitelně: mám vlastní cenovou nabídku</summary><div class="field-grid-2"><label class="field"><span>Beton za m³</span><div class="input-unit"><input id="readyPrice" type="number" min="0" step="50" placeholder="např. 3500"><b>Kč/m³</b></div></label><label class="field"><span>Doprava + služby celkem</span><div class="input-unit"><input id="readyExtras" type="number" min="0" step="100" placeholder="např. 2500"><b>Kč</b></div></label></div><p>Nezadáváme vlastní „tržní cenu“. Náklad spočítáme pouze z částek, které vložíte vy.</p></details>
+      </div>
+
+      <aside class="c-result rv-brand-module" aria-live="polite">
+        <div class="result-kicker"><span>BETONÁŽ / VÝSLEDEK</span><small id="resultModeLabel">geometrický součet</small></div>
+        <div class="result-main"><span>Objednávkové množství</span><strong id="orderVolume">3,10 m³</strong><small id="orderExplain">2,88 m³ čistě + 5 % rezerva, zaokrouhleno nahoru na 0,10 m³.</small></div>
+        <div class="result-grid"><div><span>Čistý objem</span><strong id="netVolume">2,88 m³</strong></div><div><span>Rezerva</span><strong id="reserveVolume">0,14 m³</strong></div><div><span>6–8m³ vozy</span><strong id="truckTrips">1 jízda</strong></div></div>
+        <div class="result-callout" id="resultCallout"><strong>Co ověřit před objednávkou</strong><p>Specifikaci betonu vezměte z projektu. Potvrďte minimální odběr, dopravní podmínky, přístup vozu a případné čerpání.</p></div>
+        <div class="result-price" id="priceResult" hidden><span>Vaše zadaná nabídka</span><strong id="readyCost">—</strong><small>beton + zadaná doprava/služby</small></div>
+        <div class="result-actions"><button id="copyResult" type="button">Kopírovat souhrn</button><button id="printResult" type="button">Vytisknout</button></div>
+      </aside>
+    </div>
+
+    <div class="breakdown-wrap"><div class="breakdown-head"><div><p class="eyebrow">03 · Rozpad objemu</p><h2>Každá část zůstává dohledatelná</h2></div><span id="componentCount">1 část</span></div><div class="breakdown-table-wrap"><table class="breakdown-table"><thead><tr><th>Část</th><th>Geometrie</th><th>Čistý objem</th><th>Podíl</th></tr></thead><tbody id="breakdownBody"></tbody></table></div></div>
+  </div>
 </section>
-<section class="container concrete-section" data-rv-section="2">
-<div class="section-head rv-section-head"><p class="eyebrow">Rozhodovací cockpit</p><h2>Objem je začátek. Důležitá je i logistika betonáže.</h2><p>Kalkulačka převádí geometrii na množství materiálu, ale správná objednávka musí počítat také s přístupem, rychlostí ukládání, kapacitou lidí a podmínkami dodavatele.</p></div>
-<div class="decision-grid">
-<article class="decision-card"><span>Malý objem</span><h3>Pytle mohou dávat smysl</h3><p>U lokální opravy nebo několika patek porovnejte cenu pytlů s dopravou malé dodávky. Nezapomeňte ocenit vlastní práci, vodu, elektřinu, manipulaci a čas.</p></article>
-<article class="decision-card is-featured"><span>Souvislá betonáž</span><h3>Rychlost může být důležitější než nejnižší cena</h3><p>U desky, pasů nebo větší konstrukce potřebujete směs ukládat a zpracovávat plynule. Prověřte dostupnost autodomíchávače, čerpadla a lidí ještě před objednávkou.</p></article>
-<article class="decision-card"><span>Nepravidelný výkop</span><h3>Změřte skutečnost na více místech</h3><p>Nerovné stěny výkopu nebo rozdílná hloubka dokážou objem navýšit. Jedno nominální číslo nemusí popsat celou konstrukci, proto pracujte s průměrem a rozumnou rezervou.</p></article>
-</div>
-</section>
-<section class="container concrete-section" data-rv-section="3">
-<div class="section-head rv-section-head"><p class="eyebrow">Transparentní výstup</p><h2>Rozpad vašeho výpočtu</h2><p>Tabulka ukazuje přesně, co kalkulačka používá. Můžete ji zkopírovat do poptávky nebo porovnat s výkazem výměr.</p></div>
-<div class="breakdown-shell"><table class="breakdown-table"><thead><tr><th>Položka</th><th>Výsledek</th><th>Jak vznikla</th></tr></thead><tbody>
-<tr><td>Typ konstrukce</td><td id="summaryShape">deska</td><td>zvolený geometrický model</td></tr>
-<tr><td>Rozměry</td><td id="summaryDimensions">–</td><td>hodnoty zadané ve formuláři</td></tr>
-<tr><td>Čistý objem</td><td id="summaryNet">0 m³</td><td>geometrický objem bez rezervy</td></tr>
-<tr><td>Rezerva</td><td id="summaryReserve">0 %</td><td>procento z čistého objemu</td></tr>
-<tr><td>Množství k objednání</td><td id="summaryOrder">0 m³</td><td>objem s rezervou zaokrouhlený nahoru na 0,1 m³</td></tr>
-<tr><td>Orientační hmotnost</td><td id="summaryWeight">0 t</td><td>objednaný objem × zadaná objemová hmotnost</td></tr>
-<tr><td>Pytlovaná směs</td><td id="summaryBags">0 ks</td><td>objem ÷ vydatnost jednoho pytle</td></tr>
-<tr><td>Dávky míchačky</td><td id="summaryBatches">0</td><td>objem ÷ využitelná velikost jedné dávky</td></tr>
-<tr><td>Transportbeton</td><td id="summaryReadyCost">0 Kč</td><td>cena za m³ + doprava + další služby</td></tr>
-<tr><td>Pytlovaná směs</td><td id="summaryBagCost">0 Kč</td><td>počet pytlů × cena pytle, bez práce</td></tr>
-</tbody></table></div>
-</section>
-<section class="container concrete-section rv-brand-method" data-rv-section="4" id="metodika">
-<div class="section-head rv-section-head"><p class="eyebrow">Metodika</p><h2>Jak kalkulačka betonu počítá</h2><p>Základem není odhad ceny, ale geometrický objem. Teprve z něj vznikají rezervy, pytle, hmotnost a nákladové scénáře.</p></div>
-<div class="content-grid">
-<article class="method-card"><h3>Deska</h3><p>U rovnoměrné desky násobíme délku, šířku a tloušťku. Tloušťka zadaná v centimetrech se před výpočtem převede na metry.</p><div class="formula-box">V = délka × šířka × tloušťka</div></article>
-<article class="method-card"><h3>Základové pasy a patky</h3><p>U pasů pracujeme se součtem všech délek. U patek spočítáme objem jednoho kvádru a vynásobíme ho počtem stejných kusů.</p><div class="formula-box">V = počet × délka × šířka × výška</div></article>
-<article class="method-card"><h3>Válcové sloupy</h3><p>Objem sloupu vychází z plochy kruhu a výšky. Průměr se převede z centimetrů na metry a následně na poloměr.</p><div class="formula-box">V = počet × π × r² × výška</div></article>
-</div>
-</section>
-<section class="container concrete-section" data-rv-section="5" id="priklady">
-<article class="seo-long">
-<p class="eyebrow">Praktický průvodce</p>
-<h2>Jak správně spočítat beton pro desku, pasy, patky a sloupy</h2>
-<p>Kalkulačka betonu je užitečná ve chvíli, kdy potřebujete převést rozměry stavby na objem v metrech krychlových. Samotný vzorec je jednoduchý, největší chyby ale obvykle nevznikají při násobení. Vznikají při špatně změřených rozměrech, záměně centimetrů za metry, podcenění nerovností nebo použití příliš obecné rezervy. Kvalitní výpočet proto nezačíná zadáním náhodných čísel, ale kontrolou toho, jaký prostor bude beton ve skutečnosti vyplňovat.</p>
-<p>U pravidelné betonové desky potřebujete délku, šířku a tloušťku. Plochu v metrech čtverečních vynásobíte tloušťkou převedenou na metry. Deska o rozměrech 6 × 4 metry a tloušťce 12 centimetrů má čistý geometrický objem 2,88 m³. Při osmiprocentní rezervě je mezivýsledek přibližně 3,11 m³ a kalkulačka jej pro poptávku zaokrouhlí nahoru na 3,2 m³. Toto zaokrouhlení není náhradou přesné objednávky; dává však praktičtější pracovní číslo než výsledek s mnoha desetinnými místy.</p>
-<h3>Proč se k čistému objemu přidává rezerva</h3>
-<p>Geometrický objem předpokládá, že jsou všechny rozměry přesné a prostor je dokonale pravidelný. Na skutečné stavbě mohou mít výkop, podklad nebo bednění drobné odchylky. Část směsi zůstane v dopravní cestě, nářadí nebo čerpadle a malá část se může ztratit při manipulaci. Rezerva vytváří prostor pro tyto rozdíly. Neměla by však zakrývat nekvalitní zaměření. Pokud je výkop výrazně nepravidelný, změřte šířku a hloubku na více místech, rozdělte konstrukci na několik částí a jejich objemy sečtěte.</p>
-<p>Procento rezervy nelze stanovit jedním univerzálním číslem pro všechny stavby. Přesně provedené bednění a rovný podklad mohou vyžadovat menší rezervu než pasy betonované přímo do nerovného výkopu. Kalkulačka proto umožňuje zadat vlastní hodnotu. Prakticky je lepší nejprve zpřesnit rozměry a teprve potom zvolit přiměřenou rezervu než automaticky přidávat vysoké procento k nepřesnému základu.</p>
-<div class="tip-box"><strong>Dobrý postup:</strong> větší nebo nepravidelnou konstrukci rozdělte na jednoduché kvádry či válce. Spočítejte každý díl samostatně, objemy sečtěte a rezervu přidejte až k celku.</div>
-<h3>Výpočet betonu pro základové pasy</h3>
-<p>U základových pasů se nejprve sečtou délky všech betonovaných úseků. Následně se celková délka násobí průměrnou šířkou a skutečnou betonovanou výškou. Důležité je nezaměnit hloubku celého výkopu za výšku betonu. Pokud část výkopu vyplňuje štěrkové lože, ztracené bednění nebo jiná skladba, do objemu betonu patří pouze prostor určený pro betonovou směs.</p>
-<p>Máte-li různé šířky nebo výšky pasů, nesnažte se je násilně sloučit do jednoho čísla. Rozdělte je na skupiny. Například obvodové pasy spočítejte zvlášť a vnitřní nosné pasy zvlášť. Výsledné objemy sečtěte. Takový postup je přesnější a zároveň usnadní kontrolu proti projektu nebo výkazu výměr.</p>
-<h3>Samostatné patky a válcové sloupy</h3>
-<p>Patky pod pergolu, přístřešek, sloupky nebo nosnou konstrukci se často opakují ve stejném rozměru. Kalkulačka vypočítá objem jedné patky jako kvádr a vynásobí jej počtem kusů. Pokud nejsou všechny patky stejné, vypočítejte každou skupinu samostatně. U vrtaných nebo válcových otvorů použijte režim sloupů, který vychází z průměru kruhu a výšky.</p>
-<p>U válcových konstrukcí bývá častou chybou použití průměru místo poloměru ve vzorci. Kalkulačka převod provádí automaticky. Zadaný průměr v centimetrech nejprve převede na metry, vydělí dvěma a teprve potom použije druhou mocninu poloměru. Proto může i zdánlivě malé zvětšení průměru objem výrazně navýšit.</p>
-<h3>Kolik pytlů hotové betonové směsi je potřeba</h3>
-<p>Pytlované směsi se liší složením, hmotností balení i vydatností. Proto nelze spolehlivě určit počet pytlů pouze z jejich hmotnosti. Rozhodující údaj je množství hotové směsi, které vznikne z jednoho pytle při dodržení předepsaného množství vody. Tento údaj hledejte v technickém listu nebo na obalu výrobku a zadejte jej do kalkulačky v litrech.</p>
-<p>Kalkulačka vydělí objednávaný objem v litrech zadanou vydatností a počet pytlů zaokrouhlí nahoru. Výsledkem je materiálový počet, nikoli kompletní plán práce. U stovek pytlů je nutné počítat s manipulací, skladováním v suchu, přesným dávkováním vody, časem míchání a schopností uložit směs bez dlouhých technologických přestávek.</p>
-<h3>Kolik váží beton</h3>
-<p>Hmotnost je důležitá kvůli dopravě, manipulaci a představě o rozsahu zakázky. Běžné betony se podle odborného zdroje Ebeton často pohybují přibližně mezi 2 000 a 2 500 kg/m³. Konkrétní hodnota závisí na druhu směsi a kamenivu. Kalkulačka používá výchozí hodnotu 2 350 kg/m³, ale ponechává ji editovatelnou. Výsledek proto berte jako orientační přepočet, nikoli jako údaj pro statický návrh nebo přesné zatížení konstrukce.</p>
-<p>Tři metry krychlové běžného betonu mohou představovat více než sedm tun materiálu. Tento přepočet dobře ukazuje, proč se větší betonáž nedá posuzovat jen podle ceny za pytel. Rozhoduje také způsob dopravy na místo, únosnost příjezdu, vzdálenost od místa vykládky a rychlost, s jakou lze beton zpracovat.</p>
-<h3>Transportbeton versus vlastní míchání</h3>
-<p>Srovnání ceny transportbetonu a pytlované směsi musí používat stejný rozsah. U transportbetonu započítejte cenu za metr krychlový, dopravu, případné čekání, čerpadlo a další služby. U pytlů započítejte počet balení, dopravu z obchodu, vodu, elektřinu, opotřebení míchačky a především práci. Kalkulačka porovnává pouze zadané materiálové a dodavatelské náklady, takže cena pytlované varianty nezahrnuje automaticky hodnotu vašeho času.</p>
-<p>U velmi malých oprav může být objednávka autodomíchávače nepraktická kvůli dopravě nebo minimálnímu množství. U větší souvislé betonáže naopak roste význam stejnoměrnosti směsi a rychlého průběhu. CEMEX uvádí, že používané autodomíchávače mohou mít různé přepravní kapacity, a dostupnost dodávky závisí také na konkrétní stavbě a požadavcích. Před objednávkou proto nesledujte jen cenu za m³, ale ověřte minimální odběr, velikost vozidla, přístup, čas vykládky a možnosti čerpání.</p>
-<h3>Co připravit před objednávkou betonu</h3>
-<p>Přesné množství není jediný údaj, který bude dodavatel potřebovat. Druh a specifikace betonu vycházejí z projektu a účelu konstrukce. U nosných, venkovních, namáhaných nebo jinak specifických konstrukcí nevybírejte směs pouze podle ceny. Ověřte požadovanou pevnostní třídu, konzistenci, stupeň vlivu prostředí, maximální zrno a další parametry s projektantem nebo dodavatelem.</p>
-<p>Před betonáží zkontrolujte připravenost bednění, výztuže, podkladu, prostupů, kotev a přístupových cest. Naplánujte dostatek lidí, nářadí, vibrování či jiné zhutnění podle technologie, srovnání povrchu a následné ošetřování betonu. Kalkulačka množství nemůže nahradit technologický postup, projekt ani koordinaci dodávky.</p>
-<h3>Jak výsledek použít při poptávce</h3>
-<p>Do poptávky uveďte čistý objem, zvolenou rezervu a výsledné množství, které chcete prověřit. Přidejte adresu stavby, termín, požadovaný druh betonu, způsob ukládání a informace o příjezdu. U čerpadla popište vzdálenost a výšku dopravy směsi. Zeptejte se na dopravu, minimální odběr, čekání, příplatky, možnosti vrácení zbytku a časové podmínky dodávky.</p>
-<p>Výsledek kalkulačky porovnejte s projektovou dokumentací nebo výkazem výměr. Pokud se hodnoty výrazně liší, nepokračujte automaticky s vyšším číslem. Nejprve ověřte jednotky, tloušťky, délky, počet prvků a to, zda některá část nebyla započítána dvakrát. Transparentní rozpad na této stránce je vytvořen právě proto, aby bylo možné rozdíl dohledat.</p>
-</article>
-</section>
-<section class="container concrete-section" data-rv-section="6">
-<div class="section-head rv-section-head"><p class="eyebrow">Kontrolní seznam</p><h2>Nejčastější chyby při výpočtu betonu</h2><p>Jedna chyba v jednotkách nebo rozměrech může změnit objednávku o stovky litrů.</p></div>
-<div class="mistake-grid">
-<article><h3>Centimetry použité jako metry</h3><p>Tloušťku 12 cm je ve vzorci potřeba použít jako 0,12 m. Kalkulačka tento převod provádí automaticky.</p></article>
-<article><h3>Hloubka výkopu místo výšky betonu</h3><p>Do výpočtu patří jen prostor vyplněný betonem, nikoli štěrk, izolace nebo další vrstvy skladby.</p></article>
-<article><h3>Jedna šířka pro nepravidelný výkop</h3><p>Změřte několik míst, použijte reprezentativní průměr nebo konstrukci rozdělte na samostatné části.</p></article>
-<article><h3>Rezerva přidaná dvakrát</h3><p>Zadávejte skutečné rozměry bez rezervy. Kalkulačka přidává zvolené procento až po výpočtu čistého objemu.</p></article>
-<article><h3>Počet pytlů podle hmotnosti</h3><p>Různé směsi mají odlišnou vydatnost. Použijte litry hotové směsi uvedené výrobcem, ne pouze kilogramy balení.</p></article>
-<article><h3>Cena bez dopravy a práce</h3><p>Materiálová cena není celková cena betonáže. Zohledněte dopravu, čerpadlo, manipulaci, lidi a čas.</p></article>
-</div>
-</section>
-<section class="container concrete-section" data-rv-section="7" id="faq">
-<div class="section-head rv-section-head"><p class="eyebrow">FAQ</p><h2>Časté otázky ke kalkulačce betonu</h2><p>Rychlé odpovědi k objemu, rezervě, pytlům a objednávce.</p></div>
-<div class="faq-list">
-<details><summary>Jak vypočítat množství betonu pro desku?</summary><div>Vynásobte délku, šířku a tloušťku v metrech. Například tloušťka 15 cm se do vzorce zadává jako 0,15 m. Kalkulačka převod centimetrů provede automaticky a následně přidá zvolenou rezervu.</div></details>
-<details><summary>Kolik rezervy mám přidat?</summary><div>Záleží na přesnosti bednění, podkladu a zaměření. U pravidelné konstrukce může být rezerva menší, u nerovného výkopu vyšší. Nejprve však zpřesněte rozměry; rezerva nemá nahrazovat měření.</div></details>
-<details><summary>Proč se množství zaokrouhluje na 0,1 m³?</summary><div>Objednávka v praktickém provozu obvykle nepoužívá mnoho desetinných míst. Kalkulačka proto výsledek s rezervou zaokrouhlí nahoru na desetinu kubíku. Podmínky a skutečné množství vždy potvrďte s betonárnou.</div></details>
-<details><summary>Kolik pytlů betonu potřebuji na 1 m³?</summary><div>Počet závisí na vydatnosti konkrétní směsi. Pokud jeden pytel vytvoří 12,5 litru hotové směsi, na 1 m³ by matematicky vyšlo 80 pytlů. Použijte však údaj z technického listu výrobku a počítejte s rezervou.</div></details>
-<details><summary>Kolik váží 1 m³ betonu?</summary><div>Podle druhu směsi se hmotnost liší. U běžného betonu se často uvádí přibližně 2 000 až 2 500 kg/m³. Pro přesnější odhad změňte výchozí objemovou hmotnost podle konkrétního materiálu.</div></details>
-<details><summary>Je výsledek vhodný pro objednávku transportbetonu?</summary><div>Je vhodný jako kontrolní a poptávkový podklad. Druh betonu, přesné množství, dopravu, čerpání a podmínky dodávky potvrďte s projektantem a betonárnou.</div></details>
-<details><summary>Počítá kalkulačka cenu čerpadla?</summary><div>Ano, v pokročilých volbách můžete zadat jednorázovou cenu čerpadla nebo jiných služeb. Kalkulačka ji přičte k ceně transportbetonu a dopravy.</div></details>
-<details><summary>Mohu spočítat více různých částí?</summary><div>Aktuální výpočet řeší jeden typ a jednu skupinu stejných prvků. Různé části spočítejte samostatně a jejich čisté objemy sečtěte. Rezervu je ideální přidat až k celkovému součtu.</div></details>
-</div>
-</section>
-<section class="container concrete-section" data-rv-section="8">
-<div class="section-head rv-section-head"><p class="eyebrow">Zdroje a limity</p><h2>Na čem jsou přepočty založené</h2><p>Geometrické vzorce jsou obecné. Technické vlastnosti a dodací podmínky se liší podle směsi, výrobce a stavby.</p></div>
-<article class="source-card">
-<ul class="source-list">
-<li><a href="https://www.ebeton.cz/pojmy/hmotnost-betonu/" rel="noopener noreferrer" target="_blank">Ebeton – hmotnost betonu</a>: orientační rozsah objemové hmotnosti běžných betonů.</li>
-<li><a href="https://www.ebeton.cz/pojmy/csn-en-206a2-beton-specifikace-vlastnosti-vyroba-a-shoda/" rel="noopener noreferrer" target="_blank">Ebeton – ČSN EN 206+A2</a>: přehled specifikace, vlastností, výroby a shody betonu.</li>
-<li><a href="https://www.transportbeton.cz/5-dil-objednani-a-nakup-betonu.html" rel="noopener noreferrer" target="_blank">Transportbeton.cz – objednání a nákup betonu</a>: význam specifikace, objednávky a dodacího listu.</li>
-<li><a href="https://www.cemex.cz/sluzby/doprava-a-cerpani-betonu" rel="noopener noreferrer" target="_blank">CEMEX – doprava a čerpání betonu</a>: logistika dodávky, autodomíchávače a čerpání.</li>
-</ul>
-<p><strong>Ověřeno 13. 7. 2026.</strong> Kalkulačka neurčuje vhodnou třídu betonu, výztuž, statiku, technologii ukládání ani ošetřování. U nosných a důležitých konstrukcí vycházejte z projektu a pokynů odborníka.</p>
-</article>
-</section>
-<section class="container concrete-section" data-rv-section="9">
-<div class="section-head rv-section-head"><p class="eyebrow">Navazující výpočty</p><h2>Pokračujte celým rozpočtem stavby</h2><p>Množství betonu je jedna položka. Pro rozhodnutí o stavbě potřebujete také zdivo, cenu základů, hrubé stavby, střechy a celého domu.</p></div>
-<div class="related-grid"> <a class="related-card" href="/kalkulacka-sterku.html"><span>Kamenivo</span><strong>Kalkulačka štěrku</strong><small>Podkladní vrstvy, tuny, hutnění, doprava a cena.</small></a>
-<a class="related-card" href="/kalkulacka-ceny-zakladove-desky.html"><span>Základy</span><strong>Cena základové desky</strong><small>Beton, výztuž, zemní práce, izolace a rezerva.</small></a>
-<a class="related-card" href="/kalkulacka-ceny-hrube-stavby-domu.html"><span>Hrubá stavba</span><strong>Cena hrubé stavby</strong><small>Orientační rozpad konstrukční části domu.</small></a>
-<a class="related-card" href="/kalkulacka-ceny-strechy.html"><span>Střecha</span><strong>Cena střechy</strong><small>Plocha, konstrukce, krytina, doplňky a práce.</small></a>
-<a class="related-card" href="/kalkulacka-ztraceneho-bedneni.html"><span>ZB</span><strong>Ztracené bednění</strong><small>Tvárnice, zálivkový beton, výztuž, palety a cena.</small></a>
-</div>
-</section>
+
+<section class="c-section c-soft" id="logistika"><div class="c-shell"><div class="section-intro"><p class="eyebrow">04 · Logistika betonáže</p><h2>Přepočet na domíchávače je plánovací pomůcka, ne objednávka</h2><p>Beton.cz/CEMEX veřejně uvádí autodomíchávače o objemu <strong>6–8 m³</strong>. Kalkulačka proto ukazuje interval počtu jízd podle tohoto rozsahu, ale konkrétní vytížení závisí na vozidle a podmínkách dodavatele.</p></div><div class="logistics-grid"><article><span>6–8 m³</span><h3>Kapacita vozu</h3><p>Výsledek „jízdy“ počítáme jako interval mezi 8m³ a 6m³ vozem. Neříká, že právě takové auto přijede na vaši stavbu.</p></article><article><span>1 m³</span><h3>Poptávka CEMEX</h3><p>CEMEX u svého veřejného kalkulátoru uvádí minimální objem 1 m³ pro odeslání poptávky. Není to obecné pravidlo českého trhu.</p></article><article><span>6 m³</span><h3>Účtování dopravy TRANSBETON</h3><p>TRANSBETON uvádí, že cena dopravy se účtuje podle skutečně dopraveného množství, nejméně však jako minimální vytížení 6 m³. Jde o pravidlo konkrétního dodavatele.</p></article><article><span>projekt</span><h3>Třída betonu</h3><p>Kalkulačka třídu betonu nevybírá. CEMEX výslovně uvádí, že příklady tříd nejsou doporučením a specifikaci máte převzít z projektové dokumentace nebo od odborníka.</p></article></div></div></section>
+
+<section class="c-section" id="pytle"><div class="c-shell bag-grid"><div><p class="eyebrow">05 · Pytlovaná směs</p><h2>U malého objemu přepočítejte m³ na skutečnou vydatnost pytle</h2><p>Neexistuje univerzální „počet pytlů na kubík“. Výrobky mají vlastní deklarovanou vydatnost. Vyberte konkrétní technickou referenci a kalkulačka použije právě její litry hotové směsi z 25kg balení.</p><label class="field"><span>Technická reference</span><select id="bagProduct"><option value="b208">quick-mix B 208 · 12 l / 25 kg</option><option value="be04">quick-mix BE 04/C16/20 · 12,5 l / 25 kg</option><option value="b308">quick-mix B 308 · 12 l / 25 kg</option><option value="cemixb25">Cemix BETON BASIC B25 · 12 l / 25 kg</option></select></label><div class="bag-own-price"><label class="field"><span>Moje cena pytle (volitelné)</span><div class="input-unit"><input id="bagPrice" type="number" min="0" step="1" placeholder="např. 140"><b>Kč/25 kg</b></div></label></div></div><aside class="bag-result"><div><span>Pro objednávkové množství</span><strong id="bagOrderVolume">3,10 m³</strong></div><div class="bag-big"><span>Potřebný počet 25kg pytlů</span><strong id="bagCount">259 ks</strong><small id="bagYieldNote">počítáno z vydatnosti 12 l / 25 kg</small></div><div class="bag-cost" id="bagCostWrap" hidden><span>Vaše zadaná cena pytlů</span><strong id="bagCost">—</strong></div><p id="bagAdvice">Při tomto objemu už jde o stovky pytlů. Přepočet je matematicky správný, ale praktickou logistiku porovnejte s dodávkou transportbetonu.</p></aside></div></section>
+
+<section class="c-section c-soft" id="benchmark"><div class="c-shell"><div class="section-intro"><p class="eyebrow">06 · Ověřená data</p><h2>Logistické a produktové hodnoty držíme s jejich původním kontextem</h2><p>Tabulka není „český průměr“. Každý řádek patří konkrétnímu dodavateli nebo konkrétnímu výrobku. Přesně proto z nich nevyrábíme univerzální tržní pravidlo.</p></div><div class="tech-table-wrap"><table class="tech-table"><thead><tr><th>Zdroj</th><th>Reference</th><th>Hodnota</th><th>Jak ji používáme</th></tr></thead><tbody>
+<tr><td><a href="https://www.cemex.cz/formulare/kalkulacka-objemu-betonu" target="_blank" rel="noopener noreferrer"><strong>CEMEX CZ</strong><small>kalkulátor objemu</small></a></td><td>minimum pro odeslání poptávky</td><td>1 m³</td><td>jen jako informace o veřejném formuláři CEMEX</td></tr>
+<tr><td><a href="https://www.beton.cz/kalkulator-betonu.html" target="_blank" rel="noopener noreferrer"><strong>Beton.cz / CEMEX</strong><small>doprava</small></a></td><td>autodomíchávače</td><td>6–8 m³</td><td>orientační interval počtu jízd</td></tr>
+<tr><td><a href="https://www.transbeton.cz/betonova-kalkulacka" target="_blank" rel="noopener noreferrer"><strong>TRANSBETON</strong><small>betonová kalkulačka</small></a></td><td>minimální vytížení pro účtování dopravy</td><td>6 m³</td><td>příklad pravidla konkrétního dodavatele</td></tr>
+<tr><td><a href="https://www.quick-mix.cz/cs/b-208" target="_blank" rel="noopener noreferrer"><strong>quick-mix B 208</strong><small>C16/20</small></a></td><td>vydatnost 25kg pytle</td><td>cca 12 l</td><td>přímý přepočet pytlů</td></tr>
+<tr><td><a href="https://www.quick-mix.cz/cs/be-04c1620" target="_blank" rel="noopener noreferrer"><strong>quick-mix BE 04</strong><small>C16/20</small></a></td><td>vydatnost 25kg pytle</td><td>cca 12,5 l</td><td>přímý přepočet pytlů</td></tr>
+<tr><td><a href="https://www.quick-mix.cz/cs/b-308" target="_blank" rel="noopener noreferrer"><strong>quick-mix B 308</strong><small>C25/30</small></a></td><td>vydatnost 25kg pytle</td><td>cca 12 l</td><td>přímý přepočet pytlů</td></tr>
+<tr><td><a href="https://www.cemix.cz/cs/p/1100-Betony/1101-BETON-BASIC-B25" target="_blank" rel="noopener noreferrer"><strong>Cemix BETON BASIC B25</strong><small>25 kg</small></a></td><td>vydatnost 25kg pytle</td><td>0,012 m³ / 12 l</td><td>přímý přepočet pytlů</td></tr>
+</tbody></table></div><div class="data-actions"><a class="c-btn c-btn-primary" href="/beton-2026-overene-logisticke-a-produktove-reference.csv" download>Stáhnout CSV</a><a class="c-btn c-btn-ghost" href="/data-a-benchmarky.html">Všechna data a benchmarky</a></div><p class="dataset-note"><strong>Ověřeno 17. 8. 2026.</strong> Dodavatelské podmínky, vozový park i technické parametry výrobků se mohou měnit. Před objednávkou otevřete aktuální podmínky nebo technický list.</p></div></section>
+
+<section class="c-section" id="metodika"><div class="c-shell method-grid"><div><p class="eyebrow">07 · Metodika</p><h2>Geometrii počítáme přesně. Nejistotu neskrýváme do vzorce.</h2><p>Každá část se nejprve převede na čistý geometrický objem v m³. Teprve nad součtem všech částí se aplikuje vámi zvolená rezerva. Objednávkové množství se nakonec zaokrouhlí <strong>nahoru</strong> na zvolený krok.</p><div class="formula-box">deska = délka × šířka × tloušťka</div><div class="formula-box">pás / stěna = délka × šířka nebo tloušťka × výška</div><div class="formula-box">patky = počet × délka × šířka × výška</div><div class="formula-box">válcový sloup = počet × π × (průměr / 2)² × výška</div><div class="formula-box">objednávka = ceil((součet × (1 + rezerva)) / krok) × krok</div><p>Rozměry v centimetrech převádíme na metry před násobením. U nepravidelných výkopů je správnost výsledku omezená tím, jak dobře zadané rozměry reprezentují skutečný prostor.</p></div><aside class="method-cards"><div><span>Σ</span><strong>Více částí</strong><p>Celkový objem je auditovatelný součet jednotlivých konstrukcí.</p></div><div><span>↑</span><strong>Zaokrouhlení nahoru</strong><p>Objednávkový krok nikdy nesnižuje vypočtené množství.</p></div><div><span>0×</span><strong>Žádná vymyšlená třída betonu</strong><p>Specifikaci směsi musí určit projekt nebo odpovědný odborník.</p></div></aside></div></section>
+
+<section class="c-section c-soft"><div class="c-shell"><div class="section-intro"><p class="eyebrow">08 · Co ověřit před betonáží</p><h2>Kalkulačka končí tam, kde začíná projekt a organizace stavby</h2></div><div class="risk-grid"><article><span>01</span><h3>Specifikace směsi</h3><p>Třídu, konzistenci, prostředí a další požadavky převezměte z projektu nebo od statika/projektanta. Nástroj je záměrně nenavrhuje.</p></article><article><span>02</span><h3>Skutečná geometrie</h3><p>Nerovný výkop, rozdílná tloušťka nebo ztráty při ukládání mohou změnit skutečnou spotřebu. Rezerva není náhradou za zaměření.</p></article><article><span>03</span><h3>Přístup a čerpání</h3><p>Prověřte nosnost a šířku příjezdu, místo pro auto, délku hadic nebo ramene a způsob ukládání.</p></article><article><span>04</span><h3>Dodavatelské podmínky</h3><p>Minimální odběr, vytížení dopravy, čekání, malé množství i zaokrouhlení se liší podle betonárny. Kalkulačka je neprezentuje jako jednotný ceník.</p></article></div></div></section>
+
+<section class="c-section" id="faq"><div class="c-shell faq-grid"><div><p class="eyebrow">09 · FAQ</p><h2>Nejčastější otázky k množství betonu</h2><p>Největší chyby obvykle nevznikají ve vzorci, ale v geometrii, jednotkách a záměně objemu za specifikaci směsi.</p></div><div class="faq-list"><details><summary>Kolik betonu potřebuji na desku?</summary><p>Vynásobte délku, šířku a tloušťku v metrech. Například 6 × 4 × 0,12 = 2,88 m³ čistého geometrického objemu. Objednávkovou rezervu přidejte až potom a držte ji odděleně od samotné geometrie.</p></details><details><summary>Kolik procent betonu přidat jako rezervu?</summary><p>Neexistuje jedna univerzální hodnota pro každou betonáž. Kalkulačka proto nabízí explicitní vstup a výchozích 5 % označuje pouze jako pracovní scénář. Nepravidelné výkopy nebo proměnlivá tloušťka vyžadují lepší zaměření, ne slepě vyšší procento.</p></details><details><summary>Kolik m³ odveze domíchávač?</summary><p>Beton.cz/CEMEX veřejně uvádí autodomíchávače o objemu 6–8 m³. Konkrétní vozidlo a skutečné vytížení však potvrďte s dodavatelem. Kalkulačka proto počítá interval jízd, nikoliv jeden univerzální objem auta.</p></details><details><summary>Kolik pytlů 25 kg je na 1 m³ betonu?</summary><p>Záleží na konkrétní směsi. Při vydatnosti 12 l z 25kg pytle vychází matematicky ceil(1000/12) = 84 pytlů na 1 m³; při 12,5 l je to 80 pytlů. Vždy použijte vydatnost z technického listu konkrétního výrobku.</p></details><details><summary>Jakou třídu betonu mám zvolit?</summary><p>Kalkulačka ji neurčuje. CEMEX na svém poptávkovém formuláři výslovně upozorňuje, že uváděné příklady tříd betonu nejsou doporučením a specifikaci je třeba získat z projektové dokumentace nebo od stavbyvedoucího, statika či projektanta.</p></details><details><summary>Mohu výsledek rovnou poslat betonárně?</summary><p>Jako podklad pro množství ano, ale finální objednávka musí obsahovat také správnou specifikaci směsi, místo a termín dodání, dopravu, případné čerpání a podmínky konkrétní betonárny.</p></details></div></div></section>
+
+<section class="c-related"><div class="c-shell"><div class="section-intro compact"><p class="eyebrow">10 · Navazující výpočty</p><h2>Beton je jedna část shellu stavby</h2></div><div class="related-grid"><a href="/kalkulacka-ceny-zakladove-desky.html"><span>01</span><strong>Základová deska</strong><p>Geometrie projektu a audit rozsahu nabídky.</p></a><a href="/kalkulacka-cihel-a-tvarnic.html"><span>02</span><strong>Cihly a tvárnice</strong><p>Kusy, palety a spotřeba konkrétního výrobku.</p></a><a href="/kalkulacka-ceny-hrube-stavby-domu.html"><span>03</span><strong>Hrubá stavba</strong><p>Veřejné cenové reference a kontrola scope.</p></a><a href="/kalkulacka-sterku.html"><span>04</span><strong>Štěrk</strong><p>Objem sypkého materiálu podle geometrie vrstvy.</p></a></div></div></section>
 </main>
-<footer class="footer rv-brand-footer">
-<div class="container footer-grid">
-<div><a aria-label="RychléVýpočty.cz – domů" class="rv-logo rv-logo--inverse" href="/"><img alt="" class="rv-logo-image" decoding="async" height="48" src="/logo-rv-v32-inverse.svg?v=1" width="295"/></a><p>Praktické online kalkulačky pro stavbu, bydlení, finance, mzdy, podnikání a provoz domácnosti.</p><div class="rv-footer-process"><span>Zadat</span><span>Spočítat</span><span>Pochopit</span><span>Rozhodnout</span></div></div>
-<div><h3>Stavba domu</h3><div class="footer-links"><a href="/stavba-domu.html">Přehled stavby</a><a href="/kalkulacka-betonu.html">Kalkulačka betonu</a><a href="/kalkulacka-sterku.html">Kalkulačka štěrku</a><a href="/kalkulacka-cihel-a-tvarnic.html">Cihly a tvárnice</a><a href="/kalkulacka-ceny-zakladove-desky.html">Základová deska</a><a href="/kalkulacka-ceny-strechy.html">Cena střechy</a></div></div>
-<div><h3>Další oblasti</h3><div class="footer-links"><a href="/rekonstrukce.html">Rekonstrukce</a><a href="/bydleni.html">Bydlení</a><a href="/finance-a-hypoteky.html">Finance a hypotéky</a><a href="/kalkulacky.html">Všechny kalkulačky</a></div></div>
-<div><h3>Informace</h3><div class="footer-links"><a href="/jak-pocitame.html">Jak počítáme</a><a href="/kontakt.html">Kontakt</a><a href="/podminky-pouziti.html">Podmínky použití</a><a href="/ochrana-osobnich-udaju.html">Ochrana osobních údajů</a></div></div>
-</div>
-<div class="container footer-bottom">© 2026 RychléVýpočty.cz. Výsledky jsou orientační a nenahrazují projekt, statický návrh, technologický postup ani nabídku dodavatele.</div>
-</footer>
-<script src="rv-tool-core.js"></script>
-<script src="beton.js?v=20260713-2"></script>
-</body>
-</html>
+<footer class="site-footer rv-brand-footer"><div class="c-shell c-footer-grid"><div class="c-footer-brand"><a class="rv-logo rv-logo--inverse" href="/" aria-label="RychléVýpočty.cz – domů"><img class="rv-logo-image" src="/logo-rv-v32-inverse.svg?v=1" width="295" height="48" alt="" decoding="async"></a><p>Praktické české kalkulačky s okamžitým výsledkem, srozumitelnou interpretací a dohledatelnou metodikou.</p><a href="mailto:rychlevypocty@seznam.cz">rychlevypocty@seznam.cz</a><div class="footer-socials" aria-label="Oficiální profily RychléVýpočty.cz"><a href="https://www.facebook.com/rychlevypocty" rel="me" aria-label="RychléVýpočty.cz na Facebooku" title="Facebook"><svg aria-hidden="true" viewBox="0 0 24 24"><path fill="currentColor" d="M13.7 22v-8h2.7l.4-3h-3.1V9.1c0-.9.3-1.5 1.6-1.5H17V4.9c-.3 0-1.3-.1-2.4-.1-2.5 0-4.2 1.5-4.2 4.3V11H7.6v3h2.8v8h3.3z"/></svg></a><a href="https://www.instagram.com/rychlevypocty/" rel="me" aria-label="RychléVýpočty.cz na Instagramu" title="Instagram"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1" fill="currentColor" stroke="none"/></svg></a></div><div class="rv-footer-process"><span>Zadat</span><span>Spočítat</span><span>Pochopit</span><span>Rozhodnout</span></div></div><div><h2>Stavba</h2><a href="/stavba-domu.html">Stavba domu</a><a href="/kalkulacka-ceny-zakladove-desky.html">Základová deska</a><a href="/kalkulacka-cihel-a-tvarnic.html">Cihly a tvárnice</a><a href="/kalkulacka-ceny-strechy.html">Cena střechy</a></div><div><h2>Data a metodika</h2><a href="/data-a-benchmarky.html">Data a benchmarky</a><a href="/beton-2026-overene-logisticke-a-produktove-reference.csv" download>CSV: 7 referencí</a><a href="/jak-pocitame.html">Jak počítáme</a><a href="/redakcni-zasady.html">Redakční zásady</a></div><div><h2>Informace</h2><a href="/kalkulacky.html">Všechny kalkulačky</a><a href="/kontakt.html">Kontakt</a><a href="/podminky-pouziti.html">Podmínky použití</a><a href="/ochrana-osobnich-udaju.html">Ochrana osobních údajů</a></div></div><div class="c-shell c-footer-bottom"><span>© 2026 RychléVýpočty.cz. Výpočty jsou orientační.</span><span><strong>Upozornění:</strong> Kalkulačka počítá objem a logistický scénář. Nenavrhuje třídu, složení ani statické použití betonu a nenahrazuje projekt, výkaz výměr ani podmínky betonárny.</span></div></footer>
+<script src="/rv-brand-v32.js?v=20260801" defer></script><script src="/beton-vnext.js?v=20260817-1" defer></script>
+<!-- RV-VNEXT: status=DONE | major=2026-08-17 | qa=PASS -->
+</body></html>
