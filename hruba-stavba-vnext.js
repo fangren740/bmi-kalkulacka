@@ -70,7 +70,29 @@
   function formatRange(min, max) {
     if (!Number.isFinite(min)) return "—";
     if (!Number.isFinite(max)) return `od ${number.format(Math.round(min))} Kč`;
-    return `${number.format(Math.round(min))}–${number.format(Math.round(max))} Kč`;
+    return `${number.format(Math.round(min))} – ${number.format(Math.round(max))} Kč`;
+  }
+
+  function setResultValueRange(min, max) {
+    const host = $("resultValue");
+    if (!Number.isFinite(min)) {
+      host.classList.remove("is-range");
+      host.textContent = "—";
+      return;
+    }
+    if (!Number.isFinite(max)) {
+      host.classList.remove("is-range");
+      host.textContent = `od ${money.format(Math.round(min))}`;
+      return;
+    }
+    host.classList.add("is-range");
+    host.innerHTML = `<span class="range-amount">${number.format(Math.round(min))}</span><span class="range-separator">–</span><span class="range-amount">${number.format(Math.round(max))}</span><span class="range-currency">Kč</span>`;
+  }
+
+  function setResultValueText(text) {
+    const host = $("resultValue");
+    host.classList.remove("is-range");
+    host.textContent = text;
   }
 
   function formatPerM2(ref) {
@@ -172,7 +194,7 @@
       const ref = matches[0];
       const low = area * ref.min;
       const high = ref.max ? area * ref.max : null;
-      $("resultValue").textContent = high ? formatRange(low, high).replace(" Kč", " Kč") : `od ${money.format(Math.round(low))}`;
+      if (high) { setResultValueRange(low, high); } else { setResultValueText(`od ${money.format(Math.round(low))}`); }
       $("resultPerM2").textContent = `${formatPerM2(ref)} · ${ref.vat}`;
       $("resultExplain").textContent = `Přepočet používá zveřejněnou referenci „${ref.label}“ a stejnou definici plochy. Nejde o průměr trhu ani cenovou nabídku.`;
 
@@ -187,7 +209,7 @@
       $("resultCallout").innerHTML = `<strong>Co ověřit</strong><p>${ref.vat.includes("neuvedeno") ? "Zdroj u tohoto pásma neuvádí režim DPH. " : ""}Před srovnáním nabídky potvrďte stejný rozsah díla a stejnou definici m².</p>`;
       lastSummary = `Hrubá stavba ${number.format(area)} m²: ${high ? formatRange(low, high) : `od ${money.format(Math.round(low))}`} podle reference ${ref.source} (${formatPerM2(ref)}, ${ref.basisLabel}, ${ref.vat}). Rozsah: ${scope === "closed" ? "uzavřená" : "klasická se střechou"}.`;
     } else {
-      $("resultValue").textContent = "Bez bezpečného přepočtu";
+      setResultValueText("Bez bezpečného přepočtu");
       $("resultPerM2").textContent = "viz cenová mapa níže";
       $("resultExplain").textContent = "Pro tuto kombinaci nemáme veřejnou referenci se shodným rozsahem, způsobem realizace a zároveň jasně stejnou definicí plochy. Záměrně nedopočítáváme chybějící číslo vlastním koeficientem.";
       $("metricLabelA").textContent = "Rezerva";
@@ -236,7 +258,7 @@
     setHeroScope(scope);
     $("resultMode").textContent = "AUDIT NABÍDKY";
     $("resultHeadline").textContent = "Cena nabídky po přepočtu";
-    $("resultValue").textContent = money.format(Math.round(price));
+    setResultValueText(money.format(Math.round(price)));
     $("resultPerM2").textContent = `${number.format(Math.round(perM2))} Kč/m² · ${basis === "usable" ? "užitná plocha" : basis === "floor" ? "podlahová plocha" : "definice plochy neuvedena"}`;
 
     let comparison = "Nemáme přímou veřejnou referenci se stejnou definicí plochy a rozsahem.";
