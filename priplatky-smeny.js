@@ -34,7 +34,7 @@
     "payRegime", "holidayCompensation", "overtimeCompensation", "shiftDate", "shiftStart",
     "shiftEnd", "breakStart",
   ];
-  const checkboxIds = ["includeNight", "includeWeekend", "includeHoliday", "includeOvertime", "roundWhole"];
+  const checkboxIds = ["includeNight", "includeWeekend", "includeHoliday", "includeOvertime", "salaryOvertimeRestDay", "roundWhole"];
   const allIds = [...numericIds, ...selectableIds, ...checkboxIds];
 
   const URL_MAP = {
@@ -62,6 +62,7 @@
     overtimePercent: "prescasPct",
     holidayCompensation: "svatekForma",
     overtimeCompensation: "prescasForma",
+    salaryOvertimeRestDay: "prescasKlid",
     customPercent: "vlastniPct",
     customFixedRate: "vlastniKc",
     customHours: "vlastniH",
@@ -161,7 +162,7 @@
     $("nightPercent").value = defaults.night;
     $("weekendPercent").value = defaults.weekend;
     $("holidayPercent").value = defaults.holiday;
-    $("overtimePercent").value = defaults.overtime;
+    $("overtimePercent").value = regime === "salary" && checked("salaryOvertimeRestDay") ? 50 : defaults.overtime;
     if (regime === "agreement") {
       $("includeOvertime").checked = false;
       $("overtimeHours").value = 0;
@@ -174,6 +175,10 @@
     const defaults = legalRates(regime);
     const overtimeToggle = $("includeOvertime");
     const overtimeCard = doc.querySelector('[data-bonus-card="overtime"]');
+    const salaryRestWrap = $("salaryRestOvertimeWrap");
+    const salaryRestToggle = $("salaryOvertimeRestDay");
+    if (salaryRestWrap) salaryRestWrap.hidden = regime !== "salary";
+    if (regime !== "salary" && salaryRestToggle) salaryRestToggle.checked = false;
     if (overtimeToggle) overtimeToggle.disabled = regime === "agreement";
     if (overtimeCard) {
       overtimeCard.classList.toggle("is-unavailable", regime === "agreement");
@@ -188,7 +193,7 @@
     const overtimeText = regime === "agreement"
       ? "U DPP a DPČ kalkulačka zákonný přesčasový příplatek automaticky nenastavuje."
       : regime === "salary"
-        ? "Výchozí sazba pro plat: 25 %, ve dni nepřetržitého odpočinku 50 %."
+        ? (checked("salaryOvertimeRestDay") ? "Plat · den nepřetržitého odpočinku: 50 % průměrného hodinového výdělku." : "Výchozí sazba pro plat: 25 %. Ve dni nepřetržitého odpočinku použijte pomocnou volbu 50 %.")
         : "Výchozí sazba pro mzdu: 25 % průměrného výdělku.";
     setText("nightRateHint", nightText);
     setText("weekendRateHint", weekendText);
@@ -200,7 +205,7 @@
       const p = assumption.querySelector("p");
       if (regime === "salary") {
         if (strong) strong.textContent = "Rychlý režim používá výchozí sazby pro plat:";
-        if (p) p.textContent = "noční 20 %, víkend 25 %, přesčas 25 %. U přesčasu ve dni nepřetržitého odpočinku upravte sazbu na 50 %. Svátek je předvolen jako náhradní volno.";
+        if (p) p.textContent = checked("salaryOvertimeRestDay") ? "noční 20 %, víkend 25 %, přesčas 50 % pro zvolený den nepřetržitého odpočinku. Svátek je předvolen jako náhradní volno." : "noční 20 %, víkend 25 %, přesčas 25 %. Ve dni nepřetržitého odpočinku zapněte v podrobném režimu pomocnou volbu 50 %. Svátek je předvolen jako náhradní volno.";
       } else if (regime === "agreement") {
         if (strong) strong.textContent = "Rychlý režim používá výchozí sazby pro DPP / DPČ:";
         if (p) p.textContent = "noční 10 %, víkend 10 %, svátek s předvoleným náhradním volnem. Přesčasový příplatek není automaticky zapnutý; případný smluvní bonus zadejte v podrobném režimu.";
@@ -218,7 +223,11 @@
     const rateSource = options.rateSource || "current";
     const factor = rateSource === "higher" ? 1.25 : 1;
     const useLegal = rateSource === "legal" || !advanced;
-    const rate = (id, key) => (useLegal ? defaults[key] : readNumeric(id)) * factor;
+    const legalOvertimeRate = regime === "salary" && checked("salaryOvertimeRestDay") ? 50 : defaults.overtime;
+    const rate = (id, key) => {
+      const legalValue = key === "overtime" ? legalOvertimeRate : defaults[key];
+      return (useLegal ? legalValue : readNumeric(id)) * factor;
+    };
 
     return {
       regime,
@@ -238,6 +247,7 @@
       includeOvertime: checked("includeOvertime") && regime !== "agreement",
       overtimeHours: checked("includeOvertime") && regime !== "agreement" ? readNumeric("overtimeHours") : 0,
       overtimePercent: rate("overtimePercent", "overtime"),
+      salaryOvertimeRestDay: regime === "salary" && checked("salaryOvertimeRestDay"),
       holidayCompensation: advanced ? selectValue("holidayCompensation", "leave") : "leave",
       overtimeCompensation: advanced ? selectValue("overtimeCompensation", "pay") : "pay",
       customPercent: advanced ? readNumeric("customPercent") * factor : 0,
@@ -800,8 +810,18 @@
   });
 
   checkboxIds.forEach((id) => $(id)?.addEventListener("change", run));
-  $("payRegime")?.addEventListener("change", () => { ratesCustomized = false; applyRegimeDefaults(true); run(); });
+  $("payRegime")?.addEventListener("change", () => { ratesCustomized = false; if ($("salaryOvertimeRestDay")) $("salaryOvertimeRestDay").checked = false; applyRegimeDefaults(true); run(); });
   ["holidayCompensation", "overtimeCompensation"].forEach((id) => $(id)?.addEventListener("change", run));
+  $("salaryOvertimeRestDay")?.addEventListener("change", () => {
+    if (selectValue("payRegime", "wage") === "salary") {
+      exactValues.delete("overtimePercent");
+      $("overtimePercent").value = checked("salaryOvertimeRestDay") ? 50 : 25;
+      formatInput("overtimePercent");
+      ratesCustomized = true;
+    }
+    updateRegimeHints();
+    run();
+  });
   ["shiftDate", "shiftStart", "shiftEnd", "breakStart", "breakMinutes"].forEach((id) => {
     $(id)?.addEventListener("input", renderAutoHours);
     $(id)?.addEventListener("change", renderAutoHours);
