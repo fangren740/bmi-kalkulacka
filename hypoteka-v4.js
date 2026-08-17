@@ -1,195 +1,140 @@
-(() => {
+/* RychléVýpočty.cz · Mortgage X-Ray V-next · deterministic core + UI */
+(function(){
   'use strict';
-  const $ = id => document.getElementById(id);
-  const $$ = sel => Array.from(document.querySelectorAll(sel));
-  const czk = value => new Intl.NumberFormat('cs-CZ',{style:'currency',currency:'CZK',maximumFractionDigits:0}).format(Number.isFinite(value)?value:0);
-  const num = (id, fallback=0) => { const v = Number($(id)?.value); return Number.isFinite(v) ? v : fallback; };
-  const pct = value => `${new Intl.NumberFormat('cs-CZ',{maximumFractionDigits:1}).format(Number.isFinite(value)?value:0)} %`;
-  const monthsText = months => { const y=Math.floor(months/12), m=months%12; return [y?`${y} let`:null,m?`${m} měs.`:null].filter(Boolean).join(' ') || '0 měs.'; };
-
-  const defaults = {
-    basicLoan:4000000,basicRate:4.89,basicYears:30,basicFee:0,basicProperty:5000000,basicIncome:70000,
-    proLoan:4000000,proProperty:5000000,proRate:4.89,proYears:30,proFee:0,proIncome:70000,proOtherDebt:0,
-    fixYears:5,refixRate:6.0,extraMonthly:0,extraOneTime:0,extraMonth:60,insuranceMonthly:0,taxRate:15
+  const EPS=1e-8;
+  const core={
+    annuity(principal, annualRatePct, months){
+      principal=Number(principal); annualRatePct=Number(annualRatePct); months=Math.round(Number(months));
+      if(!(principal>=0)||!(annualRatePct>=0)||!(months>0)) return NaN;
+      if(principal===0) return 0;
+      const r=annualRatePct/100/12;
+      if(Math.abs(r)<EPS) return principal/months;
+      return principal*r/(1-Math.pow(1+r,-months));
+    },
+    amortize(principal, annualRatePct, months){
+      const payment=core.annuity(principal,annualRatePct,months);
+      if(!Number.isFinite(payment)) return null;
+      const r=annualRatePct/100/12;
+      let balance=principal,totalInterest=0,totalPrincipal=0;
+      const rows=[];
+      for(let m=1;m<=months;m++){
+        const interest=Math.abs(r)<EPS?0:balance*r;
+        let principalPart=payment-interest;
+        let actualPayment=payment;
+        if(principalPart>balance || m===months){principalPart=balance;actualPayment=interest+principalPart;}
+        balance=Math.max(0,balance-principalPart);
+        totalInterest+=interest;totalPrincipal+=principalPart;
+        rows.push({month:m,payment:actualPayment,interest,principal:principalPart,balance,totalInterest,totalPrincipal});
+        if(balance<=0.005) break;
+      }
+      return {payment,totalInterest,totalPaid:principal+totalInterest,rows};
+    },
+    balanceAfter(principal, annualRatePct, totalMonths, elapsedMonths){
+      const plan=core.amortize(principal,annualRatePct,totalMonths);
+      if(!plan) return NaN;
+      if(elapsedMonths<=0) return principal;
+      const row=plan.rows[Math.min(Math.round(elapsedMonths),plan.rows.length)-1];
+      return row?row.balance:0;
+    },
+    refix(principal, currentRatePct, totalMonths, fixMonths, newRatePct){
+      fixMonths=Math.max(0,Math.min(Math.round(fixMonths),totalMonths));
+      const original=core.amortize(principal,currentRatePct,totalMonths);
+      if(!original) return null;
+      if(fixMonths<=0 || fixMonths>=totalMonths) return {balance:principal,payment:original.payment,delta:0,remainingMonths:totalMonths};
+      const balance=core.balanceAfter(principal,currentRatePct,totalMonths,fixMonths);
+      const remainingMonths=totalMonths-fixMonths;
+      const payment=core.annuity(balance,newRatePct,remainingMonths);
+      return {balance,payment,delta:payment-original.payment,remainingMonths};
+    },
+    ltv(loan,property){return property>0?loan/property*100:null}
   };
+  if(typeof module!=='undefined'&&module.exports) module.exports=core;
+  if(typeof window!=='undefined') window.RVMortgageCore=core;
+  if(typeof document==='undefined') return;
 
-  function annuity(principal, annualRate, months){
-    if(principal<=0 || months<=0) return 0;
-    const r=annualRate/100/12;
-    return r===0 ? principal/months : principal*(r*Math.pow(1+r,months))/(Math.pow(1+r,months)-1);
+  const $=id=>document.getElementById(id);
+  const els={
+    form:$('mortgageForm'),loan:$('loan'),rate:$('rate'),years:$('years'),property:$('propertyValue'),fix:$('fixYears'),refix:$('refixRate'),error:$('inputError'),
+    monthly:$('monthlyPayment'),caption:$('paymentCaption'),totalInterest:$('totalInterest'),totalPaid:$('totalPaid'),firstTotal:$('firstPaymentTotal'),firstInterest:$('firstInterest'),firstPrincipal:$('firstPrincipal'),interestShare:$('firstInterestShare'),principalShare:$('firstPrincipalShare'),interestBar:$('interestBar'),principalBar:$('principalBar'),yearInterest:$('year1Interest'),yearPrincipal:$('year1Principal'),yearBalance:$('year1Balance'),ltvBox:$('ltvResult'),ltvValue:$('ltvValue'),ltvText:$('ltvText'),refixBox:$('refixResult'),fixBalance:$('fixBalance'),refixPayment:$('refixPayment'),refixDelta:$('refixDelta'),refixText:$('refixText'),milestones:$('milestones'),scenarioGrid:$('scenarioGrid'),chartLine:$('debtLine'),chartArea:$('debtArea'),chartDots:$('debtDots'),chartEnd:$('chartEndLabel'),chartStart:$('axisStart'),chartBalanceNow:$('chartBalanceNow'),copy:$('copyBtn'),share:$('shareBtn'),reset:$('resetBtn')
+  };
+  const CZK=new Intl.NumberFormat('cs-CZ',{maximumFractionDigits:0});
+  const PCT=new Intl.NumberFormat('cs-CZ',{minimumFractionDigits:2,maximumFractionDigits:2});
+  const money=v=>`${CZK.format(Math.round(v))} Kč`;
+  const pct=v=>`${PCT.format(v)} %`;
+  const clamp=(v,min,max)=>Math.min(max,Math.max(min,v));
+  const num=el=>Number(el.value);
+
+  function validate(){
+    const loan=num(els.loan),rate=num(els.rate),years=num(els.years);
+    const problems=[];
+    if(!(loan>=100000&&loan<=50000000)) problems.push('Výše hypotéky musí být mezi 100 000 a 50 000 000 Kč.');
+    if(!(rate>=0&&rate<=30)) problems.push('Úroková sazba musí být mezi 0 a 30 %.');
+    if(!(years>=1&&years<=50)) problems.push('Splatnost musí být mezi 1 a 50 lety.');
+    const property=num(els.property); if(els.property.value!==''&&!(property>0&&property<=100000000)) problems.push('Hodnota nemovitosti musí být kladná a nejvýše 100 000 000 Kč.');
+    if(!els.refix.disabled){const r=num(els.refix);if(!(r>=0&&r<=30)) problems.push('Modelová sazba po fixaci musí být mezi 0 a 30 %.');}
+    els.error.hidden=problems.length===0; els.error.textContent=problems[0]||'';
+    return problems.length===0;
   }
-
-  function baseValues(){
-    const pro = $('proPanel')?.classList.contains('is-active');
-    if(pro){
-      return {
-        loan:num('proLoan'), property:num('proProperty'), rate:num('proRate'), years:num('proYears'), fee:num('proFee'), income:num('proIncome'), otherDebt:num('proOtherDebt'),
-        fixYears:num('fixYears'), refixRate:num('refixRate'), extraMonthly:num('extraMonthly'), extraOneTime:num('extraOneTime'), extraMonth:Math.round(num('extraMonth')), insurance:num('insuranceMonthly'),
-        taxEnabled:$('taxEnabled')?.checked, taxRate:num('taxRate',15), strategy:$('extraStrategy')?.value || 'term', pro:true
-      };
-    }
-    return {
-      loan:num('basicLoan'), property:num('basicProperty'), rate:num('basicRate'), years:num('basicYears'), fee:num('basicFee'), income:num('basicIncome'), otherDebt:0,
-      fixYears:0, refixRate:num('basicRate'), extraMonthly:0, extraOneTime:0, extraMonth:0, insurance:0,taxEnabled:false,taxRate:15,strategy:'term',pro:false
-    };
-  }
-
-  function validate(v){
-    if(v.loan<=0) return 'Zadejte kladnou výši hypotéky.';
-    if(v.property<=0) return 'Zadejte hodnotu nemovitosti.';
-    if(v.rate<0 || v.rate>30) return 'Úroková sazba musí být mezi 0 a 30 %.';
-    if(v.years<1 || v.years>45) return 'Splatnost nastavte mezi 1 a 45 lety.';
-    if(v.fixYears<0 || v.fixYears>v.years) return 'Délka fixace nemůže překročit celou splatnost.';
-    if(v.refixRate<0 || v.refixRate>30) return 'Sazba po fixaci musí být mezi 0 a 30 %.';
-    if(v.extraMonth<0 || v.extraMonth>v.years*12) return 'Měsíc jednorázové splátky musí ležet v době splácení.';
-    return '';
-  }
-
-  function simulate(v,{useRefix=false,useExtras=false}={}){
-    const originalMonths=Math.round(v.years*12);
-    const fixMonth=useRefix ? Math.min(originalMonths,Math.round(v.fixYears*12)) : originalMonths;
-    let balance=v.loan;
-    let month=0;
-    let annualRate=v.rate;
-    let basePayment=annuity(balance,annualRate,originalMonths);
-    let totalInterest=0,totalPrincipal=0,totalFees=0,firstYearInterest=0;
-    let oneTimeApplied=false;
-    let balanceAtFix=fixMonth===0?balance:0;
-    const rows=[];
-    const yearAgg={};
-    const maxMonths=720;
-    while(balance>0.01 && month<maxMonths){
-      month++;
-      if(useRefix && month===fixMonth+1 && fixMonth<originalMonths){
-        annualRate=v.refixRate;
-        basePayment=annuity(balance,annualRate,Math.max(1,originalMonths-month+1));
-      }
-      const rate=annualRate/100/12;
-      const interest=rate===0?0:balance*rate;
-      let principal=Math.max(0,basePayment-interest);
-      let extra=useExtras?Math.max(0,v.extraMonthly):0;
-      if(useExtras && !oneTimeApplied && v.extraOneTime>0 && month===Math.max(1,v.extraMonth)){
-        extra+=v.extraOneTime; oneTimeApplied=true;
-      }
-      principal=Math.min(balance,principal+extra);
-      const payment=interest+principal;
-      balance=Math.max(0,balance-principal);
-      totalInterest+=interest; totalPrincipal+=principal; totalFees+=Math.max(0,v.fee+v.insurance);
-      if(month<=12) firstYearInterest+=interest;
-      if(month===fixMonth) balanceAtFix=balance;
-      const y=Math.ceil(month/12);
-      yearAgg[y] ||= {year:y,payments:0,interest:0,principal:0,fees:0,balance:0,rate:annualRate};
-      yearAgg[y].payments+=payment; yearAgg[y].interest+=interest; yearAgg[y].principal+=principal; yearAgg[y].fees+=Math.max(0,v.fee+v.insurance); yearAgg[y].balance=balance; yearAgg[y].rate=annualRate;
-      if(useExtras && oneTimeApplied && v.strategy==='payment' && month===Math.max(1,v.extraMonth) && balance>0){
-        const remaining=Math.max(1,originalMonths-month);
-        basePayment=annuity(balance,annualRate,remaining);
-      }
-      if(month>originalMonths && !useExtras) break;
-    }
-    const schedule=Object.values(yearAgg);
-    return {
-      months:month, monthlyInitial:annuity(v.loan,v.rate,originalMonths), monthlyAfterFix: useRefix&&fixMonth<originalMonths ? annuity(balanceAtFix,v.refixRate,Math.max(1,originalMonths-fixMonth)) : annuity(v.loan,v.rate,originalMonths),
-      totalInterest,totalPrincipal,totalFees,totalPaid:totalInterest+totalPrincipal+totalFees,firstYearInterest,balanceAtFix,schedule
-    };
-  }
-
-  function metrics(v){
-    const baseline=simulate(v,{useRefix:false,useExtras:false});
-    const refix=simulate(v,{useRefix:v.fixYears>0,useExtras:false});
-    const optimized=simulate(v,{useRefix:v.fixYears>0,useExtras:v.extraMonthly>0||v.extraOneTime>0});
-    const ltv=v.property>0?v.loan/v.property*100:0;
-    const monthlyAll=baseline.monthlyInitial+v.fee+v.insurance;
-    const burden=v.income>0?(monthlyAll+v.otherDebt)/v.income*100:0;
-    const stress=annuity(v.loan,v.rate+2,v.years*12)+v.fee+v.insurance;
-    const taxBase=Math.min(150000,baseline.firstYearInterest);
-    const taxSaving=v.taxEnabled?taxBase*(v.taxRate/100):0;
-    return {baseline,refix,optimized,ltv,monthlyAll,burden,stress,taxSaving};
-  }
-
-  function set(id,text){ if($(id)) $(id).textContent=text; }
-  function setWidth(id,val){ if($(id)) $(id).style.width=`${Math.max(0,Math.min(100,val))}%`; }
-
-  function verdict(v,m){
-    const refixAll=m.refix.monthlyAfterFix+v.fee+v.insurance;
-    if(m.ltv<=80 && m.burden<=35 && (v.income<=0 || (refixAll+v.otherDebt)/v.income*100<=42)) return ['Stabilnější scénář','Splátka, LTV i zátěž příjmu působí relativně rozumně. Přesto zachovejte rezervu a porovnejte nabídky podle RPSN, poplatků a podmínek fixace.','good'];
-    if(m.ltv>90 || m.burden>45 || (v.income>0&&(refixAll+v.otherDebt)/v.income*100>52)) return ['Rizikovější scénář','Vysoké LTV nebo velký podíl splátek na příjmu dělá úvěr citlivý na výpadek příjmu a změnu sazby. Zvažte nižší úvěr, vyšší vlastní zdroje nebo delší rezervu.','risk'];
-    return ['Scénář vyžaduje rezervu','Výsledek může být použitelný, ale rozpočet je potřeba otestovat při vyšší sazbě, dalších nákladech bydlení a méně příznivém měsíci.','warn'];
-  }
-
-  function renderSchedule(rows,fixYears){
-    const body=$('scheduleBody'); if(!body) return;
-    const selected=[];
-    rows.forEach(r=>{ if(r.year<=5 || r.year===fixYears || r.year%5===0 || r.year===rows.length) selected.push(r); });
-    const unique=selected.filter((r,i,a)=>a.findIndex(x=>x.year===r.year)===i);
-    body.innerHTML=unique.map(r=>`<tr><td>${r.year}. rok</td><td>${czk(r.payments+r.fees)}</td><td>${czk(r.interest)}</td><td>${czk(r.principal)}</td><td>${czk(r.balance)}</td><td>${pct(r.rate)}</td></tr>`).join('');
-    const bars=$('balanceBars'); if(!bars) return;
-    const max=Math.max(...unique.map(r=>r.balance),1);
-    bars.innerHTML=unique.slice(0,12).map(r=>`<div class="mort-bar ${r.year===fixYears?'is-refix':''}" style="height:${Math.max(5,r.balance/max*100)}%" data-year="${r.year}"></div>`).join('');
-  }
+  function getInputs(){return {loan:num(els.loan),rate:num(els.rate),years:Math.round(num(els.years)),property:els.property.value===''?null:num(els.property),fixYears:Number(els.fix.value),refixRate:num(els.refix)}}
+  function rowAt(plan,months,principal){if(months<=0)return {balance:principal,totalInterest:0,totalPrincipal:0};return plan.rows[Math.min(months,plan.rows.length)-1]||plan.rows[plan.rows.length-1]}
 
   function render(){
-    const v=baseValues(); const error=validate(v); const box=$('calcError');
-    if(error){ if(box){box.hidden=false;box.textContent=error;} return; }
-    if(box){box.hidden=true;box.textContent='';}
-    const m=metrics(v); const [label,message,state]=verdict(v,m);
-    set('resultPayment',czk(m.monthlyAll));
-    set('resultPaymentNote',`Samotná anuitní splátka ${czk(m.baseline.monthlyInitial)} + poplatky a pojištění ${czk(v.fee+v.insurance)}.`);
-    set('resultInterest',czk(m.baseline.totalInterest));
-    set('resultTotal',czk(m.baseline.totalPaid));
-    set('resultLtv',pct(m.ltv));
-    set('resultBurden',v.income>0?pct(m.burden):'nezadáno');
-    set('resultStress',czk(m.stress));
-    set('resultFirstYearInterest',czk(m.baseline.firstYearInterest));
-    set('resultRefixPayment',v.fixYears>0&&v.fixYears<v.years?czk(m.refix.monthlyAfterFix+v.fee+v.insurance):'bez změny');
-    set('resultFixBalance',czk(m.refix.balanceAtFix));
-    set('resultOptimizedTerm',monthsText(m.optimized.months));
-    set('resultInterestSaved',czk(Math.max(0,m.refix.totalInterest-m.optimized.totalInterest)));
-    set('resultTaxSaving',v.taxEnabled?czk(m.taxSaving):'nezapočteno');
-    set('resultVerdict',label); set('resultMessage',message);
-    const verdictEl=$('resultVerdict'); if(verdictEl) verdictEl.dataset.state=state;
-    setWidth('heroLtvBar',m.ltv); setWidth('heroBurdenBar',m.burden);
-    set('heroPayment',czk(m.monthlyAll)); set('heroLtv',pct(m.ltv)); set('heroInterest',czk(m.baseline.totalInterest)); set('heroStress',czk(m.stress));
-    set('stressRatePayment',czk(m.stress));
-    set('stressRefixPayment',v.fixYears>0?czk(m.refix.monthlyAfterFix+v.fee+v.insurance):czk(m.monthlyAll));
-    set('stressIncomeBurden',v.income>0?pct((m.stress+v.otherDebt)/v.income*100):'nezadáno');
-    const reserve6=(m.stress+v.otherDebt)*6; set('stressReserve',czk(reserve6));
-    set('compareBaseInterest',czk(m.baseline.totalInterest)); set('compareRefixInterest',czk(m.refix.totalInterest)); set('compareOptimizedInterest',czk(m.optimized.totalInterest));
-    set('compareBaseTerm',monthsText(m.baseline.months)); set('compareRefixTerm',monthsText(m.refix.months)); set('compareOptimizedTerm',monthsText(m.optimized.months));
-    renderSchedule(m.optimized.schedule,Math.round(v.fixYears));
+    if(!validate()) return;
+    const v=getInputs(),months=v.years*12,plan=core.amortize(v.loan,v.rate,months); if(!plan)return;
+    const first=plan.rows[0],year=rowAt(plan,Math.min(12,months),v.loan);
+    const interestShare=plan.payment?first.interest/plan.payment*100:0,principalShare=100-interestShare;
+    els.monthly.textContent=money(plan.payment); els.caption.textContent=`při ${pct(v.rate)} p. a. na ${v.years} ${v.years===1?'rok':v.years<5?'roky':'let'}`;
+    els.totalInterest.textContent=money(plan.totalInterest); els.totalPaid.textContent=money(plan.totalPaid);
+    els.firstTotal.textContent=money(first.payment);els.firstInterest.textContent=money(first.interest);els.firstPrincipal.textContent=money(first.principal);els.interestShare.textContent=pct(interestShare);els.principalShare.textContent=pct(principalShare);els.interestBar.style.width=`${clamp(interestShare,0,100)}%`;els.principalBar.style.width=`${clamp(principalShare,0,100)}%`;
+    els.yearInterest.textContent=money(year.totalInterest);els.yearPrincipal.textContent=money(year.totalPrincipal);els.yearBalance.textContent=money(year.balance);
+    renderLtv(v);renderRefix(v,months);renderMilestones(v,plan);renderScenarios(v);renderChart(v,plan);updateUrlSilently(v);
   }
-
-  function syncBasicToPro(){
-    const pairs=[['basicLoan','proLoan'],['basicProperty','proProperty'],['basicRate','proRate'],['basicYears','proYears'],['basicFee','proFee'],['basicIncome','proIncome']];
-    pairs.forEach(([a,b])=>{ if($(a)&&$(b)) $(b).value=$(a).value; });
+  function renderLtv(v){
+    if(!(v.property>0)){els.ltvBox.hidden=true;return} els.ltvBox.hidden=false;
+    const l=core.ltv(v.loan,v.property),own=v.property-v.loan;els.ltvValue.textContent=pct(l);
+    let msg=`Úvěr tvoří ${pct(l)} z hodnoty zástavy. `;
+    if(own>=0) msg+=`Rozdíl mezi hodnotou nemovitosti a úvěrem je ${money(own)}.`; else msg+=`Úvěr je o ${money(Math.abs(own))} vyšší než zadaná hodnota nemovitosti.`;
+    msg+=' ČNB aktuálně uvádí obecnou horní hranici 80 % a 90 % pro žadatele mladší 36 let při financování vlastního bydlení; konkrétní posouzení dělá banka.';
+    els.ltvText.textContent=msg;
   }
-  function syncProToBasic(){
-    const pairs=[['proLoan','basicLoan'],['proProperty','basicProperty'],['proRate','basicRate'],['proYears','basicYears'],['proFee','basicFee'],['proIncome','basicIncome']];
-    pairs.forEach(([a,b])=>{ if($(a)&&$(b)) $(b).value=$(a).value; });
+  function renderRefix(v,months){
+    if(!(v.fixYears>0)){els.refixBox.hidden=true;return} els.refixBox.hidden=false;
+    const fixMonths=Math.min(v.fixYears*12,months-1),r=core.refix(v.loan,v.rate,months,fixMonths,v.refixRate); if(!r){els.refixBox.hidden=true;return}
+    els.fixBalance.textContent=money(r.balance);els.refixPayment.textContent=money(r.payment);const sign=r.delta>0?'+':'';els.refixDelta.textContent=`${sign}${money(r.delta)}`;
+    els.refixText.textContent=`Po ${v.fixYears} ${v.fixYears===1?'roce':v.fixYears<5?'letech':'letech'} modelujeme sazbu ${pct(v.refixRate)} pro zbývajících ${Math.round(r.remainingMonths/12*10)/10} roku. Nejde o předpověď budoucí sazby.`;
   }
-
-  $$('.mort-mode-btn').forEach(btn=>btn.addEventListener('click',()=>{
-    const mode=btn.dataset.mode;
-    if(mode==='pro') syncBasicToPro(); else syncProToBasic();
-    $$('.mort-mode-btn').forEach(b=>b.classList.toggle('is-active',b===btn));
-    $('basicPanel')?.classList.toggle('is-active',mode==='basic'); $('proPanel')?.classList.toggle('is-active',mode==='pro'); render();
-  }));
-
-  let step=0; const stages=$$('.mort-stage'),steps=$$('.mort-step');
-  function showStep(i){ step=Math.max(0,Math.min(stages.length-1,i)); stages.forEach((s,n)=>s.classList.toggle('is-active',n===step)); steps.forEach((s,n)=>{s.classList.toggle('is-active',n===step);s.classList.toggle('is-done',n<step);}); set('stepCounter',`Krok ${step+1} ze ${stages.length}`); if($('prevStep')) $('prevStep').disabled=step===0; if($('nextStep')) $('nextStep').textContent=step===stages.length-1?'Hotovo':'Pokračovat'; }
-  steps.forEach((s,i)=>s.addEventListener('click',()=>showStep(i)));
-  $('prevStep')?.addEventListener('click',()=>showStep(step-1)); $('nextStep')?.addEventListener('click',()=>showStep(step+1));
-
-  $$('.mort-presets button').forEach(btn=>btn.addEventListener('click',()=>{
-    const p=btn.dataset.preset;
-    const presets={balanced:{loan:4000000,property:5000000,rate:4.89,years:30,income:70000},lower:{loan:3000000,property:4500000,rate:4.59,years:25,income:75000},higher:{loan:6000000,property:7500000,rate:5.19,years:30,income:110000}};
-    const x=presets[p]||presets.balanced;
-    ['basic','pro'].forEach(prefix=>{ const map={Loan:x.loan,Property:x.property,Rate:x.rate,Years:x.years,Income:x.income}; Object.entries(map).forEach(([k,val])=>{const el=$(prefix+k);if(el)el.value=val;}); }); render();
-  }));
-
-  $$('input,select').forEach(el=>el.addEventListener('input',render));
-  $('calculateBtn')?.addEventListener('click',render);
-  $('resetBtn')?.addEventListener('click',()=>{ Object.entries(defaults).forEach(([id,val])=>{if($(id))$(id).value=val;}); if($('taxEnabled'))$('taxEnabled').checked=false; if($('extraStrategy'))$('extraStrategy').value='term'; showStep(0); render(); });
-  $('printBtn')?.addEventListener('click',()=>window.print());
-  $('copyBtn')?.addEventListener('click',async()=>{ const v=baseValues(),m=metrics(v); const text=`Hypotéka ${czk(v.loan)} | splátka ${czk(m.monthlyAll)} | úroky ${czk(m.baseline.totalInterest)} | LTV ${pct(m.ltv)} | stresová splátka ${czk(m.stress)}`; try{await navigator.clipboard.writeText(text);set('copyBtn','Zkopírováno');setTimeout(()=>set('copyBtn','Kopírovat'),1600);}catch{set('copyBtn','Kopírování selhalo');} });
-  showStep(0); render();
+  function renderMilestones(v,plan){
+    const points=[1,5,10,20,v.years].filter((x,i,a)=>x<=v.years&&a.indexOf(x)===i).sort((a,b)=>a-b);
+    els.milestones.innerHTML=points.map(y=>{const row=rowAt(plan,Math.min(y*12,plan.rows.length),v.loan),paid=(1-row.balance/v.loan)*100;return `<div><span>${y===v.years?'Konec':y+'. rok'}</span><b><i style="width:${clamp(paid,0,100).toFixed(2)}%"></i></b><strong>${money(row.balance)}</strong></div>`}).join('');
+  }
+  function renderScenarios(v){
+    const deltas=[-1,0,1,2];
+    els.scenarioGrid.innerHTML=deltas.map(d=>{const rate=Math.max(0,v.rate+d),p=core.amortize(v.loan,rate,v.years*12),delta=p.payment-core.annuity(v.loan,v.rate,v.years*12);return `<article class="scenario-card ${d===0?'current':''}"><span>${d===0?'Váš model':d>0?'Sazba +'+d+' p. b.':'Sazba −1 p. b.'}</span><b>${pct(rate)} p. a.</b><strong>${money(p.payment)}</strong><small>${d===0?'výchozí měsíční splátka':`${delta>=0?'+':''}${money(delta)} měsíčně oproti vašemu modelu`} · úroky celkem ${money(p.totalInterest)}</small>${d===0?'<i>VÝCHOZÍ</i>':''}</article>`}).join('');
+  }
+  function renderChart(v,plan){
+    const W=800,H=300,left=56,right=768,top=34,bottom=244,total=plan.rows.length;
+    const samples=[0];for(let m=12;m<total;m+=12)samples.push(m);samples.push(total);
+    const pts=samples.map(m=>{const balance=m===0?v.loan:rowAt(plan,m,v.loan).balance;const x=left+(right-left)*(m/total),y=bottom-(bottom-top)*(balance/v.loan);return {x,y,m,balance}});
+    const line=pts.map((p,i)=>`${i?'L':'M'}${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ');els.chartLine.setAttribute('d',line);els.chartArea.setAttribute('d',`${line} L${right},${bottom} L${left},${bottom} Z`);
+    const dotYears=[0,5,10,20,v.years].filter((y,i,a)=>y<=v.years&&a.indexOf(y)===i);els.chartDots.innerHTML=dotYears.map(y=>{const m=Math.min(y*12,total),balance=m===0?v.loan:rowAt(plan,m,v.loan).balance,x=left+(right-left)*(m/total),yy=bottom-(bottom-top)*(balance/v.loan);return `<circle cx="${x.toFixed(1)}" cy="${yy.toFixed(1)}" r="5"></circle>${y>0&&y<v.years?`<text x="${x.toFixed(1)}" y="${Math.max(18,yy-12).toFixed(1)}" text-anchor="middle">${y} r.</text>`:''}`}).join('');
+    els.chartEnd.textContent=`${v.years} let`;els.chartStart.textContent=`${(v.loan/1e6).toLocaleString('cs-CZ',{maximumFractionDigits:1})} mil. Kč`;els.chartBalanceNow.textContent=`${money(v.loan)} → 0 Kč`;
+  }
+  function updateUrlSilently(v){
+    if(!history.replaceState)return;try{const u=new URL(location.href);u.search='';u.searchParams.set('uver',Math.round(v.loan));u.searchParams.set('sazba',v.rate.toFixed(2));u.searchParams.set('roky',v.years);if(v.property)u.searchParams.set('hodnota',Math.round(v.property));if(v.fixYears){u.searchParams.set('fixace',v.fixYears);u.searchParams.set('refix',v.refixRate.toFixed(2));}history.replaceState(null,'',u.pathname+'?'+u.searchParams.toString()+u.hash);}catch(e){/* about:blank / locked-down preview: calculation remains fully functional */}
+  }
+  function loadUrl(){const q=new URLSearchParams(location.search);const set=(el,key,min,max)=>{if(!q.has(key))return;const v=Number(q.get(key));if(Number.isFinite(v)&&v>=min&&v<=max)el.value=v};set(els.loan,'uver',100000,50000000);set(els.rate,'sazba',0,30);set(els.years,'roky',1,50);set(els.property,'hodnota',1,100000000);if(q.has('fixace')){const f=String(Number(q.get('fixace')));if([...els.fix.options].some(o=>o.value===f))els.fix.value=f}set(els.refix,'refix',0,30);syncFix();}
+  function syncFix(){
+    const termYears=Math.max(1,Math.round(num(els.years))||1);
+    [...els.fix.options].forEach(o=>{const y=Number(o.value);o.disabled=y>0&&y>=termYears});
+    if(Number(els.fix.value)>=termYears) els.fix.value='0';
+    const active=Number(els.fix.value)>0;
+    els.refix.disabled=!active;
+    if(active)$('advancedPanel').open=true;
+  }
+  async function copyText(text,button,label){try{await navigator.clipboard.writeText(text);const old=button.textContent;button.textContent=label;setTimeout(()=>button.textContent=old,1600)}catch(e){button.textContent='Kopírování selhalo';setTimeout(()=>button.textContent='Kopírovat',1600)}}
+  function resultText(){const v=getInputs(),plan=core.amortize(v.loan,v.rate,v.years*12),first=plan.rows[0];return `Hypotéka ${money(v.loan)}, ${pct(v.rate)} p. a., ${v.years} let\nMěsíční splátka: ${money(plan.payment)}\nCelkové úroky při stejné sazbě: ${money(plan.totalInterest)}\nPrvní splátka: úrok ${money(first.interest)}, jistina ${money(first.principal)}\nVýpočet: RychléVýpočty.cz`}
+  els.form.addEventListener('input',e=>{if(e.target===els.years)syncFix();render()});els.fix.addEventListener('change',()=>{syncFix();render()});document.querySelectorAll('[data-loan]').forEach(b=>b.addEventListener('click',()=>{els.loan.value=b.dataset.loan;render()}));els.reset.addEventListener('click',()=>{els.form.reset();els.loan.value=4000000;els.rate.value='5.00';els.years.value=30;els.property.value='';els.fix.value='0';els.refix.value='6.00';syncFix();render()});els.copy.addEventListener('click',()=>copyText(resultText(),els.copy,'Zkopírováno ✓'));els.share.addEventListener('click',()=>copyText(location.href,els.share,'Odkaz zkopírován ✓'));
+  const menu=$('menuToggle'),nav=$('mainNav');
+  if(menu&&nav){menu.addEventListener('click',()=>{const open=menu.getAttribute('aria-expanded')==='true';menu.setAttribute('aria-expanded',String(!open));nav.classList.toggle('is-open',!open)});document.addEventListener('keydown',e=>{if(e.key==='Escape'){menu.setAttribute('aria-expanded','false');nav.classList.remove('is-open')}})}
+  loadUrl();render();
 })();
