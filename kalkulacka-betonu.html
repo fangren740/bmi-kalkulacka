@@ -26,7 +26,7 @@
   <meta name="twitter:card" content="summary_large_image">
 
   <link rel="stylesheet" href="/rv-brand-v32.css?v=20260801-stable">
-  <link rel="stylesheet" href="/beton-vnext.css?v=20260817-6">
+  <link rel="stylesheet" href="/beton-vnext.css?v=20260817-7">
 
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"RychléVýpočty.cz","item":"https://rychlevypocty.cz/"},{"@type":"ListItem","position":2,"name":"Stavba domu","item":"https://rychlevypocty.cz/stavba-domu.html"},{"@type":"ListItem","position":3,"name":"Kalkulačka betonu","item":"https://rychlevypocty.cz/kalkulacka-betonu.html"}]}</script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Kalkulačka betonu","url":"https://rychlevypocty.cz/kalkulacka-betonu.html","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","isAccessibleForFree":true,"inLanguage":"cs-CZ","description":"Betonážní plán pro součet více geometrických částí, rezervu, objednávkové zaokrouhlení, orientační počet jízd domíchávače a přepočet pytlované směsi podle deklarované vydatnosti výrobku.","publisher":{"@type":"Organization","name":"RychléVýpočty.cz","url":"https://rychlevypocty.cz/","sameAs":["https://www.facebook.com/rychlevypocty","https://www.instagram.com/rychlevypocty/"]},"dateModified":"2026-08-17"}</script>
@@ -67,35 +67,54 @@
     <div class="section-intro"><p class="eyebrow">01 · Betonážní plán</p><h2>Sečtěte skutečné části konstrukce, ne jen jednu ideální kostku</h2><p>Každá karta představuje jeden geometrický úsek. Přidejte tolik částí, kolik potřebujete. Pokud už máte objem z projektu nebo výkazu výměr, můžete geometrii úplně přeskočit.</p></div>
     <div class="c-mode" role="tablist" aria-label="Způsob zadání"><button class="is-active" type="button" data-mode="geometry" aria-selected="true">Počítám z rozměrů<small>více konstrukcí v jednom součtu</small></button><button type="button" data-mode="direct" aria-selected="false">Mám objem z projektu<small>zadám hotové m³</small></button></div>
 
-    <div class="c-tool-grid">
-      <div class="c-input-card">
+    <div class="c-workspace">
+      <section class="c-live-result rv-brand-module" aria-live="polite" aria-label="Živý výsledek betonáže">
+        <div class="c-live-head">
+          <div><span>ŽIVÝ VÝSLEDEK</span><small id="resultModeLabel">geometrický součet</small></div>
+          <strong>Betonážní souhrn</strong>
+        </div>
+        <div class="c-live-grid">
+          <div class="c-live-primary">
+            <span>Objednávkové množství</span>
+            <strong id="orderVolume">3,10 m³</strong>
+            <small id="orderExplain">2,88 m³ čistě + 5 % rezerva, zaokrouhleno nahoru na 0,10 m³.</small>
+          </div>
+          <div class="c-live-metrics">
+            <div><span>Čistý objem</span><strong id="netVolume">2,88 m³</strong></div>
+            <div><span>Rezerva</span><strong id="reserveVolume">0,14 m³</strong></div>
+            <div><span>6–8m³ vozy</span><strong id="truckTrips">1 jízda</strong></div>
+          </div>
+        </div>
+        <div class="c-live-foot">
+          <div class="result-callout" id="resultCallout"><strong>Co ověřit před objednávkou</strong><p>Specifikaci betonu vezměte z projektu. Potvrďte minimální odběr, dopravní podmínky, přístup vozu a případné čerpání.</p></div>
+          <div class="result-price" id="priceResult" hidden><span>Vaše zadaná nabídka</span><strong id="readyCost">—</strong><small>beton + zadaná doprava/služby</small></div>
+          <div class="result-actions"><button id="copyResult" type="button">Kopírovat souhrn</button><button id="printResult" type="button">Vytisknout</button></div>
+        </div>
+      </section>
+
+      <section class="c-work-card" aria-label="Zadání betonáže">
         <div id="geometryPanel">
-          <div class="component-toolbar"><div><strong>Části betonáže</strong><small>Každou část lze pojmenovat, změnit nebo odebrat.</small></div><button class="text-action" id="addComponent" type="button">+ Přidat část</button></div>
+          <div class="component-toolbar"><div><span class="step-badge">01</span><div><strong>Části betonáže</strong><small>Přidejte jednotlivé konstrukce. Každá zůstává v součtu dohledatelná.</small></div></div><button class="text-action" id="addComponent" type="button">+ Přidat část</button></div>
           <div class="component-list" id="componentList"></div>
         </div>
         <div id="directPanel" hidden>
-          <label class="field"><span>Čistý objem z projektu</span><div class="input-unit"><input id="directVolume" type="number" min="0.01" max="10000" step="0.01" value="3"><b>m³</b></div><small>Použijte hodnotu před objednávkovou rezervou, pokud ji projekt nebo výkaz už obsahuje.</small></label>
-          <label class="field"><span>Poznámka k objemu</span><input class="plain-input" id="directNote" type="text" maxlength="80" value="Objem podle výkazu výměr" aria-label="Poznámka k objemu"></label>
+          <div class="component-toolbar"><div><span class="step-badge">01</span><div><strong>Objem z projektu</strong><small>Přeskočte geometrii a zadejte ověřenou hodnotu v m³.</small></div></div></div>
+          <div class="direct-grid">
+            <label class="field"><span>Čistý objem z projektu</span><div class="input-unit"><input id="directVolume" type="number" min="0.01" max="10000" step="0.01" value="3"><b>m³</b></div><small>Použijte hodnotu před objednávkovou rezervou, pokud ji projekt nebo výkaz už obsahuje.</small></label>
+            <label class="field"><span>Poznámka k objemu</span><input class="plain-input" id="directNote" type="text" maxlength="80" value="Objem podle výkazu výměr" aria-label="Poznámka k objemu"></label>
+          </div>
         </div>
 
-        <div class="input-divider" id="objednavka"><span>02</span><div><strong>Nastavte objednávku</strong><small>Rezervu i obchodní zaokrouhlení držíme viditelně oddělené od geometrie.</small></div></div>
-        <div class="field-grid-2">
-          <label class="field"><span>Pracovní rezerva</span><div class="input-unit"><input id="reservePct" type="number" min="0" max="30" step="0.5" value="5"><b>%</b></div><small>Výchozích 5 % je pouze pracovní scénář, nikoli norma. Upravte podle skutečnosti a projektu.</small></label>
-          <label class="field"><span>Objednávkový krok</span><select id="orderStep"><option value="0.05">0,05 m³</option><option value="0.1" selected>0,10 m³</option><option value="0.25">0,25 m³</option><option value="0.5">0,50 m³</option></select><small>Ověřte u dodavatele, v jakých krocích skutečně objednávku přijímá.</small></label>
+        <div class="order-zone" id="objednavka">
+          <div class="order-zone-head"><span class="step-badge">02</span><div><strong>Nastavte objednávku</strong><small>Rezerva i obchodní zaokrouhlení jsou oddělené od čisté geometrie.</small></div></div>
+          <div class="field-grid-2">
+            <label class="field"><span>Pracovní rezerva</span><div class="input-unit"><input id="reservePct" type="number" min="0" max="30" step="0.5" value="5"><b>%</b></div><small>Výchozích 5 % je pracovní scénář, nikoli norma.</small></label>
+            <label class="field"><span>Objednávkový krok</span><select id="orderStep"><option value="0.05">0,05 m³</option><option value="0.1" selected>0,10 m³</option><option value="0.25">0,25 m³</option><option value="0.5">0,50 m³</option></select><small>Ověřte skutečný krok u dodavatele.</small></label>
+          </div>
+          <div class="reserve-chips" aria-label="Rychlá volba rezervy"><button type="button" data-reserve="0">0 %</button><button type="button" data-reserve="5" class="is-active">5 %</button><button type="button" data-reserve="8">8 %</button><button type="button" data-reserve="10">10 %</button></div>
+          <details class="own-price"><summary>Volitelně: mám vlastní cenovou nabídku</summary><div class="field-grid-2"><label class="field"><span>Beton za m³</span><div class="input-unit"><input id="readyPrice" type="number" min="0" step="50" placeholder="např. 3500"><b>Kč/m³</b></div></label><label class="field"><span>Doprava + služby celkem</span><div class="input-unit"><input id="readyExtras" type="number" min="0" step="100" placeholder="např. 2500"><b>Kč</b></div></label></div><p>Nezadáváme vlastní „tržní cenu“. Náklad spočítáme pouze z částek, které vložíte vy.</p></details>
         </div>
-        <div class="reserve-chips" aria-label="Rychlá volba rezervy"><button type="button" data-reserve="0">0 %</button><button type="button" data-reserve="5" class="is-active">5 %</button><button type="button" data-reserve="8">8 %</button><button type="button" data-reserve="10">10 %</button></div>
-
-        <details class="own-price"><summary>Volitelně: mám vlastní cenovou nabídku</summary><div class="field-grid-2"><label class="field"><span>Beton za m³</span><div class="input-unit"><input id="readyPrice" type="number" min="0" step="50" placeholder="např. 3500"><b>Kč/m³</b></div></label><label class="field"><span>Doprava + služby celkem</span><div class="input-unit"><input id="readyExtras" type="number" min="0" step="100" placeholder="např. 2500"><b>Kč</b></div></label></div><p>Nezadáváme vlastní „tržní cenu“. Náklad spočítáme pouze z částek, které vložíte vy.</p></details>
-      </div>
-
-      <aside class="c-result rv-brand-module" aria-live="polite">
-        <div class="result-kicker"><span>BETONÁŽ / VÝSLEDEK</span><small id="resultModeLabel">geometrický součet</small></div>
-        <div class="result-main"><span>Objednávkové množství</span><strong id="orderVolume">3,10 m³</strong><small id="orderExplain">2,88 m³ čistě + 5 % rezerva, zaokrouhleno nahoru na 0,10 m³.</small></div>
-        <div class="result-grid"><div><span>Čistý objem</span><strong id="netVolume">2,88 m³</strong></div><div><span>Rezerva</span><strong id="reserveVolume">0,14 m³</strong></div><div><span>6–8m³ vozy</span><strong id="truckTrips">1 jízda</strong></div></div>
-        <div class="result-callout" id="resultCallout"><strong>Co ověřit před objednávkou</strong><p>Specifikaci betonu vezměte z projektu. Potvrďte minimální odběr, dopravní podmínky, přístup vozu a případné čerpání.</p></div>
-        <div class="result-price" id="priceResult" hidden><span>Vaše zadaná nabídka</span><strong id="readyCost">—</strong><small>beton + zadaná doprava/služby</small></div>
-        <div class="result-actions"><button id="copyResult" type="button">Kopírovat souhrn</button><button id="printResult" type="button">Vytisknout</button></div>
-      </aside>
+      </section>
     </div>
 
     <div class="breakdown-wrap"><div class="breakdown-head"><div><p class="eyebrow">03 · Rozpad objemu</p><h2>Každá část zůstává dohledatelná</h2></div><span id="componentCount">1 část</span></div><div class="breakdown-table-wrap"><table class="breakdown-table"><thead><tr><th>Část</th><th>Geometrie</th><th>Čistý objem</th><th>Podíl</th></tr></thead><tbody id="breakdownBody"></tbody></table></div></div>
@@ -125,6 +144,6 @@
 <section class="c-related"><div class="c-shell"><div class="section-intro compact"><p class="eyebrow">10 · Navazující výpočty</p><h2>Beton je jedna část shellu stavby</h2></div><div class="related-grid"><a href="/kalkulacka-ceny-zakladove-desky.html"><span>01</span><strong>Základová deska</strong><p>Geometrie projektu a audit rozsahu nabídky.</p></a><a href="/kalkulacka-cihel-a-tvarnic.html"><span>02</span><strong>Cihly a tvárnice</strong><p>Kusy, palety a spotřeba konkrétního výrobku.</p></a><a href="/kalkulacka-ceny-hrube-stavby-domu.html"><span>03</span><strong>Hrubá stavba</strong><p>Veřejné cenové reference a kontrola scope.</p></a><a href="/kalkulacka-sterku.html"><span>04</span><strong>Štěrk</strong><p>Objem sypkého materiálu podle geometrie vrstvy.</p></a></div></div></section>
 </main>
 <footer class="site-footer rv-brand-footer"><div class="c-shell c-footer-grid"><div class="c-footer-brand"><a class="rv-logo rv-logo--inverse" href="/" aria-label="RychléVýpočty.cz – domů"><img class="rv-logo-image" src="/logo-rv-v32-inverse.svg?v=1" width="295" height="48" alt="" decoding="async"></a><p>Praktické české kalkulačky s okamžitým výsledkem, srozumitelnou interpretací a dohledatelnou metodikou.</p><a href="mailto:rychlevypocty@seznam.cz">rychlevypocty@seznam.cz</a><div class="footer-socials" aria-label="Oficiální profily RychléVýpočty.cz"><a href="https://www.facebook.com/rychlevypocty" rel="me" aria-label="RychléVýpočty.cz na Facebooku" title="Facebook"><svg aria-hidden="true" viewBox="0 0 24 24"><path fill="currentColor" d="M13.7 22v-8h2.7l.4-3h-3.1V9.1c0-.9.3-1.5 1.6-1.5H17V4.9c-.3 0-1.3-.1-2.4-.1-2.5 0-4.2 1.5-4.2 4.3V11H7.6v3h2.8v8h3.3z"/></svg></a><a href="https://www.instagram.com/rychlevypocty/" rel="me" aria-label="RychléVýpočty.cz na Instagramu" title="Instagram"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1" fill="currentColor" stroke="none"/></svg></a></div><div class="rv-footer-process"><span>Zadat</span><span>Spočítat</span><span>Pochopit</span><span>Rozhodnout</span></div></div><div><h2>Stavba</h2><a href="/stavba-domu.html">Stavba domu</a><a href="/kalkulacka-ceny-zakladove-desky.html">Základová deska</a><a href="/kalkulacka-cihel-a-tvarnic.html">Cihly a tvárnice</a><a href="/kalkulacka-ceny-strechy.html">Cena střechy</a></div><div><h2>Data a metodika</h2><a href="/data-a-benchmarky.html">Data a benchmarky</a><a href="/beton-2026-overene-logisticke-a-produktove-reference.csv" download>CSV: 7 referencí</a><a href="/jak-pocitame.html">Jak počítáme</a><a href="/redakcni-zasady.html">Redakční zásady</a></div><div><h2>Informace</h2><a href="/kalkulacky.html">Všechny kalkulačky</a><a href="/kontakt.html">Kontakt</a><a href="/podminky-pouziti.html">Podmínky použití</a><a href="/ochrana-osobnich-udaju.html">Ochrana osobních údajů</a></div></div><div class="c-shell c-footer-bottom"><span>© 2026 RychléVýpočty.cz. Výpočty jsou orientační.</span><span><strong>Upozornění:</strong> Kalkulačka počítá objem a logistický scénář. Nenavrhuje třídu, složení ani statické použití betonu a nenahrazuje projekt, výkaz výměr ani podmínky betonárny.</span></div></footer>
-<script src="/rv-brand-v32.js?v=20260801" defer></script><script src="/beton-vnext.js?v=20260817-2" defer></script>
+<script src="/rv-brand-v32.js?v=20260801" defer></script><script src="/beton-vnext.js?v=20260817-1" defer></script>
 <!-- RV-VNEXT: status=DONE | major=2026-08-17 | qa=PASS -->
 </body></html>
