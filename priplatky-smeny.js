@@ -1,860 +1,397 @@
 (() => {
-  "use strict";
+  'use strict';
 
   const doc = document;
-  const root = doc.body;
-  const form = doc.getElementById("shiftForm");
-  if (!form) return;
-
   const $ = (id) => doc.getElementById(id);
-  const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
-  const numberFormat = new Intl.NumberFormat("cs-CZ", { maximumFractionDigits: 2 });
-  const wholeMoneyFormat = new Intl.NumberFormat("cs-CZ", { maximumFractionDigits: 0 });
-  const decimalMoneyFormat = new Intl.NumberFormat("cs-CZ", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const qsa = (sel) => [...doc.querySelectorAll(sel)];
+  const moneyFmt = new Intl.NumberFormat('cs-CZ', { maximumFractionDigits: 0 });
+  const decFmt = new Intl.NumberFormat('cs-CZ', { maximumFractionDigits: 2 });
 
-  const LEGAL_DEFAULTS = {
+  const LEGAL = {
     wage: { night: 10, weekend: 10, holiday: 100, overtime: 25 },
     salary: { night: 20, weekend: 25, holiday: 100, overtime: 25 },
     agreement: { night: 10, weekend: 10, holiday: 100, overtime: 0 },
   };
+  const LABEL = { wage: 'mzda', salary: 'plat', agreement: 'DPP / DPČ' };
 
-  const REGIME_LABELS = {
-    wage: "mzda",
-    salary: "plat",
-    agreement: "DPP / DPČ",
-  };
+  let inputMode = 'shift';
+  let regime = 'wage';
+  let ratesDirty = false;
+  let lastCalc = null;
+  let lastShift = null;
 
-  const numericIds = [
-    "hourlyRate", "averageEarnings", "shiftHours", "shiftCount", "nightHours", "weekendHours",
-    "holidayHours", "overtimeHours", "breakMinutes", "nightPercent", "weekendPercent",
-    "holidayPercent", "overtimePercent", "customPercent", "customFixedRate", "customHours",
-    "paidBonus", "paidShiftCount",
-  ];
-  const selectableIds = [
-    "payRegime", "holidayCompensation", "overtimeCompensation", "shiftDate", "shiftStart",
-    "shiftEnd", "breakStart",
-  ];
-  const checkboxIds = ["includeNight", "includeWeekend", "includeHoliday", "includeOvertime", "salaryOvertimeRestDay", "roundWhole"];
-  const allIds = [...numericIds, ...selectableIds, ...checkboxIds];
+  function n(id, fallback = 0) {
+    const v = Number.parseFloat(String($(id)?.value ?? '').replace(',', '.'));
+    return Number.isFinite(v) ? v : fallback;
+  }
+  function clamp(v, min, max) { return Math.min(max, Math.max(min, v)); }
+  function money(v) { return `${moneyFmt.format(Number.isFinite(v) ? v : 0)} Kč`; }
+  function hrs(v) { return `${decFmt.format(Number.isFinite(v) ? v : 0)} h`; }
+  function pct(v) { return `${decFmt.format(v)} %`; }
+  function setText(id, text) { const el = $(id); if (el) el.textContent = text; }
 
-  const URL_MAP = {
-    payRegime: "rezimOdm",
-    hourlyRate: "sazba",
-    averageEarnings: "prumer",
-    shiftHours: "hodiny",
-    shiftCount: "smeny",
-    includeNight: "nocAno",
-    nightHours: "nocH",
-    includeWeekend: "vikendAno",
-    weekendHours: "vikendH",
-    includeHoliday: "svatekAno",
-    holidayHours: "svatekH",
-    includeOvertime: "prescasAno",
-    overtimeHours: "prescasH",
-    shiftDate: "datum",
-    shiftStart: "zacatek",
-    shiftEnd: "konec",
-    breakStart: "pauzaOd",
-    breakMinutes: "pauzaMin",
-    nightPercent: "nocPct",
-    weekendPercent: "vikendPct",
-    holidayPercent: "svatekPct",
-    overtimePercent: "prescasPct",
-    holidayCompensation: "svatekForma",
-    overtimeCompensation: "prescasForma",
-    salaryOvertimeRestDay: "prescasKlid",
-    customPercent: "vlastniPct",
-    customFixedRate: "vlastniKc",
-    customHours: "vlastniH",
-    paidBonus: "paskaPriplatky",
-    paidShiftCount: "paskaSmeny",
-    roundWhole: "celeKc",
-  };
-
-  const PRESETS = {
-    night: { night: true, weekend: false, holiday: false, overtime: false, nightHours: 8, weekendHours: 0, holidayHours: 0, overtimeHours: 0 },
-    weekendNight: { night: true, weekend: true, holiday: false, overtime: false, nightHours: 8, weekendHours: 8, holidayHours: 0, overtimeHours: 0 },
-    holiday: { night: false, weekend: false, holiday: true, overtime: false, nightHours: 0, weekendHours: 0, holidayHours: 8, overtimeHours: 0 },
-    overtimeNight: { night: true, weekend: false, holiday: false, overtime: true, nightHours: 8, weekendHours: 0, holidayHours: 0, overtimeHours: 2 },
-  };
-
-  let currentMode = "basic";
-  let currentStep = 0;
-  let lastResult = null;
-  let ratesCustomized = false;
-  const exactValues = new Map();
-
-  function setText(id, value) {
-    const el = $(id);
-    if (el) el.textContent = value;
+  function localDateString(date) {
+    return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
+  }
+  function nextWeekday(from, weekday) {
+    const d = new Date(from.getFullYear(), from.getMonth(), from.getDate());
+    const add = (weekday - d.getDay() + 7) % 7;
+    d.setDate(d.getDate() + add);
+    return d;
+  }
+  function timeToMinutes(value) {
+    const m = /^(\d{1,2}):(\d{2})$/.exec(value || '');
+    return m ? Number(m[1]) * 60 + Number(m[2]) : null;
+  }
+  function dateKey(date) {
+    return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
+  }
+  function easterSunday(year) {
+    const a=year%19,b=Math.floor(year/100),c=year%100,d=Math.floor(b/4),e=b%4;
+    const f=Math.floor((b+8)/25),g=Math.floor((b-f+1)/3),h=(19*a+b-d-g+15)%30;
+    const i=Math.floor(c/4),k=c%4,l=(32+2*e+2*i-h-k)%7,m=Math.floor((a+11*h+22*l)/451);
+    const month=Math.floor((h+l-7*m+114)/31),day=((h+l-7*m+114)%31)+1;
+    return new Date(year, month-1, day);
+  }
+  function czechHolidays(year) {
+    const fixed=['01-01','05-01','05-08','07-05','07-06','09-28','10-28','11-17','12-24','12-25','12-26'];
+    const out=new Set(fixed.map(md=>`${year}-${md}`));
+    const easter=easterSunday(year);
+    const fri=new Date(easter); fri.setDate(easter.getDate()-2);
+    const mon=new Date(easter); mon.setDate(easter.getDate()+1);
+    out.add(dateKey(fri)); out.add(dateKey(mon));
+    return out;
   }
 
-  function parseLocalized(value) {
-    if (typeof value === "number") return Number.isFinite(value) ? value : 0;
-    const normalized = String(value ?? "")
-      .replace(/[\s\u00a0]/g, "")
-      .replace(/,/g, ".")
-      .replace(/[^0-9.+-]/g, "");
-    const parsed = Number.parseFloat(normalized);
-    return Number.isFinite(parsed) ? parsed : 0;
+  function defaultDate() {
+    if (!$('shiftDate').value) $('shiftDate').value = localDateString(new Date());
   }
 
-  function limits(input) {
-    return {
-      min: input?.dataset.min === undefined ? -Infinity : parseLocalized(input.dataset.min),
-      max: input?.dataset.max === undefined ? Infinity : parseLocalized(input.dataset.max),
-    };
+  function getShiftDates() {
+    const dateValue = $('shiftDate').value;
+    const startMin = timeToMinutes($('shiftStart').value);
+    const endMin = timeToMinutes($('shiftEnd').value);
+    if (!dateValue || startMin === null || endMin === null) return null;
+    const [y,m,d] = dateValue.split('-').map(Number);
+    const start = new Date(y,m-1,d,Math.floor(startMin/60),startMin%60,0,0);
+    const end = new Date(y,m-1,d,Math.floor(endMin/60),endMin%60,0,0);
+    if (end <= start) end.setDate(end.getDate()+1);
+    if ((end-start) > 24*3600000) return null;
+    return { start, end };
   }
 
-  function readNumeric(id) {
-    const input = $(id);
-    if (!input) return 0;
-    const { min, max } = limits(input);
-    const value = exactValues.has(id) ? exactValues.get(id) : parseLocalized(input.value);
-    return clamp(Number.isFinite(value) ? value : 0, min, max);
-  }
+  function analyzeShift() {
+    const dates = getShiftDates();
+    if (!dates) return { error:'Zkontrolujte datum a čas směny. Maximální délka jednoho zadaného úseku je 24 hodin.' };
+    const { start, end } = dates;
+    const breakMinutes = clamp(n('breakMinutes',0),0,240);
+    const breakTime = timeToMinutes($('breakStart').value);
+    if (breakMinutes > 0 && breakTime === null) return { error:'Při nenulové neplacené přestávce zadejte také její začátek.' };
 
-  function formatInput(id) {
-    const input = $(id);
-    if (!input) return;
-    const decimalIds = [
-      "hourlyRate", "averageEarnings", "shiftHours", "nightHours", "weekendHours",
-      "holidayHours", "overtimeHours", "customHours", "nightPercent", "weekendPercent",
-      "holidayPercent", "overtimePercent", "customPercent", "customFixedRate", "paidBonus",
-    ];
-    const decimals = decimalIds.includes(id) ? 2 : 0;
-    input.value = new Intl.NumberFormat("cs-CZ", { maximumFractionDigits: decimals }).format(readNumeric(id));
-  }
-
-  function setExactNumeric(id, value) {
-    const input = $(id);
-    if (!input || !Number.isFinite(value)) return;
-    exactValues.set(id, value);
-    input.value = new Intl.NumberFormat("cs-CZ", { maximumFractionDigits: 2 }).format(value);
-  }
-
-  function selectValue(id, fallback = "") {
-    const el = $(id);
-    return el ? el.value : fallback;
-  }
-
-  function checked(id) {
-    return Boolean($(id)?.checked);
-  }
-
-  function money(value, roundWhole = true) {
-    const safe = Number.isFinite(value) ? value : 0;
-    return `${(roundWhole ? wholeMoneyFormat : decimalMoneyFormat).format(safe)} Kč`;
-  }
-
-  function hours(value) {
-    return `${numberFormat.format(Number.isFinite(value) ? value : 0)} h`;
-  }
-
-  function legalRates(regime) {
-    return LEGAL_DEFAULTS[regime] || LEGAL_DEFAULTS.wage;
-  }
-
-  function applyRegimeDefaults(force = false) {
-    if (ratesCustomized && !force) return;
-    const regime = selectValue("payRegime", "wage");
-    const defaults = legalRates(regime);
-    $("nightPercent").value = defaults.night;
-    $("weekendPercent").value = defaults.weekend;
-    $("holidayPercent").value = defaults.holiday;
-    $("overtimePercent").value = regime === "salary" && checked("salaryOvertimeRestDay") ? 50 : defaults.overtime;
-    if (regime === "agreement") {
-      $("includeOvertime").checked = false;
-      $("overtimeHours").value = 0;
+    let breakStart = null, breakEnd = null;
+    if (breakMinutes > 0) {
+      breakStart = new Date(start.getFullYear(),start.getMonth(),start.getDate(),Math.floor(breakTime/60),breakTime%60,0,0);
+      if (breakStart < start) breakStart.setDate(breakStart.getDate()+1);
+      breakEnd = new Date(breakStart.getTime()+breakMinutes*60000);
+      if (breakStart >= end || breakEnd <= start) return { error:'Zadaná přestávka neleží uvnitř směny.' };
     }
-    updateRegimeHints();
-  }
 
-  function updateRegimeHints() {
-    const regime = selectValue("payRegime", "wage");
-    const defaults = legalRates(regime);
-    const overtimeToggle = $("includeOvertime");
-    const overtimeCard = doc.querySelector('[data-bonus-card="overtime"]');
-    const salaryRestWrap = $("salaryRestOvertimeWrap");
-    const salaryRestToggle = $("salaryOvertimeRestDay");
-    if (salaryRestWrap) salaryRestWrap.hidden = regime !== "salary";
-    if (regime !== "salary" && salaryRestToggle) salaryRestToggle.checked = false;
-    if (overtimeToggle) overtimeToggle.disabled = regime === "agreement";
-    if (overtimeCard) {
-      overtimeCard.classList.toggle("is-unavailable", regime === "agreement");
-      overtimeCard.setAttribute("aria-disabled", String(regime === "agreement"));
-    }
-    const nightText = regime === "salary"
-      ? `Výchozí sazba pro plat: ${numberFormat.format(defaults.night)} % průměrného hodinového výdělku.`
-      : `Výchozí sazba: ${numberFormat.format(defaults.night)} % průměrného výdělku; smluvně může být určena jinak.`;
-    const weekendText = regime === "salary"
-      ? `Výchozí sazba pro plat: ${numberFormat.format(defaults.weekend)} % průměrného hodinového výdělku.`
-      : `Výchozí sazba: ${numberFormat.format(defaults.weekend)} % průměrného výdělku; smluvně může být určena jinak.`;
-    const overtimeText = regime === "agreement"
-      ? "U DPP a DPČ kalkulačka zákonný přesčasový příplatek automaticky nenastavuje."
-      : regime === "salary"
-        ? (checked("salaryOvertimeRestDay") ? "Plat · den nepřetržitého odpočinku: 50 % průměrného hodinového výdělku." : "Výchozí sazba pro plat: 25 %. Ve dni nepřetržitého odpočinku použijte pomocnou volbu 50 %.")
-        : "Výchozí sazba pro mzdu: 25 % průměrného výdělku.";
-    setText("nightRateHint", nightText);
-    setText("weekendRateHint", weekendText);
-    setText("overtimeRateHint", overtimeText);
+    const totalElapsed = Math.round((end-start)/60000);
+    const holidayCache = new Map();
+    const getHol = (year) => { if(!holidayCache.has(year)) holidayCache.set(year,czechHolidays(year)); return holidayCache.get(year); };
+    const minuteRows=[];
+    let worked=0,night=0,weekend=0,holiday=0;
+    let nw=0,nh=0,wh=0,nwh=0;
 
-    const assumption = $("legalAssumption");
-    if (assumption) {
-      const strong = assumption.querySelector("strong");
-      const p = assumption.querySelector("p");
-      if (regime === "salary") {
-        if (strong) strong.textContent = "Rychlý režim používá výchozí sazby pro plat:";
-        if (p) p.textContent = checked("salaryOvertimeRestDay") ? "noční 20 %, víkend 25 %, přesčas 50 % pro zvolený den nepřetržitého odpočinku. Svátek je předvolen jako náhradní volno." : "noční 20 %, víkend 25 %, přesčas 25 %. Ve dni nepřetržitého odpočinku zapněte v podrobném režimu pomocnou volbu 50 %. Svátek je předvolen jako náhradní volno.";
-      } else if (regime === "agreement") {
-        if (strong) strong.textContent = "Rychlý režim používá výchozí sazby pro DPP / DPČ:";
-        if (p) p.textContent = "noční 10 %, víkend 10 %, svátek s předvoleným náhradním volnem. Přesčasový příplatek není automaticky zapnutý; případný smluvní bonus zadejte v podrobném režimu.";
-      } else {
-        if (strong) strong.textContent = "Rychlý režim používá výchozí sazby pro mzdu:";
-        if (p) p.textContent = "noční 10 %, víkend 10 %, přesčas 25 %. U svátku je předvoleno náhradní volno; peněžní příplatek lze zvolit v podrobném režimu.";
+    for(let i=0;i<totalElapsed;i++) {
+      const t = new Date(start.getTime()+i*60000);
+      const onBreak = breakStart && t >= breakStart && t < breakEnd;
+      const isNight = t.getHours()>=22 || t.getHours()<6;
+      const isWeekend = t.getDay()===0 || t.getDay()===6;
+      const isHoliday = getHol(t.getFullYear()).has(dateKey(t));
+      const active = !onBreak;
+      minuteRows.push({active,night:isNight&&active,weekend:isWeekend&&active,holiday:isHoliday&&active});
+      if(!active) continue;
+      worked++;
+      if(isNight) night++;
+      if(isWeekend) weekend++;
+      if(isHoliday) holiday++;
+      if(isNight&&isWeekend&&isHoliday) nwh++;
+      else {
+        if(isNight&&isWeekend) nw++;
+        if(isNight&&isHoliday) nh++;
+        if(isWeekend&&isHoliday) wh++;
       }
     }
-  }
-
-  function collectInput(options = {}) {
-    const regime = selectValue("payRegime", "wage");
-    const defaults = legalRates(regime);
-    const advanced = currentMode === "advanced";
-    const rateSource = options.rateSource || "current";
-    const factor = rateSource === "higher" ? 1.25 : 1;
-    const useLegal = rateSource === "legal" || !advanced;
-    const legalOvertimeRate = regime === "salary" && checked("salaryOvertimeRestDay") ? 50 : defaults.overtime;
-    const rate = (id, key) => {
-      const legalValue = key === "overtime" ? legalOvertimeRate : defaults[key];
-      return (useLegal ? legalValue : readNumeric(id)) * factor;
-    };
-
+    const h=v=>v/60;
     return {
-      regime,
-      hourlyRate: readNumeric("hourlyRate"),
-      averageEarnings: readNumeric("averageEarnings") || readNumeric("hourlyRate"),
-      shiftHours: readNumeric("shiftHours"),
-      shiftCount: Math.max(1, Math.round(readNumeric("shiftCount"))),
-      includeNight: checked("includeNight"),
-      nightHours: checked("includeNight") ? readNumeric("nightHours") : 0,
-      nightPercent: rate("nightPercent", "night"),
-      includeWeekend: checked("includeWeekend"),
-      weekendHours: checked("includeWeekend") ? readNumeric("weekendHours") : 0,
-      weekendPercent: rate("weekendPercent", "weekend"),
-      includeHoliday: checked("includeHoliday"),
-      holidayHours: checked("includeHoliday") ? readNumeric("holidayHours") : 0,
-      holidayPercent: rate("holidayPercent", "holiday"),
-      includeOvertime: checked("includeOvertime") && regime !== "agreement",
-      overtimeHours: checked("includeOvertime") && regime !== "agreement" ? readNumeric("overtimeHours") : 0,
-      overtimePercent: rate("overtimePercent", "overtime"),
-      salaryOvertimeRestDay: regime === "salary" && checked("salaryOvertimeRestDay"),
-      holidayCompensation: advanced ? selectValue("holidayCompensation", "leave") : "leave",
-      overtimeCompensation: advanced ? selectValue("overtimeCompensation", "pay") : "pay",
-      customPercent: advanced ? readNumeric("customPercent") * factor : 0,
-      customFixedRate: advanced ? readNumeric("customFixedRate") * factor : 0,
-      customHours: advanced ? readNumeric("customHours") : 0,
-      paidBonus: advanced ? readNumeric("paidBonus") : 0,
-      paidShiftCount: advanced ? Math.max(1, Math.round(readNumeric("paidShiftCount"))) : Math.max(1, Math.round(readNumeric("shiftCount"))),
-      roundWhole: checked("roundWhole"),
-      rateSource,
+      start,end,totalElapsed,minuteRows,
+      worked:h(worked),night:h(night),weekend:h(weekend),holiday:h(holiday),
+      overlaps:{nw:h(nw+nwh),nh:h(nh+nwh),wh:h(wh+nwh),nwh:h(nwh)}
     };
   }
 
-  function validate(input) {
-    const errors = [];
-    if (input.hourlyRate <= 0) errors.push("Základní hodinová sazba musí být vyšší než nula.");
-    if (input.averageEarnings <= 0) errors.push("Průměrný hodinový výdělek musí být vyšší než nula.");
-    if (input.shiftHours <= 0 || input.shiftHours > 24) errors.push("Odpracovaná doba musí být mezi 0,25 a 24 hodinami.");
-    [
-      [input.nightHours, "Noční"], [input.weekendHours, "Víkendové"],
-      [input.holidayHours, "Sváteční"], [input.overtimeHours, "Přesčasové"],
-      [input.customHours, "Vlastní"],
-    ].forEach(([value, label]) => {
-      if (value > input.shiftHours + 0.001) errors.push(`${label} hodiny nemohou být vyšší než celková doba směny.`);
+  function contiguousSegments(rows,key) {
+    const out=[]; let start=null;
+    rows.forEach((row,i)=>{
+      const on=Boolean(row[key]);
+      if(on && start===null) start=i;
+      if(!on && start!==null){ out.push([start,i]); start=null; }
     });
+    if(start!==null) out.push([start,rows.length]);
+    return out;
+  }
+  function renderTrack(id, rows, key, cls) {
+    const host=$(id); if(!host) return; host.replaceChildren();
+    const total=Math.max(1,rows.length);
+    contiguousSegments(rows,key).forEach(([a,b])=>{
+      const el=doc.createElement('i'); el.className=`sf-track-bar ${cls}`;
+      el.style.left=`${a/total*100}%`; el.style.width=`${(b-a)/total*100}%`;
+      host.appendChild(el);
+    });
+  }
+  function renderTimeline(shift) {
+    if(!shift || shift.error){ ['workTrack','nightTrack','weekendTrack','holidayTrack'].forEach(id=>$(id)?.replaceChildren()); return; }
+    renderTrack('workTrack',shift.minuteRows,'active','work');
+    renderTrack('nightTrack',shift.minuteRows,'night','night');
+    renderTrack('weekendTrack',shift.minuteRows,'weekend','weekend');
+    renderTrack('holidayTrack',shift.minuteRows,'holiday','holiday');
+    const fmt=t=>`${String(t.getHours()).padStart(2,'0')}:${String(t.getMinutes()).padStart(2,'0')}`;
+    setText('timelineStart',fmt(shift.start)); setText('timelineEnd',fmt(shift.end));
+    setText('timelineRange',`${fmt(shift.start)} → ${fmt(shift.end)}`);
+    setText('autoWorked',hrs(shift.worked)); setText('autoNight',hrs(shift.night)); setText('autoWeekend',hrs(shift.weekend)); setText('autoHoliday',hrs(shift.holiday));
+  }
+
+  function currentHours() {
+    if(inputMode==='manual') {
+      return {
+        worked:clamp(n('manualWorked'),0,24),
+        night:clamp(n('manualNight'),0,24),
+        weekend:clamp(n('manualWeekend'),0,24),
+        holiday:clamp(n('manualHoliday'),0,24),
+      };
+    }
+    const s=analyzeShift(); lastShift=s;
+    return s.error ? {error:s.error,worked:0,night:0,weekend:0,holiday:0} : s;
+  }
+
+  function rateDefaults(force=false) {
+    if(ratesDirty && !force) return;
+    const d=LEGAL[regime];
+    $('nightPercent').value=d.night;
+    $('weekendPercent').value=d.weekend;
+    $('holidayPercent').value=d.holiday;
+    $('overtimePercent').value=regime==='salary' && $('salaryRestDay').checked ? 50 : d.overtime;
+    ratesDirty=false;
+  }
+  function updateRegimeUi() {
+    $('payRegime').value=regime;
+    qsa('[data-regime]').forEach(b=>b.classList.toggle('is-active',b.dataset.regime===regime));
+    $('salaryRestWrap').hidden=regime!=='salary';
+    $('wageOvertimeIncludedWrap').hidden=regime!=='wage';
+    if(regime!=='salary') $('salaryRestDay').checked=false;
+    if(regime!=='wage') $('wageOvertimeIncluded').checked=false;
+    const overtime=$('overtimeHours');
+    const overtimeComp=$('overtimeCompensation');
+    const disabled=regime==='agreement';
+    overtime.disabled=disabled; overtimeComp.disabled=disabled;
+    if(disabled){ overtime.value=0; setText('overtimeHint','U DPP/DPČ se práce přesčas v právním smyslu nekoná; zákonný přesčasový příplatek proto model nepřidává.'); }
+    else setText('overtimeHint','Použijte pouze hodiny, které skutečně splňují podmínky práce přesčas.');
+    setText('ratesIntro',regime==='salary'
+      ? 'Pro plat používáme výchozí zákonné sazby 20 % noc, 25 % víkend a 25/50 % přesčas. Vyšší interní sazby můžete zadat ručně; zadané nižší hodnoty budou při výpočtu zvýšeny alespoň na zákonnou úroveň modelu.'
+      : regime==='agreement'
+        ? 'DPP/DPČ používá pro noc, víkend a svátek obdobná pravidla jako mzda. Přesčasový příplatek je v tomto režimu vypnutý.'
+        : 'U mzdy je výchozí model 10 % pro noc a víkend; tyto dvě sazby mohou být sjednány jinak. Přesčasový peněžní příplatek má v modelu minimum 25 % a svátek v penězích 100 %.');
+  }
+  function ensureRateFloors() {
+    const floor = (id, min) => { const el=$(id); const val=n(id); if(el && val < min) el.value=String(min); };
+    if(regime==='salary'){ floor('nightPercent',20); floor('weekendPercent',25); floor('holidayPercent',100); floor('overtimePercent',$('salaryRestDay').checked?50:25); }
+    else if(regime==='wage'){ floor('holidayPercent',100); floor('overtimePercent',25); }
+    else { floor('holidayPercent',100); $('overtimePercent').value='0'; }
+  }
+  function effectiveRates() {
+    ensureRateFloors();
+    let night=Math.max(0,n('nightPercent')),weekend=Math.max(0,n('weekendPercent')),
+      holiday=Math.max(0,n('holidayPercent')),overtime=Math.max(0,n('overtimePercent'));
+    if(regime==='salary'){
+      night=Math.max(20,night); weekend=Math.max(25,weekend); holiday=Math.max(100,holiday);
+      overtime=Math.max($('salaryRestDay').checked?50:25,overtime);
+    } else if(regime==='wage') {
+      holiday=Math.max(100,holiday); overtime=Math.max(25,overtime);
+    } else {
+      holiday=Math.max(100,holiday); overtime=0;
+    }
+    return {night,weekend,holiday,overtime};
+  }
+
+  function validateHours(h,overtime) {
+    const errors=[];
+    if(h.error) errors.push(h.error);
+    ['night','weekend','holiday'].forEach(key=>{ if(h[key] > h.worked + 1e-6) errors.push(`${key==='night'?'Noční':key==='weekend'?'Víkendové':'Sváteční'} hodiny nemohou být vyšší než odpracovaná doba.`); });
+    if(overtime > h.worked + 1e-6) errors.push('Přesčasové hodiny nemohou být vyšší než odpracovaná doba této směny.');
+    if(n('hourlyRate')<0 || n('averageEarnings')<0) errors.push('Sazby musí být nezáporné.');
     return errors;
   }
 
-  function calculate(input) {
-    const basePay = input.hourlyRate * input.shiftHours;
-    const nightBonus = input.averageEarnings * input.nightHours * input.nightPercent / 100;
-    const weekendBonus = input.averageEarnings * input.weekendHours * input.weekendPercent / 100;
-    const holidayBonus = input.holidayCompensation === "pay"
-      ? input.averageEarnings * input.holidayHours * input.holidayPercent / 100
-      : 0;
-    const overtimeBonus = input.overtimeCompensation === "pay"
-      ? input.averageEarnings * input.overtimeHours * input.overtimePercent / 100
-      : 0;
-    const customPercentBonus = input.averageEarnings * input.customHours * input.customPercent / 100;
-    const customFixedBonus = input.customFixedRate * input.customHours;
-    const cashBonus = nightBonus + weekendBonus + holidayBonus + overtimeBonus + customPercentBonus + customFixedBonus;
-    const totalPay = basePay + cashBonus;
-    const effectiveHourly = input.shiftHours > 0 ? totalPay / input.shiftHours : 0;
-    const timeoffHours = (input.holidayCompensation === "leave" ? input.holidayHours : 0)
-      + (input.overtimeCompensation === "leave" ? input.overtimeHours : 0);
-    const timeoffValue = input.averageEarnings * timeoffHours;
-    const monthlyBonus = cashBonus * input.shiftCount;
-    const monthlyTotal = totalPay * input.shiftCount;
-    const payrollExpected = cashBonus * input.paidShiftCount;
-    const payrollDifference = input.paidBonus > 0 ? input.paidBonus - payrollExpected : null;
-    const activeCount = [input.nightHours, input.weekendHours, input.holidayHours, input.overtimeHours].filter((v) => v > 0).length + ((input.customHours > 0 && (input.customPercent > 0 || input.customFixedRate > 0)) ? 1 : 0);
-    return {
-      input, basePay, nightBonus, weekendBonus, holidayBonus, overtimeBonus, customPercentBonus,
-      customFixedBonus, cashBonus, totalPay, effectiveHourly, timeoffHours, timeoffValue,
-      monthlyBonus, monthlyTotal, payrollExpected, payrollDifference, activeCount,
-    };
-  }
+  function calculate() {
+    const h=currentHours();
+    if(inputMode==='shift') renderTimeline(lastShift);
+    const hourly=Math.max(0,n('hourlyRate'));
+    const phv=Math.max(0,n('averageEarnings')||hourly);
+    const overtime=regime==='agreement'?0:clamp(n('overtimeHours'),0,24);
+    const errors=validateHours(h,overtime);
+    const errorBox=$('formError');
+    if(errors.length){ errorBox.hidden=false; errorBox.textContent=errors.join(' '); }
+    else errorBox.hidden=true;
 
-  function bonusRows(result) {
-    const { input } = result;
-    const rows = [
-      { name: "Základní odměna", value: result.basePay, note: `${numberFormat.format(input.shiftHours)} h × ${money(input.hourlyRate, input.roundWhole)} za hodinu`, total: false },
-    ];
-    if (input.nightHours > 0) rows.push({ name: "Noční práce", value: result.nightBonus, note: `${numberFormat.format(input.nightHours)} h × ${numberFormat.format(input.nightPercent)} % z průměrného výdělku`, total: false });
-    if (input.weekendHours > 0) rows.push({ name: "Sobota a neděle", value: result.weekendBonus, note: `${numberFormat.format(input.weekendHours)} h × ${numberFormat.format(input.weekendPercent)} % z průměrného výdělku`, total: false });
-    if (input.holidayHours > 0) rows.push({ name: "Práce ve svátek", value: result.holidayBonus, note: input.holidayCompensation === "leave" ? `${numberFormat.format(input.holidayHours)} h řešeno náhradním volnem` : `${numberFormat.format(input.holidayHours)} h × ${numberFormat.format(input.holidayPercent)} %`, total: false });
-    if (input.overtimeHours > 0) rows.push({ name: "Práce přesčas", value: result.overtimeBonus, note: input.overtimeCompensation === "leave" ? `${numberFormat.format(input.overtimeHours)} h řešeno náhradním volnem` : `${numberFormat.format(input.overtimeHours)} h × ${numberFormat.format(input.overtimePercent)} %`, total: false });
-    if (input.customHours > 0 && input.customPercent > 0) rows.push({ name: "Vlastní procentní příplatek", value: result.customPercentBonus, note: `${numberFormat.format(input.customHours)} h × ${numberFormat.format(input.customPercent)} %`, total: false });
-    if (input.customHours > 0 && input.customFixedRate > 0) rows.push({ name: "Vlastní pevný příplatek", value: result.customFixedBonus, note: `${numberFormat.format(input.customHours)} h × ${money(input.customFixedRate, input.roundWhole)} za hodinu`, total: false });
-    rows.push({ name: "Peněžní příplatky celkem", value: result.cashBonus, note: "Součet všech vyplacených příplatkových položek", total: true });
-    rows.push({ name: "Celkem za směnu", value: result.totalPay, note: "Základní odměna a peněžní příplatky", total: true });
-    return rows;
-  }
-
-  function renderBreakdown(result) {
-    const list = $("breakdownList");
-    if (!list) return;
-    list.replaceChildren(...bonusRows(result).map((item) => {
-      const row = doc.createElement("div");
-      row.className = `shift-breakdown-row${item.total ? " is-total" : ""}`;
-      const copy = doc.createElement("div");
-      const strong = doc.createElement("strong");
-      const small = doc.createElement("small");
-      const amount = doc.createElement("b");
-      strong.textContent = item.name;
-      small.textContent = item.note;
-      amount.textContent = money(item.value, result.input.roundWhole);
-      copy.append(strong, small);
-      row.append(copy, amount);
-      return row;
-    }));
-  }
-
-  function describeActive(input) {
-    const labels = [];
-    if (input.nightHours > 0) labels.push("noční");
-    if (input.weekendHours > 0) labels.push("víkend");
-    if (input.holidayHours > 0) labels.push("svátek");
-    if (input.overtimeHours > 0) labels.push("přesčas");
-    if (input.customHours > 0 && (input.customPercent > 0 || input.customFixedRate > 0)) labels.push("vlastní bonus");
-    return labels.length ? labels.join(" + ") : "bez příplatkového režimu";
-  }
-
-  function renderPayroll(result) {
-    const box = $("payrollCheck");
-    if (!box) return;
-    box.classList.remove("is-positive", "is-negative");
-    if (result.payrollDifference === null) {
-      setText("payrollDifference", "Částka z pásky nebyla zadána");
-      setText("payrollMessage", "V podrobném režimu můžete porovnat vyplacené příplatky se stejným počtem směn.");
-      return;
-    }
-    const diff = result.payrollDifference;
-    if (Math.abs(diff) < 1) {
-      box.classList.add("is-positive");
-      setText("payrollDifference", "Model a páska se shodují");
-      setText("payrollMessage", `Očekávané příplatky za ${result.input.paidShiftCount} směn jsou ${money(result.payrollExpected, result.input.roundWhole)}.`);
-    } else if (diff > 0) {
-      box.classList.add("is-positive");
-      setText("payrollDifference", `Na pásce je o ${money(diff, result.input.roundWhole)} více`);
-      setText("payrollMessage", "Rozdíl může tvořit vyšší interní sazba, další bonus nebo jiný počet příplatkových hodin.");
-    } else {
-      box.classList.add("is-negative");
-      setText("payrollDifference", `Na pásce je o ${money(Math.abs(diff), result.input.roundWhole)} méně`);
-      setText("payrollMessage", "Nejprve ověřte průměrný výdělek, hodiny, náhradní volno a smluvní sazby. Rozdíl není automaticky důkaz chyby.");
-    }
-  }
-
-  function renderDecision(result) {
-    const { input } = result;
-    if (result.activeCount === 0) {
-      setText("decisionKicker", "Bez příplatku");
-      setText("decisionHeadline", "Výsledek obsahuje pouze základní odměnu");
-      setText("decisionText", "Zapněte noční, víkendový, sváteční nebo přesčasový režim a zadejte skutečný počet hodin.");
-      return;
-    }
-    if (result.timeoffHours > 0) {
-      setText("decisionKicker", "Peněžní část a volno");
-      setText("decisionHeadline", "Část nároku není okamžitě vyplaceným příplatkem");
-      setText("decisionText", `K peněžním příplatkům ${money(result.cashBonus, input.roundWhole)} kalkulačka eviduje ${hours(result.timeoffHours)} náhradního volna. Na pásce proto nemusí být celá ekonomická hodnota vidět jako hotovost.`);
-      return;
-    }
-    if (result.activeCount >= 2) {
-      setText("decisionKicker", "Souběh příplatků");
-      setText("decisionHeadline", "Každou příplatkovou položku kontrolujte samostatně");
-      setText("decisionText", `Směna kombinuje ${describeActive(input)}. Peněžní příplatky činí ${money(result.cashBonus, input.roundWhole)} a neměly by být bez důvodu sloučeny do jedné nejasné sazby.`);
-      return;
-    }
-    setText("decisionKicker", "Jednoduchý scénář");
-    setText("decisionHeadline", "Zkontrolujte hlavně počet hodin a průměrný výdělek");
-    setText("decisionText", `Při jediném příplatkovém režimu je nejčastějším zdrojem rozdílu jiný počet hodin nebo jiný průměrný hodinový výdělek než ${money(input.averageEarnings, input.roundWhole)}.`);
-  }
-
-  function setBar(id, ratio) {
-    const el = $(id);
-    if (!el) return;
-    const width = clamp(Number.isFinite(ratio) ? ratio * 100 : 0, 0, 100);
-    el.style.width = `${width}%`;
-    const track = el.closest(".shift-map-track");
-    track?.classList.toggle("is-active", width > 0.01 || track.classList.contains("is-base"));
-  }
-
-  function renderShiftMap(result) {
-    const { input } = result;
-    const total = Math.max(input.shiftHours, 0.01);
-    setText("mapSummary", `${numberFormat.format(input.shiftHours)} h · ${describeActive(input)}`);
-    setText("mapBaseValue", hours(input.shiftHours));
-    setText("mapNightValue", hours(input.nightHours));
-    setText("mapWeekendValue", hours(input.weekendHours));
-    setText("mapHolidayValue", hours(input.holidayHours));
-    setText("mapOvertimeValue", hours(input.overtimeHours));
-    setBar("mapBaseFill", 1);
-    setBar("mapNightFill", input.nightHours / total);
-    setBar("mapWeekendFill", input.weekendHours / total);
-    setBar("mapHolidayFill", input.holidayHours / total);
-    setBar("mapOvertimeFill", input.overtimeHours / total);
-
-    const heroBars = [
-      ["heroBaseBar", 1],
-      ["heroNightBar", input.nightHours / total],
-      ["heroWeekendBar", input.weekendHours / total],
-    ];
-    heroBars.forEach(([id, ratio]) => {
-      const el = $(id);
-      if (el) el.style.setProperty("--fill", `${clamp(ratio * 100, 0, 100)}%`);
-    });
-  }
-
-  function setConfidence(id, state, text) {
-    const el = $(id);
-    if (!el) return;
-    el.classList.remove("is-warning", "is-strong");
-    if (state) el.classList.add(state);
-    const small = el.querySelector("small");
-    if (small) small.textContent = text;
-  }
-
-  function renderConfidence(result) {
-    const { input } = result;
-    const sameRate = Math.abs(input.averageEarnings - input.hourlyRate) < 0.01;
-    setConfidence(
-      "confidenceAverage",
-      sameRate ? "is-warning" : "is-strong",
-      sameRate
-        ? "Používáte stejnou hodnotu jako základní sazbu. Pro kontrolu pásky ověřte skutečný průměrný výdělek."
-        : `Samostatně zadáno ${money(input.averageEarnings, input.roundWhole)} za hodinu.`
-    );
-    const usedAuto = currentMode === "advanced" && Boolean(selectValue("shiftDate")) && Boolean(selectValue("shiftStart")) && Boolean(selectValue("shiftEnd"));
-    setConfidence(
-      "confidenceHours",
-      usedAuto ? "is-strong" : "is-warning",
-      usedAuto
-        ? "Časové rozdělení lze ověřit automatickým výpočtem po minutách."
-        : "Hodiny jsou zadané ručně. Porovnejte je s evidencí pracovní doby."
-    );
-    setConfidence(
-      "confidenceRates",
-      ratesCustomized ? "is-strong" : "",
-      ratesCustomized
-        ? "Sazby jste upravili podle vlastních podkladů."
-        : `Použity výchozí sazby pro režim ${REGIME_LABELS[input.regime]}.`
-    );
-  }
-
-  function render(result) {
-    lastResult = result;
-    const { input } = result;
-    const legalResult = calculate(collectInput({ rateSource: "legal" }));
-    const higherResult = calculate(collectInput({ rateSource: "higher" }));
-
-    setText("resultModeLabel", currentMode === "advanced" ? "Podrobná kontrola" : "Rychlý výpočet");
-    setText("totalPay", money(result.totalPay, input.roundWhole));
-    setText("cashBonusTotal", money(result.cashBonus, input.roundWhole));
-    setText("basePay", money(result.basePay, input.roundWhole));
-    setText("baseRateLabel", `${numberFormat.format(input.hourlyRate)} Kč × ${numberFormat.format(input.shiftHours)} h`);
-    setText("effectiveHourly", money(result.effectiveHourly, input.roundWhole));
-    setText("monthlyBonus", money(result.monthlyBonus, input.roundWhole));
-    setText("monthlyShiftLabel", `${input.shiftCount} stejných směn`);
-    setText("monthlyTotal", money(result.monthlyTotal, input.roundWhole));
-    setText("statusBadge", result.activeCount ? `Souběh ${result.activeCount} režimů` : "Bez příplatku");
-    setText("resultSummary", result.activeCount > 1
-      ? `${describeActive(input)} se počítají jako oddělené položky podle vlastního počtu hodin.`
-      : `${describeActive(input)} je vypočten ze zadaného průměrného hodinového výdělku.`);
-    setText("timeoffHours", hours(result.timeoffHours));
-    setText("timeoffValue", result.timeoffHours > 0
-      ? `Orientační hodnota placeného volna při průměru ${money(input.averageEarnings, input.roundWhole)} za hodinu je ${money(result.timeoffValue, input.roundWhole)}.`
-      : "V tomto scénáři není započtené náhradní volno.");
-    setText("scenarioLegal", money(legalResult.totalPay, input.roundWhole));
-    setText("scenarioCurrent", money(result.totalPay, input.roundWhole));
-    setText("scenarioHigher", money(higherResult.totalPay, input.roundWhole));
-
-    setText("heroTotal", money(result.totalPay, input.roundWhole));
-    setText("heroBase", money(result.basePay, input.roundWhole));
-    setText("heroBonus", money(result.cashBonus, input.roundWhole));
-    setText("heroMonth", money(result.monthlyBonus, input.roundWhole));
-    setText("heroSummary", `${numberFormat.format(input.shiftHours)} hodin, ${describeActive(input)} v režimu ${REGIME_LABELS[input.regime]}.`);
-
-    renderBreakdown(result);
-    renderPayroll(result);
-    renderDecision(result);
-    renderShiftMap(result);
-    renderConfidence(result);
-  }
-
-  function run() {
-    toggleCards();
-    const input = collectInput();
-    const errors = validate(input);
-    setText("formStatus", errors.join(" "));
-    if (errors.length) return null;
-    const result = calculate(input);
-    render(result);
+    const r=effectiveRates();
+    const base=hourly*h.worked;
+    const night=phv*h.night*r.night/100;
+    const weekend=phv*h.weekend*r.weekend/100;
+    const holidayCash=$('holidayCompensation').value==='pay' ? phv*h.holiday*r.holiday/100 : 0;
+    const overtimeIncluded=regime==='wage' && $('wageOvertimeIncluded').checked;
+    const overtimeCash=regime!=='agreement' && $('overtimeCompensation').value==='pay' && !overtimeIncluded ? phv*overtime*r.overtime/100 : 0;
+    const custom=Math.max(0,n('customFixedRate'))*Math.max(0,n('customHours'));
+    const bonus=night+weekend+holidayCash+overtimeCash+custom;
+    const holidayLeave=$('holidayCompensation').value==='leave'?h.holiday:0;
+    const overtimeLeave=regime!=='agreement' && $('overtimeCompensation').value==='leave' && !overtimeIncluded ? overtime:0;
+    const leave=holidayLeave+overtimeLeave;
+    const total=base+bonus;
+    const repeat=Math.max(1,Math.round(n('repeatCount',1)));
+    const result={h,hourly,phv,overtime,r,base,night,weekend,holidayCash,overtimeCash,custom,bonus,leave,total,repeat,overtimeIncluded,errors};
+    lastCalc=result;
+    renderResult(result);
+    renderOverlap(result);
+    renderAudit();
+    renderBenchmark(result);
+    updateHero(result);
+    updateUrl();
     return result;
   }
 
-  function toggleCards() {
-    const map = { night: "includeNight", weekend: "includeWeekend", holiday: "includeHoliday", overtime: "includeOvertime" };
-    Object.entries(map).forEach(([key, id]) => {
-      const card = doc.querySelector(`[data-bonus-card="${key}"]`);
-      const active = checked(id);
-      card?.classList.toggle("is-active", active);
-      card?.querySelectorAll("input[type='text']").forEach((input) => { input.disabled = !active; });
-    });
+  function row(label,value,note,zero=false){
+    const el=doc.createElement('div'); el.className=`sf-breakdown-row${zero?' is-zero':''}`;
+    const left=doc.createElement('div'),strong=doc.createElement('strong'),small=doc.createElement('small'),b=doc.createElement('b');
+    strong.textContent=label; small.textContent=note; b.textContent=money(value); left.append(strong,small); el.append(left,b); return el;
+  }
+  function renderResult(x) {
+    setText('resultRegime',LABEL[regime]);
+    setText('cashBonus',money(x.bonus)); setText('basePay',money(x.base)); setText('totalPay',money(x.total)); setText('timeOff',hrs(x.leave)); setText('repeatBonus',money(x.bonus*x.repeat));
+    const active=[]; if(x.h.night)active.push('noční');if(x.h.weekend)active.push('víkend');if(x.h.holiday)active.push('svátek');if(x.overtime)active.push('přesčas');if(x.custom)active.push('další bonus');
+    setText('resultSummary',active.length?active.join(' + '):'bez peněžního příplatku');
+    const list=$('breakdownList'); list.replaceChildren(
+      row('Noční práce',x.night,`${hrs(x.h.night)} × ${pct(x.r.night)} z PHV`,x.h.night===0),
+      row('Sobota / neděle',x.weekend,`${hrs(x.h.weekend)} × ${pct(x.r.weekend)} z PHV`,x.h.weekend===0),
+      row('Svátek',x.holidayCash,x.h.holiday===0?'bez svátečních hodin':$('holidayCompensation').value==='leave'?`${hrs(x.h.holiday)} → náhradní volno`:`${hrs(x.h.holiday)} × ${pct(x.r.holiday)} z PHV`,x.h.holiday===0),
+      row('Přesčas',x.overtimeCash,x.overtime===0?'bez přesčasových hodin':regime==='agreement'?'DPP/DPČ: bez zákonného přesčasu':x.overtimeIncluded?'mzda sjednána s přihlédnutím k přesčasům':$('overtimeCompensation').value==='leave'?`${hrs(x.overtime)} → náhradní volno`:`${hrs(x.overtime)} × ${pct(x.r.overtime)} z PHV`,x.overtime===0),
+      row('Další pevný bonus',x.custom,`${hrs(n('customHours'))} × ${money(n('customFixedRate'))}/h`,x.custom===0)
+    );
+    const note=$('resultNote');
+    if(regime==='salary') note.querySelector('p').textContent='U platu je hlavní spolehlivý výstup výše příplatků podle PHV. „Základ za hodiny“ je pouze model z vámi zadaného hodinového ekvivalentu; z jedné směny nelze rekonstruovat celý měsíční plat.';
+    else if(regime==='agreement') note.querySelector('p').textContent='DPP/DPČ: kalkulačka počítá noc, víkend a svátek obdobně jako u mzdy. Přesčasový příplatek nepřidává, protože na dohodách se práce přesčas v právním smyslu nekoná.';
+    else note.querySelector('p').textContent=x.overtimeIncluded?'U přesčasu jste označili mzdu sjednanou s přihlédnutím k určitému rozsahu práce přesčas, proto model k těmto hodinám nepřidává další přesčasový příplatek. Ověřte sjednaný rozsah.':'Peněžní příplatky jsou model podle zadaného PHV, hodin a sazeb. Kalkulačka sama nerozhoduje, zda zaměstnavatel přesčas nebo jinou hodinu právně správně klasifikoval.';
   }
 
-  function setMode(mode, options = {}) {
-    currentMode = mode === "advanced" ? "advanced" : "basic";
-    root.dataset.calculatorMode = currentMode;
-    doc.querySelectorAll(".shift-mode-btn").forEach((button) => {
-      const active = button.dataset.mode === currentMode;
-      button.classList.toggle("is-active", active);
-      button.setAttribute("aria-pressed", String(active));
-    });
-    const advanced = $("advancedCalculation");
-    if (advanced) advanced.hidden = currentMode !== "advanced";
-    setText("formTitle", currentMode === "advanced" ? "Zkontrolujte směnu do detailu" : "Spočítejte odměnu za jednu směnu");
-    setText("formLead", currentMode === "advanced"
-      ? "Základní vstupy zůstávají nahoře. Pod nimi rozložíte směnu podle času, upravíte sazby a porovnáte výsledek s páskou."
-      : "Zvolte způsob odměňování, zadejte sazbu a označte skutečné noční, víkendové, sváteční nebo přesčasové hodiny.");
-    if (options.render !== false) run();
+  function renderOverlap(x) {
+    const chips=$('overlapChips'); chips.replaceChildren();
+    if(inputMode==='manual') { setText('overlapText','Ruční režim zná součty hodin, ale ne jejich časové překryvy.'); return; }
+    const s=lastShift; if(!s || s.error){setText('overlapText','Čekám na platný čas směny.');return;}
+    const vals=[['noční + víkend',s.overlaps.nw],['noční + svátek',s.overlaps.nh],['víkend + svátek',s.overlaps.wh],['noční + víkend + svátek',s.overlaps.nwh]];
+    vals.filter(([,v])=>v>0).forEach(([label,v])=>{const el=doc.createElement('span');el.textContent=`${label}: ${hrs(v)}`;chips.appendChild(el);});
+    setText('overlapText',chips.children.length?'Stejná minuta může nést více samostatných příplatků. Přesčas se přidává zvlášť podle vašeho zadání.':'V této směně jsme nenašli překryv nočního, víkendu a svátku.');
   }
 
-  function setAdvancedStep(index) {
-    const stages = [...doc.querySelectorAll("[data-advanced-stage]")];
-    const buttons = [...doc.querySelectorAll("[data-advanced-step]")];
-    if (!stages.length) return;
-    currentStep = clamp(Number(index) || 0, 0, stages.length - 1);
-    stages.forEach((stage, i) => {
-      const active = i === currentStep;
-      stage.hidden = !active;
-      stage.classList.toggle("is-active", active);
-    });
-    buttons.forEach((button, i) => button.classList.toggle("is-active", i === currentStep));
-    const prev = $("advancedPrev");
-    const next = $("advancedNext");
-    if (prev) prev.disabled = currentStep === 0;
-    if (next) {
-      const isLast = currentStep === stages.length - 1;
-      next.disabled = isLast;
-      next.textContent = isLast ? "Všechny kroky hotové" : "Další krok →";
+  function renderAudit() {
+    if(!lastCalc) return;
+    const count=Math.max(1,Math.round(n('auditCount',lastCalc.repeat)));
+    const expected=lastCalc.bonus*count; setText('auditExpected',money(expected));
+    const paidRaw=$('paidBonus').value.trim(); const box=$('auditResult'); box.classList.remove('is-good','is-warn','is-bad');
+    if(!paidRaw){setText('auditMessage','Zadejte částku z pásky a uvidíte rozdíl.');return;}
+    const paid=Math.max(0,n('paidBonus')); const diff=paid-expected;
+    if(Math.abs(diff)<1){box.classList.add('is-good');setText('auditMessage','Model a zadaná částka se shodují. Přesto ověřte počet hodin a PHV.');}
+    else if(diff>0){box.classList.add('is-good');setText('auditMessage',`Na pásce je o ${money(diff)} více. Může jít o vyšší firemní sazby, další bonus nebo jiný počet hodin.`);}
+    else {box.classList.add('is-warn');setText('auditMessage',`Na pásce je o ${money(Math.abs(diff))} méně než v tomto modelu. Nejdřív ověřte PHV, evidenci hodin, firemní sazby a náhradní volno.`);}
+  }
+
+  function renderBenchmark(x) {
+    setText('benchmarkPhv',`${moneyFmt.format(x.phv)} Kč/h`);
+    setText('nightLegalKc',`${moneyFmt.format(x.phv*.10)} Kč/h`);
+    setText('weekendLegalKc',`${moneyFmt.format(x.phv*.10)} Kč/h`);
+    setText('overtimeLegalKc',`${moneyFmt.format(x.phv*.25)} Kč/h`);
+    setText('holidayLegalKc',`${moneyFmt.format(x.phv)} Kč/h`);
+  }
+  function updateHero(x) {
+    setText('heroBonus',money(x.bonus)); setText('heroWorked',hrs(x.h.worked)); setText('heroTotal',money(x.total)); setText('heroLeave',hrs(x.leave));
+    const active=[];if(x.h.night)active.push('noční');if(x.h.weekend)active.push('víkend');if(x.h.holiday)active.push('svátek');if(x.overtime)active.push('přesčas');
+    setText('heroCaption',active.length?active.join(' + '):'bez příplatkového režimu');
+  }
+
+  function setPreset(name) {
+    const today=new Date();
+    if(name==='fridayNight'){
+      const d=nextWeekday(today,5); $('shiftDate').value=localDateString(d); $('shiftStart').value='22:00'; $('shiftEnd').value='06:00'; $('breakStart').value='02:00'; $('breakMinutes').value=30;
+    } else if(name==='saturdayDay') {
+      const d=nextWeekday(today,6); $('shiftDate').value=localDateString(d); $('shiftStart').value='06:00'; $('shiftEnd').value='14:00'; $('breakStart').value='10:00'; $('breakMinutes').value=30;
+    } else if(name==='christmas') {
+      const y=today.getFullYear(); $('shiftDate').value=`${y}-12-24`; $('shiftStart').value='08:00'; $('shiftEnd').value='16:00'; $('breakStart').value='12:00'; $('breakMinutes').value=30;
     }
-    setText("advancedStepStatus", `Krok ${currentStep + 1} ze ${stages.length}`);
+    calculate();
   }
 
-  function timeToMinutes(value) {
-    const match = /^(\d{1,2}):(\d{2})$/.exec(value || "");
-    if (!match) return null;
-    return Number(match[1]) * 60 + Number(match[2]);
+  function shareParams() {
+    const p=new URLSearchParams();
+    p.set('rezim',regime);p.set('mode',inputMode);p.set('sazba',n('hourlyRate'));p.set('phv',n('averageEarnings'));
+    if(inputMode==='shift'){['shiftDate','shiftStart','shiftEnd','breakStart','breakMinutes'].forEach(id=>p.set(id,$(id).value));}
+    else {['manualWorked','manualNight','manualWeekend','manualHoliday'].forEach(id=>p.set(id,$(id).value));}
+    p.set('prescas',n('overtimeHours'));p.set('prescasForma',$('overtimeCompensation').value);p.set('svatekForma',$('holidayCompensation').value);p.set('opakovat',n('repeatCount'));
+    if($('salaryRestDay').checked)p.set('platKlid','1');if($('wageOvertimeIncluded').checked)p.set('mzdaPrescas','1');
+    return p;
   }
-
-  function easterSunday(year) {
-    const a = year % 19;
-    const b = Math.floor(year / 100);
-    const c = year % 100;
-    const d = Math.floor(b / 4);
-    const e = b % 4;
-    const f = Math.floor((b + 8) / 25);
-    const g = Math.floor((b - f + 1) / 3);
-    const h = (19 * a + b - d - g + 15) % 30;
-    const i = Math.floor(c / 4);
-    const k = c % 4;
-    const l = (32 + 2 * e + 2 * i - h - k) % 7;
-    const m = Math.floor((a + 11 * h + 22 * l) / 451);
-    const month = Math.floor((h + l - 7 * m + 114) / 31);
-    const day = ((h + l - 7 * m + 114) % 31) + 1;
-    return new Date(year, month - 1, day);
-  }
-
-  function dateKey(date) {
-    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
-  }
-
-  function czechHolidays(year) {
-    const fixed = ["01-01", "05-01", "05-08", "07-05", "07-06", "09-28", "10-28", "11-17", "12-24", "12-25", "12-26"];
-    const keys = new Set(fixed.map((md) => `${year}-${md}`));
-    const easter = easterSunday(year);
-    const goodFriday = new Date(easter); goodFriday.setDate(easter.getDate() - 2);
-    const easterMonday = new Date(easter); easterMonday.setDate(easter.getDate() + 1);
-    keys.add(dateKey(goodFriday));
-    keys.add(dateKey(easterMonday));
-    return keys;
-  }
-
-  function autoHours() {
-    const dateValue = selectValue("shiftDate");
-    const startMinutes = timeToMinutes(selectValue("shiftStart"));
-    const endMinutes = timeToMinutes(selectValue("shiftEnd"));
-    if (!dateValue || startMinutes === null || endMinutes === null) return null;
-    const [year, month, day] = dateValue.split("-").map(Number);
-    const start = new Date(year, month - 1, day, Math.floor(startMinutes / 60), startMinutes % 60, 0, 0);
-    const end = new Date(year, month - 1, day, Math.floor(endMinutes / 60), endMinutes % 60, 0, 0);
-    if (end <= start) end.setDate(end.getDate() + 1);
-    if ((end - start) / 3600000 > 24) return null;
-
-    let breakStartDate = null;
-    let breakEndDate = null;
-    const breakStartMinutes = timeToMinutes(selectValue("breakStart"));
-    const breakLength = readNumeric("breakMinutes");
-    if (breakStartMinutes !== null && breakLength > 0) {
-      breakStartDate = new Date(year, month - 1, day, Math.floor(breakStartMinutes / 60), breakStartMinutes % 60, 0, 0);
-      if (breakStartDate < start) breakStartDate.setDate(breakStartDate.getDate() + 1);
-      breakEndDate = new Date(breakStartDate.getTime() + breakLength * 60000);
-    }
-
-    const holidaysByYear = new Map();
-    const getHolidays = (y) => {
-      if (!holidaysByYear.has(y)) holidaysByYear.set(y, czechHolidays(y));
-      return holidaysByYear.get(y);
-    };
-    let worked = 0;
-    let night = 0;
-    let weekend = 0;
-    let holiday = 0;
-    for (let t = start.getTime(); t < end.getTime(); t += 60000) {
-      const moment = new Date(t);
-      if (breakStartDate && breakEndDate && t >= breakStartDate.getTime() && t < breakEndDate.getTime()) continue;
-      worked += 1;
-      const hour = moment.getHours();
-      if (hour >= 22 || hour < 6) night += 1;
-      if (moment.getDay() === 0 || moment.getDay() === 6) weekend += 1;
-      if (getHolidays(moment.getFullYear()).has(dateKey(moment))) holiday += 1;
-    }
-    const toHours = (minutes) => minutes / 60;
-    return { worked: toHours(worked), night: toHours(night), weekend: toHours(weekend), holiday: toHours(holiday), start, end };
-  }
-
-  function renderAutoHours() {
-    const result = autoHours();
-    if (!result) {
-      setText("autoTotalHours", "—");
-      setText("autoNightHours", "—");
-      setText("autoWeekendHours", "—");
-      setText("autoHolidayHours", "—");
-      setText("autoHoursNote", "Zkontrolujte datum a časy. Směna může mít nejvýše 24 hodin.");
-      return null;
-    }
-    setText("autoTotalHours", hours(result.worked));
-    setText("autoNightHours", hours(result.night));
-    setText("autoWeekendHours", hours(result.weekend));
-    setText("autoHolidayHours", hours(result.holiday));
-    const crossesMidnight = result.start.getDate() !== result.end.getDate();
-    setText("autoHoursNote", `${crossesMidnight ? "Směna pokračuje přes půlnoc. " : ""}Výpočet vynechal zadanou neplacenou přestávku a rozpoznal kalendářní režimy po minutách.`);
-    return result;
-  }
-
-  function applyAutoHours() {
-    const result = renderAutoHours();
-    if (!result) return;
-    setExactNumeric("shiftHours", result.worked);
-    setExactNumeric("nightHours", result.night);
-    setExactNumeric("weekendHours", result.weekend);
-    setExactNumeric("holidayHours", result.holiday);
-    $("includeNight").checked = result.night > 0;
-    $("includeWeekend").checked = result.weekend > 0;
-    $("includeHoliday").checked = result.holiday > 0;
-    run();
-  }
-
-  function shareUrl() {
-    const url = new URL(window.location.href);
-    url.search = "";
-    Object.entries(URL_MAP).forEach(([id, key]) => {
-      const el = $(id);
-      if (!el) return;
-      const value = el.type === "checkbox" ? (el.checked ? "1" : "0") : el.tagName === "SELECT" || el.type === "date" || el.type === "time" ? el.value : readNumeric(id);
-      url.searchParams.set(key, String(value));
-    });
-    url.searchParams.set("rezim", currentMode);
-    return url.toString();
-  }
-
+  function updateUrl(){try{history.replaceState(null,'',`${location.pathname}?${shareParams().toString()}${location.hash}`);}catch(_){} }
   function loadUrl() {
-    exactValues.clear();
-    const params = new URLSearchParams(window.location.search);
-    Object.entries(URL_MAP).forEach(([id, key]) => {
-      if (!params.has(key)) return;
-      const el = $(id);
-      if (!el) return;
-      const raw = params.get(key) ?? "";
-      if (el.type === "checkbox") el.checked = raw === "1" || raw === "true";
-      else if (el.tagName === "SELECT") {
-        if ([...el.options].some((option) => option.value === raw)) el.value = raw;
-      } else {
-        el.value = raw;
-        if (numericIds.includes(id)) formatInput(id);
-      }
-    });
-    if (params.has("nocPct") || params.has("vikendPct") || params.has("prescasPct") || params.has("svatekPct")) ratesCustomized = true;
-    setMode(params.get("rezim") === "advanced" ? "advanced" : "basic", { render: false });
+    const p=new URLSearchParams(location.search);
+    if(p.has('rezim')&&LEGAL[p.get('rezim')]) regime=p.get('rezim');
+    if(p.get('mode')==='manual') inputMode='manual';
+    const map={sazba:'hourlyRate',phv:'averageEarnings',shiftDate:'shiftDate',shiftStart:'shiftStart',shiftEnd:'shiftEnd',breakStart:'breakStart',breakMinutes:'breakMinutes',manualWorked:'manualWorked',manualNight:'manualNight',manualWeekend:'manualWeekend',manualHoliday:'manualHoliday',prescas:'overtimeHours',opakovat:'repeatCount'};
+    Object.entries(map).forEach(([key,id])=>{if(p.has(key))$(id).value=p.get(key);});
+    if(p.has('prescasForma'))$('overtimeCompensation').value=p.get('prescasForma');if(p.has('svatekForma'))$('holidayCompensation').value=p.get('svatekForma');
+    $('salaryRestDay').checked=p.get('platKlid')==='1'; $('wageOvertimeIncluded').checked=p.get('mzdaPrescas')==='1';
   }
 
-  async function copyText(value, successMessage) {
-    try {
-      if (navigator.clipboard && window.isSecureContext) await navigator.clipboard.writeText(value);
-      else {
-        const area = doc.createElement("textarea");
-        area.value = value;
-        area.setAttribute("readonly", "");
-        area.style.position = "fixed";
-        area.style.opacity = "0";
-        doc.body.appendChild(area);
-        area.select();
-        const copied = doc.execCommand("copy");
-        area.remove();
-        if (!copied) throw new Error("copy failed");
-      }
-      setText("copyStatus", successMessage);
-    } catch (error) {
-      setText("copyStatus", "Kopírování se nepodařilo. Odkaz můžete zkopírovat z adresního řádku.");
-    }
+  function setInputMode(mode) {
+    inputMode=mode==='manual'?'manual':'shift';
+    qsa('[data-input-mode]').forEach(b=>{const active=b.dataset.inputMode===inputMode;b.classList.toggle('is-active',active);b.setAttribute('aria-selected',String(active));});
+    $('shiftModePanel').hidden=inputMode!=='shift'; $('manualModePanel').hidden=inputMode!=='manual'; calculate();
   }
 
-  function resultText() {
-    if (!lastResult) return "";
-    const r = lastResult;
-    return [
-      "Příplatky za směny – RychléVýpočty.cz",
-      `Režim: ${REGIME_LABELS[r.input.regime]}, ${currentMode === "advanced" ? "podrobná kontrola" : "rychlý výpočet"}`,
-      `Směna: ${numberFormat.format(r.input.shiftHours)} h`,
-      `Příplatkové režimy: ${describeActive(r.input)}`,
-      `Základní odměna: ${money(r.basePay, r.input.roundWhole)}`,
-      `Peněžní příplatky: ${money(r.cashBonus, r.input.roundWhole)}`,
-      `Celkem za směnu: ${money(r.totalPay, r.input.roundWhole)}`,
-      `Měsíčně na příplatcích: ${money(r.monthlyBonus, r.input.roundWhole)}`,
-      `Náhradní volno: ${hours(r.timeoffHours)}`,
-      "Výsledek je orientační hrubý model a nenahrazuje mzdové podklady zaměstnavatele.",
-    ].join("\n");
+  function copy(text,button){
+    const done=()=>{const old=button.textContent;button.textContent='Zkopírováno';setTimeout(()=>button.textContent=old,1300);};
+    if(navigator.clipboard?.writeText) navigator.clipboard.writeText(text).then(done).catch(()=>{});
+  }
+  function summaryText() {
+    const x=lastCalc;if(!x)return'';
+    return `Příplatky za směnu (${LABEL[regime]}): ${money(x.bonus)} navíc; odpracováno ${hrs(x.h.worked)}; noční ${hrs(x.h.night)}; víkend ${hrs(x.h.weekend)}; svátek ${hrs(x.h.holiday)}; přesčas ${hrs(x.overtime)}; náhradní volno ${hrs(x.leave)}. Celkem v penězích podle zadané základní hodinové hodnoty: ${money(x.total)}.`;
   }
 
-  function applyPreset(name) {
-    const preset = PRESETS[name] || PRESETS.weekendNight;
-    doc.querySelectorAll("[data-shift-preset]").forEach((button) => {
-      const active = button.dataset.shiftPreset === name;
-      button.classList.toggle("is-active", active);
-      button.setAttribute("aria-pressed", String(active));
-    });
-    ["nightHours", "weekendHours", "holidayHours", "overtimeHours"].forEach((id) => exactValues.delete(id));
-    $("includeNight").checked = preset.night;
-    $("includeWeekend").checked = preset.weekend;
-    $("includeHoliday").checked = preset.holiday;
-    $("includeOvertime").checked = preset.overtime;
-    $("nightHours").value = preset.nightHours;
-    $("weekendHours").value = preset.weekendHours;
-    $("holidayHours").value = preset.holidayHours;
-    $("overtimeHours").value = preset.overtimeHours;
-    ["nightHours", "weekendHours", "holidayHours", "overtimeHours"].forEach(formatInput);
-    run();
+  function wire() {
+    defaultDate(); loadUrl(); updateRegimeUi(); rateDefaults(true);
+    qsa('[data-input-mode]').forEach(b=>b.addEventListener('click',()=>setInputMode(b.dataset.inputMode)));
+    qsa('[data-regime]').forEach(b=>b.addEventListener('click',()=>{regime=b.dataset.regime;ratesDirty=false;updateRegimeUi();rateDefaults(true);calculate();}));
+    qsa('[data-preset]').forEach(b=>b.addEventListener('click',()=>setPreset(b.dataset.preset)));
+    ['hourlyRate','averageEarnings','shiftDate','shiftStart','shiftEnd','breakMinutes','breakStart','manualWorked','manualNight','manualWeekend','manualHoliday','overtimeHours','repeatCount','customFixedRate','customHours'].forEach(id=>$(id)?.addEventListener('input',calculate));
+    ['overtimeCompensation','holidayCompensation'].forEach(id=>$(id)?.addEventListener('change',calculate));
+    ['salaryRestDay','wageOvertimeIncluded'].forEach(id=>$(id)?.addEventListener('change',()=>{if(id==='salaryRestDay'&&!ratesDirty)rateDefaults(true);calculate();}));
+    ['nightPercent','weekendPercent','holidayPercent','overtimePercent'].forEach(id=>$(id)?.addEventListener('input',()=>{ratesDirty=true;calculate();}));
+    $('syncAverage').addEventListener('click',()=>{$('averageEarnings').value=$('hourlyRate').value;calculate();});
+    $('resetRates').addEventListener('click',()=>{ratesDirty=false;rateDefaults(true);calculate();});
+    ['paidBonus','auditCount'].forEach(id=>$(id)?.addEventListener('input',renderAudit));
+    $('copyResult').addEventListener('click',e=>copy(summaryText(),e.currentTarget));
+    $('copyLink').addEventListener('click',e=>copy(location.href,e.currentTarget));
+    $('printResult').addEventListener('click',()=>window.print());
+    const toggle=$('menuToggle'),nav=$('mainNavMobile');
+    toggle?.addEventListener('click',()=>{const open=nav.classList.toggle('is-open');toggle.setAttribute('aria-expanded',String(open));});
+    nav?.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{nav.classList.remove('is-open');toggle?.setAttribute('aria-expanded','false');}));
+    setInputMode(inputMode); updateRegimeUi(); calculate();
   }
-
-  function resetAll() {
-    exactValues.clear();
-    form.reset();
-    ratesCustomized = false;
-    currentStep = 0;
-    $("payRegime").value = "wage";
-    applyRegimeDefaults(true);
-    setMode("basic", { render: false });
-    setAdvancedStep(0);
-    numericIds.forEach(formatInput);
-    setText("copyStatus", "");
-    setText("formStatus", "");
-    renderAutoHours();
-    run();
-  }
-
-  form.addEventListener("submit", (event) => {
-    event.preventDefault();
-    run();
-  });
-
-  numericIds.forEach((id) => {
-    const el = $(id);
-    if (!el) return;
-    el.addEventListener("input", () => {
-      exactValues.delete(id);
-      if (["nightPercent", "weekendPercent", "holidayPercent", "overtimePercent"].includes(id)) ratesCustomized = true;
-      run();
-    });
-    el.addEventListener("change", run);
-    el.addEventListener("blur", () => { formatInput(id); run(); });
-  });
-
-  checkboxIds.forEach((id) => $(id)?.addEventListener("change", run));
-  $("payRegime")?.addEventListener("change", () => { ratesCustomized = false; if ($("salaryOvertimeRestDay")) $("salaryOvertimeRestDay").checked = false; applyRegimeDefaults(true); run(); });
-  ["holidayCompensation", "overtimeCompensation"].forEach((id) => $(id)?.addEventListener("change", run));
-  $("salaryOvertimeRestDay")?.addEventListener("change", () => {
-    if (selectValue("payRegime", "wage") === "salary") {
-      exactValues.delete("overtimePercent");
-      $("overtimePercent").value = checked("salaryOvertimeRestDay") ? 50 : 25;
-      formatInput("overtimePercent");
-      ratesCustomized = true;
-    }
-    updateRegimeHints();
-    run();
-  });
-  ["shiftDate", "shiftStart", "shiftEnd", "breakStart", "breakMinutes"].forEach((id) => {
-    $(id)?.addEventListener("input", renderAutoHours);
-    $(id)?.addEventListener("change", renderAutoHours);
-  });
-
-  doc.querySelectorAll("[data-shift-preset]").forEach((button) => button.addEventListener("click", () => applyPreset(button.dataset.shiftPreset)));
-  doc.querySelectorAll(".shift-mode-btn").forEach((button) => button.addEventListener("click", () => setMode(button.dataset.mode)));
-  doc.querySelectorAll(".shift-step-btn").forEach((button) => button.addEventListener("click", () => setAdvancedStep(Number(button.dataset.advancedStep))));
-  $("advancedPrev")?.addEventListener("click", () => setAdvancedStep(currentStep - 1));
-  $("advancedNext")?.addEventListener("click", () => setAdvancedStep(currentStep + 1));
-  $("applyAutoHours")?.addEventListener("click", applyAutoHours);
-  $("resetBtn")?.addEventListener("click", resetAll);
-  $("copyResultBtn")?.addEventListener("click", () => copyText(resultText(), "Výsledek byl zkopírován."));
-  $("copyLinkBtn")?.addEventListener("click", () => copyText(shareUrl(), "Odkaz s nastavením byl zkopírován."));
-  $("toggleBreakdown")?.addEventListener("click", (event) => {
-    const wrap = $("breakdownWrap");
-    if (!wrap) return;
-    const collapsed = wrap.classList.toggle("is-collapsed");
-    event.currentTarget.setAttribute("aria-expanded", String(!collapsed));
-    event.currentTarget.textContent = collapsed ? "Zobrazit rozpad" : "Skrýt rozpad";
-  });
-
-  loadUrl();
-  const dateInput = $("shiftDate");
-  const urlHasDate = new URLSearchParams(window.location.search).has("datum");
-  if (dateInput && !urlHasDate) {
-    const now = new Date();
-    const localDate = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
-    dateInput.value = localDate;
-  }
-  if (!ratesCustomized) applyRegimeDefaults(true);
-  numericIds.forEach(formatInput);
-  setAdvancedStep(0);
-  renderAutoHours();
-  run();
+  wire();
 })();
