@@ -1,7 +1,7 @@
 # RychléVýpočty.cz V-next — Production Standard
 
 **Revize:** 18. 8. 2026  
-**Verze:** 1.3
+**Verze:** 1.4
 
 Tento dokument je závazný výrobní checklist pro každý nový kalkulátor, tool, utilitu, tracker, lookup nebo datový produkt. Cílem není vyrábět více URL, ale každý nový asset posunout nad úroveň předchozí generace RychléVýpočty.cz.
 
@@ -115,6 +115,9 @@ Nový indexovatelný produkt není hotový, dokud není zapojen do projektu:
 - Interaktivní prvky: RV interně preferuje 44×44 px; menší textový odkaz musí mít alespoň bezpečný hit-area/spacing a nesmí padat na Lighthouse target-size auditu.
 - `aria-label` používat pouze na prvcích/rolích, které accessible name podporují; u generického `div` nejdřív zvolit správnou semantickou roli nebo label odstranit.
 - Pokud je dostupný agent accessibility audit, accessibility tree nesmí mít strukturální fail.
+- **Component accessibility contract před buildem:** každý custom tab/radio/accordion/switch/combobox musí mít předem popsaný native/ARIA role model, fokus a keyboard ovládání. Pokud lze použít native HTML control, preferuj jej.
+- **Executable lint:** před ZIPem spusť `python rv-vnext-a11y-lint.py <changed HTML...>` (nebo ekvivalent). PASS z lint gate je povinný, ale nenahrazuje produkční Lighthouse/PageSpeed.
+- **Systemic regression sweep:** objeví-li se po deployi opakovatelná chyba na jedné V-next stránce, před další výrobou prohledej všechny dokončené V-next URL na stejný pattern. Opravu klasifikuj jako TECHNICAL/QA, neresetuj MAJOR HOLD, pokud se nemění intent/produkt. Současně aktualizuj linter/standard, aby se chyba neopakovala.
 
 ## 12. Release QA gate
 Před ZIPem musí projít:
@@ -132,7 +135,8 @@ Před ZIPem musí projít:
 12. automatická accessibility QA: ARIA role/attributes/required children, keyboard widget model, kontrast a touch targety bez známého failu,
 13. post-deploy mobilní PageSpeed/Lighthouse Accessibility: cíl **100**; automatický fail = RELEASE_CANDIDATE, ne DONE, pokud nejde o zdokumentovaný false positive,
 14. agent accessibility tree bez strukturálního failu, pokud je audit dostupný,
-15. change-only **FLAT ZIP**, bez podsložek.
+15. `rv-vnext-a11y-lint.py` / ekvivalent PASS na všech změněných HTML a při systémové chybě také regression sweep již dokončených V-next URL,
+16. change-only **FLAT ZIP**, bez podsložek.
 
 ## 13. Po nasazení
 - Nový produkt označit jako významnou/MAJOR změnu portfolia a nechat ho měřit.

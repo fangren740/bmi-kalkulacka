@@ -1,7 +1,7 @@
 # RychléVýpočty.cz V-next — Experience Standard v2
 
 **Revize:** 18. 8. 2026  
-**Verze:** 2.1  
+**Verze:** 2.2  
 **Účel:** závazná produktová a UX nadstavba nad `RV-VNEXT-PRODUCTION-STANDARD.md` pro nové kalkulačky, decision tooly, trackery a lookupy.
 
 ## 0. Proč v2 vzniká
@@ -273,6 +273,8 @@ Praktické pravidlo: v jednom viewportu nemá být více než **jedna dominantn�
 - Barva nikdy není jediný nositel významu.
 - Výsledkové změny oznámit vhodným `aria-live`, ale nezahlcovat screen reader při každém stisku klávesy.
 - 200% zoom jako povinná vizuální kontrola.
+- Accessibility contract se zamyká ve COMPONENT LOCK před buildem: u custom widgetu je předem jasné, zda je to native control nebo ARIA pattern, jak se tabuje, jak fungují šipky/Home/End/Space/Enter a co je `aria-live`.
+- Jakmile post-deploy audit odhalí opakovatelný pattern, následuje portfolio regression sweep před další kalkulačkou; izolovaný hotfix bez aktualizace standardu/linteru je nedostatečný.
 
 ---
 
@@ -309,9 +311,9 @@ Každý nový V-next tool se kontroluje minimálně na:
 
 ---
 
-## 15. Experience release gate — 15 otázek
+## 15. Experience release gate — 16 otázek
 
-Release pouze pokud je 15× ANO:
+Release pouze pokud je 16× ANO:
 
 1. Poznám za 5 sekund, co tool řeší?
 2. Je hero tematicky unikátní a současně zjevně RV?
@@ -328,6 +330,7 @@ Release pouze pokud je 15× ANO:
 13. Vypadá stránka jako produkt vytvořený pro tento problém, ne jako přebarvená šablona?
 14. Projde custom UI semantikou a klávesnicí bez ARIA/role chyby a bez rozbitého accessibility tree?
 15. Projde produkční mobilní Lighthouse/PageSpeed accessibility bez automatického failu (cílově 100), včetně kontrastu a touch targetů?
+16. Pokud jsme v této wave objevili novou systémovou QA chybu, proběhl regression sweep starších V-next URL a byla chyba přidána do lint/standardu?
 
 ---
 

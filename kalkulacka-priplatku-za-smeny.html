@@ -29,7 +29,7 @@
 <meta name="twitter:description" content="Směna podle času, právní režim, souběhy příplatků, náhradní volno a kontrola výplatnice.">
 <meta name="twitter:image" content="https://rychlevypocty.cz/og-rv-priplatky-smeny-v32.jpg">
 <link rel="stylesheet" href="/rv-brand-v32.css?v=20260801-stable">
-<link rel="stylesheet" href="/priplatky-smeny.css?v=20260818-flagship3">
+<link rel="stylesheet" href="/priplatky-smeny.css?v=20260818-a11y1">
 <script defer src="/rv-brand-v32.js?v=20260801"></script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"RychléVýpočty.cz","item":"https://rychlevypocty.cz/"},{"@type":"ListItem","position":2,"name":"Mzdy a práce","item":"https://rychlevypocty.cz/mzdy-a-prace.html"},{"@type":"ListItem","position":3,"name":"Kalkulačka příplatků za směny","item":"https://rychlevypocty.cz/kalkulacka-priplatku-za-smeny.html"}]}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Kalkulačka příplatků za směny 2026","url":"https://rychlevypocty.cz/kalkulacka-priplatku-za-smeny.html","applicationCategory":"BusinessApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","inLanguage":"cs-CZ","isAccessibleForFree":true,"description":"Kalkulačka nočních, víkendových, svátečních a přesčasových příplatků pro mzdu, plat a DPP/DPČ s automatickým rozdělením konkrétní směny.","publisher":{"@type":"Organization","name":"RychléVýpočty.cz","url":"https://rychlevypocty.cz/","sameAs":["https://www.facebook.com/rychlevypocty","https://www.instagram.com/rychlevypocty/"]}}</script>
@@ -87,8 +87,8 @@
     <div class="sf-section-head"><p class="sf-eyebrow">01 · Výpočet konkrétní směny</p><h2>Nejdřív čas. Potom právo. Až nakonec peníze.</h2><p>Příplatkové hodiny se mohou překrývat. Proto kalkulačka nejprve rozloží směnu podle času a teprve nad zjištěnými hodinami aplikuje pravidla vašeho režimu odměňování.</p></div>
 
     <div class="sf-mode-tabs" role="tablist" aria-label="Způsob zadání hodin">
-      <button type="button" class="is-active" data-input-mode="shift" aria-selected="true"><strong>Podle konkrétní směny</strong><small>datum, začátek, konec, přestávka</small></button>
-      <button type="button" data-input-mode="manual" aria-selected="false"><strong>Mám hodiny z docházky</strong><small>zadám hotové součty hodin</small></button>
+      <button type="button" class="is-active" id="sfShiftTab" role="tab" data-input-mode="shift" aria-selected="true" aria-controls="shiftModePanel" tabindex="0"><strong>Podle konkrétní směny</strong><small>datum, začátek, konec, přestávka</small></button>
+      <button type="button" id="sfManualTab" role="tab" data-input-mode="manual" aria-selected="false" aria-controls="manualModePanel" tabindex="-1"><strong>Mám hodiny z docházky</strong><small>zadám hotové součty hodin</small></button>
     </div>
 
     <div class="sf-calculator-grid">
@@ -96,9 +96,9 @@
         <section class="sf-input-section">
           <div class="sf-input-title"><span>01</span><div><strong>Jak jste odměňováni?</strong><small>Volba mění výchozí právní sazby a pravidla přesčasu.</small></div></div>
           <div class="sf-regime-grid" role="radiogroup" aria-label="Způsob odměňování">
-            <button class="is-active" type="button" data-regime="wage"><strong>Mzda</strong><small>soukromá / podnikatelská sféra</small></button>
-            <button type="button" data-regime="salary"><strong>Plat</strong><small>zaměstnavatelé podle § 109 odst. 3</small></button>
-            <button type="button" data-regime="agreement"><strong>DPP / DPČ</strong><small>dohody mimo pracovní poměr</small></button>
+            <button class="is-active" type="button" role="radio" data-regime="wage" aria-checked="true" tabindex="0"><strong>Mzda</strong><small>soukromá / podnikatelská sféra</small></button>
+            <button type="button" role="radio" data-regime="salary" aria-checked="false" tabindex="-1"><strong>Plat</strong><small>zaměstnavatelé podle § 109 odst. 3</small></button>
+            <button type="button" role="radio" data-regime="agreement" aria-checked="false" tabindex="-1"><strong>DPP / DPČ</strong><small>dohody mimo pracovní poměr</small></button>
           </div>
           <input type="hidden" id="payRegime" value="wage">
           <div class="sf-two-fields">
@@ -107,9 +107,9 @@
           </div>
         </section>
 
-        <section class="sf-input-section" id="shiftModePanel">
+        <section class="sf-input-section" id="shiftModePanel" role="tabpanel" aria-labelledby="sfShiftTab" tabindex="0">
           <div class="sf-input-title"><span>02</span><div><strong>Kdy směna proběhla?</strong><small>Směnu přes půlnoc rozpoznáme automaticky.</small></div></div>
-          <div class="sf-preset-row" aria-label="Rychlé příklady"><button type="button" data-preset="fridayNight">Pá 22:00 → So 06:00</button><button type="button" data-preset="saturdayDay">Sobota 06:00 → 14:00</button><button type="button" data-preset="christmas">24. 12. 08:00 → 16:00</button></div>
+          <div class="sf-preset-row" role="group" aria-label="Rychlé příklady"><button type="button" data-preset="fridayNight">Pá 22:00 → So 06:00</button><button type="button" data-preset="saturdayDay">Sobota 06:00 → 14:00</button><button type="button" data-preset="christmas">24. 12. 08:00 → 16:00</button></div>
           <div class="sf-shift-fields">
             <label class="sf-field"><span>Datum začátku</span><input class="sf-control" id="shiftDate" type="date"></label>
             <label class="sf-field"><span>Začátek</span><input class="sf-control" id="shiftStart" type="time" value="22:00"></label>
@@ -118,7 +118,7 @@
           </div>
           <div class="sf-break-row"><label class="sf-field"><span>Začátek přestávky</span><input class="sf-control" id="breakStart" type="time" value="02:00"><small>Při nenulové přestávce uveďte její začátek, aby šla správně odečíst i z nočních, víkendových a svátečních hodin.</small></label></div>
 
-          <div class="sf-timeline-card" aria-label="Automatické rozdělení směny">
+          <div class="sf-timeline-card" role="group" aria-label="Automatické rozdělení směny">
             <div class="sf-timeline-head"><div><strong id="timelineTitle">Rozpad směny</strong><small id="timelineRange">22:00 → 06:00</small></div><span id="autoStatus">automaticky</span></div>
             <div class="sf-track-row"><span>Práce</span><div class="sf-track" id="workTrack"></div></div>
             <div class="sf-track-row"><span>Noční</span><div class="sf-track" id="nightTrack"></div></div>
@@ -130,7 +130,7 @@
           <p class="sf-edge-note" id="calendarRuleNote">Automatika používá kalendářní sobotu/neděli a české svátky. Speciální rozvržení dne pracovního klidu u některých nočních provozů nelze bez pravidel zaměstnavatele poznat.</p>
         </section>
 
-        <section class="sf-input-section" id="manualModePanel" hidden>
+        <section class="sf-input-section" id="manualModePanel" role="tabpanel" aria-labelledby="sfManualTab" tabindex="0" hidden>
           <div class="sf-input-title"><span>02</span><div><strong>Hodiny z docházky</strong><small>Jedna hodina může současně patřit do více příplatkových režimů.</small></div></div>
           <div class="sf-manual-grid">
             <label class="sf-field"><span>Odpracováno</span><div class="sf-unit-input"><input id="manualWorked" type="number" min="0" max="24" step="0.25" value="8"><b>h</b></div></label>
@@ -285,14 +285,14 @@
 
 <footer class="sf-footer rv-brand-footer">
   <div class="sf-shell sf-footer-grid">
-    <div class="sf-footer-brand"><a class="rv-logo rv-logo--inverse" href="/" aria-label="RychléVýpočty.cz – domů"><img class="rv-logo-image" src="/logo-rv-v32-inverse.svg?v=1" width="295" height="48" alt="" decoding="async"></a><p>Praktické české kalkulačky s okamžitým výsledkem, srozumitelnou interpretací a dohledatelnou metodikou.</p><a href="mailto:rychlevypocty@seznam.cz">rychlevypocty@seznam.cz</a><div class="sf-socials" aria-label="Oficiální profily RychléVýpočty.cz"><a href="https://www.facebook.com/rychlevypocty" rel="me" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M13.7 22v-8h2.7l.4-3h-3.1V9.1c0-.9.3-1.5 1.6-1.5H17V4.9c-.3 0-1.3-.1-2.4-.1-2.5 0-4.2 1.5-4.2 4.3V11H7.6v3h2.8v8h3.3z"/></svg></a><a href="https://www.instagram.com/rychlevypocty/" rel="me" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1" fill="currentColor" stroke="none"/></svg></a></div><div class="sf-process"><span>Zadat</span><span>Rozdělit čas</span><span>Spočítat</span><span>Zkontrolovat</span></div></div>
+    <div class="sf-footer-brand"><a class="rv-logo rv-logo--inverse" href="/" aria-label="RychléVýpočty.cz – domů"><img class="rv-logo-image" src="/logo-rv-v32-inverse.svg?v=1" width="295" height="48" alt="" decoding="async"></a><p>Praktické české kalkulačky s okamžitým výsledkem, srozumitelnou interpretací a dohledatelnou metodikou.</p><a href="mailto:rychlevypocty@seznam.cz">rychlevypocty@seznam.cz</a><div class="sf-socials" role="group" aria-label="Oficiální profily RychléVýpočty.cz"><a href="https://www.facebook.com/rychlevypocty" rel="me" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M13.7 22v-8h2.7l.4-3h-3.1V9.1c0-.9.3-1.5 1.6-1.5H17V4.9c-.3 0-1.3-.1-2.4-.1-2.5 0-4.2 1.5-4.2 4.3V11H7.6v3h2.8v8h3.3z"/></svg></a><a href="https://www.instagram.com/rychlevypocty/" rel="me" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1" fill="currentColor" stroke="none"/></svg></a></div><div class="sf-process"><span>Zadat</span><span>Rozdělit čas</span><span>Spočítat</span><span>Zkontrolovat</span></div></div>
     <div><h3>Mzdy a práce</h3><a href="/mzdy-a-prace.html">Mzdy a práce</a><a href="/kalkulacka-priplatku-za-smeny.html">Příplatky za směny</a><a href="/kalkulacka-prescasu.html">Přesčas</a><a href="/prumerny-vydelek-kalkulacka.html">Průměrný výdělek</a></div>
     <div><h3>Data a metodika</h3><a href="/data-a-benchmarky.html">Data a benchmarky</a><a href="/priplatky-za-praci-2026-benchmark.csv" download>CSV: model 2026</a><a href="/priplatky-kolektivni-smlouvy-2025-mpsv.csv" download>CSV: MPSV 2025</a><a href="/jak-pocitame.html">Jak počítáme</a></div>
     <div><h3>Informace</h3><a href="/kalkulacky.html">Všechny kalkulačky</a><a href="/kontakt.html">Kontakt</a><a href="/podminky-pouziti.html">Podmínky použití</a><a href="/ochrana-osobnich-udaju.html">Ochrana osobních údajů</a></div>
   </div>
   <div class="sf-shell sf-footer-bottom"><span>© 2026 RychléVýpočty.cz.</span><span><strong>Upozornění:</strong> Výsledek je transparentní kontrolní model. Nenahrazuje evidenci pracovní doby, mzdové podklady zaměstnavatele ani individuální právní posouzení.</span></div>
 </footer>
-<script src="/priplatky-smeny.js?v=20260817-flagship2" defer></script>
+<script src="/priplatky-smeny.js?v=20260818-a11y1" defer></script>
 <!-- RV-VNEXT: status=DONE | major=2026-08-17 | qa=PASS | archetype=Shift-Pay-Inspector -->
 </body>
 </html>

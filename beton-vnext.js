@@ -120,4 +120,29 @@
   $("copyResult")?.addEventListener("click",copySummary); $("printResult")?.addEventListener("click",()=>window.print());
   const menuToggle=$("menuToggle"),mainNav=$("mainNav"); menuToggle?.addEventListener("click",()=>{const open=mainNav.classList.toggle("is-open");menuToggle.setAttribute("aria-expanded",String(open));menuToggle.setAttribute("aria-label",open?"Zavřít navigaci":"Otevřít navigaci")}); mainNav?.querySelectorAll("a").forEach(a=>a.addEventListener("click",()=>{mainNav.classList.remove("is-open");menuToggle?.setAttribute("aria-expanded","false")}));
   renderComponents(); renderAll();
+
+  // RV V-next accessibility hardening: complete keyboard model for ARIA tabs.
+  (function bindRvTabs(){
+    const tablist=document.querySelector('.c-mode');
+    if(!tablist) return;
+    const tabs=Array.from(tablist.querySelectorAll('[role="tab"]'));
+    if(!tabs.length) return;
+    const sync=()=>tabs.forEach(tab=>tab.setAttribute('tabindex',tab.getAttribute('aria-selected')==='true'?'0':'-1'));
+    tabs.forEach(tab=>tab.addEventListener('click',sync));
+    tablist.addEventListener('keydown',event=>{
+      const index=tabs.indexOf(document.activeElement);
+      if(index<0) return;
+      let next=index;
+      if(event.key==='ArrowRight'||event.key==='ArrowDown') next=(index+1)%tabs.length;
+      else if(event.key==='ArrowLeft'||event.key==='ArrowUp') next=(index-1+tabs.length)%tabs.length;
+      else if(event.key==='Home') next=0;
+      else if(event.key==='End') next=tabs.length-1;
+      else return;
+      event.preventDefault();
+      tabs[next].click();
+      tabs[next].focus();
+      sync();
+    });
+    sync();
+  })();
 })();

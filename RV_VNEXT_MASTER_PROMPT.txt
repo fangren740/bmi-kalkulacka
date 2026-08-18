@@ -1,5 +1,5 @@
 RYCHLÉVÝPOČTY.CZ V7 — V-NEXT PORTFOLIO REBUILD MASTER PROMPT
-Verze protokolu: 1.3
+Verze protokolu: 1.4
 Založeno: 17. 8. 2026
 Poslední revize: 18. 8. 2026
 
@@ -244,6 +244,9 @@ Minimální QA:
 - accessibility / agent-tree gate: před DONE nesmí zůstat známý automatický PageSpeed/Lighthouse accessibility fail. Povinně kontroluj role/ARIA kompatibilitu, required ARIA children, keyboard model vlastních widgetů, kontrast malého textu, touch targety a validní accessibility tree. U `tablist` používej skutečné `role=tab` + `tabpanel` + `aria-controls/aria-labelledby` + roving tabindex/klávesnici. `aria-label` nedávej na generické prvky bez podporované role.
 - post-deploy accessibility gate: cílem je mobilní PageSpeed/Lighthouse Accessibility 100. Pokud produkční audit ukáže automatický fail, stránka zůstává RELEASE_CANDIDATE i když výpočet, SEO a vizuál prošly. Výjimka pouze pro zdokumentovaný false positive / nerelevantní experimentální audit.
 - agent browsing gate: pokud PageSpeed/Chrome reportuje chybný accessibility tree pro AI agenty, považuj to za strukturální QA chybu stejné priority jako běžný ARIA fail; u dostupného agent auditu mířit na plný PASS.
+- systemic regression rule: pokud se po nasazení objeví opakovatelná třída chyby (např. špatný `tablist`, nepodporované `aria-*`, kontrast, touch target, schema, overflow), neopravuj pouze aktuální URL. PŘED dalším buildem proveď cílený sweep všech již dokončených V-next stránek, zjisti rozsah stejného vzoru, oprav pouze skutečně dotčené soubory a přidej tuto chybu do automatického regression/lint gate, aby se nemohla znovu dostat do další kalkulačky.
+- executable a11y lint gate: před RELEASE_CANDIDATE spusť `python rv-vnext-a11y-lint.py <changed HTML...>` nebo ekvivalentní kontrolu. Linter musí minimálně hlídat duplicate IDs, generické `aria-label` bez podporované role, `aria-selected` na nesprávné roli, kompletní `tablist→tab→tabpanel` kontrakt a custom `radiogroup` bez radio potomků. Statický lint nenahrazuje Lighthouse; oba gate jsou povinné.
+- accessibility contract BEFORE BUILD: pokud stránka používá vlastní tabs/radio/accordion/switch/combobox, jeho semantic role model + keyboard model se zamyká ve VISUAL/COMPONENT LOCK ještě před kódem. Accessibility se nesmí doplňovat až po screenshotu.
 
 Povinná produktová QA otázka:
 „Je tato stránka pro člověka zřetelně lepší než běžný SERP výsledek, nebo jsme ji jen hezky přepsali?“

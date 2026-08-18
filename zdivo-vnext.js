@@ -79,4 +79,29 @@
   $("copyResult").addEventListener("click",()=>{const done=()=>{const old=$("copyResult").textContent;$("copyResult").textContent="Zkopírováno";setTimeout(()=>$("copyResult").textContent=old,1200);};navigator.clipboard?.writeText(lastSummary).then(done).catch(()=>{});});
   const mt=$("menuToggle"),nav=$("mainNav"); mt?.addEventListener("click",()=>{const open=nav.classList.toggle("is-open");mt.setAttribute("aria-expanded",String(open));});nav?.querySelectorAll("a").forEach(a=>a.addEventListener("click",()=>{nav.classList.remove("is-open");mt?.setAttribute("aria-expanded","false");}));
   syncProductUI(); setMode("dimensions");
+
+  // RV V-next accessibility hardening: complete keyboard model for ARIA tabs.
+  (function bindRvTabs(){
+    const tablist=document.querySelector('.m-mode');
+    if(!tablist) return;
+    const tabs=Array.from(tablist.querySelectorAll('[role="tab"]'));
+    if(!tabs.length) return;
+    const sync=()=>tabs.forEach(tab=>tab.setAttribute('tabindex',tab.getAttribute('aria-selected')==='true'?'0':'-1'));
+    tabs.forEach(tab=>tab.addEventListener('click',sync));
+    tablist.addEventListener('keydown',event=>{
+      const index=tabs.indexOf(document.activeElement);
+      if(index<0) return;
+      let next=index;
+      if(event.key==='ArrowRight'||event.key==='ArrowDown') next=(index+1)%tabs.length;
+      else if(event.key==='ArrowLeft'||event.key==='ArrowUp') next=(index-1+tabs.length)%tabs.length;
+      else if(event.key==='Home') next=0;
+      else if(event.key==='End') next=tabs.length-1;
+      else return;
+      event.preventDefault();
+      tabs[next].click();
+      tabs[next].focus();
+      sync();
+    });
+    sync();
+  })();
 })();

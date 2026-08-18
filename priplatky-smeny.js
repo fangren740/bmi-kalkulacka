@@ -186,7 +186,7 @@
   }
   function updateRegimeUi() {
     $('payRegime').value=regime;
-    qsa('[data-regime]').forEach(b=>b.classList.toggle('is-active',b.dataset.regime===regime));
+    qsa('[data-regime]').forEach(b=>{const active=b.dataset.regime===regime;b.classList.toggle('is-active',active);b.setAttribute('aria-checked',String(active));b.setAttribute('tabindex',active?'0':'-1');});
     $('salaryRestWrap').hidden=regime!=='salary';
     $('wageOvertimeIncludedWrap').hidden=regime!=='wage';
     if(regime!=='salary') $('salaryRestDay').checked=false;
@@ -394,4 +394,49 @@
     setInputMode(inputMode); updateRegimeUi(); calculate();
   }
   wire();
+
+  // RV V-next accessibility hardening: complete keyboard model for ARIA tabs.
+  (function bindRvTabs(){
+    const tablist=document.querySelector('.sf-mode-tabs');
+    if(!tablist) return;
+    const tabs=Array.from(tablist.querySelectorAll('[role="tab"]'));
+    if(!tabs.length) return;
+    const sync=()=>tabs.forEach(tab=>tab.setAttribute('tabindex',tab.getAttribute('aria-selected')==='true'?'0':'-1'));
+    tabs.forEach(tab=>tab.addEventListener('click',sync));
+    tablist.addEventListener('keydown',event=>{
+      const index=tabs.indexOf(document.activeElement);
+      if(index<0) return;
+      let next=index;
+      if(event.key==='ArrowRight'||event.key==='ArrowDown') next=(index+1)%tabs.length;
+      else if(event.key==='ArrowLeft'||event.key==='ArrowUp') next=(index-1+tabs.length)%tabs.length;
+      else if(event.key==='Home') next=0;
+      else if(event.key==='End') next=tabs.length-1;
+      else return;
+      event.preventDefault();
+      tabs[next].click();
+      tabs[next].focus();
+      sync();
+    });
+    sync();
+  })();
+
+  // RV V-next accessibility hardening: keyboard model for the custom pay-regime radio group.
+  (function bindRegimeRadios(){
+    const group=document.querySelector('.sf-regime-grid');
+    if(!group) return;
+    const radios=Array.from(group.querySelectorAll('[role="radio"]'));
+    group.addEventListener('keydown',event=>{
+      const index=radios.indexOf(document.activeElement);
+      if(index<0) return;
+      let next=index;
+      if(event.key==='ArrowRight'||event.key==='ArrowDown') next=(index+1)%radios.length;
+      else if(event.key==='ArrowLeft'||event.key==='ArrowUp') next=(index-1+radios.length)%radios.length;
+      else if(event.key==='Home') next=0;
+      else if(event.key==='End') next=radios.length-1;
+      else return;
+      event.preventDefault();
+      radios[next].click();
+      radios[next].focus();
+    });
+  })();
 })();
