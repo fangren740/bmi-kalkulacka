@@ -1,7 +1,7 @@
 # RychléVýpočty.cz V-next — Production Standard
 
 **Revize:** 18. 8. 2026  
-**Verze:** 1.4
+**Verze:** 1.5
 
 Tento dokument je závazný výrobní checklist pro každý nový kalkulátor, tool, utilitu, tracker, lookup nebo datový produkt. Cílem není vyrábět více URL, ale každý nový asset posunout nad úroveň předchozí generace RychléVýpočty.cz.
 
@@ -56,6 +56,10 @@ Identita nesmí přebít pochopení produktu. Přibližně 80 % vizuálu patří
 - Preferuj CSS/SVG před těžkými bitmapami.
 - Generický gradient bez rozpoznatelné brand/topic identity sám o sobě toto pravidlo nesplňuje.
 - Hero visual gate = FAIL, pokud první viewport působí vizuálně nedodělaně, sterilně nebo zaměnitelně s desítkami jiných RV stránek.
+- **Signature blocks mimo hero:** minimálně dva hlavní bloky stránky musí mít vlastní tematickou vizuální gramatiku, která není jen další grid stejných cards. U technických témat preferuj material atlas, řez/schéma, system console, comparison rail, decision map nebo scénářovou vizualizaci.
+- **Section rhythm:** nepovoluj více než dvě po sobě jdoucí sekce se stejnou kompozicí `headline + equal cards`. Změna barvy backgroundu sama o sobě se nepočítá jako nová vizuální gramatika.
+- **Visual sameness review:** před releasem screenshotově porovnej produkt s předchozími 3 V-next buildy. Pokud je struktura zaměnitelná po výměně textu a barev, release FAIL.
+- U kalkulaček s produktovými presety nabídnout bezpečný režim **Vlastní výrobek / technický list**, pokud lze výpočet provést z explicitních uživatelských parametrů bez domýšlení systému.
 - Samotný low-opacity nápis/watermark není automaticky PASS. U významného produktu musí hero mít tematicky nativní vizuální logiku (např. řez, tok, mapa, časová osa, skladba, geometrie, produktový scénář), kterou nelze beze změny přenést na jiný intent.
 - Před buildem explicitně napiš jednu větu: **„Proč tento hero vizuál patří právě tomuto produktu?“** Bez přesvědčivé odpovědi se hero nezamyká.
 

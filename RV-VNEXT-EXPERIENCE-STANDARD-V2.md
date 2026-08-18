@@ -1,7 +1,7 @@
 # RychléVýpočty.cz V-next — Experience Standard v2
 
 **Revize:** 18. 8. 2026  
-**Verze:** 2.2  
+**Verze:** 2.3  
 **Účel:** závazná produktová a UX nadstavba nad `RV-VNEXT-PRODUCTION-STANDARD.md` pro nové kalkulačky, decision tooly, trackery a lookupy.
 
 ## 0. Proč v2 vzniká
@@ -29,6 +29,15 @@ Každý tool musí mít:
 ---
 
 ## 2. Vlastní vizuální gramatika každého produktu
+
+### 2.1 Premium page dramaturgy — hero nestačí
+- Vizuální originalita se hodnotí přes **celou stránku**, ne pouze první viewport.
+- Každá významná kalkulačka musí mít nejméně **2 signature visual blocks mimo hero**, které vycházejí z jejího problému (material atlas, technical cutaway, decision console, timeline, route/map, scenario board, data plot, system matrix…).
+- Ne více než **2 po sobě jdoucí hlavní sekce** ve formátu `headline + grid stejných cards`. Poté musí přijít změna rytmu, měřítka nebo vizuálního jazyka.
+- Dark card + KPI grid není automatický premium pattern. Používat ho jen tehdy, když je výsledková/dashboardová logika nativní pro user job.
+- Před BUILD LOCK proveď **3-page anti-template comparison** proti posledním třem V-next produktům. Cíl: stejná brand rodina, ale jiná kompozice, signature bloky a vizuální metafora.
+- Premium ≠ více dekorací. Premium = lepší hierarchie, vlastní vizuální metafora, kontrolovaný prostor, kvalitní microdetail a jasná dramaturgie.
+
 
 Hero a výsledek se nesmí skládat automaticky ze stejného dashboardu.
 
@@ -330,6 +339,8 @@ Release pouze pokud je 16× ANO:
 13. Vypadá stránka jako produkt vytvořený pro tento problém, ne jako přebarvená šablona?
 14. Projde custom UI semantikou a klávesnicí bez ARIA/role chyby a bez rozbitého accessibility tree?
 15. Projde produkční mobilní Lighthouse/PageSpeed accessibility bez automatického failu (cílově 100), včetně kontrastu a touch targetů?
+16. Má stránka mimo hero alespoň dva signaturní vizuální bloky nativní pro tento problém, nebo po kalkulačce sklouzává do generických card gridů?
+17. Prošla screenshotovým anti-template porovnáním s předchozími 3 V-next stránkami a je zřejmé, že jde o jiný produkt, ne stejnou stránku s jiným textem?
 16. Pokud jsme v této wave objevili novou systémovou QA chybu, proběhl regression sweep starších V-next URL a byla chyba přidána do lint/standardu?
 
 ---
