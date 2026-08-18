@@ -81,7 +81,37 @@ Pravidla:
 - generický gradient se nepovažuje za identitní vrstvu;
 - pokud po odstranění textu není hero vizuálně rozpoznatelné jako konkrétní RV produkt nebo alespoň tematicky ukotvené, visual gate není splněn.
 
+### 3.2 Hero distinctiveness gate — presence ≠ quality
+Hero nesplní standard jen tím, že obsahuje watermark. Před zamknutím musí projít čtyřmi otázkami:
+1. **Relevance:** vysvětluje vizuální motiv něco z problému nebo rozhodnutí?
+2. **Distinctiveness:** je motiv přirozeně jiný než u předchozí kalkulačky?
+3. **Brand integration:** působí jako RV produkt, ne jako náhodná stock dekorace?
+4. **Composition:** zvyšuje vizuální energii stránky, aniž by soutěžil s H1 a CTA?
+
+Pouhý velký text tématu v nízké opacity = podpůrná vrstva, nikoli signaturní hero. U odborných produktů preferovat nativní vizuální logiku problému: technický řez, tok, skladbu, měřítko, graf závislosti, mapu rozhodnutí, timeline apod.
+
+Před BUILD LOCK musí být zapsána věta: **„Tento hero vizuál patří právě sem, protože …“**. Pokud ji nelze přesvědčivě dokončit, hero se vrací do návrhu.
+
 **Zakázané defaulty:** obří H1 jen proto, aby byl „premium“; tmavý panel vpravo bez informační funkce; série generických KPI karet; falešná statistika nebo testimonial; sterilní textová plocha bez brand/topic identity, pokud není vědomě odůvodněná.
+
+---
+
+### 3.3 Content Sufficiency / Authority Gate
+Design a výpočet nejsou hotový produkt, pokud stránka po výsledku nepokrývá relevantní rozhodovací kontext. Před buildem vznikne **CONTENT COVERAGE MATRIX**:
+- výběr správného vstupu / produktu / režimu;
+- interpretace výsledku;
+- compare / delta scénář;
+- chyby a edge cases;
+- metodická hranice a co nástroj záměrně neřeší;
+- konkrétní worked example;
+- primární zdroje / data;
+- next action.
+
+Každý bod se označí `RELEVANT` nebo `N/A`. Release je FAIL, pokud některý `RELEVANT` bod není na stránce skutečně pokryt. Nejde o počet sekcí ani slov; několik bodů lze spojit do jednoho silného modulu.
+
+**Authority floor pro odborná témata:** správný výběrový kontext + interpretace + metodická hranice + worked example/compare + častá chyba + primární zdroj.
+
+Povinný test: **„Po výpočtu — jakou zásadní otázku by uživatel ještě musel hned googlit, aby mohl bezpečně udělat stejné rozhodnutí?“** Pokud existuje zjevná odpověď v rámci stejného intentu, stránka je příliš stručná.
 
 ---
 

@@ -1,7 +1,7 @@
 # RychléVýpočty.cz V-next — Production Standard
 
 **Revize:** 18. 8. 2026  
-**Verze:** 1.1
+**Verze:** 1.2
 
 Tento dokument je závazný výrobní checklist pro každý nový kalkulátor, tool, utilitu, tracker, lookup nebo datový produkt. Cílem není vyrábět více URL, ale každý nový asset posunout nad úroveň předchozí generace RychléVýpočty.cz.
 
@@ -56,12 +56,16 @@ Identita nesmí přebít pochopení produktu. Přibližně 80 % vizuálu patří
 - Preferuj CSS/SVG před těžkými bitmapami.
 - Generický gradient bez rozpoznatelné brand/topic identity sám o sobě toto pravidlo nesplňuje.
 - Hero visual gate = FAIL, pokud první viewport působí vizuálně nedodělaně, sterilně nebo zaměnitelně s desítkami jiných RV stránek.
+- Samotný low-opacity nápis/watermark není automaticky PASS. U významného produktu musí hero mít tematicky nativní vizuální logiku (např. řez, tok, mapa, časová osa, skladba, geometrie, produktový scénář), kterou nelze beze změny přenést na jiný intent.
+- Před buildem explicitně napiš jednu větu: **„Proč tento hero vizuál patří právě tomuto produktu?“** Bez přesvědčivé odpovědi se hero nezamyká.
 
-## 6. Obsah / SEO vrstva
-- Pro hlavní transakční a citlivější tooly je interní cíl **min. cca 2 700 užitečných viditelných českých slov**, pokud téma tuto hloubku přirozeně unese. Není to tvrzení o požadavku Googlu.
-- Žádná vata kvůli počtu slov. Obsah musí rozšiřovat intent a podporovat použití toolu.
-- Typicky: co výsledek znamená, metodika, pravidla, omezení, příklady, časté chyby, scénáře, FAQ, zdroje, navazující nástroje.
-- Výsledek/tool zůstává nahoře; dlouhý obsah nikdy nesmí zdržovat uživatele od výpočtu.
+## 6. Obsah / SEO vrstva — Content Sufficiency Gate
+- **Žádná povinná slovní kvóta.** Délka je důsledek pokrytí user jobu, ne cíl. Krátká jednoduchá kalkulačka může být kompletní; odborný nástroj může potřebovat výrazně hlubší authority vrstvu.
+- Před buildem vytvořit **CONTENT COVERAGE MATRIX** s položkami: výběr vstupu/produktu, interpretace výsledku, compare/delta, chyby/edge cases, metodická hranice, konkrétní scénáře, zdroje/data, next action. Každou označit relevantní / nerelevantní a relevantní body během QA zkontrolovat.
+- U technického, finančního, právního, zdravotního nebo jinak odborného toolu musí být viditelný minimálně: kontext správného výběru, interpretace výsledku, metodická hranice, konkrétní scénář/compare, častá chyba/edge case a primární zdroje.
+- Žádná vata kvůli počtu slov. Obsah musí rozšiřovat intent a podporovat reálné použití toolu.
+- Tool zůstává nahoře; authority vrstva přichází po odpovědi a nesmí blokovat výpočet.
+- Release gate FAIL, pokud uživatel po výpočtu musí okamžitě googlit zásadní otázku, která je přirozenou součástí stejného user jobu a mohla být bezpečně pokryta na stránce.
 
 ## 7. Autorita a zdroje
 - Primární zdroje před sekundárními.
@@ -115,10 +119,11 @@ Před ZIPem musí projít:
 5. JSON/JSON-LD/CSV/XML validita,
 6. canonical + indexability + sitemap + registry + hub + katalog,
 7. desktop/mobile screenshot a vizuální kontrola,
-8. **hero identity gate** — první viewport má smysluplnou brand/topic identity layer nebo product visual proof; není sterilní a dekorace nesnižuje čitelnost/výkon,
-9. horizontal overflow 0,
-10. žádná nechtěná změna HOLD URL nebo sdíleného výpočtového jádra,
-11. change-only **FLAT ZIP**, bez podsložek.
+8. **hero identity + distinctiveness gate** — první viewport má smysluplnou brand/topic identity layer nebo product visual proof; samotný generický watermark nestačí,
+9. **content sufficiency gate** — relevantní body CONTENT COVERAGE MATRIX jsou skutečně pokryté a stránka má odpovídající authority floor,
+10. horizontal overflow 0,
+11. žádná nechtěná změna HOLD URL nebo sdíleného výpočtového jádra,
+12. change-only **FLAT ZIP**, bez podsložek.
 
 ## 13. Po nasazení
 - Nový produkt označit jako významnou/MAJOR změnu portfolia a nechat ho měřit.
