@@ -29,7 +29,7 @@
 <meta name="twitter:description" content="Směna podle času, právní režim, souběhy příplatků, náhradní volno a kontrola výplatnice.">
 <meta name="twitter:image" content="https://rychlevypocty.cz/og-rv-priplatky-smeny-v32.jpg">
 <link rel="stylesheet" href="/rv-brand-v32.css?v=20260801-stable">
-<link rel="stylesheet" href="/priplatky-smeny.css?v=20260817-flagship2">
+<link rel="stylesheet" href="/priplatky-smeny.css?v=20260818-flagship3">
 <script defer src="/rv-brand-v32.js?v=20260801"></script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"RychléVýpočty.cz","item":"https://rychlevypocty.cz/"},{"@type":"ListItem","position":2,"name":"Mzdy a práce","item":"https://rychlevypocty.cz/mzdy-a-prace.html"},{"@type":"ListItem","position":3,"name":"Kalkulačka příplatků za směny","item":"https://rychlevypocty.cz/kalkulacka-priplatku-za-smeny.html"}]}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Kalkulačka příplatků za směny 2026","url":"https://rychlevypocty.cz/kalkulacka-priplatku-za-smeny.html","applicationCategory":"BusinessApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","inLanguage":"cs-CZ","isAccessibleForFree":true,"description":"Kalkulačka nočních, víkendových, svátečních a přesčasových příplatků pro mzdu, plat a DPP/DPČ s automatickým rozdělením konkrétní směny.","publisher":{"@type":"Organization","name":"RychléVýpočty.cz","url":"https://rychlevypocty.cz/","sameAs":["https://www.facebook.com/rychlevypocty","https://www.instagram.com/rychlevypocty/"]}}</script>
@@ -59,12 +59,14 @@
       <div class="sf-hero-actions"><a class="sf-btn sf-btn-primary" href="#kalkulacka">Spočítat konkrétní směnu</a><a class="sf-btn sf-btn-secondary" href="#metodika">Jak výpočet vzniká</a></div>
       <ul class="sf-hero-trust"><li>Mzda · plat · DPP/DPČ</li><li>Směna přes půlnoc</li><li>České svátky</li><li>Kontrola výplatnice</li></ul>
     </div>
-    <aside class="sf-hero-board rv-brand-module rv-brand-display" aria-label="Ukázka rozdělení noční víkendové směny">
-      <div class="sf-hero-board-head"><span>SHIFT PAY INSPECTOR</span><b>živý rozpad</b></div>
-      <div class="sf-hero-clock"><strong>22:00</strong><i></i><strong>06:00</strong></div>
-      <div class="sf-hero-mini-track"><span class="night"></span><span class="weekend"></span></div>
-      <div class="sf-hero-amount"><span>Příplatky navíc</span><strong id="heroBonus">288 Kč</strong><small id="heroCaption">noční + víkend</small></div>
-      <div class="sf-hero-kpis"><div><span>Odpracováno</span><strong id="heroWorked">8 h</strong></div><div><span>Celkem v penězích</span><strong id="heroTotal">1 728 Kč</strong></div><div><span>Volno</span><strong id="heroLeave">0 h</strong></div></div>
+    <aside class="sf-hero-board rv-brand-module rv-brand-display" aria-label="Modelový rozpad noční víkendové směny">
+      <div class="sf-hero-board-head"><span>SHIFT PAY INSPECTOR</span><b>model · pátek → sobota</b></div>
+      <div class="sf-hero-clock"><strong><small>Pá</small>22:00</strong><i></i><strong><small>So</small>06:00</strong></div>
+      <div class="sf-hero-mini-track" aria-hidden="true"><span class="night"></span><span class="weekend"></span></div>
+      <div class="sf-hero-track-legend"><div><i class="is-night"></i><span>Noční</span><strong>7,5 h</strong></div><div><i class="is-weekend"></i><span>Víkend</span><strong>5,5 h</strong></div></div>
+      <div class="sf-hero-amount"><span>Příplatky za tuto směnu</span><strong>+234 Kč</strong><small>noční +135 Kč · víkend +99 Kč</small></div>
+      <div class="sf-hero-kpis"><div><span>Odpracováno</span><strong>7,5 h</strong></div><div><span>Celkem v penězích</span><strong>1 584 Kč</strong></div><div><span>Překryv noc + víkend</span><strong>5,5 h</strong></div></div>
+      <p class="sf-hero-explain"><strong>Proč?</strong> Stejná minuta může současně patřit do noční práce i víkendu. Samostatné příplatky se proto v modelu sčítají.</p>
     </aside>
   </div>
 </section>
@@ -141,14 +143,25 @@
 
         <section class="sf-input-section">
           <div class="sf-input-title"><span>03</span><div><strong>Přesčas a způsob kompenzace</strong><small>Přesčas nejde spolehlivě odvodit jen z času směny – závisí na rozvrhu a právních okolnostech.</small></div></div>
-          <div class="sf-four-fields">
-            <label class="sf-field"><span>Přesčasové hodiny</span><div class="sf-unit-input"><input id="overtimeHours" type="number" min="0" max="24" step="0.25" value="0"><b>h</b></div><small id="overtimeHint">Použijte pouze hodiny, které skutečně splňují podmínky práce přesčas.</small></label>
-            <label class="sf-field"><span>Přesčas</span><select class="sf-control" id="overtimeCompensation"><option value="pay" selected>peněžní příplatek</option><option value="leave">náhradní volno</option></select></label>
-            <label class="sf-field"><span>Svátek</span><select class="sf-control" id="holidayCompensation"><option value="leave" selected>náhradní volno</option><option value="pay">příplatek v penězích</option></select></label>
-            <label class="sf-field"><span>Stejných směn v období</span><div class="sf-unit-input"><input id="repeatCount" type="number" min="1" max="31" step="1" value="10"><b>×</b></div><small>Jen pro orientační násobek příplatků.</small></label>
+          <div class="sf-compensation-layout">
+            <div class="sf-comp-card">
+              <div class="sf-comp-card-head"><span>03A</span><div><strong>Přesčas</strong><small>Hodiny a způsob kompenzace držíme pohromadě.</small></div></div>
+              <div class="sf-comp-two">
+                <label class="sf-field"><span>Přesčasové hodiny</span><div class="sf-unit-input"><input id="overtimeHours" type="number" min="0" max="24" step="0.25" value="0"><b>h</b></div><small id="overtimeHint">Použijte jen hodiny, které skutečně splňují podmínky práce přesčas.</small></label>
+                <label class="sf-field"><span>Kompenzace přesčasu</span><select class="sf-control" id="overtimeCompensation"><option value="pay" selected>peněžní příplatek</option><option value="leave">náhradní volno</option></select><small>Volba určuje peníze vs. náhradní volno v modelu.</small></label>
+              </div>
+              <label class="sf-check-row" id="salaryRestWrap" hidden><input id="salaryRestDay" type="checkbox"><span><strong>Přesčas u platu proběhl ve dni nepřetržitého odpočinku v týdnu</strong><small>Pro plat se pak použije 50 % průměrného hodinového výdělku místo běžných 25 %.</small></span></label>
+              <label class="sf-check-row" id="wageOvertimeIncludedWrap"><input id="wageOvertimeIncluded" type="checkbox"><span><strong>Mzda je sjednána s přihlédnutím k určitému rozsahu práce přesčas</strong><small>Zapněte jen pokud to máte skutečně sjednáno včetně rozsahu. Model pak nepřidá další přesčasový příplatek za zadané hodiny.</small></span></label>
+            </div>
+            <div class="sf-comp-card sf-comp-card-secondary">
+              <div class="sf-comp-card-head"><span>03B</span><div><strong>Svátek a opakování</strong><small>Dvě doplňkové volby bez míchání do přesčasové logiky.</small></div></div>
+              <div class="sf-comp-two">
+                <label class="sf-field"><span>Práce ve svátek</span><select class="sf-control" id="holidayCompensation"><option value="leave" selected>náhradní volno</option><option value="pay">příplatek v penězích</option></select><small>Vyberte způsob kompenzace pro sváteční hodiny.</small></label>
+                <label class="sf-field"><span>Stejných směn v období</span><div class="sf-unit-input"><input id="repeatCount" type="number" min="1" max="31" step="1" value="10"><b>×</b></div><small>Jen orientační násobek příplatků, ne evidence docházky.</small></label>
+              </div>
+              <p class="sf-comp-note"><strong>Tip:</strong> Pokud řešíte jen jednu směnu, ponechte hodnotu 1. Násobek nemění právní rozpad jednotlivé směny.</p>
+            </div>
           </div>
-          <label class="sf-check-row" id="salaryRestWrap" hidden><input id="salaryRestDay" type="checkbox"><span><strong>Přesčas u platu proběhl ve dni nepřetržitého odpočinku v týdnu</strong><small>Pro plat se pak použije 50 % průměrného hodinového výdělku místo běžných 25 %.</small></span></label>
-          <label class="sf-check-row" id="wageOvertimeIncludedWrap"><input id="wageOvertimeIncluded" type="checkbox"><span><strong>Mzda je sjednána s přihlédnutím k určitému rozsahu práce přesčas</strong><small>Zapněte jen pokud to máte skutečně sjednáno včetně rozsahu. Model pak nepřidá další přesčasový příplatek za zadané hodiny.</small></span></label>
           <div class="sf-overlap-box" id="overlapBox"><strong>Souběh v této směně</strong><div id="overlapChips" class="sf-overlap-chips"></div><p id="overlapText">Čekám na rozpad konkrétní směny.</p></div>
         </section>
 
