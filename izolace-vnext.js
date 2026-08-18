@@ -287,6 +287,7 @@
       const active = btn.dataset.mode === mode;
       btn.classList.toggle('is-active', active);
       btn.setAttribute('aria-selected', String(active));
+      btn.setAttribute('tabindex', active ? '0' : '-1');
     });
     $('buyPanel').hidden = mode !== 'buy';
     $('comparePanel').hidden = mode !== 'compare';
@@ -349,7 +350,22 @@
     initCompare();
     initProject();
 
-    $$('[data-mode]').forEach(btn => btn.addEventListener('click', () => setMode(btn.dataset.mode)));
+    const modeTabs = $$('[data-mode]');
+    modeTabs.forEach(btn => btn.addEventListener('click', () => setMode(btn.dataset.mode)));
+    $('.in-mode').addEventListener('keydown', event => {
+      const currentIndex = modeTabs.indexOf(document.activeElement);
+      if (currentIndex < 0) return;
+      let nextIndex = currentIndex;
+      if (event.key === 'ArrowRight' || event.key === 'ArrowDown') nextIndex = (currentIndex + 1) % modeTabs.length;
+      else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') nextIndex = (currentIndex - 1 + modeTabs.length) % modeTabs.length;
+      else if (event.key === 'Home') nextIndex = 0;
+      else if (event.key === 'End') nextIndex = modeTabs.length - 1;
+      else return;
+      event.preventDefault();
+      const next = modeTabs[nextIndex];
+      setMode(next.dataset.mode);
+      next.focus();
+    });
     $$('input,select', $('insulationPlanner')).forEach(el => el.addEventListener('input', calculateAndRender));
     $('compareArea').addEventListener('input', calculateAndRender);
     $('compareReserve').addEventListener('input', calculateAndRender);

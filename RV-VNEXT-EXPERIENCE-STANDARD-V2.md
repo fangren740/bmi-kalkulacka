@@ -1,6 +1,7 @@
 # RychléVýpočty.cz V-next — Experience Standard v2
 
 **Revize:** 18. 8. 2026  
+**Verze:** 2.1  
 **Účel:** závazná produktová a UX nadstavba nad `RV-VNEXT-PRODUCTION-STANDARD.md` pro nové kalkulačky, decision tooly, trackery a lookupy.
 
 ## 0. Proč v2 vzniká
@@ -138,6 +139,10 @@ Každá desktopová dvojice polí musí mít stejnou vertikální strukturu:
 
 - standardní control min-height: **52 px**;
 - interní touch target: **min. 44×44 px**;
+- běžný text/helper musí mít kontrast minimálně **4.5:1**; velký text minimálně **3:1**;
+- vlastní widget není hotový jen vizuálně: semantic role model + keyboard model musí být kompletní;
+- `tablist` bez skutečných `tab` potomků je release FAIL, stejně jako `aria-selected` na prvku bez odpovídající role;
+- accessibility tree musí být smysluplný pro screen reader i agentní procházení; generické `div` s `aria-label` bez vhodné role nepoužívat.
 - delší label nesmí posunout vedlejší control;
 - helper text nesmí posunout control, pouze obsah pod ním;
 - na mobilu vždy jedna jasná čtecí osa;
@@ -304,9 +309,9 @@ Každý nový V-next tool se kontroluje minimálně na:
 
 ---
 
-## 15. Experience release gate — 13 otázek
+## 15. Experience release gate — 15 otázek
 
-Release pouze pokud je 13× ANO:
+Release pouze pokud je 15× ANO:
 
 1. Poznám za 5 sekund, co tool řeší?
 2. Je hero tematicky unikátní a současně zjevně RV?
@@ -321,6 +326,8 @@ Release pouze pokud je 13× ANO:
 11. Je další krok jasný?
 12. Jsou metodika, nejistota a zdroj vidět v kontextu?
 13. Vypadá stránka jako produkt vytvořený pro tento problém, ne jako přebarvená šablona?
+14. Projde custom UI semantikou a klávesnicí bez ARIA/role chyby a bez rozbitého accessibility tree?
+15. Projde produkční mobilní Lighthouse/PageSpeed accessibility bez automatického failu (cílově 100), včetně kontrastu a touch targetů?
 
 ---
 

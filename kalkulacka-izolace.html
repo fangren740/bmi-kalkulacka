@@ -29,7 +29,7 @@
 <meta name="twitter:description" content="Nejen m²: spočítejte konkrétní variantu, celé balení a tepelný odpor samotné vrstvy.">
 <meta name="twitter:image" content="https://rychlevypocty.cz/og-rv-izolace-vnext.jpg">
 <link rel="stylesheet" href="/rv-brand-v32.css?v=20260801-stable">
-<link rel="stylesheet" href="/izolace-vnext.css?v=20260818-2">
+<link rel="stylesheet" href="/izolace-vnext.css?v=20260818-3">
 <script defer src="/rv-brand-v32.js?v=20260801"></script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"RychléVýpočty.cz","item":"https://rychlevypocty.cz/"},{"@type":"ListItem","position":2,"name":"Stavba domu","item":"https://rychlevypocty.cz/stavba-domu.html"},{"@type":"ListItem","position":3,"name":"Kalkulačka izolace","item":"https://rychlevypocty.cz/kalkulacka-izolace.html"}]}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Kalkulačka izolace 2026","url":"https://rychlevypocty.cz/kalkulacka-izolace.html","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","inLanguage":"cs-CZ","isAccessibleForFree":true,"description":"Nákupní kalkulačka tepelné izolace podle konkrétního výrobku a tloušťkové varianty. Odděluje čistou plochu, viditelnou rezervu, skutečné m² v balení a tepelný odpor R samotné izolační vrstvy.","publisher":{"@type":"Organization","name":"RychléVýpočty.cz","url":"https://rychlevypocty.cz/","sameAs":["https://www.facebook.com/rychlevypocty","https://www.instagram.com/rychlevypocty/"]}}</script>
@@ -65,7 +65,7 @@
       <div class="in-hero-actions"><a class="in-btn in-btn-primary" href="#kalkulacka">Spočítat izolaci</a><a class="in-btn in-btn-secondary" href="#produktove-reference">Ověřená data</a></div>
       <ul class="in-trust"><li>m²/balení podle tloušťky</li><li>R = d / λ</li><li>projektová agregace</li><li>bez falešného U celé stěny</li></ul>
     </div>
-    <div class="in-thermal-scene" aria-label="Ukázka výpočtu izolační vrstvy">
+    <div class="in-thermal-scene" role="group" aria-label="Ukázka výpočtu izolační vrstvy">
       <div class="in-scene-head"><span>THERMAL LAYER BLUEPRINT</span><b>45 m² · FRONTROCK SUPER</b></div>
       <div class="in-layer-stage" aria-hidden="true">
         <div class="in-wall-layer in-wall-inner"><small>konstrukce</small></div>
@@ -87,16 +87,16 @@
   <div class="in-shell">
     <div class="in-section-head"><p class="in-eyebrow">01 · Produktový výpočet</p><h2>Nejdřív určete skutečnou výrobní variantu.</h2><p>Stejný výrobek může mít při jiné tloušťce jinou plochu v balení. Proto tloušťku nikdy neoddělujeme od konkrétního produktového řádku.</p></div>
     <div class="in-mode" role="tablist" aria-label="Režim kalkulačky">
-      <button class="is-active" type="button" data-mode="buy" aria-selected="true"><strong>Koupit izolaci</strong><small>plocha → balení → R vrstvy</small></button>
-      <button type="button" data-mode="compare" aria-selected="false"><strong>Porovnat tloušťky</strong><small>stejný produkt, dvě varianty</small></button>
-      <button type="button" data-mode="project" aria-selected="false"><strong>Projekt</strong><small>více ploch, jedna varianta</small></button>
+      <button class="is-active" id="buyModeTab" type="button" role="tab" data-mode="buy" aria-selected="true" aria-controls="buyPanel" tabindex="0"><strong>Koupit izolaci</strong><small>plocha → balení → R vrstvy</small></button>
+      <button id="compareModeTab" type="button" role="tab" data-mode="compare" aria-selected="false" aria-controls="comparePanel" tabindex="-1"><strong>Porovnat tloušťky</strong><small>stejný produkt, dvě varianty</small></button>
+      <button id="projectModeTab" type="button" role="tab" data-mode="project" aria-selected="false" aria-controls="projectPanel" tabindex="-1"><strong>Projekt</strong><small>více ploch, jedna varianta</small></button>
     </div>
 
     <div class="in-workbench">
       <form class="in-form" id="insulationPlanner" novalidate>
         <div class="in-error" id="formError" role="alert" hidden></div>
 
-        <div id="buyPanel">
+        <div id="buyPanel" role="tabpanel" aria-labelledby="buyModeTab" tabindex="0">
           <section class="in-step">
             <div class="in-step-head"><span>01</span><div><strong>Čistá plocha izolace</strong><small>Geometrie je oddělená od rezervy a nákupního balení.</small></div></div>
             <label class="in-field in-field-half"><span>Způsob zadání</span><select class="in-control" id="buyAreaMode"><option value="direct" selected>Znám čistou plochu</option><option value="dimensions">Šířka × výška − otvory</option></select></label>
@@ -117,7 +117,7 @@
           </section>
         </div>
 
-        <div id="comparePanel" hidden>
+        <div id="comparePanel" role="tabpanel" aria-labelledby="compareModeTab" tabindex="0" hidden>
           <section class="in-step">
             <div class="in-step-head"><span>01</span><div><strong>Stejná plocha, dvě tloušťky</strong><small>Porovnáme tepelný odpor i skutečné balení.</small></div></div>
             <div class="in-three"><label class="in-field"><span>Čistá plocha</span><div class="in-unit"><input id="compareArea" type="number" min="0.1" step="0.1" value="45"><b>m²</b></div></label><label class="in-field"><span>Rezerva</span><div class="in-unit"><input id="compareReserve" type="number" min="0" max="40" step="1" value="5"><b>%</b></div></label><label class="in-field"><span>Produkt</span><select class="in-control" id="compareProduct"></select></label></div>
@@ -126,7 +126,7 @@
           </section>
         </div>
 
-        <div id="projectPanel" hidden>
+        <div id="projectPanel" role="tabpanel" aria-labelledby="projectModeTab" tabindex="0" hidden>
           <section class="in-step">
             <div class="in-step-head"><span>01</span><div><strong>Jedna varianta pro více ploch</strong><small>Vhodné, když skutečně objednáváte stejný produkt a tloušťku společně.</small></div></div>
             <div class="in-two"><label class="in-field"><span>Produkt</span><select class="in-control" id="projectProduct"></select></label><label class="in-field"><span>Tloušťková varianta</span><select class="in-control" id="projectThickness"></select></label></div>
@@ -227,8 +227,8 @@
 
 <section class="in-related"><div class="in-shell"><div class="in-section-head compact"><p class="in-eyebrow">09 · Navazující nástroje</p><h2>Izolace je jen jedna vrstva stavebního rozhodnutí.</h2></div><div class="in-related-grid"><a href="/kalkulacka-sadrokartonu.html"><span>01</span><strong>Sádrokarton</strong><p>Desky, profily a suchá výstavba.</p></a><a href="/kalkulacka-ceny-strechy.html"><span>02</span><strong>Cena střechy</strong><p>Rozsah střechy, cena a kontrola nabídky.</p></a><a href="/kalkulacka-ceny-zakladove-desky.html"><span>03</span><strong>Základová deska</strong><p>Materiálový a cenový rámec základů.</p></a><a href="/stavba-domu.html"><span>04</span><strong>Stavba domu</strong><p>Celý stavební cluster a další nástroje.</p></a></div></div></section>
 </main>
-<footer class="in-footer rv-brand-footer"><div class="in-shell in-footer-grid"><div class="in-footer-brand"><a class="rv-logo rv-logo--inverse" href="/" aria-label="RychléVýpočty.cz – domů"><img class="rv-logo-image" src="/logo-rv-v32-inverse.svg?v=1" width="295" height="48" alt="" decoding="async"></a><p>Praktické české kalkulačky s transparentním výpočtem, srozumitelným výsledkem a dohledatelnými zdroji.</p><a href="mailto:rychlevypocty@seznam.cz">rychlevypocty@seznam.cz</a><div class="in-socials" aria-label="Oficiální profily RychléVýpočty.cz"><a href="https://www.facebook.com/rychlevypocty" rel="me" aria-label="Facebook"><svg aria-hidden="true" viewBox="0 0 24 24"><path fill="currentColor" d="M13.7 22v-8h2.7l.4-3h-3.1V9.1c0-.9.3-1.5 1.6-1.5H17V4.9c-.3 0-1.3-.1-2.4-.1-2.5 0-4.2 1.5-4.2 4.3V11H7.6v3h2.8v8h3.3z"/></svg></a><a href="https://www.instagram.com/rychlevypocty/" rel="me" aria-label="Instagram"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1" fill="currentColor" stroke="none"/></svg></a></div></div><div><h3>Stavba</h3><a href="/stavba-domu.html">Stavba domu</a><a href="/kalkulacka-sadrokartonu.html">Sádrokarton</a><a href="/kalkulacka-ceny-strechy.html">Střecha</a><a href="/kalkulacka-betonu.html">Beton</a></div><div><h3>Data a metodika</h3><a href="/data-a-benchmarky.html">Data a benchmarky</a><a href="/izolace-2026-overene-produktove-varianty.csv" download>CSV: izolace 2026</a><a href="/jak-pocitame.html">Jak počítáme</a><a href="/redakcni-zasady.html">Redakční zásady</a></div><div><h3>Informace</h3><a href="/kalkulacky.html">Všechny kalkulačky</a><a href="/kontakt.html">Kontakt</a><a href="/podminky-pouziti.html">Podmínky použití</a><a href="/ochrana-osobnich-udaju.html">Ochrana osobních údajů</a></div></div><div class="in-shell in-footer-bottom"><span>© 2026 RychléVýpočty.cz. Výpočty jsou orientační.</span><span><strong>Upozornění:</strong> Výsledek je nákupní a fyzikální model konkrétní izolační vrstvy. Nenahrazuje technický list, systémový předpis, tepelnětechnický návrh celé konstrukce ani projektovou dokumentaci.</span></div></footer>
-<script src="/izolace-vnext.js?v=20260818-1"></script>
+<footer class="in-footer rv-brand-footer"><div class="in-shell in-footer-grid"><div class="in-footer-brand"><a class="rv-logo rv-logo--inverse" href="/" aria-label="RychléVýpočty.cz – domů"><img class="rv-logo-image" src="/logo-rv-v32-inverse.svg?v=1" width="295" height="48" alt="" decoding="async"></a><p>Praktické české kalkulačky s transparentním výpočtem, srozumitelným výsledkem a dohledatelnými zdroji.</p><a href="mailto:rychlevypocty@seznam.cz">rychlevypocty@seznam.cz</a><div class="in-socials" role="group" aria-label="Oficiální profily RychléVýpočty.cz"><a href="https://www.facebook.com/rychlevypocty" rel="me" aria-label="Facebook"><svg aria-hidden="true" viewBox="0 0 24 24"><path fill="currentColor" d="M13.7 22v-8h2.7l.4-3h-3.1V9.1c0-.9.3-1.5 1.6-1.5H17V4.9c-.3 0-1.3-.1-2.4-.1-2.5 0-4.2 1.5-4.2 4.3V11H7.6v3h2.8v8h3.3z"/></svg></a><a href="https://www.instagram.com/rychlevypocty/" rel="me" aria-label="Instagram"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1" fill="currentColor" stroke="none"/></svg></a></div></div><div><h3>Stavba</h3><a href="/stavba-domu.html">Stavba domu</a><a href="/kalkulacka-sadrokartonu.html">Sádrokarton</a><a href="/kalkulacka-ceny-strechy.html">Střecha</a><a href="/kalkulacka-betonu.html">Beton</a></div><div><h3>Data a metodika</h3><a href="/data-a-benchmarky.html">Data a benchmarky</a><a href="/izolace-2026-overene-produktove-varianty.csv" download>CSV: izolace 2026</a><a href="/jak-pocitame.html">Jak počítáme</a><a href="/redakcni-zasady.html">Redakční zásady</a></div><div><h3>Informace</h3><a href="/kalkulacky.html">Všechny kalkulačky</a><a href="/kontakt.html">Kontakt</a><a href="/podminky-pouziti.html">Podmínky použití</a><a href="/ochrana-osobnich-udaju.html">Ochrana osobních údajů</a></div></div><div class="in-shell in-footer-bottom"><span>© 2026 RychléVýpočty.cz. Výpočty jsou orientační.</span><span><strong>Upozornění:</strong> Výsledek je nákupní a fyzikální model konkrétní izolační vrstvy. Nenahrazuje technický list, systémový předpis, tepelnětechnický návrh celé konstrukce ani projektovou dokumentaci.</span></div></footer>
+<script src="/izolace-vnext.js?v=20260818-2"></script>
 <!-- RV-VNEXT: status=RELEASE_CANDIDATE | major=2026-08-18 | qa=LOCAL_PENDING_MANUAL_PRODUCTION_GATE -->
 </body>
 </html>
