@@ -896,18 +896,16 @@
       "notes": "#19 rebuild separates the primary user job from data analysis. Apartment quick mode uses published 2026 public ranges by actual work scope; complete apartment adds a nearest published RENOVIU size/type control point. House mode separates interior-without-new-roof/facade from a wider old-house renovation model. No automatic region or premium coefficient and default reserve is 0%. Own-budget mode sums only user-entered quotes. Public sources retain their original region/scope rather than being averaged into a fake market price. User review caught an apples-vs-oranges RV DATA visualization: source names, regions and a fixed 55 m² RENOVIU example had been presented as equivalent rows. V2 fixes this by comparing only complete-apartment Kč/m² sources on a real 0–25k shared scale with explicit source+region+scope labels; RENOVIU fixed 55 m² panel/brick examples are now a separate block. Comparison Integrity Gate added to production standard v1.8 and master prompt. User accepted V2 comparison-integrity fix on 19. 8. 2026; public Kč/m² bands now compare like-for-like rows and fixed RENOVIU examples are separated from the range chart.",
       "comparisonIntegrityGate": "PASS_AFTER_V2_FIX",
       "manualProductionVisualGateAt": "2026-08-19"
-    }
-  ],
-  "inProgressPages": [
+    },
     {
       "file": "objem-materialu-kalkulacka.html",
       "url": "https://rychlevypocty.cz/objem-materialu-kalkulacka.html",
-      "status": "RELEASE_CANDIDATE",
+      "status": "DONE",
       "decision": "KEEP + FULL REBUILD",
       "archetype": "Material Measure Board / geometry-first m³ + supplier conversion",
       "majorChangeDate": "2026-08-19",
       "researchVerifiedAt": "2026-08-19",
-      "qaStatus": "LOCAL_QA_PASS_MANUAL_VISUAL_GATE_PENDING_AFTER_ALIGNMENT_FIX",
+      "qaStatus": "PASS",
       "benchmarkDataset": {
         "enabled": false,
         "reason": "No RV DATA benchmark: geometry/unit conversions are deterministic and a scenario table would be trivial."
@@ -926,7 +924,7 @@
       "navigationHierarchyGate": "PASS – linear sections, no competing anchor/tab navigation",
       "comparisonIntegrityGate": "N/A – no comparative chart",
       "flexibilityGate": "PASS – density, bag volume and price are explicit user/supplier inputs; no preset material properties",
-      "notes": "Full V-next rebuild around the generic geometry job rather than product-specific ordering. Core output is m³ and litres from area+layer, box, cylinder or known volume. Reserve defaults to 0%. Tonnes require supplier-provided t/m³; bag count requires litres per package; price uses only user-entered price. No universal density, compaction, settling or truck payload is invented. Specialized gravel/concrete/formwork calculators remain separate to avoid cannibalization. Visual QA follow-up 2026-08-19: user caught top-edge misalignment in the calculator composition. Root causes were the sticky result top offset and non-locked selector-card internal rows. V2 removes desktop sticky offset and locks all four geometry tiles to equal-height grid rows.",
+      "notes": "Full V-next rebuild around the generic geometry job rather than product-specific ordering. Core output is m³ and litres from area+layer, box, cylinder or known volume. Reserve defaults to 0%. Tonnes require supplier-provided t/m³; bag count requires litres per package; price uses only user-entered price. No universal density, compaction, settling or truck payload is invented. Specialized gravel/concrete/formwork calculators remain separate to avoid cannibalization. Visual QA follow-up 2026-08-19: user caught top-edge misalignment in the calculator composition. Root causes were the sticky result top offset and non-locked selector-card internal rows. V2 removes desktop sticky offset and locks all four geometry tiles to equal-height grid rows. User accepted the V2 alignment fix on 2026-08-19; manual visual gate closed.",
       "heroDistinctivenessGate": "STATIC_VISUAL_REVIEW_PASS – light material measuring tray, dimensional tags and 1 m³ cube; unlike kitchen/bathroom/renovation layouts. Fresh Chromium screenshot unavailable in current runtime; manual preview gate pending.",
       "contentSufficiencyGate": "PASS",
       "localQa": {
@@ -940,13 +938,62 @@
         "calculationFixtures": "PASS by independent formula check – 20 m² × 5 cm = 1.00 m³ = 1000 l; box 4×2×0.2 = 1.60 m³; cylinder Ø1.2×1 = 1.13 m³; 10% reserve => 1.10 m³; 1.55 t/m³ => 1.705 t; 50 l package => 22 packages",
         "browserRuntime": "MANUAL_GATE_REQUIRED – Chromium automation unstable in current runtime; no browser PASS claimed"
       },
-      "layoutAlignmentGate": "FIXED 2026-08-19 – geometry selector tiles now share one top baseline/equal-height internal grid; result card no longer uses sticky top offset that could visually drop it below the form card."
+      "layoutAlignmentGate": "FIXED 2026-08-19 – geometry selector tiles now share one top baseline/equal-height internal grid; result card no longer uses sticky top offset that could visually drop it below the form card.",
+      "manualProductionVisualGate": "PASS",
+      "manualProductionVisualGateAt": "2026-08-19"
+    }
+  ],
+  "inProgressPages": [
+    {
+      "file": "dph-kalkulacka.html",
+      "url": "https://rychlevypocty.cz/dph-kalkulacka.html",
+      "status": "RELEASE_CANDIDATE",
+      "decision": "KEEP + FULL REBUILD",
+      "archetype": "Receipt Split / invoice math desk",
+      "majorChangeDate": "2026-08-19",
+      "researchVerifiedAt": "2026-08-19",
+      "qaStatus": "LOCAL_BROWSER_PASS_MANUAL_VISUAL_GATE_PENDING",
+      "benchmarkDataset": {
+        "enabled": false,
+        "reason": "No RV DATA benchmark: DPH arithmetic is deterministic; a scenario table would be trivial."
+      },
+      "primaryIntentGate": "PASS – price + direction + rate immediately returns base, tax and gross.",
+      "navigationHierarchyGate": "PASS – linear page, no second anchor/tab navigation.",
+      "comparisonIntegrityGate": "N/A – no mixed comparison chart.",
+      "contentCoverageMatrix": {
+        "choose_input_or_mode": "PASS",
+        "interpret_result": "PASS",
+        "compare_or_decision": "N/A",
+        "errors_edge_cases": "PASS",
+        "method_boundary": "PASS",
+        "worked_examples": "PASS",
+        "sources_data": "PASS",
+        "next_action": "PASS"
+      },
+      "notes": "Rebuild keeps the exact tax arithmetic simple in the first viewport, adds invoice-line aggregation as a secondary job, and explicitly refuses to determine the correct legal VAT rate, exemption, reverse-charge treatment or deduction entitlement. Primary methodology verified against Finanční správa sources on 2026-08-19.",
+      "heroDistinctivenessGate": "PASS – physical receipt split scene + VAT stamp; product-native and not reused from construction/renovation archetypes.",
+      "contentSufficiencyGate": "PASS",
+      "accessibilityContract": "PASS – native radios/inputs/selects; no custom tabs; 44px controls; mobile invoice rows retain table semantics but stack visually.",
+      "localQa": {
+        "javascriptSyntax": "PASS",
+        "cssParse": "PASS (tinycss2, 0 parse errors)",
+        "duplicateIds": 0,
+        "jsonLd": "PASS – BreadcrumbList/WebApplication",
+        "a11yLint": "PASS – calculator + catalog + finance hub",
+        "sitemapXml": "PASS",
+        "sitemapLastmod": "2026-08-19",
+        "calculationFixtures": "PASS – 1210 gross@21 => 1000/210; 1120 gross@12 => 1000/120; 10000 net@21 => 12100/2100; custom 15% 1150 gross => 1000/150; invoice 1000@21 + 2×500@12 => 2000 base / 330 tax / 2330 gross",
+        "runtimeBrowserErrors": 0,
+        "responsiveOverflow": "PASS – 0 px at 320/360/390/768/1024/1280/1440",
+        "layoutAlignment": "PASS – calculator and result top edges differ by 0 px at 1440",
+        "mobileMenu": "PASS – open + Escape close"
+      }
     }
   ],
   "nextCandidate": {
-    "file": "objem-materialu-kalkulacka.html",
+    "file": "dph-kalkulacka.html",
     "status": "RELEASE_CANDIDATE",
-    "reason": "#20 closes the planned 10-item Wave 2 after user/manual visual approval; then run Wave 2 review."
+    "reason": "Wave 3 starts with DPH after Wave 2 site review; manual visual gate pending."
   },
   "waves": [
     {
@@ -973,7 +1020,7 @@
     },
     {
       "id": "VNEXT-WAVE-2",
-      "status": "IN_PROGRESS",
+      "status": "REVIEWED_PASS",
       "startedAt": "2026-08-18",
       "targetReviewAfterCompleted": 10,
       "completed": [
@@ -985,10 +1032,21 @@
         "kalkulacka-orientacni-ceny-stavby-domu.html",
         "kalkulacka-ceny-rekonstrukce-kuchyne.html",
         "kalkulacka-ceny-rekonstrukce-koupelny.html",
-        "kalkulacka-nakladu-na-rekonstrukci-bytu-domu.html"
+        "kalkulacka-nakladu-na-rekonstrukci-bytu-domu.html",
+        "objem-materialu-kalkulacka.html"
       ],
-      "next": "objem-materialu-kalkulacka.html",
-      "completedCount": 9
+      "next": "dph-kalkulacka.html",
+      "completedCount": 10,
+      "reviewedAt": "2026-08-19"
+    },
+    {
+      "id": "VNEXT-WAVE-3",
+      "status": "IN_PROGRESS",
+      "startedAt": "2026-08-19",
+      "targetReviewAfterCompleted": 10,
+      "completed": [],
+      "next": "dph-kalkulacka.html",
+      "completedCount": 0
     }
   ],
   "globalDecisions": [
@@ -1025,6 +1083,28 @@
           "Do not judge Wave 1 from GSC yet: most Wave 1 MAJOR changes are 2026-08-17/18 and existing GSC evidence predates them.",
           "Prefer a second production wave over an immediate broad re-edit of Wave 1."
         ]
+      }
+    },
+    {
+      "id": "VNEXT-WAVE-2-SITE-REVIEW",
+      "reviewedAt": "2026-08-19",
+      "status": "PASS_WITH_CALIBRATION_UPGRADES",
+      "completedRebuilds": 10,
+      "scope": [
+        "primary intent clarity",
+        "visual distinctiveness",
+        "navigation hierarchy",
+        "comparison integrity",
+        "layout alignment",
+        "full-release integration"
+      ],
+      "findings": {
+        "productClarity": "PASS after #16 clarity rebuild; Primary Intent + Plain Language Gate is now mandatory.",
+        "comparisonIntegrity": "PASS after #19 correction; fixed examples and rate bands must not share one comparison scale.",
+        "navigationAndAlignment": "PASS after #18/#20 fixes; no competing top-level navigation and equal-card alignment must be visually locked.",
+        "visualDistinctiveness": "PASS: Wave 2 spans floor order desk, insulation blueprint, drywall material desk, masonry wall, plaster studio, house budget atlas, kitchen, bathroom, renovation X-ray and material measure board.",
+        "releasePackaging": "PASS: FULL RELEASE packaging became mandatory during the wave.",
+        "nextWave": "Shift to high-intent finance/business utilities with exact outputs and strong GSC opportunity; start with DPH."
       }
     }
   ],
