@@ -869,7 +869,7 @@
       "archetype": "Renovation X-Ray / public price frame + own quote ledger + scope layers",
       "majorChangeDate": "2026-08-19",
       "researchVerifiedAt": "2026-08-19",
-      "qaStatus": "PASS",
+      "qaStatus": "TECHNICAL_QA_HOTFIX_READY_PRODUCTION_PSI_RETEST_PENDING",
       "benchmarkDataset": {
         "enabled": true,
         "file": "rekonstrukce-2026-verejne-cenove-reference.csv",
@@ -893,9 +893,18 @@
       "heroDistinctivenessGate": "DESIGN LOCK – renovation x-ray board with floor-plan and peeled scope layers; not a kitchen/bathroom room scene and not a generic dashboard.",
       "antiTemplateGate": "DESIGN LOCK – paper plan + scope layers + quote ledger + dark renovation x-ray, no repeated equal-card dashboard grammar.",
       "accessibilityContract": "native radio/input/select/details; visible focus; no custom tabs; mobile menu Escape; 44px preferred targets.",
-      "notes": "#19 rebuild separates the primary user job from data analysis. Apartment quick mode uses published 2026 public ranges by actual work scope; complete apartment adds a nearest published RENOVIU size/type control point. House mode separates interior-without-new-roof/facade from a wider old-house renovation model. No automatic region or premium coefficient and default reserve is 0%. Own-budget mode sums only user-entered quotes. Public sources retain their original region/scope rather than being averaged into a fake market price. User review caught an apples-vs-oranges RV DATA visualization: source names, regions and a fixed 55 m² RENOVIU example had been presented as equivalent rows. V2 fixes this by comparing only complete-apartment Kč/m² sources on a real 0–25k shared scale with explicit source+region+scope labels; RENOVIU fixed 55 m² panel/brick examples are now a separate block. Comparison Integrity Gate added to production standard v1.8 and master prompt. User accepted V2 comparison-integrity fix on 19. 8. 2026; public Kč/m² bands now compare like-for-like rows and fixed RENOVIU examples are separated from the range chart.",
+      "notes": "#19 rebuild separates the primary user job from data analysis. Apartment quick mode uses published 2026 public ranges by actual work scope; complete apartment adds a nearest published RENOVIU size/type control point. House mode separates interior-without-new-roof/facade from a wider old-house renovation model. No automatic region or premium coefficient and default reserve is 0%. Own-budget mode sums only user-entered quotes. Public sources retain their original region/scope rather than being averaged into a fake market price. User review caught an apples-vs-oranges RV DATA visualization: source names, regions and a fixed 55 m² RENOVIU example had been presented as equivalent rows. V2 fixes this by comparing only complete-apartment Kč/m² sources on a real 0–25k shared scale with explicit source+region+scope labels; RENOVIU fixed 55 m² panel/brick examples are now a separate block. Comparison Integrity Gate added to production standard v1.8 and master prompt. User accepted V2 comparison-integrity fix on 19. 8. 2026; public Kč/m² bands now compare like-for-like rows and fixed RENOVIU examples are separated from the range chart. Systemic accessibility regression sweep on 19. 8. 2026 found unlabeled own-budget ledger controls; a non-visual technical hotfix is included in the #25 V2 release. Intent/product unchanged and MAJOR HOLD is not reset.",
       "comparisonIntegrityGate": "PASS_AFTER_V2_FIX",
-      "manualProductionVisualGateAt": "2026-08-19"
+      "manualProductionVisualGateAt": "2026-08-19",
+      "technicalQa": {
+        "detectedAt": "2026-08-19",
+        "classification": "TECHNICAL_QA_REGRESSION_SWEEP",
+        "issue": "own-budget ledger inputs had visual text but lacked programmatic labels",
+        "localFix": "added aria-label + stable name attributes to affected controls",
+        "structuralRegressionLint": "PASS_AFTER_FIX",
+        "productionPageSpeedRetest": "PENDING_AFTER_DEPLOY",
+        "majorHoldReset": false
+      }
     },
     {
       "file": "objem-materialu-kalkulacka.html",
@@ -1039,18 +1048,39 @@
     {
       "file": "kalkulacka-hodinove-sazby-freelancera.html",
       "url": "https://rychlevypocty.cz/kalkulacka-hodinove-sazby-freelancera.html",
-      "status": "DONE",
+      "status": "RELEASE_CANDIDATE",
       "decision": "KEEP + REBUILD",
       "majorChangeDate": "2026-08-19",
       "archetype": "Billable Time Calendar / monthly target divided by real billable hours",
       "researchVerifiedAt": "2026-08-19",
-      "qaStatus": "PASS",
+      "qaStatus": "TECHNICAL_QA_FIX_READY_PRODUCTION_PSI_RETEST_PENDING",
       "benchmarkDataset": {
         "enabled": false
       },
       "minimumHoldUntil": "2026-09-02",
       "holdUntil": "2026-09-16",
-      "notes": "V-next rebuild focused on the primary intent: monthly amount to cover + true billable hours -> transparent minimum hourly rate. No guessed tax/insurance amounts; explicit own reserve only. Manual visual gate passed by user. Footer uses icon-only Facebook and Instagram controls."
+      "notes": "V-next rebuild focused on the primary intent: monthly amount to cover + true billable hours -> transparent minimum hourly rate. No guessed tax/insurance amounts; explicit own reserve only. Manual visual gate passed by user. Footer uses icon-only Facebook and Instagram controls. Production PageSpeed evidence on 19. 8. 2026 exposed an unlabeled actualRate control and low-contrast small text; product remains visually approved but DONE is revoked until the technical hotfix is deployed and production PSI/Agentic browsing is re-run.",
+      "manualProductionVisualGate": "PASS",
+      "technicalQa": {
+        "detectedAt": "2026-08-19",
+        "classification": "TECHNICAL_QA",
+        "source": "production mobile PageSpeed/Lighthouse supplied by user",
+        "observed": [
+          "Accessibility 90",
+          "Agentic browsing 1/2",
+          "form control without programmatic label",
+          "insufficient text contrast"
+        ],
+        "localFixes": [
+          "actualRate now has a real label",
+          "editable fields have stable name attributes",
+          "small-text contrast hardened",
+          "CSS cachebuster bumped"
+        ],
+        "structuralRegressionLint": "PASS_AFTER_FIX",
+        "productionPageSpeedRetest": "PENDING_AFTER_DEPLOY",
+        "majorHoldReset": false
+      }
     }
   ],
   "inProgressPages": [
@@ -1105,7 +1135,10 @@
   "nextCandidate": {
     "file": "kalkulacka-minimalni-fakturace-osvc.html",
     "status": "RELEASE_CANDIDATE",
-    "reason": "#25 rebuilt around explicit monthly needs + number of true billing months -> annual minimum and minimum active-month invoicing. Tax/social/health are never guessed; optional own reserve defaults to zero. Manual visual gate pending."
+    "reason": "#25 V2: hero collision and footer fixed; full-footer + hero-collision gates applied. Structural regression lint PASS. Manual visual gate and post-deploy mobile PSI/Agentic browsing remain required before DONE.",
+    "qaStatus": "LOCAL_BROWSER_PASS_PRODUCTION_PSI_PENDING",
+    "heroCollisionGate": "PASS_LOCAL: measured free gap ~101 px at 1440, ~90 px at 1280, 88 px at 1024",
+    "fullFooterGate": "PASS_LOCAL: full RV footer with inverse logo, link groups, icon-only FB/IG, page-specific disclaimer and bottom methodology row"
   },
   "waves": [
     {
@@ -1159,11 +1192,13 @@
       "completed": [
         "dph-kalkulacka.html",
         "kalkulacka-marze-a-prirazky.html",
-        "bod-zvratu-kalkulacka.html",
-        "kalkulacka-hodinove-sazby-freelancera.html"
+        "bod-zvratu-kalkulacka.html"
       ],
       "next": "kalkulacka-minimalni-fakturace-osvc.html",
-      "completedCount": 4
+      "completedCount": 3,
+      "technicalRetestQueue": [
+        "kalkulacka-hodinove-sazby-freelancera.html"
+      ]
     }
   ],
   "globalDecisions": [
@@ -1256,5 +1291,18 @@
       "majorHoldReset": false,
       "nextAction": "Deploy changed-only batch, then spot-check representative pages in mobile PageSpeed/Lighthouse; any remaining page-specific contrast/target finding gets a targeted technical fix."
     }
-  ]
+  ],
+  "qaPolicyRevision": "V-next Production Standard v2.0 — production PSI/agent browsing evidence required before DONE",
+  "latestTechnicalQaSweep": {
+    "date": "2026-08-19",
+    "trigger": "production PageSpeed on #24 showed Accessibility 90 and Agentic browsing 1/2",
+    "scope": "all V-next completedPages + current candidate from RV_VNEXT_PROGRESS.json",
+    "linterChange": "--all-vnext now derives page list from progress JSON and checks programmatic labels on editable controls",
+    "pagesWithMissingLabelPattern": [
+      "kalkulacka-hodinove-sazby-freelancera.html",
+      "kalkulacka-nakladu-na-rekonstrukci-bytu-domu.html"
+    ],
+    "localStructuralResult": "25/25 PASS after hotfixes",
+    "productionPsi": "must be re-run after deployment; local lint is not a substitute"
+  }
 }

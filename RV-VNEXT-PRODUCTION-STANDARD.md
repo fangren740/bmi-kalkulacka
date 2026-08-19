@@ -1,7 +1,7 @@
 # RychléVýpočty.cz V-next — Production Standard
 
 **Revize:** 19. 8. 2026  
-**Verze:** 1.9
+**Verze:** 2.0
 
 Tento dokument je závazný výrobní checklist pro každý nový kalkulátor, tool, utilitu, tracker, lookup nebo datový produkt. Cílem není vyrábět více URL, ale každý nový asset posunout nad úroveň předchozí generace RychléVýpočty.cz.
 
@@ -46,6 +46,8 @@ První viewport musí bez oborové znalosti odpovědět: **Co tady spočítám? 
 - Ikonové odkazy musí mít `aria-label` s názvem sítě a projektu; samotná dekorativní SVG ikona je `aria-hidden`.
 - Textový název sítě může zůstat pouze jako screen-reader fallback, tooltip nebo tam, kde ikona bez textu objektivně snižuje srozumitelnost.
 - Ikony musí vizuálně sedět do footeru, mít bezpečný hit-area (preferovaně 40–44 px) a nesmí vyžadovat externí icon/font knihovnu.
+- **Full Footer Gate:** významná kalkulačka standardně používá plnohodnotný RV footer: inverse logo + krátký brand claim + ikonové sociální odkazy + minimálně dvě smysluplné linkové skupiny (tematický cluster a informace) + page-specific disclaimer, pokud je relevantní + spodní copyright/metodika řádek. Minimalistický jednopásový footer je výjimka, ne default.
+- Desktop footer musí mít čitelnou hierarchii a sociální ikony zarovnané k brand bloku; disclaimer nesmí být jedna extrémně dlouhá nepřehledná řádka.
 
 ## 3. Základní + pokročilý režim
 - Dva režimy používat všude, kde pokročilá přesnost skutečně vyžaduje více vstupů.
@@ -84,6 +86,7 @@ Identita nesmí přebít pochopení produktu. Přibližně 80 % vizuálu patří
 - Preferuj CSS/SVG před těžkými bitmapami.
 - Generický gradient bez rozpoznatelné brand/topic identity sám o sobě toto pravidlo nesplňuje.
 - Hero visual gate = FAIL, pokud první viewport působí vizuálně nedodělaně, sterilně nebo zaměnitelně s desítkami jiných RV stránek.
+- **Hero Collision Gate:** na desktopu 1280/1440 px musí být copy a tematický vizuál zřetelně oddělené. Text nesmí vizuálně narážet do panelu/ilustrace ani působit „naprcaně“. Pokud nejde o záměrný překryv kompozice, drž reálný volný prostor mezi bounding boxy typicky alespoň ~48 px a ověř ho screenshotem.
 - **Signature blocks mimo hero:** minimálně dva hlavní bloky stránky musí mít vlastní tematickou vizuální gramatiku, která není jen další grid stejných cards. U technických témat preferuj material atlas, řez/schéma, system console, comparison rail, decision map nebo scénářovou vizualizaci.
 - **Section rhythm:** nepovoluj více než dvě po sobě jdoucí sekce se stejnou kompozicí `headline + equal cards`. Změna barvy backgroundu sama o sobě se nepočítá jako nová vizuální gramatika.
 - **Visual sameness review:** před releasem screenshotově porovnej produkt s předchozími 3 V-next buildy. Pokud je struktura zaměnitelná po výměně textu a barev, release FAIL.
@@ -141,6 +144,10 @@ Nový indexovatelný produkt není hotový, dokud není zapojen do projektu:
 - Samostatné CSS/JS s cachebusterem při změně.
 - Preferovat SVG/CSS vizuály před těžkými dekorativními obrázky.
 - PageSpeed/Core Web Vitals nesmí být vědomě obětovány designu.
+- **Production PSI is authoritative:** lokální lint, screenshot ani browser smoke test nejsou náhradou za post-deploy PageSpeed/Lighthouse na skutečné produkční URL. Stránka se nesmí označit DONE, dokud není doložen produkční mobilní audit po nasazení aktuálního HTML/CSS/JS.
+- Pro deterministické kategorie mířit na **Accessibility 100 / Best Practices 100 / SEO 100**. Performance má cíl 100 a nesmí mít známý akční fail; jednotlivý laboratorní výkyv výkonu se hodnotí podle konkrétní diagnostiky, ne slepě podle jednoho bodu.
+- Pokud PageSpeed nabízí **Procházení agenty / Agentic browsing**, požaduj plný PASS dostupných auditů. Chybný accessibility tree, chybějící programmatic label nebo jiný agent accessibility fail = RELEASE_CANDIDATE.
+- Každý `input`, `select` a `textarea` musí mít programmaticky rozpoznatelný název přes skutečný `<label>`, ancestor `<label>`, `aria-label` nebo validní `aria-labelledby`; placeholder není label. U nových kalkulaček přidávej také stabilní `name`, pokud to nemá objektivní nevýhodu.
 - Povinný ARIA/widget audit: žádné nepovolené `aria-*`, chybějící required children/parents ani nekompletní custom tab/accordion semantics.
 - Custom tabs musí mít `tablist → tab → tabpanel`, vazby `aria-controls/aria-labelledby`, roving `tabindex` a ovládání šipkami/Home/End.
 - Kontrast: malý/běžný text minimálně WCAG AA 4.5:1; velký text minimálně 3:1. Muted helper text nesmí být zesvětlen pod limit jen kvůli estetice.
@@ -150,6 +157,7 @@ Nový indexovatelný produkt není hotový, dokud není zapojen do projektu:
 - **Component accessibility contract před buildem:** každý custom tab/radio/accordion/switch/combobox musí mít předem popsaný native/ARIA role model, fokus a keyboard ovládání. Pokud lze použít native HTML control, preferuj jej.
 - **Executable lint:** před ZIPem spusť `python rv-vnext-a11y-lint.py <changed HTML...>` (nebo ekvivalent). PASS z lint gate je povinný, ale nenahrazuje produkční Lighthouse/PageSpeed.
 - **Systemic regression sweep:** objeví-li se po deployi opakovatelná chyba na jedné V-next stránce, před další výrobou prohledej všechny dokončené V-next URL na stejný pattern. Opravu klasifikuj jako TECHNICAL/QA, neresetuj MAJOR HOLD, pokud se nemění intent/produkt. Současně aktualizuj linter/standard, aby se chyba neopakovala.
+- `--all-vnext` nesmí používat zastaralý ručně psaný seznam. Musí primárně načíst aktuální `RV_VNEXT_PROGRESS.json` (`completedPages` + aktuální candidate), aby novější stránky nemohly z regression sweepu vypadnout.
 
 ## 12. Release QA gate
 Před ZIPem musí projít:
@@ -165,9 +173,9 @@ Před ZIPem musí projít:
 10. horizontal overflow 0,
 11. žádná nechtěná změna HOLD URL nebo sdíleného výpočtového jádra,
 12. automatická accessibility QA: ARIA role/attributes/required children, keyboard widget model, kontrast a touch targety bez známého failu,
-13. post-deploy mobilní PageSpeed/Lighthouse Accessibility: cíl **100**; automatický fail = RELEASE_CANDIDATE, ne DONE, pokud nejde o zdokumentovaný false positive,
-14. agent accessibility tree bez strukturálního failu, pokud je audit dostupný,
-15. `rv-vnext-a11y-lint.py` / ekvivalent PASS na všech změněných HTML a při systémové chybě také regression sweep již dokončených V-next URL,
+13. **post-deploy production PageSpeed/Lighthouse evidence**: skutečná produkční URL po nasazení; Accessibility / Best Practices / SEO bez automatického failu a cíl 100; bez tohoto důkazu status zůstává RELEASE_CANDIDATE,
+14. pokud je dostupné **Procházení agenty / Agentic browsing**, požaduj plný PASS; accessibility tree bez strukturálního failu a všechny interaktivní prvky s programmatic name,
+15. `rv-vnext-a11y-lint.py` / ekvivalent PASS na všech změněných HTML; `--all-vnext` musí číst aktuální progress JSON a při systémové chybě proběhne regression sweep již dokončených V-next URL před další výrobou,
 16. change-only **FLAT ZIP**, bez podsložek.
 
 ## 13. Po nasazení

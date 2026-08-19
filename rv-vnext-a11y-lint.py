@@ -6,7 +6,7 @@ Usage:
   python rv-vnext-a11y-lint.py --all-vnext
 
 This is intentionally dependency-free and checks structural mistakes that have
-already escaped into production. It complements, but never replaces, browser
+already escaped into production, including missing form labels. It complements, but never replaces, browser
 and post-deploy Lighthouse/PageSpeed accessibility QA.
 """
 from __future__ import annotations
@@ -104,6 +104,16 @@ def lint_file(path: Path) -> list[str]:
 
     by_id = {n.attrs["id"]: n for n in nodes if n.attrs.get("id")}
 
+    # Every user-editable form control needs a programmatic name. Visual sibling text or placeholder alone is not enough.
+    for n in nodes:
+        if n.tag not in {"input", "select", "textarea"}:
+            continue
+        input_type = n.attrs.get("type", "").lower() if n.tag == "input" else ""
+        if input_type in {"hidden", "button", "submit", "reset", "image"}:
+            continue
+        if not has_programmatic_label(n, nodes, by_id):
+            errors.append(f"{ident(n)} form control has no programmatic label")
+
     # Known bad pattern: generic element with aria-label but no semantic role.
     for n in nodes:
         if n.tag in {"div", "span"} and "aria-label" in n.attrs and not n.attrs.get("role"):
@@ -156,28 +166,70 @@ def lint_file(path: Path) -> list[str]:
     return errors
 
 
+def has_programmatic_label(node: Node, nodes: list[Node], by_id: dict[str, Node]) -> bool:
+    if node.attrs.get("aria-label", "").strip():
+        return True
+    labelledby = [x for x in node.attrs.get("aria-labelledby", "").split() if x]
+    if labelledby and all(x in by_id for x in labelledby):
+        return True
+    current = node.parent
+    while current is not None:
+        if current.tag == "label":
+            return True
+        current = current.parent
+    node_id = node.attrs.get("id")
+    if node_id:
+        for candidate in nodes:
+            if candidate.tag == "label" and candidate.attrs.get("for") == node_id:
+                return True
+    return False
+
+
 def default_vnext_files(base: Path) -> list[Path]:
-    names = [
-        "hypotecni-kalkulacka.html",
-        "kalkulacka-ceny-strechy.html",
-        "kalkulacka-ceny-zakladove-desky.html",
-        "kalkulacka-ceny-hrube-stavby-domu.html",
-        "kalkulacka-cihel-a-tvarnic.html",
-        "kalkulacka-betonu.html",
-        "kalkulacka-priplatku-za-smeny.html",
-        "kalkulacka-sterku.html",
-        "kalkulacka-dlazby-a-obkladu.html",
-        "kalkulacka-barvy-na-malovani.html",
-        "kalkulacka-podlahy.html",
-        "kalkulacka-izolace.html",
-    ]
-    return [base / n for n in names if (base / n).exists()]
+    progress = base / "RV_VNEXT_PROGRESS.json"
+    names: list[str] = []
+    if progress.exists():
+        try:
+            import json
+            data = json.loads(progress.read_text(encoding="utf-8"))
+            for item in data.get("completedPages", []):
+                name = item.get("file")
+                if isinstance(name, str) and name.endswith(".html"):
+                    names.append(name)
+            candidate = data.get("nextCandidate", {})
+            name = candidate.get("file") if isinstance(candidate, dict) else None
+            if isinstance(name, str) and name.endswith(".html"):
+                names.append(name)
+        except Exception:
+            names = []
+    if not names:
+        names = [
+            "hypotecni-kalkulacka.html",
+            "kalkulacka-ceny-strechy.html",
+            "kalkulacka-ceny-zakladove-desky.html",
+            "kalkulacka-ceny-hrube-stavby-domu.html",
+            "kalkulacka-cihel-a-tvarnic.html",
+            "kalkulacka-betonu.html",
+            "kalkulacka-priplatku-za-smeny.html",
+            "kalkulacka-sterku.html",
+            "kalkulacka-dlazby-a-obkladu.html",
+            "kalkulacka-barvy-na-malovani.html",
+            "kalkulacka-podlahy.html",
+            "kalkulacka-izolace.html",
+        ]
+    seen: set[str] = set()
+    result: list[Path] = []
+    for name in names:
+        if name not in seen and (base / name).exists():
+            seen.add(name)
+            result.append(base / name)
+    return result
 
 
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("files", nargs="*", type=Path)
-    ap.add_argument("--all-vnext", action="store_true", help="scan the known V-next rebuilt pages in the current directory")
+    ap.add_argument("--all-vnext", action="store_true", help="scan completedPages + current candidate from RV_VNEXT_PROGRESS.json")
     args = ap.parse_args()
 
     base = Path.cwd()
