@@ -941,18 +941,16 @@
       "layoutAlignmentGate": "FIXED 2026-08-19 – geometry selector tiles now share one top baseline/equal-height internal grid; result card no longer uses sticky top offset that could visually drop it below the form card.",
       "manualProductionVisualGate": "PASS",
       "manualProductionVisualGateAt": "2026-08-19"
-    }
-  ],
-  "inProgressPages": [
+    },
     {
       "file": "dph-kalkulacka.html",
       "url": "https://rychlevypocty.cz/dph-kalkulacka.html",
-      "status": "RELEASE_CANDIDATE",
+      "status": "DONE",
       "decision": "KEEP + FULL REBUILD",
       "archetype": "Receipt Split / invoice math desk",
       "majorChangeDate": "2026-08-19",
       "researchVerifiedAt": "2026-08-19",
-      "qaStatus": "LOCAL_BROWSER_PASS_MANUAL_VISUAL_GATE_PENDING",
+      "qaStatus": "PASS",
       "benchmarkDataset": {
         "enabled": false,
         "reason": "No RV DATA benchmark: DPH arithmetic is deterministic; a scenario table would be trivial."
@@ -970,7 +968,7 @@
         "sources_data": "PASS",
         "next_action": "PASS"
       },
-      "notes": "Rebuild keeps the exact tax arithmetic simple in the first viewport, adds invoice-line aggregation as a secondary job, and explicitly refuses to determine the correct legal VAT rate, exemption, reverse-charge treatment or deduction entitlement. Primary methodology verified against Finanční správa sources on 2026-08-19.",
+      "notes": "Rebuild keeps the exact tax arithmetic simple in the first viewport, adds invoice-line aggregation as a secondary job, and explicitly refuses to determine the correct legal VAT rate, exemption, reverse-charge treatment or deduction entitlement. Primary methodology verified against Finanční správa sources on 2026-08-19. User accepted #21 on 19. 8. 2026; manual visual gate closed.",
       "heroDistinctivenessGate": "PASS – physical receipt split scene + VAT stamp; product-native and not reused from construction/renovation archetypes.",
       "contentSufficiencyGate": "PASS",
       "accessibilityContract": "PASS – native radios/inputs/selects; no custom tabs; 44px controls; mobile invoice rows retain table semantics but stack visually.",
@@ -987,13 +985,42 @@
         "responsiveOverflow": "PASS – 0 px at 320/360/390/768/1024/1280/1440",
         "layoutAlignment": "PASS – calculator and result top edges differ by 0 px at 1440",
         "mobileMenu": "PASS – open + Escape close"
-      }
+      },
+      "manualProductionVisualGate": "PASS",
+      "manualProductionVisualGateAt": "2026-08-19"
+    }
+  ],
+  "inProgressPages": [
+    {
+      "file": "kalkulacka-marze-a-prirazky.html",
+      "url": "https://rychlevypocty.cz/kalkulacka-marze-a-prirazky.html",
+      "status": "RELEASE_CANDIDATE",
+      "decision": "KEEP + FULL REBUILD",
+      "majorChangeDate": "2026-08-19",
+      "researchVerifiedAt": "2026-08-19",
+      "qaStatus": "LOCAL_BROWSER_PASS_MANUAL_PRODUCTION_GATE_PENDING",
+      "archetype": "Price Stack / margin-vs-markup explainer + discount runway",
+      "benchmarkDataset": {
+        "enabled": false,
+        "reason": "Deterministic arithmetic; a benchmark dataset would be synthetic and add no independent insight."
+      },
+      "contentCoverageMatrix": {
+        "choose_mode": "PASS",
+        "interpret_result": "PASS",
+        "compare_delta": "PASS",
+        "errors_edge_cases": "PASS",
+        "method_boundary": "PASS",
+        "worked_examples": "PASS",
+        "sources_data": "N/A",
+        "next_action": "PASS"
+      },
+      "notes": "V-next rebuild focused on the primary intent: cost + selling price -> profit, margin and markup, or cost + target percentage -> required selling price. No invented healthy-margin thresholds. Discount runway is derived only from entered cost and price. Footer social identity uses icon-only Facebook and Instagram controls with accessible names per the new standard."
     }
   ],
   "nextCandidate": {
-    "file": "dph-kalkulacka.html",
+    "file": "kalkulacka-marze-a-prirazky.html",
     "status": "RELEASE_CANDIDATE",
-    "reason": "Wave 3 starts with DPH after Wave 2 site review; manual visual gate pending."
+    "reason": "#22 built under Primary Intent, Navigation, Comparison Integrity and Social Icon Footer gates; manual visual gate pending."
   },
   "waves": [
     {
@@ -1044,9 +1071,11 @@
       "status": "IN_PROGRESS",
       "startedAt": "2026-08-19",
       "targetReviewAfterCompleted": 10,
-      "completed": [],
-      "next": "dph-kalkulacka.html",
-      "completedCount": 0
+      "completed": [
+        "dph-kalkulacka.html"
+      ],
+      "next": "kalkulacka-marze-a-prirazky.html",
+      "completedCount": 1
     }
   ],
   "globalDecisions": [

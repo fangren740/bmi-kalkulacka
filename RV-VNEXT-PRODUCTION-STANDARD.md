@@ -1,7 +1,7 @@
 # RychléVýpočty.cz V-next — Production Standard
 
 **Revize:** 19. 8. 2026  
-**Verze:** 1.8
+**Verze:** 1.9
 
 Tento dokument je závazný výrobní checklist pro každý nový kalkulátor, tool, utilitu, tracker, lookup nebo datový produkt. Cílem není vyrábět více URL, ale každý nový asset posunout nad úroveň předchozí generace RychléVýpočty.cz.
 
@@ -40,6 +40,12 @@ První viewport musí bez oborové znalosti odpovědět: **Co tady spočítám? 
 - Pokud se zdroje liší rozsahem, ukaž rozdíl přímo u dat; neslévej je do jednoho „tržního průměru“ bez obhajitelné normalizace.
 - Vizuální délka sloupce/range musí mít skutečnou společnou stupnici. Dekorativní procenta, která nevycházejí ze stejné osy, jsou FAIL.
 - QA otázka: **„Porovnává každý řádek opravdu totéž?“** Pokud ne, rozdělit data do samostatných bloků nebo změnit vizualizaci.
+
+### 2.4 Social Icon Footer Gate — povinné od 19. 8. 2026
+- Oficiální Facebook a Instagram se v brand footeru zobrazují primárně jako čisté rozpoznatelné ikony, nikoli jako samostatná viditelná slova „Facebook“ / „Instagram“.
+- Ikonové odkazy musí mít `aria-label` s názvem sítě a projektu; samotná dekorativní SVG ikona je `aria-hidden`.
+- Textový název sítě může zůstat pouze jako screen-reader fallback, tooltip nebo tam, kde ikona bez textu objektivně snižuje srozumitelnost.
+- Ikony musí vizuálně sedět do footeru, mít bezpečný hit-area (preferovaně 40–44 px) a nesmí vyžadovat externí icon/font knihovnu.
 
 ## 3. Základní + pokročilý režim
 - Dva režimy používat všude, kde pokročilá přesnost skutečně vyžaduje více vstupů.
