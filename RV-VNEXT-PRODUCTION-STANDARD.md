@@ -1,7 +1,7 @@
 # RychléVýpočty.cz V-next — Production Standard
 
 **Revize:** 19. 8. 2026  
-**Verze:** 1.7
+**Verze:** 1.8
 
 Tento dokument je závazný výrobní checklist pro každý nový kalkulátor, tool, utilitu, tracker, lookup nebo datový produkt. Cílem není vyrábět více URL, ale každý nový asset posunout nad úroveň předchozí generace RychléVýpočty.cz.
 
@@ -32,6 +32,14 @@ První viewport musí bez oborové znalosti odpovědět: **Co tady spočítám? 
 - Sekční navigace se přidává jen tehdy, když prokazatelně zrychluje orientaci. Nepřidávat ji jako dekorativní druhou lištu.
 - Desktop gate = FAIL, pokud uživatel po prvním scrollu nepozná, která navigace je hlavní, nebo pokud navigační pás vizuálně konkuruje H1 / kalkulačce.
 - U stránky s jednoduchým lineárním flow preferuj obyčejné sekce bez tabs.
+
+### 2.3 Comparison Integrity Gate — povinné od 19. 8. 2026
+- Jeden graf, tabulka nebo žebříček smí porovnávat jen položky se stejnou hlavní dimenzí a stejným významem. Zdroj, region, pevný modelový příklad a přepočtená sazba nejsou zaměnitelné kategorie.
+- Každý srovnávaný řádek musí mít konzistentní identitu: **zdroj + region/segment + jednotka + rozsah**. Nelze vedle sebe popsat jeden řádek názvem webu, druhý krajem a třetí velikostí příkladu.
+- Pevné veřejné realizace/modely drž odděleně od přepočtených pásem nebo sazeb, pokud nejde o totožný typ údaje.
+- Pokud se zdroje liší rozsahem, ukaž rozdíl přímo u dat; neslévej je do jednoho „tržního průměru“ bez obhajitelné normalizace.
+- Vizuální délka sloupce/range musí mít skutečnou společnou stupnici. Dekorativní procenta, která nevycházejí ze stejné osy, jsou FAIL.
+- QA otázka: **„Porovnává každý řádek opravdu totéž?“** Pokud ne, rozdělit data do samostatných bloků nebo změnit vizualizaci.
 
 ## 3. Základní + pokročilý režim
 - Dva režimy používat všude, kde pokročilá přesnost skutečně vyžaduje více vstupů.
