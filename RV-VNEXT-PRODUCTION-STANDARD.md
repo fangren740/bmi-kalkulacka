@@ -1,7 +1,7 @@
 # RychléVýpočty.cz V-next — Production Standard
 
 **Revize:** 19. 8. 2026  
-**Verze:** 1.6
+**Verze:** 1.7
 
 Tento dokument je závazný výrobní checklist pro každý nový kalkulátor, tool, utilitu, tracker, lookup nebo datový produkt. Cílem není vyrábět více URL, ale každý nový asset posunout nad úroveň předchozí generace RychléVýpočty.cz.
 
@@ -26,6 +26,12 @@ První viewport musí bez oborové znalosti odpovědět: **Co tady spočítám? 
 - **Simple front, rigorous back:** metodika může být odborně hluboká, ale uživatel se k první použitelné odpovědi nesmí prokousávat metodikou. Nejdřív odpověď, potom nuance a důkazy.
 - Povinný QA test „cizí člověk“: přečti pouze hero → první vstupy → hlavní výsledek. Bez znalosti projektu musí být zřejmé **k čemu stránka je, co zadat a co číslo znamená**. Pokud je nutná znalost toho, jak jsme produkt navrhli, release = FAIL.
 - Produktovou novinku hodnotit odděleně od primary intentu. „Je to chytřejší než konkurence“ není důvod změnit hlavní job URL. Chytrá sekundární funkce patří za základní odpověď, ne místo ní.
+
+### 2.2 Navigation Hierarchy Gate — povinné od 19. 8. 2026
+- Jedna stránka nesmí mít dvě konkurenční top-level navigace nad hlavním obsahem. Pokud hero nebo první viewport používá process/step rail, další anchor/tabs strip musí být jasně podřízený, nebo se nepoužije.
+- Sekční navigace se přidává jen tehdy, když prokazatelně zrychluje orientaci. Nepřidávat ji jako dekorativní druhou lištu.
+- Desktop gate = FAIL, pokud uživatel po prvním scrollu nepozná, která navigace je hlavní, nebo pokud navigační pás vizuálně konkuruje H1 / kalkulačce.
+- U stránky s jednoduchým lineárním flow preferuj obyčejné sekce bez tabs.
 
 ## 3. Základní + pokročilý režim
 - Dva režimy používat všude, kde pokročilá přesnost skutečně vyžaduje více vstupů.

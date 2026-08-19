@@ -803,18 +803,16 @@
         "mobile390Visual": "PASS"
       },
       "manualProductionVisualGateAt": "2026-08-19"
-    }
-  ],
-  "inProgressPages": [
+    },
     {
       "file": "kalkulacka-ceny-rekonstrukce-koupelny.html",
       "url": "https://rychlevypocty.cz/kalkulacka-ceny-rekonstrukce-koupelny.html",
-      "status": "RELEASE_CANDIDATE",
+      "status": "DONE",
       "decision": "KEEP + FULL REBUILD",
       "archetype": "Bathroom Price Mirror / size-band public range + own budget ledger + offer coverage check",
       "majorChangeDate": "2026-08-19",
       "researchVerifiedAt": "2026-08-19",
-      "qaStatus": "LOCAL_BROWSER_PASS_MANUAL_PRODUCTION_GATE_PENDING",
+      "qaStatus": "PASS",
       "benchmarkDataset": {
         "enabled": true,
         "file": "koupelna-2026-verejne-cenove-reference.csv",
@@ -823,8 +821,8 @@
       },
       "primaryIntentGate": "PASS: first screen answers how much a complete bathroom renovation may cost; input is only bathroom size and optional real quote.",
       "plainLanguageGate": "PASS: primary result says price range, what it means and a concrete public SIKO control point; technical details are secondary.",
-      "manualProductionVisualGate": "PENDING",
-      "notes": "#18 rebuild starts from the primary-intent/plain-language rule. Quick mode maps bathroom area only to published public size bands and refuses automatic extrapolation above 12 m². A current first-party SIKO realization page is shown as a separate concrete control point; regional and per-m² sources stay separated in RV DATA. Own-budget mode uses only user-entered values with 0% default reserve. Offer coverage check counts described areas but never rates contractor quality. Final local Chromium QA uses a self-contained in-memory preview: runtime errors 0, overflow 0 at 320–1440 px, price-band/own-budget/offer fixtures pass, desktop and 390px visual review pass. User review found a desktop section-heading layout defect: the 3 direct children of .bath-section-head were auto-placed into a 2-column grid, which separated eyebrow/title/body across opposite columns. V2 UX fix replaces that with a single coherent left-aligned heading stack, reduces heading scale, and bumps the page CSS cachebuster to 20260819-2.",
+      "manualProductionVisualGate": "PASS",
+      "notes": "#18 rebuild starts from the primary-intent/plain-language rule. Quick mode maps bathroom area only to published public size bands and refuses automatic extrapolation above 12 m². A current first-party SIKO realization page is shown as a separate concrete control point; regional and per-m² sources stay separated in RV DATA. Own-budget mode uses only user-entered values with 0% default reserve. Offer coverage check counts described areas but never rates contractor quality. Final local Chromium QA uses a self-contained in-memory preview: runtime errors 0, overflow 0 at 320–1440 px, price-band/own-budget/offer fixtures pass, desktop and 390px visual review pass. User review found a desktop section-heading layout defect: the 3 direct children of .bath-section-head were auto-placed into a 2-column grid, which separated eyebrow/title/body across opposite columns. V2 UX fix replaces that with a single coherent left-aligned heading stack, reduces heading scale, and bumps the page CSS cachebuster to 20260819-2. User accepted V2 section-heading layout fix on 19. 8. 2026 and continued to the next calculator; manual visual gate closed.",
       "contentCoverageMatrix": {
         "primary_intent": "PASS",
         "result_interpretation": "PASS",
@@ -860,13 +858,50 @@
         "previewIntegrity": "PASS – self-contained preview script moved after DOM; no runtime error",
         "sectionHeadingLayout": "PASS – single coherent stack at desktop/tablet/mobile; no auto-placement split"
       },
-      "sectionHeadingLayoutGate": "PASS AFTER USER REVIEW: all numbered section headers now use one coherent left-aligned stack (eyebrow → H2 → explanation); removed accidental CSS grid auto-placement that split label/text left and title right."
+      "sectionHeadingLayoutGate": "PASS AFTER USER REVIEW: all numbered section headers now use one coherent left-aligned stack (eyebrow → H2 → explanation); removed accidental CSS grid auto-placement that split label/text left and title right.",
+      "manualProductionVisualGateAt": "2026-08-19"
+    }
+  ],
+  "inProgressPages": [
+    {
+      "file": "kalkulacka-nakladu-na-rekonstrukci-bytu-domu.html",
+      "url": "https://rychlevypocty.cz/kalkulacka-nakladu-na-rekonstrukci-bytu-domu.html",
+      "status": "RELEASE_CANDIDATE",
+      "decision": "KEEP + FULL REBUILD",
+      "archetype": "Renovation X-Ray / public price frame + own quote ledger + scope layers",
+      "majorChangeDate": "2026-08-19",
+      "researchVerifiedAt": "2026-08-19",
+      "qaStatus": "LOCAL_QA_MANUAL_VISUAL_GATE_PENDING",
+      "benchmarkDataset": {
+        "enabled": true,
+        "file": "rekonstrukce-2026-verejne-cenove-reference.csv",
+        "rows": 20,
+        "verifiedAt": "2026-08-19"
+      },
+      "primaryIntentGate": "PASS: first screen answers how much a renovation may cost from only property type, area and actual work scope.",
+      "plainLanguageGate": "PASS: primary layer uses byt/dům, plocha, rozsah, cenový rámec and vlastní nabídky; technical/data language is secondary.",
+      "navigationHierarchyGate": "PASS: no secondary tabs/anchor strip or competing process rail; one global header and normal section flow only.",
+      "manualProductionVisualGate": "PENDING",
+      "contentCoverageMatrix": {
+        "primary_intent": "PASS",
+        "result_interpretation": "PASS",
+        "own_quote_path": "PASS",
+        "scope_difference": "PASS",
+        "mistakes_edge_cases": "PASS",
+        "methodology_boundary": "PASS",
+        "public_sources_data": "PASS",
+        "next_action": "PASS"
+      },
+      "heroDistinctivenessGate": "DESIGN LOCK – renovation x-ray board with floor-plan and peeled scope layers; not a kitchen/bathroom room scene and not a generic dashboard.",
+      "antiTemplateGate": "DESIGN LOCK – paper plan + scope layers + quote ledger + dark renovation x-ray, no repeated equal-card dashboard grammar.",
+      "accessibilityContract": "native radio/input/select/details; visible focus; no custom tabs; mobile menu Escape; 44px preferred targets.",
+      "notes": "#19 rebuild separates the primary user job from data analysis. Apartment quick mode uses published 2026 public ranges by actual work scope; complete apartment adds a nearest published RENOVIU size/type control point. House mode separates interior-without-new-roof/facade from a wider old-house renovation model. No automatic region or premium coefficient and default reserve is 0%. Own-budget mode sums only user-entered quotes. Public sources retain their original region/scope rather than being averaged into a fake market price."
     }
   ],
   "nextCandidate": {
-    "file": "kalkulacka-ceny-rekonstrukce-koupelny.html",
+    "file": "kalkulacka-nakladu-na-rekonstrukci-bytu-domu.html",
     "status": "RELEASE_CANDIDATE",
-    "reason": "#18 local browser, calculation, accessibility, data and integration QA passed; awaiting user/manual production visual gate."
+    "reason": "#19 built as the next Wave 2 reconstruction-cluster candidate; await user/manual visual gate."
   },
   "waves": [
     {
@@ -903,10 +938,11 @@
         "kalkulacka-ztraceneho-bedneni.html",
         "kalkulacka-omitky.html",
         "kalkulacka-orientacni-ceny-stavby-domu.html",
-        "kalkulacka-ceny-rekonstrukce-kuchyne.html"
+        "kalkulacka-ceny-rekonstrukce-kuchyne.html",
+        "kalkulacka-ceny-rekonstrukce-koupelny.html"
       ],
-      "next": "kalkulacka-ceny-rekonstrukce-koupelny.html",
-      "completedCount": 7
+      "next": "kalkulacka-nakladu-na-rekonstrukci-bytu-domu.html",
+      "completedCount": 8
     }
   ],
   "globalDecisions": [
