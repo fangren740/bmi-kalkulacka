@@ -1,7 +1,7 @@
 # RychléVýpočty.cz V-next — Production Standard
 
-**Revize:** 18. 8. 2026  
-**Verze:** 1.5
+**Revize:** 19. 8. 2026  
+**Verze:** 1.6
 
 Tento dokument je závazný výrobní checklist pro každý nový kalkulátor, tool, utilitu, tracker, lookup nebo datový produkt. Cílem není vyrábět více URL, ale každý nový asset posunout nad úroveň předchozí generace RychléVýpočty.cz.
 
@@ -18,6 +18,14 @@ První viewport musí bez oborové znalosti odpovědět: **Co tady spočítám? 
 - Primární CTA vede přímo do toolu.
 - Výsledek je dominantní a interpretovaný běžnou češtinou.
 - Technický/legal detail je až druhá vrstva.
+
+### 2.1 Primary Intent + Plain Language Gate — povinné od 19. 8. 2026
+- Před buildem napiš jednou běžnou větou: **„Uživatel přichází, protože chce …“** Pokud hlavní job nelze vysvětlit bez interního/slangového termínu, produkt není zamčený.
+- První režim kalkulačky musí řešit **nejčastější a nejpřirozenější search intent URL**. Datový benchmark, audit nabídky, odborný compare nebo jiná chytrá sekundární vrstva nesmí vytlačit základní odpověď z prvního místa.
+- První vrstva používá běžnou češtinu. Výrazy typu `benchmark`, `scope`, `delta`, `anchor`, `extrapolace`, `percentil`, `modelová obálka` apod. jsou v hero, hlavních vstupech a dominantním výsledku zakázané, pokud nejsou nezbytné; když nezbytné jsou, musí být okamžitě vysvětlené lidsky.
+- **Simple front, rigorous back:** metodika může být odborně hluboká, ale uživatel se k první použitelné odpovědi nesmí prokousávat metodikou. Nejdřív odpověď, potom nuance a důkazy.
+- Povinný QA test „cizí člověk“: přečti pouze hero → první vstupy → hlavní výsledek. Bez znalosti projektu musí být zřejmé **k čemu stránka je, co zadat a co číslo znamená**. Pokud je nutná znalost toho, jak jsme produkt navrhli, release = FAIL.
+- Produktovou novinku hodnotit odděleně od primary intentu. „Je to chytřejší než konkurence“ není důvod změnit hlavní job URL. Chytrá sekundární funkce patří za základní odpověď, ne místo ní.
 
 ## 3. Základní + pokročilý režim
 - Dva režimy používat všude, kde pokročilá přesnost skutečně vyžaduje více vstupů.
