@@ -752,18 +752,16 @@
       "primaryIntentPlainLanguageGate": "PASS_AFTER_USER_REVIEW_REWORK",
       "manualProductionVisualGate": "PASS",
       "manualProductionVisualGateAt": "2026-08-19"
-    }
-  ],
-  "inProgressPages": [
+    },
     {
       "file": "kalkulacka-ceny-rekonstrukce-kuchyne.html",
       "url": "https://rychlevypocty.cz/kalkulacka-ceny-rekonstrukce-kuchyne.html",
-      "status": "RELEASE_CANDIDATE",
+      "status": "DONE",
       "decision": "KEEP + FULL REBUILD",
       "archetype": "Kitchen Budget Counter / scope-first public range + own quote ledger + offer coverage check",
       "majorChangeDate": "2026-08-19",
       "researchVerifiedAt": "2026-08-19",
-      "qaStatus": "LOCAL_BROWSER_PASS_MANUAL_PRODUCTION_GATE_PENDING",
+      "qaStatus": "PASS",
       "benchmarkDataset": {
         "enabled": true,
         "file": "kuchyne-2026-verejne-cenove-a-montazni-reference.csv",
@@ -772,8 +770,8 @@
       },
       "primaryIntentGate": "PASS: first screen answers how much a kitchen renovation may cost by renovation scope; jargon and audit mechanics are secondary.",
       "plainLanguageGate": "PASS: no benchmark/scope terminology in the primary user-facing answer; public range, own amounts and missing offer items are named directly.",
-      "manualProductionVisualGate": "PENDING",
-      "notes": "#17 rebuild selected from the existing queue after #16 clarity approval. Quick mode uses preserved public 2026 price ranges by explicitly described scope; own-budget mode uses only user-entered amounts with 0% default reserve; IKEA product/service rows are concrete references and are not generalized into a Czech market price. Local browser QA completed after integration: no runtime errors or horizontal overflow; own-budget, public-range, IKEA installation and offer-audit fixtures pass. Full-release integration updates sitemap, registry, catalog, reconstruction hub, data manifest/catalog and progress tracking.",
+      "manualProductionVisualGate": "PASS",
+      "notes": "#17 rebuild selected from the existing queue after #16 clarity approval. Quick mode uses preserved public 2026 price ranges by explicitly described scope; own-budget mode uses only user-entered amounts with 0% default reserve; IKEA product/service rows are concrete references and are not generalized into a Czech market price. Local browser QA completed after integration: no runtime errors or horizontal overflow; own-budget, public-range, IKEA installation and offer-audit fixtures pass. Full-release integration updates sitemap, registry, catalog, reconstruction hub, data manifest/catalog and progress tracking. User accepted the final visual/product version on 19. 8. 2026 (\"super, jedeme dále\"); promoted to DONE.",
       "contentCoverageMatrix": {
         "primary_intent": "PASS",
         "result_interpretation": "PASS",
@@ -803,13 +801,70 @@
         "mobileMenu": "PASS – open + Escape close",
         "desktopVisual": "PASS",
         "mobile390Visual": "PASS"
+      },
+      "manualProductionVisualGateAt": "2026-08-19"
+    }
+  ],
+  "inProgressPages": [
+    {
+      "file": "kalkulacka-ceny-rekonstrukce-koupelny.html",
+      "url": "https://rychlevypocty.cz/kalkulacka-ceny-rekonstrukce-koupelny.html",
+      "status": "RELEASE_CANDIDATE",
+      "decision": "KEEP + FULL REBUILD",
+      "archetype": "Bathroom Price Mirror / size-band public range + own budget ledger + offer coverage check",
+      "majorChangeDate": "2026-08-19",
+      "researchVerifiedAt": "2026-08-19",
+      "qaStatus": "LOCAL_BROWSER_PASS_MANUAL_PRODUCTION_GATE_PENDING",
+      "benchmarkDataset": {
+        "enabled": true,
+        "file": "koupelna-2026-verejne-cenove-reference.csv",
+        "rows": 16,
+        "verifiedAt": "2026-08-19"
+      },
+      "primaryIntentGate": "PASS: first screen answers how much a complete bathroom renovation may cost; input is only bathroom size and optional real quote.",
+      "plainLanguageGate": "PASS: primary result says price range, what it means and a concrete public SIKO control point; technical details are secondary.",
+      "manualProductionVisualGate": "PENDING",
+      "notes": "#18 rebuild starts from the primary-intent/plain-language rule. Quick mode maps bathroom area only to published public size bands and refuses automatic extrapolation above 12 m². A current first-party SIKO realization page is shown as a separate concrete control point; regional and per-m² sources stay separated in RV DATA. Own-budget mode uses only user-entered values with 0% default reserve. Offer coverage check counts described areas but never rates contractor quality. Final local Chromium QA uses a self-contained in-memory preview: runtime errors 0, overflow 0 at 320–1440 px, price-band/own-budget/offer fixtures pass, desktop and 390px visual review pass.",
+      "contentCoverageMatrix": {
+        "primary_intent": "PASS",
+        "result_interpretation": "PASS",
+        "own_quote_path": "PASS",
+        "compare_scope": "PASS",
+        "mistakes_edge_cases": "PASS",
+        "methodology_boundary": "PASS",
+        "public_sources_data": "PASS",
+        "next_action": "PASS"
+      },
+      "heroDistinctivenessGate": "LOCAL DESIGN LOCK – light bathroom floor-plan / wet-zone blueprint with price mirror; visually distinct from kitchen counter, house atlas, plaster studio and masonry planner.",
+      "antiTemplateGate": "DESIGN LOCK – interaction is floor-area plan + price mirror + paper budget ledger + wet-zone offer grid, not repeated card dashboard grammar.",
+      "accessibilityContract": "native inputs/buttons/checkboxes; visible focus; no custom tabs; mobile menu Escape; 44px preferred targets.",
+      "localQa": {
+        "javascriptSyntax": "PASS",
+        "cssParse": "PASS – tinycss2 0 parse errors",
+        "duplicateIds": 0,
+        "jsonLd": "PASS – BreadcrumbList + WebApplication",
+        "localAssets": "PASS – no missing local references",
+        "fragmentLinks": "PASS – no missing targets",
+        "a11yLint": "PASS – calculator + catalog + reconstruction hub + data hub",
+        "datasetRows": 16,
+        "datasetManifest": "PASS – 44 datasets / 912 rows",
+        "dataCatalog": "PASS – 44/44 Dataset references",
+        "calculationFixtures": "PASS – 3.5 m² => 80–150k; 6 m² => 120–250k; 10 m² => 200–400k; 14 m² => no extrapolation",
+        "ownBudgetFixture": "PASS – 185,000 Kč subtotal + 10% = 203,500 Kč",
+        "offerChecklistFixture": "PASS – 10/10 => very well described scope, explicitly not quality/price rating",
+        "runtimeBrowserErrors": 0,
+        "responsiveOverflow": "PASS – 0 px at 320/360/390/768/1024/1280/1440",
+        "mobileMenu": "PASS – open + Escape close",
+        "desktopVisual": "PASS – hero + calculator/result + offer/data sections reviewed in Chromium",
+        "mobile390Visual": "PASS – hero and first-flow reviewed in Chromium",
+        "previewIntegrity": "PASS – self-contained preview script moved after DOM; no runtime error"
       }
     }
   ],
   "nextCandidate": {
-    "file": "kalkulacka-ceny-rekonstrukce-kuchyne.html",
+    "file": "kalkulacka-ceny-rekonstrukce-koupelny.html",
     "status": "RELEASE_CANDIDATE",
-    "reason": "#17 built around primary-intent/plain-language gate; await manual visual review before #18."
+    "reason": "#18 local browser, calculation, accessibility, data and integration QA passed; awaiting user/manual production visual gate."
   },
   "waves": [
     {
@@ -845,10 +900,11 @@
         "kalkulacka-sadrokartonu.html",
         "kalkulacka-ztraceneho-bedneni.html",
         "kalkulacka-omitky.html",
-        "kalkulacka-orientacni-ceny-stavby-domu.html"
+        "kalkulacka-orientacni-ceny-stavby-domu.html",
+        "kalkulacka-ceny-rekonstrukce-kuchyne.html"
       ],
-      "next": "kalkulacka-ceny-rekonstrukce-kuchyne.html",
-      "completedCount": 6
+      "next": "kalkulacka-ceny-rekonstrukce-koupelny.html",
+      "completedCount": 7
     }
   ],
   "globalDecisions": [
