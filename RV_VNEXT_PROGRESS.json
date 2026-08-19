@@ -907,7 +907,7 @@
       "archetype": "Material Measure Board / geometry-first m³ + supplier conversion",
       "majorChangeDate": "2026-08-19",
       "researchVerifiedAt": "2026-08-19",
-      "qaStatus": "LOCAL_QA_PASS_MANUAL_VISUAL_GATE_PENDING",
+      "qaStatus": "LOCAL_QA_PASS_MANUAL_VISUAL_GATE_PENDING_AFTER_ALIGNMENT_FIX",
       "benchmarkDataset": {
         "enabled": false,
         "reason": "No RV DATA benchmark: geometry/unit conversions are deterministic and a scenario table would be trivial."
@@ -926,7 +926,7 @@
       "navigationHierarchyGate": "PASS – linear sections, no competing anchor/tab navigation",
       "comparisonIntegrityGate": "N/A – no comparative chart",
       "flexibilityGate": "PASS – density, bag volume and price are explicit user/supplier inputs; no preset material properties",
-      "notes": "Full V-next rebuild around the generic geometry job rather than product-specific ordering. Core output is m³ and litres from area+layer, box, cylinder or known volume. Reserve defaults to 0%. Tonnes require supplier-provided t/m³; bag count requires litres per package; price uses only user-entered price. No universal density, compaction, settling or truck payload is invented. Specialized gravel/concrete/formwork calculators remain separate to avoid cannibalization.",
+      "notes": "Full V-next rebuild around the generic geometry job rather than product-specific ordering. Core output is m³ and litres from area+layer, box, cylinder or known volume. Reserve defaults to 0%. Tonnes require supplier-provided t/m³; bag count requires litres per package; price uses only user-entered price. No universal density, compaction, settling or truck payload is invented. Specialized gravel/concrete/formwork calculators remain separate to avoid cannibalization. Visual QA follow-up 2026-08-19: user caught top-edge misalignment in the calculator composition. Root causes were the sticky result top offset and non-locked selector-card internal rows. V2 removes desktop sticky offset and locks all four geometry tiles to equal-height grid rows.",
       "heroDistinctivenessGate": "STATIC_VISUAL_REVIEW_PASS – light material measuring tray, dimensional tags and 1 m³ cube; unlike kitchen/bathroom/renovation layouts. Fresh Chromium screenshot unavailable in current runtime; manual preview gate pending.",
       "contentSufficiencyGate": "PASS",
       "localQa": {
@@ -939,7 +939,8 @@
         "sitemapLastmod": "2026-08-19",
         "calculationFixtures": "PASS by independent formula check – 20 m² × 5 cm = 1.00 m³ = 1000 l; box 4×2×0.2 = 1.60 m³; cylinder Ø1.2×1 = 1.13 m³; 10% reserve => 1.10 m³; 1.55 t/m³ => 1.705 t; 50 l package => 22 packages",
         "browserRuntime": "MANUAL_GATE_REQUIRED – Chromium automation unstable in current runtime; no browser PASS claimed"
-      }
+      },
+      "layoutAlignmentGate": "FIXED 2026-08-19 – geometry selector tiles now share one top baseline/equal-height internal grid; result card no longer uses sticky top offset that could visually drop it below the form card."
     }
   ],
   "nextCandidate": {
