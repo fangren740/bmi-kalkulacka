@@ -575,18 +575,16 @@
       "manualProductionVisualGate": "PASS",
       "manualProductionVisualGateAt": "2026-08-18",
       "postDeployPageSpeedRetest": "PENDING_AFTER_DEPLOY"
-    }
-  ],
-  "inProgressPages": [
+    },
     {
       "file": "kalkulacka-ztraceneho-bedneni.html",
       "url": "https://rychlevypocty.cz/kalkulacka-ztraceneho-bedneni.html",
-      "status": "RELEASE_CANDIDATE",
+      "status": "DONE",
       "decision": "KEEP + FULL REBUILD",
       "archetype": "Foundation Block Course Planner / whole rows + product-specific fill volume",
       "majorChangeDate": "2026-08-18",
       "researchVerifiedAt": "2026-08-18",
-      "qaStatus": "LOCAL_BROWSER_PASS_MANUAL_PRODUCTION_GATE_PENDING",
+      "qaStatus": "PASS",
       "benchmarkDataset": {
         "enabled": true,
         "file": "ztracene-bedneni-2026-overene-vyrobkove-reference.csv",
@@ -632,13 +630,73 @@
         "mobile390Visual": "PASS – full mobile page reviewed locally",
         "mobileMenu": "PASS – open + Escape close"
       },
-      "notes": "Full V-next rebuild around the real procurement job: choose an actual formwork-block product/technical sheet, define one or more foundation/wall sections, round to whole courses and block positions, then calculate order quantity, module-height check, pallet equivalent and product-specific fill concrete. Reinforcement is never designed: the optional rebar calculation appears only when the user explicitly supplies project/statik values. Prices are optional user-entered quote values only; no fake live internet pricing. Manufacturer fill volumes are kept product-specific because nominally equal formats can differ in cavity volume. Pour guidance is deliberately manufacturer-specific rather than universal. Method verification and primary technical sources are visible directly after the calculator. Browser QA used installed Chromium with in-memory page injection because direct local navigation is blocked by the environment; desktop/mobile rendering, interactions, fixtures and overflow checks passed. Manual production visual/deploy gate remains pending."
+      "notes": "Full V-next rebuild around the real procurement job: choose an actual formwork-block product/technical sheet, define one or more foundation/wall sections, round to whole courses and block positions, then calculate order quantity, module-height check, pallet equivalent and product-specific fill concrete. Reinforcement is never designed: the optional rebar calculation appears only when the user explicitly supplies project/statik values. Prices are optional user-entered quote values only; no fake live internet pricing. Manufacturer fill volumes are kept product-specific because nominally equal formats can differ in cavity volume. Pour guidance is deliberately manufacturer-specific rather than universal. Method verification and primary technical sources are visible directly after the calculator. Browser QA used installed Chromium with in-memory page injection because direct local navigation is blocked by the environment; desktop/mobile rendering, interactions, fixtures and overflow checks passed. Manual production visual/deploy gate remains pending. User accepted V4 visual/UX correction on 2026-08-18; boundary rows were rebuilt as explicit components and worked-example cards were polished. Page promoted to DONE.",
+      "manualProductionVisualGate": "PASS",
+      "manualProductionVisualGateAt": "2026-08-18"
+    }
+  ],
+  "inProgressPages": [
+    {
+      "file": "kalkulacka-omitky.html",
+      "url": "https://rychlevypocty.cz/kalkulacka-omitky.html",
+      "status": "RELEASE_CANDIDATE",
+      "decision": "KEEP + FULL REBUILD",
+      "archetype": "Plaster Thickness & Bag Planner / product-specific consumption + whole-bag order + +1 mm sensitivity",
+      "majorChangeDate": "2026-08-18",
+      "researchVerifiedAt": "2026-08-18",
+      "qaStatus": "LOCAL_BROWSER_PASS_MANUAL_PRODUCTION_GATE_PENDING",
+      "benchmarkDataset": {
+        "enabled": true,
+        "file": "omitky-2026-overene-produktove-reference.csv",
+        "rows": 8,
+        "verifiedAt": "2026-08-18"
+      },
+      "contentCoverageMatrix": {
+        "choose_product_or_mode": "PASS",
+        "interpret_result": "PASS",
+        "compare_or_decision": "PASS",
+        "errors_edge_cases": "PASS",
+        "method_boundary": "PASS",
+        "worked_examples": "PASS",
+        "sources_data": "PASS",
+        "next_action": "PASS"
+      },
+      "heroDistinctivenessGate": "LOCAL BROWSER PASS – warm plaster/finish studio with wall-layer cutaway, trowel, thickness ruler and +1 mm sensitivity proof; manual production gate pending",
+      "visualArchetype": "Warm Plaster Finish Studio / tactile wall layers + order slip + thickness sensitivity",
+      "signatureVisualBlocks": [
+        "warm wall cutaway hero with brick, plaster, finish layer and trowel",
+        "order-slip result focused on whole bags and visible reserve",
+        "+1 mm thickness sensitivity as a memorable purchase-risk metric",
+        "manufacturer-specific product data comparison instead of a universal plaster coefficient",
+        "visible methodology verification and page-specific system-design boundary"
+      ],
+      "flexibilityGate": "PASS: custom product / technical-sheet mode supports user-entered consumption, bag weight and recommended thickness.",
+      "antiTemplateGate": "LOCAL BROWSER PASS: deliberately distinct from drywall material desk and warm masonry bednění; lighter finish-studio language and thickness-first result dramaturgy.",
+      "accessibilityContract": "PASS: native inputs/radios, semantic tabs with keyboard Home/End support, visible focus, aria-live result and mobile menu Escape handling.",
+      "localQa": {
+        "javascriptSyntax": "PASS",
+        "cssParse": "PASS",
+        "duplicateIds": 0,
+        "jsonLd": "PASS",
+        "localAssets": "PASS",
+        "fragmentLinks": "PASS",
+        "a11yLint": "PASS",
+        "datasetRows": 8,
+        "datasetSources": "PASS – all 8 rows include manufacturer source_url",
+        "calculationFixtures": "PASS – 100 m² / 10 mm MP75 L = 850 kg before reserve; whole-bag rounding, multi-surface aggregation and custom product mode checked",
+        "runtimeBrowserErrors": 0,
+        "responsiveOverflow": "PASS – 0 px at 320/360/390/768/1024/1280/1440",
+        "desktopVisual": "PASS – hero, calculator/result and methodology reviewed locally",
+        "mobile390Visual": "PASS",
+        "mobileMenu": "PASS – open + Escape close"
+      },
+      "notes": "Full V-next rebuild around the real purchase job. Calculation is tied to a concrete manufacturer product or explicit technical-sheet values; quantity is computed from area × thickness × kg/m²/mm, reserve remains visible, and purchase rounds to whole bags. Project mode aggregates multiple surfaces before final rounding. The product deliberately does not auto-design primer, mesh/profiles, multi-layer system composition or curing/workmanship rules. Primary Knauf/Cemix technical sources are visible in the methodology block and the 8-row open CSV is integrated into the data library. Local browser QA passed; manual production visual/deploy gate remains pending."
     }
   ],
   "nextCandidate": {
-    "file": "kalkulacka-ztraceneho-bedneni.html",
+    "file": "kalkulacka-omitky.html",
     "status": "RELEASE_CANDIDATE",
-    "reason": "#14 built locally and QA-passed; await user/manual production visual gate before #15."
+    "reason": "#15 full release package prepared; await user/manual production visual gate before #16."
   },
   "waves": [
     {
@@ -671,10 +729,11 @@
       "completed": [
         "kalkulacka-podlahy.html",
         "kalkulacka-izolace.html",
-        "kalkulacka-sadrokartonu.html"
+        "kalkulacka-sadrokartonu.html",
+        "kalkulacka-ztraceneho-bedneni.html"
       ],
-      "next": "kalkulacka-ztraceneho-bedneni.html",
-      "completedCount": 3
+      "next": "kalkulacka-omitky.html",
+      "completedCount": 4
     }
   ],
   "globalDecisions": [
