@@ -2,7 +2,7 @@
   "schemaVersion": "1.0",
   "project": "RychléVýpočty.cz V7",
   "program": "V-next Portfolio Rebuild",
-  "updatedAt": "2026-08-18",
+  "updatedAt": "2026-08-19",
   "sourceOfTruth": "latest uploaded production ZIP",
   "strategy": {
     "portfolioPolicy": "KEEP URL by default; merge only when independent user intent cannot be defended",
@@ -633,18 +633,16 @@
       "notes": "Full V-next rebuild around the real procurement job: choose an actual formwork-block product/technical sheet, define one or more foundation/wall sections, round to whole courses and block positions, then calculate order quantity, module-height check, pallet equivalent and product-specific fill concrete. Reinforcement is never designed: the optional rebar calculation appears only when the user explicitly supplies project/statik values. Prices are optional user-entered quote values only; no fake live internet pricing. Manufacturer fill volumes are kept product-specific because nominally equal formats can differ in cavity volume. Pour guidance is deliberately manufacturer-specific rather than universal. Method verification and primary technical sources are visible directly after the calculator. Browser QA used installed Chromium with in-memory page injection because direct local navigation is blocked by the environment; desktop/mobile rendering, interactions, fixtures and overflow checks passed. Manual production visual/deploy gate remains pending. User accepted V4 visual/UX correction on 2026-08-18; boundary rows were rebuilt as explicit components and worked-example cards were polished. Page promoted to DONE.",
       "manualProductionVisualGate": "PASS",
       "manualProductionVisualGateAt": "2026-08-18"
-    }
-  ],
-  "inProgressPages": [
+    },
     {
       "file": "kalkulacka-omitky.html",
       "url": "https://rychlevypocty.cz/kalkulacka-omitky.html",
-      "status": "RELEASE_CANDIDATE",
+      "status": "DONE",
       "decision": "KEEP + FULL REBUILD",
       "archetype": "Plaster Thickness & Bag Planner / product-specific consumption + whole-bag order + +1 mm sensitivity",
       "majorChangeDate": "2026-08-18",
       "researchVerifiedAt": "2026-08-18",
-      "qaStatus": "LOCAL_BROWSER_PASS_MANUAL_PRODUCTION_GATE_PENDING",
+      "qaStatus": "PASS",
       "benchmarkDataset": {
         "enabled": true,
         "file": "omitky-2026-overene-produktove-reference.csv",
@@ -690,13 +688,73 @@
         "mobile390Visual": "PASS",
         "mobileMenu": "PASS – open + Escape close"
       },
-      "notes": "Full V-next rebuild around the real purchase job. Calculation is tied to a concrete manufacturer product or explicit technical-sheet values; quantity is computed from area × thickness × kg/m²/mm, reserve remains visible, and purchase rounds to whole bags. Project mode aggregates multiple surfaces before final rounding. The product deliberately does not auto-design primer, mesh/profiles, multi-layer system composition or curing/workmanship rules. Primary Knauf/Cemix technical sources are visible in the methodology block and the 8-row open CSV is integrated into the data library. Local browser QA passed; manual production visual/deploy gate remains pending."
+      "notes": "Full V-next rebuild around the real purchase job. Calculation is tied to a concrete manufacturer product or explicit technical-sheet values; quantity is computed from area × thickness × kg/m²/mm, reserve remains visible, and purchase rounds to whole bags. Project mode aggregates multiple surfaces before final rounding. The product deliberately does not auto-design primer, mesh/profiles, multi-layer system composition or curing/workmanship rules. Primary Knauf/Cemix technical sources are visible in the methodology block and the 8-row open CSV is integrated into the data library. Local browser QA passed; manual production visual/deploy gate remains pending. User accepted the full release package on 2026-08-19 (\"cajk, jedeme na další\"); manual visual/release gate closed and the page was promoted to DONE.",
+      "manualProductionVisualGate": "PASS",
+      "manualProductionVisualGateAt": "2026-08-19"
+    }
+  ],
+  "inProgressPages": [
+    {
+      "file": "kalkulacka-orientacni-ceny-stavby-domu.html",
+      "url": "https://rychlevypocty.cz/kalkulacka-orientacni-ceny-stavby-domu.html",
+      "status": "RELEASE_CANDIDATE",
+      "decision": "KEEP + FULL FLAGSHIP REBUILD",
+      "archetype": "House Budget Atlas / scope-matched public price band + own-offer envelope",
+      "majorChangeDate": "2026-08-19",
+      "researchVerifiedAt": "2026-08-19",
+      "qaStatus": "LOCAL_BROWSER_PASS_MANUAL_PRODUCTION_GATE_PENDING",
+      "benchmarkDataset": {
+        "enabled": true,
+        "file": "stavba-domu-2026-verejne-katalogove-reference.csv",
+        "rows": 12,
+        "verifiedAt": "2026-08-19"
+      },
+      "contentCoverageMatrix": {
+        "choose_product_or_mode": "PASS",
+        "interpret_result": "PASS",
+        "compare_or_decision": "PASS",
+        "errors_edge_cases": "PASS",
+        "method_boundary": "PASS",
+        "worked_examples": "PASS",
+        "sources_data": "PASS",
+        "next_action": "PASS"
+      },
+      "heroDistinctivenessGate": "LOCAL BROWSER PASS – bright architectural plan table with house elevation and two non-equivalent cost ribbons; visually distinct from masonry, plaster and drywall builds.",
+      "visualArchetype": "Architectural House Budget Atlas / cobalt plan sheet + scope ribbons + public-reference scatter",
+      "signatureVisualBlocks": [
+        "architectural plan-table hero with house elevation and scope-specific price ribbons",
+        "budget-envelope result with min/median/max price track instead of dashboard card grid",
+        "scope map contrasting inclusions before price",
+        "public-reference scatter plot of eight comparable catalogue models",
+        "supplier-offer scope audit sheet"
+      ],
+      "flexibilityGate": "PASS: user can switch from public benchmark to own total quote or own Kč/m²; optional project-side costs are explicit and default to zero.",
+      "antiTemplateGate": "LOCAL BROWSER PASS: new cobalt/coral/mustard architectural-paper grammar, result band and scatter plot do not reuse the previous three calculators’ hero or result composition.",
+      "accessibilityContract": "PASS: semantic tablist/tab/tabpanel with roving tabindex and Arrow/Home/End, native inputs/radios/checkboxes, role=img for explanatory diagrams, visible focus and mobile menu Escape handling.",
+      "localQa": {
+        "javascriptSyntax": "PASS",
+        "cssParse": "PASS – 0 parse errors",
+        "duplicateIds": 0,
+        "jsonLd": "PASS – BreadcrumbList + WebApplication",
+        "fragmentLinks": "PASS – 0 missing targets",
+        "a11yLint": "PASS",
+        "datasetRows": 12,
+        "datasetStructure": "PASS – 8 comparable RD Rýmařov references + 4 CANABA scope-contrast references",
+        "calculationFixtures": "PASS – 120 m² patrový default = 5.40–6.27 mil. Kč; reserve defaults to 0; own quote/rate modes and explicit extras checked",
+        "runtimeBrowserErrors": 0,
+        "responsiveOverflow": "PASS – 0 px at 320/360/390/768/1024/1280/1440",
+        "keyboardTabs": "PASS – End→Vlastní nabídka, Home→Veřejný benchmark",
+        "mobileMenu": "PASS – open + Escape close",
+        "desktopVisual": "PASS – hero, calculator/result and methodology reviewed locally",
+        "mobile390Visual": "PASS"
+      },
+      "notes": "Full V-next rebuild removes unsupported house-type/region/standard multipliers. Public mode uses only observed catalogue Kč/m² from a scope-consistent set of eight current RD Rýmařov references and clearly marks extrapolation outside their area range. Four current CANABA catalogue references are kept only as a scope-contrast dataset because the declared base scope excludes the foundation slab; they are never averaged into the RD Rýmařov band. Own-offer mode accepts the user’s real total or Kč/m² and does not add internet prices. All project-side extras and reserve are explicit user inputs and default to zero. ČSÚ construction-price index is displayed as context only, never as an automatic forecast multiplier. Methodology verification, primary-source links, data CSV and a page-specific disclaimer are visible on-page. Local browser/static QA passed; user manual production visual gate remains pending."
     }
   ],
   "nextCandidate": {
-    "file": "kalkulacka-omitky.html",
+    "file": "kalkulacka-orientacni-ceny-stavby-domu.html",
     "status": "RELEASE_CANDIDATE",
-    "reason": "#15 full release package prepared; await user/manual production visual gate before #16."
+    "reason": "#16 full rebuild locally built and QA-passed; await user/manual visual gate before #17."
   },
   "waves": [
     {
@@ -730,10 +788,11 @@
         "kalkulacka-podlahy.html",
         "kalkulacka-izolace.html",
         "kalkulacka-sadrokartonu.html",
-        "kalkulacka-ztraceneho-bedneni.html"
+        "kalkulacka-ztraceneho-bedneni.html",
+        "kalkulacka-omitky.html"
       ],
-      "next": "kalkulacka-omitky.html",
-      "completedCount": 4
+      "next": "kalkulacka-orientacni-ceny-stavby-domu.html",
+      "completedCount": 5
     }
   ],
   "globalDecisions": [
