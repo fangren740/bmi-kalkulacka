@@ -1119,19 +1119,49 @@
       "decision": "KEEP + FULL REBUILD",
       "majorChangeDate": "2026-08-20",
       "researchVerifiedAt": "2026-08-20",
-      "qaStatus": "LOCAL_VISUAL_HOTFIX_PASS_USER_VISUAL_AND_PRODUCTION_PSI_PENDING",
+      "qaStatus": "LOCAL_VISUAL_HOTFIX_AND_USER_GATE_PASS_PRODUCTION_PSI_PENDING",
       "archetype": "Annual Tax Statement / year-2026 liability sheet + advance settlement",
       "primaryIntentGate": "PASS – revenue + tax expense method + activity immediately return annual income tax, social and health insurance.",
       "navigationHierarchyGate": "PASS – linear page with no competing tabs or secondary top-level navigation.",
       "comparisonIntegrityGate": "PASS – no mixed-source comparison chart; legal flat-expense rates are presented as categories, not interchangeable offers.",
       "socialIconFooterGate": "PASS – full RV footer with icon-only Facebook/Instagram and accessible names.",
-      "notes": "Forward solver for standard OSVČ regime using income earned in 2026. Explicitly distinguishes 2026 income year from a return filed in 2026 for 2025 income; uses current post-1-July-2026 CSSZ 35% main minimum, VZP 2026 minimum and official tax parameters. Local browser QA: runtime/console 0 errors, horizontal overflow 0 at 320/360/390/768/1024/1440, form/result top alignment 0 px, default/side/actual-expense/settlement fixtures PASS, AX interactive names PASS. TECHNICAL visual hotfix 20. 8.: year badge text specificity fixed; local tx-result ::before collision with shared rv-brand-result top rail removed. Visual preflight PASS at 320/360/390/768/1024/1440 with 0 horizontal overflow; calculation JS unchanged."
+      "notes": "Forward solver for standard OSVČ regime using income earned in 2026. Explicitly distinguishes 2026 income year from a return filed in 2026 for 2025 income; uses current post-1-July-2026 CSSZ 35% main minimum, VZP 2026 minimum and official tax parameters. Local browser QA: runtime/console 0 errors, horizontal overflow 0 at 320/360/390/768/1024/1440, form/result top alignment 0 px, default/side/actual-expense/settlement fixtures PASS, AX interactive names PASS. TECHNICAL visual hotfix 20. 8.: year badge text specificity fixed; local tx-result ::before collision with shared rv-brand-result top rail removed. Visual preflight PASS at 320/360/390/768/1024/1440 with 0 horizontal overflow; calculation JS unchanged. User visual gate PASS 20. 8. 2026; production mobile PSI remains pending.",
+      "manualProductionVisualGate": "PASS",
+      "manualProductionVisualGateAt": "2026-08-20"
+    },
+    {
+      "file": "osvc-vedlejsi-cinnost-kalkulacka.html",
+      "url": "https://rychlevypocty.cz/osvc-vedlejsi-cinnost-kalkulacka.html",
+      "status": "RELEASE_CANDIDATE",
+      "decision": "KEEP + FULL REBUILD",
+      "majorChangeDate": "2026-08-20",
+      "researchVerifiedAt": "2026-08-20",
+      "qaStatus": "LOCAL_BROWSER_PASS_USER_VISUAL_AND_PRODUCTION_PSI_PENDING",
+      "archetype": "Threshold Gate / side-income runway + legal month reference",
+      "primaryIntentGate": "PASS – user enters active months, revenue and tax-expense method to see whether the 2026 side-OSVČ decision threshold is crossed and what social, health and incremental tax follow.",
+      "navigationHierarchyGate": "PASS – linear simple-front flow with advanced details; no competing tabs or secondary top-level navigation.",
+      "comparisonIntegrityGate": "PASS – legal threshold and derived revenue runway are clearly separated; no pseudo-benchmark or mixed-source population claim.",
+      "socialIconFooterGate": "PASS – full RV footer with icon-only Facebook/Instagram and accessible names.",
+      "benchmarkDataset": {
+        "enabled": false,
+        "mode": "REFERENCE",
+        "reason": "Exact 2026 legal decision threshold and its month-adjusted values are directly actionable. Aggregate counts of side OSVČ do not form a valid individual income benchmark."
+      },
+      "contentCoverageMatrix": {
+        "primaryIntent": "PASS",
+        "methodology": "PASS – official ČSSZ, VZP and Finanční správa parameters verified 2026-08-20.",
+        "referenceLayer": "PASS – 12-month decision-threshold map plus derived revenue runway for flat-expense modes.",
+        "workedExample": "PASS – 250 000 Kč revenue with 60% flat expenses demonstrates turnover vs tax-base distinction.",
+        "disclaimer": "PASS – explicit scope boundary for legal status, health exceptions, tax return, DPH and special cases.",
+        "relatedTools": "PASS – annual OSVČ tax, flat vs actual expenses and flat-tax regime."
+      },
+      "notes": "Full V-next rebuild around the actual side-OSVČ decision: tax base vs 2026 decision amount. REFERENCE rather than population benchmark. Distinct Threshold Gate hero, month-by-month legal reference and revenue-runway conversion. Calculation fixtures PASS: default 250k/60% -> profit 100,000 / threshold 117,521 / social 0 / health 6,750; 300k/60% -> profit 120,000 / social 19,272 / health 8,100; 6 months -> threshold 58,757; actual-expense mode returns profit headroom and does not fake a revenue threshold. Local browser QA: runtime errors 0, horizontal overflow 0 at 320/360/390/768/1024/1440, AX interactive names PASS. Dedicated 1200×630 OG asset added. User visual gate and production mobile PSI pending."
     }
   ],
   "nextCandidate": {
-    "file": "osvc-danova-kalkulacka.html",
-    "status": "RELEASE_CANDIDATE",
-    "reason": "#27 visual hotfix PASS locally after fixing year badge and result-rail collision. User visual gate and post-deploy mobile PSI pending; #26 remains production-PSI pending."
+    "file": "pausalni-vydaje-kalkulacka.html",
+    "status": "NEXT",
+    "reason": "#28 side-OSVČ is locally QA-clean RELEASE_CANDIDATE awaiting user visual gate and production PSI. Next registry priority is #29 paušální vs. skutečné výdaje; #26 and #27 still await production PSI."
   },
   "waves": [
     {
@@ -1189,7 +1219,7 @@
         "kalkulacka-hodinove-sazby-freelancera.html",
         "kalkulacka-minimalni-fakturace-osvc.html"
       ],
-      "next": "osvc-danova-kalkulacka.html",
+      "next": "pausalni-vydaje-kalkulacka.html",
       "completedCount": 5
     }
   ],
