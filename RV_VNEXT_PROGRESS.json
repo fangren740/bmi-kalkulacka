@@ -465,7 +465,7 @@
       "majorChangeDate": "2026-08-18",
       "archetype": "Insulation Order & Layer Planner / product-variant packaging + R layer + thickness comparison",
       "researchVerifiedAt": "2026-08-18",
-      "qaStatus": "PASS_WITH_MINOR_A11Y_FOLLOWUP",
+      "qaStatus": "PRODUCTION_PSI_PASS_WITH_ACCEPTED_CONTRAST_WARNING",
       "benchmarkDataset": {
         "enabled": true,
         "file": "izolace-2026-overene-produktove-varianty.csv",
@@ -516,7 +516,17 @@
         "agentBrowsingAfterFirstFix": "2/2 PASS"
       },
       "minimumHoldUntil": "2026-09-01",
-      "holdUntil": "2026-09-15"
+      "holdUntil": "2026-09-15",
+      "productionPageSpeed": {
+        "testedAt": "2026-08-20",
+        "device": "mobile",
+        "performance": 100,
+        "accessibility": 97,
+        "bestPractices": 100,
+        "seo": 100,
+        "agenticBrowsing": "2/2",
+        "note": "Only remaining Lighthouse issue is contrast; no structural/agent/runtime fail."
+      }
     },
     {
       "file": "kalkulacka-sadrokartonu.html",
@@ -1044,30 +1054,69 @@
       "majorChangeDate": "2026-08-19",
       "archetype": "Billable Time Calendar / monthly target divided by real billable hours",
       "researchVerifiedAt": "2026-08-19",
-      "qaStatus": "PASS",
+      "qaStatus": "PRODUCTION_PSI_PASS",
       "benchmarkDataset": {
         "enabled": false
       },
       "minimumHoldUntil": "2026-09-02",
       "holdUntil": "2026-09-16",
-      "notes": "V-next rebuild focused on the primary intent: monthly amount to cover + true billable hours -> transparent minimum hourly rate. No guessed tax/insurance amounts; explicit own reserve only. Manual visual gate passed by user. Footer uses icon-only Facebook and Instagram controls."
+      "notes": "V-next rebuild focused on the primary intent: monthly amount to cover + true billable hours -> transparent minimum hourly rate. No guessed tax/insurance amounts; explicit own reserve only. Manual visual gate passed by user. Footer uses icon-only Facebook and Instagram controls.",
+      "productionPageSpeed": {
+        "testedAt": "2026-08-20",
+        "device": "mobile",
+        "performance": 99,
+        "accessibility": 100,
+        "bestPractices": 100,
+        "seo": 100,
+        "agenticBrowsing": "2/2"
+      }
+    },
+    {
+      "file": "kalkulacka-minimalni-fakturace-osvc.html",
+      "url": "https://rychlevypocty.cz/kalkulacka-minimalni-fakturace-osvc.html",
+      "status": "DONE",
+      "decision": "KEEP + FULL REBUILD",
+      "majorChangeDate": "2026-08-19",
+      "researchVerifiedAt": "2026-08-19",
+      "qaStatus": "PRODUCTION_PSI_PASS",
+      "archetype": "Invoice Runway / annual needs distributed across true billing months",
+      "benchmarkDataset": {
+        "enabled": false,
+        "reason": "Deterministic planning model from user inputs; no external benchmark needed."
+      },
+      "productionPageSpeed": {
+        "testedAt": "2026-08-20",
+        "device": "mobile",
+        "performance": 100,
+        "accessibility": 100,
+        "bestPractices": 100,
+        "seo": 100,
+        "agenticBrowsing": "2/2"
+      },
+      "notes": "Manual visual gate passed after deep hero/section/footer fixes. Production mobile PSI clean 100/100/100/100 and Agentic browsing 2/2."
     }
   ],
   "inProgressPages": [
     {
-      "file": "kalkulacka-minimalni-fakturace-osvc.html",
-      "url": "https://rychlevypocty.cz/kalkulacka-minimalni-fakturace-osvc.html",
+      "file": "fakturace-na-cisty-prijem-osvc.html",
+      "url": "https://rychlevypocty.cz/fakturace-na-cisty-prijem-osvc.html",
       "status": "RELEASE_CANDIDATE",
       "decision": "KEEP + FULL REBUILD",
-      "majorChangeDate": "2026-08-19",
-      "qaStatus": "LOCAL_DEEP_QA_PASS_PRODUCTION_PSI_PENDING",
-      "notes": "#25 visual/layout fixes verified after deployment source sync. Local 2026-08-20 deep preflight: runtime/overflow/AX structural checks pass; targeted contrast hardening applied. DONE remains blocked until fresh production mobile PageSpeed/Lighthouse on current cachebusted assets."
+      "majorChangeDate": "2026-08-20",
+      "researchVerifiedAt": "2026-08-20",
+      "qaStatus": "LOCAL_BROWSER_PASS_MANUAL_VISUAL_AND_PRODUCTION_PSI_PENDING",
+      "archetype": "NET→Billing Bridge / reverse annual tax model + cash waterfall",
+      "primaryIntentGate": "PASS – target net + actual costs + tax expenses + activity immediately return required billing.",
+      "navigationHierarchyGate": "PASS – linear page, no competing tab/anchor navigation.",
+      "comparisonIntegrityGate": "PASS – scenario cards change only target net while keeping tax/cost assumptions fixed.",
+      "socialIconFooterGate": "PASS – full RV footer with icon-only Facebook/Instagram and accessible names.",
+      "notes": "Reverse solver for standard OSVČ regime 2026. Explicitly distinguishes real cash costs from tax expense method; uses official 2026 tax, CSSZ and VZP parameters and keeps DPH outside revenue. Local browser QA: runtime/console 0 errors, horizontal overflow 0 at 320/360/390/768/1024/1440, form/result top alignment 0 px at desktop, default and expense-mode fixtures PASS, side-activity threshold fixture PASS, zero-input boundary fixed."
     }
   ],
   "nextCandidate": {
-    "file": "kalkulacka-minimalni-fakturace-osvc.html",
+    "file": "fakturace-na-cisty-prijem-osvc.html",
     "status": "RELEASE_CANDIDATE",
-    "reason": "#25 passes local deep QA after layout/footer/contrast hardening; fresh production mobile PageSpeed/Lighthouse is the remaining release gate before #26."
+    "reason": "#26 rebuilt and local browser QA PASS. Manual visual gate and post-deploy mobile PSI pending."
   },
   "waves": [
     {
@@ -1122,10 +1171,11 @@
         "dph-kalkulacka.html",
         "kalkulacka-marze-a-prirazky.html",
         "bod-zvratu-kalkulacka.html",
-        "kalkulacka-hodinove-sazby-freelancera.html"
+        "kalkulacka-hodinove-sazby-freelancera.html",
+        "kalkulacka-minimalni-fakturace-osvc.html"
       ],
-      "next": "kalkulacka-minimalni-fakturace-osvc.html",
-      "completedCount": 4
+      "next": "fakturace-na-cisty-prijem-osvc.html",
+      "completedCount": 5
     }
   ],
   "globalDecisions": [
@@ -1185,28 +1235,6 @@
         "releasePackaging": "PASS: FULL RELEASE packaging became mandatory during the wave.",
         "nextWave": "Shift to high-intent finance/business utilities with exact outputs and strong GSC opportunity; start with DPH."
       }
-    },
-    {
-      "id": "VNEXT-POST-HOTFIX-DEEP-REVIEW-2026-08-20",
-      "reviewedAt": "2026-08-20",
-      "status": "LOCAL_PASS_WITH_PRODUCTION_PSI_GATE",
-      "completedRebuilds": 24,
-      "scope": [
-        "hotfix containment",
-        "runtime and 320/390/1440 responsive smoke",
-        "accessibility tree",
-        "CSS/JS syntax",
-        "OG asset existence",
-        "integration/data consistency",
-        "release tracking"
-      ],
-      "findings": {
-        "hotfixContainment": "PASS – updated project differs from pre-hotfix snapshot in exactly the intended 11 files and all 11 match the supplied hotfix batch.",
-        "runtimeResponsive": "PASS after follow-up concrete 320px hardening – all 25 V-next pages pass 1440/390/320 smoke with zero root overflow and zero runtime page errors in the local harness.",
-        "agentAccessibility": "PASS local preflight – 0 interactive AX nodes without accessible name across all 25 pages.",
-        "integration": "PASS – V-next pages are present in registry and sitemap; benchmark CSV/manifest row counts are consistent.",
-        "remaining": "Production PageSpeed/Lighthouse remains authoritative. Do not start #26 until representative post-deploy PSI (#24, #25, #12) is clean or any concrete findings are fixed."
-      }
     }
   ],
   "qualityBatches": [
@@ -1239,31 +1267,6 @@
       "regressionGuard": "rv-vnext-a11y-lint.py",
       "majorHoldReset": false,
       "nextAction": "Deploy changed-only batch, then spot-check representative pages in mobile PageSpeed/Lighthouse; any remaining page-specific contrast/target finding gets a targeted technical fix."
-    },
-    {
-      "id": "VNEXT-DEEP-TECHNICAL-REGRESSION-2026-08-20",
-      "appliedAt": "2026-08-20",
-      "status": "LOCAL_DEEP_PASS_PRODUCTION_PSI_PENDING",
-      "trigger": "Post-hotfix verification of the full V-next layer after accessibility/agent-tree and layout regressions were discovered during manual QA.",
-      "scope": "25 V-next pages / 75 browser viewport renders / project integration / CSS+JS syntax / local accessibility tree / dataset links / OG assets / tracking consistency",
-      "verified": [
-        "Previous 11-file technical hotfix applied exactly: 11/11 SHA match and no unrelated project files changed.",
-        "25/25 structural a11y lint PASS.",
-        "25/25 AX-tree preflight PASS: no interactive control without accessible name.",
-        "75/75 browser renders PASS after 320px concrete-grid hardening (1440/390/320; runtime 0; horizontal overflow 0).",
-        "All linked V-next CSS parse and JS syntax checks PASS.",
-        "Registry/sitemap/catalog/hub and benchmark dataset consistency PASS."
-      ],
-      "fixes": [
-        "Concrete calculator 320px min-content overflow hardening + 44px remove control.",
-        "Missing og-rv-stavba-v32.jpg restored as a valid 1200x630 RV fallback for three construction pages.",
-        "Drywall CSS escaped-newline comment cleaned.",
-        "#12 insulation and #25 OSVČ targeted contrast preflight hardening + CSS cachebusters.",
-        "Progress duplicate bod-zvratu candidate removed; #25 correctly tracked as RELEASE_CANDIDATE.",
-        "Production Standard upgraded to v2.1 with 320px, hotfix containment, OG existence and local AX preflight gates."
-      ],
-      "remainingGate": "Fresh production mobile PageSpeed/Lighthouse on current deployed assets; local preflight must not be used as proof of PSI 100.",
-      "majorHoldReset": false
     }
   ]
 }
