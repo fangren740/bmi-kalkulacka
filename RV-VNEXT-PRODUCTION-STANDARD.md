@@ -1,7 +1,7 @@
 # RychléVýpočty.cz V-next — Production Standard
 
-**Revize:** 19. 8. 2026  
-**Verze:** 2.0
+**Revize:** 20. 8. 2026  
+**Verze:** 2.1
 
 Tento dokument je závazný výrobní checklist pro každý nový kalkulátor, tool, utilitu, tracker, lookup nebo datový produkt. Cílem není vyrábět více URL, ale každý nový asset posunout nad úroveň předchozí generace RychléVýpočty.cz.
 
@@ -137,11 +137,13 @@ Nový indexovatelný produkt není hotový, dokud není zapojen do projektu:
 - Pokud Dataset schema používá `license`, musí odkazovat na skutečné a obsahově odpovídající licenční podmínky; nevkládat fiktivní licenci jen kvůli rich-result warningu.
 
 ## 11. Mobile / accessibility / speed
-- Mobile-first QA minimálně 360/390 px + desktop 1440 px.
+- Mobile-first QA minimálně **320/360/390 px** + desktop 1440 px. 320 px je povinný overflow smoke, protože min-content/grid chyby se mohou projevit až pod 360 px.
 - Žádný horizontální overflow, překryv, useknutý výsledek nebo nečitelná tabulka.
 - Keyboard focus, labely, ARIA tam, kde má význam, reduced-motion respekt.
 - Bez zbytečných externích fontů, frameworků a runtime závislostí.
 - Samostatné CSS/JS s cachebusterem při změně.
+- **Hotfix Diff Containment Gate:** u technického hotfixe porovnej pre/post snapshot projektu. Změněny smějí být pouze zamýšlené soubory; výpočtový JS se nesmí změnit bez explicitního důvodu a fixture retestu.
+- **OG Asset Existence Gate:** každý lokální `og:image` / `twitter:image` použitý novou nebo měněnou stránkou musí před ZIPem fyzicky existovat v root projektu a mít validní obrazový formát; neexistující social asset = FAIL.
 - Preferovat SVG/CSS vizuály před těžkými dekorativními obrázky.
 - PageSpeed/Core Web Vitals nesmí být vědomě obětovány designu.
 - **Production PSI is authoritative:** lokální lint, screenshot ani browser smoke test nejsou náhradou za post-deploy PageSpeed/Lighthouse na skutečné produkční URL. Stránka se nesmí označit DONE, dokud není doložen produkční mobilní audit po nasazení aktuálního HTML/CSS/JS.
@@ -154,6 +156,7 @@ Nový indexovatelný produkt není hotový, dokud není zapojen do projektu:
 - Interaktivní prvky: RV interně preferuje 44×44 px; menší textový odkaz musí mít alespoň bezpečný hit-area/spacing a nesmí padat na Lighthouse target-size auditu.
 - `aria-label` používat pouze na prvcích/rolích, které accessible name podporují; u generického `div` nejdřív zvolit správnou semantickou roli nebo label odstranit.
 - Pokud je dostupný agent accessibility audit, accessibility tree nesmí mít strukturální fail.
+- **Local AX preflight:** je-li lokálně dostupný Chromium/CDP, před release proveď accessibility-tree smoke všech změněných V-next URL a ověř, že interaktivní prvky (`button`, `link`, `textbox`, `combobox`, `checkbox`, `radio`, `tab`, `switch`, `spinbutton`, `slider`) nemají prázdný accessible name. Tento preflight je doplněk, nikoli náhrada produkčního PSI.
 - **Component accessibility contract před buildem:** každý custom tab/radio/accordion/switch/combobox musí mít předem popsaný native/ARIA role model, fokus a keyboard ovládání. Pokud lze použít native HTML control, preferuj jej.
 - **Executable lint:** před ZIPem spusť `python rv-vnext-a11y-lint.py <changed HTML...>` (nebo ekvivalent). PASS z lint gate je povinný, ale nenahrazuje produkční Lighthouse/PageSpeed.
 - **Systemic regression sweep:** objeví-li se po deployi opakovatelná chyba na jedné V-next stránce, před další výrobou prohledej všechny dokončené V-next URL na stejný pattern. Opravu klasifikuj jako TECHNICAL/QA, neresetuj MAJOR HOLD, pokud se nemění intent/produkt. Současně aktualizuj linter/standard, aby se chyba neopakovala.

@@ -2,7 +2,7 @@
   "schemaVersion": "1.0",
   "project": "RychléVýpočty.cz V7",
   "program": "V-next Portfolio Rebuild",
-  "updatedAt": "2026-08-19",
+  "updatedAt": "2026-08-20",
   "sourceOfTruth": "latest uploaded production ZIP",
   "strategy": {
     "portfolioPolicy": "KEEP URL by default; merge only when independent user intent cannot be defended",
@@ -1055,57 +1055,19 @@
   ],
   "inProgressPages": [
     {
-      "file": "bod-zvratu-kalkulacka.html",
-      "url": "https://rychlevypocty.cz/bod-zvratu-kalkulacka.html",
+      "file": "kalkulacka-minimalni-fakturace-osvc.html",
+      "url": "https://rychlevypocty.cz/kalkulacka-minimalni-fakturace-osvc.html",
       "status": "RELEASE_CANDIDATE",
       "decision": "KEEP + FULL REBUILD",
       "majorChangeDate": "2026-08-19",
-      "researchVerifiedAt": "2026-08-19",
-      "qaStatus": "LOCAL_BROWSER_PASS_MANUAL_PRODUCTION_GATE_PENDING",
-      "archetype": "Break-even Crossing / loss-to-profit runway + contribution split",
-      "benchmarkDataset": {
-        "enabled": false,
-        "reason": "No RV DATA benchmark: break-even arithmetic is deterministic; sensitivity is generated from the user's own inputs rather than presented as external benchmark data."
-      },
-      "primaryIntentGate": "PASS – fixed costs + price + variable cost immediately return minimum sales and turnover.",
-      "navigationHierarchyGate": "PASS – linear page, no competing anchor/tab navigation.",
-      "comparisonIntegrityGate": "PASS – sensitivity rows all compare the same metric (minimum sales) against one baseline and change only one variable at a time.",
-      "socialIconFooterGate": "PASS – icon-only Facebook and Instagram links with accessible names.",
-      "contentCoverageMatrix": {
-        "choose_inputs": "PASS",
-        "interpret_result": "PASS",
-        "compare_delta": "PASS",
-        "errors_edge_cases": "PASS",
-        "method_boundary": "PASS",
-        "worked_examples": "PASS",
-        "sources_data": "PASS",
-        "next_action": "PASS"
-      },
-      "notes": "Full rebuild around the plain-language question “Kolik musím prodat, abych nebyl ve ztrátě?”. Primary result is practical whole-unit sales minimum; exact arithmetic remains transparent in methodology. Secondary planning adds expected sales, target operating profit and capacity. Sensitivity compares only like-for-like minimum-sales outputs. Model explicitly refuses a false single-unit answer for unstable multi-product mix and flags price <= variable cost as no break-even case.",
-      "heroDistinctivenessGate": "PASS – native loss→zero→profit crossing chart with live example; cannot be swapped onto DPH, margin or material-volume intents without changing its logic.",
-      "contentSufficiencyGate": "PASS",
-      "accessibilityContract": "PASS – native inputs/selects/details, mobile menu with explicit expanded state/Escape close, icon-only social links with accessible names.",
-      "localQa": {
-        "javascriptSyntax": "PASS",
-        "cssParse": "PASS (tinycss2, 0 parse errors)",
-        "duplicateIds": 0,
-        "jsonLd": "PASS – BreadcrumbList/WebApplication",
-        "a11yLint": "PASS – calculator + catalog + Business hub",
-        "sitemapXml": "PASS",
-        "sitemapLastmod": "2026-08-19",
-        "calculationFixtures": "PASS – default 180000/(1200-450)=240; 100000/(1000-600)=250; non-integer 100000/(1000-650)=285.714→286; price<=variable => no break-even; zero fixed costs => 0 units; target profit 230000/750→307.",
-        "runtimeBrowserErrors": 0,
-        "responsiveOverflow": "PASS – 0 px at 320/360/390/768/1024/1280/1440",
-        "layoutAlignment": "PASS – calculator and result top edges differ by 0 px; all three input tiles share identical top and 209 px height at 1440.",
-        "mobileMenu": "PASS – open + Escape close",
-        "comparisonIntegrity": "PASS – 5% price cut / +5% variable / +10% fixed all return the same metric (whole-unit minimum sales) against one baseline."
-      }
+      "qaStatus": "LOCAL_DEEP_QA_PASS_PRODUCTION_PSI_PENDING",
+      "notes": "#25 visual/layout fixes verified after deployment source sync. Local 2026-08-20 deep preflight: runtime/overflow/AX structural checks pass; targeted contrast hardening applied. DONE remains blocked until fresh production mobile PageSpeed/Lighthouse on current cachebusted assets."
     }
   ],
   "nextCandidate": {
     "file": "kalkulacka-minimalni-fakturace-osvc.html",
     "status": "RELEASE_CANDIDATE",
-    "reason": "#25 rebuilt around explicit monthly needs + number of true billing months -> annual minimum and minimum active-month invoicing. Tax/social/health are never guessed; optional own reserve defaults to zero. Manual visual gate pending."
+    "reason": "#25 passes local deep QA after layout/footer/contrast hardening; fresh production mobile PageSpeed/Lighthouse is the remaining release gate before #26."
   },
   "waves": [
     {
@@ -1223,6 +1185,28 @@
         "releasePackaging": "PASS: FULL RELEASE packaging became mandatory during the wave.",
         "nextWave": "Shift to high-intent finance/business utilities with exact outputs and strong GSC opportunity; start with DPH."
       }
+    },
+    {
+      "id": "VNEXT-POST-HOTFIX-DEEP-REVIEW-2026-08-20",
+      "reviewedAt": "2026-08-20",
+      "status": "LOCAL_PASS_WITH_PRODUCTION_PSI_GATE",
+      "completedRebuilds": 24,
+      "scope": [
+        "hotfix containment",
+        "runtime and 320/390/1440 responsive smoke",
+        "accessibility tree",
+        "CSS/JS syntax",
+        "OG asset existence",
+        "integration/data consistency",
+        "release tracking"
+      ],
+      "findings": {
+        "hotfixContainment": "PASS – updated project differs from pre-hotfix snapshot in exactly the intended 11 files and all 11 match the supplied hotfix batch.",
+        "runtimeResponsive": "PASS after follow-up concrete 320px hardening – all 25 V-next pages pass 1440/390/320 smoke with zero root overflow and zero runtime page errors in the local harness.",
+        "agentAccessibility": "PASS local preflight – 0 interactive AX nodes without accessible name across all 25 pages.",
+        "integration": "PASS – V-next pages are present in registry and sitemap; benchmark CSV/manifest row counts are consistent.",
+        "remaining": "Production PageSpeed/Lighthouse remains authoritative. Do not start #26 until representative post-deploy PSI (#24, #25, #12) is clean or any concrete findings are fixed."
+      }
     }
   ],
   "qualityBatches": [
@@ -1255,6 +1239,31 @@
       "regressionGuard": "rv-vnext-a11y-lint.py",
       "majorHoldReset": false,
       "nextAction": "Deploy changed-only batch, then spot-check representative pages in mobile PageSpeed/Lighthouse; any remaining page-specific contrast/target finding gets a targeted technical fix."
+    },
+    {
+      "id": "VNEXT-DEEP-TECHNICAL-REGRESSION-2026-08-20",
+      "appliedAt": "2026-08-20",
+      "status": "LOCAL_DEEP_PASS_PRODUCTION_PSI_PENDING",
+      "trigger": "Post-hotfix verification of the full V-next layer after accessibility/agent-tree and layout regressions were discovered during manual QA.",
+      "scope": "25 V-next pages / 75 browser viewport renders / project integration / CSS+JS syntax / local accessibility tree / dataset links / OG assets / tracking consistency",
+      "verified": [
+        "Previous 11-file technical hotfix applied exactly: 11/11 SHA match and no unrelated project files changed.",
+        "25/25 structural a11y lint PASS.",
+        "25/25 AX-tree preflight PASS: no interactive control without accessible name.",
+        "75/75 browser renders PASS after 320px concrete-grid hardening (1440/390/320; runtime 0; horizontal overflow 0).",
+        "All linked V-next CSS parse and JS syntax checks PASS.",
+        "Registry/sitemap/catalog/hub and benchmark dataset consistency PASS."
+      ],
+      "fixes": [
+        "Concrete calculator 320px min-content overflow hardening + 44px remove control.",
+        "Missing og-rv-stavba-v32.jpg restored as a valid 1200x630 RV fallback for three construction pages.",
+        "Drywall CSS escaped-newline comment cleaned.",
+        "#12 insulation and #25 OSVČ targeted contrast preflight hardening + CSS cachebusters.",
+        "Progress duplicate bod-zvratu candidate removed; #25 correctly tracked as RELEASE_CANDIDATE.",
+        "Production Standard upgraded to v2.1 with 320px, hotfix containment, OG existence and local AX preflight gates."
+      ],
+      "remainingGate": "Fresh production mobile PageSpeed/Lighthouse on current deployed assets; local preflight must not be used as proof of PSI 100.",
+      "majorHoldReset": false
     }
   ]
 }
