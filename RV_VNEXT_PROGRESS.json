@@ -1193,7 +1193,7 @@
       "majorChangeDate": "2026-08-20",
       "archetype": "Paušální Passport / three-band eligibility runway + 2026 refund timeline",
       "researchVerifiedAt": "2026-08-20",
-      "qaStatus": "PENDING_FINAL_VISUAL_GATE",
+      "qaStatus": "USER_VISUAL_GATE_PASS_PRODUCTION_PSI_PENDING",
       "benchmarkDataset": {
         "enabled": true,
         "file": "pausalni-dan-2026-modelove-scenare.csv",
@@ -1208,13 +1208,43 @@
         "Dataset",
         "Dataset"
       ],
-      "notes": "Full V-next rebuild. Primary intent is two-stage: lowest available band first, financial comparison second. Integrates July 2026 I-band reduction and 4,932 Kč first-half overpayment, mixed-activity 75% eligibility test, official adoption benchmark and 24-scenario reproducible value benchmark. Awaiting user visual gate and production PSI after deploy."
+      "notes": "Full V-next rebuild. Primary intent is two-stage: lowest available band first, financial comparison second. Integrates July 2026 I-band reduction and 4,932 Kč first-half overpayment, mixed-activity 75% eligibility test, official adoption benchmark and 24-scenario reproducible value benchmark. User visual gate passed 2026-08-20; production PSI remains pending after deploy."
+    },
+    {
+      "file": "zamestnanec-vs-osvc-kalkulacka.html",
+      "url": "https://rychlevypocty.cz/zamestnanec-vs-osvc-kalkulacka.html",
+      "status": "RELEASE_CANDIDATE",
+      "decision": "KEEP + FULL REBUILD",
+      "majorChangeDate": "2026-08-20",
+      "researchVerifiedAt": "2026-08-20",
+      "qaStatus": "LOCAL_BROWSER_PASS_USER_VISUAL_AND_PRODUCTION_PSI_PENDING",
+      "archetype": "Equal-Budget Bridge / employee vs OSVČ compensation split + parity invoice",
+      "primaryIntentGate": "PASS – compares employee and OSVČ on the same company budget, then calculates the invoice needed to match the employee personal package.",
+      "navigationHierarchyGate": "PASS – one primary comparison flow with optional advanced model; no competing top-level navigation.",
+      "comparisonIntegrityGate": "PASS – both variants start from the same total employer/client budget; real OSVČ cash costs are separated from tax expenses.",
+      "socialIconFooterGate": "PASS – full RV footer with high-contrast icon-only Facebook/Instagram and accessible names.",
+      "benchmarkDataset": {
+        "enabled": true,
+        "file": "zamestnanec-vs-osvc-2026-stejny-rozpocet-benchmark.csv",
+        "rows": 24,
+        "verifiedAt": "2026-08-20",
+        "mode": "MODEL_BENCHMARK"
+      },
+      "contentCoverageMatrix": {
+        "primaryIntent": "PASS",
+        "methodology": "PASS – 2026 employee/employer insurance, tax and OSVČ parameters linked to MPSV, VZP and Finanční správa; legal boundary linked to SÚIP.",
+        "benchmark": "PASS – 24 same-budget scenarios across six salary levels and four real-cost shares; explicitly not presented as population statistics.",
+        "workedExample": "PASS – default 60k gross / 2.5k benefits / 8k OSVČ real costs shows same-budget employee vs OSVČ and parity invoice.",
+        "disclaimer": "PASS – economic model separated from payroll, tax return and legal classification of dependent work.",
+        "relatedTools": "PASS – OSVČ vs s.r.o., required invoicing for target net income and hourly rate."
+      },
+      "notes": "Full V-next rebuild with a distinct Equal-Budget Bridge hero. Default fixture: gross 60,000 Kč + 2,500 Kč employer-paid benefits -> employer budget 82,780 Kč/month; employee net 46,610 Kč; OSVČ net after 8,000 Kč real costs and mandatory payments 63,761 Kč; delta +17,151 Kč/month; parity invoice about 66,867 Kč/month before extra risk premium. Benchmark adds 24 reproducible scenarios and shows the sign reversal as real OSVČ costs rise. Local browser QA via inlined production assets: runtime/console 0 errors, horizontal overflow 0 at 320/360/390/768/1024/1440; input/result top alignment diff 0 px at 1024 and 1440; structural accessibility lint PASS. Dedicated OG asset added. User visual gate and production PSI pending."
     }
   ],
   "nextCandidate": {
-    "file": "FILL_AFTER_VISUAL_GATE",
-    "status": "HOLD",
-    "reason": "#30 paušální daň is RELEASE_CANDIDATE awaiting user visual gate; next URL will be selected only after this page passes."
+    "file": "osvc-vs-sro-kalkulacka.html",
+    "status": "READY_AFTER_VISUAL_GATE",
+    "reason": "#31 Zaměstnanec vs. OSVČ is RELEASE_CANDIDATE; OSVČ vs. s.r.o. is the next high-intent comparison URL after visual approval."
   },
   "waves": [
     {
