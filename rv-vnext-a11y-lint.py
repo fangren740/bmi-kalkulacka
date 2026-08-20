@@ -157,6 +157,15 @@ def lint_file(path: Path) -> list[str]:
             if radio.tag in {"button", "a"} and "tabindex" not in radio.attrs:
                 errors.append(f"{ident(radio)} custom radio missing roving tabindex")
 
+    # Social icon accessibility contract: official icon-only social links need a programmatic name.
+    for n in nodes:
+        if n.tag != "a":
+            continue
+        href = n.attrs.get("href", "")
+        if "facebook.com/rychlevypocty" in href or "instagram.com/rychlevypocty" in href:
+            if not n.attrs.get("aria-label", "").strip():
+                errors.append(f"{ident(n)} official social icon link missing aria-label")
+
     # Broken in-page anchor references.
     for n in nodes:
         href = n.attrs.get("href", "")
@@ -192,10 +201,11 @@ def default_vnext_files(base: Path) -> list[Path]:
         try:
             import json
             data = json.loads(progress.read_text(encoding="utf-8"))
-            for item in data.get("completedPages", []):
-                name = item.get("file")
-                if isinstance(name, str) and name.endswith(".html"):
-                    names.append(name)
+            for key in ("completedPages", "inProgressPages"):
+                for item in data.get(key, []):
+                    name = item.get("file") if isinstance(item, dict) else None
+                    if isinstance(name, str) and name.endswith(".html"):
+                        names.append(name)
             candidate = data.get("nextCandidate", {})
             name = candidate.get("file") if isinstance(candidate, dict) else None
             if isinstance(name, str) and name.endswith(".html"):

@@ -352,7 +352,7 @@
 
     const modeTabs = $$('[data-mode]');
     modeTabs.forEach(btn => btn.addEventListener('click', () => setMode(btn.dataset.mode)));
-    $('.in-mode').addEventListener('keydown', event => {
+    document.querySelector('.in-mode')?.addEventListener('keydown', event => {
       const currentIndex = modeTabs.indexOf(document.activeElement);
       if (currentIndex < 0) return;
       let nextIndex = currentIndex;
