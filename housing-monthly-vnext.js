@@ -17,6 +17,7 @@
 
   function read() {
     return {
+      mode,
       type: $('housingType').value,
       primary: val('primaryCost'),
       operations: val('operations'),
@@ -46,9 +47,10 @@
   function interpretation(r) {
     if (!r.income) return ['Doplňte čistý příjem domácnosti.', 'Bez příjmu umíme sečíst náklady, ale ne jejich tlak na rozpočet.'];
     if (r.remainder < 0) return ['Měsíční cash-flow je záporné.', `Po bydlení a dalších splátkách chybí ${money(Math.abs(r.remainder))} měsíčně.`];
-    if (r.share >= 40) return ['Bydlení bere přes 40 % příjmu.', `Eurostat používá 40 % jako statistickou hranici housing-cost overburden. Není to osobní doporučení, ale silný varovný kontext.`];
-    if (r.share > r.target) return ['Nad vaším zadaným limitem.', `Aktuální podíl ${pct(r.share)} je nad vaším osobním cílem ${pct(r.target)}.`];
-    return ['Rozpočet je pod vaším zadaným limitem.', `Bydlení bere ${pct(r.share)} příjmu a po bydlení a dalších splátkách zbývá ${money(r.remainder)}.`];
+    if (r.share >= 40) return ['Bydlení bere přes 40 % příjmu.', `Eurostat používá 40 % jako statistickou hranici housing-cost overburden. Není to osobní doporučení, ale užitečný varovný kontext.`];
+    if (r.mode === 'advanced' && r.share > r.target) return ['Nad vaším zadaným limitem.', `Aktuální podíl ${pct(r.share)} je nad vaším osobním cílem ${pct(r.target)}.`];
+    if (r.mode === 'advanced') return ['Pod vaším zadaným limitem.', `Bydlení bere ${pct(r.share)} příjmu a po bydlení a dalších splátkách zbývá ${money(r.remainder)}.`];
+    return [`Bydlení tvoří ${pct(r.share)} čistého příjmu.`, `Po bydlení zbývá ${money(r.remainder)}. Pro osobní limit, náklad na osobu, m² a stresový test přepněte na podrobný režim.`];
   }
 
   function render() {
@@ -57,17 +59,21 @@
     const mainShare = r.total ? r.primary / r.total * 100 : 0;
     const opsShare = r.total ? r.operations / r.total * 100 : 0;
     const reserveShare = r.total ? r.reserve / r.total * 100 : 0;
+    const housingIncomeShare = r.income > 0 ? Math.min(100, r.total / r.income * 100) : 0;
+    const debtIncomeShare = r.income > 0 ? Math.min(Math.max(0, 100 - housingIncomeShare), r.debt / r.income * 100) : 0;
+    const freeIncomeShare = r.income > 0 ? Math.max(0, 100 - housingIncomeShare - debtIncomeShare) : 0;
 
     set('heroTotal', money(r.total));
     set('heroShare', r.income ? pct(r.share) : '—');
     set('heroRemainder', r.income ? money(r.remainder) : '—');
     set('heroAnnual', money(r.annual));
+    set('heroStatus', !r.income ? 'Doplňte příjem pro kontext rozpočtu.' : (r.remainder < 0 ? `Rozpočet je v mínusu o ${money(Math.abs(r.remainder))}.` : `Po bydlení zůstává ${money(r.remainder)} měsíčně.`));
     set('resultTotal', money(r.total));
     set('resultAnnual', `${money(r.annual)} za rok`);
     set('resultShare', r.income ? pct(r.share) : '—');
     set('resultRemainder', r.income ? money(r.remainder) : '—');
-    set('resultPerPerson', money(r.perPerson));
-    set('resultPerArea', `${money(r.perArea)}/m²`);
+    set('resultPerPerson', r.mode === 'advanced' ? money(r.perPerson) : '—');
+    set('resultPerArea', r.mode === 'advanced' ? `${money(r.perArea)}/m²` : '—');
     set('resultHeadline', headline);
     set('resultCopy', copy);
     set('stressTotal', money(r.stress));
@@ -81,6 +87,21 @@
     $('stackReserve').style.width = `${reserveShare}%`;
     $('incomeFill').style.width = `${Math.min(100, r.share)}%`;
     $('incomeMarker').style.left = '40%';
+    if ($('shareDial')) {
+      $('shareDial').style.setProperty('--hm-share', `${Math.min(100, r.share)}%`);
+      $('shareDial').classList.toggle('is-over', r.income > 0 && r.share >= 40);
+    }
+    if ($('cashlineHousing')) $('cashlineHousing').style.width = `${housingIncomeShare}%`;
+    if ($('cashlineDebt')) $('cashlineDebt').style.width = `${debtIncomeShare}%`;
+    if ($('cashlineFree')) $('cashlineFree').style.width = `${freeIncomeShare}%`;
+    set('cashlineCaption', !r.income ? 'Doplňte příjem' : (r.remainder >= 0 ? `${money(r.remainder)} volně` : `${money(Math.abs(r.remainder))} chybí`));
+    document.querySelectorAll('.hm-kpi-advanced').forEach(el => { el.hidden = r.mode !== 'advanced'; });
+    document.querySelectorAll('.hm-reserve-output').forEach(el => { el.hidden = r.mode !== 'advanced'; });
+    document.querySelectorAll('.hm-debt-output').forEach(el => { el.hidden = r.mode !== 'advanced' || r.debt <= 0; });
+    if ($('stressPanel')) $('stressPanel').hidden = r.mode !== 'advanced';
+    set('stressAssumption', `Model: hlavní platba +${fmt.format(r.stressMain)} %, provoz a rezerva +${fmt.format(r.stressOps)} %.`);
+    $('vysledek')?.classList.toggle('is-over', r.income > 0 && r.share >= 40);
+    $('vysledek')?.classList.toggle('is-negative', r.income > 0 && r.remainder < 0);
 
     const typeLabel = { rent:'Nájem', flat:'Vlastní byt', house:'Rodinný dům' }[r.type];
     set('heroType', typeLabel);
@@ -95,7 +116,11 @@
 
   function setMode(next) {
     mode = next === 'advanced' ? 'advanced' : 'basic';
-    $('advancedFields').hidden = mode !== 'advanced'; if ($('advancedDetails')) $('advancedDetails').open = mode === 'advanced';
+    if ($('advancedDetails')) {
+      $('advancedDetails').hidden = mode !== 'advanced';
+      $('advancedDetails').open = mode === 'advanced';
+    }
+    if ($('advancedFields')) $('advancedFields').hidden = mode !== 'advanced';
     modeButtons.forEach(btn => {
       const active = btn.dataset.mode === mode;
       btn.classList.toggle('is-active', active);
@@ -129,5 +154,5 @@
     document.addEventListener('keydown', e => { if (e.key === 'Escape') { nav.classList.remove('is-open'); toggle.setAttribute('aria-expanded','false'); } });
   }
 
-  render();
+  setMode('basic');
 })();
