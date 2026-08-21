@@ -1338,6 +1338,51 @@
         "Dataset"
       ],
       "notes": "V-next rebuild keeps quick commission/base calculation to two inputs, adds target-base inversion, progressive vs retroactive tier semantics, fixed component, equal team split and settlement view. Benchmark is deterministic and explains effective-rate behavior rather than claiming market-standard commission rates."
+    },
+    {
+      "file": "muzu-si-dovolit-bydleni.html",
+      "url": "https://rychlevypocty.cz/muzu-si-dovolit-bydleni.html",
+      "status": "RELEASE_CANDIDATE",
+      "decision": "KEEP + FULL REBUILD",
+      "majorChangeDate": "2026-08-21",
+      "archetype": "Housing Four-Gate Check / dům se čtyřmi transparentními kontrolami",
+      "researchVerifiedAt": "2026-08-21",
+      "qaStatus": "PASS",
+      "benchmarkDataset": {
+        "enabled": true,
+        "file": "dostupnost-bydleni-2026-cnb-eurostat-reference.csv",
+        "rows": 11,
+        "verifiedAt": "2026-08-21"
+      },
+      "structuredData": [
+        "BreadcrumbList",
+        "SoftwareApplication",
+        "Dataset"
+      ],
+      "minimumHoldUntil": "2026-09-04",
+      "holdUntil": "2026-09-18",
+      "notes": "V-next rebuild separates this URL from the max-price calculator: this page audits one concrete housing plan rather than calculating a recommended property price. Removed opaque affordability score and replaces it with four explicit gates: LTV, monthly surplus, reserve after purchase, and editable stress scenario. Public benchmark layer keeps CNB and Eurostat dimensions separate.",
+      "qa": {
+        "viewports": [
+          320,
+          360,
+          390,
+          768,
+          1024,
+          1280,
+          1440
+        ],
+        "horizontalOverflow": "0 px all tested widths",
+        "desktopTopAlignment": "0 px at 1280/1440; intentional stacked layout at <=1050",
+        "runtimeErrors": 0,
+        "a11yLint": "PASS",
+        "fixtures": [
+          "under-36 own housing switches LTV reference to 90%",
+          "investment switches recommended LTV to 70% and disables under-36 checkbox",
+          "higher rate increases payment"
+        ],
+        "productionPageSpeedRetest": "PENDING_AFTER_DEPLOY"
+      }
     }
   ],
   "inProgressPages": [
@@ -1600,9 +1645,9 @@
     }
   ],
   "nextCandidate": {
-    "file": "muzu-si-dovolit-bydleni.html",
-    "status": "READY_AFTER_PROVIZE_VISUAL_GATE",
-    "reason": "Business/cenotvorba rebuild cluster is complete; this is the highest-priority unfinished finance/hypotéky intent in the registry."
+    "file": "muzu-si-dovolit-nemovitost-kalkulacka.html",
+    "status": "READY_AFTER_VISUAL_GATE",
+    "reason": "Adjacent but distinct finance intent: after auditing a concrete plan, next unfinished high-priority URL calculates the maximum property price from the household budget."
   },
   "waves": [
     {
