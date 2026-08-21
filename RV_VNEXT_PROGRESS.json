@@ -1439,6 +1439,34 @@
         "Dataset"
       ],
       "notes": "V-next rebuild separates own purchase-price share, appraisal gap, closing/setup costs and protected reserve. Primary form uses stable full-width rows to avoid pair-field alignment defects seen on the previous housing page."
+    },
+    {
+      "file": "kalkulacka-celkove-ceny-nemovitosti.html",
+      "url": "https://rychlevypocty.cz/kalkulacka-celkove-ceny-nemovitosti.html",
+      "status": "RELEASE_CANDIDATE",
+      "decision": "KEEP + FULL REBUILD",
+      "majorChangeDate": "2026-08-21",
+      "archetype": "Closing Receipt / advertised price → transaction layer → post-handover layer",
+      "researchVerifiedAt": "2026-08-21",
+      "qaStatus": "LOCAL_QA_PENDING_USER_VISUAL_AND_PRODUCTION_PSI",
+      "benchmarkDataset": {
+        "enabled": true,
+        "file": "celkova-cena-nemovitosti-all-in-benchmark.csv",
+        "rows": 25,
+        "verifiedAt": "2026-08-21",
+        "mode": "MODEL_BENCHMARK"
+      },
+      "contentCoverageMatrix": {
+        "primaryIntent": "PASS – advertised/purchase price plus explicit costs returns true acquisition spend.",
+        "resultInterpretation": "PASS – cost stack, uplift, cash plan and reserve separation.",
+        "comparisonBenchmark": "PASS – 25 same-dimension sensitivity scenarios; explicitly not a market average.",
+        "mistakesEdgeCases": "PASS – commission already included vs on top, reserve is not a cost, no acquisition tax, electronic cadastral discount.",
+        "methodology": "PASS – official fixed fees verified; variable services remain user-entered instead of invented defaults.",
+        "workedExamples": "PASS – live receipt and timeline.",
+        "sourcesData": "PASS – ČÚZK and Finanční správa links + downloadable benchmark CSV.",
+        "nextAction": "PASS – own funds, affordability ceiling and mortgage payment."
+      },
+      "notes": "V-next rebuild intentionally narrows the job to true acquisition spend beyond the advertised price and removes financing overlap with the own-funds calculator. Unique Closing Receipt hero and cost stack. Acquisition reserve is separated from cost. Official 2026-relevant fixed references verified: CZK 2,000 cadastral filing fee, 20% electronic filing discount, acquisition tax abolished. 25-scenario RV model benchmark maps purchase price × extra-cost percentage without presenting it as population data."
     }
   ],
   "inProgressPages": [
@@ -1701,9 +1729,9 @@
     }
   ],
   "nextCandidate": {
-    "file": "kalkulacka-celkove-ceny-nemovitosti.html",
+    "file": "mesicni-naklady-na-bydleni-kalkulacka.html",
     "status": "READY_AFTER_VISUAL_GATE",
-    "reason": "Adjacent purchase-intent tool: after cash needed before signing, calculate the full acquisition cost beyond the advertised purchase price."
+    "reason": "Continue the housing cluster from one-off acquisition cost to recurring monthly ownership/rental cost."
   },
   "waves": [
     {
@@ -1857,33 +1885,31 @@
     }
   ],
   "currentCandidate": {
-    "file": "kalkulacka-slevy.html",
-    "url": "https://rychlevypocty.cz/kalkulacka-slevy.html",
+    "file": "kalkulacka-celkove-ceny-nemovitosti.html",
+    "url": "https://rychlevypocty.cz/kalkulacka-celkove-ceny-nemovitosti.html",
     "status": "RELEASE_CANDIDATE",
     "decision": "KEEP + FULL REBUILD",
-    "majorChangeDate": "2026-08-20",
-    "archetype": "Sale Tag Stack / receipt result + stacked-discount waterfall + seller volume matrix",
-    "researchVerifiedAt": "2026-08-20",
-    "qaStatus": "STATIC_FIXTURE_VISUAL_PASS_USER_AND_PRODUCTION_PSI_PENDING",
+    "majorChangeDate": "2026-08-21",
+    "archetype": "Closing Receipt / advertised price → transaction layer → post-handover layer",
+    "researchVerifiedAt": "2026-08-21",
+    "qaStatus": "LOCAL_QA_PENDING_USER_VISUAL_AND_PRODUCTION_PSI",
     "benchmarkDataset": {
       "enabled": true,
-      "file": "sleva-vs-potrebny-objem-prodeje-benchmark.csv",
+      "file": "celkova-cena-nemovitosti-all-in-benchmark.csv",
       "rows": 25,
-      "verifiedAt": "2026-08-20",
+      "verifiedAt": "2026-08-21",
       "mode": "MODEL_BENCHMARK"
     },
-    "minimumHoldUntil": "2026-09-03",
-    "holdUntil": "2026-09-17",
-    "qaNotes": "JS syntax PASS; structural accessibility lint PASS; 54 unique IDs / 0 duplicates; 3 valid JSON-LD blocks; 25-row benchmark CSV validated. Numeric fixtures PASS: 2,000 Kč −20% = 1,600 Kč; stacked 20% then 10% = 28% effective; advanced 2×2,000 Kč with 20%+10%, 100 Kč coupon and 120 Kč shipping = 2,900 Kč; seller 1,000/600 Kč with 10% discount = +33.3% volume / 134 vs 100 units. Desktop 1440 static visual render reviewed including hero, aligned calculator/result, seller flow, 25-cell matrix, compact related block and high-contrast white social icons. Interactive local Chromium navigation is blocked by this runtime policy, so responsive/runtime visual verification remains part of user production gate after deploy; production PSI remains authoritative.",
     "contentCoverageMatrix": {
-      "primaryIntent": "PASS – original price + discount immediately return price after discount and savings.",
-      "resultInterpretation": "PASS – receipt breakdown, effective discount and amount saved.",
-      "comparisonBenchmark": "PASS – 25 same-dimension model scenarios compare required volume growth by baseline contribution share and discount.",
-      "mistakesEdgeCases": "PASS – stacked discounts, fixed coupon cap, shipping outside discount, zero/negative contribution after discount.",
-      "methodology": "PASS – deterministic percentage and contribution formulas; no external law/data needed.",
-      "workedExamples": "PASS – presets plus live stacked-discount waterfall and seller scenario.",
-      "sourcesData": "PASS – downloadable 25-row RV DATA CSV.",
-      "nextAction": "PASS – margin, minimum selling price and break-even tools."
-    }
+      "primaryIntent": "PASS – advertised/purchase price plus explicit costs returns true acquisition spend.",
+      "resultInterpretation": "PASS – cost stack, uplift, cash plan and reserve separation.",
+      "comparisonBenchmark": "PASS – 25 same-dimension sensitivity scenarios; explicitly not a market average.",
+      "mistakesEdgeCases": "PASS – commission already included vs on top, reserve is not a cost, no acquisition tax, electronic cadastral discount.",
+      "methodology": "PASS – official fixed fees verified; variable services remain user-entered instead of invented defaults.",
+      "workedExamples": "PASS – live receipt and timeline.",
+      "sourcesData": "PASS – ČÚZK and Finanční správa links + downloadable benchmark CSV.",
+      "nextAction": "PASS – own funds, affordability ceiling and mortgage payment."
+    },
+    "notes": "V-next rebuild intentionally narrows the job to true acquisition spend beyond the advertised price and removes financing overlap with the own-funds calculator. Unique Closing Receipt hero and cost stack. Acquisition reserve is separated from cost. Official 2026-relevant fixed references verified: CZK 2,000 cadastral filing fee, 20% electronic filing discount, acquisition tax abolished. 25-scenario RV model benchmark maps purchase price × extra-cost percentage without presenting it as population data."
   }
 }
