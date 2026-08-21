@@ -198,3 +198,28 @@ Před ZIPem musí projít:
 
 ## Zlaté pravidlo
 **Každý nový tool musí být buď produktově, datově, metodicky nebo UX o krok dál než předchozí generace. Pokud jen kopíruje existující šablonu, není připravený k výrobě.**
+
+
+### 2.6 Quiet Luxury Gate — povinné od 21. 8. 2026
+
+RychléVýpočty.cz má působit **luxusně, ale jednoduše luxusně**. Brand recognition nevzniká počtem dekorací, ale konzistencí, hierarchií, typografií, spacingem a několika přesnými signály.
+
+### Hard rules
+- **Jedna dominantní brand kotva na viewport.** Nekombinovat současně stamp + page code + vertikální rail + watermark + grid + cut-corner, pokud to nemá jasný funkční důvod.
+- Hero standardně používá pouze: shared header/logo, jeden jemný RV signál (např. tri-color rail/line), tématický product proof a čistou typografii.
+- `RV CORE` je primárně **systém**, ne ornament: navy/blue/green rodina, čisté radiusy, důsledný spacing, result/status language, RV DATA a plný footer.
+- Dekorace mají rozpočet: **max. 2 nefukční vizuální vrstvy v hero**, z toho pouze jedna může být výrazná.
+- Pokud odstranění dekorace zlepší čitelnost a produkt neztratí identitu, dekorace se odstraní.
+- Preferovat **quiet confidence**: hodně vzduchu, přesné alignmenty, jeden silný vizuální proof, žádný „dashboard cosplay“.
+- Hero nesmí připomínat interní dashboard, design-system demo ani konferenční slide.
+- Product proof má být výraznější než brand ornament. Uživatel má nejprve pochopit výpočet, až potom vnímat design.
+- Na mobilu se brand vrstvy dále redukují; priorita je H1 → payoff → CTA → výsledek.
+
+### Anti-overdesign gate
+Visual gate = FAIL, pokud:
+- hero obsahuje 3+ konkurenční identity prvky;
+- je v prvním viewportu více malých štítků/kódů než skutečných informací;
+- více než jeden blok používá cut-corner / grid / rail jen kvůli vzhledu;
+- stránka působí „víc navržená než užitečná“.
+
+Cíl: **Apple-like restraint, ne sterilita; prémiová přesnost, ne vizuální exhibice.**
