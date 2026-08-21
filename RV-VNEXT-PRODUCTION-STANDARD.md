@@ -1,7 +1,7 @@
 # RychléVýpočty.cz V-next — Production Standard
 
-**Revize:** 20. 8. 2026  
-**Verze:** 2.1
+**Revize:** 21. 8. 2026  
+**Verze:** 2.2
 
 Tento dokument je závazný výrobní checklist pro každý nový kalkulátor, tool, utilitu, tracker, lookup nebo datový produkt. Cílem není vyrábět více URL, ale každý nový asset posunout nad úroveň předchozí generace RychléVýpočty.cz.
 
@@ -40,6 +40,16 @@ První viewport musí bez oborové znalosti odpovědět: **Co tady spočítám? 
 - Pokud se zdroje liší rozsahem, ukaž rozdíl přímo u dat; neslévej je do jednoho „tržního průměru“ bez obhajitelné normalizace.
 - Vizuální délka sloupce/range musí mít skutečnou společnou stupnici. Dekorativní procenta, která nevycházejí ze stejné osy, jsou FAIL.
 - QA otázka: **„Porovnává každý řádek opravdu totéž?“** Pokud ne, rozdělit data do samostatných bloků nebo změnit vizualizaci.
+
+
+### 2.5 Brand Lineage Gate — povinné od 21. 8. 2026
+- Před návrhem znovu otevři `index.html`, `kalkulacky.html` a relevantní hub. Nepracuj pouze z poslední kalkulačky.
+- Zapiš 3 vrstvy návrhu: **RV CORE / TOPIC GRAMMAR / PRODUCT PROOF**.
+- Nová stránka musí zdědit funkční identitní prvky webu (brand field/rail, status/result language, plný footer, section signals apod.), ale nesmí kopírovat kompozici předchozí kalkulačky.
+- Local-only CSS design bez viditelné návaznosti na index/katalog je visual gate FAIL, i když je samostatně hezký.
+- Každé 2–3 hlavní sekce musí být patrná další identitní kotva; značka nesmí po hero „zmizet“.
+- Benchmark sekce používá viditelné `RV DATA` označení.
+- Povinné identity QA skóre je **13/16**, podle `RV-VNEXT-IDENTITY-AUDIT-2026-08-21.md`.
 
 ### 2.4 Social Icon Footer Gate — povinné od 19. 8. 2026
 - Oficiální Facebook a Instagram se v brand footeru zobrazují primárně jako čisté rozpoznatelné ikony, nikoli jako samostatná viditelná slova „Facebook“ / „Instagram“.

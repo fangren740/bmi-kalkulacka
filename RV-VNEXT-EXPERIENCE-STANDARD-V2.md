@@ -1,7 +1,7 @@
 # RychléVýpočty.cz V-next — Experience Standard v2
 
-**Revize:** 18. 8. 2026  
-**Verze:** 2.3  
+**Revize:** 21. 8. 2026  
+**Verze:** 2.4  
 **Účel:** závazná produktová a UX nadstavba nad `RV-VNEXT-PRODUCTION-STANDARD.md` pro nové kalkulačky, decision tooly, trackery a lookupy.
 
 ## 0. Proč v2 vzniká
@@ -58,6 +58,44 @@ Před buildem se vybere **nativní vizuální archetyp podle problému**:
 Dekorativní grafika bez informační role se nepovažuje za diferenciaci.
 
 ---
+
+
+## 2.2 Brand Lineage / Project Identity Gate — povinné od 21. 8. 2026
+
+V-next nesmí vytvořit sérii kvalitních, ale vzájemně izolovaných microsites. Každý významný tool musí vizuálně patřit do stejného produktu jako `index.html`, `kalkulacky.html` a relevantní hub.
+
+### Třívrstvý model
+Každá stránka kombinuje:
+1. **RV CORE** — sdílená identita projektu;
+2. **TOPIC GRAMMAR** — vizuální jazyk tématu;
+3. **PRODUCT PROOF** — nativní vizuální důkaz konkrétního výpočtu.
+
+### Povinný benchmark před BUILD LOCK
+Novou stránku porovnej současně s:
+- indexem;
+- katalogem kalkulaček;
+- relevantním tematickým hubem;
+- posledními 3 V-next produkty.
+
+Anti-template test bez tohoto brandového srovnání je neúplný. Cíl je **stejná značka, jiný produkt**, nikoli „jiná microsite se stejným logem“.
+
+### Minimum identity kotvení
+Významná kalkulačka standardně obsahuje:
+- shared RV header / navigační rodinu;
+- hero identity layer (`rv-identity-hero` nebo kvalitativně rovnocenné řešení);
+- RV rail / field / status / result-system nebo jiný funkční brand signal v calculator/result zóně;
+- `RV DATA` identitu, pokud je datový benchmark;
+- další brandovou kotvu ve spodní polovině stránky;
+- plný `rv-brand-footer`.
+
+Pouhá barevná paleta nebo logo se za splnění nepovažují.
+
+### Identity QA score
+Hodnoť 0–2: brand recognition, topic recognition, product proof, page rhythm, calculator/result integration, data/method identity, footer/next-step, mobile identity.
+
+**Release floor: 13/16 a žádná nula v prvních pěti bodech.**
+
+Detailní audit a rationale: `RV-VNEXT-IDENTITY-AUDIT-2026-08-21.md`.
 
 ## 3. Hero musí prodat užitek, ne šablonu
 
