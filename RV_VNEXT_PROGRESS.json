@@ -1783,6 +1783,42 @@
         "productionPageSpeedRetest": "PENDING_AFTER_DEPLOY",
         "manualProductionVisualGate": "PENDING"
       }
+    },
+    {
+      "file": "leasing-kalkulacka.html",
+      "url": "https://rychlevypocty.cz/leasing-kalkulacka.html",
+      "status": "RELEASE_CANDIDATE",
+      "decision": "KEEP + FULL CLEAN REBUILD",
+      "majorChangeDate": "2026-08-22",
+      "researchVerifiedAt": "2026-08-22",
+      "qaStatus": "LOCAL_BROWSER_1440_390_320_RUNTIME_A11Y_CALC_BENCHMARK_PASS_PRODUCTION_VISUAL_AND_PSI_PENDING",
+      "archetype": "Deal Stack / Leasing Scanner — upfront → installments → mandatory services → balloon → total",
+      "primaryIntentGate": "PASS – dominant answer is the real payment stack and total model cost, not the advertised monthly installment.",
+      "navigationHierarchyGate": "PASS – calculator immediately follows hero; PRO and offer-B comparison are local controls, benchmark is linear.",
+      "comparisonIntegrityGate": "PASS – offer comparison holds the same asset price and separates down payment, term, rate, balloon and mandatory costs.",
+      "benchmarkDataset": {
+        "enabled": true,
+        "file": "leasing-nizsi-sazba-vs-povinne-naklady-benchmark.csv",
+        "rows": 20,
+        "verifiedAt": "2026-08-22",
+        "mode": "MODEL_BENCHMARK"
+      },
+      "identityPolicy": "MODERN_PRODUCT_UI_2026_WITH_RV_CONTINUITY",
+      "identityScore": "PASS local – modern sans typography, Deal Stack product proof, rate-vs-service benchmark heatmap and restrained RV blue/green signals; no legacy mrp/lease layout reused.",
+      "notes": "Full clean rebuild from leasing user job. Old mrp/lease shell not reused. Modern fintech/product UI direction requested by user. Benchmark is first-class: 20 scenarios show how much mandatory monthly cost can erase a lower nominal rate. Official RPSN guidance rechecked with ČNB and Ministry of Finance on 2026-08-22.",
+      "minimumHoldUntil": "2026-09-05",
+      "holdUntil": "2026-09-19",
+      "qa": {
+        "jsSyntax": "PASS",
+        "structuralAccessibility": "PASS page lint + all-vnext regression",
+        "internalAssets": "PASS – 0 missing local refs",
+        "benchmarkRows": 20,
+        "benchmarkConsistency": "PASS",
+        "localBrowser": "PASS – 1440/390/320, 0 horizontal overflow, 0 runtime errors, calculator/result top alignment PASS at desktop",
+        "defaultFixture": "650k / 20% / 60m / 6.9% -> 10,272.11 Kč monthly, 746,326.43 Kč total, 96,326.43 Kč over price",
+        "productionPageSpeedRetest": "PENDING_AFTER_DEPLOY",
+        "manualProductionVisualGate": "PENDING"
+      }
     }
   ],
   "inProgressPages": [
@@ -2045,8 +2081,8 @@
     }
   ],
   "nextCandidate": {
-    "status": "TO_SELECT_AFTER_INVEST_VS_REPAY_RELEASE_GATE",
-    "reason": "Select next V-next URL only after user visual gate; do not inherit Capital Fork mechanics or length mechanically."
+    "status": "TO_SELECT_AFTER_LEASING_RELEASE_GATE",
+    "reason": "Select next V-next URL only after user visual gate; do not inherit Deal Stack layout or modern typography mechanically."
   },
   "waves": [
     {
@@ -2200,47 +2236,37 @@
     }
   ],
   "currentCandidate": {
-    "file": "investovat-vs-splatit-hypoteku-kalkulacka.html",
-    "url": "https://rychlevypocty.cz/investovat-vs-splatit-hypoteku-kalkulacka.html",
+    "file": "leasing-kalkulacka.html",
+    "url": "https://rychlevypocty.cz/leasing-kalkulacka.html",
     "status": "RELEASE_CANDIDATE",
     "decision": "KEEP + FULL CLEAN REBUILD",
     "majorChangeDate": "2026-08-22",
     "researchVerifiedAt": "2026-08-22",
-    "qaStatus": "CLEAN_SHELL_BROWSER_1440_390_320_RUNTIME_A11Y_CALC_BENCHMARK_PASS_PRODUCTION_VISUAL_AND_PSI_PENDING",
-    "archetype": "Return Hurdle Board / mortgage sets the hurdle rate an investment must clear",
-    "primaryIntentGate": "PASS – one amount, two uses; dominant answer is the clean annual investment return required to mathematically match mortgage prepayment.",
-    "navigationHierarchyGate": "PASS – calculator immediately follows hero; Basic/PRO is the only mode switch; benchmark and methodology remain linear.",
-    "comparisonIntegrityGate": "PASS – both strategies start with the exact same free amount; investment gain is compared with net interest saving, not incompatible totals.",
+    "qaStatus": "LOCAL_BROWSER_1440_390_320_RUNTIME_A11Y_CALC_BENCHMARK_PASS_PRODUCTION_VISUAL_AND_PSI_PENDING",
+    "archetype": "Deal Stack / Leasing Scanner — upfront → installments → mandatory services → balloon → total",
+    "primaryIntentGate": "PASS – dominant answer is the real payment stack and total model cost, not the advertised monthly installment.",
+    "navigationHierarchyGate": "PASS – calculator immediately follows hero; PRO and offer-B comparison are local controls, benchmark is linear.",
+    "comparisonIntegrityGate": "PASS – offer comparison holds the same asset price and separates down payment, term, rate, balloon and mandatory costs.",
     "benchmarkDataset": {
       "enabled": true,
-      "file": "investovat-vs-splatit-hypoteku-bod-zvratu-benchmark.csv",
-      "rows": 25,
+      "file": "leasing-nizsi-sazba-vs-povinne-naklady-benchmark.csv",
+      "rows": 20,
       "verifiedAt": "2026-08-22",
-      "mode": "MODEL_SCENARIOS"
+      "mode": "MODEL_BENCHMARK"
     },
-    "contentCoverageMatrix": {
-      "inputChoice": "PASS – Basic uses 5 visible inputs; PRO explicitly adds investment cost, bank fee, tax impact, inflation and repayment strategy.",
-      "resultInterpretation": "PASS – break-even hurdle is dominant; mortgage benefit, investment gain and delta stay separate.",
-      "decisionScenario": "PASS – 25-scenario rate × remaining-term hurdle heatmap is a first-class product block, not an appendix.",
-      "edgeCases": "PASS – reserve/liquidity, volatility, fees, tax impact and future refix are disclosed instead of guessed.",
-      "methodology": "PASS – annuity debt model and compound-growth investment model are separated; current legal/tax facts rechecked 2026-08-22.",
-      "workedExample": "PASS – 3.0m / 300k / 4.8% / 20y yields 426,638 Kč interest saving, 37-month shortening and ~4.52% p.a. break-even.",
-      "sources": "PASS – ČNB consumer-credit prepayment guidance and Finanční správa 2026 mortgage-interest deduction guidance checked 2026-08-22.",
-      "nextAction": "PASS – links to detailed prepayment, compound-interest and reserve calculators."
-    },
-    "identityPolicy": "UNIQUE_INTENT_DRIVEN_PRODUCT_WITH_CLEAN_REBUILD_GATE_2026_08_22",
-    "identityScore": "PASS local – new Return Hurdle Board shell, no legacy ivh-* layout classes, hurdle visual in hero/result, benchmark heatmap, decision compass and restrained RV doodles; live user visual gate pending.",
-    "notes": "Previous Capital Fork candidate rejected by user as a patchwork. This revision is a clean-shell rebuild: new HTML composition, new page CSS and new presentation JS. Only validated math/methodology and the 25-row dataset were retained. #48 is quality reference only, not a template.",
+    "identityPolicy": "MODERN_PRODUCT_UI_2026_WITH_RV_CONTINUITY",
+    "identityScore": "PASS local – modern sans typography, Deal Stack product proof, rate-vs-service benchmark heatmap and restrained RV blue/green signals; no legacy mrp/lease layout reused.",
+    "notes": "Full clean rebuild from leasing user job. Old mrp/lease shell not reused. Modern fintech/product UI direction requested by user. Benchmark is first-class: 20 scenarios show how much mandatory monthly cost can erase a lower nominal rate. Official RPSN guidance rechecked with ČNB and Ministry of Finance on 2026-08-22.",
     "minimumHoldUntil": "2026-09-05",
     "holdUntil": "2026-09-19",
     "qa": {
       "jsSyntax": "PASS",
       "structuralAccessibility": "PASS page lint + all-vnext regression",
       "internalAssets": "PASS – 0 missing local refs",
-      "benchmarkRows": 25,
+      "benchmarkRows": 20,
       "benchmarkConsistency": "PASS",
-      "localBrowser": "PASS – 1440/390/320, 0 horizontal overflow, 0 runtime errors; Basic→PRO keyboard PASS",
-      "cleanRebuildProof": "PASS – zero legacy ivh-* classes in target HTML; v5 page CSS/JS are new files",
+      "localBrowser": "PASS – 1440/390/320, 0 horizontal overflow, 0 runtime errors, calculator/result top alignment PASS at desktop",
+      "defaultFixture": "650k / 20% / 60m / 6.9% -> 10,272.11 Kč monthly, 746,326.43 Kč total, 96,326.43 Kč over price",
       "productionPageSpeedRetest": "PENDING_AFTER_DEPLOY",
       "manualProductionVisualGate": "PENDING"
     }

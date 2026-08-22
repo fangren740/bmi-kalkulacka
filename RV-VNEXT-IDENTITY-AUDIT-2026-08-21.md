@@ -202,3 +202,13 @@ PASS. #44 má přibližně 3,1 tis. slov a 22 hlavních sekcí, zatímco bezpros
 - contrast: manual verification against actual dark gradient stops passes WCAG AA for relevant text; automatic walker cannot correctly resolve gradient backgrounds and its transparent-background false positives se nepoužívají jako verdict.
 
 **Status = RELEASE_CANDIDATE.** `DONE` je zakázáno do skutečného post-deploy production PageSpeed/Lighthouse testu.
+
+## MODERN PRODUCT UI CALIBRATION — FROM #50 (2026-08-22)
+
+User visual direction after the #49 gate:
+
+- Default typography direction should move toward a **modern sans / product / fintech UI** rather than editorial-serif or paper-document styling.
+- Prefer clean grotesk/system-sans stacks, strong numerical hierarchy, tabular figures, crisp grids, restrained gradients and contemporary product dashboards where the intent supports them.
+- Serif, paper cards, stamps and editorial motifs are **not forbidden**, but they are no longer the default. Use them only when the calculator's user job genuinely benefits from that metaphor.
+- This is **not a new universal template**. Each calculator must still have its own archetype, length, information rhythm, result language, benchmark treatment and signature visual proof.
+- The anti-template gate remains mandatory: modern typography is a shared direction, not permission to clone the same SaaS dashboard on every URL.
