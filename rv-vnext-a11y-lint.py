@@ -114,6 +114,20 @@ def lint_file(path: Path) -> list[str]:
         if not has_programmatic_label(n, nodes, by_id):
             errors.append(f"{ident(n)} form control has no programmatic label")
 
+    # Shared dark brand modules are not generic form skins. Applying one directly to a form
+    # has repeatedly caused low-contrast inherited text/background combinations.
+    for n in nodes:
+        if n.tag == "form" and "rv-brand-module" in cls(n).split():
+            errors.append(f"{ident(n)} applies rv-brand-module directly to a form; use rv-brand-calculator/result primitives instead")
+
+    # Project step-tab controls are tabs semantically; require the full tab contract instead
+    # of visually switching panels with plain buttons.
+    for n in nodes:
+        if "step-tabs" in cls(n).split():
+            buttons = [c for c in n.children if c.tag == "button"]
+            if buttons and n.attrs.get("role") != "tablist":
+                errors.append(f"{ident(n)} step-tabs must use role=tablist + role=tab/tabpanel contract")
+
     # Known bad pattern: generic element with aria-label but no semantic role.
     for n in nodes:
         if n.tag in {"div", "span"} and "aria-label" in n.attrs and not n.attrs.get("role"):
@@ -157,7 +171,8 @@ def lint_file(path: Path) -> list[str]:
             if radio.tag in {"button", "a"} and "tabindex" not in radio.attrs:
                 errors.append(f"{ident(radio)} custom radio missing roving tabindex")
 
-    # Social icon accessibility contract: official icon-only social links need a programmatic name.
+    # Social icon accessibility + visual contract: official social links are icon-first,
+    # locally rendered and programmatically named.
     for n in nodes:
         if n.tag != "a":
             continue
@@ -165,6 +180,8 @@ def lint_file(path: Path) -> list[str]:
         if "facebook.com/rychlevypocty" in href or "instagram.com/rychlevypocty" in href:
             if not n.attrs.get("aria-label", "").strip():
                 errors.append(f"{ident(n)} official social icon link missing aria-label")
+            if not any(d.tag == "svg" for d in n.descendants()):
+                errors.append(f"{ident(n)} official social link must render a local SVG icon, not visible network-name text only")
 
     # Broken in-page anchor references.
     for n in nodes:

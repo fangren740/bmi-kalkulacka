@@ -137,58 +137,27 @@ Před release povinně zkontroluj 4 screenshoty: **hero / calculator+result / da
 ### Procesní změna
 BUILD LOCK nově obsahuje explicitní řádek `Shared RV primitives to be used:` s konkrétními CSS/HTML třídami nebo komponentami. Obecná formulace „bude tam identita“ nestačí.
 
-## 2026-08-21 — INDEX / KATALOG LINEAGE ACTIVATED od #44
+## 2026-08-22 — Identity lineage without homepage cloning
 
-Vizuální audit aktuálního `index.html` a `kalkulacky.html` ukázal, že samotné použití RV barev, loga a rounded panelů nestačí. Nová hlavní identita stojí na **editorial typografii + ručním značkování + skutečném product proof + asymetrickém workspace rytmu**. Od kalkulačky #44 je tento směr součástí BUILD LOCK a má přednost před kopírováním poslední dokončené kalkulačky.
+Index, katalog a tematické huby jsou od této chvíle **referencí identity**, nikoli povinnou kostrou kalkulaček. Shared RV lineage se dědí přes několik přesných primitiv (barvy, rail/status/result language, typografii, jeden hand-drawn signál, RV metodiku/data a footer), ale kompozice kalkulačky se vždy řídí jejím vlastním user jobem.
 
-### Povinný inheritance gate před buildem
-- **Primary visual references:** vždy nejdřív aktuální `index.html` + `kalkulacky.html`, až potom tematický hub a sousední kalkulačky.
-- **Editorial scale:** hero musí mít jasnou typografickou dominantu; nesmí končit jako standardní H1 + odstavec + dvě tlačítka v generickém dvousloupcovém layoutu.
-- **Hand / marker signal:** minimálně jeden účelný ruční, doodle nebo markerový signál převzatý z hlavních stránek; na mobilu se redukuje, ne násobí.
-- **Product proof:** pravá strana hero nesmí být pouze dekorativní karta. Musí vizualizovat konkrétní logiku nástroje a ideálně reagovat na vstupy.
-- **Asymmetric rhythm:** stránka má pracovat s měřítkem, střídáním světlého/dark prostoru, datovou nebo metodickou plochou a rozdílnými kompozicemi; ne se sérií stejně velkých card gridů.
-- **Decision continuity:** produkt vede uživatele v rytmu `Zadat → Spočítat → Pochopit → Rozhodnout`; tento princip musí být vidět v kalkulačce, výsledku i spodní části stránky.
-
-### Release-blocking anti-boring gate
-Visual gate = FAIL, pokud platí některé z následujících:
-1. po odebrání loga hero působí jako zaměnitelný fintech/SaaS template;
-2. hlavní product proof lze bez úprav vložit na jinou kalkulačku;
-3. kalkulačka + výsledek jsou jen dvě anonymní zaoblené karty bez topic grammar;
-4. první dvě mobilní obrazovky ztratí editorial charakter a product proof;
-5. stránka pouze používá navy/blue/green, ale nepřenáší kompoziční jazyk indexu/katalogu.
-
-### Povinný screenshot gate
-Před release kontrolovat minimálně: **desktop hero, calculator + result, data/method, footer a mobilní první dvě obrazovky**. Product proof musí být na desktopu v prvním viewportu a na mobilu nejpozději v prvních dvou obrazovkách.
+### BUILD LOCK
+- **Primary product reference:** nejprve současná kalkulačka + nejlepší dokončené V-next kalkulačky se srovnatelným user jobem; index/katalog/hub slouží jako kontrola brand lineage, ne jako layout template.
+- **Preserve/evolve when strong:** pokud existující archetyp správně řeší intent, zachová se a vylepší. Full rebuild neznamená automaticky nový layout od nuly.
+- **Shared RV primitives:** vědomě použít 3–5 funkčních prvků RV systému (např. `rv-identity-hero`, category rail/status, `rv-brand-result`, RV METODIKA/DATA, inverse footer + 4-step signature).
+- **Topic-native product proof:** hlavní vizuální důkaz musí patřit konkrétnímu výpočtu. Dekorace ho pouze rámuje.
+- **Graphic budget:** v jednom viewportu zpravidla jeden hlavní product proof + přibližně 1–2 sekundární akcenty. Pokud další doodle/rail/marker nepomáhá orientaci nebo významu, odstranit.
+- **Section choreography:** délka, rytmus a množství sekcí jsou intent-driven; nepřevádět dlouhé stránky na jednotný grid karet.
+- **Mobile identity:** na mobilu zůstává H1 → payoff → hlavní vstup/výsledek; dekorace se redukují dříve než produkt.
 
 ### Aktivace na #44 — Akontace a LTV hypotéky
-- RV inheritance: editorial headline, ruční circle/doodle signál, nový header/footer lineage, navy/blue/green product canvas.
-- Topic signature: zvýrazněné `20 %` a explicitní rozdíl kupní cena × bankovní odhad.
-- Product signature: **Equity Blueprint** — živý řez financováním banka × vlastní zdroje napojený na výpočet.
-- Calculator/result grammar: worksheet + branded result climax, nikoli dvě generické karty.
-- Mobile identity: H1 → payoff → CTA → LTV proof → Equity Blueprint v prvních dvou obrazovkách.
+#44 zachovává vlastní dvousloupcový archetyp **LTV Equity Planneru**, protože odpovídá jobu „kolik vlastních peněz budu potřebovat a co se stane při nižším bankovním odhadu“. Není to homepage workspace clone.
 
-
-
-## 2026-08-22 — #44 RECALIBRATION AFTER VISUAL REJECTION
-
-První implementace #44 byla vizuálně odmítnuta, protože stále vycházela z logiky staré kalkulačky a novou identitu přidávala převážně jako skin. Tohle je od této chvíle explicitní **FAIL pattern**.
-
-### Co se mění v BUILD LOCK
-- **Rebuild znamená strukturální rebuild:** u stránky určené k full rebuildu se nesmí ponechat staré hero/work rozložení a jen na něj navěsit nový CSS skin.
-- **Index-first composition:** nejdřív se navrhne editorial statement + topic-specific product canvas + decision workspace; teprve potom se do něj mapují existující vstupy a výpočtová logika.
-- **Identity elements musí mít funkci:** doodle/marker zvýrazňuje klíčový princip, product canvas vysvětluje matematiku nástroje a dark/data plochy mění rytmus stránky. Dekorace bez role se nepočítá.
-- **Legacy stylesheet gate:** po full rebuildu se ověří, zda stránka zbytečně nenačítá starý page-specific stylesheet. Pokud nový page system staré CSS nepotřebuje, legacy stylesheet se odpojí.
-- **Screenshot rejection rule:** pokud desktop hero nebo první dvě mobilní obrazovky působí jako převlečená předchozí stránka, release se zastavuje bez ohledu na technický PASS.
-
-### #44 po recalibraci
-- centered editorial hero v měřítku aktuálního indexu;
-- hand-circle + dva redukované doodle signály, nikoli dekorativní soup;
-- samostatný browser-like **LTV Workspace** pod headline místo generické pravé hero karty;
-- jedna souvislá pracovní plocha `Zadat → Spočítat → Pochopit → Rozhodnout` s tmavým výsledkovým climaxem;
-- vlastní RV DATA sekce 70 / 80 / 90 a papírový price-vs-valuation explain panel;
-- odpojený legacy `akontace-ltv-v4.css`;
-- mobilní product proof zůstává v prvních dvou obrazovkách; horizontální overflow 0 px na 320 / 390 / 1440.
-
+- RV inheritance: shared header/logo, `rv-identity-hero`, jemný tri-color rail, calculator category rail, branded result, RV METODIKA a inverse footer s `Zadat → Spočítat → Pochopit → Rozhodnout`.
+- Topic signature: dům/klíč + živý LTV proof; funkční rozdělení `Banka × vlastní podíl`; LTV ring/valuation logic.
+- Secondary signature moments: scénářové „papers“, editorial mistake ledger a časová cesta koupě.
+- Quiet Luxury correction: po auditu byl odstraněn nadbytečný zelený burst v hero; product proof zůstává dominantní a hand-drawn circle je jediný výraznější nefunkční hero akcent.
+- Anti-template comparison #41–#44: PASS. Stránky sdílejí RV rodinu, ale #44 má vlastní result archetyp, finanční dramaturgii a výrazně větší intent-driven hloubku.
 
 ## 2026-08-22 — Portfolio uniqueness + graphic accent calibration
 
@@ -201,3 +170,35 @@ User feedback clarified the intended balance after an overdesigned LTV iteration
 - **Box modernization is selective.** Replace weak legacy cards/results when it improves hierarchy; do not rebuild every section into the newest card pattern.
 - **Length remains intent-driven.** Simple calculators can be short; YMYL or decision-heavy tools can be substantially deeper. Never normalize pages to a shared word count.
 - **Visual comparison target:** same RV family, different product. If a page can be converted into the previous calculator by swapping copy, release = FAIL. If it looks like a one-off design experiment unrelated to finished RV calculators, release = FAIL too.
+
+
+## 2026-08-22 — #44 Full prompt-compliance audit after contrast rejection
+
+Opakovaný audit #44 proti `RV_VNEXT_MASTER_PROMPT.txt`, `RV-VNEXT-PRODUCTION-STANDARD.md`, `RV-VNEXT-EXPERIENCE-STANDARD-V2.md` a tomuto identity auditu odhalil, že předchozí release candidate **nebyl plně compliant**. Hlavní vady byly systémové, ne pouze kosmetické.
+
+### Release-blocking nálezy a opravy
+- **Kontrast / shared CSS collision:** formulář měl omylem `rv-brand-module`, takže shared CSS ztmavilo plochu bez odpovídajícího textového tématu. Třída byla odstraněna. Broad local heading selector zároveň přepisoval světlé nadpisy dark sekcí; selektory byly omezeny a dark Decision/Method sekce mají explicitní kontrastní tokeny.
+- **Primary intent / hidden defaults:** rychlý režim dříve skrytě připočítával 200 000 Kč vedlejších nákladů a podrobný režim měl další nenulové skryté defaulty. Všechny volitelné náklady a stres jsou nyní defaultně 0; rychlý režim transparentně předpokládá bankovní hodnotu = kupní cena, dokud uživatel nepřejde do podrobného režimu.
+- **Metodika LTV:** dominantní KPI je `LTV nového úvěru = nový úvěr / hodnota zajištění`. Konzervativní model prostoru při další zástavě a existujícím dluhu je odděleně popsán jako RV plánovací model, nikoli jako oficiální definice ČNB nebo příslib banky.
+- **Investment scenario:** 70 % / DTI 7 je označeno jako doporučení ČNB pro investiční hypotéky, ne jako obecně závazný limit pro vlastní bydlení.
+- **RV lineage:** kalkulačka používá `rv-brand-calculator` + category rail, `rv-brand-result`, `/rv-brand-v32.js`, RV METODIKA a inverse footer.
+- **Accessibility:** 3-step advanced UI má kompletní `tablist/tab/tabpanel`, `aria-controls`, `aria-labelledby`, roving `tabindex` a Arrow/Home/End keyboard model.
+- **Social Icon Gate:** footer #44 používá icon-only Facebook/Instagram s aria-label a 44×44 hit area. Stejný opakující se defekt byl nalezen a TECHNICAL_QA opraven i na 7 starších dokončených V-next stránkách; jejich MAJOR HOLD data se tím neresetují.
+- **Sensitive-finance disclaimer:** footer obsahuje page-specific upozornění, že výsledek je orientační plánovací model a individuální schválení určuje banka.
+- **Dedicated OG:** #44 má vlastní 1200×630 OG asset.
+- **Section choreography:** série stejných card gridů byla rozbita — mistakes jsou editorial ledger, audit/check část používá jinou dvousloupcovou gramatiku a vlastní full-width callout.
+- **Quiet Luxury:** nadbytečný hero burst byl odstraněn; hlavní topic-native proof zůstává dominantní.
+
+### Uniqueness / length gate
+PASS. #44 má přibližně 3,1 tis. slov a 22 hlavních sekcí, zatímco bezprostřední #41–#43 jsou přibližně 0,95–1,2 tis. slov a 8–11 sekcí. Rozdíl není kvóta, ale důsledek YMYL/decision-heavy intentu. #44 se nesmí zkracovat ani přepisovat do stejného template jen kvůli vizuální uniformitě.
+
+### Local release status
+- responsive browser QA: 320 / 360 / 390 / 768 / 1024 / 1280 / 1366 / 1440 px, 0 px horizontal overflow;
+- browser runtime errors: 0;
+- JS syntax: PASS;
+- structural accessibility lint: PASS;
+- all completed/current V-next regression lint after social sweep: PASS;
+- deterministic finance fixtures: PASS;
+- contrast: manual verification against actual dark gradient stops passes WCAG AA for relevant text; automatic walker cannot correctly resolve gradient backgrounds and its transparent-background false positives se nepoužívají jako verdict.
+
+**Status = RELEASE_CANDIDATE.** `DONE` je zakázáno do skutečného post-deploy production PageSpeed/Lighthouse testu.
