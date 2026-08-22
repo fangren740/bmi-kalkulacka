@@ -167,3 +167,24 @@ Před release kontrolovat minimálně: **desktop hero, calculator + result, data
 - Calculator/result grammar: worksheet + branded result climax, nikoli dvě generické karty.
 - Mobile identity: H1 → payoff → CTA → LTV proof → Equity Blueprint v prvních dvou obrazovkách.
 
+
+
+## 2026-08-22 — #44 RECALIBRATION AFTER VISUAL REJECTION
+
+První implementace #44 byla vizuálně odmítnuta, protože stále vycházela z logiky staré kalkulačky a novou identitu přidávala převážně jako skin. Tohle je od této chvíle explicitní **FAIL pattern**.
+
+### Co se mění v BUILD LOCK
+- **Rebuild znamená strukturální rebuild:** u stránky určené k full rebuildu se nesmí ponechat staré hero/work rozložení a jen na něj navěsit nový CSS skin.
+- **Index-first composition:** nejdřív se navrhne editorial statement + topic-specific product canvas + decision workspace; teprve potom se do něj mapují existující vstupy a výpočtová logika.
+- **Identity elements musí mít funkci:** doodle/marker zvýrazňuje klíčový princip, product canvas vysvětluje matematiku nástroje a dark/data plochy mění rytmus stránky. Dekorace bez role se nepočítá.
+- **Legacy stylesheet gate:** po full rebuildu se ověří, zda stránka zbytečně nenačítá starý page-specific stylesheet. Pokud nový page system staré CSS nepotřebuje, legacy stylesheet se odpojí.
+- **Screenshot rejection rule:** pokud desktop hero nebo první dvě mobilní obrazovky působí jako převlečená předchozí stránka, release se zastavuje bez ohledu na technický PASS.
+
+### #44 po recalibraci
+- centered editorial hero v měřítku aktuálního indexu;
+- hand-circle + dva redukované doodle signály, nikoli dekorativní soup;
+- samostatný browser-like **LTV Workspace** pod headline místo generické pravé hero karty;
+- jedna souvislá pracovní plocha `Zadat → Spočítat → Pochopit → Rozhodnout` s tmavým výsledkovým climaxem;
+- vlastní RV DATA sekce 70 / 80 / 90 a papírový price-vs-valuation explain panel;
+- odpojený legacy `akontace-ltv-v4.css`;
+- mobilní product proof zůstává v prvních dvou obrazovkách; horizontální overflow 0 px na 320 / 390 / 1440.
