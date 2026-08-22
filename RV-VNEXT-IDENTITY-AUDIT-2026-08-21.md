@@ -188,3 +188,16 @@ První implementace #44 byla vizuálně odmítnuta, protože stále vycházela z
 - vlastní RV DATA sekce 70 / 80 / 90 a papírový price-vs-valuation explain panel;
 - odpojený legacy `akontace-ltv-v4.css`;
 - mobilní product proof zůstává v prvních dvou obrazovkách; horizontální overflow 0 px na 320 / 390 / 1440.
+
+
+## 2026-08-22 — Portfolio uniqueness + graphic accent calibration
+
+User feedback clarified the intended balance after an overdesigned LTV iteration. This is now a release rule:
+
+- **No universal calculator template.** Each calculator keeps a composition, page length, content depth, result archetype and signature blocks that fit its own user job. Two consecutive calculators must not become text/color swaps of the same shell.
+- **Uniqueness is product-led, not chaos-led.** A full rebuild does not require importing homepage composition into every calculator. Existing strong V-next calculator archetypes may be preserved and evolved when they already fit the intent.
+- **Graphic identity grows as a library.** Add a small number of topic-appropriate RV hand-drawn / doodle / rail / marker motifs per page; keep inventing new motifs across the portfolio instead of repeating the same 4–5 graphics everywhere.
+- **Default graphic budget:** one main topic-native visual proof plus roughly 1–2 secondary graphic accents in a viewport/section. Decorative graphics must not overpower the calculator.
+- **Box modernization is selective.** Replace weak legacy cards/results when it improves hierarchy; do not rebuild every section into the newest card pattern.
+- **Length remains intent-driven.** Simple calculators can be short; YMYL or decision-heavy tools can be substantially deeper. Never normalize pages to a shared word count.
+- **Visual comparison target:** same RV family, different product. If a page can be converted into the previous calculator by swapping copy, release = FAIL. If it looks like a one-off design experiment unrelated to finished RV calculators, release = FAIL too.
