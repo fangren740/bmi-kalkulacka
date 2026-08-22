@@ -2,7 +2,7 @@
   "schemaVersion": "1.0",
   "project": "RychléVýpočty.cz V7",
   "program": "V-next Portfolio Rebuild",
-  "updatedAt": "2026-08-22T08:29:00+02:00",
+  "updatedAt": "2026-08-22T09:23:00+02:00",
   "sourceOfTruth": "latest uploaded production ZIP",
   "strategy": {
     "portfolioPolicy": "KEEP URL by default; merge only when independent user intent cannot be defended",
@@ -1602,6 +1602,52 @@
           "dph-kalkulacka.html"
         ]
       }
+    },
+    {
+      "file": "porovnani-fixace-hypoteky-kalkulacka.html",
+      "url": "https://rychlevypocty.cz/porovnani-fixace-hypoteky-kalkulacka.html",
+      "status": "RELEASE_CANDIDATE",
+      "decision": "KEEP + FULL REBUILD",
+      "majorChangeDate": "2026-08-22",
+      "researchVerifiedAt": "2026-08-22",
+      "qaStatus": "LOCAL_STATIC_A11Y_AND_CALC_FIXTURES_PASS_MANUAL_VISUAL_AND_PRODUCTION_PSI_PENDING",
+      "archetype": "Fixation Fork / two known offers → break-even refix rate → uncertainty map",
+      "primaryIntentGate": "PASS – compare two concrete fixed-rate offers without requiring a forecast; dominant answer is the future refix rate at which the cheaper path flips.",
+      "navigationHierarchyGate": "PASS – linear calculator flow with one optional details disclosure; no competing tabs.",
+      "comparisonIntegrityGate": "PASS – same principal, remaining term and comparison horizon; only offer rates/fix lengths and explicit fees differ. Principal repayment is shown separately and not mislabeled as cost.",
+      "socialIconFooterGate": "PASS – full RV footer with icon-only Facebook/Instagram and accessible names.",
+      "benchmarkDataset": {
+        "enabled": false,
+        "mode": "REFERENCE",
+        "reason": "Public market averages do not provide a comparable fixation-length benchmark for an individual offer. The page uses official ČBA/ČNB context plus a user-specific break-even sensitivity map instead of pseudo-benchmarking."
+      },
+      "contentCoverageMatrix": {
+        "inputChoice": "PASS – explains two offers, same remaining mortgage and why future rate is not required.",
+        "resultInterpretation": "PASS – break-even rate + current payments + same-horizon interest/fee costs + remaining balances.",
+        "decisionScenario": "PASS – optional own refix rate and lower/higher-than-threshold interpretation.",
+        "edgeCases": "PASS – fees, prepayment/refinancing conditions, reserve for payment shock and no universal best fixation.",
+        "methodology": "PASS – annuity formula, same-horizon comparison and numerical break-even method disclosed.",
+        "workedExample": "PASS – 3y 4.49% vs 5y 4.79% on 3.5m / 25y.",
+        "sources": "PASS – ČNB and ČBA primary/current sources checked 2026-08-22.",
+        "nextAction": "PASS – five-item bank checklist plus related mortgage tools."
+      },
+      "identityPolicy": "UNIQUE_INTENT_DRIVEN_PRODUCT_WITH_RESTRAINED_RV_GRAPHIC_LIBRARY_2026_08_22",
+      "identityScore": "PASS target – Fixation Fork hero/product proof, shared calculator/category rail, RV result, RV DATA market context, full inverse-logo footer; manual production visual gate pending.",
+      "notes": "Full V-next rebuild of the July V10 page. Removes the hidden need to guess a future refix rate from the primary flow. The core answer is a user-specific break-even refix rate over the longer fixation horizon; an expected future rate remains optional. Distinct visual grammar: two fixation tracks/fork, threshold map and linear decision route. Current market context uses ČBA June 2026 realized new-mortgage average 4.79% and ČNB spring-2026 refixation volumes; these do not drive the calculation. Page-specific financial disclaimer included.",
+      "minimumHoldUntil": "2026-09-05",
+      "holdUntil": "2026-09-19",
+      "qa": {
+        "jsSyntax": "PASS",
+        "structuralAccessibility": "PASS",
+        "internalAssets": "PASS pending final packaging recheck",
+        "calculationFixtures": [
+          "default 3.5m / 25y / 3y 4.49% vs 5y 4.79% → break-even refix ≈ 5.286%",
+          "principal repayment excluded from cost comparison; remaining balances shown separately",
+          "optional user refix rate affects scenario verdict but not break-even threshold"
+        ],
+        "productionPageSpeedRetest": "PENDING_AFTER_DEPLOY",
+        "manualProductionVisualGate": "PENDING"
+      }
     }
   ],
   "inProgressPages": [
@@ -1864,8 +1910,8 @@
     }
   ],
   "nextCandidate": {
-    "status": "TO_SELECT_AFTER_44_RELEASE_GATE",
-    "reason": "Select the next URL from the V-next priority queue only after #44 user visual gate; do not inherit #43/#44 layout mechanically. Apply the activated index/catalog lineage BUILD LOCK."
+    "status": "TO_SELECT_AFTER_45_RELEASE_GATE",
+    "reason": "Select the next V-next URL only after #45 user visual gate; preserve uniqueness and do not inherit the Fixation Fork layout mechanically."
   },
   "waves": [
     {
@@ -2019,84 +2065,49 @@
     }
   ],
   "currentCandidate": {
-    "file": "kalkulacka-akontace-a-ltv-hypoteky.html",
-    "url": "https://rychlevypocty.cz/kalkulacka-akontace-a-ltv-hypoteky.html",
+    "file": "porovnani-fixace-hypoteky-kalkulacka.html",
+    "url": "https://rychlevypocty.cz/porovnani-fixace-hypoteky-kalkulacka.html",
     "status": "RELEASE_CANDIDATE",
-    "decision": "KEEP + RECALIBRATED REBUILD",
+    "decision": "KEEP + FULL REBUILD",
     "majorChangeDate": "2026-08-22",
-    "archetype": "LTV Equity Planner / bank value → new-loan LTV → own cash + lower-appraisal stress",
     "researchVerifiedAt": "2026-08-22",
-    "qaStatus": "PASS_LOCAL_STATIC_BROWSER_A11Y_AND_FIXTURES_PENDING_PRODUCTION_PSI",
-    "structuredData": [
-      "BreadcrumbList",
-      "SoftwareApplication"
-    ],
-    "identityPolicy": "UNIQUE_PRODUCT_WITH_RESTRAINED_RV_GRAPHIC_LIBRARY_2026_08_22",
-    "notes": "Full prompt re-audit after visual/contrast rejection. Native two-column LTV planner archetype and intent-driven long-form depth were preserved; homepage/workspace cloning was rejected. Hidden cost/stress defaults were removed, quick-mode assumptions are visible, official new-loan LTV is separated from the conservative extra-collateral planning model, dark-section contrast and advanced-tab semantics were fixed, and RV identity primitives were completed. Graphics are restrained: house/key live proof + one hand-drawn hero accent, bank-vs-own funding split, LTV ring, scenario papers and purchase timeline.",
-    "identityScore": "PASS – same RV family, unique product; quiet-luxury graphic budget",
+    "qaStatus": "LOCAL_STATIC_A11Y_AND_CALC_FIXTURES_PASS_MANUAL_VISUAL_AND_PRODUCTION_PSI_PENDING",
+    "archetype": "Fixation Fork / two known offers → break-even refix rate → uncertainty map",
+    "primaryIntentGate": "PASS – compare two concrete fixed-rate offers without requiring a forecast; dominant answer is the future refix rate at which the cheaper path flips.",
+    "navigationHierarchyGate": "PASS – linear calculator flow with one optional details disclosure; no competing tabs.",
+    "comparisonIntegrityGate": "PASS – same principal, remaining term and comparison horizon; only offer rates/fix lengths and explicit fees differ. Principal repayment is shown separately and not mislabeled as cost.",
+    "socialIconFooterGate": "PASS – full RV footer with icon-only Facebook/Instagram and accessible names.",
+    "benchmarkDataset": {
+      "enabled": false,
+      "mode": "REFERENCE",
+      "reason": "Public market averages do not provide a comparable fixation-length benchmark for an individual offer. The page uses official ČBA/ČNB context plus a user-specific break-even sensitivity map instead of pseudo-benchmarking."
+    },
+    "contentCoverageMatrix": {
+      "inputChoice": "PASS – explains two offers, same remaining mortgage and why future rate is not required.",
+      "resultInterpretation": "PASS – break-even rate + current payments + same-horizon interest/fee costs + remaining balances.",
+      "decisionScenario": "PASS – optional own refix rate and lower/higher-than-threshold interpretation.",
+      "edgeCases": "PASS – fees, prepayment/refinancing conditions, reserve for payment shock and no universal best fixation.",
+      "methodology": "PASS – annuity formula, same-horizon comparison and numerical break-even method disclosed.",
+      "workedExample": "PASS – 3y 4.49% vs 5y 4.79% on 3.5m / 25y.",
+      "sources": "PASS – ČNB and ČBA primary/current sources checked 2026-08-22.",
+      "nextAction": "PASS – five-item bank checklist plus related mortgage tools."
+    },
+    "identityPolicy": "UNIQUE_INTENT_DRIVEN_PRODUCT_WITH_RESTRAINED_RV_GRAPHIC_LIBRARY_2026_08_22",
+    "identityScore": "PASS target – Fixation Fork hero/product proof, shared calculator/category rail, RV result, RV DATA market context, full inverse-logo footer; manual production visual gate pending.",
+    "notes": "Full V-next rebuild of the July V10 page. Removes the hidden need to guess a future refix rate from the primary flow. The core answer is a user-specific break-even refix rate over the longer fixation horizon; an expected future rate remains optional. Distinct visual grammar: two fixation tracks/fork, threshold map and linear decision route. Current market context uses ČBA June 2026 realized new-mortgage average 4.79% and ČNB spring-2026 refixation volumes; these do not drive the calculation. Page-specific financial disclaimer included.",
     "minimumHoldUntil": "2026-09-05",
     "holdUntil": "2026-09-19",
     "qa": {
-      "viewports": [
-        320,
-        360,
-        390,
-        768,
-        1024,
-        1280,
-        1366,
-        1440
-      ],
-      "horizontalOverflow": "0 px all tested widths",
-      "mobileProductProof": "PASS – primary intent, inputs and LTV proof remain readable in mobile flow without homepage-clone requirement",
-      "runtimeErrors": 0,
       "jsSyntax": "PASS",
       "structuralAccessibility": "PASS",
-      "allVnextRegressionLint": "PASS after systemic social-icon sweep",
-      "visualScreens": [
-        "hero",
-        "calculator + result",
-        "decision scenarios",
-        "methodology + sources",
-        "footer",
-        "full mobile 390",
-        "full mobile 320"
+      "internalAssets": "PASS pending final packaging recheck",
+      "calculationFixtures": [
+        "default 3.5m / 25y / 3y 4.49% vs 5y 4.79% → break-even refix ≈ 5.286%",
+        "principal repayment excluded from cost comparison; remaining balances shown separately",
+        "optional user refix rate affects scenario verdict but not break-even threshold"
       ],
-      "fixtures": [
-        "basic default: price 6.0m, LTV 80%, savings 1.45m, protected 150k -> mortgage 4.8m, down payment 1.2m, total cash 1.2m, remaining usable cash 100k",
-        "basic explicit -5% appraisal illustration -> stressed value 5.7m, mortgage 4.56m, total cash 1.44m, delta +240k",
-        "advanced initial switch -> bank value synced to 6.0m, LTV 80%, optional costs 0, stress 0; no hidden nonzero assumptions",
-        "advanced explicit costs: price 6.0m, bank value 5.7m, LTV 80%, costs 200k -> mortgage 4.56m, down payment 1.44m, total cash 1.64m",
-        "extra collateral planning model: bank value 5.7m + extra collateral 2.0m, existing secured debt 0.5m, LTV 80% -> mortgage space 5.66m; new-loan LTV 73.5%, combined conservative load 80%"
-      ],
-      "productionPageSpeedRetest": "PENDING_AFTER_DEPLOY"
-    },
-    "visualCalibration": {
-      "date": "2026-08-22",
-      "rule": "same RV family, unique intent-driven product; index/catalog are identity references, not calculator skeletons",
-      "signatureBlocks": [
-        "house/key + live hero proof",
-        "bank vs own funding split",
-        "LTV ring / valuation logic",
-        "scenario papers",
-        "editorial mistake ledger",
-        "purchase timeline"
-      ],
-      "heroDecorationBudget": "PASS – excess burst removed; one hand-drawn accent plus functional product proof"
-    },
-    "accessibilityRegressionSweep": {
-      "classification": "TECHNICAL_QA",
-      "majorHoldReset": false,
-      "pattern": "text-only Facebook/Instagram footer links on completed V-next pages",
-      "fixedPages": [
-        "kalkulacka-omitky.html",
-        "kalkulacka-orientacni-ceny-stavby-domu.html",
-        "kalkulacka-ceny-rekonstrukce-kuchyne.html",
-        "kalkulacka-ceny-rekonstrukce-koupelny.html",
-        "kalkulacka-nakladu-na-rekonstrukci-bytu-domu.html",
-        "objem-materialu-kalkulacka.html",
-        "dph-kalkulacka.html"
-      ]
+      "productionPageSpeedRetest": "PENDING_AFTER_DEPLOY",
+      "manualProductionVisualGate": "PENDING"
     }
   },
   "identitySystem": {
