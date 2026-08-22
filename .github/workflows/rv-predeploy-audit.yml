@@ -1,0 +1,52 @@
+name: RV Predeploy Audit
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  static-audit:
+    name: Static release gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Run deterministic audit
+        id: audit
+        shell: bash
+        run: |
+          set -o pipefail
+          python .github/scripts/audit_static_site.py \
+            --root . \
+            --config audits/audit-config.json \
+            --check-js \
+            --json-out rv-audit-report.json | tee rv-audit-report.txt
+
+      - name: Upload audit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rv-static-audit-report
+          path: |
+            rv-audit-report.json
+            rv-audit-report.txt
+          if-no-files-found: warn
+          retention-days: 30
