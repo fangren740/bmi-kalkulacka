@@ -136,3 +136,34 @@ Před release povinně zkontroluj 4 screenshoty: **hero / calculator+result / da
 
 ### Procesní změna
 BUILD LOCK nově obsahuje explicitní řádek `Shared RV primitives to be used:` s konkrétními CSS/HTML třídami nebo komponentami. Obecná formulace „bude tam identita“ nestačí.
+
+## 2026-08-21 — INDEX / KATALOG LINEAGE ACTIVATED od #44
+
+Vizuální audit aktuálního `index.html` a `kalkulacky.html` ukázal, že samotné použití RV barev, loga a rounded panelů nestačí. Nová hlavní identita stojí na **editorial typografii + ručním značkování + skutečném product proof + asymetrickém workspace rytmu**. Od kalkulačky #44 je tento směr součástí BUILD LOCK a má přednost před kopírováním poslední dokončené kalkulačky.
+
+### Povinný inheritance gate před buildem
+- **Primary visual references:** vždy nejdřív aktuální `index.html` + `kalkulacky.html`, až potom tematický hub a sousední kalkulačky.
+- **Editorial scale:** hero musí mít jasnou typografickou dominantu; nesmí končit jako standardní H1 + odstavec + dvě tlačítka v generickém dvousloupcovém layoutu.
+- **Hand / marker signal:** minimálně jeden účelný ruční, doodle nebo markerový signál převzatý z hlavních stránek; na mobilu se redukuje, ne násobí.
+- **Product proof:** pravá strana hero nesmí být pouze dekorativní karta. Musí vizualizovat konkrétní logiku nástroje a ideálně reagovat na vstupy.
+- **Asymmetric rhythm:** stránka má pracovat s měřítkem, střídáním světlého/dark prostoru, datovou nebo metodickou plochou a rozdílnými kompozicemi; ne se sérií stejně velkých card gridů.
+- **Decision continuity:** produkt vede uživatele v rytmu `Zadat → Spočítat → Pochopit → Rozhodnout`; tento princip musí být vidět v kalkulačce, výsledku i spodní části stránky.
+
+### Release-blocking anti-boring gate
+Visual gate = FAIL, pokud platí některé z následujících:
+1. po odebrání loga hero působí jako zaměnitelný fintech/SaaS template;
+2. hlavní product proof lze bez úprav vložit na jinou kalkulačku;
+3. kalkulačka + výsledek jsou jen dvě anonymní zaoblené karty bez topic grammar;
+4. první dvě mobilní obrazovky ztratí editorial charakter a product proof;
+5. stránka pouze používá navy/blue/green, ale nepřenáší kompoziční jazyk indexu/katalogu.
+
+### Povinný screenshot gate
+Před release kontrolovat minimálně: **desktop hero, calculator + result, data/method, footer a mobilní první dvě obrazovky**. Product proof musí být na desktopu v prvním viewportu a na mobilu nejpozději v prvních dvou obrazovkách.
+
+### Aktivace na #44 — Akontace a LTV hypotéky
+- RV inheritance: editorial headline, ruční circle/doodle signál, nový header/footer lineage, navy/blue/green product canvas.
+- Topic signature: zvýrazněné `20 %` a explicitní rozdíl kupní cena × bankovní odhad.
+- Product signature: **Equity Blueprint** — živý řez financováním banka × vlastní zdroje napojený na výpočet.
+- Calculator/result grammar: worksheet + branded result climax, nikoli dvě generické karty.
+- Mobile identity: H1 → payoff → CTA → LTV proof → Equity Blueprint v prvních dvou obrazovkách.
+
