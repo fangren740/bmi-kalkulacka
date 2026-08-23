@@ -7,6 +7,7 @@ Použij pro pravidelnou kontrolu celého portfolia bez záměru redesignovat str
 - 20 SEO / INDEXABILITY
 - 30 STRUCTURED DATA
 - 40 LINKS / ASSETS
+- 45 LIVE PRODUCTION HEALTH
 - 90 RELEASE GATE
 
 ## Doporučené vzorkování

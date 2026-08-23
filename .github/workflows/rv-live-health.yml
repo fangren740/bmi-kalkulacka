@@ -1,0 +1,73 @@
+name: RV Live Health Monitor
+
+on:
+  workflow_run:
+    workflows: ["pages-build-deployment"]
+    types: [completed]
+  schedule:
+    - cron: '17 5 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: rv-live-health
+  cancel-in-progress: true
+
+jobs:
+  live-health:
+    name: Live production gate
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout current main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Wait for edge propagation
+        if: ${{ github.event_name == 'workflow_run' }}
+        shell: bash
+        run: sleep 20
+
+      - name: Run live production audit
+        id: live-audit
+        shell: bash
+        run: |
+          set -o pipefail
+          python .github/scripts/live_health_monitor.py \
+            --root . \
+            --config audits/audit-config.json \
+            --json-out rv-live-health-report.json | tee rv-live-health-report.txt
+
+      - name: Write job summary
+        if: always()
+        shell: bash
+        run: |
+          echo '## RV Live Health Monitor' >> "$GITHUB_STEP_SUMMARY"
+          echo '```text' >> "$GITHUB_STEP_SUMMARY"
+          if [ -f rv-live-health-report.txt ]; then
+            head -n 120 rv-live-health-report.txt >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo 'Live report was not produced.' >> "$GITHUB_STEP_SUMMARY"
+          fi
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload live audit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rv-live-health-report
+          path: |
+            rv-live-health-report.json
+            rv-live-health-report.txt
+          if-no-files-found: warn
+          retention-days: 30
