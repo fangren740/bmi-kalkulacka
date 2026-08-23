@@ -31,7 +31,7 @@ from urllib.error import HTTPError, URLError
 from urllib.parse import urljoin, urlparse, urlunparse
 from urllib.request import HTTPRedirectHandler, Request, build_opener
 
-VERSION = "1.0.0"
+VERSION = "1.0.1"
 SEVERITY_ORDER = {"P0": 0, "P1": 1, "P2": 2, "P3": 3, "INFO": 4}
 USER_AGENT = "RychleVypocty-LiveHealth/1.0 (+https://rychlevypocty.cz/)"
 HTML_MAX_BYTES = 4_000_000
@@ -227,13 +227,7 @@ def _fetch_once(url: str, timeout: float, max_bytes: int, method: str = "GET") -
                 if len(body) > max_bytes:
                     body = body[:max_bytes]
             elapsed = int((time.perf_counter() - started) * 1000)
-            return FetchResult(
-                url=url,
-                status=int(resp.getcode()),
-                headers={k.lower(): v for k, v in resp.headers.items()},
-                body=body,
-                elapsed_ms=elapsed,
-            )
+            return FetchResult(url=url, status=int(resp.getcode()), headers={k.lower(): v for k, v in resp.headers.items()}, body=body, elapsed_ms=elapsed)
     except HTTPError as exc:
         elapsed = int((time.perf_counter() - started) * 1000)
         body = b""
@@ -242,28 +236,13 @@ def _fetch_once(url: str, timeout: float, max_bytes: int, method: str = "GET") -
                 body = exc.read(max_bytes)
         except Exception:
             pass
-        return FetchResult(
-            url=url,
-            status=int(exc.code),
-            headers={k.lower(): v for k, v in exc.headers.items()} if exc.headers else {},
-            body=body,
-            error=str(exc),
-            location=(exc.headers.get("Location", "") if exc.headers else ""),
-            elapsed_ms=elapsed,
-        )
+        return FetchResult(url=url, status=int(exc.code), headers={k.lower(): v for k, v in exc.headers.items()} if exc.headers else {}, body=body, error=str(exc), location=(exc.headers.get("Location", "") if exc.headers else ""), elapsed_ms=elapsed)
     except (URLError, TimeoutError, OSError) as exc:
         elapsed = int((time.perf_counter() - started) * 1000)
         return FetchResult(url=url, status=None, headers={}, body=b"", error=str(exc), elapsed_ms=elapsed)
 
 
-def fetch_with_retry(
-    url: str,
-    timeout: float,
-    retries: int,
-    retry_delay: float,
-    max_bytes: int,
-    method: str = "GET",
-) -> FetchResult:
+def fetch_with_retry(url: str, timeout: float, retries: int, retry_delay: float, max_bytes: int, method: str = "GET") -> FetchResult:
     result: FetchResult | None = None
     for attempt in range(retries + 1):
         result = _fetch_once(url, timeout=timeout, max_bytes=max_bytes, method=method)
@@ -354,24 +333,14 @@ def add(findings: list[Finding], check: str, severity: str, path: str, message: 
     findings.append(Finding(check, severity, path, message, detail))
 
 
-def scan_page(
-    url: str,
-    site_origin: str,
-    timeout: float,
-    retries: int,
-    retry_delay: float,
-    dataset_min: int,
-    dataset_max: int,
-) -> tuple[list[Finding], dict[str, Any], set[str]]:
+def scan_page(url: str, site_origin: str, timeout: float, retries: int, retry_delay: float, dataset_min: int, dataset_max: int) -> tuple[list[Finding], dict[str, Any], set[str]]:
     findings: list[Finding] = []
     stats: dict[str, Any] = {"jsonld_blocks": 0, "dataset_objects": 0}
     assets: set[str] = set()
     path = url_to_path(url, site_origin)
-
     result = fetch_with_retry(url, timeout, retries, retry_delay, HTML_MAX_BYTES)
     stats["elapsed_ms"] = result.elapsed_ms
     stats["status"] = result.status
-
     if result.status is None:
         add(findings, "LIVE_PAGE_UNREACHABLE", "P1", path, "Produkční URL není dostupná po opakovaných pokusech.", result.error)
         return findings, stats, assets
@@ -382,19 +351,16 @@ def scan_page(
         severity = "P0" if path == "index.html" and result.status >= 500 else "P1"
         add(findings, "LIVE_PAGE_STATUS", severity, path, f"Produkční URL vrací HTTP {result.status}.", result.error)
         return findings, stats, assets
-
     content_type = result.headers.get("content-type", "").lower()
     if "text/html" not in content_type:
         add(findings, "LIVE_PAGE_CONTENT_TYPE", "P1", path, f"URL ze sitemap nevrací HTML Content-Type: {content_type or 'missing'}.")
         return findings, stats, assets
-
     text = decode_text(result)
     try:
         parser = parse_html(text)
     except Exception as exc:
         add(findings, "LIVE_HTML_PARSE", "P1", path, "Produkční HTML nelze spolehlivě parsovat.", str(exc))
         return findings, stats, assets
-
     if not parser.title:
         add(findings, "LIVE_MISSING_TITLE", "P1", path, "Produkční indexovatelná stránka nemá neprázdný <title>.")
     if parser.h1_count == 0:
@@ -407,7 +373,6 @@ def scan_page(
         canonical_abs = urljoin(url, parser.canonical)
         if normalized_url(canonical_abs) != normalized_url(url):
             add(findings, "LIVE_CANONICAL_MISMATCH", "P1", path, "Produkční canonical neodpovídá URL ze sitemap.", canonical_abs)
-
     for idx, raw in enumerate(parser.jsonld, start=1):
         stats["jsonld_blocks"] += 1
         try:
@@ -427,7 +392,6 @@ def scan_page(
                 add(findings, "LIVE_SCHEMA_DATASET_DESCRIPTION", "P1", path, f"Dataset description je kratší než {dataset_min} znaků.", f"length={len(desc)}")
             elif len(desc) > dataset_max:
                 add(findings, "LIVE_SCHEMA_DATASET_DESCRIPTION", "P1", path, f"Dataset description je delší než {dataset_max} znaků.", f"length={len(desc)}")
-
     for raw in parser.asset_refs + parser.og_images + parser.twitter_images:
         raw = raw.strip()
         if not raw or raw.startswith(("data:", "blob:", "javascript:", "mailto:", "tel:", "#")):
@@ -437,15 +401,21 @@ def scan_page(
             assets.add(absolute)
         elif absolute.lower().startswith("http://"):
             add(findings, "LIVE_MIXED_CONTENT", "P1", path, "Produkční HTTPS stránka odkazuje na HTTP asset.", absolute)
-
     return findings, stats, assets
 
 
 def scan_asset(url: str, site_origin: str, timeout: float, retries: int, retry_delay: float) -> list[Finding]:
+    """Check browser-loadable asset availability.
+
+    HEAD is only an optimization probe. CDNs/edge middleware can legally behave
+    differently for HEAD than for GET (Cloudflare email protection is one real
+    example). Therefore every non-200 HEAD result is confirmed with GET before
+    a finding is emitted. The browser-visible GET result is authoritative.
+    """
     findings: list[Finding] = []
     path = url_to_path(url, site_origin)
     result = fetch_with_retry(url, timeout, retries, retry_delay, ASSET_MAX_BYTES, method="HEAD")
-    if result.status in {405, 501}:
+    if result.status != 200:
         result = fetch_with_retry(url, timeout, retries, retry_delay, ASSET_MAX_BYTES, method="GET")
     if result.status is None:
         add(findings, "LIVE_ASSET_UNREACHABLE", "P1", path, "Asset načítaný produkční stránkou není dostupný.", result.error)
@@ -458,16 +428,7 @@ def scan_asset(url: str, site_origin: str, timeout: float, retries: int, retry_d
 
 def run_live_audit(root: Path, config: dict[str, Any]) -> tuple[list[Finding], dict[str, Any]]:
     findings: list[Finding] = []
-    stats: dict[str, Any] = {
-        "live_sitemap_urls": 0,
-        "repo_sitemap_urls": 0,
-        "pages_checked": 0,
-        "assets_checked": 0,
-        "jsonld_blocks": 0,
-        "dataset_objects": 0,
-        "max_page_ms": 0,
-    }
-
+    stats: dict[str, Any] = {"live_sitemap_urls": 0, "repo_sitemap_urls": 0, "pages_checked": 0, "assets_checked": 0, "jsonld_blocks": 0, "dataset_objects": 0, "max_page_ms": 0}
     site_origin = normalize_origin(str(config.get("site_origin", "https://rychlevypocty.cz")))
     live_cfg = config.get("live", {}) if isinstance(config.get("live", {}), dict) else {}
     timeout = float(live_cfg.get("timeout_seconds", 12))
@@ -480,11 +441,8 @@ def run_live_audit(root: Path, config: dict[str, Any]) -> tuple[list[Finding], d
     dataset_cfg = config.get("dataset", {}) if isinstance(config.get("dataset", {}), dict) else {}
     dataset_min = int(dataset_cfg.get("description_min", 50))
     dataset_max = int(dataset_cfg.get("description_max", 5000))
-
     live_sitemap_url = str(live_cfg.get("sitemap_url", f"{site_origin}/{config.get('sitemap', 'sitemap.xml')}")).strip()
     live_robots_url = str(live_cfg.get("robots_url", f"{site_origin}/{config.get('robots', 'robots.txt')}")).strip()
-
-    # Robots
     robots = fetch_with_retry(live_robots_url, timeout, retries, retry_delay, 512_000)
     if robots.status is None:
         add(findings, "LIVE_ROBOTS_UNREACHABLE", "P1", "robots.txt", "Produkční robots.txt není dostupný.", robots.error)
@@ -494,8 +452,6 @@ def run_live_audit(root: Path, config: dict[str, Any]) -> tuple[list[Finding], d
         robots_text = decode_text(robots)
         if "sitemap:" not in robots_text.lower():
             add(findings, "LIVE_ROBOTS_SITEMAP_MISSING", "P2", "robots.txt", "Produkční robots.txt neobsahuje Sitemap directive.")
-
-    # Sitemap
     sitemap = fetch_with_retry(live_sitemap_url, timeout, retries, retry_delay, 4_000_000)
     if sitemap.status is None:
         add(findings, "LIVE_SITEMAP_UNREACHABLE", "P0", "sitemap.xml", "Produkční sitemap.xml není dostupná.", sitemap.error)
@@ -508,7 +464,6 @@ def run_live_audit(root: Path, config: dict[str, Any]) -> tuple[list[Finding], d
     except Exception as exc:
         add(findings, "LIVE_SITEMAP_PARSE", "P0", "sitemap.xml", "Produkční sitemap.xml není validní XML sitemap.", str(exc))
         return findings, stats
-
     live_urls = list(dict.fromkeys(live_urls))
     stats["live_sitemap_urls"] = len(live_urls)
     if len(live_urls) < min_urls:
@@ -517,8 +472,6 @@ def run_live_audit(root: Path, config: dict[str, Any]) -> tuple[list[Finding], d
     for url in foreign:
         add(findings, "LIVE_SITEMAP_FOREIGN_ORIGIN", "P1", "sitemap.xml", "Sitemap obsahuje URL mimo očekávaný origin.", url)
     scan_urls = [u for u in live_urls if same_origin(u, site_origin)]
-
-    # Exact parity to repo sitemap (high-value post-deploy check)
     repo_sitemap_path = root / str(config.get("sitemap", "sitemap.xml"))
     try:
         repo_urls = list(dict.fromkeys(load_repo_sitemap(repo_sitemap_path)))
@@ -537,14 +490,9 @@ def run_live_audit(root: Path, config: dict[str, Any]) -> tuple[list[Finding], d
             add(findings, "LIVE_SITEMAP_REPO_MISMATCH", "P2", "sitemap.xml", "Produkční sitemap obsahuje URL, která není v repo sitemap.", url)
         if len(missing_live) > 50 or len(extra_live) > 50:
             add(findings, "LIVE_SITEMAP_REPO_MISMATCH", "P1", "sitemap.xml", "Rozdíl repo/live sitemap je větší než 50 položek.", f"missing={len(missing_live)} extra={len(extra_live)}")
-
-    # Pages concurrently
     all_assets: set[str] = set()
     with ThreadPoolExecutor(max_workers=workers) as pool:
-        futures = {
-            pool.submit(scan_page, url, site_origin, timeout, retries, retry_delay, dataset_min, dataset_max): url
-            for url in scan_urls
-        }
+        futures = {pool.submit(scan_page, url, site_origin, timeout, retries, retry_delay, dataset_min, dataset_max): url for url in scan_urls}
         for future in as_completed(futures):
             url = futures[future]
             try:
@@ -558,8 +506,6 @@ def run_live_audit(root: Path, config: dict[str, Any]) -> tuple[list[Finding], d
             stats["jsonld_blocks"] += int(page_stats.get("jsonld_blocks", 0))
             stats["dataset_objects"] += int(page_stats.get("dataset_objects", 0))
             stats["max_page_ms"] = max(stats["max_page_ms"], int(page_stats.get("elapsed_ms", 0)))
-
-    # Same-origin critical assets
     if check_assets and all_assets:
         with ThreadPoolExecutor(max_workers=workers) as pool:
             futures = {pool.submit(scan_asset, url, site_origin, timeout, retries, retry_delay): url for url in sorted(all_assets)}
@@ -570,7 +516,6 @@ def run_live_audit(root: Path, config: dict[str, Any]) -> tuple[list[Finding], d
                 except Exception as exc:
                     add(findings, "LIVE_ASSET_WORKER_ERROR", "P1", url_to_path(url, site_origin), "Interní chyba live asset workeru.", str(exc))
                 stats["assets_checked"] += 1
-
     return findings, stats
 
 
@@ -579,30 +524,14 @@ def summarize(findings: list[Finding], stats: dict[str, Any], blocking: set[str]
     exempted = [f for f in findings if f.exempted]
     counts = Counter(f.severity for f in active)
     blocked = any(f.severity in blocking for f in active)
-    return {
-        "version": VERSION,
-        "status": "FAIL" if blocked else "PASS",
-        "counts": {s: counts.get(s, 0) for s in ["P0", "P1", "P2", "P3", "INFO"]},
-        "exempted_count": len(exempted),
-        "stats": stats,
-        "generated_at_utc": dt.datetime.now(dt.timezone.utc).isoformat(),
-    }
+    return {"version": VERSION, "status": "FAIL" if blocked else "PASS", "counts": {s: counts.get(s, 0) for s in ["P0", "P1", "P2", "P3", "INFO"]}, "exempted_count": len(exempted), "stats": stats, "generated_at_utc": dt.datetime.now(dt.timezone.utc).isoformat()}
 
 
 def print_report(summary: dict[str, Any], findings: list[Finding]) -> None:
     print(f"RV LIVE HEALTH v{summary['version']}")
     print("=" * 78)
     st = summary["stats"]
-    print(
-        "SCAN: "
-        f"liveSitemap={st.get('live_sitemap_urls', 0)} "
-        f"repoSitemap={st.get('repo_sitemap_urls', 0)} "
-        f"pages={st.get('pages_checked', 0)} "
-        f"assets={st.get('assets_checked', 0)} "
-        f"JSON-LD={st.get('jsonld_blocks', 0)} "
-        f"Dataset={st.get('dataset_objects', 0)} "
-        f"maxPage={st.get('max_page_ms', 0)}ms"
-    )
+    print("SCAN: " f"liveSitemap={st.get('live_sitemap_urls', 0)} " f"repoSitemap={st.get('repo_sitemap_urls', 0)} " f"pages={st.get('pages_checked', 0)} " f"assets={st.get('assets_checked', 0)} " f"JSON-LD={st.get('jsonld_blocks', 0)} " f"Dataset={st.get('dataset_objects', 0)} " f"maxPage={st.get('max_page_ms', 0)}ms")
     c = summary["counts"]
     print(f"FINDINGS: P0={c['P0']} P1={c['P1']} P2={c['P2']} P3={c['P3']} INFO={c['INFO']} | exempted={summary['exempted_count']}")
     print(f"LIVE GATE: {summary['status']}")
@@ -627,7 +556,6 @@ def main() -> int:
     ap.add_argument("--config", default="audits/audit-config.json", help="Audit config path")
     ap.add_argument("--json-out", default="", help="Optional JSON report path")
     args = ap.parse_args()
-
     root = Path(args.root).resolve()
     config_path = (root / args.config).resolve() if not Path(args.config).is_absolute() else Path(args.config)
     try:
@@ -635,7 +563,6 @@ def main() -> int:
     except Exception as exc:
         print(f"CONFIG ERROR: {exc}", file=sys.stderr)
         return 2
-
     findings, stats = run_live_audit(root, config)
     exceptions = validate_exceptions(config, findings)
     apply_exceptions(findings, exceptions)
@@ -643,14 +570,12 @@ def main() -> int:
     blocking = set(release_cfg.get("blocking_severities", ["P0", "P1"]))
     summary = summarize(findings, stats, blocking)
     print_report(summary, findings)
-
     if args.json_out:
         out = Path(args.json_out)
         if not out.is_absolute():
             out = root / out
         out.write_text(json.dumps({"summary": summary, "findings": [asdict(f) for f in findings]}, ensure_ascii=False, indent=2), "utf-8")
         print(f"\nJSON report: {out}")
-
     return 1 if summary["status"] == "FAIL" else 0
 
 

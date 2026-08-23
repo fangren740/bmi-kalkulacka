@@ -24,6 +24,13 @@ python .github/scripts/live_health_monitor.py \
 - kritické same-origin assety načítané živými stránkami existují;
 - HTTP asset na HTTPS stránce je chyba.
 
+## Asset probe contract — od V1.0.1
+- `HEAD` je pouze rychlá optimalizační kontrola, nikoli autoritativní důkaz dostupnosti assetu;
+- pokud `HEAD` vrátí cokoli jiného než HTTP 200, monitor povinně ověří stejný asset skutečným `GET` requestem;
+- finding vznikne až podle výsledku `GET`, protože ten odpovídá requestu prohlížeče;
+- pravidlo řeší CDN/edge middleware (např. Cloudflare runtime assety), které mohou pro `HEAD` vracet jiný stav než pro `GET`;
+- žádná konkrétní `/cdn-cgi/` cesta není globálně whitelistovaná: skutečný GET 4xx/5xx zůstává P1.
+
 ## Trigger
 Monitor běží:
 1. automaticky po úspěšném `pages-build-deployment`;
@@ -46,4 +53,4 @@ P0/P1 vrací nenulový exit code a `LIVE GATE: FAIL`.
 Tyto kontroly patří do 50 RUNTIME, 60 VISUAL, 70 PERFORMANCE a budoucího calculation regression gate.
 
 ## Anti-false-positive pravidlo
-Síťové timeouty a běžné transient 5xx/429 se opakují podle `audit-config.json`. Výjimky se nesmí schovávat ve workflow ani skriptu; používá se společný `exceptions` registr.
+Síťové timeouty a běžné transient 5xx/429 se opakují podle `audit-config.json`. Výjimky se nesmí schovávat ve workflow ani skriptu; používá se společný `exceptions` registr. U assetů je browser-visible `GET` autoritativní; samotný neúspěšný `HEAD` nesmí shodit release gate.
