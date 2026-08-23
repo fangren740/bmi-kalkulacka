@@ -2,7 +2,7 @@
   "schemaVersion": "1.0",
   "project": "RychléVýpočty.cz V7",
   "program": "V-next Portfolio Rebuild",
-  "updatedAt": "2026-08-22",
+  "updatedAt": "2026-08-23",
   "sourceOfTruth": "latest uploaded production ZIP",
   "strategy": {
     "portfolioPolicy": "KEEP URL by default; merge only when independent user intent cannot be defended",
@@ -1819,6 +1819,43 @@
         "productionPageSpeedRetest": "PENDING_AFTER_DEPLOY",
         "manualProductionVisualGate": "PENDING"
       }
+    },
+    {
+      "file": "kalkulacka-splatky-auta.html",
+      "url": "https://rychlevypocty.cz/kalkulacka-splatky-auta.html",
+      "status": "RELEASE_CANDIDATE",
+      "decision": "KEEP + FULL CLEAN REBUILD",
+      "majorChangeDate": "2026-08-23",
+      "researchVerifiedAt": "2026-08-23",
+      "qaStatus": "LOCAL_BROWSER_1440_390_320_RUNTIME_A11Y_CALC_BENCHMARK_PASS_PRODUCTION_VISUAL_AND_PSI_PENDING",
+      "archetype": "Auto Credit Timeline / regular payments → balloon cliff → total cost",
+      "primaryIntentGate": "PASS – dominant answer is monthly payment plus the amount left at the end; the page explicitly separates a lower payment from a cheaper financing deal.",
+      "navigationHierarchyGate": "PASS – BASIC calculator is immediate; PRO locally reveals balloon, fees, budget control and offer B comparison.",
+      "comparisonIntegrityGate": "PASS – offer B keeps the same car price and compares visible down payment, rate, term, balloon and mandatory extras.",
+      "benchmarkDataset": {
+        "enabled": true,
+        "file": "auto-uver-zaverecny-doplatek-benchmark.csv",
+        "rows": 25,
+        "verifiedAt": "2026-08-23",
+        "mode": "MODEL_BENCHMARK"
+      },
+      "identityPolicy": "MODERN_PRODUCT_UI_2026_WITH_UNIQUE_AUTO_FINANCE_TIMELINE",
+      "identityScore": "PASS local – modern sans/product UI, timeline with balloon cliff, 25-scenario balloon trade-off map and restrained RV blue/green signals; no leasing Deal Stack layout reused.",
+      "notes": "Full clean rebuild after #50 modern UI calibration. Unique user job: reveal how a final balloon payment lowers the monthly installment but shifts principal to the end and can increase interest cost. RPSN methodology rechecked with ČNB on 2026-08-23.",
+      "minimumHoldUntil": "2026-09-06",
+      "holdUntil": "2026-09-20",
+      "qa": {
+        "jsSyntax": "PASS",
+        "structuralAccessibility": "PASS page lint + all-vnext regression",
+        "internalAssets": "PASS – 0 missing local refs",
+        "benchmarkRows": 25,
+        "benchmarkConsistency": "PASS",
+        "localBrowser": "PASS – 1440/390/320, 0 horizontal overflow, 0 runtime errors, desktop form/result top alignment PASS, mobile menu PASS",
+        "defaultFixture": "650k price / 130k down / 6.49% / 60m / 0 balloon -> 10,171.96 Kč monthly, 90,317.69 Kč interest, 740,317.69 Kč total",
+        "balloonFixture": "100k balloon -> 8,756.65 Kč monthly, 105,398.91 Kč interest, 755,398.91 Kč total",
+        "productionPageSpeedRetest": "PENDING_AFTER_DEPLOY",
+        "manualProductionVisualGate": "PENDING"
+      }
     }
   ],
   "inProgressPages": [
@@ -2081,8 +2118,8 @@
     }
   ],
   "nextCandidate": {
-    "status": "TO_SELECT_AFTER_LEASING_RELEASE_GATE",
-    "reason": "Select next V-next URL only after user visual gate; do not inherit Deal Stack layout or modern typography mechanically."
+    "status": "TO_SELECT_AFTER_AUTO_CREDIT_RELEASE_GATE",
+    "reason": "Select next V-next URL only after user visual gate; keep modern sans/product direction but do not inherit Auto Credit Timeline mechanically."
   },
   "waves": [
     {
@@ -2236,37 +2273,38 @@
     }
   ],
   "currentCandidate": {
-    "file": "leasing-kalkulacka.html",
-    "url": "https://rychlevypocty.cz/leasing-kalkulacka.html",
+    "file": "kalkulacka-splatky-auta.html",
+    "url": "https://rychlevypocty.cz/kalkulacka-splatky-auta.html",
     "status": "RELEASE_CANDIDATE",
     "decision": "KEEP + FULL CLEAN REBUILD",
-    "majorChangeDate": "2026-08-22",
-    "researchVerifiedAt": "2026-08-22",
+    "majorChangeDate": "2026-08-23",
+    "researchVerifiedAt": "2026-08-23",
     "qaStatus": "LOCAL_BROWSER_1440_390_320_RUNTIME_A11Y_CALC_BENCHMARK_PASS_PRODUCTION_VISUAL_AND_PSI_PENDING",
-    "archetype": "Deal Stack / Leasing Scanner — upfront → installments → mandatory services → balloon → total",
-    "primaryIntentGate": "PASS – dominant answer is the real payment stack and total model cost, not the advertised monthly installment.",
-    "navigationHierarchyGate": "PASS – calculator immediately follows hero; PRO and offer-B comparison are local controls, benchmark is linear.",
-    "comparisonIntegrityGate": "PASS – offer comparison holds the same asset price and separates down payment, term, rate, balloon and mandatory costs.",
+    "archetype": "Auto Credit Timeline / regular payments → balloon cliff → total cost",
+    "primaryIntentGate": "PASS – dominant answer is monthly payment plus the amount left at the end; the page explicitly separates a lower payment from a cheaper financing deal.",
+    "navigationHierarchyGate": "PASS – BASIC calculator is immediate; PRO locally reveals balloon, fees, budget control and offer B comparison.",
+    "comparisonIntegrityGate": "PASS – offer B keeps the same car price and compares visible down payment, rate, term, balloon and mandatory extras.",
     "benchmarkDataset": {
       "enabled": true,
-      "file": "leasing-nizsi-sazba-vs-povinne-naklady-benchmark.csv",
-      "rows": 20,
-      "verifiedAt": "2026-08-22",
+      "file": "auto-uver-zaverecny-doplatek-benchmark.csv",
+      "rows": 25,
+      "verifiedAt": "2026-08-23",
       "mode": "MODEL_BENCHMARK"
     },
-    "identityPolicy": "MODERN_PRODUCT_UI_2026_WITH_RV_CONTINUITY",
-    "identityScore": "PASS local – modern sans typography, Deal Stack product proof, rate-vs-service benchmark heatmap and restrained RV blue/green signals; no legacy mrp/lease layout reused.",
-    "notes": "Full clean rebuild from leasing user job. Old mrp/lease shell not reused. Modern fintech/product UI direction requested by user. Benchmark is first-class: 20 scenarios show how much mandatory monthly cost can erase a lower nominal rate. Official RPSN guidance rechecked with ČNB and Ministry of Finance on 2026-08-22.",
-    "minimumHoldUntil": "2026-09-05",
-    "holdUntil": "2026-09-19",
+    "identityPolicy": "MODERN_PRODUCT_UI_2026_WITH_UNIQUE_AUTO_FINANCE_TIMELINE",
+    "identityScore": "PASS local – modern sans/product UI, timeline with balloon cliff, 25-scenario balloon trade-off map and restrained RV blue/green signals; no leasing Deal Stack layout reused.",
+    "notes": "Full clean rebuild after #50 modern UI calibration. Unique user job: reveal how a final balloon payment lowers the monthly installment but shifts principal to the end and can increase interest cost. RPSN methodology rechecked with ČNB on 2026-08-23.",
+    "minimumHoldUntil": "2026-09-06",
+    "holdUntil": "2026-09-20",
     "qa": {
       "jsSyntax": "PASS",
       "structuralAccessibility": "PASS page lint + all-vnext regression",
       "internalAssets": "PASS – 0 missing local refs",
-      "benchmarkRows": 20,
+      "benchmarkRows": 25,
       "benchmarkConsistency": "PASS",
-      "localBrowser": "PASS – 1440/390/320, 0 horizontal overflow, 0 runtime errors, calculator/result top alignment PASS at desktop",
-      "defaultFixture": "650k / 20% / 60m / 6.9% -> 10,272.11 Kč monthly, 746,326.43 Kč total, 96,326.43 Kč over price",
+      "localBrowser": "PASS – 1440/390/320, 0 horizontal overflow, 0 runtime errors, desktop form/result top alignment PASS, mobile menu PASS",
+      "defaultFixture": "650k price / 130k down / 6.49% / 60m / 0 balloon -> 10,171.96 Kč monthly, 90,317.69 Kč interest, 740,317.69 Kč total",
+      "balloonFixture": "100k balloon -> 8,756.65 Kč monthly, 105,398.91 Kč interest, 755,398.91 Kč total",
       "productionPageSpeedRetest": "PENDING_AFTER_DEPLOY",
       "manualProductionVisualGate": "PENDING"
     }
