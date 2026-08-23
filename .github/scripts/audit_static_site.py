@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """RychléVýpočty.cz deterministic static audit.
 
-V1 checks repository integrity, SEO/indexability, JSON-LD Dataset rules,
-local links/assets and optional JavaScript syntax via Node.js.
+V1 checks repository integrity, SEO/indexability, JSON-LD Dataset and
+SoftwareApplication rules, local links/assets and optional JavaScript syntax via Node.js.
 
 The script never modifies the audited project.
 """
@@ -27,7 +27,7 @@ from pathlib import Path
 from typing import Any, Iterable
 from urllib.parse import unquote, urljoin, urlparse
 
-VERSION = "1.0.0"
+VERSION = "1.1.0"
 SEVERITY_ORDER = {"P0": 0, "P1": 1, "P2": 2, "P3": 3, "INFO": 4}
 BLOCKING_DEFAULT = {"P0", "P1"}
 SKIP_SCHEMES = {"mailto", "tel", "data", "javascript", "blob", "about"}
@@ -277,21 +277,29 @@ def sitemap_path_to_file(url: str, root: Path, site_origin: str) -> Path | None:
     return root / rel
 
 
-def iter_dataset_objects(value: Any) -> Iterable[dict[str, Any]]:
+def schema_types(value: dict[str, Any]) -> list[str]:
+    typ = value.get("@type")
+    if isinstance(typ, str):
+        return [typ]
+    if isinstance(typ, list):
+        return [x for x in typ if isinstance(x, str)]
+    return []
+
+
+def iter_typed_objects(value: Any, type_name: str) -> Iterable[dict[str, Any]]:
+    wanted = type_name.lower()
     if isinstance(value, dict):
-        typ = value.get("@type")
-        types: list[str] = []
-        if isinstance(typ, str):
-            types = [typ]
-        elif isinstance(typ, list):
-            types = [x for x in typ if isinstance(x, str)]
-        if any(t.lower() == "dataset" for t in types):
+        if any(t.lower() == wanted for t in schema_types(value)):
             yield value
         for child in value.values():
-            yield from iter_dataset_objects(child)
+            yield from iter_typed_objects(child, type_name)
     elif isinstance(value, list):
         for child in value:
-            yield from iter_dataset_objects(child)
+            yield from iter_typed_objects(child, type_name)
+
+
+def iter_dataset_objects(value: Any) -> Iterable[dict[str, Any]]:
+    yield from iter_typed_objects(value, "Dataset")
 
 
 def parse_srcset(value: str) -> list[str]:
@@ -516,6 +524,37 @@ def run_audit(root: Path, config: dict[str, Any], check_js: bool) -> tuple[list[
                     length = len(desc.strip())
                     if length < ds_min or length > ds_max:
                         add(findings, "SCHEMA_DATASET_DESCRIPTION_LENGTH", "P1", page.rel, f"Dataset description má {length} znaků; povolený rozsah je {ds_min}–{ds_max}.")
+                if "contentUrl" in ds:
+                    add(
+                        findings,
+                        "SCHEMA_DATASET_CONTENTURL_PLACEMENT",
+                        "P1",
+                        page.rel,
+                        "Dataset nesmí mít contentUrl přímo; download patří do distribution typu DataDownload.",
+                    )
+                distribution = ds.get("distribution")
+                if distribution is not None:
+                    distributions = distribution if isinstance(distribution, list) else [distribution]
+                    for item in distributions:
+                        if not isinstance(item, dict) or not any(t.lower() == "datadownload" for t in schema_types(item)):
+                            add(findings, "SCHEMA_DATASET_DISTRIBUTION_TYPE", "P1", page.rel, "Dataset distribution musí být DataDownload.")
+                            continue
+                        content_url = item.get("contentUrl")
+                        if not isinstance(content_url, str) or not content_url.strip():
+                            add(findings, "SCHEMA_DATADOWNLOAD_CONTENTURL", "P1", page.rel, "DataDownload nemá neprázdné contentUrl.")
+
+            for app in iter_typed_objects(obj, "SoftwareApplication"):
+                stats["software_application_objects"] += 1
+                name = app.get("name")
+                if not isinstance(name, str) or not name.strip():
+                    add(findings, "SCHEMA_SOFTWARE_APP_NAME", "P1", page.rel, "SoftwareApplication nemá neprázdné name.")
+                offers = app.get("offers")
+                offer_items = offers if isinstance(offers, list) else [offers] if offers is not None else []
+                has_price = any(isinstance(offer, dict) and offer.get("price") not in (None, "") for offer in offer_items)
+                if not has_price:
+                    add(findings, "SCHEMA_SOFTWARE_APP_PRICE", "P1", page.rel, "SoftwareApplication nemá offers.price požadované Google Software App rich result.")
+                if app.get("aggregateRating") is None and app.get("review") is None:
+                    add(findings, "SCHEMA_SOFTWARE_APP_RATING_OR_REVIEW", "P1", page.rel, "SoftwareApplication nemá legitimní aggregateRating ani review požadované Google Software App rich result.")
 
     # Local refs and internal noindex hops
     noindex_abs = {p.path.resolve(): p for p in pages.values() if p.noindex}
@@ -636,6 +675,7 @@ def print_report(summary: dict[str, Any], findings: list[Finding]) -> None:
         f"JS={st.get('js_files', 0)} "
         f"JSON-LD={st.get('jsonld_blocks', 0)} "
         f"Dataset={st.get('dataset_objects', 0)} "
+        f"SoftwareApp={st.get('software_application_objects', 0)} "
         f"SitemapURL={st.get('sitemap_urls', 0)}"
     )
     print(f"JS SYNTAX: {st.get('js_syntax_status', 'NOT RUN')}")
