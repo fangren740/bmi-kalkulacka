@@ -212,3 +212,15 @@ User visual direction after the #49 gate:
 - Serif, paper cards, stamps and editorial motifs are **not forbidden**, but they are no longer the default. Use them only when the calculator's user job genuinely benefits from that metaphor.
 - This is **not a new universal template**. Each calculator must still have its own archetype, length, information rhythm, result language, benchmark treatment and signature visual proof.
 - The anti-template gate remains mandatory: modern typography is a shared direction, not permission to clone the same SaaS dashboard on every URL.
+
+
+## 2026-08-23 — Anti-generic visual rejection gate after #51
+
+Technický PASS (`0 overflow`, validní JS, accessibility, správná numerika) **není vizuální PASS**. Po odmítnutí první verze #51 je závazné:
+
+- U FULL CLEAN REBUILD nesmí být nový produkt jen `hero + karta / formulář + result / tmavá tabulka`. Pokud stránka po odstranění copy působí jako generický SaaS/fintech shell, release = FAIL.
+- Před release se povinně renderují a ručně hodnotí minimálně čtyři pohledy: **desktop hero**, **calculator + result**, **benchmark/data**, **mobile top + primary result**.
+- Nový archetyp musí být viditelný v nejméně dvou částech stránky mimo copy. Nestačí ho pojmenovat v trackeru.
+- Modern Product UI znamená moderní typografii a hierarchii, nikoli uniformní dashboard template. Topic-native product proof má přednost před generickými kartami.
+- Pokud uživatel vizuální verzi zamítne jako nedotaženou, další iterace se nesmí dělat override patchováním stejného shellu. Povinný je nový build lock a při FULL REBUILD nový namespacovaný shell; ze zamítnuté verze se smí převzít matematika, fakta a validní dataset.
+- #51 re-build reference: **Auto Finance Cockpit** používá tři nativní momenty — cockpit v hero, cash-trail v hlavním výsledku a 25scénářovou Balloon Map. Tyto prvky jsou referencí laťky, nikoli template pro další URL.
