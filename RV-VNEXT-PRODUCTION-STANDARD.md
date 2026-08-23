@@ -1,7 +1,7 @@
 # RychléVýpočty.cz V-next — Production Standard
 
-**Revize:** 21. 8. 2026  
-**Verze:** 2.2
+**Revize:** 23. 8. 2026  
+**Verze:** 2.3
 
 Tento dokument je závazný výrobní checklist pro každý nový kalkulátor, tool, utilitu, tracker, lookup nebo datový produkt. Cílem není vyrábět více URL, ale každý nový asset posunout nad úroveň předchozí generace RychléVýpočty.cz.
 
@@ -124,6 +124,7 @@ Benchmark se přidává jen tehdy, když z metodiky vznikne **netriviální lids
 - První vrstva: lidská otázka a dominantní vizuální odpověď; technický termín až potom.
 - Na stránce: RV DATA signature, hlavní finding, 3–5 reprezentativních scénářů, plain-language omezení, CTA na CSV + data hub.
 - Root CSV + záznam v `rychlevypocty-datasets.json` + karta v `data-a-benchmarky.html` + Dataset/DataDownload schema v centrálním DataCatalogu.
+- **Dataset identity lock — povinné od 23. 8. 2026:** při vzniku benchmarku zamkni současně `id`, CSV/contentUrl, `name`, `description`, methodology a význam datasetu. Každý page-level i katalogový `Dataset` JSON-LD musí mít neprázdné `name` a `description` dlouhé 50–5000 znaků; description musí významově odpovídat stejnému datasetu v manifestu/data hubu a nesmí být vymyšlené pouze pro crawler.
 - Vždy označit jako **modelové/reprodukovatelné srovnání**, pokud nejde o skutečná observační data.
 - Benchmark není povinný; slabý/triviální benchmark je horší než žádný.
 
@@ -143,7 +144,10 @@ Nový indexovatelný produkt není hotový, dokud není zapojen do projektu:
 - OG/Twitter metadata + dedicated OG u významných assetů.
 - BreadcrumbList + WebApplication/SoftwareApplication podle typu produktu.
 - Dataset schema centrálně v DataCatalogu tam, kde existuje RV DATA asset.
+- **Každý `Dataset` objekt, včetně page-level Datasetu, musí mít při buildu neprázdné `name` a `description` v rozsahu 50–5000 znaků. Chybějící/krátké `description` = P1 / release FAIL.**
+- Page-level Dataset musí používat stejnou dataset identitu a význam jako odpovídající záznam v `rychlevypocty-datasets.json` / `data-a-benchmarky.html`; nevytvářet separátní crawler-only popis.
 - Všechny JSON-LD bloky musí projít parserem.
+- Před vytvořením deploy ZIPu musí projít deterministický schema gate: `python .github/scripts/audit_static_site.py --root . --config audits/audit-config.json --check-js`. Pokud structured-data gate vrátí P0/P1, stránka není release candidate.
 - Pokud Dataset schema používá `license`, musí odkazovat na skutečné a obsahově odpovídající licenční podmínky; nevkládat fiktivní licenci jen kvůli rich-result warningu.
 
 ## 11. Mobile / accessibility / speed
@@ -189,7 +193,8 @@ Před ZIPem musí projít:
 13. **post-deploy production PageSpeed/Lighthouse evidence**: skutečná produkční URL po nasazení; Accessibility / Best Practices / SEO bez automatického failu a cíl 100; bez tohoto důkazu status zůstává RELEASE_CANDIDATE,
 14. pokud je dostupné **Procházení agenty / Agentic browsing**, požaduj plný PASS; accessibility tree bez strukturálního failu a všechny interaktivní prvky s programmatic name,
 15. `rv-vnext-a11y-lint.py` / ekvivalent PASS na všech změněných HTML; `--all-vnext` musí číst aktuální progress JSON a při systémové chybě proběhne regression sweep již dokončených V-next URL před další výrobou,
-16. change-only **FLAT ZIP**, bez podsložek.
+16. **RV static release gate PASS:** `python .github/scripts/audit_static_site.py --root . --config audits/audit-config.json --check-js`; žádný nevyjmutý P0/P1, zejména žádný Dataset bez validního `description`,
+17. change-only **FLAT ZIP**, bez podsložek.
 
 ## 13. Po nasazení
 - Nový produkt označit jako významnou/MAJOR změnu portfolia a nechat ho měřit.
