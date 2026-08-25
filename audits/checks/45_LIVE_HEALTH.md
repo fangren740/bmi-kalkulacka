@@ -22,7 +22,8 @@ python .github/scripts/live_health_monitor.py \
 - produkční JSON-LD je validní JSON;
 - každý živý `Dataset` má `name` a `description` v povolené délce;
 - kritické same-origin assety načítané živými stránkami existují;
-- HTTP asset na HTTPS stránce je chyba.
+- HTTP asset na HTTPS stránce je chyba;
+- každý nakonfigurovaný legacy/alias origin (např. `https://www.rychlevypocty.cz`) musí být dostupný a jedním redirectem zachovat cestu na canonical origin bez `www`.
 
 ## Asset probe contract — od V1.0.1
 - `HEAD` je pouze rychlá optimalizační kontrola, nikoli autoritativní důkaz dostupnosti assetu;
@@ -39,7 +40,7 @@ Monitor běží:
 
 ## Severity
 - homepage/server 5xx nebo nedostupná/rozbitá sitemap = **P0**;
-- sitemap URL 4xx/5xx, noindex, canonical mismatch, invalid JSON-LD, Dataset contract nebo chybějící kritický asset = **P1**;
+- sitemap URL 4xx/5xx, noindex, canonical mismatch, invalid JSON-LD, Dataset contract, chybějící kritický asset nebo nefunkční alias-host redirect = **P1**;
 - asset redirect, chybějící Sitemap directive v robots nebo jiná neblokující nekonzistence = **P2**.
 
 P0/P1 vrací nenulový exit code a `LIVE GATE: FAIL`.

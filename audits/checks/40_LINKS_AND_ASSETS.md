@@ -9,7 +9,8 @@ Odhalit rozbité lokální odkazy a asset reference dřív, než se projeví jak
 - lokální `url(...)` reference v CSS;
 - lokální `og:image` a `twitter:image`;
 - chybějící HTML/CSS/JS/image/font/data asset;
-- HTTP mixed-content reference na HTTPS webu.
+- HTTP mixed-content reference na HTTPS webu;
+- legacy/zakázané originy (např. `www` alias) i uvnitř JS stringů a dalších deployable textových souborů.
 
 ## Pravidla
 - fragmenty, `mailto:`, `tel:`, `data:`, `javascript:` a externí origin se nevyhodnocují jako lokální soubor;
@@ -21,4 +22,5 @@ Odhalit rozbité lokální odkazy a asset reference dřív, než se projeví jak
 - chybějící aktivní CSS/JS nebo zásadní funkční asset: P1;
 - rozbitý interní HTML link: P1/P2 podle dosahu;
 - chybějící OG/social asset: P2;
-- mixed content: P2, případně P1 pokud blokuje funkci.
+- mixed content: P2, případně P1 pokud blokuje funkci;
+- hardcoded legacy/zakázaný origin: P2; před release odstranit, pokud nejde o explicitní výjimku.
