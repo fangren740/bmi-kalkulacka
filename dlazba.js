@@ -449,7 +449,7 @@
       `Balení: ${lastResult.packs} ks (${areaText(lastResult.purchasedArea)})`,
       `Počet dlaždic: ${new Intl.NumberFormat('cs-CZ').format(lastResult.tiles)} ks`,
       lastResult.totalCost > 0 ? `Celkový rozpočet: ${money(lastResult.totalCost)}` : '',
-      'https://www.rychlevypocty.cz/kalkulacka-dlazby-a-obkladu.html'
+      'https://rychlevypocty.cz/kalkulacka-dlazby-a-obkladu.html'
     ].filter(Boolean).join('\n');
     navigator.clipboard?.writeText(lines).then(() => {
       const button = $('#copyResultBtn');

@@ -490,7 +490,7 @@
   }
 
   function buildShareUrl() {
-    const base = location.protocol === 'file:' ? 'https://www.rychlevypocty.cz/smenovy-kalendar.html' : `${location.origin}${location.pathname}`;
+    const base = location.protocol === 'file:' ? 'https://rychlevypocty.cz/smenovy-kalendar.html' : `${location.origin}${location.pathname}`;
     const params = new URLSearchParams({ year:String(state.year), preset:state.preset, anchor:state.anchor, phase:String(state.phase) });
     if (state.preset === 'custom') params.set('cycle',state.customCycle.join(','));
     if (state.compare.enabled) {
