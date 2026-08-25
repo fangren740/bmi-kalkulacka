@@ -31,7 +31,7 @@ from urllib.error import HTTPError, URLError
 from urllib.parse import urljoin, urlparse, urlunparse
 from urllib.request import HTTPRedirectHandler, Request, build_opener
 
-VERSION = "1.0.1"
+VERSION = "1.0.2"
 SEVERITY_ORDER = {"P0": 0, "P1": 1, "P2": 2, "P3": 3, "INFO": 4}
 USER_AGENT = "RychleVypocty-LiveHealth/1.0 (+https://rychlevypocty.cz/)"
 HTML_MAX_BYTES = 4_000_000
@@ -428,7 +428,7 @@ def scan_asset(url: str, site_origin: str, timeout: float, retries: int, retry_d
 
 def run_live_audit(root: Path, config: dict[str, Any]) -> tuple[list[Finding], dict[str, Any]]:
     findings: list[Finding] = []
-    stats: dict[str, Any] = {"live_sitemap_urls": 0, "repo_sitemap_urls": 0, "pages_checked": 0, "assets_checked": 0, "jsonld_blocks": 0, "dataset_objects": 0, "max_page_ms": 0}
+    stats: dict[str, Any] = {"live_sitemap_urls": 0, "repo_sitemap_urls": 0, "pages_checked": 0, "assets_checked": 0, "jsonld_blocks": 0, "dataset_objects": 0, "max_page_ms": 0, "redirect_aliases_checked": 0}
     site_origin = normalize_origin(str(config.get("site_origin", "https://rychlevypocty.cz")))
     live_cfg = config.get("live", {}) if isinstance(config.get("live", {}), dict) else {}
     timeout = float(live_cfg.get("timeout_seconds", 12))
@@ -466,6 +466,36 @@ def run_live_audit(root: Path, config: dict[str, Any]) -> tuple[list[Finding], d
         return findings, stats
     live_urls = list(dict.fromkeys(live_urls))
     stats["live_sitemap_urls"] = len(live_urls)
+
+    # Legacy/alias host must resolve and redirect directly to the canonical origin.
+    # Test homepage and one real sitemap path so the redirect must also preserve paths.
+    alias_origins = [normalize_origin(str(x)) for x in live_cfg.get("redirect_alias_origins", []) if str(x).strip()]
+    sample_path = "/"
+    for candidate in live_urls:
+        parsed_candidate = urlparse(candidate)
+        if parsed_candidate.path and parsed_candidate.path != "/":
+            sample_path = parsed_candidate.path
+            break
+    for alias_origin in alias_origins:
+        for test_path in dict.fromkeys(["/", sample_path]):
+            alias_url = alias_origin + (test_path if test_path.startswith("/") else "/" + test_path)
+            result = fetch_with_retry(alias_url, timeout, retries, retry_delay, 64_000, method="HEAD")
+            stats["redirect_aliases_checked"] += 1
+            label = f"alias:{urlparse(alias_origin).netloc}{test_path}"
+            if result.status is None:
+                add(findings, "LIVE_ALIAS_UNREACHABLE", "P1", label, "Legacy/alias host není dostupný; Google na něj nemůže spolehlivě následovat redirect.", result.error)
+                continue
+            if result.status not in {301, 302, 307, 308}:
+                add(findings, "LIVE_ALIAS_NOT_REDIRECT", "P1", label, f"Legacy/alias URL nevrací redirect, ale HTTP {result.status}.", result.location)
+                continue
+            location = result.location or result.headers.get("location", "")
+            if not location:
+                add(findings, "LIVE_ALIAS_NO_LOCATION", "P1", label, "Redirect z legacy/alias hostu nemá Location header.")
+                continue
+            target = urljoin(alias_url, location)
+            expected = site_origin + (test_path if test_path != "/" else "/")
+            if normalized_url(target) != normalized_url(expected):
+                add(findings, "LIVE_ALIAS_REDIRECT_TARGET", "P1", label, "Legacy/alias redirect nemíří jedním krokem na očekávanou canonical URL.", f"got={target} expected={expected}")
     if len(live_urls) < min_urls:
         add(findings, "LIVE_SITEMAP_TOO_SMALL", "P0", "sitemap.xml", f"Produkční sitemap obsahuje jen {len(live_urls)} URL; minimum je {min_urls}.")
     foreign = [u for u in live_urls if not same_origin(u, site_origin)]
@@ -531,7 +561,7 @@ def print_report(summary: dict[str, Any], findings: list[Finding]) -> None:
     print(f"RV LIVE HEALTH v{summary['version']}")
     print("=" * 78)
     st = summary["stats"]
-    print("SCAN: " f"liveSitemap={st.get('live_sitemap_urls', 0)} " f"repoSitemap={st.get('repo_sitemap_urls', 0)} " f"pages={st.get('pages_checked', 0)} " f"assets={st.get('assets_checked', 0)} " f"JSON-LD={st.get('jsonld_blocks', 0)} " f"Dataset={st.get('dataset_objects', 0)} " f"maxPage={st.get('max_page_ms', 0)}ms")
+    print("SCAN: " f"liveSitemap={st.get('live_sitemap_urls', 0)} " f"repoSitemap={st.get('repo_sitemap_urls', 0)} " f"pages={st.get('pages_checked', 0)} " f"assets={st.get('assets_checked', 0)} " f"JSON-LD={st.get('jsonld_blocks', 0)} " f"Dataset={st.get('dataset_objects', 0)} " f"aliases={st.get('redirect_aliases_checked', 0)} " f"maxPage={st.get('max_page_ms', 0)}ms")
     c = summary["counts"]
     print(f"FINDINGS: P0={c['P0']} P1={c['P1']} P2={c['P2']} P3={c['P3']} INFO={c['INFO']} | exempted={summary['exempted_count']}")
     print(f"LIVE GATE: {summary['status']}")

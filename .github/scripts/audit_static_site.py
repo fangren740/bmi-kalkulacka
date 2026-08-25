@@ -27,7 +27,7 @@ from pathlib import Path
 from typing import Any, Iterable
 from urllib.parse import unquote, urljoin, urlparse
 
-VERSION = "1.1.1"
+VERSION = "1.1.2"
 SEVERITY_ORDER = {"P0": 0, "P1": 1, "P2": 2, "P3": 3, "INFO": 4}
 BLOCKING_DEFAULT = {"P0", "P1"}
 SKIP_SCHEMES = {"mailto", "tel", "data", "javascript", "blob", "about"}
@@ -573,6 +573,25 @@ def run_audit(root: Path, config: dict[str, Any], check_js: bool) -> tuple[list[
     for page in pages.values():
         if page.indexable and page.canonical and page.canonical not in sitemap_set:
             add(findings, "SEO_INDEXABLE_NOT_IN_SITEMAP", "P1", page.rel, "Canonical indexovatelné stránky není v sitemapě.", page.canonical)
+
+    # Origin consistency in deployable web files (catches hard-coded www/http aliases even inside JS strings)
+    seo_cfg = config.get("seo", {}) if isinstance(config.get("seo", {}), dict) else {}
+    forbidden_origins = [str(x).rstrip("/") for x in seo_cfg.get("forbidden_origins", []) if str(x).strip()]
+    if forbidden_origins:
+        web_exts = {".html", ".js", ".css", ".xml", ".json", ".txt", ".webmanifest"}
+        for path in sorted(p for p in root.rglob("*") if p.is_file() and p.suffix.lower() in web_exts and not is_excluded(p.relative_to(root).as_posix(), config)):
+            rel = path.relative_to(root).as_posix()
+            try:
+                text = path.read_text("utf-8", errors="replace")
+            except Exception as exc:
+                add(findings, "REPO_TEXT_READ", "P2", rel, "Soubor nelze načíst pro kontrolu originu.", str(exc))
+                continue
+            lowered = text.lower()
+            for forbidden in forbidden_origins:
+                count = lowered.count(forbidden.lower())
+                if count:
+                    stats["forbidden_origin_refs"] += count
+                    add(findings, "SEO_FORBIDDEN_ORIGIN_REFERENCE", "P2", rel, f"Soubor obsahuje {count}× zakázaný/legacy origin {forbidden}.")
 
     # robots sitemap declaration
     if robots_file.exists():
