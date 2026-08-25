@@ -37,7 +37,7 @@ function validateOperating(){
 function renderOperating(){
  if(!validateOperating())return;
  var m=operatingModel();var sorted=m.sorted,w=sorted[0],second=sorted[1];
- text('publicShareLabel',Math.round(m.share*100)+' %');text('evBlendPrice',dec(m.blend,2)+' Kč/kWh');
+ text('publicShareLabel',Math.round(m.share*100)+' %');if(el.publicShare)el.publicShare.style.setProperty('--share-pct',Math.round(m.share*100)+'%');text('evBlendPrice',dec(m.blend,2)+' Kč/kWh');
  text('petrol100',money1(m.rows.petrol.per100));text('diesel100',money1(m.rows.diesel.per100));text('ev100',money1(m.rows.ev.per100));
  text('heroAnnualKm',Math.round(m.annualKm).toLocaleString('cs-CZ')+' km/rok');text('heroPetrol100',money1(m.rows.petrol.per100));text('heroDiesel100',money1(m.rows.diesel.per100));text('heroEv100',money1(m.rows.ev.per100));text('heroWinner',w.name);text('heroWinnerDelta','o '+money1(second.per100-w.per100)+' / 100 km před druhým místem');
  var max100=Math.max(m.rows.petrol.per100,m.rows.diesel.per100,m.rows.ev.per100),min100=Math.min(m.rows.petrol.per100,m.rows.diesel.per100,m.rows.ev.per100),range=Math.max(1,max100-min100);
