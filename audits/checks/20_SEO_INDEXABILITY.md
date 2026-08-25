@@ -10,6 +10,8 @@ Zabránit technickým stavům, které vedou k nesprávné indexaci, duplicitám 
 - `noindex` URL není v sitemapě;
 - sitemap URL odpovídá existujícímu lokálnímu dokumentu;
 - sitemap neobsahuje duplicitní `<loc>`;
+- pokud stránka explicitně publikuje vlastní `dateModified`, sitemap `<lastmod>` nesmí být starší;
+- `<lastmod>` má validní datum a nesmí být v budoucnosti;
 - interní odkazy z indexovatelných stránek nevedou na známý `noindex` HTML shim/redirect;
 - `robots.txt` obsahuje deklaraci sitemap.
 
@@ -25,4 +27,4 @@ Zabránit technickým stavům, které vedou k nesprávné indexaci, duplicitám 
 - aktivní interní link přes noindex shim: P2, případně P1 při rozsáhlém výskytu.
 
 ## Poznámka
-`sitemap lastmod` není důkaz významné změny obsahu. Pro growth/HOLD rozhodování používej historii konkrétního souboru v produkčním repu.
+`sitemap lastmod` není důkaz významné změny obsahu. Pro growth/HOLD rozhodování používej historii konkrétního souboru v produkčním repu. Automatická kontrola výše pouze hlídá vnitřní konzistenci: pokud sama stránka tvrdí novější `dateModified`, sitemap nesmí tvrdit starší datum.
