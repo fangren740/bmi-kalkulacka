@@ -27,7 +27,7 @@ from pathlib import Path
 from typing import Any, Iterable
 from urllib.parse import unquote, urljoin, urlparse
 
-VERSION = "1.1.0"
+VERSION = "1.1.1"
 SEVERITY_ORDER = {"P0": 0, "P1": 1, "P2": 2, "P3": 3, "INFO": 4}
 BLOCKING_DEFAULT = {"P0", "P1"}
 SKIP_SCHEMES = {"mailto", "tel", "data", "javascript", "blob", "about"}
@@ -155,6 +155,59 @@ class RVHTMLParser(HTMLParser):
             self.title_parts.append(data)
         if self._script_parts is not None:
             self._script_parts.append(data)
+
+
+def parse_schema_date(value: Any) -> dt.date | None:
+    """Parse an ISO/W3C-style date or datetime into a calendar date."""
+    if not isinstance(value, str):
+        return None
+    raw = value.strip()
+    if not raw:
+        return None
+    try:
+        if re.fullmatch(r"\d{4}-\d{2}-\d{2}", raw):
+            return dt.date.fromisoformat(raw)
+        return dt.datetime.fromisoformat(raw.replace("Z", "+00:00")).date()
+    except ValueError:
+        return None
+
+
+def explicit_page_date_modified(page: PageInfo) -> dt.date | None:
+    """Return dateModified explicitly attached to the current canonical page entity.
+
+    Only top-level JSON-LD entities and @graph members are considered. Nested
+    datasets/items must not advance a parent page's sitemap timestamp.
+    """
+    canonical = page.canonical.split("#", 1)[0].rstrip("/")
+    if not canonical:
+        return None
+    found: list[dt.date] = []
+    for block in page.jsonld:
+        try:
+            data = json.loads(block)
+        except Exception:
+            continue
+        roots = data if isinstance(data, list) else [data]
+        nodes: list[dict[str, Any]] = []
+        for root_obj in roots:
+            if not isinstance(root_obj, dict):
+                continue
+            nodes.append(root_obj)
+            graph = root_obj.get("@graph")
+            if isinstance(graph, list):
+                nodes.extend(x for x in graph if isinstance(x, dict))
+        for node in nodes:
+            raw_modified = node.get("dateModified")
+            modified = parse_schema_date(raw_modified)
+            if modified is None:
+                continue
+            raw_url = node.get("url")
+            raw_id = node.get("@id")
+            entity_url = raw_url if isinstance(raw_url, str) else raw_id if isinstance(raw_id, str) else ""
+            if entity_url.split("#", 1)[0].rstrip("/") != canonical:
+                continue
+            found.append(modified)
+    return max(found) if found else None
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -457,14 +510,25 @@ def run_audit(root: Path, config: dict[str, Any], check_js: bool) -> tuple[list[
 
     # Sitemap
     sitemap_urls: list[str] = []
+    sitemap_lastmods: dict[str, str] = {}
     if sitemap_file.exists():
         try:
             tree = ET.parse(sitemap_file)
             ns = {"sm": "http://www.sitemaps.org/schemas/sitemap/0.9"}
-            locs = tree.getroot().findall("sm:url/sm:loc", ns)
-            if not locs:  # tolerate sitemap without namespace
-                locs = tree.getroot().findall("url/loc")
-            sitemap_urls = [(x.text or "").strip() for x in locs if (x.text or "").strip()]
+            url_nodes = tree.getroot().findall("sm:url", ns)
+            namespaced = True
+            if not url_nodes:  # tolerate sitemap without namespace
+                url_nodes = tree.getroot().findall("url")
+                namespaced = False
+            for url_node in url_nodes:
+                loc_node = url_node.find("sm:loc", ns) if namespaced else url_node.find("loc")
+                if loc_node is None or not (loc_node.text or "").strip():
+                    continue
+                loc = (loc_node.text or "").strip()
+                sitemap_urls.append(loc)
+                lastmod_node = url_node.find("sm:lastmod", ns) if namespaced else url_node.find("lastmod")
+                if lastmod_node is not None and (lastmod_node.text or "").strip():
+                    sitemap_lastmods[loc] = (lastmod_node.text or "").strip()
             stats["sitemap_urls"] = len(sitemap_urls)
         except Exception as exc:
             add(findings, "SEO_INVALID_SITEMAP", "P0", sitemap_rel, "Sitemap není validní XML.", str(exc))
@@ -486,6 +550,25 @@ def run_audit(root: Path, config: dict[str, Any], check_js: bool) -> tuple[list[
         page = page_by_abs_path.get(target.resolve())
         if page and page.noindex:
             add(findings, "SEO_NOINDEX_IN_SITEMAP", "P1", page.rel, "Noindex stránka je uvedená v sitemapě.", url)
+
+        raw_lastmod = sitemap_lastmods.get(url, "")
+        sitemap_date = parse_schema_date(raw_lastmod) if raw_lastmod else None
+        if raw_lastmod and sitemap_date is None:
+            add(findings, "SEO_SITEMAP_LASTMOD_FORMAT", "P2", sitemap_rel, "Sitemap obsahuje neplatný <lastmod>.", f"{url} -> {raw_lastmod}")
+        elif sitemap_date and sitemap_date > dt.date.today():
+            add(findings, "SEO_SITEMAP_LASTMOD_FUTURE", "P2", sitemap_rel, "Sitemap obsahuje <lastmod> v budoucnosti.", f"{url} -> {raw_lastmod}")
+
+        if page and sitemap_date:
+            page_modified = explicit_page_date_modified(page)
+            if page_modified and sitemap_date < page_modified:
+                add(
+                    findings,
+                    "SEO_SITEMAP_LASTMOD_BEHIND_PAGE",
+                    "P2",
+                    page.rel,
+                    "Sitemap <lastmod> je starší než explicitní dateModified stejné stránky.",
+                    f"sitemap={sitemap_date.isoformat()} page={page_modified.isoformat()}",
+                )
 
     for page in pages.values():
         if page.indexable and page.canonical and page.canonical not in sitemap_set:
