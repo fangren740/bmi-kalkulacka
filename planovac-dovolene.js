@@ -7,6 +7,10 @@
   const DAYS = ['neděle','pondělí','úterý','středa','čtvrtek','pátek','sobota'];
   const DAYS_SHORT = ['Ne','Po','Út','St','Čt','Pá','So'];
   const STORAGE_KEY = 'rv-vacation-planner-v1';
+  const nowLocal = new Date();
+  const CURRENT_YEAR = nowLocal.getFullYear();
+  const DEFAULT_YEAR = Math.max(2025, Math.min(2035, CURRENT_YEAR));
+  const todayUtc = () => dateUTC(nowLocal.getFullYear(), nowLocal.getMonth(), nowLocal.getDate());
 
   const DISTRICT_GROUPS = [
     ['Mladá Boleslav','Příbram','Tábor','Prachatice','Strakonice','Ústí nad Labem','Chomutov','Most','Jičín','Rychnov nad Kněžnou','Olomouc','Šumperk','Opava','Jeseník'],
@@ -51,7 +55,7 @@
   const els = {};
   let storageControl;
   const state = {
-    year: 2026,
+    year: DEFAULT_YEAR,
     budget: 20,
     profile: 'balanced',
     minBreak: 3,
@@ -199,8 +203,10 @@
     const maxLength = Math.max(5, Math.min(35, Number(state.maxBreak) || 18));
     const minLength = Math.max(3, Math.min(maxLength, Number(state.minBreak) || 3));
 
+    const today = todayUtc();
     for (let i = 1; i < dates.length - 2; i += 1) {
       const start = dates[i];
+      if (year === CURRENT_YEAR && start < today) continue;
       if (!isBaselineWorkday(dates[i - 1], ctx)) continue;
       for (let length = minLength; length <= maxLength && i + length < dates.length; length += 1) {
         const endIndex = i + length - 1;
@@ -215,7 +221,7 @@
         if (leaveDates.some(d => ctx.blocked.has(iso(d)))) continue;
         const touchesYear = interval.some(d => d.getUTCFullYear() === year);
         if (!touchesYear) continue;
-        const holidayNames = [...new Set(interval.map(d => ctx.holidays.get(iso(d))).filter(Boolean))];
+        const holidayNames = [...new Set(interval.filter(d => d.getUTCDay() >= 1 && d.getUTCDay() <= 5).map(d => ctx.holidays.get(iso(d))).filter(Boolean))];
         const schoolOverlap = interval.reduce((sum, d) => sum + (ctx.school.has(iso(d)) ? 1 : 0), 0);
         const ratio = interval.length / leaveDates.length;
         candidates.push({
@@ -292,6 +298,7 @@
       } else {
         value -= 165;
         value += Math.round(item.ratio * 8);
+        if (!item.holidayNames.length && item.totalDays <= 4) value -= 190;
       }
       if (state.schoolMode) value += item.schoolOverlap * 24;
       return value;
@@ -356,7 +363,7 @@
   }
 
   function calculate({ announce = false } = {}) {
-    const year = clamp(Number(els.yearSelect.value) || 2026, 2025, 2035);
+    const year = clamp(Number(els.yearSelect.value) || DEFAULT_YEAR, 2025, 2035);
     const budget = clamp(Number(els.leaveDays.value) || 20, 1, 50);
     state.year = year;
     state.budget = budget;
@@ -395,14 +402,20 @@
     const stats = planStats(state.results.annual);
     els.heroYear.textContent = state.year;
     els.heroBudget.textContent = state.budget;
+    if (els.planningScope) {
+      els.planningScope.textContent = state.year === CURRENT_YEAR
+        ? `Aktuální rok · termíny od ${dateLabel(todayUtc(), false)}`
+        : `Celý rok ${state.year}`;
+    }
     if (stats.blocks.length) {
       els.heroOff.textContent = stats.off;
       els.heroBlocks.textContent = stats.count;
       els.heroEfficiency.textContent = `${formatNumber(stats.efficiency, 1)}×`;
       els.heroResultText.innerHTML = `<strong>${stats.leave} ${dayWord(stats.leave)} dovolené</strong> může vytvořit <strong>${stats.off} ${dayWord(stats.off)} volna</strong>`;
-      els.heroHint.textContent = stats.leave < state.budget
+      const scopePrefix = state.year === CURRENT_YEAR ? 'Minulé termíny se nepočítají. ' : '';
+      els.heroHint.textContent = scopePrefix + (stats.leave < state.budget
         ? `Optimální plán využívá ${stats.leave} z dostupných ${state.budget} ${dayWord(state.budget)}. Zbytek zůstává jako rezerva.`
-        : `Rozpočet ${state.budget} ${dayWord(state.budget)} je rozdělen do ${stats.count} navazujících bloků volna.`;
+        : `Rozpočet ${state.budget} ${dayWord(state.budget)} je rozdělen do ${stats.count} navazujících bloků volna.`);
     } else {
       els.heroOff.textContent = '—';
       els.heroBlocks.textContent = '0';
@@ -423,7 +436,7 @@
     qsa('[data-plan-tab]').forEach(tab => {
       const active = tab.dataset.planTab === state.activePlan;
       tab.classList.toggle('is-active', active);
-      tab.setAttribute('aria-selected', active ? 'true' : 'false');
+      tab.setAttribute('aria-pressed', active ? 'true' : 'false');
     });
   }
 
@@ -470,7 +483,7 @@
     qsa('[data-show-month]', els.blockList).forEach(btn => btn.addEventListener('click', () => {
       state.mobileMonth = Number(btn.dataset.showMonth);
       renderCalendar(buildCalendarContext(state.year));
-      els.calendarSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      (els.calendarSection || $('kalendar')).scrollIntoView({ behavior: 'smooth', block: 'start' });
     }));
   }
 
@@ -507,7 +520,7 @@
         if (ctx.blocked.has(key)) { classes.push('is-blocked'); notes.push(ctx.blocked.get(key)); }
         if (blockDays.has(key)) classes.push('is-plan');
         if (leaveDays.has(key)) { classes.push('is-leave'); notes.push('doporučená dovolená'); }
-        if (key === iso(new Date())) classes.push('is-today');
+        if (key === iso(todayUtc())) classes.push('is-today');
         const label = `${day}. ${MONTHS_GEN[month]} ${state.year}${notes.length ? ` – ${notes.join(', ')}` : ''}`;
         daysHtml += `<button type="button" class="${classes.join(' ')}" data-day="${key}" aria-label="${escapeHtml(label)}" title="${escapeHtml(label)}"><span>${day}</span>${leaveDays.has(key) ? '<b>D</b>' : ''}</button>`;
       }
@@ -646,6 +659,27 @@
     els.icsBtn.addEventListener('click', exportIcs);
     els.printBtn.addEventListener('click', () => window.print());
     els.resetBtn.addEventListener('click', resetPlanner);
+    const menuBtn = $('menuBtn');
+    const mobileNav = $('mobile-nav');
+    if (menuBtn && mobileNav) {
+      menuBtn.addEventListener('click', () => {
+        const open = menuBtn.getAttribute('aria-expanded') === 'true';
+        menuBtn.setAttribute('aria-expanded', String(!open));
+        mobileNav.classList.toggle('is-open', !open);
+      });
+      mobileNav.addEventListener('click', event => {
+        if (event.target.closest('a')) {
+          menuBtn.setAttribute('aria-expanded', 'false');
+          mobileNav.classList.remove('is-open');
+        }
+      });
+      document.addEventListener('keydown', event => {
+        if (event.key === 'Escape') {
+          menuBtn.setAttribute('aria-expanded', 'false');
+          mobileNav.classList.remove('is-open');
+        }
+      });
+    }
   }
 
   function setActivePlan(plan) {
@@ -784,7 +818,7 @@
 
   function resetPlanner() {
     storageControl.disable();
-    state.year = 2026;
+    state.year = DEFAULT_YEAR;
     state.budget = 20;
     state.profile = 'balanced';
     state.minBreak = 3;
@@ -794,7 +828,7 @@
     state.district = 'Benešov';
     state.exceptions = [];
     state.activePlan = 'annual';
-    els.yearSelect.value = '2026';
+    els.yearSelect.value = String(DEFAULT_YEAR);
     els.leaveDays.value = '20';
     els.minBreak.value = '3';
     els.maxBreak.value = '18';
@@ -821,7 +855,7 @@
     const params = new URLSearchParams(location.search);
     if (params.has('rok') || params.has('dny')) {
       payload = {
-        year: Number(params.get('rok')) || 2026,
+        year: Number(params.get('rok')) || DEFAULT_YEAR,
         budget: Number(params.get('dny')) || 20,
         profile: params.get('styl') || 'balanced',
         schoolMode: params.get('rodina') === '1',
@@ -834,7 +868,7 @@
       try { payload = JSON.parse(localStorage.getItem(STORAGE_KEY)); } catch { payload = null; }
     }
     if (!payload) return;
-    state.year = clamp(Number(payload.year) || 2026, 2025, 2035);
+    state.year = clamp(Number(payload.year) || DEFAULT_YEAR, 2025, 2035);
     state.budget = clamp(Number(payload.budget) || 20, 1, 50);
     state.profile = ['balanced','short','long'].includes(payload.profile) ? payload.profile : 'balanced';
     state.minBreak = clamp(Number(payload.minBreak) || 3, 3, 14);
@@ -855,7 +889,7 @@
     qsa('input[name="profile"]').forEach(input => { input.checked = input.value === state.profile; });
     qsa('input', els.monthToggles).forEach(input => { input.checked = state.allowedMonths.has(Number(input.value)); });
     els.district.value = state.district;
-    state.mobileMonth = new Date().getFullYear() === state.year ? new Date().getMonth() : 0;
+    state.mobileMonth = CURRENT_YEAR === state.year ? nowLocal.getMonth() : 0;
   }
 
   function cacheElements() {
@@ -864,7 +898,7 @@
       'resultsSection','liveStatus','annualCardTitle','annualCardMain','annualCardSub','annualCardLeave','annualCardRatio','longestCardTitle','longestCardMain','longestCardSub','longestCardLeave','longestCardRatio','efficientCardTitle','efficientCardMain','efficientCardSub','efficientCardLeave','efficientCardRatio',
       'planTitle','planDescription','planLeave','planOff','planCount','planLongest','blockList','calendarSection','calendarYear','yearCalendar','mobilePrev','mobileNext','mobileMonthLabel','dayDetail','schoolLegend',
       'minBreak','maxBreak','monthToggles','schoolToggle','district','schoolFields','schoolAvailability','exceptionType','exceptionDate','exceptionLabel','addExceptionBtn','exceptionList',
-      'copyBtn','shareBtn','csvBtn','icsBtn','printBtn','resetBtn','dynamicTitle','yearInIntro'
+      'copyBtn','shareBtn','csvBtn','icsBtn','printBtn','resetBtn','dynamicTitle','yearInIntro','planningScope'
     ].forEach(id => { els[id] = $(id); });
   }
 
