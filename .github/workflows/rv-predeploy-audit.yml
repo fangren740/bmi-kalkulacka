@@ -29,6 +29,15 @@ jobs:
         with:
           node-version: '22'
 
+      - name: Run V-next state tracking gate
+        id: vnext_tracking
+        shell: bash
+        run: |
+          set -o pipefail
+          python rv-vnext-progress-audit.py \
+            --root . \
+            --json-out rv-vnext-progress-report.json | tee rv-vnext-progress-report.txt
+
       - name: Run deterministic audit
         id: audit
         shell: bash
@@ -46,6 +55,8 @@ jobs:
         with:
           name: rv-static-audit-report
           path: |
+            rv-vnext-progress-report.json
+            rv-vnext-progress-report.txt
             rv-audit-report.json
             rv-audit-report.txt
           if-no-files-found: warn
