@@ -3,9 +3,10 @@
 Použij před větším release, merge větší wave nebo když se mění společné brand/runtime assety.
 
 ## Povinné moduly
-Všechny moduly 10–90, včetně `45 LIVE PRODUCTION HEALTH` po skutečném deployi.
+Všechny moduly 10–90, včetně `15 V-NEXT STATE / TRACKING INTEGRITY` a `45 LIVE PRODUCTION HEALTH` po skutečném deployi.
 
 ## Rozsah
+- V-next state/tracking gate nad celým trackerem a skutečným HTML;
 - statický audit celého repa;
 - JS syntax celého repa;
 - po deployi automatický live health gate nad celou sitemapou;

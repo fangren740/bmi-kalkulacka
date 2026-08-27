@@ -4,6 +4,7 @@ Použij pro novou kalkulačku nebo zásadní rebuild existující kalkulačky.
 
 ## Povinné moduly
 - 10 REPO INTEGRITY
+- 15 V-NEXT STATE / TRACKING INTEGRITY
 - 20 SEO / INDEXABILITY
 - 30 STRUCTURED DATA
 - 40 LINKS / ASSETS
@@ -20,6 +21,7 @@ Načti aktuální:
 - `RV-VNEXT-IDENTITY-AUDIT-2026-08-21.md`
 
 ## Navíc
+- před PRE-BUILD i před release spusť `python rv-vnext-progress-audit.py --root .`;
 - testuj základní i pokročilý režim, pokud existují;
 - testuj minimální, běžný a extrémní vstup;
 - ověř reset/presety/validace;
