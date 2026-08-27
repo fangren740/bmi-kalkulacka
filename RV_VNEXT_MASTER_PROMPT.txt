@@ -1,7 +1,7 @@
 RYCHLÉVÝPOČTY.CZ V7 — V-NEXT PORTFOLIO REBUILD MASTER PROMPT
-Verze protokolu: 1.6
+Verze protokolu: 1.7
 Založeno: 17. 8. 2026
-Poslední revize: 21. 8. 2026
+Poslední revize: 27. 8. 2026
 
 ROLE A CÍL
 Pracuješ na projektu RychléVýpočty.cz V7. Hlavní cíl této fáze není vyrábět co nejvíce nových URL. Cílem je systematicky zvednout hodnotu EXISTUJÍCÍHO portfolia kalkulaček tak, aby každá silná URL fungovala jako samostatný, profesionální a užitečný produkt — pro uživatele, organické vyhledávání, důvěryhodnost značky i budoucí monetizaci.
@@ -27,7 +27,7 @@ PŘED JAKOUKOLI DALŠÍ PRACÍ MUSÍŠ:
    - hlavní index/katalog/huby
    - relevantní HTML/CSS/JS aktuálně řešené kalkulačky
    - případné benchmark/data manifesty a datasety
-3) Ověřit stav progress trackeru proti SKUTEČNÝM souborům.
+3) Ověřit stav progress trackeru proti SKUTEČNÝM souborům a povinně spustit `python rv-vnext-progress-audit.py --root .`.
 4) Zjistit:
    - co už bylo v programu V-next dokončeno,
    - co je rozpracováno,
@@ -262,7 +262,7 @@ Minimální QA:
 - agent browsing gate: pokud PageSpeed/Chrome reportuje chybný accessibility tree pro AI agenty, považuj to za strukturální QA chybu stejné priority jako běžný ARIA fail; u dostupného agent auditu mířit na plný PASS.
 - systemic regression rule: pokud se po nasazení objeví opakovatelná třída chyby (např. špatný `tablist`, nepodporované `aria-*`, kontrast, touch target, schema, overflow), neopravuj pouze aktuální URL. PŘED dalším buildem proveď cílený sweep všech již dokončených V-next stránek, zjisti rozsah stejného vzoru, oprav pouze skutečně dotčené soubory a přidej tuto chybu do automatického regression/lint gate, aby se nemohla znovu dostat do další kalkulačky.
 - executable a11y lint gate: před RELEASE_CANDIDATE spusť `python rv-vnext-a11y-lint.py <changed HTML...>` nebo ekvivalentní kontrolu. Linter musí minimálně hlídat duplicate IDs, generické `aria-label` bez podporované role, `aria-selected` na nesprávné roli, kompletní `tablist→tab→tabpanel` kontrakt, custom `radiogroup` bez radio potomků a form controls bez programmatic labelu. Statický lint nenahrazuje Lighthouse; oba gate jsou povinné.
-- `rv-vnext-a11y-lint.py --all-vnext` musí načítat aktuální `RV_VNEXT_PROGRESS.json`, ne zastaralý ruční seznam. Jakmile produkční audit odhalí strukturální chybu, proveď regression sweep všech DONE V-next stránek ještě před další kalkulačkou.
+- `rv-vnext-a11y-lint.py --all-vnext` musí načítat aktuální `RV_VNEXT_PROGRESS.json` (`completedPages` + `inProgressPages` + `currentCandidate`), nikdy `nextCandidate`, a při nečitelném/nekonzistentním trackeru musí FAIL — žádný tichý fallback na ruční seznam. Jakmile produkční audit odhalí strukturální chybu, proveď regression sweep všech trackovaných V-next stránek ještě před další kalkulačkou.
 - accessibility contract BEFORE BUILD: pokud stránka používá vlastní tabs/radio/accordion/switch/combobox, jeho semantic role model + keyboard model se zamyká ve VISUAL/COMPONENT LOCK ještě před kódem. Accessibility se nesmí doplňovat až po screenshotu.
 
 Povinná produktová QA otázka:
@@ -284,8 +284,9 @@ Podle potřeby aktualizuj:
 Nedělej umělé změny jen proto, aby se změnilo datum.
 
 FÁZE 8 — TRACKING
-Po dokončení zapiš stránku do RV_VNEXT_PROGRESS.json.
+Tracking je součást stejné změny jako rebuild, ne dodatečný administrativní krok. Po dokončení zapiš stránku do `RV_VNEXT_PROGRESS.json`, přidej/aktualizuj technický RV-VNEXT marker v HTML a spusť `python rv-vnext-progress-audit.py --root .`. Dokud gate nevrátí PASS, nesmí začít další kalkulačka.
 Každá dokončená stránka musí mít minimálně:
+- sequence (unikátní, souvislé pořadí V-next wave),
 - filename/url,
 - status,
 - majorChangeDate,
@@ -297,7 +298,7 @@ Každá dokončená stránka musí mít minimálně:
 - holdUntil / measurement window, pokud relevantní.
 
 Do HTML dokončené stránky vlož nenápadný technický komentář:
-<!-- RV-VNEXT: status=DONE | major=YYYY-MM-DD | qa=PASS -->
+<!-- RV-VNEXT: status=DONE|RELEASE_CANDIDATE | major=YYYY-MM-DD | qa=PASS|LOCAL_PASS_PRODUCTION_PENDING | seq=N -->
 Tento komentář je pouze pro budoucí rychlé obnovení stavu projektu a nesmí být viditelný uživateli.
 
 Po MAJOR změně stránku zbytečně znovu nepřepisuj:
@@ -459,7 +460,7 @@ Po dokončení vždy dej stručný release report:
 8) Structured data: stav
 9) Benchmark/dataset: stav
 10) MAJOR change date + HOLD
-11) Aktualizovaný progress tracker: ANO/NE
+11) Aktualizovaný progress tracker + RV-VNEXT marker + `rv-vnext-progress-audit.py` PASS: ANO/NE
 12) Další doporučená URL a proč
 
 Pokud byl upraven projekt, vrať uživateli nový aktuální ZIP.
@@ -488,7 +489,7 @@ Po obdržení tohoto promptu + nejnovějšího ZIPu:
 
 A) NIC NEPROGRAMUJ.
 B) Nejprve obnov stav projektu z ZIPu.
-C) Ověř RV_VNEXT_PROGRESS.json proti skutečnému kódu.
+C) Ověř `RV_VNEXT_PROGRESS.json` proti skutečnému kódu a spusť `python rv-vnext-progress-audit.py --root .`. Jakýkoli P0/P1 = STOP výrobní linky a nejdřív STATE RECOVERY.
 D) Napiš pouze stručný „STATE RECOVERY + NEXT CALCULATOR“.
 E) Potom proveď PRE-BUILD audit navržené další kalkulačky.
 F) Teprve po objektivním rozhodnutí pokračuj do buildu.

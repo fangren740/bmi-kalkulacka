@@ -212,55 +212,58 @@ def has_programmatic_label(node: Node, nodes: list[Node], by_id: dict[str, Node]
 
 
 def default_vnext_files(base: Path) -> list[Path]:
+    import json
+
     progress = base / "RV_VNEXT_PROGRESS.json"
+    if not progress.exists():
+        raise RuntimeError("RV_VNEXT_PROGRESS.json is missing; --all-vnext must not fall back to a stale manual list")
+    try:
+        data = json.loads(progress.read_text(encoding="utf-8"))
+    except Exception as exc:
+        raise RuntimeError(f"cannot read RV_VNEXT_PROGRESS.json: {exc}") from exc
+
     names: list[str] = []
-    if progress.exists():
-        try:
-            import json
-            data = json.loads(progress.read_text(encoding="utf-8"))
-            for key in ("completedPages", "inProgressPages"):
-                for item in data.get(key, []):
-                    name = item.get("file") if isinstance(item, dict) else None
-                    if isinstance(name, str) and name.endswith(".html"):
-                        names.append(name)
-            candidate = data.get("nextCandidate", {})
-            name = candidate.get("file") if isinstance(candidate, dict) else None
+    for key in ("completedPages", "inProgressPages"):
+        items = data.get(key, [])
+        if not isinstance(items, list):
+            raise RuntimeError(f"{key} must be an array in RV_VNEXT_PROGRESS.json")
+        for item in items:
+            name = item.get("file") if isinstance(item, dict) else None
             if isinstance(name, str) and name.endswith(".html"):
                 names.append(name)
-        except Exception:
-            names = []
+    candidate = data.get("currentCandidate")
+    name = candidate.get("file") if isinstance(candidate, dict) else None
+    if isinstance(name, str) and name.endswith(".html"):
+        names.append(name)
+
     if not names:
-        names = [
-            "hypotecni-kalkulacka.html",
-            "kalkulacka-ceny-strechy.html",
-            "kalkulacka-ceny-zakladove-desky.html",
-            "kalkulacka-ceny-hrube-stavby-domu.html",
-            "kalkulacka-cihel-a-tvarnic.html",
-            "kalkulacka-betonu.html",
-            "kalkulacka-priplatku-za-smeny.html",
-            "kalkulacka-sterku.html",
-            "kalkulacka-dlazby-a-obkladu.html",
-            "kalkulacka-barvy-na-malovani.html",
-            "kalkulacka-podlahy.html",
-            "kalkulacka-izolace.html",
-        ]
+        raise RuntimeError("RV_VNEXT_PROGRESS.json contains no V-next pages to scan")
+
     seen: set[str] = set()
     result: list[Path] = []
     for name in names:
-        if name not in seen and (base / name).exists():
-            seen.add(name)
-            result.append(base / name)
+        if name in seen:
+            continue
+        seen.add(name)
+        path = base / name
+        if not path.exists():
+            raise RuntimeError(f"tracked V-next file does not exist: {name}")
+        result.append(path)
     return result
 
 
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("files", nargs="*", type=Path)
-    ap.add_argument("--all-vnext", action="store_true", help="scan completedPages + current candidate from RV_VNEXT_PROGRESS.json")
+    ap.add_argument("--all-vnext", action="store_true", help="scan completedPages + inProgressPages + currentCandidate from RV_VNEXT_PROGRESS.json")
     args = ap.parse_args()
 
     base = Path.cwd()
-    files = default_vnext_files(base) if args.all_vnext else args.files
+    try:
+        files = default_vnext_files(base) if args.all_vnext else args.files
+    except RuntimeError as exc:
+        print(f"FAIL --all-vnext: {exc}")
+        return 1
     if not files:
         ap.error("provide HTML files or --all-vnext")
 

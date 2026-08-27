@@ -148,6 +148,7 @@ Nový indexovatelný produkt není hotový, dokud není zapojen do projektu:
 - Page-level Dataset musí používat stejnou dataset identitu a význam jako odpovídající záznam v `rychlevypocty-datasets.json` / `data-a-benchmarky.html`; nevytvářet separátní crawler-only popis.
 - Všechny JSON-LD bloky musí projít parserem.
 - Před vytvořením deploy ZIPu musí projít deterministický schema gate: `python .github/scripts/audit_static_site.py --root . --config audits/audit-config.json --check-js`. Pokud structured-data gate vrátí P0/P1, stránka není release candidate.
+- Před PRE-BUILD další kalkulačky i před vytvořením deploy ZIPu musí projít `python rv-vnext-progress-audit.py --root .`. Skutečné V-next HTML, `RV_VNEXT_PROGRESS.json`, sequence a technické RV-VNEXT markery jsou jeden stavový kontrakt; drift = P1 / release FAIL.
 - Pokud Dataset schema používá `license`, musí odkazovat na skutečné a obsahově odpovídající licenční podmínky; nevkládat fiktivní licenci jen kvůli rich-result warningu.
 
 ## 11. Mobile / accessibility / speed
@@ -174,7 +175,7 @@ Nový indexovatelný produkt není hotový, dokud není zapojen do projektu:
 - **Component accessibility contract před buildem:** každý custom tab/radio/accordion/switch/combobox musí mít předem popsaný native/ARIA role model, fokus a keyboard ovládání. Pokud lze použít native HTML control, preferuj jej.
 - **Executable lint:** před ZIPem spusť `python rv-vnext-a11y-lint.py <changed HTML...>` (nebo ekvivalent). PASS z lint gate je povinný, ale nenahrazuje produkční Lighthouse/PageSpeed.
 - **Systemic regression sweep:** objeví-li se po deployi opakovatelná chyba na jedné V-next stránce, před další výrobou prohledej všechny dokončené V-next URL na stejný pattern. Opravu klasifikuj jako TECHNICAL/QA, neresetuj MAJOR HOLD, pokud se nemění intent/produkt. Současně aktualizuj linter/standard, aby se chyba neopakovala.
-- `--all-vnext` nesmí používat zastaralý ručně psaný seznam. Musí primárně načíst aktuální `RV_VNEXT_PROGRESS.json` (`completedPages` + aktuální candidate), aby novější stránky nemohly z regression sweepu vypadnout.
+- `--all-vnext` nesmí používat zastaralý ručně psaný seznam. Musí načíst aktuální `RV_VNEXT_PROGRESS.json` (`completedPages` + `inProgressPages` + `currentCandidate`), nikdy `nextCandidate`. Při nečitelném/nekonzistentním trackeru musí lint FAIL; tichý fallback na ruční seznam je zakázán.
 
 ## 12. Release QA gate
 Před ZIPem musí projít:
@@ -192,9 +193,10 @@ Před ZIPem musí projít:
 12. automatická accessibility QA: ARIA role/attributes/required children, keyboard widget model, kontrast a touch targety bez známého failu,
 13. **post-deploy production PageSpeed/Lighthouse evidence**: skutečná produkční URL po nasazení; Accessibility / Best Practices / SEO bez automatického failu a cíl 100; bez tohoto důkazu status zůstává RELEASE_CANDIDATE,
 14. pokud je dostupné **Procházení agenty / Agentic browsing**, požaduj plný PASS; accessibility tree bez strukturálního failu a všechny interaktivní prvky s programmatic name,
-15. `rv-vnext-a11y-lint.py` / ekvivalent PASS na všech změněných HTML; `--all-vnext` musí číst aktuální progress JSON a při systémové chybě proběhne regression sweep již dokončených V-next URL před další výrobou,
-16. **RV static release gate PASS:** `python .github/scripts/audit_static_site.py --root . --config audits/audit-config.json --check-js`; žádný nevyjmutý P0/P1, zejména žádný Dataset bez validního `description`,
-17. change-only **FLAT ZIP**, bez podsložek.
+15. **V-next state/tracking gate PASS:** `python rv-vnext-progress-audit.py --root .`; tracker, sequence, technické markery a skutečné V-next HTML musí být v úplném souladu,
+16. `rv-vnext-a11y-lint.py` / ekvivalent PASS na všech změněných HTML; `--all-vnext` musí číst aktuální progress JSON a při systémové chybě proběhne regression sweep všech trackovaných V-next URL před další výrobou,
+17. **RV static release gate PASS:** `python .github/scripts/audit_static_site.py --root . --config audits/audit-config.json --check-js`; žádný nevyjmutý P0/P1, zejména žádný Dataset bez validního `description`,
+18. change-only **FLAT ZIP**, bez podsložek.
 
 ## 13. Po nasazení
 - Nový produkt označit jako významnou/MAJOR změnu portfolia a nechat ho měřit.
