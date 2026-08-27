@@ -1,7 +1,7 @@
-# RV MASTER AUDIT — V1.1
+# RV MASTER AUDIT — V1.2
 
-**Verze:** 1.1  
-**Datum:** 23. 8. 2026  
+**Verze:** 1.2  
+**Datum:** 27. 8. 2026  
 **Status:** ACTIVE / SOURCE OF TRUTH FOR AUDIT WORKFLOW
 
 ## 1. Účel
@@ -36,19 +36,28 @@ P0 a P1 vždy blokují release. P2 může blokovat podle profilu nebo dopadu. V�
 Auditní strom se provádí v tomto pořadí:
 
 1. `checks/10_REPO_INTEGRITY.md`
-2. `checks/20_SEO_INDEXABILITY.md`
-3. `checks/30_STRUCTURED_DATA.md`
-4. `checks/40_LINKS_AND_ASSETS.md`
-5. `checks/45_LIVE_HEALTH.md`
-6. `checks/50_RUNTIME_BROWSER.md`
-7. `checks/60_VISUAL_RESPONSIVE.md`
-8. `checks/70_PERFORMANCE.md`
-9. `checks/80_CONTENT_METHOD_AND_TRUST.md`
-10. `checks/90_RELEASE_GATE.md`
+2. `checks/15_VNEXT_STATE_TRACKING.md`
+3. `checks/20_SEO_INDEXABILITY.md`
+4. `checks/30_STRUCTURED_DATA.md`
+5. `checks/40_LINKS_AND_ASSETS.md`
+6. `checks/45_LIVE_HEALTH.md`
+7. `checks/50_RUNTIME_BROWSER.md`
+8. `checks/60_VISUAL_RESPONSIVE.md`
+9. `checks/70_PERFORMANCE.md`
+10. `checks/80_CONTENT_METHOD_AND_TRUST.md`
+11. `checks/90_RELEASE_GATE.md`
 
 `45 LIVE HEALTH` se spouští nad skutečnou produkcí po deployi a pravidelně ze scheduleru. Profil určuje, které ostatní moduly jsou povinné a které jen podmíněné.
 
 ## 5. Deterministické scannery
+
+### V-next state/tracking gate
+
+```bash
+python rv-vnext-progress-audit.py --root .
+```
+
+Tento gate je povinný pro calculator release a full deploy a musí proběhnout před `--all-vnext`, aby regression sweep nemohl tiše vynechat novější V-next URL.
 
 ### Repo/static gate
 

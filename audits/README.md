@@ -1,7 +1,7 @@
 # RychléVýpočty.cz — Audit System V1
 
-**Verze:** 1.0  
-**Datum:** 22. 8. 2026  
+**Verze:** 1.1  
+**Datum:** 27. 8. 2026  
 **Status:** ACTIVE
 
 Tento adresář je zdroj pravdy pro **auditní workflow** projektu RychléVýpočty.cz. Nenahrazuje produktové a designové standardy; pouze určuje, **jak konzistentně kontrolovat změny a release**.
@@ -10,9 +10,10 @@ Tento adresář je zdroj pravdy pro **auditní workflow** projektu RychléVýpo�
 
 1. Otevři `audits/00_MASTER_AUDIT.md`.
 2. Zvol profil v `audits/profiles/` podle typu práce.
-3. Nejdřív spusť deterministický scanner:
+3. U V-next práce nejdřív ověř stav/tracking a potom spusť statický scanner:
 
 ```bash
+python rv-vnext-progress-audit.py --root .
 python .github/scripts/audit_static_site.py --root . --config audits/audit-config.json --check-js
 ```
 
@@ -35,6 +36,7 @@ Pro novou kalkulačku:
 - `checks/` — jednotlivé auditní moduly.
 - `profiles/` — kombinace modulů podle typu práce.
 - `audit-config.json` — strojově čitelná konfigurace a explicitní výjimky.
+- `rv-vnext-progress-audit.py` — deterministická kontrola souladu trackeru a skutečných V-next HTML.
 - `.github/scripts/audit_static_site.py` — deterministický statický audit.
 - `.github/workflows/rv-predeploy-audit.yml` — automatické spuštění v GitHub Actions.
 
