@@ -2652,15 +2652,41 @@
       "holdUntil": "2026-09-24",
       "buildId": "SALARY74-VNEXT-20260827-1",
       "notes": "Full clean V-next rebuild for the 2026 Czech employee payroll intent. Primary flow is gross monthly wage -> employee social/health contributions -> income tax after monthly discounts -> net salary, with children and tax declaration kept simple and exact legal/edge-case controls behind advanced mode. Standard employer cost is shown separately from employee take-home. Methodology refreshed against primary Czech 2026 sources (Finanční správa, ČSSZ, VZP and MPSV). Calculation QA explicitly covers the 23% tax threshold, health-insurance crown rounding and optional minimum assessment, annual social maximum, employee social discount for working pensioners, child tax credit/bonus, signed vs unsigned declaration and zero-line suppression in the payslip result. New 25-row RV DATA benchmark uses the same calculation convention as the page. Local responsive visual/runtime QA covered desktop/mobile with no horizontal overflow or browser errors; production PageSpeed/Lighthouse remains pending after deploy."
+    },
+    {
+      "sequence": 75,
+      "file": "kalkulacka-hrube-mzdy-z-ciste.html",
+      "url": "https://rychlevypocty.cz/kalkulacka-hrube-mzdy-z-ciste.html",
+      "status": "RELEASE_CANDIDATE",
+      "decision": "KEEP + FULL CLEAN REBUILD",
+      "majorChangeDate": "2026-08-28",
+      "researchVerifiedAt": "2026-08-28",
+      "qaStatus": "LOCAL_STATIC_NUMERIC_AND_STRUCTURAL_A11Y_PASS_BROWSER_VISUAL_AND_PRODUCTION_PSI_PENDING",
+      "archetype": "Net Target Resolver & Salary Ladder",
+      "benchmarkDataset": {
+        "enabled": true,
+        "file": "hruba-z-ciste-2026-benchmark.csv",
+        "rows": 25,
+        "verifiedAt": "2026-08-28"
+      },
+      "structuredData": [
+        "BreadcrumbList",
+        "WebApplication",
+        "Dataset"
+      ],
+      "minimumHoldUntil": "2026-09-11",
+      "holdUntil": "2026-09-25",
+      "buildId": "NET75-VNEXT-20260828-1",
+      "notes": "Full clean V-next rebuild for the inverse Czech payroll intent. Primary job is target net monthly pay -> lowest whole-koruna gross wage that reaches the target using the same verified 2026 payroll engine as #74. The solver performs repeated forward payroll calculations rather than applying a fixed net/gross coefficient, so statutory rounding, the 23% tax band, declaration discounts, children and tax bonus remain part of the inverse result. Advanced mode can include known post-payroll deductions, exact child order, disability/ZTP-P discounts, working-pensioner social discount, health minimum and annual social cap. New 25-row RV DATA benchmark covers five net targets across five tax situations. Local release gate includes numeric regression, JS syntax and progress/static/structural-a11y audits. Local browser visual/runtime capture is pending; production PageSpeed/Lighthouse is also pending after deploy."
     }
   ],
   "inProgressPages": [],
   "nextCandidate": {
-    "sequence": 75,
-    "file": "kalkulacka-hrube-mzdy-z-ciste.html",
-    "url": "https://rychlevypocty.cz/kalkulacka-hrube-mzdy-z-ciste.html",
+    "sequence": 76,
+    "file": "naklady-zamestnavatele-kalkulacka.html",
+    "url": "https://rychlevypocty.cz/naklady-zamestnavatele-kalkulacka.html",
     "status": "PRE_BUILD_CANDIDATE_NOT_STARTED",
-    "reason": "Next highest-priority unrebuilt payroll intent after clean-net-salary rebuild; inverse payroll calculation requires reuse of the freshly verified 2026 payroll engine with its own solver QA."
+    "reason": "Next highest-priority unrebuilt payroll intent after gross-from-net; employer cost should build on the freshly verified employee/payroll engine but needs its own employer-side product scope and cost taxonomy."
   },
   "waves": [
     {
