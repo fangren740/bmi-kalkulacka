@@ -2,7 +2,7 @@
   "schemaVersion": "1.0",
   "project": "RychléVýpočty.cz V7",
   "program": "V-next Portfolio Rebuild",
-  "updatedAt": "2026-08-27",
+  "updatedAt": "2026-08-28",
   "sourceOfTruth": "latest uploaded production ZIP",
   "strategy": {
     "portfolioPolicy": "KEEP URL by default; merge only when independent user intent cannot be defended",
@@ -2627,15 +2627,40 @@
       "holdUntil": "2026-09-24",
       "buildId": "INF73-CLEAN-20260827-1",
       "notes": "Full clean rebuild. Primary intent locked to future price / purchasing-power conversion from amount, annual inflation scenario and time. Hero uses the Inflation Lens rather than the previous dashboard archetype; result exposes both opposite directions simultaneously and keeps two-phase inflation plus real-value-of-savings modelling behind progressive disclosure. Methodology refreshed against Czech Statistical Office CPI/inflation definitions and July 2026 release, with CNB summer 2026 forecast/2% target used only as context, never as an automatic long-term assumption. Existing 25-row RV DATA benchmark retained and reverified mathematically. Final local QA: tracking 73/73 PASS, full V-next structural accessibility sweep PASS, static audit P0/P1/P2/P3=0, JS syntax PASS, Playwright runtime interaction checks PASS, zero horizontal overflow at 320/360/390/768/1024/1280/1440 px, calculator/result top alignment diff 0 px at desktop, no console/page errors. Default model independently verified: 100000 Kč × 1.03^10 = 134391.64 Kč; fixed 100000 Kč purchasing power = 74409.39 Kč."
+    },
+    {
+      "sequence": 74,
+      "file": "cista-mzda-kalkulacka.html",
+      "url": "https://rychlevypocty.cz/cista-mzda-kalkulacka.html",
+      "status": "RELEASE_CANDIDATE",
+      "decision": "KEEP + FULL CLEAN REBUILD",
+      "majorChangeDate": "2026-08-27",
+      "researchVerifiedAt": "2026-08-27",
+      "qaStatus": "LOCAL_STATIC_RUNTIME_VISUAL_NUMERIC_AND_STRUCTURAL_A11Y_PASS_PRODUCTION_PSI_PENDING",
+      "archetype": "Payroll Rail & Payslip Ledger",
+      "benchmarkDataset": {
+        "enabled": true,
+        "file": "cista-mzda-2026-benchmark.csv",
+        "rows": 25,
+        "verifiedAt": "2026-08-27"
+      },
+      "structuredData": [
+        "BreadcrumbList",
+        "WebApplication"
+      ],
+      "minimumHoldUntil": "2026-09-10",
+      "holdUntil": "2026-09-24",
+      "buildId": "SALARY74-VNEXT-20260827-1",
+      "notes": "Full clean V-next rebuild for the 2026 Czech employee payroll intent. Primary flow is gross monthly wage -> employee social/health contributions -> income tax after monthly discounts -> net salary, with children and tax declaration kept simple and exact legal/edge-case controls behind advanced mode. Standard employer cost is shown separately from employee take-home. Methodology refreshed against primary Czech 2026 sources (Finanční správa, ČSSZ, VZP and MPSV). Calculation QA explicitly covers the 23% tax threshold, health-insurance crown rounding and optional minimum assessment, annual social maximum, employee social discount for working pensioners, child tax credit/bonus, signed vs unsigned declaration and zero-line suppression in the payslip result. New 25-row RV DATA benchmark uses the same calculation convention as the page. Local responsive visual/runtime QA covered desktop/mobile with no horizontal overflow or browser errors; production PageSpeed/Lighthouse remains pending after deploy."
     }
   ],
   "inProgressPages": [],
   "nextCandidate": {
-    "sequence": 74,
-    "file": "cista-mzda-kalkulacka.html",
-    "url": "https://rychlevypocty.cz/cista-mzda-kalkulacka.html",
+    "sequence": 75,
+    "file": "kalkulacka-hrube-mzdy-z-ciste.html",
+    "url": "https://rychlevypocty.cz/kalkulacka-hrube-mzdy-z-ciste.html",
     "status": "PRE_BUILD_CANDIDATE_NOT_STARTED",
-    "reason": "Next highest-priority unrebuilt calculator after finance cluster completion; high-volume payroll/YMYL intent requires fresh 2026 legal and rate audit before build."
+    "reason": "Next highest-priority unrebuilt payroll intent after clean-net-salary rebuild; inverse payroll calculation requires reuse of the freshly verified 2026 payroll engine with its own solver QA."
   },
   "waves": [
     {
@@ -2815,5 +2840,5 @@
     "nextSequence": 73,
     "guard": "python rv-vnext-progress-audit.py --root ."
   },
-  "lastUpdated": "2026-08-27"
+  "lastUpdated": "2026-08-28"
 }
