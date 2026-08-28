@@ -89,7 +89,7 @@
     set('resultSentence',sentence);
     set('heroTotal',fmt(r.total));set('heroEmployer',`${fmt(r.employer)} · zaměstnavatel`);set('heroCssz',`${fmt(r.cssz)} · ČSSZ`);set('heroIncome',v.worker==='osvc'?'OSVČ · zadaný pojistný základ':`při příjmu ${fmt(v.monthly)} měsíčně`);
     [14,30,60,90].forEach(d=>set(`scenario${d}`,fmt(calc(v,d).total)));
-    set('bench30',fmt(calc(v,30).total));set('bench60',fmt(calc(v,60).total));set('bench90',fmt(calc(v,90).total));
+    set('budgetSick',fmt(r.total));set('budgetContext',`${r.days} dnů · ${v.worker==='osvc'?'OSVČ':`měsíční příjem ${fmt(v.monthly)}`}`);
   }
   function syncMode(mode){
     state.mode=mode;
