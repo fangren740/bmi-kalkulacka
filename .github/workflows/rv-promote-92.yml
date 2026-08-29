@@ -1,0 +1,126 @@
+name: RV Promote 92
+
+on:
+  push:
+    paths:
+      - '.github/workflows/rv-promote-92.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Release V-next 92
+        shell: bash
+        run: |
+          python - <<'PY'
+          import base64, gzip, json, re
+          from pathlib import Path
+
+          root = Path('.')
+          payload = ''.join((root / f'.github/rv_payload_92_{i}.txt').read_text(encoding='utf-8').strip() for i in range(1, 5))
+          bundle = json.loads(gzip.decompress(base64.b64decode(payload)).decode('utf-8'))
+
+          target = 'pribirani-v-tehotenstvi-kalkulacka.html'
+          dataset = 'pribirani-tehotenstvi-trend-compass-regression.csv'
+          (root / target).write_text(bundle['html'], encoding='utf-8')
+          (root / dataset).write_text(bundle['csv'], encoding='utf-8')
+
+          pp = root / 'RV_VNEXT_PROGRESS.json'
+          data = json.loads(pp.read_text(encoding='utf-8'))
+          completed = [x for x in data.get('completedPages', []) if x.get('file') != target and x.get('sequence') != 92]
+          completed.append({
+            'file': target,
+            'url': 'https://rychlevypocty.cz/pribirani-v-tehotenstvi-kalkulacka.html',
+            'status': 'DONE',
+            'decision': 'KEEP + FULL CLEAN REBUILD',
+            'majorChangeDate': '2026-08-29',
+            'archetype': 'Trend Compass / pregnancy weight context rail',
+            'researchVerifiedAt': '2026-08-29',
+            'qaStatus': 'PASS',
+            'benchmarkDataset': {'enabled': True, 'file': dataset, 'rows': 25, 'verifiedAt': '2026-08-29', 'mode': 'REGRESSION_SCENARIOS_NOT_CLINICAL_BENCHMARK'},
+            'structuredData': ['BreadcrumbList','WebApplication','Dataset'],
+            'minimumHoldUntil': '2026-09-12',
+            'holdUntil': '2026-09-26',
+            'manualProductionVisualGate': 'PASS',
+            'manualProductionVisualGateAt': '2026-08-29',
+            'notes': 'Full V-next rebuild approved by user on 2026-08-29. Trend Compass keeps current CDC/National Academies population guidance but removes the old first-trimester linear weekly verdict. Weekly model context is shown only for singleton pregnancies after week 13; twins retain total-range context without a week-by-week classification. The product deliberately avoids calorie targets, diet advice, weight-loss instructions and invented component weights. 25-row synthetic regression dataset verifies arithmetic and boundary behavior and is explicitly not a clinical benchmark.',
+            'sequence': 92
+          })
+          data['completedPages'] = sorted(completed, key=lambda x: x.get('sequence',9999))
+          data['inProgressPages'] = [x for x in data.get('inProgressPages', []) if x.get('file') != target and x.get('sequence') != 92]
+          data['currentCandidate'] = None
+          data['nextCandidate'] = None
+          data['updatedAt'] = '2026-08-29'
+          data['lastUpdated'] = '2026-08-29'
+          ti = data.setdefault('trackingIntegrity', {})
+          ti['lastReconciledAt'] = '2026-08-29'
+          ti['reconciledAgainst'] = 'GitHub main + user-approved #92 preview + deterministic release QA'
+          ti['trackedSequenceRange'] = '1-92 completed'
+          ti['nextSequence'] = 93
+          ti['guard'] = 'python rv-vnext-progress-audit.py --root .'
+          pp.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+
+          rp = root / 'calculators-registry.json'
+          reg = json.loads(rp.read_text(encoding='utf-8'))
+          reg['source'] = 'RychléVýpočty.cz V7 registry – reconciled V-next state through sequence 92'
+          found = False
+          for item in reg.get('items', []):
+            if item.get('id') == 'pribirani-v-tehotenstvi-kalkulacka' or item.get('file') == target:
+              item['name'] = 'Přibírání v těhotenství – Trend Compass'
+              item['shortDescription'] = 'Porovnejte změnu hmotnosti s populačním doporučením podle BMI před těhotenstvím, týdne a počtu plodů. Bez dietního verdiktu a bez lineární známky v 1. trimestru.'
+              item['methodologyCheckedAt'] = '2026-08-29'
+              item['referenceYear'] = 2026
+              item['status'] = 'published'
+              item['indexable'] = True
+              item['inSitemap'] = True
+              found = True
+              break
+          assert found, 'Registry item not found'
+          rp.write_text(json.dumps(reg, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+
+          sp = root / 'sitemap.xml'
+          sm = sp.read_text(encoding='utf-8')
+          loc = 'https://rychlevypocty.cz/pribirani-v-tehotenstvi-kalkulacka.html'
+          pat = re.compile(r'(<url>\s*<loc>' + re.escape(loc) + r'</loc>)(.*?)(</url>)', re.S)
+          def repl(m):
+              mid = re.sub(r'<lastmod>[^<]+</lastmod>', '<lastmod>2026-08-29</lastmod>', m.group(2))
+              if '<lastmod>' not in mid:
+                  mid = '\n<lastmod>2026-08-29</lastmod>' + mid
+              return m.group(1) + mid + m.group(3)
+          sm2, count = pat.subn(repl, sm, count=1)
+          assert count == 1, 'Sitemap URL not found'
+          sp.write_text(sm2, encoding='utf-8')
+
+          h = (root / target).read_text(encoding='utf-8')
+          assert '<!-- RV-VNEXT: status=DONE | major=2026-08-29 | qa=PASS | seq=92 -->' in h
+          assert 'noindex' not in h.lower()
+          assert 'data-build="PW92-VNEXT-20260829-1"' in h
+          assert 'logo-rv-v32.svg' in h and 'logo-rv-v32-inverse.svg' in h
+          assert 'facebook.com/rychlevypocty' in h and 'instagram.com/rychlevypocty' in h
+          assert 'pribirani-tehotenstvi-trend-compass-regression.csv' in h
+          assert h.count('application/ld+json') == 3
+          assert 'pribirani-v-tehotenstvi-v1.js' not in h
+          ids = re.findall(r'\bid="([^"]+)"', h)
+          assert len(ids) == len(set(ids)), 'Duplicate IDs'
+          assert len(bundle['csv'].splitlines()) == 26
+          scripts = re.findall(r'<script>(.*?)</script>', h, re.S)
+          app = next(s for s in scripts if "(()=>{'use strict'" in s)
+          Path('/tmp/rv92-inline.js').write_text(app, encoding='utf-8')
+          PY
+          node --check /tmp/rv92-inline.js
+          python rv-vnext-progress-audit.py --root .
+      - name: Commit release and clean staging
+        shell: bash
+        run: |
+          git config user.name 'rv-github-native-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git rm .github/rv_payload_92_1.txt .github/rv_payload_92_2.txt .github/rv_payload_92_3.txt .github/rv_payload_92_4.txt .github/workflows/rv-promote-92.yml
+          git add pribirani-v-tehotenstvi-kalkulacka.html pribirani-tehotenstvi-trend-compass-regression.csv RV_VNEXT_PROGRESS.json calculators-registry.json sitemap.xml
+          git commit -m 'Release V-next #92 Trend Compass calculator'
+          git push origin HEAD:main
