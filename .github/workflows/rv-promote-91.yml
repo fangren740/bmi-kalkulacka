@@ -23,7 +23,7 @@ jobs:
           from pathlib import Path
 
           root = Path('.')
-          payload = (root / '.github/rv_payload_91.txt').read_text(encoding='utf-8').strip()
+          payload = ''.join((root / f'.github/rv_payload_91_{i}.txt').read_text(encoding='utf-8').strip() for i in range(1, 6))
           bundle = json.loads(gzip.decompress(base64.b64decode(payload)).decode('utf-8'))
 
           target = 'kolik-stoji-umele-mleko-kalkulacka.html'
@@ -111,7 +111,7 @@ jobs:
         run: |
           git config user.name 'rv-github-native-bot'
           git config user.email 'actions@users.noreply.github.com'
-          git rm .github/rv_payload_91.txt .github/workflows/rv-promote-91.yml
+          git rm .github/rv_payload_91.txt .github/rv_payload_91_1.txt .github/rv_payload_91_2.txt .github/rv_payload_91_3.txt .github/rv_payload_91_4.txt .github/rv_payload_91_5.txt .github/workflows/rv-promote-91.yml
           git add kolik-stoji-umele-mleko-kalkulacka.html umele-mleko-tin-runway-2026-regression.csv RV_VNEXT_PROGRESS.json calculators-registry.json sitemap.xml
           git commit -m 'Release V-next #91 Tin Runway calculator'
           git push origin HEAD:main
