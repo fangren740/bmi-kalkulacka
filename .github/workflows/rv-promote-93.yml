@@ -1,0 +1,138 @@
+name: RV Promote 93
+
+on:
+  push:
+    paths:
+      - '.github/workflows/rv-promote-93.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Release V-next 93
+        shell: bash
+        run: |
+          python - <<'PY'
+          import base64, gzip, hashlib, json, re
+          from pathlib import Path
+
+          root = Path('.')
+          expected = {
+            1: '8d265d5ad0e891c39373bc8613b989bf83d69661c1d3a7a03df99ac0e035ddf5',
+            2: 'b959bb503aedfcd0f7251ef3d13139aaa2eebab49b4199765b18532d3acad2d5',
+            3: 'b729172a6a3b9056df3f79d9f192a56b23ac19f8f939a70dfb0736229f280ff0',
+            4: '0a934a6fd7119b02eebe0324141d845946fe66dc28fd5c5c0f3a2f40d8fd1afa'
+          }
+          chunks = []
+          for i in range(1, 5):
+            part = (root / f'.github/rv93_payload_{i}.txt').read_text(encoding='utf-8').strip()
+            assert hashlib.sha256(part.encode()).hexdigest() == expected[i], f'Payload chunk {i} hash mismatch'
+            chunks.append(part)
+          payload = ''.join(chunks)
+          assert hashlib.sha256(payload.encode()).hexdigest() == 'e671aebc394b5494205857acc5e97a3379e9a15bdd36a3c6fd22541643c7e7e6', 'Combined payload hash mismatch'
+          bundle = json.loads(gzip.decompress(base64.b64decode(payload)).decode('utf-8'))
+
+          target = 'cena-za-km-kalkulacka.html'
+          dataset = 'cena-za-km-route-cost-stack-regression.csv'
+          (root / target).write_text(bundle['html'], encoding='utf-8')
+          (root / dataset).write_text(bundle['csv'], encoding='utf-8')
+
+          pp = root / 'RV_VNEXT_PROGRESS.json'
+          data = json.loads(pp.read_text(encoding='utf-8'))
+          completed = [x for x in data.get('completedPages', []) if x.get('file') != target and x.get('sequence') != 93]
+          completed.append({
+            'file': target,
+            'url': 'https://rychlevypocty.cz/cena-za-km-kalkulacka.html',
+            'status': 'DONE',
+            'decision': 'KEEP + FULL CLEAN REBUILD',
+            'majorChangeDate': '2026-08-29',
+            'archetype': 'Route Cost Stack / concrete trip cost layers',
+            'researchVerifiedAt': '2026-08-29',
+            'qaStatus': 'PASS',
+            'benchmarkDataset': {'enabled': True, 'file': dataset, 'rows': 25, 'verifiedAt': '2026-08-29', 'mode': 'REGRESSION_SCENARIOS_NOT_MARKET_BENCHMARK'},
+            'structuredData': ['BreadcrumbList','WebApplication','Dataset'],
+            'minimumHoldUntil': '2026-09-12',
+            'holdUntil': '2026-09-26',
+            'manualProductionVisualGate': 'PASS',
+            'manualProductionVisualGateAt': '2026-08-29',
+            'notes': 'Full V-next rebuild approved by user on 2026-08-29. Route Cost Stack locks the primary intent to a concrete trip: user-entered energy cost, trip fees, optional own operating and depreciation rates, total trip, per-km and per-person outputs. Removed the old hard-coded legal benchmark from the core product and removed fixed 0.95x0.90 / 1.10x1.15 pseudo-scenarios. A/B comparison now uses explicit user-entered route inputs. TCO, financing and statutory travel reimbursement remain separate specialized calculators. 25-row synthetic regression dataset verifies arithmetic and is not a market-price benchmark.',
+            'sequence': 93
+          })
+          data['completedPages'] = sorted(completed, key=lambda x: x.get('sequence',9999))
+          data['inProgressPages'] = [x for x in data.get('inProgressPages', []) if x.get('file') != target and x.get('sequence') != 93]
+          data['currentCandidate'] = None
+          data['nextCandidate'] = None
+          data['updatedAt'] = '2026-08-29'
+          data['lastUpdated'] = '2026-08-29'
+          ti = data.setdefault('trackingIntegrity', {})
+          ti['lastReconciledAt'] = '2026-08-29'
+          ti['reconciledAgainst'] = 'GitHub main + user-approved #93 preview + deterministic release QA'
+          ti['trackedSequenceRange'] = '1-93 completed'
+          ti['nextSequence'] = 94
+          ti['guard'] = 'python rv-vnext-progress-audit.py --root .'
+          pp.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+
+          rp = root / 'calculators-registry.json'
+          reg = json.loads(rp.read_text(encoding='utf-8'))
+          reg['source'] = 'RychléVýpočty.cz V7 registry – reconciled V-next state through sequence 93'
+          found = False
+          for item in reg.get('items', []):
+            if item.get('id') == 'cena-za-km-kalkulacka' or item.get('file') == target:
+              item['name'] = 'Cena za km – Route Cost Stack'
+              item['shortDescription'] = 'Spočítejte cenu konkrétní cesty z vlastní spotřeby a ceny energie, poplatků a volitelné vlastní sazby provozu či amortizace. Výstup ukáže celou cestu, Kč/km, částku na osobu a porovnání variant A/B.'
+              item['methodologyCheckedAt'] = '2026-08-29'
+              item['referenceYear'] = 2026
+              item['status'] = 'published'
+              item['indexable'] = True
+              item['inSitemap'] = True
+              found = True
+              break
+          assert found, 'Registry item not found'
+          rp.write_text(json.dumps(reg, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+
+          sp = root / 'sitemap.xml'
+          sm = sp.read_text(encoding='utf-8')
+          loc = 'https://rychlevypocty.cz/cena-za-km-kalkulacka.html'
+          pat = re.compile(r'(<url>\s*<loc>' + re.escape(loc) + r'</loc>)(.*?)(</url>)', re.S)
+          def repl(m):
+              mid = re.sub(r'<lastmod>[^<]+</lastmod>', '<lastmod>2026-08-29</lastmod>', m.group(2))
+              if '<lastmod>' not in mid:
+                  mid = '\n<lastmod>2026-08-29</lastmod>' + mid
+              return m.group(1) + mid + m.group(3)
+          sm2, count = pat.subn(repl, sm, count=1)
+          assert count == 1, 'Sitemap URL not found'
+          sp.write_text(sm2, encoding='utf-8')
+
+          h = (root / target).read_text(encoding='utf-8')
+          assert '<!-- RV-VNEXT: status=DONE | major=2026-08-29 | qa=PASS | seq=93 -->' in h
+          assert 'noindex' not in h.lower()
+          assert 'data-build="KM93-VNEXT-20260829-1"' in h
+          assert '/logo-rv-v32.svg?v=1' in h and '/logo-rv-v32-inverse.svg?v=1' in h
+          assert 'facebook.com/rychlevypocty' in h and 'instagram.com/rychlevypocty' in h
+          assert dataset in h
+          assert h.count('application/ld+json') == 3
+          assert 'cena-za-km-v3.js' not in h and 'cena-za-km-v3.css' not in h
+          ids = re.findall(r'\bid="([^"]+)"', h)
+          assert len(ids) == len(set(ids)), 'Duplicate IDs'
+          assert len(bundle['csv'].splitlines()) == 26
+          scripts = re.findall(r'<script>(.*?)</script>', h, re.S)
+          app = next(s for s in scripts if "(()=>{'use strict'" in s)
+          Path('/tmp/rv93-inline.js').write_text(app, encoding='utf-8')
+          PY
+          node --check /tmp/rv93-inline.js
+          python rv-vnext-progress-audit.py --root .
+      - name: Commit release and clean staging
+        shell: bash
+        run: |
+          git config user.name 'rv-github-native-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git rm .github/rv93_payload_1.txt .github/rv93_payload_2.txt .github/rv93_payload_3.txt .github/rv93_payload_4.txt .github/workflows/rv-promote-93.yml
+          git add cena-za-km-kalkulacka.html cena-za-km-route-cost-stack-regression.csv RV_VNEXT_PROGRESS.json calculators-registry.json sitemap.xml
+          git commit -m 'Release V-next #93 Route Cost Stack calculator'
+          git push origin HEAD:main
