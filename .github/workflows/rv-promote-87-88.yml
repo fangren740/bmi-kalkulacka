@@ -1,0 +1,81 @@
+name: RV Promote 87-88
+
+on:
+  push:
+    paths:
+      - '.github/workflows/rv-promote-87-88.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Reconcile V-next tracker
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path('RV_VNEXT_PROGRESS.json')
+          data = json.loads(p.read_text(encoding='utf-8'))
+          completed = [x for x in data.get('completedPages', []) if x.get('sequence') not in (87, 88)]
+          in_progress = [x for x in data.get('inProgressPages', []) if x.get('sequence') not in (87, 88)]
+          completed.append({
+            'sequence': 87,
+            'file': 'superdavka-kalkulacka.html',
+            'url': 'https://rychlevypocty.cz/superdavka-kalkulacka.html',
+            'status': 'DONE',
+            'decision': 'KEEP + FULL REBUILD',
+            'majorChangeDate': '2026-08-29',
+            'archetype': 'Benefit Stack & Eligibility Path',
+            'researchVerifiedAt': '2026-08-29',
+            'qaStatus': 'PASS',
+            'benchmarkDataset': {'enabled': True, 'file': 'superdavka-2026-benchmark.csv', 'rows': 25, 'verifiedAt': '2026-08-29'},
+            'structuredData': ['BreadcrumbList', 'WebApplication', 'Dataset'],
+            'notes': 'Round 2 product and visual version approved by user on 2026-08-29. Model intentionally covers requests through 30 September 2026 and directs October-rule users to the official MPSV model rather than inventing incomplete district normatives.'
+          })
+          completed.append({
+            'sequence': 88,
+            'file': 'kolik-me-stoji-dite-kalkulacka.html',
+            'url': 'https://rychlevypocty.cz/kolik-me-stoji-dite-kalkulacka.html',
+            'status': 'DONE',
+            'decision': 'KEEP + FULL CLEAN REBUILD',
+            'majorChangeDate': '2026-08-29',
+            'archetype': 'Family Cost Fingerprint & Lifecycle Runway',
+            'researchVerifiedAt': '2026-08-29',
+            'qaStatus': 'PASS',
+            'benchmarkDataset': {'enabled': True, 'file': 'naklady-dite-2026-benchmark.csv', 'rows': 25, 'verifiedAt': '2026-08-29'},
+            'structuredData': ['BreadcrumbList', 'WebApplication', 'Dataset'],
+            'notes': 'Clean V-next rebuild removes unsupported age-price presets and profile multipliers. Monthly, annual and long-term outputs use only user-entered costs; age controls horizon and contextual lifecycle prompts, not an invented price. Post-result depth adds a live cost fingerprint, annual irregular-cost rhythm, lifecycle map, explicit model boundaries, RV methodology/data and full RV identity. Design R5 approved by user on 2026-08-29.'
+          })
+          data['completedPages'] = sorted(completed, key=lambda x: x['sequence'])
+          data['inProgressPages'] = in_progress
+          data['currentCandidate'] = None
+          data['nextCandidate'] = None
+          data['updatedAt'] = '2026-08-29'
+          data['lastUpdated'] = '2026-08-29'
+          data['sourceOfTruth'] = 'GitHub main (fangren740/bmi-kalkulacka)'
+          ti = data.setdefault('trackingIntegrity', {})
+          ti['lastReconciledAt'] = '2026-08-29'
+          ti['reconciledAgainst'] = 'GitHub main + canonical RV-VNEXT HTML markers + user visual approvals'
+          ti['trackedSequenceRange'] = '1-88 completed'
+          ti['nextSequence'] = 89
+          ti['guard'] = 'python rv-vnext-progress-audit.py --root .'
+          p.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          PY
+          python rv-vnext-progress-audit.py --root .
+      - name: Commit tracker reconciliation
+        run: |
+          if git diff --quiet -- RV_VNEXT_PROGRESS.json; then
+            echo 'Tracker already reconciled.'
+            exit 0
+          fi
+          git config user.name 'rv-github-native-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add RV_VNEXT_PROGRESS.json
+          git commit -m 'Promote V-next 87 and 88 to DONE'
+          git push origin HEAD:main
