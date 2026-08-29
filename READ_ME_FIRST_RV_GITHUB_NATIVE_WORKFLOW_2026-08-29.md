@@ -41,6 +41,7 @@ Před další úpravou webu načti z aktuálního GitHub `main` minimálně:
 - `RV_VNEXT_MASTER_PROMPT.txt`
 - `RV-VNEXT-PRODUCTION-STANDARD.md`
 - `RV-VNEXT-EXPERIENCE-STANDARD-V2.md`
+- `RV-VNEXT-TOPIC-DEPTH-STANDARD-2026-08-29.md`
 - `RV_VNEXT_PROGRESS.json`
 - `calculators-registry.json`
 - `sitemap.xml`
@@ -246,3 +247,16 @@ Cílový provozní model projektu je:
 **GitHub main → asistent pracuje přímo se zdrojem → uživatel schvaluje produkt → asistent deployuje → CI automaticky kontroluje → asistent řeší chyby → uživatel dostává hotový live výsledek.**
 
 Ruční přesouvání souborů uživatelem není standardní součástí workflow.
+
+---
+
+## 13. Povinná kontrola produktové hloubky
+
+Od 29. 8. 2026 je před každým dalším V-next buildem a visual approval povinné načíst a aplikovat `RV-VNEXT-TOPIC-DEPTH-STANDARD-2026-08-29.md`.
+
+Cíl není dělat stránky delší. Cíl je zabránit dvěma extrémům současně:
+
+- příliš strohý produkt typu hero → formulář → výsledek → metodika;
+- nafouknutý produkt plný SEO výplně, vymyšlených funkcí nebo falešné přesnosti.
+
+Každý významný upgrade musí po hlavním výsledku prověřit přirozené otázky stejného user intentu a přidat pouze ty moduly, které prokazatelně zlepšují interpretaci, rozhodnutí, plánování nebo prevenci chyby. U TIER M/L je před visual approval povinný samostatný Product Richness Round.
