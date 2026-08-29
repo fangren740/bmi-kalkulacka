@@ -1,5 +1,19 @@
 (()=>{
   const root=document.documentElement;
+
+  // Canonical header logo guard. Some older V3.2 calculator shells may still
+  // render a cached/text-only wordmark. Normalize the live header to the
+  // current full RV V3.2 mark and force a fresh asset version.
+  if(document.body?.classList.contains('vat-limit-page')){
+    const headerBrand=document.querySelector('.site-header .rv-logo');
+    if(headerBrand){
+      headerBrand.setAttribute('aria-label','RychléVýpočty.cz – domů');
+      headerBrand.innerHTML='<img alt="RychléVýpočty.cz" class="rv-logo-image" decoding="async" fetchpriority="high" height="48" src="/logo-rv-v32.svg?v=20260829-2" width="295">';
+    }
+    const heroBrand=document.querySelector('.vat-signature img');
+    if(heroBrand)heroBrand.src='/logo-rv-v32.svg?v=20260829-2';
+  }
+
   let t1=0,t2=0;
   const pulse=()=>{clearTimeout(t1);clearTimeout(t2);root.dataset.rvState='working';t1=setTimeout(()=>root.dataset.rvState='ready',180);t2=setTimeout(()=>root.dataset.rvState='idle',720)};
   document.addEventListener('input',pulse,{passive:true});document.addEventListener('change',pulse,{passive:true});document.addEventListener('click',e=>{if(e.target.closest('button,[role="tab"],.mode-button,.calc-tab,.category-filter,.group-toggle'))pulse()},{passive:true});root.dataset.rvState='idle';
