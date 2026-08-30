@@ -1,0 +1,177 @@
+name: RV Promote 94
+
+on:
+  push:
+    paths:
+      - '.github/workflows/rv-promote-94.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Release V-next 94
+        shell: bash
+        run: |
+          python - <<'PY'
+          import base64, csv, gzip, hashlib, io, json, re
+          from pathlib import Path
+
+          root = Path('.')
+          expected = {
+            1: '49981199e4290ecead29610c8c90c98b214b7aaccce91f5d011a22847a54b2a4',
+            2: 'b41dff70604473a5774f570423dfdf27874dee96e1cc74fc73f8ddcf1426e97a',
+            3: '0e10221d3cabc4b5404d5b9cdb1ae10e10ffbe450b467b8a6d48e084df576c63',
+            4: '63e33a518d4aa18b23faea744314c79e7694d53f0b8d2d6437b7be121e4325f6',
+          }
+          chunks = []
+          for i in range(1, 5):
+              part = (root / f'.github/rv94_payload_{i}.txt').read_text(encoding='utf-8').strip()
+              assert hashlib.sha256(part.encode()).hexdigest() == expected[i], f'Payload chunk {i} hash mismatch'
+              chunks.append(part)
+          payload = ''.join(chunks)
+          assert hashlib.sha256(payload.encode()).hexdigest() == 'cbead9313f08888ac9a467c7a3853b1d5f202903ef1ed1ada03ecd77180cc1ae', 'Combined payload hash mismatch'
+          bundle = json.loads(gzip.decompress(base64.b64decode(payload)).decode('utf-8'))
+
+          target = 'amortizace-auta-kalkulacka.html'
+          dataset = 'amortizace-auta-value-exit-guard-regression.csv'
+          h = bundle['html']
+          assert hashlib.sha256(h.encode()).hexdigest() == '5e103ad30f167bd2dc73c956fc2cf3a98822864a4d59e4b3cbec1f50da78fc76', 'Approved R7 HTML hash mismatch'
+          assert h.count('<body>') == 1
+          h = h.replace('<body>', '<body data-build="AMORT94-VNEXT-20260830-1">', 1)
+          assert hashlib.sha256(h.encode()).hexdigest() == 'aa4abead6b757f5aaa7b517b45c57c64c4c893c0e48fab75ce20956cde8d9718', 'Final HTML hash mismatch'
+
+          csv_text = bundle['csv']
+          bad = 'synthetic-05,316000,178000,4.5,22000,0,1800,3.3,139800,2588.8889,1.412121,1800,synthetic_regression_not_market_benchmark'
+          good = 'synthetic-05,316000,178000,4.5,22000,0,1800,3.3,139800,2588.8889,1.412121,0,synthetic_regression_not_market_benchmark'
+          assert csv_text.count(bad) == 1, 'Known Exit Guard fixture correction not found exactly once'
+          csv_text = csv_text.replace(bad, good)
+          assert hashlib.sha256(csv_text.encode()).hexdigest() == '008a05fae958d7c22b7e29b2eb89413e073348de5f7ce7039bd9e3fe8d769290', 'Corrected regression CSV hash mismatch'
+
+          (root / target).write_text(h, encoding='utf-8')
+          (root / dataset).write_text(csv_text, encoding='utf-8')
+
+          pp = root / 'RV_VNEXT_PROGRESS.json'
+          data = json.loads(pp.read_text(encoding='utf-8'))
+          completed = [x for x in data.get('completedPages', []) if x.get('file') != target and x.get('sequence') != 94]
+          completed.append({
+            'file': target,
+            'url': 'https://rychlevypocty.cz/amortizace-auta-kalkulacka.html',
+            'status': 'DONE',
+            'decision': 'KEEP + FULL CLEAN REBUILD',
+            'majorChangeDate': '2026-08-30',
+            'archetype': 'Value Loss & Exit Guard / ownership depreciation ledger',
+            'researchVerifiedAt': '2026-08-30',
+            'qaStatus': 'PASS',
+            'benchmarkDataset': {
+              'enabled': True,
+              'file': dataset,
+              'rows': 25,
+              'verifiedAt': '2026-08-30',
+              'mode': 'REGRESSION_SCENARIOS_NOT_MARKET_BENCHMARK'
+            },
+            'structuredData': ['BreadcrumbList', 'WebApplication', 'Dataset'],
+            'minimumHoldUntil': '2026-09-13',
+            'holdUntil': '2026-09-27',
+            'manualProductionVisualGate': 'PASS',
+            'manualProductionVisualGateAt': '2026-08-30',
+            'notes': 'Full V-next rebuild approved by user on 2026-08-30. Value Loss & Exit Guard calculates only from user-entered purchase/resale values, holding period, mileage and optional transaction costs; it deliberately does not invent universal depreciation percentages or future market prices. R7 adds a mileage lens, sensitivity reading and exit-price guard while keeping the primary result dominant. 25 synthetic regression scenarios validate deterministic arithmetic and are explicitly not a market benchmark.',
+            'sequence': 94
+          })
+          data['completedPages'] = sorted(completed, key=lambda x: x.get('sequence', 9999))
+          data['inProgressPages'] = [x for x in data.get('inProgressPages', []) if x.get('file') != target and x.get('sequence') != 94]
+          data['currentCandidate'] = None
+          data['nextCandidate'] = None
+          data['updatedAt'] = '2026-08-30'
+          data['lastUpdated'] = '2026-08-30'
+          ti = data.setdefault('trackingIntegrity', {})
+          ti['lastReconciledAt'] = '2026-08-30'
+          ti['reconciledAgainst'] = 'GitHub main + user-approved #94 R7 preview + deterministic release QA'
+          ti['trackedSequenceRange'] = '1-94 completed'
+          ti['nextSequence'] = 95
+          ti['guard'] = 'python rv-vnext-progress-audit.py --root .'
+          pp.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+
+          rp = root / 'calculators-registry.json'
+          reg = json.loads(rp.read_text(encoding='utf-8'))
+          reg['source'] = 'RychléVýpočty.cz V7 registry – reconciled V-next state through sequence 94'
+          found = False
+          for item in reg.get('items', []):
+              if item.get('id') == 'amortizace-auta-kalkulacka' or item.get('file') == target:
+                  item['name'] = 'Amortizace auta – Value Loss & Exit Guard'
+                  item['shortDescription'] = 'Spočítejte skutečnou ztrátu hodnoty auta mezi koupí a prodejem za měsíc, rok i kilometr. Otestujte vlastní prodejní rozpětí, nájezd a minimální výstupní cenu bez univerzálních procent znehodnocení.'
+                  item['methodologyCheckedAt'] = '2026-08-30'
+                  item['referenceYear'] = 2026
+                  item['status'] = 'published'
+                  item['indexable'] = True
+                  item['inSitemap'] = True
+                  found = True
+                  break
+          assert found, 'Registry item not found'
+          rp.write_text(json.dumps(reg, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+
+          sp = root / 'sitemap.xml'
+          sm = sp.read_text(encoding='utf-8')
+          loc = 'https://rychlevypocty.cz/amortizace-auta-kalkulacka.html'
+          pat = re.compile(r'(<url>\s*<loc>' + re.escape(loc) + r'</loc>)(.*?)(</url>)', re.S)
+          def repl(m):
+              mid = re.sub(r'<lastmod>[^<]+</lastmod>', '<lastmod>2026-08-30</lastmod>', m.group(2))
+              if '<lastmod>' not in mid:
+                  mid = '\n<lastmod>2026-08-30</lastmod>' + mid
+              return m.group(1) + mid + m.group(3)
+          sm2, count = pat.subn(repl, sm, count=1)
+          assert count == 1, 'Sitemap URL not found'
+          sp.write_text(sm2, encoding='utf-8')
+
+          # Deterministic release QA.
+          assert '<!-- RV-VNEXT: status=DONE | major=2026-08-30 | qa=PASS | seq=94 -->' in h
+          assert h.count('data-build="AMORT94-VNEXT-20260830-1"') == 1
+          assert 'noindex' not in h.lower()
+          assert '/logo-rv-v32.svg?v=1' in h and '/logo-rv-v32-inverse.svg?v=1' in h
+          assert 'facebook.com/rychlevypocty' in h and 'instagram.com/rychlevypocty' in h
+          assert dataset in h
+          assert h.count('application/ld+json') == 3
+          assert 'amortizace-auta-v3.css' not in h and 'mimoradna-splatka-hypoteky-v3.css' not in h
+          ids = re.findall(r'\bid="([^"]+)"', h)
+          assert len(ids) == len(set(ids)), 'Duplicate IDs'
+
+          rows = list(csv.DictReader(io.StringIO(csv_text)))
+          assert len(rows) == 25
+          for r in rows:
+              p = float(r['purchase_czk']); sale = float(r['resale_czk']); years = float(r['years']); annual_km = float(r['annual_km'])
+              entry = float(r['entry_costs_czk']); selling = float(r['selling_costs_czk']); target_rate = float(r['target_czk_per_km'])
+              loss = p + entry + selling - sale
+              monthly = loss / (years * 12)
+              per_km = loss / (years * annual_km)
+              target_sale = max(0, p + entry - target_rate * (years * annual_km) + selling)
+              assert abs(loss - float(r['expected_loss_czk'])) < 1e-6, r['scenario'] + ' loss'
+              assert abs(monthly - float(r['expected_monthly_czk'])) < 1e-3, r['scenario'] + ' monthly'
+              assert abs(per_km - float(r['expected_per_km_czk'])) < 1e-6, r['scenario'] + ' per-km'
+              assert abs(target_sale - float(r['expected_target_sale_czk'])) < 1e-3, r['scenario'] + ' target-sale'
+
+          scripts = re.findall(r'<script>(.*?)</script>', h, re.S)
+          assert len(scripts) == 1
+          Path('/tmp/rv94-inline.js').write_text(scripts[0], encoding='utf-8')
+          PY
+
+          node --check /tmp/rv94-inline.js
+          python rv-vnext-progress-audit.py --root .
+          python .github/scripts/audit_static_site.py --root . --config audits/audit-config.json --check-js --json-out /tmp/rv94-audit.json
+
+      - name: Commit release and clean staging
+        shell: bash
+        run: |
+          git config user.name 'rv-github-native-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git rm .rv-staging/rv94-page-01.b64 .rv-staging/rv94-page-02.b64 .rv-staging/rv94-page-03.b64 .rv-staging/rv94-page-04.b64 .rv-staging/rv94-page-05.b64 .rv-staging/rv94-page-06.b64 .rv-staging/rv94-page-07.b64 .rv-staging/rv94-page-08.b64 .rv-staging/rv94-page-09.b64 .rv-staging/rv94-page-10.b64 .rv-staging/rv94-page-11.b64 .rv-staging/rv94-page-12.b64 .rv-staging/rv94-page-13.b64
+          git rm .github/rv94_payload_1.txt .github/rv94_payload_2.txt .github/rv94_payload_3.txt .github/rv94_payload_4.txt .github/workflows/rv-promote-94.yml
+          git add amortizace-auta-kalkulacka.html amortizace-auta-value-exit-guard-regression.csv RV_VNEXT_PROGRESS.json calculators-registry.json sitemap.xml
+          git commit -m 'Release V-next #94 Value Loss & Exit Guard calculator'
+          git push origin HEAD:main
