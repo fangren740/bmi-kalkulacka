@@ -1,110 +1,441 @@
-<!DOCTYPE html>
+<!doctype html>
+<!-- RV-VNEXT: status=DONE | major=2026-08-30 | qa=PASS | seq=94 -->
 <html lang="cs">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="referrer" content="strict-origin-when-cross-origin"/>
-<meta name="format-detection" content="telephone=no">
-  <meta name="theme-color" content="#164b4b">
-  <title>Kalkulačka amortizace auta – ztráta hodnoty za rok i km</title>
-  <meta name="description" content="Spočítejte ztrátu hodnoty auta za měsíc, rok i kilometr. Porovnejte prodejní scénáře, náklady pořízení a výhodnost dvou vozů.">
-  <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
-  <link rel="canonical" href="https://rychlevypocty.cz/amortizace-auta-kalkulacka.html">
-  <meta property="og:locale" content="cs_CZ">
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="RychléVýpočty.cz">
-  <meta property="og:url" content="https://rychlevypocty.cz/amortizace-auta-kalkulacka.html">
-  <meta property="og:title" content="Kalkulačka amortizace auta">
-  <meta property="og:description" content="Zjistěte, kolik hodnoty auto ztratí za měsíc, rok a každý ujetý kilometr. BASIC výpočet i PRO scénáře.">
-  <meta property="og:image" content="https://rychlevypocty.cz/og-image.jpg">
-  <meta name="twitter:card" content="summary_large_image">
-  <link rel="stylesheet" href="mimoradna-splatka-hypoteky-v3.css?v=20260718-1">
-  <link rel="stylesheet" href="amortizace-auta-v3.css?v=20260719-3">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"RychléVýpočty.cz","item":"https://rychlevypocty.cz/"},{"@type":"ListItem","position":2,"name":"Auto a provoz","item":"https://rychlevypocty.cz/auto-a-provoz.html"},{"@type":"ListItem","position":3,"name":"Amortizace auta","item":"https://rychlevypocty.cz/amortizace-auta-kalkulacka.html"}]}</script>
-  
-  
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<title>Amortizace auta – ztráta hodnoty za rok i km | RychléVýpočty.cz</title>
+<meta name="description" content="Spočítejte skutečnou ztrátu hodnoty auta mezi koupí a prodejem: za měsíc, rok i kilometr. Otestujte citlivost prodejní ceny, nájezdu a minimální výstupní cenu bez univerzálních procent znehodnocení.">
+<link rel="canonical" href="https://rychlevypocty.cz/amortizace-auta-kalkulacka.html">
+<meta property="og:locale" content="cs_CZ"><meta property="og:type" content="website"><meta property="og:site_name" content="RychléVýpočty.cz">
+<meta property="og:title" content="Amortizace auta – Value Loss & Exit Guard"><meta property="og:description" content="Kolik hodnoty auto skutečně ztratí mezi koupí a prodejem? Výpočet z vašich cen, nájezdu a horizontu – bez falešné tržní předpovědi.">
+<meta property="og:url" content="https://rychlevypocty.cz/amortizace-auta-kalkulacka.html"><meta property="og:image" content="https://rychlevypocty.cz/og-image-rv-v31.jpg">
+<meta name="twitter:card" content="summary_large_image"><meta name="theme-color" content="#071a33">
+<link rel="icon" href="/favicon.ico?v=2" sizes="any"><link rel="icon" type="image/svg+xml" href="/favicon-rv-v32.svg?v=1"><link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2"><link rel="manifest" href="/site.webmanifest?v=2">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"RychléVýpočty.cz","item":"https://rychlevypocty.cz/"},{"@type":"ListItem","position":2,"name":"Auto a provoz","item":"https://rychlevypocty.cz/auto-a-provoz.html"},{"@type":"ListItem","position":3,"name":"Amortizace auta","item":"https://rychlevypocty.cz/amortizace-auta-kalkulacka.html"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Amortizace auta – Value Loss & Exit Guard","applicationCategory":"FinanceApplication","operatingSystem":"Any","url":"https://rychlevypocty.cz/amortizace-auta-kalkulacka.html","description":"Deterministický výpočet ekonomické ztráty hodnoty auta mezi uživatelem zadanou pořizovací a očekávanou prodejní cenou, včetně přepočtu na čas a kilometr, citlivosti vstupů a Exit Guard cíle.","isAccessibleForFree":true}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Dataset","name":"Amortizace auta – syntetické regresní scénáře 2026","description":"25 syntetických scénářů pro ověření deterministické aritmetiky kalkulačky amortizace auta. Nejde o benchmark trhu, prodejních cen ani tempa znehodnocení vozidel.","url":"https://rychlevypocty.cz/amortizace-auta-value-exit-guard-regression.csv","distribution":[{"@type":"DataDownload","encodingFormat":"text/csv","contentUrl":"https://rychlevypocty.cz/amortizace-auta-value-exit-guard-regression.csv"}]}</script>
+<style>
+:root{
+  --navy:#071a33;--navy2:#0d3157;--ink:#28455b;--muted:#708596;--line:#d5e2ea;--line2:#e7eef3;
+  --blue:#2387d8;--green:#52d657;--teal:#4fc7bd;--amber:#efb24f;--rose:#d97e76;
+  --soft:#f4f8fa;--soft2:#ebf5f5;--white:#fff;--shell:min(1220px,calc(100% - 40px));
+  --shadow:0 22px 64px rgba(7,26,51,.11);--shadow2:0 10px 28px rgba(7,26,51,.07)
+}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:84px}
+body{margin:0;font-family:Inter,"Segoe UI",Arial,sans-serif;color:var(--ink);background:#fff;line-height:1.56;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}button,input{font:inherit}button{cursor:pointer}img,svg{display:block;max-width:100%}
+h1,h2,h3,p{margin-top:0}h1,h2,h3{color:var(--navy);letter-spacing:-.045em;text-wrap:balance}
+h1{font-size:clamp(3rem,5.8vw,5.55rem);line-height:.94;font-weight:930}h2{font-size:clamp(2rem,3.6vw,3.25rem);line-height:1.04;font-weight:910}.shell{width:var(--shell);margin-inline:auto}
+:focus-visible{outline:3px solid rgba(35,135,216,.3);outline-offset:3px}.skip{position:fixed;left:12px;top:-80px;z-index:1000;padding:10px 13px;border-radius:10px;background:var(--navy);color:#fff}.skip:focus{top:12px}
 
+/* HEADER */
+.header{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);border-bottom:1px solid rgba(213,226,234,.95);backdrop-filter:blur(12px)}
+.header-in{min-height:76px;display:flex;align-items:center;gap:22px}.logo{display:flex;align-items:center;min-height:48px;max-width:265px}.logo img{width:100%;height:auto;max-height:48px}
+.nav{margin-left:auto;display:flex;gap:3px;color:#4f687c;font-size:.86rem;font-weight:820}.nav a{padding:10px 11px;border-radius:10px}.nav a:hover,.nav a.active{background:var(--soft);color:var(--navy)}
+.cta{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:9px 15px;border-radius:11px;background:var(--navy);color:#fff;font-size:.8rem;font-weight:900}
+.menu{display:none;margin-left:auto;width:46px;height:46px;border:1px solid var(--line);border-radius:12px;background:#fff;align-items:center;justify-content:center;flex-direction:column;gap:5px}.menu span{width:19px;height:2px;background:var(--navy)}
+.mobile-nav{position:absolute;top:76px;left:0;right:0;padding:8px 20px 15px;background:#fff;border-bottom:1px solid var(--line);box-shadow:var(--shadow2)}.mobile-nav a{display:block;padding:11px 2px;border-bottom:1px solid var(--line2);font-weight:820}
+
+/* HERO — ROOTS: clear copy + product proof */
+.hero{position:relative;overflow:hidden;padding:30px 0 48px;background:linear-gradient(180deg,#fcfeff 0%,#eef6f8 100%);border-bottom:1px solid var(--line)}
+.hero:before{content:"";position:absolute;width:620px;height:620px;right:-180px;top:-320px;border-radius:50%;border:1px solid rgba(35,135,216,.09);box-shadow:0 0 0 90px rgba(79,199,189,.02),0 0 0 180px rgba(82,214,87,.014)}
+.hero-grid{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1.03fr) minmax(430px,.87fr);gap:58px;align-items:center}
+.crumbs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:27px;color:#8193a2;font-size:.75rem;font-weight:720}.crumbs span{color:#b1bec8}
+.eyebrow,.micro{display:inline-flex;align-items:center;gap:9px;color:#27877f;font-size:.67rem;font-weight:950;letter-spacing:.11em;text-transform:uppercase}.eyebrow:before,.micro:before{content:"";width:22px;height:2px;background:linear-gradient(90deg,var(--blue),var(--green))}
+.hero h1{max-width:10.6ch;margin:12px 0 18px}.hero h1 em{display:block;color:#197dbb;font-style:normal}.lead{max-width:690px;color:#587184;font-size:1.06rem;line-height:1.67}
+.hero-actions{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-top:23px}.btn{display:inline-flex;align-items:center;justify-content:center;min-height:49px;padding:11px 18px;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--navy);font-weight:880}.btn.primary{background:var(--navy);border-color:var(--navy);color:#fff;box-shadow:0 10px 24px rgba(7,26,51,.15)}.text-link{font-size:.86rem;font-weight:860;color:#1d70aa}.text-link:after{content:" →"}
+.trust{display:flex;gap:8px 18px;flex-wrap:wrap;margin-top:18px;color:#6a7f91;font-size:.73rem;font-weight:760}.trust span:before{content:"";display:inline-block;width:7px;height:7px;margin-right:7px;border-radius:50%;background:var(--green)}
+
+/* hero proof: price erosion graph */
+.proof{position:relative;overflow:hidden;border:1px solid #c6d9e4;border-radius:27px;background:#fff;box-shadow:var(--shadow)}
+.proof-head{display:flex;justify-content:space-between;align-items:flex-start;padding:22px 23px 17px;border-bottom:1px solid var(--line2)}.proof-head span,.proof-head strong,.proof-head small{display:block}.proof-head span{font-size:.61rem;color:#7b8f9f;font-weight:950;letter-spacing:.1em}.proof-head strong{margin-top:3px;color:var(--navy);font-size:1.18rem}.proof-head small{margin-top:2px;color:#8192a1;font-size:.65rem}.proof-head b{display:grid;place-items:center;width:48px;height:48px;border-radius:14px;background:var(--navy);color:#fff;font-size:.64rem}
+.chart{position:relative;height:220px;padding:24px 24px 20px;background:linear-gradient(180deg,#fbfdfe,#f5f9fb)}
+.chart-grid{position:absolute;inset:24px 24px 42px;background:repeating-linear-gradient(to bottom,transparent 0 38px,#e9eff3 38px 39px)}
+.chart-line{position:absolute;left:10%;right:10%;top:42px;height:114px;pointer-events:none}
+.chart-line svg{width:100%;height:100%;overflow:visible}.chart-line path{fill:none;stroke:url(#lossGradient);stroke-width:5;stroke-linecap:round}
+.chart-line circle{fill:#fff;stroke-width:5}.chart-line .start{stroke:var(--teal)}.chart-line .end{stroke:var(--green)}
+.chart-label{position:absolute}.chart-label span,.chart-label strong{display:block}.chart-label span{color:#728798;font-size:.58rem;font-weight:900;letter-spacing:.08em}.chart-label strong{margin-top:2px;color:var(--navy);font-size:.91rem}.chart-label.start{left:24px;bottom:19px}.chart-label.end{right:24px;bottom:19px;text-align:right}
+.loss-badge{position:absolute;left:50%;top:78px;transform:translateX(-50%);padding:10px 13px;border:1px solid #d2e1e8;border-radius:12px;background:#fff;box-shadow:0 8px 18px rgba(7,26,51,.07);text-align:center}.loss-badge span,.loss-badge strong{display:block}.loss-badge span{color:#728899;font-size:.57rem;font-weight:900;letter-spacing:.08em}.loss-badge strong{margin-top:2px;color:var(--navy);font-size:1.18rem}
+.proof-kpis{display:grid;grid-template-columns:repeat(3,1fr);padding:0 14px 14px;gap:8px}.proof-kpis article{padding:11px;border:1px solid var(--line2);border-radius:12px;background:#fbfdfe}.proof-kpis span,.proof-kpis strong{display:block}.proof-kpis span{font-size:.59rem;color:#7d909f}.proof-kpis strong{margin-top:3px;color:var(--navy);font-size:.98rem}
+
+/* FACTS RAIL */
+.facts{background:#fff;border-bottom:1px solid var(--line)}.facts .shell{display:grid;grid-template-columns:repeat(4,1fr)}.facts article{padding:18px 20px;border-right:1px solid var(--line2)}.facts article:last-child{border-right:0}.facts span,.facts strong,.facts small{display:block}.facts span{color:#7a8f9f;font-size:.59rem;font-weight:900;letter-spacing:.08em}.facts strong{margin-top:3px;color:var(--navy);font-size:1.02rem}.facts small{margin-top:2px;color:#8796a3;font-size:.61rem}
+
+/* CALC ROOTS */
+.calc{padding:58px 0 82px}.calc-head{display:flex;justify-content:space-between;align-items:flex-end;gap:30px;margin-bottom:23px}.calc-head>div:first-child{max-width:800px}.calc-head h2{margin:7px 0 8px;font-size:clamp(2rem,3.5vw,3rem)}.calc-head p:last-child{margin:0;color:#6c8192}
+.workspace{display:grid;grid-template-columns:minmax(0,1.03fr) minmax(410px,.97fr);gap:24px;align-items:start}
+.form{padding:24px;border:1px solid var(--line);border-radius:24px;background:#fff;box-shadow:var(--shadow2)}.form-top{display:flex;justify-content:space-between;gap:16px;padding-bottom:18px;border-bottom:1px solid var(--line2)}.form-top span:first-child{display:block;color:#27877f;font-size:.63rem;font-weight:950;letter-spacing:.1em}.form-top h3{margin:4px 0 5px;font-size:1.14rem}.form-top p{margin:0;color:#758a9b;font-size:.75rem}.live{display:inline-flex!important;align-items:center;gap:7px;height:max-content;padding:6px 9px;border-radius:999px;background:#ebf9ed;color:#2f8738!important;font-size:.63rem!important;letter-spacing:0!important}.live i{width:7px;height:7px;border-radius:50%;background:var(--green)}
+.step{padding:22px 0;border-bottom:1px solid var(--line2)}.step-head{display:flex;align-items:center;gap:12px;margin-bottom:14px}.step-head>span{display:grid;place-items:center;width:31px;height:31px;border-radius:10px;background:var(--navy);color:#fff;font-size:.69rem;font-weight:950}.step-head p{margin:0;color:#708697;font-size:.6rem;font-weight:950;letter-spacing:.11em}.step-head h3{margin:1px 0 0;font-size:.97rem;letter-spacing:-.02em}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:14px}.field{display:grid;grid-template-rows:auto 52px minmax(31px,auto);gap:6px}.field>span{color:#344f67;font-size:.76rem;font-weight:830}.control{display:flex;align-items:center;overflow:hidden;border:1px solid #cbdbe5;border-radius:12px;background:#fbfdff}.control:focus-within{border-color:#71afd9;box-shadow:0 0 0 3px rgba(35,135,216,.1)}.control input{width:100%;height:100%;min-width:0;border:0;outline:0;background:transparent;padding:0 13px;color:var(--navy);font-weight:800}.control b{display:grid;place-items:center;align-self:stretch;min-width:67px;padding:0 9px;border-left:1px solid var(--line);background:#f1f6f9;color:#61778a;font-size:.65rem;white-space:nowrap}.field small{color:#7b8e9e;font-size:.66rem}
+.optional{margin-top:17px;border:1px solid var(--line);border-radius:14px;background:#fafcfd}.optional summary{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;list-style:none}.optional summary::-webkit-details-marker{display:none}.optional summary b,.optional summary small{display:block}.optional summary b{font-size:.78rem;color:var(--navy)}.optional summary small{margin-top:2px;font-size:.65rem;color:#7b8d9e}.optional summary i{display:grid;place-items:center;width:28px;height:28px;border-radius:9px;background:var(--soft);font-style:normal;font-weight:950}.optional[open] summary i{transform:rotate(45deg)}.optional-body{padding:0 16px 16px}.form-foot{display:flex;justify-content:space-between;align-items:center;gap:14px;padding-top:18px}.form-foot button{min-height:44px;padding:8px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:#536d82;font-size:.71rem;font-weight:820}.form-foot p{margin:0;color:#7c8e9d;font-size:.66rem}
+
+/* RESULT — classic strong RV, topic specific */
+.result{position:sticky;top:100px;overflow:hidden;border:1px solid #173b59;border-radius:24px;background:#071a33;color:#fff;box-shadow:0 26px 74px rgba(7,26,51,.18)}
+.result-head{display:flex;justify-content:space-between;align-items:flex-start;padding:20px 22px 13px}.result-head span,.result-head strong{display:block}.result-head span{color:#8ba5b7;font-size:.61rem;font-weight:950;letter-spacing:.1em}.result-head strong{margin-top:3px;color:#fff;font-size:.93rem}.result-head b{padding:5px 8px;border-radius:999px;background:rgba(255,255,255,.08);color:#d4e1e8;font-size:.63rem}
+.result-main{padding:7px 22px 18px}.result-main span,.result-main small{display:block}.result-main span{color:#abc0cf;font-size:.68rem}.result-main strong{display:block;margin:4px 0 5px;color:#fff;font-size:clamp(2.9rem,4.8vw,4.5rem);line-height:1;font-weight:930;letter-spacing:-.06em}.result-main small{color:#91a9b9;font-size:.64rem}
+.result-bridge{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:9px;margin:0 14px;padding:13px 14px;border:1px solid rgba(255,255,255,.1);border-radius:14px;background:rgba(255,255,255,.045)}.result-bridge span,.result-bridge strong{display:block}.result-bridge span{color:#859fb0;font-size:.57rem;font-weight:900;letter-spacing:.08em}.result-bridge strong{margin-top:2px;color:#fff;font-size:.86rem}.result-bridge .sale{text-align:right}.result-bridge i{width:45px;height:1px;background:rgba(255,255,255,.2);position:relative}.result-bridge i:after{content:"";position:absolute;right:0;top:-3px;width:7px;height:7px;border-right:1px solid rgba(255,255,255,.45);border-top:1px solid rgba(255,255,255,.45);transform:rotate(45deg)}
+.result-grid{display:grid;grid-template-columns:repeat(2,1fr);margin-top:14px;border-top:1px solid rgba(255,255,255,.09);border-bottom:1px solid rgba(255,255,255,.09)}.result-grid div{padding:14px 22px}.result-grid div:nth-child(odd){border-right:1px solid rgba(255,255,255,.09)}.result-grid div:nth-child(-n+2){border-bottom:1px solid rgba(255,255,255,.09)}.result-grid span,.result-grid strong,.result-grid small{display:block}.result-grid span{color:#8fa8b9;font-size:.6rem}.result-grid strong{margin-top:3px;color:#fff;font-size:1.03rem}.result-grid small{margin-top:2px;color:#7894a8;font-size:.58rem}
+.result-note{display:flex;gap:10px;margin:14px;padding:12px;border-left:3px solid var(--green);background:rgba(255,255,255,.04)}.result-note i{width:7px;height:7px;margin-top:5px;border-radius:50%;background:var(--green)}.result-note strong,.result-note span{display:block}.result-note strong{font-size:.69rem;color:#fff}.result-note span{margin-top:2px;color:#9db1bf;font-size:.63rem}
+
+/* VALUE WATERFALL */
+.waterfall{padding:90px 0;background:linear-gradient(180deg,#f3f8f9,#edf5f6);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.waterfall-grid{display:grid;grid-template-columns:.68fr 1.32fr;gap:58px;align-items:center}.waterfall-copy h2{margin:8px 0 14px}.waterfall-copy p{color:#617a8d}.waterfall-copy .call{margin-top:21px;padding-left:14px;border-left:3px solid var(--teal)}.waterfall-copy .call span,.waterfall-copy .call strong{display:block}.waterfall-copy .call span{color:#728899;font-size:.6rem;font-weight:950;letter-spacing:.1em}.waterfall-copy .call strong{margin-top:4px;color:var(--navy);font-size:1.15rem}
+.wf-board{overflow:hidden;border:1px solid #c7dbe5;border-radius:27px;background:#fff;box-shadow:var(--shadow)}.wf-head{display:flex;justify-content:space-between;align-items:end;padding:22px 25px 18px;border-bottom:1px solid var(--line2)}.wf-head span,.wf-head strong{display:block}.wf-head span{font-size:.61rem;color:#718698;font-weight:950;letter-spacing:.1em}.wf-head strong{margin-top:3px;color:var(--navy);font-size:1.1rem}.wf-head b{color:#277c76;font-size:.68rem}
+.wf-body{display:grid;grid-template-columns:repeat(5,1fr);align-items:end;gap:12px;height:315px;padding:24px 24px 17px;background:repeating-linear-gradient(to bottom,transparent 0 58px,#eef2f5 58px 59px)}
+.wf-col{display:flex;height:100%;flex-direction:column;justify-content:flex-end;align-items:center}.wf-col b{margin-bottom:7px;color:var(--navy);font-size:.7rem;white-space:nowrap}.wf-bar{width:min(78px,64%);min-height:4px;border-radius:10px 10px 3px 3px;background:linear-gradient(180deg,#4fc7bd,#2a9c92)}.wf-col:nth-child(2) .wf-bar{background:linear-gradient(180deg,#70b5e5,#3180ba)}.wf-col:nth-child(3) .wf-bar{background:linear-gradient(180deg,#65da69,#36a43a)}.wf-col:nth-child(4) .wf-bar{background:linear-gradient(180deg,#f4c46d,#d79a31)}.wf-col:nth-child(5) .wf-bar{background:linear-gradient(180deg,#26445f,#071a33)}.wf-col span{min-height:34px;margin-top:9px;text-align:center;color:#677f91;font-size:.59rem;font-weight:820}
+.wf-foot{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;padding:14px 18px;border-top:1px solid var(--line2);font-size:.68rem}.wf-foot b{color:var(--navy)}.wf-foot i{font-style:normal;color:#94a5b1}.wf-foot strong{padding:4px 8px;border-radius:7px;background:#edf6f6;color:#247b75}
+
+/* RESALE + EXIT combined decision section */
+.decision{padding:90px 0}.decision-head{max-width:820px;margin-bottom:31px}.decision-head h2{margin:8px 0 12px}.decision-head p{color:#647d90}
+.decision-board{display:grid;grid-template-columns:1.1fr .9fr;overflow:hidden;border:1px solid #c8dbe6;border-radius:27px;background:#fff;box-shadow:var(--shadow)}
+.resale-pane{padding:25px 25px 23px;border-right:1px solid var(--line2)}.pane-head span,.pane-head strong,.pane-head small{display:block}.pane-head span{font-size:.61rem;color:#718698;font-weight:950;letter-spacing:.1em}.pane-head strong{margin-top:4px;color:var(--navy);font-size:1.12rem}.pane-head small{margin-top:3px;color:#7b8e9e;font-size:.65rem}
+.ruler-track{position:relative;height:150px;margin:24px 4px 0}.ruler-line{position:absolute;left:0;right:0;top:62px;height:7px;border-radius:99px;background:#e8eef2}.marker{position:absolute;top:42px;transform:translateX(-50%)}.marker i{display:block;width:45px;height:45px;border:8px solid #fff;border-radius:50%;background:var(--teal);box-shadow:0 0 0 1px #b8ccd7}.marker.base i{background:var(--blue)}.marker.low i{background:var(--amber)}.marker label{position:absolute;left:50%;top:-42px;transform:translateX(-50%);white-space:nowrap;text-align:center}.marker label span,.marker label strong{display:block}.marker label span{font-size:.54rem;color:#7e91a0;font-weight:950}.marker label strong{font-size:.7rem;color:var(--navy)}.marker small{position:absolute;left:50%;top:54px;transform:translateX(-50%);white-space:nowrap;color:#526e83;font-size:.61rem;font-weight:860}
+.ruler-inputs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.ruler-inputs label{padding:10px;border:1px solid var(--line2);border-radius:11px;background:#fbfdfe}.ruler-inputs span{display:block;color:#728798;font-size:.56rem;font-weight:850}.ruler-inputs input{width:100%;margin-top:2px;border:0;outline:0;background:transparent;color:var(--navy);font-size:.88rem;font-weight:850}
+.guard-pane{position:relative;overflow:hidden;padding:25px;background:#071a33;color:#fff}.guard-pane:after{content:"EXIT";position:absolute;right:-20px;bottom:-34px;color:rgba(255,255,255,.035);font-size:100px;font-weight:950}.guard-pane .pane-head span{color:#82a0b2}.guard-pane .pane-head strong{color:#fff}.guard-pane .pane-head small{color:#95adbc}.target{position:relative;z-index:1;margin-top:23px;padding:15px;border:1px solid rgba(255,255,255,.1);border-radius:14px;background:rgba(255,255,255,.045)}.target span,.target strong,.target small{display:block}.target span{color:#89a3b4;font-size:.58rem;font-weight:900;letter-spacing:.08em}.target-input{display:flex;align-items:baseline;gap:6px;margin-top:5px}.target-input input{width:90px;border:0;border-bottom:2px solid rgba(255,255,255,.24);outline:0;background:transparent;color:#fff;font-size:2rem;font-weight:930}.target-input b{color:#9bb2c1;font-size:.67rem}.guard-answer{position:relative;z-index:1;margin-top:20px}.guard-answer span,.guard-answer strong,.guard-answer small{display:block}.guard-answer span{color:#83a0b2;font-size:.58rem;font-weight:950;letter-spacing:.08em}.guard-answer strong{margin-top:5px;color:#fff;font-size:2.5rem;line-height:1;font-weight:930;letter-spacing:-.05em}.guard-answer small{margin-top:7px;color:#9db3c2;font-size:.65rem}
+.guard-foot{position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:19px}.guard-foot div{padding:10px;border:1px solid rgba(255,255,255,.09);border-radius:11px;background:rgba(255,255,255,.04)}.guard-foot span,.guard-foot strong{display:block}.guard-foot span{color:#87a2b4;font-size:.56rem}.guard-foot strong{margin-top:3px;color:#fff;font-size:.8rem}
+
+/* methodology + next */
+.method{padding:88px 0;background:#f8fbfc}.method-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:52px;align-items:start}.method h2{margin:8px 0 14px}.method-copy p{color:#637b8e}.formula-list{border-top:1px solid #cad9e2}.formula-list div{display:grid;grid-template-columns:36px 1fr;gap:10px;padding:13px 0;border-bottom:1px solid var(--line2)}.formula-list b{color:#2a8a81}.formula-list span{font-size:.72rem;color:#466276}.boundary{margin-top:17px;padding:14px;border-left:3px solid var(--amber);background:#fff7e9;color:#7c6a49;font-size:.67rem}
+.next{padding:72px 0;background:#eef6f7}.next .shell{display:grid;grid-template-columns:.7fr 1.3fr;gap:48px}.next h2{margin:8px 0 0;font-size:clamp(2rem,3.2vw,2.8rem)}.next-list{border-top:1px solid #c5d6df}.next-list a{position:relative;display:grid;grid-template-columns:46px 1fr;gap:3px 15px;padding:18px 44px 18px 3px;border-bottom:1px solid #c5d6df}.next-list a:after{content:"→";position:absolute;right:8px;top:50%;transform:translateY(-50%);color:var(--blue);font-weight:950}.next-list span{grid-row:1/3;display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:#fff;font-size:.65rem;font-weight:950;color:#4d697f}.next-list strong{font-size:.86rem;color:var(--navy)}.next-list small{font-size:.69rem;color:#778a9b}
+
+/* footer */
+.footer{padding:47px 0 20px;background:#06162d;color:#aebdca}.footer-grid{display:grid;grid-template-columns:1.4fr repeat(3,.72fr);gap:34px}.footer .logo{width:265px;max-width:100%}.footer p{max-width:330px;margin:14px 0;color:#91a5b5;font-size:.75rem}.socials{display:flex;gap:9px;margin:14px 0}.socials a{display:grid;place-items:center;width:44px;height:44px;border:1px solid rgba(255,255,255,.14);border-radius:12px;background:rgba(255,255,255,.055);color:#fff}.socials svg{width:21px;height:21px;fill:currentColor;stroke:currentColor;stroke-width:1.7}.socials rect,.socials circle{fill:none}.process{display:flex;gap:7px;flex-wrap:wrap}.process span{padding:5px 8px;border:1px solid rgba(255,255,255,.08);border-radius:99px;font-size:.61rem}.footer h3{margin:5px 0 10px;color:#fff;font-size:.78rem;letter-spacing:0}.footer-grid>div:not(:first-child) a{display:block;padding:4px 0;color:#a1b3c2;font-size:.71rem}.footer-bottom{display:flex;justify-content:space-between;gap:30px;margin-top:33px;padding-top:17px;border-top:1px solid rgba(255,255,255,.08);color:#7890a3;font-size:.64rem}.footer-bottom strong{color:#bacbd8}
+
+@media(max-width:1000px){
+ .nav{display:none}.menu{display:flex}.cta{margin-left:auto}.hero-grid,.workspace,.waterfall-grid,.decision-board,.method-grid,.next .shell{grid-template-columns:1fr}.proof{max-width:720px}.result{position:relative;top:0}.facts .shell{grid-template-columns:1fr 1fr}.facts article:nth-child(2){border-right:0}.facts article:nth-child(-n+2){border-bottom:1px solid var(--line2)}.resale-pane{border-right:0;border-bottom:1px solid var(--line2)}.footer-grid{grid-template-columns:1.2fr 1fr 1fr}.footer-grid>div:last-child{grid-column:2/4}
+}
+@media(max-width:680px){
+ :root{--shell:min(100% - 24px,1220px)}.header-in{min-height:68px}.cta{display:none}.header .logo{flex:0 1 210px;max-width:210px}.logo img{max-height:42px}.mobile-nav{top:68px;padding-inline:12px}
+ .hero{padding:18px 0 30px}.hero-grid{gap:27px}.crumbs{margin-bottom:20px}.hero h1{font-size:clamp(2.7rem,14vw,4.05rem)}.lead{font-size:.97rem}.proof{border-radius:21px}.chart{height:205px}.loss-badge{top:70px}
+ .facts .shell{grid-template-columns:1fr 1fr}.facts article{padding:14px}.calc{padding:42px 0 60px}.calc-head{display:block}.form{padding:16px;border-radius:18px}.form-top{display:block}.live{margin-top:10px}.fields{grid-template-columns:1fr}.result-grid{grid-template-columns:1fr 1fr}.result-bridge i{width:25px}
+ .waterfall,.decision,.method,.next{padding:60px 0}.waterfall-grid{gap:28px}.wf-body{height:270px;padding-inline:10px;gap:4px}.wf-col b{font-size:.55rem}.wf-col span{font-size:.53rem}.wf-bar{width:52%}.ruler-inputs{grid-template-columns:1fr}.guard-foot{grid-template-columns:1fr}
+ .footer-grid{grid-template-columns:1fr 1fr}.footer-grid>div:first-child{grid-column:1/-1}.footer-grid>div:last-child{grid-column:auto}.footer-bottom{display:block}.footer-bottom strong{display:block;margin-top:8px}.footer .logo{width:238px}
+}
+
+/* === R7 TOP DEPTH: relevant product value only === */
+.mileage{padding:90px 0;background:#fff}
+.mileage-grid{display:grid;grid-template-columns:.68fr 1.32fr;gap:58px;align-items:center}
+.mileage-copy h2,.retention-copy h2,.valuation h2{margin:8px 0 14px}
+.mileage-copy p,.retention-copy p,.valuation p{color:#617a8d}
+.mileage-call{margin-top:23px;padding-left:14px;border-left:3px solid var(--blue)}
+.mileage-call span,.mileage-call strong,.mileage-call small{display:block}
+.mileage-call span{color:#728899;font-size:.6rem;font-weight:950;letter-spacing:.1em}
+.mileage-call strong{margin-top:4px;color:var(--navy);font-size:1.2rem}
+.mileage-call small{margin-top:2px;color:#8796a3;font-size:.62rem}
+.mileage-board{overflow:hidden;border:1px solid #c8dbe6;border-radius:26px;background:#fbfdfe;box-shadow:var(--shadow)}
+.mileage-board header{display:flex;justify-content:space-between;align-items:end;padding:22px 24px 18px;border-bottom:1px solid var(--line2)}
+.mileage-board header span,.mileage-board header strong{display:block}
+.mileage-board header span{font-size:.61rem;color:#718698;font-weight:950;letter-spacing:.1em}
+.mileage-board header strong{margin-top:3px;color:var(--navy);font-size:1.05rem}
+.mileage-board header b{color:#277d77;font-size:.68rem}
+.mileage-row{display:grid;grid-template-columns:108px 1fr 104px 150px;gap:13px;align-items:center;padding:14px 24px;border-bottom:1px solid var(--line2)}
+.mileage-row>span{font-size:.68rem;color:#587287;font-weight:850}
+.mileage-row>i{height:9px;border-radius:99px;background:#e9eff3;overflow:hidden}
+.mileage-row>i b{display:block;height:100%;width:40%;border-radius:inherit;background:linear-gradient(90deg,var(--teal),var(--blue))}
+.mileage-row>strong{color:var(--navy);font-size:.79rem;text-align:right}
+.mileage-row>small{color:#7b8e9e;font-size:.61rem}
+.mileage-row.is-current{background:#eef8ef}
+.mileage-row.is-current>span,.mileage-row.is-current>strong{color:#267a30}
+.mileage-row.is-current>i b{background:linear-gradient(90deg,var(--green),var(--teal))}
+.mileage-note{margin:0;padding:13px 24px;color:#75899a;font-size:.64rem;background:#fff}
+
+.sensitivity{padding:90px 0;background:linear-gradient(180deg,#f3f8f9,#edf5f6);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.sensitivity-head{max-width:850px;margin-bottom:31px}
+.sensitivity-head h2{margin:8px 0 12px}.sensitivity-head p{color:#647d90}
+.sensitivity-board{overflow:hidden;border:1px solid #c7dbe5;border-radius:27px;background:#fff;box-shadow:var(--shadow)}
+.sensitivity-scale{display:grid;grid-template-columns:1fr 1fr 1fr;padding:13px 21px;border-bottom:1px solid var(--line2);color:#7b8d9b;font-size:.58rem;font-weight:850}
+.sensitivity-scale span:nth-child(2){text-align:center}.sensitivity-scale span:last-child{text-align:right}
+.sensitivity-track{display:grid;grid-template-columns:repeat(5,1fr)}
+.sensitivity-track article{position:relative;padding:22px 16px 20px;text-align:center;border-right:1px solid var(--line2)}
+.sensitivity-track article:last-child{border-right:0}
+.sensitivity-track article:before{content:"";position:absolute;left:50%;top:0;width:1px;height:10px;background:#c9d8e1}
+.sensitivity-track span,.sensitivity-track strong,.sensitivity-track small{display:block}
+.sensitivity-track span{color:#75899a;font-size:.61rem;font-weight:900}
+.sensitivity-track strong{margin-top:8px;color:var(--navy);font-size:1rem}
+.sensitivity-track small{margin-top:3px;color:#8494a1;font-size:.6rem}
+.sensitivity-track .is-base{background:#eef6fb}
+.sensitivity-track .is-base:after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;background:var(--blue)}
+.sensitivity-foot{display:flex;justify-content:space-between;gap:22px;align-items:center;padding:14px 20px;border-top:1px solid var(--line2);background:#fbfdfe;color:#60798c;font-size:.67rem}
+.sensitivity-foot b{color:#277d77;font-size:.82rem;white-space:nowrap}
+
+.retention{padding:90px 0;background:#fff}
+.retention-grid{display:grid;grid-template-columns:1fr 1fr;gap:58px;align-items:center}
+.retention-visual{display:grid;grid-template-columns:245px 1fr;gap:28px;align-items:center;padding:27px;border:1px solid #cadce6;border-radius:27px;background:#fbfdfe;box-shadow:var(--shadow)}
+.retention-ring{display:grid;place-items:center;width:220px;height:220px;border-radius:50%;background:conic-gradient(var(--green) 0 61.8%,#e7eef2 61.8% 100%);position:relative}
+.retention-ring:after{content:"";position:absolute;inset:24px;border-radius:50%;background:#fff}
+.retention-ring>div{position:relative;z-index:1;text-align:center}
+.retention-ring span,.retention-ring strong,.retention-ring small{display:block}
+.retention-ring span{color:#718699;font-size:.58rem;font-weight:950;letter-spacing:.1em}
+.retention-ring strong{margin-top:5px;color:var(--navy);font-size:2.05rem;letter-spacing:-.05em}
+.retention-ring small{margin-top:2px;color:#74899a;font-size:.66rem}
+.retention-ledger{border-top:1px solid var(--line)}
+.retention-ledger div{padding:13px 0;border-bottom:1px solid var(--line2)}
+.retention-ledger span,.retention-ledger strong{display:block}
+.retention-ledger span{color:#74899a;font-size:.61rem}
+.retention-ledger strong{margin-top:3px;color:var(--navy);font-size:.93rem}
+.retention-ledger .lost strong{color:#a46323}
+.retention-insight{margin-top:22px;padding:15px 17px;border-left:4px solid var(--green);background:#f1faf2}
+.retention-insight span,.retention-insight strong{display:block}
+.retention-insight span{color:#55845b;font-size:.59rem;font-weight:950;letter-spacing:.1em}
+.retention-insight strong{margin-top:4px;color:#285d30;font-size:.86rem}
+
+.costmap{padding:90px 0;background:#071a33;color:#b9cbd7}
+.costmap-head{display:grid;grid-template-columns:1fr .78fr;gap:50px;align-items:end}
+.costmap .micro{color:#75ddd4}.costmap h2{margin:8px 0 0;color:#fff}
+.costmap-head>p{margin:0;color:#a8bdca}
+.costmap-flow{display:flex;align-items:stretch;gap:10px;margin-top:32px}
+.costmap-flow article{flex:1;min-width:0;padding:18px;border:1px solid rgba(255,255,255,.1);border-radius:16px;background:rgba(255,255,255,.045)}
+.costmap-flow article.active{border-color:rgba(82,214,87,.28);background:rgba(82,214,87,.075)}
+.costmap-flow article.total{border-color:rgba(35,135,216,.3);background:rgba(35,135,216,.09)}
+.costmap-flow>i{display:grid;place-items:center;color:#66849a;font-style:normal;font-size:1.2rem}
+.costmap-flow span,.costmap-flow strong,.costmap-flow small,.costmap-flow b{display:block}
+.costmap-flow span{color:#7f9daf;font-size:.58rem;font-weight:950}
+.costmap-flow strong{margin-top:5px;color:#fff;font-size:.85rem}
+.costmap-flow small{margin-top:3px;min-height:34px;color:#92aabc;font-size:.61rem}
+.costmap-flow b{margin-top:12px;color:#72df79;font-size:.68rem}
+.costmap-flow .total b{color:#72c6f0}
+.costmap-links{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.costmap-links a{padding:10px 13px;border:1px solid rgba(255,255,255,.12);border-radius:10px;background:rgba(255,255,255,.04);color:#dce7ee;font-size:.67rem;font-weight:820}
+
+.valuation{padding:90px 0;background:#f8fbfc}
+.valuation-grid{display:grid;grid-template-columns:.7fr 1.3fr;gap:54px;align-items:start}
+.valuation-list{border-top:2px solid var(--navy);background:#fff}
+.valuation-list>div{display:grid;grid-template-columns:48px .9fr 1.35fr;gap:14px;padding:16px 4px;border-bottom:1px solid var(--line2)}
+.valuation-list b{display:grid;place-items:center;width:38px;height:38px;border-radius:50%;background:#eaf5f5;color:#287d77;font-size:.63rem}
+.valuation-list strong{color:var(--navy);font-size:.77rem}
+.valuation-list span{color:#718697;font-size:.68rem}
+
+@media(max-width:1000px){
+ .mileage-grid,.retention-grid,.costmap-head,.valuation-grid{grid-template-columns:1fr}
+ .mileage-grid,.retention-grid,.valuation-grid{gap:30px}
+ .costmap-flow{display:grid;grid-template-columns:1fr 24px 1fr 24px 1fr}
+ .costmap-flow article.total{grid-column:3/4}
+ .retention-visual{max-width:720px}
+ .valuation-list>div{grid-template-columns:48px 1fr}
+ .valuation-list span{grid-column:2}
+}
+@media(max-width:680px){
+ .mileage,.sensitivity,.retention,.costmap,.valuation{padding:60px 0}
+ .mileage-row{grid-template-columns:88px 1fr 78px;gap:8px;padding-inline:14px}
+ .mileage-row>small{grid-column:2/4}
+ .sensitivity-track{grid-template-columns:1fr}
+ .sensitivity-track article{display:grid;grid-template-columns:96px 1fr 1fr;align-items:center;text-align:left;border-right:0;border-bottom:1px solid var(--line2);padding:13px 15px}
+ .sensitivity-track article:before,.sensitivity-track .is-base:after{display:none}
+ .sensitivity-track strong,.sensitivity-track small{margin-top:0}
+ .sensitivity-foot{align-items:flex-start;flex-direction:column}
+ .retention-visual{grid-template-columns:1fr}
+ .retention-ring{margin:auto}
+ .costmap-flow{grid-template-columns:1fr}
+ .costmap-flow>i{height:20px}
+ .costmap-flow article.total{grid-column:auto}
+ .valuation-list>div{grid-template-columns:42px 1fr}
+}
+
+</style>
 </head>
-<body class="mrp-page dep-page" data-build="DEPRECIATION-PRO-20260719-4">
-  <a class="mrp-skip" href="#kalkulacka">Přejít na kalkulačku</a>
-  <header class="mrp-header"><div class="mrp-container mrp-header__inner"><a class="mrp-logo" href="/" aria-label="RychléVýpočty.cz – domů"><img src="logo-rychlevypocty.svg" alt="RychléVýpočty.cz" width="220" height="40"></a><nav class="mrp-main-nav" aria-label="Hlavní navigace"><a href="/">Domů</a><a href="/kalkulacky.html">Kalkulačky</a><a class="is-active" href="/auto-a-provoz.html">Auto</a><a href="/finance-a-hypoteky.html">Finance</a></nav><a class="mrp-header-cta" href="#kalkulacka">Spočítat pokles</a></div></header>
+<body data-build="AMORT94-VNEXT-20260830-1">
+<a class="skip" href="#kalkulacka">Přejít na kalkulačku</a>
+<header class="header"><div class="shell header-in">
+<a class="logo" href="/" aria-label="RychléVýpočty.cz – domů"><img src="/logo-rv-v32.svg?v=1" width="590" height="96" alt="RychléVýpočty.cz"></a>
+<nav class="nav" aria-label="Hlavní navigace"><a href="/kalkulacky.html">Kalkulačky</a><a class="active" href="/auto-a-provoz.html">Auto a provoz</a><a href="/finance-a-hypoteky.html">Finance</a><a href="/jak-pocitame.html">Jak počítáme</a></nav>
+<a class="cta" href="#kalkulacka">Spočítat amortizaci</a><button class="menu" type="button" aria-label="Otevřít menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</div><nav class="mobile-nav" hidden><a href="/kalkulacky.html">Kalkulačky</a><a href="/auto-a-provoz.html">Auto a provoz</a><a href="/jak-pocitame.html">Jak počítáme</a></nav></header>
 
-  <main>
-    <section class="dep-hero" aria-labelledby="hero-title"><div class="mrp-container"><nav class="mrp-breadcrumbs" aria-label="Drobečková navigace"><a href="/">Domů</a><span>/</span><a href="/auto-a-provoz.html">Auto a provoz</a><span>/</span><span>Amortizace auta</span></nav><div class="dep-hero__grid">
-      <div class="dep-hero__copy"><p class="mrp-kicker">Hodnota auta · bez falešné úspory</p><h1 id="hero-title">Kolik hodnoty vaše auto skutečně ztratí?</h1><p>Porovnejte dnešní cenu s realistickou hodnotou při prodeji. Výsledek převede skrytý pokles ceny na měsíc, rok i kilometr a ukáže, jak citlivý je plán na jiný vývoj trhu.</p><div class="dep-hero__actions"><a class="mrp-btn mrp-btn--primary" href="#kalkulacka">Spustit jednoduchý výpočet</a><a class="mrp-btn mrp-btn--ghost" href="#metodika">Jak výsledek číst</a></div><ul class="dep-hero__proof"><li>4 základní vstupy</li><li>3 prodejní scénáře</li><li>Porovnání dvou aut</li></ul></div>
-      <aside class="dep-visual" aria-label="Produktový náhled poklesu hodnoty auta"><div class="dep-visual__top"><span>VALUE / TRACKER</span><strong>pořízení → provoz → prodej</strong></div><div class="dep-showroom"><span class="dep-showroom__sun"></span><div class="dep-car"><i></i><b></b><span></span><em></em></div><div class="dep-value-card"><span>Ztráta hodnoty</span><strong id="heroLoss">210 000 Kč</strong><small id="heroLossShare">38,2 % pořizovací ceny</small></div></div><div class="dep-visual__timeline"><div><span>Dnes</span><strong id="heroPurchase">550 000 Kč</strong></div><i><b id="heroRetainedBar"></b></i><div><span>Za 5 let</span><strong id="heroResale">340 000 Kč</strong></div></div><div class="dep-visual__metrics"><div><span>Měsíčně</span><strong id="heroMonthly">3 500 Kč</strong></div><div><span>Za rok</span><strong id="heroAnnual">42 000 Kč</strong></div><div><span>Na kilometr</span><strong id="heroPerKm">2,80 Kč</strong></div></div></aside>
-    </div></div></section>
+<main>
+<section class="hero"><div class="shell hero-grid">
+<div><nav class="crumbs"><span>Domů</span><span>›</span><span>Auto a provoz</span><span>›</span><strong>Amortizace auta</strong></nav>
+<p class="eyebrow">AUTO · ZTRÁTA HODNOTY</p>
+<h1>Kolik hodnoty <em>auto opravdu ztratí?</em></h1>
+<p class="lead">Zadejte skutečnou cenu při koupi, vlastní odhad ceny při prodeji a plánovaný nájezd. Uvidíte ztrátu hodnoty celkem, za měsíc a na kilometr — bez univerzálního procenta poklesu.</p>
+<div class="hero-actions"><a class="btn primary" href="#kalkulacka">Spočítat moji amortizaci</a><a class="text-link" href="#rozhodnuti">Pracovat s prodejní cenou</a></div>
+<div class="trust"><span>vlastní prodejní scénář</span><span>žádný preset typu auta</span><span>odděleno od TCO</span></div>
+</div>
+<aside class="proof" aria-label="Ukázka poklesu hodnoty">
+<div class="proof-head"><div><span>VALUE LOSS</span><strong>Koupě → prodej</strong><small>mezi dvěma uživatelskými cenovými body</small></div><b>RV</b></div>
+<div class="chart"><div class="chart-grid"></div><div class="chart-line"><svg viewBox="0 0 400 120" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="lossGradient" x1="0" x2="1"><stop offset="0%" stop-color="#4fc7bd"/><stop offset="100%" stop-color="#52d657"/></linearGradient></defs><path d="M10,14 C130,18 245,65 390,105"></path><circle class="start" cx="10" cy="14" r="7"></circle><circle class="end" cx="390" cy="105" r="7"></circle></svg></div>
+<div class="loss-badge"><span>ZTRÁTA HODNOTY</span><strong id="heroLoss">210 000 Kč</strong></div>
+<div class="chart-label start"><span>KOUPĚ</span><strong id="heroBuy">550 000 Kč</strong></div><div class="chart-label end"><span>PRODEJ</span><strong id="heroSale">340 000 Kč</strong></div></div>
+<div class="proof-kpis"><article><span>Za měsíc</span><strong id="heroMonthly">3 500 Kč</strong></article><article><span>Za rok</span><strong id="heroAnnual">42 000 Kč</strong></article><article><span>Na kilometr</span><strong id="heroKm">2,80 Kč</strong></article></div>
+</aside>
+</div></section>
 
-    <nav class="dep-nav" aria-label="Navigace na stránce"><div class="mrp-container dep-nav__inner"><a href="#kalkulacka">Kalkulačka</a><a href="#vysledek">Výsledek</a><a href="#rozpad">Rozpad</a><a href="#scenare">Scénáře</a><a href="#pruvodce">Průvodce</a><a href="#faq">FAQ</a></div></nav>
+<section class="facts"><div class="shell"><article><span>MODEL</span><strong>2 cenové body</strong><small>koupě a budoucí prodej</small></article><article><span>NEJDŮLEŽITĚJŠÍ VSTUP</span><strong>Prodejní cena</strong><small>určujete vy</small></article><article><span>VÝSTUP</span><strong>Kč / km</strong><small>pro Route Cost Stack</small></article><article><span>HRANICE</span><strong>Není to TCO</strong><small>provoz a financování zvlášť</small></article></div></section>
 
-    <section class="dep-calculator" id="kalkulacka"><div class="mrp-container dep-calculator__grid">
-      <form class="dep-form" id="depreciationForm" novalidate><div class="dep-form__head"><div><p class="mrp-kicker">BASIC zadání</p><h2>Spočítejte pokles hodnoty jednoduše</h2><p>Začněte čtyřmi údaji. Vedlejší náklady, rozpětí prodejní ceny a druhé auto otevřete jen tehdy, když je opravdu potřebujete.</p></div><span class="dep-live"><i></i>Výsledek živě</span></div>
-        <div class="dep-presets" aria-label="Rychlé scénáře"><button class="is-active" type="button" data-preset="family" aria-pressed="true"><span>01</span><strong>Rodinné auto</strong><small>5 let · 15 000 km/rok</small></button><button type="button" data-preset="city" aria-pressed="false"><span>02</span><strong>Městská ojetina</strong><small>4 roky · nižší nájezd</small></button><button type="button" data-preset="distance" aria-pressed="false"><span>03</span><strong>Vysoký nájezd</strong><small>5 let · 30 000 km/rok</small></button></div>
-        <div class="dep-field-grid">
-          <label class="dep-field" for="purchasePrice"><span>Pořizovací cena auta</span><span class="dep-input"><input id="purchasePrice" type="number" min="1" step="1000" value="550000"><em>Kč</em></span><small>Reálně zaplacená cena, ne původní ceník.</small></label>
-          <label class="dep-field" for="resaleValue"><span>Očekávaná cena při prodeji</span><span class="dep-input"><input id="resaleValue" type="number" min="0" step="1000" value="340000"><em>Kč</em></span><small>Odhad ceny auta ve stavu a nájezdu při prodeji.</small></label>
-          <label class="dep-field" for="ownershipYears"><span>Jak dlouho auto podržíte</span><span class="dep-input"><input id="ownershipYears" type="number" min="0.5" step="0.5" value="5"><em>let</em></span><small>Plánovaná doba od pořízení do prodeje.</small></label>
-          <label class="dep-field" for="annualKm"><span>Roční nájezd</span><span class="dep-input"><input id="annualKm" type="number" min="1" step="500" value="15000"><em>km/rok</em></span><small>Dlouhodobý průměr včetně delších cest.</small></label>
-        </div>
+<section class="calc" id="kalkulacka"><div class="shell">
+<div class="calc-head"><div><p class="micro">VAŠE AUTO</p><h2>Čtyři vstupy pro hlavní odpověď.</h2><p>Pokud chcete, můžete přidat jednorázové náklady pořízení a prodeje. Palivo, servis, pojištění ani splátky sem nemícháme.</p></div></div>
+<div class="workspace">
+<form class="form" id="valueForm">
+<div class="form-top"><div><span>CO ZADAT</span><h3>Vstup, výstup a nájezd</h3><p>Výpočet je jednoduchý schválně. Nejistota budoucí ceny se řeší až v další vrstvě.</p></div><span class="live"><i></i> živý přepočet</span></div>
+<div class="step"><div class="step-head"><span>01</span><div><p>CENOVÉ BODY</p><h3>Kolik zaplatíte a kolik očekáváte zpět</h3></div></div><div class="fields">
+<label class="field"><span>Pořizovací cena</span><div class="control"><input id="purchase" type="number" min="1" step="1000" value="550000"><b>Kč</b></div><small>Skutečně zaplacená cena.</small></label>
+<label class="field"><span>Odhad ceny při prodeji</span><div class="control"><input id="resale" type="number" min="0" step="1000" value="340000"><b>Kč</b></div><small>Váš scénář budoucího prodeje.</small></label>
+</div></div>
+<div class="step"><div class="step-head"><span>02</span><div><p>HORIZONT</p><h3>Jak dlouho a kolik kilometrů</h3></div></div><div class="fields">
+<label class="field"><span>Doba držení</span><div class="control"><input id="years" type="number" min=".5" step=".5" value="5"><b>let</b></div><small>Od koupě do prodeje.</small></label>
+<label class="field"><span>Roční nájezd</span><div class="control"><input id="annualKm" type="number" min="1" step="500" value="15000"><b>km / rok</b></div><small>Převádí ztrátu na Kč/km.</small></label>
+</div>
+<details class="optional"><summary><span><b>Vedlejší náklady pořízení a prodeje</b><small>jen pokud nejsou v hlavních cenách</small></span><i>+</i></summary><div class="optional-body"><div class="fields">
+<label class="field"><span>Vstupní náklady</span><div class="control"><input id="entryCosts" type="number" min="0" step="1000" value="0"><b>Kč</b></div><small>Dovoz, registrace nebo nutná vstupní příprava.</small></label>
+<label class="field"><span>Náklady prodeje</span><div class="control"><input id="sellingCosts" type="number" min="0" step="1000" value="0"><b>Kč</b></div><small>Provize, inzerce nebo příprava k prodeji.</small></label>
+</div></div></details></div>
+<div class="form-foot"><button id="reset" type="button">Obnovit příklad</button><p id="status" role="status">Přepočítáno z vašich vstupů.</p></div>
+</form>
 
-        <details class="dep-pro" id="proSettings"><summary><span><strong>Pokročilé nastavení</strong><small>Náklady pořízení, prodejní rozpětí a porovnání auta B</small></span><b>PRO</b></summary><div class="dep-pro__body">
-          <div class="dep-pro-intro"><strong>PRO data hlavní vstupy nenahrazují.</strong><p>Aktivujte jen část, kterou chcete zpřesnit. Výsledek vždy ukáže, odkud změna vznikla.</p></div>
-          <div class="dep-pro-tabs" role="tablist" aria-label="Kroky pokročilého zadání"><button class="is-active" id="tabCosts" type="button" role="tab" aria-selected="true" aria-controls="panelCosts"><span>01</span><strong>Náklady</strong><small>pořízení a prodej</small></button><button id="tabScenarios" type="button" role="tab" aria-selected="false" aria-controls="panelScenarios"><span>02</span><strong>Scénáře</strong><small>rozpětí ceny</small></button><button id="tabCompare" type="button" role="tab" aria-selected="false" aria-controls="panelCompare"><span>03</span><strong>Auto B</strong><small>alternativní volba</small></button></div>
-          <div class="dep-pro-workspace">
-            <section id="panelCosts" role="tabpanel" aria-labelledby="tabCosts"><div class="dep-pro-workspace__head"><div><span>Krok 1 ze 3</span><h3>Rozpočítejte skutečný vstup a prodej</h3></div><p>Dovoz, registrace nebo provize zvyšují ekonomickou ztrátu, pokud je chcete přiřadit k autu.</p></div><label class="dep-toggle"><input id="includeCosts" type="checkbox"><span><b>Zahrnout vedlejší náklady do hlavního výsledku</b><small>Bez aktivace zůstane BASIC výsledek beze změny.</small></span></label><div class="dep-pro-fields"><label class="dep-field" for="entryCosts"><span>Vstupní investice</span><span class="dep-input"><input id="entryCosts" type="number" min="0" step="1000" value="0"><em>Kč</em></span><small>Dovoz, registrace, kontrola nebo nutný první servis.</small></label><label class="dep-field" for="sellingCosts"><span>Náklady prodeje</span><span class="dep-input"><input id="sellingCosts" type="number" min="0" step="1000" value="0"><em>Kč</em></span><small>Příprava, inzerce, provize nebo administrativa.</small></label></div></section>
-            <section id="panelScenarios" role="tabpanel" aria-labelledby="tabScenarios" hidden><div class="dep-pro-workspace__head"><div><span>Krok 2 ze 3</span><h3>Vytvořte rozpětí budoucí ceny</h3></div><p>Jedna částka působí přesněji, než ve skutečnosti je. Dvě krajní varianty ukážou citlivost plánu.</p></div><div class="dep-pro-fields"><label class="dep-field" for="optimisticResale"><span>Příznivá prodejní cena</span><span class="dep-input"><input id="optimisticResale" type="number" min="0" step="1000" value="380000"><em>Kč</em></span><small>Dobře udržovaný vůz a příznivý trh.</small></label><label class="dep-field" for="conservativeResale"><span>Konzervativní prodejní cena</span><span class="dep-input"><input id="conservativeResale" type="number" min="0" step="1000" value="300000"><em>Kč</em></span><small>Slabší trh, vyšší nájezd nebo nutná rychlá nabídka.</small></label></div><div class="dep-scenario-preview"><div><span>Příznivě</span><strong id="previewOptimistic">2 833 Kč/měs.</strong></div><div><span>Základ</span><strong id="previewBase">3 500 Kč/měs.</strong></div><div><span>Konzervativně</span><strong id="previewConservative">4 167 Kč/měs.</strong></div></div></section>
-            <section id="panelCompare" role="tabpanel" aria-labelledby="tabCompare" hidden><div class="dep-pro-workspace__head"><div><span>Krok 3 ze 3</span><h3>Porovnejte alternativní auto B</h3></div><p>Stejná doba a nájezd umožní srovnat čistý pokles hodnoty bez míchání různých horizontů.</p></div><label class="dep-toggle"><input id="enableComparison" type="checkbox"><span><b>Zapnout porovnání auta B</b><small>Výsledek ukáže rozdíl za měsíc i kilometr.</small></span></label><div class="dep-pro-fields"><label class="dep-field" for="comparePurchase"><span>Pořizovací cena auta B</span><span class="dep-input"><input id="comparePurchase" type="number" min="1" step="1000" value="420000"><em>Kč</em></span></label><label class="dep-field" for="compareResale"><span>Prodejní cena auta B</span><span class="dep-input"><input id="compareResale" type="number" min="0" step="1000" value="280000"><em>Kč</em></span></label></div><div class="dep-compare-preview" id="comparePreview"><span>Auto B</span><strong id="compareMonthlyPreview">2 333 Kč/měs.</strong><small id="compareAdvicePreview">Při stejném horizontu ztrácí méně než auto A.</small></div></section>
-          </div>
-          <div class="dep-pro-actions"><button id="proPrev" type="button">Předchozí</button><span id="proStep">1 / 3</span><button id="proNext" type="button">Další krok</button></div>
-        </div></details>
-        <div class="dep-form__actions"><button class="mrp-btn mrp-btn--primary" type="submit">Přepočítat amortizaci</button><button class="mrp-btn mrp-btn--ghost" id="resetBtn" type="button">Výchozí hodnoty</button></div><p class="dep-privacy"><i></i>Zadané údaje zůstávají pouze ve vašem prohlížeči.</p><p class="dep-error" id="formError" role="alert" hidden></p>
-      </form>
+<aside class="result" aria-live="polite"><div class="result-head"><div><span>RV VÝSLEDEK</span><strong>Ztráta hodnoty auta</strong></div><b>VALUE LOSS</b></div>
+<div class="result-main"><span>Celkem za dobu držení</span><strong id="loss">210 000 Kč</strong><small id="lossSub">38,2 % efektivního vstupu</small></div>
+<div class="result-bridge"><div><span>VSTUP</span><strong id="resultBuy">550 000 Kč</strong></div><i></i><div class="sale"><span>VÝSTUP</span><strong id="resultSale">340 000 Kč</strong></div></div>
+<div class="result-grid"><div><span>Průměr / měsíc</span><strong id="monthly">3 500 Kč</strong><small>aritmetický průměr</small></div><div><span>Průměr / rok</span><strong id="annual">42 000 Kč</strong><small>za dobu držení</small></div><div><span>Amortizace / km</span><strong id="perKm">2,80 Kč</strong><small id="totalKm">75 000 km celkem</small></div><div><span>Zachovaná hodnota</span><strong id="retained">61,8 %</strong><small>výstup / vstup</small></div></div>
+<div class="result-note"><i></i><div><strong id="readingTitle">Výsledek je scénář, ne předpověď trhu.</strong><span id="readingText">Budoucí prodejní cenu ověříte níže vlastním rozpětím.</span></div></div>
+</aside>
+</div></div></section>
 
-      <aside class="dep-result" id="vysledek" aria-live="polite"><div class="dep-result__head"><span>Výsledek</span><b id="modeBadge">BASIC režim</b></div><h2>Kolik hodnoty auto ztratí</h2><p>Hlavní číslo je měsíční průměr. Vedle něj sledujte cenu za kilometr, podíl zachované hodnoty a rozpětí scénářů.</p><div class="dep-result__main"><span>Měsíční pokles hodnoty</span><output id="monthlyLoss">3 500 Kč</output><strong id="resultStatus">modelový odhad</strong><small id="resultSummary">550 000 Kč → 340 000 Kč za 5 let</small></div><div class="dep-result__metrics"><div><span>Celková ztráta</span><strong id="totalLoss">210 000 Kč</strong><small>za celé období</small></div><div><span>Roční průměr</span><strong id="annualLoss">42 000 Kč</strong><small>12 stejných průměrů</small></div><div><span>Na kilometr</span><strong id="lossPerKm">2,80 Kč/km</strong><small>jen pokles hodnoty</small></div><div><span>Zachovaná hodnota</span><strong id="retainedShare">61,8 %</strong><small>z pořizovací ceny</small></div></div><div class="dep-result__curve"><div><span>Pořízení</span><b id="resultPurchase">550 000 Kč</b></div><i><b id="resultCurveBar"></b></i><div><span>Prodej</span><b id="resultResale">340 000 Kč</b></div></div><div class="dep-result__reading"><span>Rychlé čtení</span><strong id="readingTitle">Každý měsíc mizí průměrně 3 500 Kč hodnoty.</strong><p id="readingText">Odhad prodejní ceny ovlivní výsledek víc než drobné zaokrouhlení doby nebo nájezdu.</p></div><div class="dep-result__compare" id="resultComparison" hidden><span>Porovnání auta B</span><strong id="comparisonHeadline">Auto B ztrácí méně</strong><p id="comparisonText">Rozdíl činí 1 167 Kč měsíčně.</p></div><div class="dep-result__links"><a href="#scenare">Prověřit scénáře</a><a href="/naklady-na-provoz-auta-kalkulacka.html">Přidat provoz auta</a></div></aside>
-    </div></section>
+<section class="waterfall"><div class="shell waterfall-grid">
+<div class="waterfall-copy"><p class="micro">ROZPAD HODNOTY</p><h2>Co přesně tvoří rozdíl mezi koupí a prodejem.</h2><p>Žádná další data. Jen transparentní rozklad vašich vstupů, aby bylo jasné, odkud se výsledná amortizace bere.</p><div class="call"><span>VALUE GAP</span><strong id="wfCall">210 000 Kč</strong></div></div>
+<div class="wf-board"><div class="wf-head"><div><span>VALUE WATERFALL</span><strong>Kupní cena → čistý výstup</strong></div><b id="wfPerKm">2,80 Kč/km</b></div>
+<div class="wf-body"><div class="wf-col"><b id="wfPurchaseV">550 000 Kč</b><i class="wf-bar" id="wfPurchase"></i><span>Kupní cena</span></div><div class="wf-col"><b id="wfEntryV">0 Kč</b><i class="wf-bar" id="wfEntry"></i><span>+ vstupní náklady</span></div><div class="wf-col"><b id="wfResaleV">340 000 Kč</b><i class="wf-bar" id="wfResale"></i><span>− prodejní cena</span></div><div class="wf-col"><b id="wfSellingV">0 Kč</b><i class="wf-bar" id="wfSelling"></i><span>+ náklady prodeje</span></div><div class="wf-col"><b id="wfLossV">210 000 Kč</b><i class="wf-bar" id="wfLoss"></i><span>= ztráta hodnoty</span></div></div>
+<div class="wf-foot"><b id="eqBuy">550 000</b><i>+</i><b id="eqEntry">0</b><i>−</i><b id="eqResale">340 000</b><i>+</i><b id="eqSelling">0</b><i>=</i><strong id="eqLoss">210 000 Kč</strong></div></div>
+</div></section>
 
-    <section class="dep-overview" id="metodika"><div class="mrp-container"><div class="mrp-heading mrp-heading--split"><div><p class="mrp-kicker">Čtyři odpovědi</p><h2>Výsledek musí vysvětlit rozhodnutí, ne jen vzorec</h2></div><p>Dobrá kalkulačka oddělí částku, čas, nájezd a nejistotu. Proto vedle hlavního průměru ukazuje také zachovanou hodnotu a scénář horšího prodeje.</p></div><div class="dep-stat-grid"><article><span>01</span><h3>Kolik ztratíte celkem</h3><p>Rozdíl mezi ekonomickou pořizovací hodnotou a čistým výnosem z budoucího prodeje.</p></article><article><span>02</span><h3>Jak rychle hodnota mizí</h3><p>Měsíční a roční průměr umožní porovnat různě drahá auta ve stejném horizontu.</p></article><article><span>03</span><h3>Kolik připadá na kilometr</h3><p>Celková ztráta vydělená plánovaným nájezdem doplní cenu paliva a běžného provozu.</p></article><article><span>04</span><h3>Co udělá horší prodej</h3><p>Rozpětí scénářů ukazuje rezervu, kterou může domácí rozpočet potřebovat při změně trhu nebo stavu auta.</p></article></div></div></section>
+<section class="decision" id="rozhodnuti"><div class="shell"><div class="decision-head"><p class="micro">PRACUJTE S NEJISTOTOU</p><h2>Prodejní cena není jedno magické číslo.</h2><p>Nastavte si vlastní rozpětí a hned vedle si obraťte výpočet: jakou prodejní cenu potřebujete, abyste udrželi amortizaci pod svým limitem.</p></div>
+<div class="decision-board">
+<div class="resale-pane"><div class="pane-head"><span>RESALE RANGE</span><strong>Tři vaše scénáře na jedné ose</strong><small>příznivý · základní · konzervativní</small></div>
+<div class="ruler-track"><i class="ruler-line"></i>
+<div class="marker high" id="markHigh"><label><span>PŘÍZNIVĚ</span><strong id="markHighPrice">380 000 Kč</strong></label><i></i><small id="markHighKm">2,27 Kč/km</small></div>
+<div class="marker base" id="markBase"><label><span>ZÁKLAD</span><strong id="markBasePrice">340 000 Kč</strong></label><i></i><small id="markBaseKm">2,80 Kč/km</small></div>
+<div class="marker low" id="markLow"><label><span>KONZERVATIVNĚ</span><strong id="markLowPrice">300 000 Kč</strong></label><i></i><small id="markLowKm">3,33 Kč/km</small></div>
+</div>
+<div class="ruler-inputs"><label><span>Příznivá prodejní cena</span><input id="resaleHigh" type="number" value="380000" step="1000"></label><label><span>Základní prodejní cena</span><input id="resaleMirror" type="number" value="340000" step="1000"></label><label><span>Konzervativní cena</span><input id="resaleLow" type="number" value="300000" step="1000"></label></div>
+</div>
+<div class="guard-pane"><div class="pane-head"><span>EXIT GUARD</span><strong>Kolik musíte při prodeji dostat?</strong><small>obrácený výpočet z vašeho limitu Kč/km</small></div>
+<div class="target"><span>MAXIMÁLNÍ AMORTIZACE</span><div class="target-input"><input id="targetPerKm" type="number" value="3" step=".1"><b>Kč/km</b></div></div>
+<div class="guard-answer"><span>MINIMÁLNÍ PRODEJNÍ CENA</span><strong id="targetSale">325 000 Kč</strong><small id="targetText">Při 75 000 km a vstupu 550 000 Kč.</small></div>
+<div class="guard-foot"><div><span>Povolená ztráta</span><strong id="targetLoss">225 000 Kč</strong></div><div><span>Rezerva základního scénáře</span><strong id="targetReserve">15 000 Kč</strong></div></div>
+</div>
+</div></div></section>
 
-    <section class="dep-detail" id="rozpad"><div class="mrp-container"><div class="mrp-heading mrp-heading--split"><div><p class="mrp-kicker">Detail výsledku</p><h2>Od kupní ceny k hodnotě při prodeji</h2></div><p>Tabulka drží vstupy a přepočty na jednom místě. Díky tomu snadno odhalíte, zda rozdíl mezi dvěma variantami vzniká v ceně auta, délce vlastnictví, nebo nájezdu.</p></div><div class="dep-detail__grid"><div class="dep-table-card"><div class="dep-reading"><span>Co výsledek říká</span><strong id="detailHeadline">Auto si ponechá přibližně 62 % pořizovací hodnoty.</strong><p id="detailText">Základní model počítá s prodejem za 340 000 Kč po pěti letech.</p></div><table><thead><tr><th>Položka</th><th>Hodnota</th><th>Význam</th></tr></thead><tbody id="detailTableBody"></tbody></table></div><aside class="dep-detail-card"><p class="mrp-kicker">Kontrola odhadu</p><h3>Nejdřív ověřte budoucí cenu, potom desetníky za kilometr</h3><div><span>Celkový nájezd</span><strong id="detailMileage">75 000 km</strong></div><div><span>Průměrný geometrický pokles</span><strong id="annualRate">9,2 % ročně</strong></div><div><span>Rozpětí měsíční ztráty</span><strong id="scenarioRange">2 833–4 167 Kč</strong></div><p>Průměr nepopisuje přesnou křivku ceny v jednotlivých letech. Slouží k porovnání variant, které používají stejnou metodiku.</p></aside></div></div></section>
 
-    <section class="dep-scenarios" id="scenare"><div class="mrp-container"><p class="mrp-kicker">Stresový test</p><h2>Tři prodejní ceny, tři odlišné rozpočty</h2><p class="dep-scenarios__intro">Nikdo dnes nezná přesnou cenu auta za několik let. Rozumný plán proto pracuje s pásmem a sleduje, zda rozhodnutí funguje i při slabším výsledku.</p><div class="dep-scenario-grid"><article><span>Příznivý scénář</span><strong id="scenarioOptimisticMonthly">2 833 Kč/měs.</strong><p id="scenarioOptimisticText">Prodej za 380 000 Kč</p><i><b id="scenarioOptimisticBar"></b></i></article><article class="is-base"><span>Základní scénář</span><strong id="scenarioBaseMonthly">3 500 Kč/měs.</strong><p id="scenarioBaseText">Prodej za 340 000 Kč</p><i><b id="scenarioBaseBar"></b></i></article><article><span>Konzervativní scénář</span><strong id="scenarioConservativeMonthly">4 167 Kč/měs.</strong><p id="scenarioConservativeText">Prodej za 300 000 Kč</p><i><b id="scenarioConservativeBar"></b></i></article></div><div class="dep-stress-callout"><div><span>Rezerva proti základnímu plánu</span><strong id="stressReserve">667 Kč měsíčně</strong></div><p id="stressText">Konzervativní prodej by zvýšil celkovou ztrátu o 40 000 Kč. Tuto částku nevydáte každý měsíc, ale projeví se při prodeji.</p></div></div></section>
+<section class="mileage"><div class="shell mileage-grid">
+<div class="mileage-copy"><p class="micro">MILEAGE LENS</p><h2>Stejná ztráta hodnoty. Úplně jiná cena na kilometr.</h2><p>Celkový Value Gap se nemění. Mění se jen počet kilometrů, přes které ho rozpočítáte. Díky tomu hned vidíte, proč může stejné auto vycházet velmi draze na kilometr při malém nájezdu a výrazně levněji při intenzivním využití.</p><div class="mileage-call"><span>VAŠE ZTRÁTA HODNOTY</span><strong id="mileageLoss">210 000 Kč</strong><small>stejná ve všech řádcích níže</small></div></div>
+<div class="mileage-board"><header><div><span>VALUE / KM</span><strong>Stejný Value Gap při jiném využití</strong></div><b id="mileageYears">5 let držení</b></header>
+<div class="mileage-row"><span>8 000 km/rok</span><i><b id="mBar8"></b></i><strong id="m8">5,25 Kč/km</strong><small id="m8Total">40 000 km celkem</small></div>
+<div class="mileage-row is-current"><span id="mCurrentLabel">15 000 km/rok</span><i><b id="mBarCurrent"></b></i><strong id="mCurrent">2,80 Kč/km</strong><small id="mCurrentTotal">75 000 km celkem · váš scénář</small></div>
+<div class="mileage-row"><span>25 000 km/rok</span><i><b id="mBar25"></b></i><strong id="m25">1,68 Kč/km</strong><small id="m25Total">125 000 km celkem</small></div>
+<div class="mileage-row"><span>35 000 km/rok</span><i><b id="mBar35"></b></i><strong id="m35">1,20 Kč/km</strong><small id="m35Total">175 000 km celkem</small></div>
+<p class="mileage-note">Nejde o predikci prodejní ceny. Držíme stejný Value Gap a měníme pouze nájezd, abychom izolovali efekt využití auta.</p></div>
+</div></section>
 
-    <section class="dep-method"><div class="mrp-container"><div class="mrp-heading mrp-heading--split"><div><p class="mrp-kicker">Metodika bez mlhy</p><h2>Co přesně kalkulačka počítá</h2></div><p>Model je záměrně srozumitelný. Nepředstírá budoucí tržní cenu a nezaměňuje ekonomický pokles hodnoty s daňovými nebo účetními odpisy.</p></div><div class="dep-method-grid"><article><span>01 · Základ</span><h3>Ekonomická ztráta</h3><p>Od pořizovací hodnoty odečítáme očekávaný čistý výnos při prodeji. V PRO režimu lze přidat jednorázové náklady na začátku a při prodeji.</p><code>ztráta = pořízení + vedlejší náklady − prodej</code></article><article><span>02 · Čas</span><h3>Měsíční a roční průměr</h3><p>Celková ztráta se rozpočítá do celé doby vlastnictví. Jde o ekonomický průměr, nikoli o pravidelnou platbu z účtu.</p><code>měsíčně = celková ztráta ÷ počet měsíců</code></article><article><span>03 · Používání</span><h3>Amortizace na kilometr</h3><p>Celkový pokles hodnoty dělíme plánovaným nájezdem. Při porovnání aut používejte stejný horizont a stejný realistický nájezd.</p><code>Kč/km = celková ztráta ÷ celkové km</code></article><article><span>04 · Hranice</span><h3>Není to daňový odpis</h3><p>Daňové a účetní odpisování majetku má vlastní pravidla. Tato stránka slouží pro osobní rozpočet a ekonomické porovnání variant auta.</p><code>tržní scénář ≠ daňový odpisový plán</code></article></div></div></section>
+<section class="sensitivity"><div class="shell">
+<div class="sensitivity-head"><p class="micro">RESALE SENSITIVITY</p><h2>Kolik udělá chyba v odhadu prodejní ceny?</h2><p>Budoucí prodejní cena je nejsilnější nejistý vstup. Místo falešného „lepšího a horšího auta“ proto ukazujeme čistou citlivost výsledku na konkrétní změnu prodejní ceny.</p></div>
+<div class="sensitivity-board">
+<div class="sensitivity-scale"><span>nižší prodejní cena</span><span>váš základ</span><span>vyšší prodejní cena</span></div>
+<div class="sensitivity-track">
+<article><span>−50 000 Kč</span><strong id="sMinus50">3,47 Kč/km</strong><small id="sMinus50Loss">260 000 Kč ztráta</small></article>
+<article><span>−25 000 Kč</span><strong id="sMinus25">3,13 Kč/km</strong><small id="sMinus25Loss">235 000 Kč ztráta</small></article>
+<article class="is-base"><span>Váš odhad</span><strong id="sBase">2,80 Kč/km</strong><small id="sBaseLoss">210 000 Kč ztráta</small></article>
+<article><span>+25 000 Kč</span><strong id="sPlus25">2,47 Kč/km</strong><small id="sPlus25Loss">185 000 Kč ztráta</small></article>
+<article><span>+50 000 Kč</span><strong id="sPlus50">2,13 Kč/km</strong><small id="sPlus50Loss">160 000 Kč ztráta</small></article>
+</div>
+<div class="sensitivity-foot"><span>Každých <strong>10 000 Kč</strong> rozdílu v prodejní ceně změní při vašem současném nájezdu amortizaci přibližně o</span><b id="impact10k">0,13 Kč/km</b></div>
+</div></div></section>
 
-    <section class="dep-guide" id="pruvodce"><div class="mrp-container"><div class="mrp-heading"><p class="mrp-kicker">Praktický průvodce</p><h2>Amortizace auta: jak odhadnout ztrátu hodnoty bez falešné přesnosti</h2><p>Výpočet je jednoduchý. Kvalita výsledku však závisí na tom, zda porovnáváte skutečně podobná auta, stejný časový horizont a realistický stav při prodeji.</p></div><div class="dep-guide-note"><strong>Nejdřív si ujasněte, k jakému rozhodnutí výsledek potřebujete.</strong><p>Pro kontrolu rodinného rozpočtu je důležitý měsíční průměr a konzervativní prodejní scénář. Pro porovnání dvou vozů používejte stejnou dobu vlastnictví, stejný nájezd a stejný význam vedlejších nákladů. Při rozhodování, zda současné auto držet déle, oddělte peníze již utracené od budoucího poklesu hodnoty a budoucích oprav. Kalkulačka neposuzuje spolehlivost konkrétního modelu ani pravděpodobnost závady. Její výhoda spočívá v tom, že všechny varianty převede na společný základ. Pokud se výsledek výrazně mění při malé úpravě prodejní ceny, pracujte s rozpětím a neprezentujte jednu částku jako jistotu.</p></div><div class="dep-guide-map"><div><span>01</span><strong>Stanovit cenu</strong><small>co dnes skutečně platíte</small></div><div><span>02</span><strong>Odhadnout prodej</strong><small>stav, věk, výbava a km</small></div><div><span>03</span><strong>Vytvořit rozpětí</strong><small>ne jednu dokonalou částku</small></div><div><span>04</span><strong>Pravidelně obnovit</strong><small>trh i plán se mění</small></div></div>
-      <div class="dep-article-grid">
-        <article><span>00</span><h3>Než začnete, uložte si původ vstupních cen</h3><p>K budoucí revizi modelu si poznamenejte datum, počet porovnaných nabídek a důvod zvoleného odhadu prodeje. Za rok tak poznáte, zda se změnil trh, nájezd nebo pouze váš předpoklad, a nebudete upravovat výsledek bez dohledatelného podkladu.</p></article>
-        <article><span>01</span><h3>Amortizace není částka, kterou každý měsíc někomu posíláte</h3><p>Pokles hodnoty je ekonomický náklad. Peníze se neodečtou z účtu v pravidelné platbě, ale projeví se ve chvíli, kdy auto prodáte nebo porovnáte jeho dnešní hodnotu s tím, kolik jste do něj vložili. Proto může domácnost podceňovat skutečnou cenu auta, i když bez problémů zvládá palivo, pojistku a servis. Měsíční amortizace převádí budoucí rozdíl na srozumitelný průměr. Neznamená, že cena klesá každý měsíc rovnoměrně. Pomáhá však postavit vedle sebe dražší nové auto, levnější ojetinu nebo delší držení stejného vozu.</p></article>
-        <article><span>02</span><h3>Začněte reálně zaplacenou cenou, ne katalogem</h3><p>Pořizovací hodnotou je částka, kterou jste za auto skutečně zaplatili. Katalogová cena před slevou, původní cena ojetiny před vyjednáváním ani celková suma úvěrových splátek nejsou stejný údaj. U financovaného auta oddělte hodnotu vozu od úroků a poplatků. Ty patří do ceny financování, nikoli do samotného poklesu tržní hodnoty. Pokud jste zároveň zaplatili dovoz, registraci nebo bezprostředně nutný servis, můžete tyto položky přidat v PRO režimu. Dělejte to konzistentně u všech porovnávaných variant.</p></article>
-        <article><span>03</span><h3>Budoucí prodejní cena musí odpovídat budoucímu autu</h3><p>Nesrovnávejte dnešní vůz s dnešními stejně starými inzeráty bez úpravy nájezdu a času. Při plánovaném prodeji za pět let bude auto o pět let starší a ponese další kilometry. Hledejte proto dnešní vozy, které se co nejvíce podobají stavu, do něhož se vaše auto dostane: stejná generace, motor, převodovka, výbava, původ, servisní historie a přibližný nájezd. Inzerovaná cena navíc nemusí být skutečně dosažená prodejní cena. Proto je bezpečnější vytvořit základní i konzervativní variantu.</p></article>
-        <article><span>04</span><h3>Jedna prodejní cena je plán, tři ceny jsou řízení rizika</h3><p>Základní scénář zachycuje váš nejlepší realistický odhad. Příznivý scénář předpokládá dobře udržovaný vůz, klidný prodej a rozumnou poptávku. Konzervativní scénář počítá s horším trhem, rychlejším prodejem nebo slabším stavem. Rozdíl mezi základní a konzervativní měsíční částkou není pravidelná platba. Je to velikost rezervy, kterou má smysl v rozhodnutí vnímat. Pokud se výhodnost dvou aut otočí už při malé změně prodejní ceny, není závěr příliš odolný a zaslouží další ověření.</p></article>
-        <article><span>05</span><h3>Vyšší nájezd zlevňuje kilometr jen na první pohled</h3><p>Když stejnou ztrátu hodnoty rozdělíte mezi více kilometrů, amortizace na kilometr matematicky klesne. Vyšší nájezd však obvykle ovlivní také budoucí prodejní cenu, opotřebení a servisní potřeby. Proto neměňte pouze roční kilometry a nenechávejte stejný odhad prodeje bez kontroly. Pro rozhodování o dojíždění sledujte obě strany: více kilometrů lépe využije fixní hodnotu auta, ale může urychlit servis a snížit cenu při prodeji. Kalkulačka neumí sama předpovědět, jak silný bude tento efekt u konkrétního modelu.</p></article>
-        <article><span>06</span><h3>Kratší držení často znamená dražší měsíc</h3><p>Největší část poklesu hodnoty může nastat v prvních letech života vozu, skutečný průběh ale závisí na konkrétním trhu. Pokud nové nebo zánovní auto prodáte brzy, rozdíl mezi nákupem a prodejem rozpočítáte do malého počtu měsíců. Delší držení může měsíční amortizaci snížit, současně však roste pravděpodobnost větších oprav a změny potřeb domácnosti. Rozhodnutí proto nestavte pouze na poklesu hodnoty. Spojte ho s kalkulačkou provozních nákladů a se scénářem servisu pro další roky.</p></article>
-        <article><span>07</span><h3>Stav a servisní historie nejsou kosmetický detail</h3><p>Budoucí kupující neplatí jen za rok výroby a číslo na tachometru. Důležitý je technický stav, doložený servis, původ, počet vlastníků, havárie, koroze, pneumatiky i kvalita oprav. Pravidelná údržba může podpořit prodejnost, ale neznamená automaticky, že se každá koruna servisu vrátí v ceně. Servis proto nevkládejte celý do budoucí hodnoty. V rozpočtu jej sledujte jako provozní náklad a v odhadu prodeje zohledněte spíše důvěryhodnost a stav auta než prostý součet faktur.</p></article>
-        <article><span>08</span><h3>Výbava může pomoci, ale ne každá příplatková položka se vrátí</h3><p>Žádaná výbava může zlepšit prodejnost a někdy i cenu, ale její původní příplatek se obvykle nepřenáší do ojetiny korunu za korunou. Extrémně individuální konfigurace může okruh zájemců naopak zúžit. Při odhadu se dívejte na rozdíl mezi srovnatelnými inzeráty, nikoli na původní ceník jednotlivých prvků. Dodatečné příslušenství započítejte do vstupních nákladů pouze tehdy, pokud jej necháte s vozem a chcete jeho cenu ekonomicky rozpočítat. Samostatně prodejné vybavení posuzujte raději zvlášť.</p></article>
-        <article><span>09</span><h3>Prodejní náklady snižují částku, která vám skutečně zůstane</h3><p>Čistá hodnota při prodeji může být nižší než číslo v inzerátu. Příprava vozu, drobné opravy, profesionální čištění, nová technická kontrola, inzerce, provize nebo výkupní marže snižují reálný výnos. V PRO režimu lze tyto položky přidat jako náklady prodeje. Nepřehánějte je a nemíchejte do nich budoucí běžný servis, který byste platili i bez prodeje. Smyslem je ukázat, kolik peněz po uzavření transakce skutečně připadne domácnosti, ne nafouknout model všemi možnými výdaji.</p></article>
-        <article><span>10</span><h3>Pořizovací investice přidávejte jen jednou</h3><p>Dovoz, registrace, prověření historie nebo nutný první servis mohou být součástí ekonomické pořizovací hodnoty. Pokud je ale stejná položka už zahrnuta v kupní ceně nebo v provozním rozpočtu, nepřičítejte ji znovu. Typickým příkladem je sada pneumatik: může být jednorázovou investicí při koupi, později však její pravidelná obnova patří do provozu. PRO přepínač je záměrně vypnutý, aby jednoduchý výpočet zůstal průhledný. Aktivujte jej až po sepsání konkrétních položek a stejné pravidlo použijte u auta B.</p></article>
-        <article><span>11</span><h3>Porovnání dvou aut vyžaduje stejný horizont</h3><p>Pokud auto A držíte pět let a auto B jen tři, samotná měsíční částka nemusí odpovídat stejnému rozhodnutí. Nejprve sjednoťte plánovanou dobu a roční nájezd. Potom porovnejte pořizovací a prodejní cenu každé varianty. Výsledek ukáže rozdíl v poklesu hodnoty, nikoli celý rozdíl ve vlastnictví. Dražší auto s dobrou zůstatkovou cenou může ztrácet podobně jako levnější varianta, ale může mít jiné pojištění, financování, energii a servis. Konečné rozhodnutí proto doplňte celkovými náklady auta.</p></article>
-        <article><span>12</span><h3>Procento poklesu bez času může klamat</h3><p>Informace, že auto ztratí čtyřicet procent hodnoty, není úplná bez doby, za kterou se to stane. Čtyřicet procent za tři roky je jiné rozhodnutí než stejný pokles za osm let. Kalkulačka proto zobrazuje celkový podíl i průměrný geometrický roční pokles. Geometrická sazba pomáhá porovnat různé horizonty, ale stále nepředstavuje skutečnou křivku ceny po jednotlivých měsících. U krátkého držení berte výsledky obzvlášť jako scénář, protože nákupní a prodejní marže mohou mít velký vliv.</p></article>
-        <article><span>13</span><h3>Ekonomická amortizace není účetní ani daňový odpis</h3><p>Tato kalkulačka odpovídá na otázku osobního nebo manažerského rozpočtu: kolik tržní hodnoty vozidlo pravděpodobně ztratí. Účetní a daňové odpisy sledují jiný účel, jiná pravidla a konkrétní právní podmínky. Podnikatel proto nemá přebírat zde vypočtený měsíční průměr do daňového přiznání nebo účetního plánu. Pro daňové zacházení používejte aktuální oficiální informace a účetního či daňového poradce. Jasné oddělení obou pojmů chrání uživatele před zdánlivě přesným, ale věcně chybným výsledkem.</p></article>
-        <article><span>14</span><h3>Úvěr mění cash flow, ne samotný pokles tržní ceny</h3><p>Způsob financování ovlivňuje, kdy peníze odcházejí z účtu a kolik zaplatíte na úrocích a poplatcích. Neurčuje však přímo rozdíl mezi tržní hodnotou auta při nákupu a prodeji. Proto do amortizace nepřidávejte celou splátku. Jistina představuje postupné splacení majetku, zatímco úrok a poplatky jsou nákladem financování. Pokud chcete spojit obě vrstvy, nejdříve spočítejte amortizaci a potom ji vložte do celkových nákladů auta společně s cenou úvěru. Tím se vyhnete dvojímu započtení stejné hodnoty.</p></article>
-        <article><span>15</span><h3>Trh se může změnit rychleji než váš plán</h3><p>Poptávku ovlivňuje dostupnost nových vozů, ceny energie, regulace, nabídka konkrétní motorizace i preference kupujících. Pětiletý odhad proto není jednou provždy hotový. Alespoň jednou ročně porovnejte podobná auta, aktualizujte nájezd a zvažte, zda se nezměnil plán prodeje. Pokud základní prodejní cena klesne, neznamená to automaticky, že musíte okamžitě prodávat. Aktualizovaný model vám hlavně ukáže, jaký dopad má změna na budoucí rozpočet a zda stále dává smysl původní doba držení.</p></article>
-        <article><span>16</span><h3>Při koupi ojetiny ověřujte stav, ne jen výhodnou cenu</h3><p>Nízká pořizovací cena může vypadat jako ochrana proti amortizaci, ale skrytá závada, nejasný původ nebo nesprávný nájezd mohou změnit jak servisní rozpočet, tak budoucí prodejnost. Před koupí proto pracujte se stavem auta jako se samostatným rizikem. Výsledek kalkulačky nenahrazuje technickou prohlídku, prověření historie ani jasnou kupní smlouvu. Pokud si stavem nejste jistí, snižte konzervativní prodejní cenu a současně vytvořte servisní rezervu. Nekombinujte však oba dopady bez rozmyslu tak, abyste stejnou závadu započítali dvakrát.</p></article>
-        <article><span>17</span><h3>Rozumná rezerva není totéž co očekávaná ztráta</h3><p>Konzervativní scénář ukazuje horší, ale stále uvěřitelný výsledek. Rozdíl vůči základu lze použít jako rozhodovací polštář. Nemusíte tuto částku nutně každý měsíc ukládat na samostatný účet, pokud máte jinou likvidní rezervu. Důležité je, aby vás nižší prodejní cena nedostala do situace, kdy nemůžete doplatit financování nebo pořídit náhradu. U vozů s nejistou budoucí poptávkou používejte širší rozpětí a sledujte, zda domácnost zvládne i konzervativní variantu bez spoléhání na ideální prodej.</p></article>
-        <article><span>18</span><h3>Nejlepší model je ten, který po roce opravíte podle reality</h3><p>Po prvním roce nahraďte plánovaný nájezd skutečným průměrem a znovu odhadněte cenu podobných vozů. Zkontrolujte také, zda se nezměnila doba držení a technický stav. Nesnažte se zpětně obhajovat původní předpoklad. Úkolem modelu není dokázat, že jste se při nákupu nemýlili, ale pomoci s dalším rozhodnutím. Pravidelná aktualizace odhalí, zda auto stále odpovídá rozpočtu, zda je vhodné ho držet déle, nebo zda má smysl připravit se na prodej a jinou variantu dopravy.</p></article>
-      </div>
-    </div></section>
+<section class="retention"><div class="shell retention-grid">
+<div class="retention-visual"><div class="retention-ring" id="retentionRing"><div><span>ZACHOVÁNO</span><strong id="retentionPct">61,8 %</strong><small id="retentionValue">340 000 Kč</small></div></div>
+<div class="retention-ledger"><div><span>Pořizovací hodnota</span><strong id="retPurchase">550 000 Kč</strong></div><div><span>Zachovaná hodnota</span><strong id="retKept">340 000 Kč</strong></div><div class="lost"><span>Ztracená hodnota</span><strong id="retLost">210 000 Kč</strong></div></div></div>
+<div class="retention-copy"><p class="micro">VALUE RETENTION</p><h2>Nesledujte jen kolik ztratíte. Sledujte i kolik hodnoty zůstane.</h2><p>Stejný výsledek lze číst ze dvou stran: jako ztracenou hodnotu nebo jako podíl pořizovací hodnoty, který se vám při prodeji vrátí. Pro srovnání dvou aut je právě retention často intuitivnější.</p><div class="retention-insight"><span>VÁŠ SCÉNÁŘ</span><strong id="retentionSentence">Z každých 100 Kč pořizovací hodnoty se při prodeji vrátí přibližně 62 Kč.</strong></div></div>
+</div></section>
 
-    <section class="dep-checklist"><div class="mrp-container"><div class="mrp-heading mrp-heading--split"><div><p class="mrp-kicker">Kontrola před rozhodnutím</p><h2>Šest údajů, které mají větší váhu než přesné zaokrouhlení</h2></div><p>Než výsledek použijete pro nákup nebo prodej, zkontrolujte původ vstupů. Slabý odhad prodejní ceny nevyřeší další desetinné místo.</p></div><div class="dep-checklist-grid"><article><span>01</span><div><h3>Skutečná kupní cena</h3><p>Po slevě, bez úroků a bez dvojího započtení doplňků.</p></div></article><article><span>02</span><div><h3>Budoucí stáří a nájezd</h3><p>Odhad prodeje musí odpovídat autu v budoucím stavu.</p></div></article><article><span>03</span><div><h3>Srovnatelné nabídky</h3><p>Stejný model, motor, výbava, původ a servisní historie.</p></div></article><article><span>04</span><div><h3>Čistý výnos z prodeje</h3><p>Po případné přípravě, provizi a dalších nákladech transakce.</p></div></article><article><span>05</span><div><h3>Horší scénář</h3><p>Takový, který je nepříjemný, ale stále realistický.</p></div></article><article><span>06</span><div><h3>Stejná metodika</h3><p>Auto A a B musí používat stejný horizont a význam vstupů.</p></div></article></div><div class="dep-refresh-note"><div><span>Roční revize</span><h3>Kdy model přepočítat znovu</h3></div><p>Odhad obnovte po každém výrazném posunu reality: když se změní roční nájezd, plánovaná doba držení, technický stav nebo ceny podobných ojetin. Přepočet má smysl také před větší opravou, před koncem financování a ve chvíli, kdy začnete uvažovat o prodeji. Nehodnoťte pouze rozdíl proti původnímu nákupu. Pro další rozhodnutí jsou důležité hlavně budoucí peníze: kolik hodnoty může auto ztratit od dneška, jaké opravy pravděpodobně přijdou a jak drahá by byla náhrada. Pokud aktualizovaný základ vychází výrazně jinak, uložte si starý i nový scénář. Rozdíl odhalí, která domněnka se změnila, a zabrání tomu, abyste upravovali více vstupů bez jasného důvodu.</p></div></div></section>
+<section class="costmap"><div class="shell">
+<div class="costmap-head"><div><p class="micro">KAM TENHLE VÝSLEDEK PATŘÍ</p><h2>Amortizace není provoz ani cash-flow.</h2></div><p>Výsledek musí být použitelný dál. Tohle je mapa, kde se Value Loss napojuje na zbytek ekonomiky auta — bez dvojího započítání stejné položky.</p></div>
+<div class="costmap-flow">
+<article class="active"><span>01</span><strong>Amortizace</strong><small>pokles hodnoty auta</small><b id="mapAmort">2,80 Kč/km</b></article>
+<i>+</i><article><span>02</span><strong>Provoz</strong><small>servis · pneu · pojištění</small><b>vlastní sazba</b></article>
+<i>+</i><article><span>03</span><strong>Energie</strong><small>palivo nebo elektřina</small><b>podle spotřeby</b></article>
+<i>+</i><article><span>04</span><strong>Financování</strong><small>úrok a cash-flow</small><b>samostatně</b></article>
+<i>=</i><article class="total"><span>TCO</span><strong>Celkové vlastnictví</strong><small>všechny vrstvy pohromadě</small><b>navazující model</b></article>
+</div>
+<div class="costmap-links"><a href="/cena-za-km-kalkulacka.html">Použít amortizaci v ceně za km →</a><a href="/kalkulacka-celkove-ceny-vlastnictvi-auta.html">Přejít na kompletní TCO →</a></div>
+</div></section>
 
-    <section class="dep-sources"><div class="mrp-container"><div class="mrp-heading mrp-heading--split"><div><p class="mrp-kicker">Zdroje a ověření</p><h2>Kde ověřit hranici mezi odhadem, stavem a daňovým pravidlem</h2></div><p>Kalkulačka je ekonomický scénář. Technický stav ověřujte před koupí a daňové nebo účetní zacházení vždy podle aktuálních oficiálních podkladů.</p></div><div class="dep-source-grid"><a href="https://coi.gov.cz/pro-spotrebitele/spotrebitelsky-pruvodce/" target="_blank" rel="noopener"><span>ČOI</span><strong>Spotřebitelský průvodce</strong><small>Kontrola vlastností a technického stavu ojetého vozidla.</small></a><a href="https://coi.gov.cz/faq/3-odpovida-prodavajici-i-za-vady-pouziteho-zbozi-2/" target="_blank" rel="noopener"><span>ČOI</span><strong>Vady použitého zboží</strong><small>Aktuální vysvětlení odpovědnosti při prodeji ojetiny spotřebiteli.</small></a><a href="https://financnisprava.gov.cz/cs/dane/danovy-system-cr/popis-systemu" target="_blank" rel="noopener"><span>Finanční správa</span><strong>Daňový systém ČR</strong><small>Oficiální kontext daňového odpisování majetku; nejde o tento tržní model.</small></a></div></div></section>
+<section class="valuation" id="odhad-prodeje"><div class="shell valuation-grid">
+<div><p class="micro">VALUATION CHECK</p><h2>Jak si udělat prodejní odhad, který má šanci obstát.</h2><p>Výpočet je přesný jen tak, jak dobrý je vstupní scénář. Budoucí cenu záměrně nevymýšlíme — ale můžeme výrazně zlepšit způsob, jak ji odhadnete.</p></div>
+<div class="valuation-list">
+<div><b>01</b><strong>Stejný model a motorizace</strong><span>Nezaměňujte výrazně odlišné motory, pohony nebo karosářské varianty.</span></div>
+<div><b>02</b><strong>Budoucí stáří</strong><span>Hledejte dnešní auta stará přibližně tolik, kolik bude vaše auto při plánovaném prodeji.</span></div>
+<div><b>03</b><strong>Budoucí nájezd</strong><span>Porovnávejte podobný řád kilometrů, ne jen stejný rok výroby.</span></div>
+<div><b>04</b><strong>Výbava, stav a historie</strong><span>Nehody, servisní historie, výbava a technický stav mohou hodnotu posunout výrazně.</span></div>
+<div><b>05</b><strong>Nabídková ≠ prodejní cena</strong><span>Inzerovaná částka je orientace. Do scénáře používejte realistický očekávaný výnos.</span></div>
+<div><b>06</b><strong>Vytvořte rozpětí</strong><span>Příznivý, základní a konzervativní scénář otestujete rovnou v Resale Range výše.</span></div>
+</div></div></section>
 
-    <section class="dep-related"><div class="mrp-container"><div class="mrp-heading"><p class="mrp-kicker">Navazující nástroje</p><h2>Pokles hodnoty je jen jedna vrstva ceny auta</h2></div><div class="dep-related-grid"><a href="/naklady-na-provoz-auta-kalkulacka.html"><span>N</span><strong>Náklady na provoz auta</strong><small>Palivo, servis, pojištění, hodnota a rozpočet.</small></a><a href="/kalkulacka-celkove-ceny-vlastnictvi-auta.html"><span>T</span><strong>TCO auta</strong><small>Celá ekonomika vlastnictví za zadané období.</small></a><a href="/cena-za-km-kalkulacka.html"><span>K</span><strong>Cena za kilometr</strong><small>Provozní i fixní náklady převedené na trasu.</small></a><a href="/kalkulacka-splatky-auta.html"><span>S</span><strong>Splátka auta</strong><small>Cash flow úvěru, akontace a cena financování.</small></a></div></div></section>
 
-    <section class="dep-faq" id="faq"><div class="mrp-container"><div class="mrp-heading"><p class="mrp-kicker">FAQ</p><h2>Časté otázky k amortizaci auta</h2></div><div class="dep-faq-grid"><details><summary>Jak se počítá amortizace auta?</summary><p>Od pořizovací hodnoty se odečte očekávaná prodejní hodnota. Rozdíl se vydělí počtem měsíců, let nebo celkovým nájezdem.</p></details><details><summary>Je amortizace totéž co daňový odpis?</summary><p>Není. Tato kalkulačka modeluje ekonomický pokles tržní hodnoty. Daňové a účetní odpisy se řídí samostatnými pravidly.</p></details><details><summary>Jak odhadnout budoucí prodejní cenu?</summary><p>Porovnejte podobně staré vozy stejného modelu, motorizace, výbavy a nájezdu. Vedle základu vytvořte také příznivý a konzervativní scénář.</p></details><details><summary>Patří amortizace do ceny za kilometr?</summary><p>Ano, pokud chcete ekonomickou cenu jízdy. K amortizaci následně přidejte palivo nebo elektřinu, servis, pojištění a další provozní položky.</p></details><details><summary>Proč vyšší nájezd snižuje výsledek na kilometr?</summary><p>Stejná ztráta se dělí větším počtem kilometrů. Vyšší nájezd ale může současně snížit budoucí prodejní cenu, takže upravte oba vstupy.</p></details><details><summary>Započítat dovoz a první servis?</summary><p>V PRO režimu je můžete přidat jako vstupní investice. Dbejte, aby stejná položka nebyla zároveň v kupní ceně nebo provozním rozpočtu.</p></details><details><summary>Co když auto prodám dříve?</summary><p>Změňte dobu držení i očekávanou prodejní cenu. Kratší období často zvyšuje měsíční průměr, zejména u novějších vozů.</p></details><details><summary>Je výsledek přesnou předpovědí?</summary><p>Ne. Jde o scénář založený na vašich vstupech. Skutečnou cenu ovlivní trh, stav, nájezd, historie a způsob prodeje.</p></details><details><summary>Jak porovnat dvě auta?</summary><p>Zapněte v PRO režimu auto B a použijte pro obě varianty stejnou dobu držení a roční nájezd. Potom doplňte také provozní náklady.</p></details><details><summary>Jak často odhad aktualizovat?</summary><p>Alespoň jednou ročně a po významné změně nájezdu, technického stavu, trhu nebo plánované doby vlastnictví.</p></details></div></div></section>
-  </main>
+<section class="method"><div class="shell method-grid"><div class="method-copy"><p class="micro">JAK TO POČÍTÁME</p><h2>Ekonomická ztráta hodnoty, ne daňový odpis.</h2><p>Model má jen dva skutečně potřebné cenové body: vstup a výstup. Mezi nimi nevytváří falešnou meziroční křivku a nepoužívá univerzální procento znehodnocení.</p><div class="boundary">Palivo, servis, pojištění a financování patří do jiných nákladových vrstev. Pokud je chcete spojit, použijte TCO auta.</div></div>
+<div class="formula-list"><div><b>1</b><span>Efektivní vstup = kupní cena + volitelné vstupní náklady.</span></div><div><b>2</b><span>Čistý výstup = prodejní cena − volitelné náklady prodeje.</span></div><div><b>3</b><span>Ztráta hodnoty = efektivní vstup − čistý výstup.</span></div><div><b>4</b><span>Amortizace / km = ztráta hodnoty ÷ celkový nájezd.</span></div><div><b>5</b><span>Exit Guard obrátí vzorec a dopočítá minimální potřebnou prodejní cenu.</span></div></div></div></section>
 
-  <footer class="mrp-footer"><div class="mrp-container mrp-footer__grid"><div class="mrp-footer__intro"><a href="/" aria-label="RychléVýpočty.cz – domů"><img src="logo-rychlevypocty-footer.svg" alt="RychléVýpočty.cz" width="220" height="40"></a><p>Praktické online kalkulačky pro finance, mzdy, stavbu, bydlení, auto a každodenní rozhodování.</p></div><div><h3>Auto a provoz</h3><a href="/auto-a-provoz.html">Přehled kategorie</a><a href="/naklady-na-provoz-auta-kalkulacka.html">Náklady auta</a><a href="/spotreba-paliva-kalkulacka.html">Spotřeba paliva</a><a href="/cena-za-km-kalkulacka.html">Cena za kilometr</a></div><div><h3>Finance auta</h3><a href="/kalkulacka-splatky-auta.html">Splátka auta</a><a href="/leasing-kalkulacka.html">Leasing</a><a href="/kalkulacka-celkove-ceny-vlastnictvi-auta.html">TCO auta</a><a href="/benzin-vs-diesel-vs-elektro-kalkulacka.html">Porovnání pohonů</a></div><div><h3>Web</h3><a href="/kalkulacky.html">Všechny kalkulačky</a><a href="/jak-pocitame.html">Jak počítáme</a><a href="/kontakt.html">Kontakt</a><a href="/podminky-pouziti.html">Podmínky použití</a><a href="/ochrana-osobnich-udaju.html">Ochrana osobních údajů</a></div></div><div class="mrp-container mrp-footer__bottom"><p>© 2026 RychléVýpočty.cz. Výsledky jsou orientační a nenahrazují individuální finanční, daňové ani technické posouzení.</p></div></footer>
-  <script src="amortizace-auta-v3.js?v=20260719-3" defer></script>
-</body>
-</html>
+<section class="next"><div class="shell"><div><p class="micro">CO DÁL</p><h2>Použijte amortizaci v širším rozhodnutí.</h2></div><div class="next-list"><a href="/cena-za-km-kalkulacka.html"><span>01</span><strong>Cena za km</strong><small>přidat amortizaci ke konkrétní cestě</small></a><a href="/naklady-na-provoz-auta-kalkulacka.html"><span>02</span><strong>Náklady na provoz auta</strong><small>energie, servis a pojištění</small></a><a href="/kalkulacka-celkove-ceny-vlastnictvi-auta.html"><span>03</span><strong>TCO auta</strong><small>spojit pořízení, provoz, financování a prodej</small></a></div></div></section>
+</main>
+
+<footer class="footer"><div class="shell footer-grid"><div><a class="logo" href="/"><img src="/logo-rv-v32-inverse.svg?v=1" width="590" height="96" alt="RychléVýpočty.cz"></a><p>Praktické online kalkulačky s transparentní metodikou, jasným rozsahem výsledku a bez skrytých předpokladů.</p><nav class="socials" aria-label="Sociální sítě"><a href="https://www.facebook.com/rychlevypocty" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M13.6 21v-8h2.7l.4-3h-3.1V8.1c0-.9.3-1.5 1.6-1.5h1.7V4a23 23 0 0 0-2.5-.1c-2.5 0-4.2 1.5-4.2 4.3V10H7.4v3h2.8v8z"/></svg></a><a href="https://www.instagram.com/rychlevypocty/" aria-label="Instagram"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a></nav><div class="process"><span>Zadat</span><span>Spočítat</span><span>Pochopit</span><span>Rozhodnout</span></div></div><div><h3>Auto a provoz</h3><a href="/auto-a-provoz.html">Přehled kategorie</a><a href="/cena-za-km-kalkulacka.html">Cena za kilometr</a><a href="/naklady-na-provoz-auta-kalkulacka.html">Náklady auta</a></div><div><h3>Ekonomika auta</h3><a href="/kalkulacka-celkove-ceny-vlastnictvi-auta.html">TCO auta</a><a href="/kalkulacka-splatky-auta.html">Splátka auta</a><a href="/leasing-kalkulacka.html">Leasing</a></div><div><h3>Informace</h3><a href="/kalkulacky.html">Všechny kalkulačky</a><a href="/jak-pocitame.html">Jak počítáme</a><a href="/kontakt.html">Kontakt</a></div></div><div class="shell footer-bottom"><span>© 2026 RychléVýpočty.cz · Výsledek je model z vašich vstupů.</span><strong>Zadat → Spočítat → Pochopit → Rozhodnout</strong></div></footer>
+
+<script>
+(()=>{'use strict';
+const $=id=>document.getElementById(id), ids=['purchase','resale','years','annualKm','entryCosts','sellingCosts','resaleHigh','resaleLow','targetPerKm'];
+const n=id=>{const e=$(id),v=e?Number(String(e.value).replace(',','.')):0;return Number.isFinite(v)?Math.max(0,v):0};
+const money=x=>new Intl.NumberFormat('cs-CZ',{maximumFractionDigits:0}).format(Math.round(Math.abs(Number.isFinite(x)?x:0)))+' Kč';
+const money2=x=>new Intl.NumberFormat('cs-CZ',{minimumFractionDigits:2,maximumFractionDigits:2}).format(Math.abs(Number.isFinite(x)?x:0))+' Kč';
+const pct=x=>new Intl.NumberFormat('cs-CZ',{minimumFractionDigits:1,maximumFractionDigits:1}).format(Number.isFinite(x)?x:0)+' %';
+const plain=x=>new Intl.NumberFormat('cs-CZ',{maximumFractionDigits:0}).format(Math.round(x));
+const text=(id,v)=>{if($(id))$(id).textContent=v};
+function C(resaleOverride){
+ const purchase=n('purchase'),years=Math.max(.5,n('years')),annualKm=Math.max(1,n('annualKm')),entry=n('entryCosts'),selling=n('sellingCosts'),resale=resaleOverride===undefined?n('resale'):Math.max(0,resaleOverride);
+ const effective=purchase+entry,net=resale-selling,km=years*annualKm,delta=effective-net,monthly=delta/(years*12),annual=delta/years,perKm=delta/km,retained=effective?net/effective*100:0;
+ return{purchase,years,annualKm,entry,selling,resale,effective,net,km,delta,monthly,annual,perKm,retained}
+}
+function valid(){let msg='Přepočítáno z vašich vstupů.';if(n('purchase')<=0)msg='Pořizovací cena musí být vyšší než nula.';else if(n('years')<.5)msg='Doba držení musí být alespoň půl roku.';else if(n('annualKm')<=0)msg='Roční nájezd musí být vyšší než nula.';text('status',msg);return n('purchase')>0&&n('years')>=.5&&n('annualKm')>0}
+function setBar(id,v,max){$(id).style.height=Math.max(4,Math.abs(v)/max*100)+'%'}
+function setMark(id,v,min,max){$(id).style.left=(max===min?50:8+(v-min)/(max-min)*84)+'%'}
+function render(){
+ if(!valid())return;
+ const a=C(),hi=C(n('resaleHigh')),lo=C(n('resaleLow')),loss=Math.abs(a.delta),gain=a.delta<0,share=a.effective?loss/a.effective*100:0;
+ text('heroLoss',money(loss));text('heroBuy',money(a.effective));text('heroSale',money(a.net));text('heroMonthly',money(a.monthly));text('heroAnnual',money(a.annual));text('heroKm',money2(a.perKm));
+ text('loss',money(loss));text('lossSub',`${pct(share)} efektivního vstupu`);text('resultBuy',money(a.effective));text('resultSale',money(a.net));text('monthly',money(a.monthly));text('annual',money(a.annual));text('perKm',money2(a.perKm));text('totalKm',`${plain(a.km)} km celkem`);text('retained',pct(a.retained));
+ if(gain){text('readingTitle','Váš scénář počítá s růstem hodnoty.');text('readingText','Ověřte, zda je budoucí prodejní cena realistická.')}else{text('readingTitle','Výsledek je scénář, ne předpověď trhu.');text('readingText','Budoucí prodejní cenu ověříte níže vlastním rozpětím.')}
+ const vals=[a.purchase,a.entry,a.resale,a.selling,loss],mx=Math.max(...vals,1);['wfPurchase','wfEntry','wfResale','wfSelling','wfLoss'].forEach((id,i)=>setBar(id,vals[i],mx));
+ text('wfPurchaseV',money(a.purchase));text('wfEntryV',money(a.entry));text('wfResaleV',money(a.resale));text('wfSellingV',money(a.selling));text('wfLossV',money(loss));text('wfCall',money(loss));text('wfPerKm',money2(a.perKm)+'/km');
+ text('eqBuy',plain(a.purchase));text('eqEntry',plain(a.entry));text('eqResale',plain(a.resale));text('eqSelling',plain(a.selling));text('eqLoss',(gain?'nárůst ':'')+money(loss));
+ const prices=[n('resaleLow'),n('resale'),n('resaleHigh')],min=Math.min(...prices),max=Math.max(...prices);setMark('markLow',prices[0],min,max);setMark('markBase',prices[1],min,max);setMark('markHigh',prices[2],min,max);
+ text('markLowPrice',money(prices[0]));text('markBasePrice',money(prices[1]));text('markHighPrice',money(prices[2]));text('markLowKm',money2(lo.perKm)+'/km');text('markBaseKm',money2(a.perKm)+'/km');text('markHighKm',money2(hi.perKm)+'/km');
+ if(document.activeElement!==$('resaleMirror'))$('resaleMirror').value=$('resale').value;
+ const target=n('targetPerKm'),allow=target*a.km,targetSale=Math.max(0,a.effective-allow+a.selling),reserve=n('resale')-targetSale;
+ text('targetSale',money(targetSale));text('targetText',`Při ${plain(a.km)} km a vstupu ${money(a.effective)}.`);text('targetLoss',money(allow));text('targetReserve',(reserve>=0?'+':'−')+money(reserve));
+
+ // R7: mileage lens
+ const mileageCases=[8000,a.annualKm,25000,35000];
+ const mileageIds=[['m8','m8Total','mBar8'],['mCurrent','mCurrentTotal','mBarCurrent'],['m25','m25Total','mBar25'],['m35','m35Total','mBar35']];
+ const mileageRates=mileageCases.map(k=>loss/(k*a.years));
+ const mileageMax=Math.max(...mileageRates,0.01);
+ mileageCases.forEach((k,i)=>{text(mileageIds[i][0],money2(mileageRates[i])+'/km');text(mileageIds[i][1],`${plain(k*a.years)} km celkem${i===1?' · váš scénář':''}`);$(mileageIds[i][2]).style.width=Math.max(7,mileageRates[i]/mileageMax*100)+'%'});
+ text('mileageLoss',money(loss));text('mileageYears',`${a.years.toLocaleString('cs-CZ',{maximumFractionDigits:1})} let držení`);text('mCurrentLabel',`${plain(a.annualKm)} km/rok`);
+
+ // R7: resale sensitivity
+ const deltas=[-50000,-25000,0,25000,50000], sid=[['sMinus50','sMinus50Loss'],['sMinus25','sMinus25Loss'],['sBase','sBaseLoss'],['sPlus25','sPlus25Loss'],['sPlus50','sPlus50Loss']];
+ deltas.forEach((d,i)=>{const sc=C(Math.max(0,a.resale+d)),sl=Math.abs(sc.delta);text(sid[i][0],money2(sc.perKm)+'/km');text(sid[i][1],money(sl)+' ztráta')});
+ text('impact10k',money2(10000/a.km)+'/km');
+
+ // R7: retention
+ const kept=Math.max(0,a.net),retPct=a.effective?Math.max(0,Math.min(100,kept/a.effective*100)):0;
+ text('retentionPct',pct(retPct));text('retentionValue',money(kept));text('retPurchase',money(a.effective));text('retKept',money(kept));text('retLost',money(loss));
+ text('retentionSentence',`Z každých 100 Kč pořizovací hodnoty se při prodeji vrátí přibližně ${Math.round(retPct)} Kč.`);
+ $('retentionRing').style.background=`conic-gradient(var(--green) 0 ${retPct}%,#e7eef2 ${retPct}% 100%)`;
+ text('mapAmort',money2(a.perKm)+'/km');
+}
+ids.forEach(id=>$(id)?.addEventListener('input',render));
+$('resaleMirror').addEventListener('input',()=>{$('resale').value=$('resaleMirror').value;render()});
+$('reset').addEventListener('click',()=>{const d={purchase:550000,resale:340000,years:5,annualKm:15000,entryCosts:0,sellingCosts:0,resaleHigh:380000,resaleLow:300000,targetPerKm:3};Object.entries(d).forEach(([k,v])=>$(k).value=v);$('resaleMirror').value=340000;render()});
+const q=new URLSearchParams(location.search);ids.forEach(id=>{if(q.has(id))$(id).value=q.get(id)});
+const menu=document.querySelector('.menu'),mob=document.querySelector('.mobile-nav');menu.addEventListener('click',()=>{const o=menu.getAttribute('aria-expanded')==='true';menu.setAttribute('aria-expanded',String(!o));mob.hidden=o});
+render();
+})();
+</script>
+</body></html>
