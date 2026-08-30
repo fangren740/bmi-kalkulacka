@@ -145,3 +145,26 @@ Od této revize je kalkulačka připravena k předložení pouze pokud platí so
 **PRIMARY INTENT PASS + CALCULATION PASS + TOPIC DEPTH PASS + PAGE-LEVEL ORIGINALITY PASS + VISUAL DRIFT PASS + RENDER QA PASS + IDENTITY PASS.**
 
 Technické PASS bez originality už nestačí.
+
+## 12. Recovery Lock — ACTIVE
+
+Dokud není recovery backlog uzavřen nebo výslovně odložen product ownerem:
+
+- nový build nesmí být nasazen jen proto, že má správný výpočet a lokální technické QA,
+- každý kandidát vytvořený před tímto gate se před release znovu posoudí podle Golden-wave Stranger Testu,
+- globální pozdější feedback uživatele o template driftu má přednost před dřívějším rychlým „fajn, dále“, pokud kandidát ještě nebyl produkčně uzavřen,
+- lokální koncept s URL, která už má dokončenou sekvenci, je recovery návrh dané sekvence, ne nová sekvence.
+
+Aktuální retro backlog a konkrétní klasifikace jsou vedeny v `RV-VNEXT-QUALITY-RECOVERY-AUDIT-2026-08-30.md`.
+
+## 13. Golden Delta Card — povinná před BUILD LOCK
+
+Před každým novým nebo recovery buildem musí interní BUILD LOCK obsahovat stručný **Golden Delta Card**:
+
+- **Native object:** hlavní fyzický / procesní / datový objekt tohoto problému.
+- **Why this composition:** jedna věta, proč zvolená page grammar odpovídá tomuto user jobu.
+- **Not like previous 4:** konkrétně co je jiné v hero, calculatoru, výsledku a depth oproti posledním 4 relevantním stránkám.
+- **Golden reference:** která 1–2 stránky z #11–#25 jsou kvalitativní reference a co se z nich přebírá jako princip, nikoli layout.
+- **Clone risk:** LOW / MEDIUM / HIGH; MEDIUM/HIGH musí být před buildem přepracováno nebo explicitně odůvodněno.
+
+Bez Golden Delta Card není BUILD LOCK kompletní.
