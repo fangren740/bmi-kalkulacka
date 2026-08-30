@@ -1,0 +1,38 @@
+name: RV Retro Quality Audit
+
+on:
+  push:
+    branches:
+      - audit/retro-quality-2026-08-30
+    paths:
+      - 'audits/rv-retro-quality-audit.py'
+      - '.github/workflows/rv-retro-quality-audit.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: audit/retro-quality-2026-08-30
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run retro quality audit
+        run: |
+          python audits/rv-retro-quality-audit.py | tee rv-retro-quality-console.txt
+      - name: Publish summary
+        run: |
+          cat rv-retro-quality-report.md >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rv-retro-quality-report
+          path: |
+            rv-retro-quality-report.json
+            rv-retro-quality-report.md
+            rv-retro-quality-console.txt
+          retention-days: 14
