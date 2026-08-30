@@ -1,0 +1,66 @@
+name: RV Retro Visual Render
+
+on:
+  push:
+    branches:
+      - audit/retro-quality-2026-08-30
+    paths:
+      - '.github/workflows/rv-retro-visual-render.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: audit/retro-quality-2026-08-30
+      - name: Render reference and recent waves
+        shell: bash
+        run: |
+          set -euo pipefail
+          CHROME="$(command -v google-chrome || command -v chromium || command -v chromium-browser)"
+          echo "Chrome: $CHROME"
+          mkdir -p retro-renders
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/rv-http.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill $SERVER_PID || true' EXIT
+          sleep 2
+          declare -A FILES=(
+            [11]='kalkulacka-podlahy.html'
+            [12]='kalkulacka-izolace.html'
+            [13]='kalkulacka-sadrokartonu.html'
+            [14]='kalkulacka-ztraceneho-bedneni.html'
+            [15]='kalkulacka-omitky.html'
+            [16]='kalkulacka-orientacni-ceny-stavby-domu.html'
+            [17]='kalkulacka-ceny-rekonstrukce-kuchyne.html'
+            [18]='kalkulacka-ceny-rekonstrukce-koupelny.html'
+            [19]='kalkulacka-nakladu-na-rekonstrukci-bytu-domu.html'
+            [20]='objem-materialu-kalkulacka.html'
+            [21]='dph-kalkulacka.html'
+            [22]='kalkulacka-marze-a-prirazky.html'
+            [23]='bod-zvratu-kalkulacka.html'
+            [24]='kalkulacka-hodinove-sazby-freelancera.html'
+            [25]='kalkulacka-minimalni-fakturace-osvc.html'
+            [89]='kolik-stoji-prvni-rok-ditete-kalkulacka.html'
+            [90]='kolik-me-stoji-pleny-kalkulacka.html'
+            [91]='kolik-stoji-umele-mleko-kalkulacka.html'
+            [92]='pribirani-v-tehotenstvi-kalkulacka.html'
+            [93]='cena-za-km-kalkulacka.html'
+            [94]='amortizace-auta-kalkulacka.html'
+          )
+          for seq in 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 89 90 91 92 93 94; do
+            f="${FILES[$seq]}"
+            test -f "$f"
+            "$CHROME" --headless=new --no-sandbox --disable-gpu --hide-scrollbars --run-all-compositor-stages-before-draw --virtual-time-budget=1200 --window-size=1440,1000 --screenshot="retro-renders/${seq}-hero.png" "http://127.0.0.1:8765/${f}" >/dev/null 2>&1
+            "$CHROME" --headless=new --no-sandbox --disable-gpu --hide-scrollbars --run-all-compositor-stages-before-draw --virtual-time-budget=1200 --window-size=1440,1000 --screenshot="retro-renders/${seq}-calc.png" "http://127.0.0.1:8765/${f}#kalkulacka" >/dev/null 2>&1
+          done
+          ls -lh retro-renders | head -n 10
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rv-retro-visual-renders
+          path: retro-renders/*.png
+          retention-days: 7
