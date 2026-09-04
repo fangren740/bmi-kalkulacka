@@ -7,13 +7,42 @@
 ## 1. Source of truth
 
 - Produkční repo: `fangren740/bmi-kalkulacka`, branch `main`.
-- Golden quality calibration: sekvence #11–#25.
+- **Quality floor:** `cista-mzda-kalkulacka.html` — sekvence #74. Je to minimální úroveň craftu, completeness a product polish; není to layoutová šablona.
+- **Originality calibration:** sekvence #11–#25.
 - Povinně respektovat také:
   - `RV-VNEXT-QUALITY-RECOVERY-2026-08-30.md`
   - `RV-VNEXT-CUSTOMER-COPY-AND-ADAPTIVE-DEPTH-GATE-2026-09-04.md`
+  - `RV-VNEXT-QUALITY-FLOOR-74-RECOVERY-PLAN-2026-09-04.md`
 - Před buildem ověřit Sequence / URL Integrity. Žádná hotová URL nesmí být omylem vydávána za novou sekvenci.
 
-## 2. Primary-intent lock
+## 2. #74 Quality Parity Gate — HARD FAIL
+
+Každá nová nebo recovery stránka musí být před preview porovnána s `cista-mzda-kalkulacka.html`.
+
+Platí:
+- užší téma smí být kratší než #74, ale nesmí být méně dotažené,
+- širší téma může a má být delší, pokud další hloubka řeší přirozené otázky stejného intentu,
+- jedna silná hero grafika nebo signature block nesmí maskovat slabší calculator/result/depth,
+- technické QA není důkaz product quality,
+- preview po jediném coding passu bez samostatného product/design review = FAIL.
+
+Před preview vyplň Quality Parity Scorecard 0–5 v sedmi oblastech:
+1. first-screen / brand / topic clarity,
+2. calculator UX / vstupní architektura / interaction states,
+3. result clarity / decomposition / decision value,
+4. same-intent depth / completeness / practical usefulness,
+5. visual craft / section choreography / originality,
+6. customer copy / methodology / trust / disclaimers,
+7. mobile / accessibility / render / technical finish.
+
+PASS pouze pokud:
+- total >= 31 / 35,
+- žádná oblast < 4 / 5,
+- u tématu srovnatelné nebo vyšší složitosti není depth/polish viditelně pod #74.
+
+#74 se nekopíruje kompozičně. Kvalitativní floor a originalita jsou dvě různé podmínky: **#74 = minimum kvality, #11–#25 = kalibrace originality.**
+
+## 3. Primary-intent lock
 
 Před návrhem napiš jednu větu: **„Uživatel přichází, protože chce …“**
 
@@ -26,7 +55,7 @@ Každý významný blok stránky musí tento job:
 
 Blok, který to nedělá, nevznikne.
 
-## 3. Above-the-fold UX — HARD FAIL
+## 4. Above-the-fold UX — HARD FAIL
 
 - Hero musí rychle vysvětlit user job.
 - Mezi hero a hlavní kalkulačkou nesmí být sekundární obsahová sekce.
@@ -35,7 +64,7 @@ Blok, který to nedělá, nevznikne.
 - Výsledek musí reagovat živě na vstupy, pokud je to pro daný výpočet vhodné.
 - Sekundární hloubka začíná až po hlavním výsledku.
 
-## 4. Hero Visual Integrity Gate — HARD FAIL
+## 5. Hero Visual Integrity Gate — HARD FAIL
 
 Hero nesmí být jen velký text na prázdné ploše.
 
@@ -46,14 +75,16 @@ Pokud je hero dvousloupcové:
 
 Pokud topic-native vizuál nedává smysl, zvol jinou hero kompozici — ne prázdnou pravou polovinu.
 
-## 5. Identity Lock — HARD FAIL
+Vizuál nesmí být samoúčelná náhrada za product depth. Pokud působí jako placeholder, jednoduchá CSS ilustrace nebo dekorace bez informační hodnoty, Hero Visual FAIL.
+
+## 6. Identity Lock — HARD FAIL
 
 - Logo je vždy stejné RV V3.2: `logo-rv-v32.svg?v=1`.
 - Footer používá standardní RV inverse logo, sociální sítě, metodiku / projektové odkazy a podpis `Zadat → Spočítat → Pochopit → Rozhodnout`.
 - Žádné nové wordmarky, fallback logotypy, redesign značky ani experimentální footery.
 - Originalita vzniká v produktu stránky, ne změnou identity.
 
-## 6. Page-level originality — HARD FAIL
+## 7. Page-level originality — HARD FAIL
 
 Před buildem udělej Golden Delta Card:
 - **Native object** — hlavní fyzický / procesní / datový objekt.
@@ -67,7 +98,7 @@ Zakázaný default shell:
 
 Stejný hero + stejný result jako předchozí stránka bez produktového důvodu = FAIL.
 
-## 7. Customer Copy Gate — HARD FAIL
+## 8. Customer Copy Gate — HARD FAIL
 
 Viditelný text je pro zákazníka, ne pro interní design/product tým.
 
@@ -84,7 +115,7 @@ Každá fráze musí pomáhat alespoň s jedním z bodů:
 
 Před preview proveď Customer Copy Scan a zjednoduš vše, co zní jako interní pracovní jazyk.
 
-## 8. Adaptive Page Depth Gate — HARD FAIL
+## 9. Adaptive Page Depth Gate — HARD FAIL
 
 Délka stránky se neurčuje šablonou ani kvótou.
 
@@ -101,7 +132,9 @@ Platí oba směry:
 
 Stop rule: další sekce nevzniká, pokud nepřidává novou odpověď, rozhodovací hodnotu nebo důležitou hranici. Naopak stránka je příliš krátká, pokud po výsledku zůstávají důležité přirozené otázky stejného intentu bez odpovědi, přestože pro ně máme kvalitní podklad.
 
-## 9. Product Richness
+**Fewer blocks != lower polish. More blocks != higher quality.**
+
+## 10. Product Richness
 
 Významná stránka má mít minimálně:
 - 1 topic-native dominantní vizuál v hero,
@@ -124,18 +157,50 @@ Post-result bloky mohou být například:
 
 Pouze tehdy, když mají skutečnou relevance / decision value.
 
-## 10. Topic-sensitive disclaimers
+## 11. Topic-sensitive disclaimers
 
 U finančních, daňových, právních, zdravotních a jiných citlivých témat zachovat stručný viditelný disclaimer. Má říct, že výsledek je orientační a nenahrazuje individuální odborné posouzení. Nesmí být strašák ani dlouhá právnická zeď.
 
-## 11. Pre-review render gate — HARD FAIL
+## 12. Mandatory Three-Pass Workflow — HARD FAIL
+
+### PASS A — Product architecture
+Před kódem musí být hotovo:
+- Primary Intent,
+- Depth Map,
+- calculation/data/method audit,
+- native product object,
+- section choreography,
+- Golden Delta,
+- Benchmark Delta proti #74.
+
+### PASS B — Build & interaction
+- kompletní desktop + mobile,
+- reálné interaction states a edge scenarios,
+- regression QA,
+- žádné placeholdery nebo polotovar.
+
+### PASS C — Benchmark parity review
+Samostatný průchod až po dokončení buildu:
+- full-page review 1440,
+- full-page review 390,
+- quality scorecard proti #74,
+- Customer Copy Scan,
+- Non-duplication Scan,
+- depth completeness,
+- whitespace / typography / density / rhythm,
+- interaction state review.
+
+**Uživatel nesmí dostat preview před PASS C.**
+
+## 13. Pre-review render gate — HARD FAIL
 
 Uživatel není beta tester. Před prvním náhledem musí být hotovo a zkontrolováno:
 - desktop 1440: hero,
 - desktop 1440: kalkulačka + dominantní výsledek,
-- desktop: alespoň 1 signature post-result block,
+- desktop: všechny významné post-result bloky a full-page rhythm,
 - mobile 390: hero,
 - mobile 390: kalkulačka / výsledek,
+- mobile: full-page scan,
 - horizontal overflow = 0,
 - runtime errors = 0,
 - duplicate IDs = 0,
@@ -143,7 +208,7 @@ Uživatel není beta tester. Před prvním náhledem musí být hotovo a zkontro
 
 Polotovar se k user review neposílá.
 
-## 12. Final Stranger Test
+## 14. Final Stranger Test
 
 Před user preview si polož:
 1. Kdyby zmizelo logo, H1 a SEO text, poznám z rozložení a vizuálních objektů, o jaký problém jde?
@@ -151,13 +216,14 @@ Před user preview si polož:
 3. Není stránka příliš strohá?
 4. Nevymýšlíme už zbytečné kraviny?
 5. Je délka přirozená vzhledem k tématu?
+6. Je full-page dojem minimálně na úrovni #74 vzhledem k šířce tématu?
 
-Správná odpověď: 1 = ANO, 2 = čtyři produkty jedné značky, 3 = NE, 4 = NE, 5 = ANO.
+Správná odpověď: 1 = ANO, 2 = čtyři produkty jedné značky, 3 = NE, 4 = NE, 5 = ANO, 6 = ANO.
 
-## 13. Release decision
+## 15. Release decision
 
 Preview lze předložit jen pokud současně platí:
 
-**PRIMARY INTENT PASS + CALCULATION PASS + CUSTOMER COPY PASS + ADAPTIVE DEPTH PASS + TOPIC DEPTH PASS + PAGE-LEVEL ORIGINALITY PASS + HERO VISUAL PASS + IDENTITY PASS + VISUAL DRIFT PASS + RENDER QA PASS.**
+**PRIMARY INTENT PASS + CALCULATION PASS + #74 QUALITY PARITY PASS + CUSTOMER COPY PASS + ADAPTIVE DEPTH PASS + TOPIC DEPTH PASS + PAGE-LEVEL ORIGINALITY PASS + HERO VISUAL PASS + IDENTITY PASS + FULL-PAGE VISUAL PASS + RENDER QA PASS.**
 
-Technické PASS bez originality nestačí. Originalita bez relevance nestačí. Bohatá stránka bez jasného hlavního výpočtu nestačí. Minimalistická stránka, která zamlčí důležité otázky tématu, také nestačí.
+Technické PASS bez originality nestačí. Originalita bez relevance nestačí. Bohatá stránka bez jasného hlavního výpočtu nestačí. Minimalistická stránka, která zamlčí důležité otázky tématu, také nestačí. Jedna povedená hero grafika nemůže zachránit slabší zbytek stránky.
