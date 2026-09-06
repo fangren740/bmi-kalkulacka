@@ -8,7 +8,7 @@
 <title>DPP / DPČ kalkulačka 2026 | RychléVýpočty.cz</title>
 <style>
 :root{
-  --navy:#071a33;--navy2:#0d315d;--blue:#1674b9;--blue2:#dff2ff;
+  --navy:#071a33;--navy2:#0d315d;--blue:#125f98;--blue2:#dff2ff;
   --green:#36c931;--green2:#e8fae8;--text:#183049;--muted:#637487;
   --line:#d9e4ed;--soft:#f5f8fb;--white:#fff;--amber:#e99d27;--amber2:#fff4df;
   --danger:#bd3d3d;--danger2:#fff0f0;--shadow:0 20px 50px rgba(7,26,51,.10);
@@ -81,7 +81,7 @@ h1 span{color:var(--blue)}
 .input-unit{height:54px;display:flex;align-items:center;border:1px solid #cddae4;border-radius:14px;background:#fff;overflow:hidden}
 .input-unit input,.input-unit select{min-width:0;flex:1;height:100%;border:0;outline:0;padding:0 14px;font-weight:850;color:var(--navy);background:transparent}
 .input-unit span{padding:0 13px;font-weight:850;color:#65788b;border-left:1px solid #e1e8ee}
-.field small{display:block;color:#7c8c9a;font-size:.7rem;line-height:1.4;margin-top:7px;min-height:2em}
+.field small{display:block;color:#526a7d;font-size:.7rem;line-height:1.4;margin-top:7px;min-height:2em}
 .field.error .input-unit{border-color:#d66}.field-error{font-size:.68rem;color:#b53a3a;margin-top:5px}
 .toggle-wrap{display:flex;align-items:center;justify-content:space-between;height:54px;padding:0 14px;border:1px solid #cddae4;border-radius:14px}
 .toggle{width:46px;height:26px;border:0;border-radius:999px;background:#a8b7c4;padding:3px;transition:.2s}.toggle:before{content:"";display:block;width:20px;height:20px;border-radius:50%;background:#fff;transition:.2s}.toggle.on{background:var(--green)}.toggle.on:before{transform:translateX(20px)}
@@ -102,7 +102,7 @@ h1 span{color:var(--blue)}
 .crossing{padding:66px 0;background:#f4f8fb;border-block:1px solid var(--line)}
 .cross-grid{display:grid;grid-template-columns:.82fr 1.18fr;gap:36px;align-items:start}
 .cross-copy h2,.hours-copy h2,.method h2{font-size:clamp(2rem,4vw,3.1rem);line-height:1;letter-spacing:-.05em;color:var(--navy);margin:8px 0 14px}
-.cross-copy p,.hours-copy p{color:#5f7487;line-height:1.65}
+.cross-copy p,.hours-copy p{color:#526a7d;line-height:1.65}
 .cross-scale{padding:24px;border-radius:24px;background:#fff;border:1px solid var(--line);box-shadow:0 12px 35px rgba(7,26,51,.06)}
 .scale-row{display:grid;grid-template-columns:72px 1fr;gap:14px;align-items:center;margin:18px 0}
 .scale-row>b{font-size:1.08rem;color:var(--navy)}
@@ -115,10 +115,10 @@ h1 span{color:var(--blue)}
 .hours{padding:68px 0;background:#fff}
 .hours-grid{display:grid;grid-template-columns:1fr 1fr;gap:26px}
 .hours-panel{padding:24px;border-radius:24px;border:1px solid var(--line);background:#fff}
-.hours-panel h3{margin:0 0 8px;color:var(--navy);font-size:1.35rem}.hours-panel p{color:#687b8d;line-height:1.55;margin:0 0 18px}
+.hours-panel h3{margin:0 0 8px;color:var(--navy);font-size:1.35rem}.hours-panel p{color:#526a7d;line-height:1.55;margin:0 0 18px}
 .hour-meter{height:18px;border-radius:999px;background:#eaf0f4;overflow:hidden}.hour-meter i{display:block;height:100%;width:var(--p);background:linear-gradient(90deg,var(--blue),var(--green))}
-.hour-meta{display:flex;justify-content:space-between;margin-top:8px;font-size:.72rem;color:#6e8192}
-.dpc-week{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.dpc-week i{height:56px;border-radius:10px;background:#edf3f7;position:relative}.dpc-week i:after{content:"";position:absolute;left:0;right:0;bottom:0;height:var(--h);border-radius:10px;background:linear-gradient(180deg,#3c91c7,#36c931)}.dpc-week-label{display:flex;justify-content:space-between;margin-top:8px;font-size:.72rem;color:#6e8192}
+.hour-meta{display:flex;justify-content:space-between;margin-top:8px;font-size:.72rem;color:#526a7d}
+.dpc-week{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.dpc-week i{height:56px;border-radius:10px;background:#edf3f7;position:relative}.dpc-week i:after{content:"";position:absolute;left:0;right:0;bottom:0;height:var(--h);border-radius:10px;background:linear-gradient(180deg,#3c91c7,#36c931)}.dpc-week-label{display:flex;justify-content:space-between;margin-top:8px;font-size:.72rem;color:#526a7d}
 
 .decision{padding:66px 0;background:#071a33;color:white}
 .decision h2{font-size:clamp(2rem,4vw,3rem);line-height:1;letter-spacing:-.05em;margin:8px 0 28px;max-width:16ch}
@@ -161,6 +161,9 @@ footer{background:#071a33;color:#d8e4ee;padding:44px 0 26px}
   .decision-flow{grid-template-columns:1fr}.decision-step+.decision-step{border-left:0;border-top:1px solid rgba(255,255,255,.14)}.decision-step{min-height:0}
   .footer-grid{grid-template-columns:1fr}.footer-brand img{width:235px}
 }
+
+/* RV recovery gate 2026-09-06: skip layout/paint for deep offscreen sections until needed. */
+@supports (content-visibility:auto){main>section:nth-of-type(n+4){content-visibility:auto;contain-intrinsic-size:auto 900px}}
 </style>
 <meta content="index,follow,max-image-preview:large" name="robots"/><meta content="Porovnejte DPP a DPČ v roce 2026 podle odměny a limitů. Uvidíte odvody, čistou odměnu a rozdíl mezi oběma režimy." name="description"/><meta content="cs_CZ" property="og:locale"/><meta content="website" property="og:type"/><meta content="RychléVýpočty.cz" property="og:site_name"/><meta content="DPP / DPČ kalkulačka 2026" property="og:title"/><meta content="Porovnejte DPP a DPČ v roce 2026 podle odměny a limitů. Uvidíte odvody, čistou odměnu a rozdíl mezi oběma režimy." property="og:description"/><meta content="https://rychlevypocty.cz/dpp-dpc-kalkulacka.html" property="og:url"/><meta content="https://rychlevypocty.cz/og-image-rv-v31.jpg" property="og:image"/><meta content="summary_large_image" name="twitter:card"/><meta content="DPP / DPČ kalkulačka 2026" name="twitter:title"/><meta content="Porovnejte DPP a DPČ v roce 2026 podle odměny a limitů. Uvidíte odvody, čistou odměnu a rozdíl mezi oběma režimy." name="twitter:description"/><meta content="https://rychlevypocty.cz/og-image-rv-v31.jpg" name="twitter:image"/><link href="https://rychlevypocty.cz/dpp-dpc-kalkulacka.html" rel="canonical"/><link href="/favicon.ico?v=2" rel="icon" sizes="any"/><link href="/favicon-rv-v32.svg?v=1" rel="icon" type="image/svg+xml"/><link href="/apple-touch-icon.png?v=2" rel="apple-touch-icon"/><link href="/site.webmanifest?v=2" rel="manifest"/><script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"RychléVýpočty.cz","item":"https://rychlevypocty.cz/"},{"@type":"ListItem","position":2,"name":"Mzdy a práce","item":"https://rychlevypocty.cz/mzdy-a-prace.html"},{"@type":"ListItem","position":3,"name":"Stejná odměna. Jiná hranice.","item":"https://rychlevypocty.cz/dpp-dpc-kalkulacka.html"}]}</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"DPP / DPČ kalkulačka 2026","applicationCategory":"FinanceApplication","operatingSystem":"Any","url":"https://rychlevypocty.cz/dpp-dpc-kalkulacka.html","description":"Porovnejte DPP a DPČ v roce 2026 podle odměny a limitů. Uvidíte odvody, čistou odměnu a rozdíl mezi oběma režimy.","isAccessibleForFree":true}</script></head>
 <body>
@@ -238,7 +241,7 @@ footer{background:#071a33;color:#d8e4ee;padding:44px 0 26px}
 <div class="inputs">
 <div class="field" id="grossField"><label for="gross">Hrubá měsíční odměna</label><div class="input-unit"><input autocomplete="off" id="gross" inputmode="decimal" value="10 000"/><span>Kč</span></div><small>Odměna z této dohody před daní a pojistným.</small><div class="field-error" id="grossError"></div></div>
 <div class="field" id="hoursField"><label for="hours">Odpracované hodiny</label><div class="input-unit"><input autocomplete="off" id="hours" inputmode="decimal" value="60"/><span>h</span></div><small>Pro kontrolu hodinové odměny a rozsahu práce.</small><div class="field-error" id="hoursError"></div></div>
-<div class="switch-field"><span class="switch-label">Prohlášení poplatníka</span><div class="toggle-wrap"><div><strong id="signedText">Podepsané</strong><small style="display:block;color:#7b8b99;font-size:.68rem">měsíční sleva na poplatníka</small></div><button aria-checked="true" aria-label="Podepsané Prohlášení poplatníka" class="toggle on" id="signed" role="switch" type="button"></button></div></div>
+<div class="switch-field"><span class="switch-label">Prohlášení poplatníka</span><div class="toggle-wrap"><div><strong id="signedText">Podepsané</strong><small style="display:block;color:#526a7d;font-size:.68rem">měsíční sleva na poplatníka</small></div><button aria-checked="true" aria-label="Podepsané Prohlášení poplatníka" class="toggle on" id="signed" role="switch" type="button"></button></div></div>
 </div>
 <div class="advanced" hidden="" id="advanced">
 <div class="advanced-box">
