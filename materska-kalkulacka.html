@@ -1,83 +1,366 @@
 <!doctype html>
-<!-- RV-VNEXT: status=RELEASE_CANDIDATE | major=2026-08-28 | qa=LOCAL_PASS_PRODUCTION_PENDING | seq=80 -->
+<!-- RV-VNEXT: status=RECOVERY_APPROVED | major=2026-09-06 | qa=PASS | seq=80 -->
 <html lang="cs">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="referrer" content="strict-origin-when-cross-origin">
-<meta name="format-detection" content="telephone=no">
-<title>Mateřská kalkulačka 2026: PPM, nárok a konec dávky | RychléVýpočty.cz</title>
-<meta name="description" content="Spočítejte peněžitou pomoc v mateřství (PPM) pro rok 2026. Uvidíte denní dávku, částku za měsíc, celkovou PPM, termín konce a orientační kontrolu podmínek nároku.">
-<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
-<link rel="canonical" href="https://rychlevypocty.cz/materska-kalkulacka.html">
-<meta property="og:locale" content="cs_CZ"><meta property="og:type" content="website"><meta property="og:site_name" content="RychléVýpočty.cz">
-<meta property="og:title" content="Mateřská kalkulačka 2026"><meta property="og:description" content="Kolik dostanete na PPM, jak dlouho ji budete pobírat a kdy navázat rodičovským příspěvkem."><meta property="og:url" content="https://rychlevypocty.cz/materska-kalkulacka.html"><meta property="og:image" content="https://rychlevypocty.cz/og-rv-mzdy-prace-v32.jpg">
-<meta name="twitter:card" content="summary_large_image">
-<link rel="icon" type="image/svg+xml" href="/favicon-rv-v32.svg?v=1"><link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2"><link rel="manifest" href="/site.webmanifest?v=2"><meta name="theme-color" content="#071a33">
-<link rel="stylesheet" href="/materska-vnext.css?v=20260828-1">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Domů","item":"https://rychlevypocty.cz/"},{"@type":"ListItem","position":2,"name":"Rodina a rozpočet","item":"https://rychlevypocty.cz/rodina-a-rozpocet.html"},{"@type":"ListItem","position":3,"name":"Mateřská kalkulačka","item":"https://rychlevypocty.cz/materska-kalkulacka.html"}]}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Mateřská kalkulačka 2026","applicationCategory":"FinanceApplication","operatingSystem":"Web","url":"https://rychlevypocty.cz/materska-kalkulacka.html","description":"Výpočet peněžité pomoci v mateřství podle příjmu, redukčních hranic a podpůrčí doby pro rok 2026."}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Dataset","name":"Kontrolní scénáře výpočtu PPM 2026","description":"Regresní kontrolní scénáře pro výpočet PPM na RychléVýpočty.cz.","url":"https://rychlevypocty.cz/materska-2026-benchmark.csv","dateModified":"2026-08-28"}</script>
-</head>
-<body class="mat80-page rv-page-calculator rv-brand-v3 rv-brand-v32" data-build="MAT80-VNEXT-20260828-1">
-<a class="mat80-skip" href="#kalkulacka">Přejít na kalkulačku</a>
-<header class="mat80-header"><div class="mat80-container mat80-header-inner">
-<a class="mat80-logo" href="/" aria-label="RychléVýpočty.cz – domů"><img src="/logo-rv-v32.svg?v=1" width="590" height="96" alt="RychléVýpočty.cz"></a>
-<nav class="mat80-nav" aria-label="Hlavní navigace"><a href="/kalkulacky.html">Kalkulačky</a><a href="/rodina-a-rozpocet.html" aria-current="page">Rodina</a><a href="/mzdy-a-prace.html">Mzdy</a><a href="/jak-pocitame.html">Jak počítáme</a></nav>
-<a class="mat80-header-cta" href="#kalkulacka">Spočítat PPM</a><button class="mat80-menu" type="button" aria-label="Otevřít menu" aria-expanded="false">☰</button>
-</div><nav class="mat80-mobile-nav" aria-label="Mobilní navigace" hidden><a href="/kalkulacky.html">Kalkulačky</a><a href="/rodina-a-rozpocet.html">Rodina</a><a href="/mzdy-a-prace.html">Mzdy</a><a href="/jak-pocitame.html">Jak počítáme</a></nav></header>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<meta content="#071a33" name="theme-color"/>
+<title>Mateřská kalkulačka 2026 – PPM | RychléVýpočty.cz</title>
+<style>
+:root{
+  --navy:#071a33;--navy2:#0d3156;--blue:#1265ad;--blue2:#2b8bd4;--green:#52d657;--green2:#218431;
+  --ink:#14273b;--muted:#60768a;--line:#d5e1ea;--soft:#f4f8fb;--soft2:#eaf2f7;--white:#fff;
+  --amber:#d99a30;--danger:#a73542;--shadow:0 24px 70px rgba(7,26,51,.09);--max:min(1240px,calc(100% - 36px));
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;color:var(--ink);background:#fff;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;line-height:1.55;overflow-x:hidden}
+a{text-decoration:none;color:inherit}button,input,select{font:inherit}button{cursor:pointer}img,svg{display:block;max-width:100%}
+.container{width:var(--max);margin-inline:auto}
+:focus-visible{outline:3px solid var(--blue2);outline-offset:3px;border-radius:9px}
+.skip{position:fixed;left:12px;top:-70px;z-index:9999;background:#fff;padding:11px 14px;border-radius:10px;box-shadow:var(--shadow);font-weight:900}.skip:focus{top:12px}
 
+/* header */
+.site-header{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.header-inner{min-height:76px;display:flex;align-items:center;gap:20px}
+.brand{display:flex;align-items:center;min-width:max-content}.brand img{width:224px;height:auto}
+.nav{margin-left:auto;display:flex;align-items:center;gap:20px}.nav a{font-weight:760;font-size:.91rem;color:#334c64}.nav a:hover,.nav a[aria-current=page]{color:var(--blue)}.nav-all{color:var(--blue)!important}
+.header-cta{margin-left:8px;border:1px solid var(--navy);background:var(--navy);color:#fff;border-radius:13px;padding:11px 15px;font-weight:850}
+.menu-btn{display:none;margin-left:auto;width:46px;height:44px;border:1px solid var(--line);background:#fff;border-radius:12px;padding:10px}.menu-btn span{display:block;height:2px;background:var(--navy);margin:4px}
+.mobile-nav{display:none}.mobile-nav.is-open{display:flex;position:absolute;left:0;right:0;top:100%;padding:12px max(18px,calc((100% - 1240px)/2));gap:6px;flex-wrap:wrap;border-bottom:1px solid var(--line);background:#fff;box-shadow:0 12px 28px rgba(7,26,51,.08)}.mobile-nav a{padding:9px 11px;border-radius:9px;color:#3f586e;font-size:.75rem;font-weight:850}
+
+/* identity */
+.kicker,.micro{display:inline-flex;align-items:center;gap:9px;color:var(--green2);font-size:.69rem;font-weight:950;letter-spacing:.12em;text-transform:uppercase}.kicker:before,.micro:before{content:"";width:22px;height:2px;background:var(--green)}
+
+.rvx-data-stamp{display:inline-flex;align-items:center;gap:8px;padding:7px 9px;border:1px solid rgba(255,255,255,.16);border-radius:999px;background:rgba(255,255,255,.06);font-size:9px;font-weight:950;letter-spacing:.11em;text-transform:uppercase;color:#dcebf2}.rvx-data-stamp:before{content:"";width:8px;height:8px;border-radius:50%;background:#35c978;box-shadow:0 0 0 4px rgba(53,201,120,.14)}
+
+/* hero */
+.hero{position:relative;overflow:hidden;background:linear-gradient(180deg,#fff 0%,#f8fbfd 70%,#eef5f9 100%);border-bottom:1px solid var(--line);padding-bottom:42px}
+.hero:before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(18,101,173,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(18,101,173,.04) 1px,transparent 1px);background-size:64px 64px;mask-image:linear-gradient(90deg,rgba(0,0,0,.34),transparent 82%)}
+.hero-watermarks{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.hero-watermarks .wm1{position:absolute;right:-72px;top:96px;font-size:13rem;font-weight:1000;letter-spacing:-.09em;color:rgba(7,26,51,.025);transform:rotate(90deg)}
+.hero-watermarks .wm2{position:absolute;right:27%;top:70px;font-size:4.2rem;font-weight:1000;letter-spacing:-.06em;color:rgba(18,101,173,.035)}
+.hero-watermarks .wm3{position:absolute;right:19%;bottom:26px;font-size:3.2rem;font-weight:1000;letter-spacing:-.05em;color:rgba(82,214,87,.07)}
+.hero-ring{position:absolute;border-radius:50%;border:1px solid rgba(18,101,173,.08)}.hero-ring.r1{width:230px;height:230px;left:5%;top:118px}.hero-ring.r2{width:145px;height:145px;left:8.4%;top:160px;border-style:dashed}.hero-ring.r3{width:360px;height:360px;right:17%;top:-170px;border-color:rgba(18,101,173,.05)}
+.hero-grid{position:relative;z-index:2;display:grid;grid-template-columns:minmax(0,1fr) minmax(430px,.78fr);gap:48px;align-items:center;padding-top:28px}
+.breadcrumb{grid-column:1/-1;display:flex;gap:8px;align-items:center;flex-wrap:wrap;color:#657b8e;font-size:.82rem;margin-bottom:2px}.breadcrumb a:hover{color:var(--blue)}
+.hero-copy h1{max-width:800px;margin:15px 0 20px;font-size:clamp(3.4rem,5.5vw,5.45rem);line-height:.9;letter-spacing:-.056em;color:var(--navy)}.hero-copy h1 span{color:var(--blue)}
+.lead{max-width:730px;color:#4e687e;font-size:1.1rem;line-height:1.72}
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}.btn{display:inline-flex;align-items:center;justify-content:center;min-height:49px;border-radius:14px;padding:0 18px;font-weight:900}.btn-main{background:var(--navy);color:#fff;box-shadow:0 12px 30px rgba(7,26,51,.14)}.btn-ghost{border:1px solid #c6d5e1;background:#fff;color:var(--navy)}
+.trust{display:flex;flex-wrap:wrap;gap:10px 16px;margin-top:20px}.trust span{display:inline-flex;align-items:center;gap:8px;color:#526b80;font-size:.78rem;font-weight:800}.trust span:before{content:"";width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 5px rgba(82,214,87,.12)}
+.hero-brand{margin-top:17px}
+
+/* original hero horizon */
+.horizon{position:relative;min-width:0;filter:drop-shadow(0 25px 42px rgba(7,26,51,.12))}
+.horizon-shell{position:relative;padding:23px 22px 21px;background:#fff;border:1px solid #c7d8e4;clip-path:polygon(0 0,94% 0,100% 7%,100% 100%,6% 100%,0 93%);overflow:hidden}
+.horizon-shell:before{content:"";position:absolute;inset:0;background:
+ radial-gradient(circle at 82% 12%,rgba(82,214,87,.12),transparent 26%),
+ linear-gradient(135deg,transparent 0 62%,rgba(18,101,173,.035) 62% 100%),
+ linear-gradient(rgba(18,101,173,.028) 1px,transparent 1px),linear-gradient(90deg,rgba(18,101,173,.028) 1px,transparent 1px);background-size:auto,auto,32px 32px,32px 32px}
+.horizon-shell:after{content:"";position:absolute;left:0;right:0;top:0;height:5px;background:linear-gradient(90deg,var(--navy) 0 31%,var(--blue2) 31% 69%,var(--green) 69%)}
+.horizon-shell>*{position:relative;z-index:1}
+.horizon-top{display:flex;justify-content:space-between;gap:14px;align-items:center;margin-bottom:18px}.horizon-top span{font-size:.64rem;font-weight:950;letter-spacing:.11em;color:#667e91;text-transform:uppercase}.horizon-top b{font-size:.64rem;color:#fff;background:var(--navy);border-radius:10px;padding:7px 9px}
+.horizon-main{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:center}.horizon-point small{display:block;color:#718597;font-size:.68rem}.horizon-point strong{display:block;margin-top:4px;font-size:1.45rem;color:var(--navy);letter-spacing:-.04em}.horizon-point.focus strong{color:var(--blue)}.horizon-arrow{width:64px;height:2px;background:linear-gradient(90deg,var(--blue2),var(--green));position:relative}.horizon-arrow:after{content:"";position:absolute;right:-1px;top:50%;width:8px;height:8px;border-top:2px solid var(--green);border-right:2px solid var(--green);transform:translateY(-50%) rotate(45deg)}
+.horizon-month{margin-top:18px;padding:15px;border-radius:17px;background:var(--navy);color:#fff;display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center}.horizon-month span{display:block;color:#9fb9d0;font-size:.67rem}.horizon-month strong{display:block;margin-top:3px;font-size:2rem;letter-spacing:-.055em}.horizon-month em{font-style:normal;color:#dceaf4;font-size:.72rem;text-align:right}
+.horizon-track{margin-top:18px}.track-meta{display:flex;justify-content:space-between;gap:10px;color:#657b8d;font-size:.66rem;font-weight:820}.track{position:relative;height:12px;border-radius:999px;background:#e7eef3;margin-top:8px;overflow:hidden}.track i{position:absolute;inset:0 auto 0 0;width:72%;background:linear-gradient(90deg,var(--blue2),var(--green));border-radius:999px}.track:after{content:"";position:absolute;left:72%;top:-3px;width:2px;height:18px;background:var(--navy)}
+.horizon-foot{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:15px}.horizon-foot article{padding:12px 13px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.82)}.horizon-foot span{display:block;color:#718597;font-size:.62rem}.horizon-foot strong{display:block;margin-top:3px;color:var(--navy);font-size:.94rem}
+.horizon-tab{position:absolute;right:-18px;top:96px;writing-mode:vertical-rl;transform:rotate(180deg);background:var(--green);color:#12351a;padding:12px 7px;border-radius:9px 9px 0 0;font-size:.61rem;font-weight:950;letter-spacing:.11em;text-transform:uppercase}
+
+/* calc */
+.calc{padding:84px 0 76px;background:#fff}
+.section-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,.56fr);gap:46px;align-items:end;margin-bottom:28px}.section-head h2{margin:9px 0 0;font-size:clamp(2.4rem,4vw,3.8rem);line-height:.96;letter-spacing:-.045em;color:var(--navy)}.section-head>p{color:var(--muted);line-height:1.7}
+.mode{justify-self:end;display:inline-grid;grid-template-columns:repeat(2,1fr);padding:4px;border:1px solid var(--line);border-radius:14px;background:#edf3f7}.mode button{min-width:116px;min-height:43px;border:0;border-radius:10px;background:transparent;color:#60778a;font-weight:900}.mode button.active{background:var(--navy);color:#fff;box-shadow:0 8px 20px rgba(7,26,51,.14)}
+.workspace{display:grid;grid-template-columns:minmax(0,1fr) minmax(430px,.83fr);gap:22px;align-items:start}
+.form-card{min-width:0;padding:25px;border:1px solid var(--line);border-radius:26px;background:#fff;box-shadow:var(--shadow);position:relative;overflow:hidden}.form-card:before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(18,101,173,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(18,101,173,.025) 1px,transparent 1px);background-size:38px 38px;mask-image:linear-gradient(135deg,#000,transparent 75%)}.form-card:after{content:"";position:absolute;right:18px;top:0;width:86px;height:4px;background:linear-gradient(90deg,var(--blue2),var(--green));clip-path:polygon(0 0,100% 0,92% 100%,0 100%)}.form-card>*{position:relative;z-index:1}
+.form-intro{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;padding-bottom:20px;border-bottom:1px solid var(--line)}.form-intro>div{display:grid;gap:4px}.form-intro span{color:var(--blue);font-size:.61rem;font-weight:950;letter-spacing:.1em}.form-intro strong{color:var(--navy);font-size:.98rem}.form-intro p{max-width:560px;color:var(--muted);font-size:.72rem;line-height:1.5}.live{display:inline-flex;align-items:center;gap:8px;white-space:nowrap;color:#61778a;font-size:.65rem}.live i{width:9px;height:9px;border-radius:50%;background:var(--green);box-shadow:0 0 0 6px rgba(82,214,87,.12)}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px}.field{min-width:0;display:grid;grid-template-rows:auto 54px minmax(34px,auto) 16px;gap:7px}.field>span:first-child{color:var(--navy);font-size:.78rem;font-weight:900}
+.control{display:flex;align-items:center;height:54px;min-width:0;border:1px solid #cbd9e4;border-radius:14px;background:#fbfdfe;overflow:hidden}.control:focus-within{border-color:var(--blue2);box-shadow:0 0 0 4px rgba(43,139,212,.09)}.control input,.control select{width:100%;min-width:0;max-width:100%;height:52px;border:0;outline:0;background:transparent;padding:0 13px;color:var(--navy);font-weight:880}.control b{align-self:stretch;min-width:58px;display:grid;place-items:center;padding:0 9px;border-left:1px solid var(--line);background:#f1f6f9;color:#596f83;font-size:.68rem;white-space:nowrap}.field small{color:var(--muted);font-size:.65rem;line-height:1.45}.field em{color:var(--danger);font-style:normal;font-size:.63rem;font-weight:760}
+.case-title{margin:18px 0 8px;color:var(--navy);font-size:.78rem;font-weight:900}.case-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.case-grid button{min-height:83px;text-align:left;padding:12px;border:1px solid #cfdde6;border-radius:15px;background:#f8fbfd;color:#50697d}.case-grid button.active{border-color:#9ec6de;background:#eef7fc;box-shadow:0 0 0 3px rgba(43,139,212,.06)}.case-grid b{display:block;color:var(--navy);font-size:.78rem}.case-grid strong{display:block;margin-top:3px;font-size:1.05rem;color:var(--blue)}.case-grid small{display:block;margin-top:3px;font-size:.62rem;line-height:1.35}
+.advanced{margin-top:20px;padding:17px;border:1px dashed #bfd0dc;border-radius:18px;background:#f8fbfd}.advanced[hidden]{display:none}.advanced-head strong{display:block;color:var(--navy)}.advanced-head p{margin:5px 0 13px;color:#657b8e;font-size:.71rem;line-height:1.5}.advanced-options{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:13px}.option{padding:13px;border:1px solid #d2dee7;border-radius:14px;background:#fff}.option label{display:flex;align-items:center;gap:9px;font-size:.72rem;font-weight:850;color:#344e65}.option small{display:block;margin-top:5px;color:#74889a;font-size:.63rem;line-height:1.4}.option input{width:18px;height:18px}.osvc-only[hidden]{display:none}
+
+/* original result: timeline card, not standard flat box */
+.result{position:sticky;top:98px;overflow:hidden;border-radius:28px;background:#071a33;color:#fff;box-shadow:0 28px 70px rgba(7,26,51,.16)}
+.result:before{content:"";position:absolute;inset:0;background:
+ radial-gradient(circle at 92% 6%,rgba(82,214,87,.12),transparent 24%),
+ linear-gradient(135deg,transparent 0 66%,rgba(43,139,212,.09) 66% 100%),
+ linear-gradient(rgba(255,255,255,.024) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.024) 1px,transparent 1px);background-size:auto,auto,34px 34px,34px 34px}
+.result:after{content:"PPM";position:absolute;right:-16px;bottom:-42px;font-size:7.8rem;font-weight:1000;letter-spacing:-.09em;color:rgba(255,255,255,.035)}
+.result>*{position:relative;z-index:1}
+.result-notch{height:6px;background:linear-gradient(90deg,var(--blue2) 0 64%,var(--green) 64%);clip-path:polygon(0 0,100% 0,98% 100%,2% 100%)}
+.result-inner{padding:22px 24px 24px}
+.result-id{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}.result-id>span:first-child{font-size:.61rem;font-weight:950;letter-spacing:.11em;text-transform:uppercase;color:#8fb6da}
+.result-main span{display:block;color:#9db5ca;font-size:.68rem}.result-main strong{display:block;margin-top:3px;font-size:2.7rem;line-height:1;letter-spacing:-.055em}.result-main p{margin:8px 0 0;color:#b5c7d7;font-size:.76rem;line-height:1.5}
+.result-timeline{margin-top:20px;padding:16px;border:1px solid rgba(255,255,255,.12);border-radius:17px;background:rgba(255,255,255,.045)}.timeline-meta{display:flex;justify-content:space-between;gap:10px;color:#9fb7cd;font-size:.65rem}.timeline-bar{position:relative;height:12px;border-radius:999px;background:rgba(255,255,255,.09);margin:9px 0 8px;overflow:hidden}.timeline-bar i{position:absolute;inset:0 auto 0 0;width:100%;background:linear-gradient(90deg,var(--blue2),var(--green));border-radius:999px}.timeline-labels{display:flex;justify-content:space-between;gap:10px}.timeline-labels strong{font-size:.78rem}.timeline-labels span{font-size:.63rem;color:#91abc1}
+.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:13px}.result-cell{padding:12px 13px;border-radius:14px;background:rgba(255,255,255,.07)}.result-cell span{display:block;color:#9eb5ca;font-size:.62rem}.result-cell strong{display:block;margin-top:4px;font-size:.96rem}
+.month-row{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:13px}.month-row article{padding:11px;border:1px solid rgba(255,255,255,.10);border-radius:12px;background:rgba(255,255,255,.035)}.month-row span{display:block;color:#93acc1;font-size:.58rem}.month-row strong{display:block;margin-top:2px;font-size:.85rem}
+.result-handoff{margin-top:13px;padding:12px 13px;border-radius:13px;background:#fff;color:#29445b;font-size:.72rem;line-height:1.5}.result-handoff b{color:var(--navy)}
+.eligibility-mini{margin-top:9px;padding:11px 12px;border-radius:12px;background:rgba(255,255,255,.06);font-size:.69rem;line-height:1.45;color:#c2d2df}.eligibility-mini.ok{background:rgba(82,214,87,.12);color:#d7f4da}.eligibility-mini.warn{background:rgba(217,154,48,.12);color:#f4d8ac}
+
+/* depth */
+.income-section{padding:72px 0;background:var(--soft);border-top:1px solid var(--line)}
+.income-grid{display:grid;grid-template-columns:.82fr 1.18fr;gap:36px;align-items:start}.income-copy h2,.months-section h2,.elig-section h2,.handoff-section h2,.method h2{margin:8px 0 14px;font-size:clamp(2rem,4vw,3.05rem);line-height:1;letter-spacing:-.05em;color:var(--navy)}.income-copy p{color:#5e7487;line-height:1.68}
+.bridge-board{position:relative;border:1px solid var(--line);border-radius:24px;background:#fff;overflow:hidden;box-shadow:0 12px 34px rgba(7,26,51,.05)}.bridge-board:before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(18,101,173,.04),transparent 45%);pointer-events:none}.bridge-row{display:grid;grid-template-columns:1fr 64px 1fr;gap:12px;align-items:center;padding:24px}.bridge-point{padding:18px;border-radius:17px;background:#f7fafc}.bridge-point.focus{background:#eff9f0}.bridge-point span{display:block;color:#718596;font-size:.67rem}.bridge-point strong{display:block;margin-top:4px;color:var(--navy);font-size:1.35rem}.bridge-point small{display:block;margin-top:5px;color:#6b8092;font-size:.68rem}.bridge-arrow{height:2px;background:linear-gradient(90deg,var(--blue2),var(--green));position:relative}.bridge-arrow:after{content:"";position:absolute;right:-1px;top:50%;width:8px;height:8px;border-top:2px solid var(--green);border-right:2px solid var(--green);transform:translateY(-50%) rotate(45deg)}
+.bridge-foot{display:grid;grid-template-columns:1fr 1fr;gap:0;border-top:1px solid var(--line)}.bridge-foot div{padding:16px 20px}.bridge-foot div+div{border-left:1px solid var(--line);background:#fafcfd}.bridge-foot span{display:block;color:#718596;font-size:.64rem}.bridge-foot strong{display:block;margin-top:3px;color:var(--navy);font-size:.95rem}
+
+.months-section{padding:72px 0;background:#fff}
+.months-head{display:flex;justify-content:space-between;gap:24px;align-items:end;margin-bottom:24px}.months-head p{max-width:560px;margin:0;color:#62788b;line-height:1.65}
+.month-board{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);border-radius:22px;overflow:hidden}.month-card{padding:22px;background:#fff}.month-card+.month-card{border-left:1px solid var(--line)}.month-card.active{background:#f0f8fd}.month-card span{font-size:.67rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:var(--blue)}.month-card strong{display:block;margin-top:6px;color:var(--navy);font-size:1.5rem}.month-card small{display:block;margin-top:5px;color:#718496;line-height:1.4}.month-bar{height:8px;border-radius:999px;background:#edf2f5;margin-top:16px;overflow:hidden}.month-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--blue2),var(--green));width:var(--w)}
+
+.elig-section{padding:72px 0;background:var(--soft);border-block:1px solid var(--line)}
+.elig-grid{display:grid;grid-template-columns:.84fr 1.16fr;gap:34px}.elig-copy p{color:#607588;line-height:1.68}
+.elig-board{border:1px solid var(--line);border-radius:22px;background:#fff;overflow:hidden}.elig-row{display:grid;grid-template-columns:54px 1fr auto;gap:14px;align-items:center;padding:18px 20px}.elig-row+.elig-row{border-top:1px solid var(--line)}.elig-icon{width:42px;height:42px;border-radius:13px;background:#e7f4fb;color:var(--blue);display:grid;place-items:center;font-weight:950}.elig-row:nth-child(2) .elig-icon{background:#eaf8ea;color:#33783b}.elig-row:nth-child(3) .elig-icon{background:#fff4e4;color:#9d6819}.elig-row strong{display:block;color:var(--navy)}.elig-row p{margin:3px 0 0;color:#6a7f91;font-size:.78rem;line-height:1.45}.elig-row em{font-style:normal;padding:6px 8px;border-radius:999px;background:#f2f5f7;color:#607486;font-size:.65rem;font-weight:850;white-space:nowrap}
+
+.handoff-section{padding:72px 0;background:#fff}
+.handoff-board{display:grid;grid-template-columns:1fr 80px 1fr;gap:16px;align-items:center;border:1px solid var(--line);border-radius:24px;padding:24px;background:linear-gradient(180deg,#fff,#fafcfd)}
+.handoff-card{padding:20px;border-radius:18px;background:#f6f9fb}.handoff-card.next{background:#eff9f0}.handoff-card span{display:block;color:#718596;font-size:.66rem}.handoff-card strong{display:block;margin-top:5px;color:var(--navy);font-size:1.35rem}.handoff-card p{margin:7px 0 0;color:#687d8f;font-size:.78rem;line-height:1.5}.handoff-mid{display:grid;place-items:center}.handoff-mid span{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;background:var(--navy);color:#fff;font-weight:950}
+
+.method{padding:72px 0;background:#f7fafc;border-top:1px solid var(--line)}
+.method-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:34px}.method-copy p{color:#5f7487;line-height:1.7}.method-copy ul{padding-left:18px;color:#40566a;line-height:1.7}.method-note{padding:22px;border:1px solid var(--line);border-radius:20px;background:#fff}.method-note strong{display:block;color:var(--navy);font-size:1.08rem}.method-note p{color:#5f7487;line-height:1.65}.badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.badges span{padding:7px 9px;border-radius:999px;background:#eef6fa;color:#42647d;border:1px solid #d6e3eb;font-size:.68rem;font-weight:850}
+
+footer{background:#05162d;color:#d5e2ec;padding:44px 0 25px}.footer-grid{display:grid;grid-template-columns:1.2fr .8fr .8fr;gap:34px}.footer-brand img{width:250px}.footer-brand p{max-width:470px;color:#a8bac9;line-height:1.6}.footer-col b{display:block;color:#fff;margin-bottom:10px}.footer-col a{display:block;color:#b4c6d5;font-size:.85rem;margin:8px 0}.footer-col a:hover{color:#fff}.socials{display:flex;gap:8px;margin-top:14px}.socials a{padding:7px 10px;border:1px solid rgba(255,255,255,.16);border-radius:999px;color:#d7e4ee;font-size:.74rem}.footer-bottom{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:26px;padding-top:17px;border-top:1px solid rgba(255,255,255,.12);font-size:.72rem;color:#91a6b8}
+
+@media(max-width:1200px){.hero-watermarks .wm1{right:18px;top:92px;transform:none;font-size:9rem}}
+@media(max-width:1120px){
+ .nav,.header-cta{display:none}.menu-btn{display:block}
+ .hero-grid{grid-template-columns:minmax(0,1fr) minmax(370px,.82fr);gap:30px}.hero-copy h1{font-size:clamp(3rem,6vw,4.6rem)}
+ .workspace{grid-template-columns:1fr}.result{position:relative;top:auto}.case-grid{grid-template-columns:1fr 1fr 1fr}
+}
+@media(max-width:900px){
+ .hero-grid{grid-template-columns:1fr}.horizon{max-width:720px}
+ .section-head{grid-template-columns:1fr}.mode{justify-self:start}
+ .income-grid,.elig-grid,.method-grid{grid-template-columns:1fr}
+}
+@media(max-width:650px){
+ :root{--max:min(100% - 22px,1240px)}
+ .header-inner{min-height:62px}.brand{width:205px;min-width:0;flex:0 0 205px}.brand img{width:205px}.menu-btn{flex:0 0 46px}
+ .hero{padding-bottom:26px}.hero-ring.r3{display:none}.hero-grid{padding-top:18px;gap:21px}.breadcrumb{margin-bottom:0}.hero-copy h1{font-size:2.55rem;max-width:11ch;margin:10px 0 14px}.lead{font-size:.94rem;line-height:1.55}.actions{margin-top:17px}.btn{min-height:44px;font-size:.83rem}.trust{margin-top:12px}
+ .horizon-shell{padding:17px 15px;clip-path:polygon(0 0,93% 0,100% 7%,100% 100%,7% 100%,0 93%)}.horizon-main{grid-template-columns:1fr 42px 1fr}.horizon-point strong{font-size:1.15rem}.horizon-arrow{width:42px}.horizon-month{grid-template-columns:1fr}.horizon-month em{text-align:left}.horizon-month strong{font-size:1.7rem}.horizon-tab{display:none}
+ .calc{padding:50px 0}.section-head h2{font-size:2rem}.mode button{min-width:102px}.form-card{padding:17px;border-radius:20px}.form-intro{display:block}.live{margin-top:9px}.fields,.advanced-options{grid-template-columns:1fr}.case-grid{grid-template-columns:1fr}.field{grid-template-rows:auto 54px auto 16px}
+ .result{border-radius:21px}.result-inner{padding:17px}.result-main strong{font-size:2.15rem}.result-grid,.month-row{grid-template-columns:1fr}.result-id{align-items:flex-start}
+ .income-section,.months-section,.elig-section,.handoff-section,.method{padding:50px 0}.bridge-row{grid-template-columns:1fr}.bridge-arrow{height:42px;width:2px;justify-self:center}.bridge-arrow:after{right:-3px;top:auto;bottom:0;transform:rotate(135deg)}.bridge-foot{grid-template-columns:1fr}.bridge-foot div+div{border-left:0;border-top:1px solid var(--line)}
+ .months-head{display:block}.months-head p{margin-top:11px}.month-board{grid-template-columns:1fr}.month-card+.month-card{border-left:0;border-top:1px solid var(--line)}
+ .elig-row{grid-template-columns:42px 1fr}.elig-row em{grid-column:2;justify-self:start}
+ .handoff-board{grid-template-columns:1fr}.handoff-mid{height:42px}.handoff-mid span{transform:rotate(90deg)}
+ .footer-grid{grid-template-columns:1fr}.footer-brand img{width:235px}
+}
+</style>
+<meta content="index,follow,max-image-preview:large" name="robots"/><meta content="Spočítejte orientační peněžitou pomoc v mateřství (PPM) v roce 2026, denní dávku, délku čerpání a celkový příjem." name="description"/><meta content="cs_CZ" property="og:locale"/><meta content="website" property="og:type"/><meta content="RychléVýpočty.cz" property="og:site_name"/><meta content="Mateřská kalkulačka 2026 – PPM" property="og:title"/><meta content="Spočítejte orientační peněžitou pomoc v mateřství (PPM) v roce 2026, denní dávku, délku čerpání a celkový příjem." property="og:description"/><meta content="https://rychlevypocty.cz/materska-kalkulacka.html" property="og:url"/><meta content="https://rychlevypocty.cz/og-image-rv-v31.jpg" property="og:image"/><meta content="summary_large_image" name="twitter:card"/><meta content="Mateřská kalkulačka 2026 – PPM" name="twitter:title"/><meta content="Spočítejte orientační peněžitou pomoc v mateřství (PPM) v roce 2026, denní dávku, délku čerpání a celkový příjem." name="twitter:description"/><meta content="https://rychlevypocty.cz/og-image-rv-v31.jpg" name="twitter:image"/><link href="https://rychlevypocty.cz/materska-kalkulacka.html" rel="canonical"/><link href="/favicon.ico?v=2" rel="icon" sizes="any"/><link href="/favicon-rv-v32.svg?v=1" rel="icon" type="image/svg+xml"/><link href="/apple-touch-icon.png?v=2" rel="apple-touch-icon"/><link href="/site.webmanifest?v=2" rel="manifest"/><script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"RychléVýpočty.cz","item":"https://rychlevypocty.cz/"},{"@type":"ListItem","position":2,"name":"Rodina a rozpočet","item":"https://rychlevypocty.cz/rodina-a-rozpocet.html"},{"@type":"ListItem","position":3,"name":"Kolik dostanete na mateřské a kdy PPM skončí?","item":"https://rychlevypocty.cz/materska-kalkulacka.html"}]}</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Mateřská kalkulačka 2026 – PPM","applicationCategory":"FinanceApplication","operatingSystem":"Any","url":"https://rychlevypocty.cz/materska-kalkulacka.html","description":"Spočítejte orientační peněžitou pomoc v mateřství (PPM) v roce 2026, denní dávku, délku čerpání a celkový příjem.","isAccessibleForFree":true}</script></head>
+<body>
+<a class="skip" href="#kalkulacka">Přeskočit na kalkulačku</a>
+<header class="site-header">
+<div class="container header-inner">
+<a aria-label="RychléVýpočty.cz domů" class="brand" href="https://rychlevypocty.cz/"><img alt="RychléVýpočty.cz" height="96" src="https://rychlevypocty.cz/logo-rv-v32.svg?v=1" width="590"/></a>
+<nav aria-label="Hlavní navigace" class="nav"><a class="nav-all" href="https://rychlevypocty.cz/kalkulacky.html">Všechny kalkulačky</a><a href="https://rychlevypocty.cz/finance-a-hypoteky.html">Finance</a><a href="https://rychlevypocty.cz/bydleni.html">Bydlení</a><a aria-current="page" href="https://rychlevypocty.cz/rodina-a-rozpocet.html">Rodina</a><a href="https://rychlevypocty.cz/mzdy-a-prace.html">Mzdy</a><a href="https://rychlevypocty.cz/o-nas.html">O projektu</a></nav>
+<a class="header-cta" href="#kalkulacka">Spočítat PPM</a><button aria-controls="mobileNav" aria-expanded="false" aria-label="Otevřít menu" class="menu-btn" id="menuBtn" type="button"><span></span><span></span><span></span></button>
+</div>
+<nav aria-label="Mobilní navigace" class="mobile-nav" id="mobileNav"><a href="https://rychlevypocty.cz/kalkulacky.html">Všechny kalkulačky</a><a href="https://rychlevypocty.cz/rodina-a-rozpocet.html">Rodina a rozpočet</a><a href="https://rychlevypocty.cz/mzdy-a-prace.html">Mzdy a práce</a><a href="https://rychlevypocty.cz/o-nas.html">O projektu</a></nav>
+</header>
 <main>
-<section class="mat80-hero rv-identity-hero"><div class="mat80-container mat80-hero-grid">
-<div class="mat80-hero-copy"><nav class="mat80-breadcrumbs" aria-label="Drobečková navigace"><a href="/">Domů</a><span>›</span><a href="/rodina-a-rozpocet.html">Rodina a rozpočet</a><span>›</span><strong>Mateřská 2026</strong></nav>
-<p class="mat80-eyebrow">PPM · pravidla 2026</p><h1>Kolik vám mateřská nahradí a kdy skončí?</h1><p class="mat80-lead">Zadejte běžnou hrubou mzdu. Uvidíte denní PPM, částku za běžný měsíc, celkovou dávku a hlavně datum, kdy bude potřeba navázat dalším příjmem domácnosti.</p>
-<div class="mat80-hero-actions"><a class="mat80-btn mat80-btn-primary" href="#kalkulacka">Spočítat mateřskou</a><a class="mat80-btn mat80-btn-ghost" href="#narok">Ověřit podmínky nároku</a></div>
-<div class="mat80-trust"><span>70 % redukovaného DVZ</span><span>28 / 37 týdnů</span><span>parametry 2026</span></div></div>
-<aside class="mat80-bridge" aria-label="Ukázka příjmového mostu při mateřské"><div class="mat80-bridge-head"><span>PŘÍJMOVÝ MOST</span><b>MODEL 2026</b></div>
-<div class="mat80-bridge-route"><article><small>Běžná hrubá mzda</small><strong id="heroGross">48 300 Kč</strong><i>před nástupem</i></article><div class="mat80-route-line"><span></span><b>PPM</b><span></span></div><article class="is-focus"><small>PPM za 30 dní</small><strong id="heroPpm">33 360 Kč</strong><i id="heroDaily">1 112 Kč / den</i></article></div>
-<div class="mat80-bridge-end"><span>Konec podpůrčí doby</span><strong id="heroEnd">—</strong><small>potom typicky navazuje rodičovský příspěvek nebo jiný příjem domácnosti</small></div></aside>
-</div></section>
-
-<section class="mat80-facts"><div class="mat80-container"><article><span>Výše PPM</span><strong>70 %</strong><small>z redukovaného denního základu</small></article><article><span>Základní podmínka</span><strong>270 dnů</strong><small>nemocenského pojištění za poslední 2 roky</small></article><article><span>OSVČ navíc</span><strong>180 dnů</strong><small>nemocenského pojištění OSVČ v posledním roce</small></article><article><span>Nástup matky</span><strong>6–8 týdnů</strong><small>před očekávaným porodem</small></article></div></section>
-
-<section class="mat80-calc-section" id="kalkulacka"><div class="mat80-container"><div class="mat80-calc-head"><div><span class="mat80-micro">KALKULAČKA PPM</span><h2>Zadejte minimum. Výsledek ukáže částku i konec dávky.</h2><p>Základní režim je rychlý rozpočtový odhad. Přesnější režim pracuje s příjmem a započitatelnými dny z rozhodného období.</p></div><div class="mat80-mode" role="tablist" aria-label="Režim kalkulačky"><button type="button" role="tab" aria-selected="true" aria-controls="mat80BasicPanel" id="mat80BasicTab" class="is-active" data-mode="basic" tabindex="0">Základní</button><button type="button" role="tab" aria-selected="false" aria-controls="mat80AdvancedPanel" id="mat80AdvancedTab" data-mode="advanced" tabindex="-1">Přesnější</button></div></div>
-<div class="mat80-workspace">
-<form class="mat80-form" id="maternityForm" novalidate>
-<div class="mat80-form-top"><div><span>CO ZADAT</span><h3>Údaje, které mají na PPM skutečný vliv</h3><p id="modeHelp">Pro rychlý odhad stačí běžná měsíční hrubá mzda, datum nástupu a situace po porodu.</p></div><span class="mat80-live"><i></i> živý přepočet</span></div>
-<div id="mat80BasicPanel" role="tabpanel" aria-labelledby="mat80BasicTab"><div class="mat80-fields">
-<label class="mat80-field" for="monthlyIncome"><span>Běžná hrubá mzda</span><span class="mat80-control"><input id="monthlyIncome" inputmode="decimal" value="48 300" autocomplete="off"><b>Kč</b></span><small>Rychlý režim předpokládá stabilní příjem po 12 měsíců.</small><em id="monthlyIncomeError"></em></label>
-<label class="mat80-field" for="startDate"><span>Den nástupu na PPM</span><span class="mat80-control"><input id="startDate" type="date"></span><small>Datum použijeme pro konec podpůrčí doby.</small><em></em></label>
-</div></div>
-<div id="mat80AdvancedPanel" role="tabpanel" aria-labelledby="mat80AdvancedTab" hidden><div class="mat80-fields">
-<label class="mat80-field" for="periodIncome"><span>Započitatelný příjem za období</span><span class="mat80-control"><input id="periodIncome" inputmode="decimal" value="579 600" autocomplete="off"><b>Kč</b></span><small id="periodIncomeHelp">Příjem zahrnutý do vyměřovacího základu nemocenského pojištění.</small><em id="periodIncomeError"></em></label>
-<label class="mat80-field" for="periodDays"><span>Započitatelné kalendářní dny</span><span class="mat80-control"><input id="periodDays" inputmode="numeric" value="365" autocomplete="off"><b>dnů</b></span><small>Po odečtení zákonných vyloučených dnů.</small><em id="periodDaysError"></em></label>
-<label class="mat80-field" for="incomeSource"><span>Zdroj pojištění</span><span class="mat80-control mat80-select"><select id="incomeSource"><option value="employee">Zaměstnání</option><option value="osvc">OSVČ – nemocenské pojištění</option></select></span><small id="incomeSourceHelp">U zaměstnance se vychází z pojištěného příjmu.</small><em></em></label>
-<label class="mat80-field" for="startDateAdvanced"><span>Den nástupu na PPM</span><span class="mat80-control"><input id="startDateAdvanced" type="date"></span><small>Stejné datum jako v základním režimu.</small><em></em></label>
-</div></div>
-<div class="mat80-case"><span>Jakou situaci počítáme?</span><div class="mat80-case-options" role="group" aria-label="Délka podpůrčí doby"><button type="button" class="is-active" data-case="motherSingle">Matka · 1 dítě <b>28 týdnů</b></button><button type="button" data-case="motherMultiple">Matka · vícerčata <b>37 týdnů</b></button><button type="button" data-case="takeoverSingle">Převzetí péče <b>22 týdnů</b></button></div></div>
-<button class="mat80-submit" type="submit">Přepočítat PPM</button><p class="mat80-form-note">Výpočet částky je orientační. Samotný nárok závisí také na účasti na nemocenském pojištění, ochranné lhůtě a individuálním rozhodném období.</p>
+<section class="hero">
+<div aria-hidden="true" class="hero-watermarks"><span class="wm1">PPM</span><span class="wm2">28T</span><span class="wm3">37T</span><i class="hero-ring r1"></i><i class="hero-ring r2"></i><i class="hero-ring r3"></i></div>
+<div class="container hero-grid">
+<nav aria-label="Drobečková navigace" class="breadcrumb"><a href="https://rychlevypocty.cz/">Domů</a><span>›</span><a href="https://rychlevypocty.cz/rodina-a-rozpocet.html">Rodina a rozpočet</a><span>›</span><strong>Mateřská 2026</strong></nav>
+<div class="hero-copy">
+<span class="kicker">PPM · mateřská · pravidla 2026</span>
+<h1>Kolik dostanete na mateřské a <span>kdy PPM skončí?</span></h1>
+<p class="lead">Zadejte běžnou hrubou mzdu a datum nástupu. Kalkulačka ukáže denní PPM, částku za 28/30/31 dní, celkovou dávku a přesné datum konce podpůrčí doby.</p>
+<div class="actions"><a class="btn btn-main" href="#kalkulacka">Spočítat mateřskou</a><a class="btn btn-ghost" href="#narok">Ověřit podmínky nároku</a></div>
+<div class="trust"><span>70 % z redukovaného DVZ</span><span>28 / 37 týdnů</span><span>25 kontrolních scénářů</span></div>
+</div>
+<aside aria-label="Příjmový horizont PPM" class="horizon">
+<div class="horizon-shell">
+<div class="horizon-top"><span>Příjmový horizont PPM</span><b>MODEL 2026</b></div>
+<div class="horizon-main">
+<div class="horizon-point"><small>Běžná hrubá mzda</small><strong id="heroGross">48 300 Kč</strong></div>
+<div aria-hidden="true" class="horizon-arrow"></div>
+<div class="horizon-point focus"><small>PPM za 30 dní</small><strong id="heroPpm">33 360 Kč</strong></div>
+</div>
+<div class="horizon-month"><div><span>Denní PPM</span><strong id="heroDaily">1 112 Kč</strong></div><em>70 % z redukovaného denního základu</em></div>
+<div class="horizon-track"><div class="track-meta"><span id="heroStart">nástup: —</span><span id="heroDuration">28 týdnů</span><span id="heroEnd">konec: —</span></div><div class="track"><i id="heroTrack"></i></div></div>
+<div class="horizon-foot"><article><span>Celkem za podpůrčí dobu</span><strong id="heroTotal">217 952 Kč</strong></article><article><span>Co řešit před koncem</span><strong>návazný příjem domácnosti</strong></article></div>
+</div>
+<div class="horizon-tab">PPM · 2026</div>
+</aside>
+</div>
+</section>
+<section class="calc" id="kalkulacka">
+<div class="container">
+<div class="section-head">
+<div><span class="micro">01 · Výpočet PPM</span><h2>Stačí příjem, datum nástupu a vaše situace.</h2></div>
+<div aria-label="Režim kalkulačky" class="mode" role="group"><button aria-pressed="true" class="active" data-mode="basic" id="basicTab" type="button">Základní</button><button aria-pressed="false" data-mode="advanced" id="advancedTab" type="button">Přesnější</button></div>
+</div>
+<div class="workspace">
+<form class="form-card" id="maternityForm" novalidate="">
+<div class="form-intro"><div><span>CO ZADAT</span><strong id="formTitle">Běžnou mzdu a datum nástupu</strong><p id="modeHelp">Pro rychlý odhad předpokládáme stabilní příjem za posledních 12 měsíců.</p></div><span class="live"><i></i>živý přepočet</span></div>
+<div id="basicPanel">
+<div class="fields">
+<label class="field" for="monthlyIncome"><span>Běžná hrubá mzda</span><span class="control"><input autocomplete="off" id="monthlyIncome" inputmode="decimal" value="48 300"/><b>Kč</b></span><small>Rychlý režim odhadne DVZ jako mzda × 12 ÷ 365.</small><em id="monthlyIncomeError"></em></label>
+<label class="field" for="startDate"><span>Den nástupu na PPM</span><span class="control"><input id="startDate" type="date"/></span><small>Podle data spočítáme konec podpůrčí doby.</small><em></em></label>
+</div>
+</div>
+<div class="advanced" hidden="" id="advancedPanel">
+<div class="advanced-head"><strong>Použít skutečné rozhodné období</strong><p>Vhodné při změně mzdy, odměnách, vyloučených dnech nebo u OSVČ.</p></div>
+<div class="fields">
+<label class="field" for="periodIncome"><span>Započitatelný příjem</span><span class="control"><input id="periodIncome" inputmode="decimal" value="579 600"/><b>Kč</b></span><small id="periodIncomeHelp">Příjem zahrnutý do nemocenského pojištění.</small><em id="periodIncomeError"></em></label>
+<label class="field" for="periodDays"><span>Započitatelné dny</span><span class="control"><input id="periodDays" inputmode="numeric" value="365"/><b>dnů</b></span><small>Po odečtení vyloučených dnů.</small><em id="periodDaysError"></em></label>
+<label class="field" for="incomeSource"><span>Zdroj pojištění</span><span class="control"><select id="incomeSource"><option value="employee">Zaměstnání</option><option value="osvc">OSVČ – nemocenské pojištění</option></select></span><small id="incomeSourceHelp">U zaměstnance se vychází z pojištěného příjmu.</small><em></em></label>
+<label class="field" for="startDateAdvanced"><span>Den nástupu na PPM</span><span class="control"><input id="startDateAdvanced" type="date"/></span><small>Stejné datum jako v základním režimu.</small><em></em></label>
+</div>
+<div class="advanced-options">
+<div class="option"><label><input checked="" id="insuredAtStart" type="checkbox"/> Trvá nemocenské pojištění nebo ochranná lhůta</label><small>Jde o orientační kontrolu základní podmínky.</small></div>
+<div class="option"><label><input id="insuranceDays" min="0" type="number" value="300"/> Dnů nemocenského pojištění za poslední 2 roky</label><small>Pro základní kontrolu se sleduje hranice 270 dnů.</small></div>
+<div class="option osvc-only" hidden="" id="osvcOption"><label><input id="osvcInsuranceDays" min="0" type="number" value="200"/> Dnů nemocenského pojištění OSVČ v posledním roce</label><small>U OSVČ navíc sledujeme 180 dnů.</small></div>
+</div>
+</div>
+<div class="case-title">Jakou situaci počítáme?</div>
+<div aria-label="Délka podpůrčí doby" class="case-grid" role="group">
+<button class="active" data-case="motherSingle" type="button"><b>Matka · 1 dítě</b><strong>28 týdnů</strong><small>196 kalendářních dnů</small></button>
+<button data-case="motherMultiple" type="button"><b>Matka · vícerčata</b><strong>37 týdnů</strong><small>259 kalendářních dnů</small></button>
+<button data-case="takeoverSingle" type="button"><b>Převzetí péče</b><strong>22 týdnů</strong><small>154 kalendářních dnů</small></button>
+</div>
 </form>
-
-<aside class="mat80-result rv-brand-result" id="vysledek" aria-live="polite"><div class="mat80-result-head"><div><span id="resultMode">RYCHLÝ ODHAD</span><strong>Peněžitá pomoc v mateřství</strong></div><b>RV VÝSLEDEK</b></div>
-<div class="mat80-result-main"><span>PPM za 30 kalendářních dnů</span><output id="monthlyResult">33 360 Kč</output><p id="resultSentence">Při zadaném příjmu vychází denní PPM přibližně na 1 112 Kč.</p></div>
-<div class="mat80-result-grid"><article><span>Denní PPM</span><strong id="dailyResult">1 112 Kč</strong></article><article><span>Celkem za podpůrčí dobu</span><strong id="totalResult">217 952 Kč</strong></article><article><span>Délka</span><strong id="durationResult">196 dnů</strong></article><article><span>Konec PPM</span><strong id="endResult">—</strong></article></div>
-<div class="mat80-handoff"><span>PŘÍJMOVÝ HANDOFF</span><div><b>PPM</b><i></i><b>další příjem domácnosti</b></div><p id="handoffText">Po skončení PPM si zkontrolujte návaznost rodičovského příspěvku a rozpočet domácnosti.</p></div>
-<div class="mat80-result-disclaimer"><strong>Co výsledek neznamená:</strong> Kalkulačka nepotvrzuje nárok na dávku. ČSSZ pracuje s oficiálními údaji, skutečným rozhodným obdobím, vyloučenými dny a konkrétním pojištěním.</div></aside>
-</div></div></section>
-
-<section class="mat80-meaning"><div class="mat80-container"><div class="mat80-section-head"><span class="mat80-micro">CO Z VÝSLEDKU PLYNE</span><h2>Tři částky, které mají smysl řešit v rodinném rozpočtu.</h2></div><div class="mat80-meaning-grid"><article><span>01</span><h3>Kolik přijde za běžný měsíc</h3><strong id="meaningMonth">33 360 Kč</strong><p>PPM se platí za kalendářní dny, takže únor a 31denní měsíc se liší.</p></article><article><span>02</span><h3>Jak velký je rozdíl proti hrubé mzdě</h3><strong id="meaningGap">−14 940 Kč</strong><p>Nejde o přesný rozdíl proti čisté mzdě, ale rychle ukáže změnu příjmového rámce.</p></article><article><span>03</span><h3>Kdy musí navázat další příjem</h3><strong id="meaningEnd">—</strong><p>Tohle datum je praktické pro plán rodičovského příspěvku a rezervy.</p></article></div></div></section>
-
-<section class="mat80-months"><div class="mat80-container mat80-months-grid"><div><span class="mat80-micro">PROČ SE MĚSÍCE LIŠÍ</span><h2>PPM není jedna pevná „měsíční částka“.</h2><p>Dávka náleží za kalendářní dny. Stejná denní PPM proto vytvoří jinou výplatu v únoru, v 30denním a v 31denním měsíci.</p></div><div class="mat80-month-bars"><article><span>28 dní</span><i><b id="bar28"></b></i><strong id="month28">31 136 Kč</strong></article><article class="is-main"><span>30 dní</span><i><b id="bar30"></b></i><strong id="month30">33 360 Kč</strong></article><article><span>31 dní</span><i><b id="bar31"></b></i><strong id="month31">34 472 Kč</strong></article></div></div></section>
-
-<section class="mat80-eligibility" id="narok"><div class="mat80-container"><div class="mat80-section-head"><span class="mat80-micro">ORIENTAČNÍ KONTROLA NÁROKU</span><h2>Částku lze spočítat rychle. Nárok má vlastní podmínky.</h2><p>Přesnější režim vám umožní zkontrolovat základní čekací doby, ale konečné posouzení dělá ČSSZ.</p></div><div class="mat80-eligibility-grid"><div class="mat80-checks"><label><span>Nemocenské pojištění za poslední 2 roky</span><span class="mat80-mini-control"><input id="insuranceDays" inputmode="numeric" value="270"><b>dnů</b></span></label><label class="mat80-osvc-only" hidden><span>Z toho nemocenské pojištění OSVČ v posledním roce</span><span class="mat80-mini-control"><input id="osvcInsuranceDays" inputmode="numeric" value="180"><b>dnů</b></span></label><label class="mat80-toggle"><input id="insuredAtStart" type="checkbox" checked><span><b>V den nástupu trvá pojištění nebo relevantní ochranná lhůta</b><small>U těhotné ženy po skončení zaměstnání může ochranná lhůta činit až 180 dnů podle délky posledního zaměstnání.</small></span></label></div><aside class="mat80-eligibility-status" id="eligibilityCard"><span id="eligibilityIcon">i</span><div><strong id="eligibilityTitle">Nárok ještě neověřujeme.</strong><p id="eligibilityText">Přepněte na přesnější režim a doplňte údaje o pojištění.</p></div></aside></div></div></section>
-
-<section class="mat80-guide"><div class="mat80-container"><div class="mat80-section-head"><span class="mat80-micro">NEJČASTĚJŠÍ ZMATEK</span><h2>Mateřská dovolená, PPM a rodičovský příspěvek nejsou totéž.</h2></div><div class="mat80-guide-grid"><article><b>PPM</b><h3>Peněžitá pomoc v mateřství</h3><p>Dávka nemocenského pojištění. Počítá se z redukovaného denního vyměřovacího základu a vyplácí ji ČSSZ.</p></article><article><b>Mateřská dovolená</b><h3>Pracovní volno</h3><p>Pracovněprávní institut pro zaměstnankyni. OSVČ „mateřskou dovolenou“ od zaměstnavatele nečerpá.</p></article><article><b>Rodičovský příspěvek</b><h3>Navazující rodinná dávka</h3><p>Je to jiný systém s jinými pravidly. Proto má smysl řešit jeho nastavení ještě před koncem PPM.</p></article></div></div></section>
-
-<section class="mat80-method" id="metodika"><div class="mat80-container mat80-method-grid"><div><span class="mat80-micro">METODIKA 2026</span><h2>Jak výpočet funguje a kde má své hranice.</h2><p>Pro rok 2026 používáme redukční hranice 1 633 Kč, 2 449 Kč a 4 897 Kč. U PPM se do první hranice započítává 100 %, mezi první a druhou 60 %, mezi druhou a třetí 30 % a nad třetí hranici nic. Denní PPM činí 70 % redukovaného DVZ.</p><div class="mat80-formulas"><code>DVZ = započitatelný příjem / započitatelné kalendářní dny</code><code>RDVZ = 100 % do 1 633 + 60 % do 2 449 + 30 % do 4 897 Kč</code><code>denní PPM = 70 % × redukovaný DVZ</code></div><div class="mat80-method-note"><strong>Důležité omezení:</strong> Rychlý režim předpokládá stabilní příjem a 365 započitatelných dnů. Neřeší speciální ochranné lhůty, souběhy pojištění, vyloučené dny, zaměstnání malého rozsahu, zahraniční koordinaci ani výhodnější dřívější DVZ u rychle po sobě jdoucích dětí. Konečnou částku i nárok určuje ČSSZ.</div></div><aside><h3>Ověřeno z primárních zdrojů</h3><a href="https://mpsv.gov.cz/nemocenske-pojisteni" target="_blank" rel="noopener noreferrer">MPSV – nemocenské pojištění 2026</a><a href="https://www.cssz.cz/web/cz/materstvi-snadne-a-prehledne" target="_blank" rel="noopener noreferrer">ČSSZ – mateřství přehledně</a><a href="https://www.cssz.cz/penezita-pomoc-v-materstvi" target="_blank" rel="noopener noreferrer">ČSSZ – peněžitá pomoc v mateřství</a><dl><div><dt>Redukční hranice</dt><dd>1 633 / 2 449 / 4 897 Kč</dd></div><div><dt>Sazba PPM</dt><dd>70 % RDVZ</dd></div><div><dt>Kontrola</dt><dd>28. 8. 2026</dd></div></dl></aside></div></section>
-
-<section class="mat80-related"><div class="mat80-container"><div class="mat80-section-head"><span class="mat80-micro">CO ŘEŠIT DÁL</span><h2>Navazující kroky pro rodinný příjem.</h2></div><div class="mat80-related-grid"><a href="/rodicovsky-prispevek-kalkulacka.html"><span>DÁVKY</span><strong>Rodičovský příspěvek</strong><small>Nastavte navazující čerpání po PPM.</small></a><a href="/kalkulacka-rozpoctu-domacnosti.html"><span>ROZPOČET</span><strong>Rozpočet domácnosti</strong><small>Porovnejte nový příjem s pravidelnými výdaji.</small></a><a href="/kalkulacka-financni-rezervy.html"><span>REZERVA</span><strong>Finanční rezerva</strong><small>Ověřte, kolik měsíců nižší příjem pokryjete.</small></a></div></div></section>
+<aside aria-live="polite" class="result" id="vysledek">
+<div class="result-notch"></div>
+<div class="result-inner">
+<div class="result-id"><span>RychléVýpočty.cz · výsledek PPM</span><span class="rvx-data-stamp">RV DATA · 2026</span></div>
+<div class="result-main"><span>PPM za 30 kalendářních dnů</span><strong id="monthlyResult">33 360 Kč</strong><p id="resultSentence">Denní PPM vychází přibližně na 1 112 Kč.</p></div>
+<div class="result-timeline">
+<div class="timeline-meta"><span id="timelineStart">Nástup —</span><span id="timelineWeeks">28 týdnů</span><span id="timelineEnd">Konec —</span></div>
+<div class="timeline-bar"><i></i></div>
+<div class="timeline-labels"><strong>PPM</strong><span>průběžná dávka za kalendářní dny</span><strong id="durationResult">196 dnů</strong></div>
+</div>
+<div class="result-grid">
+<div class="result-cell"><span>Denní PPM</span><strong id="dailyResult">1 112 Kč</strong></div>
+<div class="result-cell"><span>Celkem za podpůrčí dobu</span><strong id="totalResult">217 952 Kč</strong></div>
+<div class="result-cell"><span>Redukovaný DVZ</span><strong id="reducedResult">1 588 Kč</strong></div>
+<div class="result-cell"><span>Konec PPM</span><strong id="endResult">—</strong></div>
+</div>
+<div class="month-row"><article><span>28 dní</span><strong id="month28">31 136 Kč</strong></article><article><span>30 dní</span><strong id="month30">33 360 Kč</strong></article><article><span>31 dní</span><strong id="month31">34 472 Kč</strong></article></div>
+<div class="result-handoff" id="handoffText"><b>Co potom:</b> před koncem PPM zkontrolujte návaznost rodičovského příspěvku a další příjem domácnosti.</div>
+<div class="eligibility-mini" id="eligibilityMini">V základním režimu nárok neověřujeme. Pro orientační kontrolu podmínek přepněte na Přesnější.</div>
+</div>
+</aside>
+</div>
+</div>
+</section>
+<section class="income-section">
+<div class="container income-grid">
+<div class="income-copy"><span class="kicker">02 · příjmový most</span><h2>PPM není procento z měsíční mzdy.</h2><p>Nejdřív se z příjmu vytvoří denní vyměřovací základ, ten se redukuje a z výsledku se počítá 70 %. Proto není správné vzít hrubou mzdu a jednoduše ji vynásobit 0,7.</p><p>Živý rozpad vpravo používá právě vaše aktuální zadání.</p></div>
+<div class="bridge-board">
+<div class="bridge-row"><article class="bridge-point"><span>Běžný měsíční příjem</span><strong id="meaningGross">48 300 Kč</strong><small>před nástupem na PPM</small></article><div class="bridge-arrow"></div><article class="bridge-point focus"><span>PPM za 30 dní</span><strong id="meaningMonth">33 360 Kč</strong><small id="meaningGap">rozdíl −14 940 Kč proti hrubé mzdě</small></article></div>
+<div class="bridge-foot"><div><span>Denní vyměřovací základ před redukcí</span><strong id="meaningDvz">1 588 Kč</strong></div><div><span>Po redukci → 70 %</span><strong id="meaningFormula">1 588 Kč → 1 112 Kč / den</strong></div></div>
+</div>
+</div>
+</section>
+<section class="months-section">
+<div class="container">
+<div class="months-head"><div><span class="kicker">03 · měsíc není vždy stejný</span><h2>PPM se platí za kalendářní dny.</h2></div><p>Proto se měsíční částka liší podle toho, zda má měsíc 28, 30 nebo 31 dnů. Pro domácí rozpočet je užitečnější počítat s tímto rozpětím než s jednou „měsíční mateřskou“.</p></div>
+<div class="month-board">
+<article class="month-card"><span>28 kalendářních dnů</span><strong id="card28">31 136 Kč</strong><small>typický únor bez přestupného dne</small><div class="month-bar"><i id="bar28" style="--w:90%"></i></div></article>
+<article class="month-card active"><span>30 kalendářních dnů</span><strong id="card30">33 360 Kč</strong><small>praktický srovnávací měsíc</small><div class="month-bar"><i id="bar30" style="--w:97%"></i></div></article>
+<article class="month-card"><span>31 kalendářních dnů</span><strong id="card31">34 472 Kč</strong><small>maximum při stejné denní dávce</small><div class="month-bar"><i id="bar31" style="--w:100%"></i></div></article>
+</div>
+</div>
+</section>
+<section class="elig-section" id="narok">
+<div class="container elig-grid">
+<div class="elig-copy"><span class="kicker">04 · orientační nárok</span><h2>Částku lze spočítat. Nárok má ještě další podmínky.</h2><p>V základním režimu necháváme výpočet jednoduchý. Pokud chcete orientačně zkontrolovat i podmínky pojištění, přepněte nahoře na Přesnější režim.</p></div>
+<div class="elig-board">
+<div class="elig-row"><span class="elig-icon">270</span><div><strong>Nemocenské pojištění za poslední 2 roky</strong><p>Základní kontrolní hranice v našem modelu je 270 kalendářních dnů účasti na nemocenském pojištění.</p></div><em>základ</em></div>
+<div class="elig-row"><span class="elig-icon">✓</span><div><strong>Pojištění nebo ochranná lhůta při nástupu</strong><p>Samotné splnění 270 dnů nestačí, pokud při nástupu není splněna další podmínka účasti nebo ochranné lhůty.</p></div><em>nástup</em></div>
+<div class="elig-row"><span class="elig-icon">180</span><div><strong>OSVČ má navíc vlastní podmínku</strong><p>U OSVČ model navíc kontroluje 180 dnů nemocenského pojištění OSVČ v posledním roce. Nezadávejte obrat ani daňový zisk místo pojistného základu.</p></div><em>OSVČ</em></div>
+</div>
+</div>
+</section>
+<section class="handoff-section">
+<div class="container">
+<span class="kicker">05 · co řešit před koncem PPM</span><h2>Návaznost příjmu je součást výsledku.</h2>
+<div class="handoff-board">
+<article class="handoff-card"><span>Aktuální model</span><strong id="handoffEnd">PPM končí —</strong><p id="handoffDuration">Podpůrčí doba 28 týdnů.</p></article>
+<div aria-hidden="true" class="handoff-mid"><span>→</span></div>
+<article class="handoff-card next"><span>Další krok domácnosti</span><strong>Rodičovský příspěvek / jiný příjem</strong><p>Ještě před koncem PPM má smysl zkontrolovat návaznost další dávky, termíny a změnu měsíčního cash-flow.</p></article>
+</div>
+</div>
+</section>
+<section class="method" id="metodika">
+<div class="container method-grid">
+<div class="method-copy"><span class="kicker">06 · metodika a hranice</span><h2>Co model počítá a kde končí.</h2><p>Výpočet používá redukční hranice roku 2026 a sazbu PPM 70 % z redukovaného denního vyměřovacího základu. Základní režim odhaduje rozhodný příjem ze stabilní měsíční mzdy, přesnější režim pracuje s příjmem a započitatelnými dny.</p><ul><li>Redukční hranice 2026: 1 633 / 2 449 / 4 897 Kč.</li><li>Do první hranice se pro PPM započítává 100 %, mezi první a druhou 60 %, mezi druhou a třetí 30 %.</li><li>Denní PPM je 70 % redukovaného DVZ.</li><li>Model podporuje 28 týdnů, 37 týdnů a převzetí péče 22 týdnů podle zvoleného scénáře.</li></ul></div>
+<aside class="method-note"><strong>Orientační model, ne rozhodnutí ČSSZ</strong><p>Skutečný nárok a výše dávky mohou záviset na oficiálním rozhodném období, vyloučených dnech, ochranné lhůtě a dalších individuálních podmínkách. Pro kontrolu konkrétní dávky použijte skutečné podklady.</p><div class="badges"><span>25 regresních scénářů</span><span>ověřeno 28. 8. 2026</span><span>výpočet v zařízení</span></div></aside>
+</div>
+</section>
 </main>
-
-<footer class="mat80-footer rv-brand-footer"><div class="mat80-container mat80-footer-grid"><div class="mat80-footer-brand"><a href="/" aria-label="RychléVýpočty.cz domů"><img src="/logo-rv-v32-inverse.svg?v=1" width="590" height="96" alt="RychléVýpočty.cz"></a><p>Online kalkulačky s transparentní metodikou, ověřenými parametry a jasně popsanými hranicemi modelu.</p><nav class="mat80-socials" aria-label="Sociální sítě RychléVýpočty.cz"><a href="https://www.facebook.com/rychlevypocty" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.6 21v-8h2.7l.4-3h-3.1V8.1c0-.9.3-1.5 1.6-1.5h1.7V4a23 23 0 0 0-2.5-.1c-2.5 0-4.2 1.5-4.2 4.3V10H7.4v3h2.8v8z"/></svg></a><a href="https://www.instagram.com/rychlevypocty/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a></nav></div><div class="mat80-footer-col"><h3>Rodina</h3><a href="/rodina-a-rozpocet.html">Rodina a rozpočet</a><a href="/rodicovsky-prispevek-kalkulacka.html">Rodičovský příspěvek</a><a href="/termin-porodu-kalkulacka.html">Termín porodu</a></div><div class="mat80-footer-col"><h3>Projekt</h3><a href="/kalkulacky.html">Všechny kalkulačky</a><a href="/jak-pocitame.html">Jak počítáme</a><a href="/data-a-benchmarky.html">Data a benchmarky</a></div><div class="mat80-footer-col"><h3>Informace</h3><a href="/o-nas.html">O projektu</a><a href="/podminky-pouziti.html">Podmínky použití</a><a href="/ochrana-osobnich-udaju.html">Ochrana soukromí</a></div></div><div class="mat80-container mat80-footer-bottom"><span>© 2026 RychléVýpočty.cz · Orientační dávkový model; nenahrazuje rozhodnutí ČSSZ ani individuální sociální či právní posouzení.</span><strong>Zadat → Spočítat → Pochopit → Rozhodnout</strong></div></footer>
-<script src="/rv-brand-v32.js?v=20260821"></script><script src="/materska-vnext.js?v=20260828-1"></script>
-</body></html>
+<footer>
+<div class="container">
+<div class="footer-grid">
+<div class="footer-brand"><img alt="RychléVýpočty.cz" height="96" src="https://rychlevypocty.cz/logo-rv-v32-inverse.svg?v=1" width="590"/><p>Praktické kalkulačky s transparentní metodikou, jasnými hranicemi modelu a výsledkem, který pomáhá udělat další rozhodnutí.</p><div class="socials"><a href="https://www.facebook.com/rychlevypocty">Facebook</a><a href="https://www.instagram.com/rychlevypocty/">Instagram</a></div></div>
+<div class="footer-col"><b>Projekt</b><a href="https://rychlevypocty.cz/o-nas.html">O projektu</a><a href="https://rychlevypocty.cz/jak-pocitame.html">Jak počítáme</a><a href="https://rychlevypocty.cz/data-a-benchmarky.html">Data a benchmarky</a></div>
+<div class="footer-col"><b>Rodina</b><a href="https://rychlevypocty.cz/rodicovsky-prispevek-kalkulacka.html">Rodičovský příspěvek</a><a href="https://rychlevypocty.cz/tehotenstvi-kalkulacka.html">Těhotenství</a><a href="https://rychlevypocty.cz/ocr-kalkulacka.html">Ošetřovné</a></div>
+</div>
+<div class="footer-bottom"><span>© RychléVýpočty.cz · orientační výpočty</span><span>Zadat → Spočítat → Pochopit → Rozhodnout</span></div>
+</div>
+</footer>
+<script>
+(()=>{
+"use strict";
+const $=id=>document.getElementById(id),$$=s=>[...document.querySelectorAll(s)];
+const RH1=1633,RH2=2449,RH3=4897;
+const durations={motherSingle:196,motherMultiple:259,takeoverSingle:154};
+const weeks={motherSingle:28,motherMultiple:37,takeoverSingle:22};
+const state={mode:"basic",caseType:"motherSingle"};
+const nf=new Intl.NumberFormat("cs-CZ",{maximumFractionDigits:0}),dateFmt=new Intl.DateTimeFormat("cs-CZ",{day:"numeric",month:"short",year:"numeric"});
+const parse=v=>{const n=Number(String(v??"").replace(/\s/g,"").replace(",","."));return Number.isFinite(n)?n:NaN};
+const money=n=>nf.format(Math.round(Number.isFinite(n)?n:0))+" Kč";
+const signed=n=>{const v=Math.round(n);return (v>0?"+":"")+nf.format(v)+" Kč"};
+function reduceDvz(dvz){const d=Math.max(0,dvz),p1=Math.min(d,RH1),p2=Math.min(Math.max(d-RH1,0),RH2-RH1)*.6,p3=Math.min(Math.max(d-RH2,0),RH3-RH2)*.3;return Math.ceil(p1+p2+p3)}
+function benefit(dvz){return Math.ceil(reduceDvz(dvz)*.7)}
+function readDate(id){const v=$(id).value;return v?new Date(v+"T12:00:00"):null}
+function addInclusive(date,days){if(!date)return null;const d=new Date(date);d.setDate(d.getDate()+Math.max(1,Math.round(days))-1);return d}
+function input(){
+ if(state.mode==="basic"){const monthly=Math.max(0,parse($("monthlyIncome").value)||0);return{monthly,total:monthly*12,days:365,dvz:monthly*12/365,source:"employee",start:readDate("startDate")}}
+ const total=Math.max(0,parse($("periodIncome").value)||0),days=Math.max(1,parse($("periodDays").value)||1);return{monthly:total/12,total,days,dvz:total/days,source:$("incomeSource").value,start:readDate("startDateAdvanced")};
+}
+function validity(v){
+ let ok=v.dvz>0;
+ $("monthlyIncomeError").textContent="";$("periodIncomeError").textContent="";$("periodDaysError").textContent="";
+ if(!ok){if(state.mode==="basic")$("monthlyIncomeError").textContent="Zadejte kladnou mzdu.";else $("periodIncomeError").textContent="Zadejte kladný příjem."}
+ return ok;
+}
+function renderEligibility(){
+ const box=$("eligibilityMini");
+ if(state.mode!=="advanced"){box.className="eligibility-mini";box.textContent="V základním režimu nárok neověřujeme. Pro orientační kontrolu podmínek přepněte na Přesnější.";return}
+ const ins=Math.max(0,parse($("insuranceDays").value)||0),active=$("insuredAtStart").checked,osvc=$("incomeSource").value==="osvc",osvcDays=Math.max(0,parse($("osvcInsuranceDays").value)||0);
+ const ok=ins>=270&&active&&(!osvc||osvcDays>=180);
+ if(ok){box.className="eligibility-mini ok";box.textContent="Zadané základní podmínky pojištění vycházejí orientačně kladně. Konečný nárok potvrzuje ČSSZ."}
+ else{const why=[];if(ins<270)why.push(Math.round(ins)+" z 270 dnů pojištění");if(!active)why.push("není potvrzené pojištění ani ochranná lhůta");if(osvc&&osvcDays<180)why.push(Math.round(osvcDays)+" z 180 dnů pojištění OSVČ");box.className="eligibility-mini warn";box.textContent="Zkontrolujte: "+why.join(", ")+". Konečný nárok ověřte u OSSZ."}
+}
+function render(){
+ const v=input();if(!validity(v))return;
+ const rdvz=reduceDvz(v.dvz),daily=benefit(v.dvz),daysTotal=durations[state.caseType],w=weeks[state.caseType],total=daily*daysTotal,m28=daily*28,m30=daily*30,m31=daily*31,end=addInclusive(v.start,daysTotal),grossBase=state.mode==="basic"?v.monthly:v.total/12;
+ const endText=end?dateFmt.format(end):"—",startText=v.start?dateFmt.format(v.start):"—";
+ $("monthlyResult").textContent=money(m30);$("dailyResult").textContent=money(daily);$("totalResult").textContent=money(total);$("reducedResult").textContent=money(rdvz);$("durationResult").textContent=daysTotal+" dnů";$("endResult").textContent=endText;$("resultSentence").textContent="Denní PPM vychází přibližně na "+money(daily)+".";
+ $("month28").textContent=money(m28);$("month30").textContent=money(m30);$("month31").textContent=money(m31);
+ $("timelineStart").textContent="Nástup "+startText;$("timelineWeeks").textContent=w+" týdnů";$("timelineEnd").textContent="Konec "+endText;
+ $("heroGross").textContent=money(grossBase);$("heroPpm").textContent=money(m30);$("heroDaily").textContent=money(daily)+" / den";$("heroStart").textContent="nástup: "+startText;$("heroDuration").textContent=w+" týdnů";$("heroEnd").textContent="konec: "+endText;$("heroTotal").textContent=money(total);
+ $("meaningGross").textContent=money(grossBase);$("meaningMonth").textContent=money(m30);$("meaningGap").textContent="rozdíl "+signed(m30-grossBase)+" proti hrubé mzdě";$("meaningDvz").textContent=money(v.dvz);$("meaningFormula").textContent=money(rdvz)+" → "+money(daily)+" / den";
+ $("card28").textContent=money(m28);$("card30").textContent=money(m30);$("card31").textContent=money(m31);const max=m31||1;$("bar28").style.setProperty("--w",Math.max(8,m28/max*100)+"%");$("bar30").style.setProperty("--w",Math.max(8,m30/max*100)+"%");$("bar31").style.setProperty("--w","100%");
+ $("handoffText").innerHTML=end?`<b>Co potom:</b> PPM v tomto modelu končí ${endText}. Před tímto datem zkontrolujte návaznost rodičovského příspěvku a další příjem domácnosti.`:"<b>Co potom:</b> zadejte datum nástupu a kalkulačka ukáže přesný konec podpůrčí doby.";
+ $("handoffEnd").textContent=end?"PPM končí "+endText:"PPM končí —";$("handoffDuration").textContent="Podpůrčí doba "+w+" týdnů · "+daysTotal+" dnů.";
+ renderEligibility();
+}
+function syncDates(source){const a=$("startDate"),b=$("startDateAdvanced");if(source===a)b.value=a.value;if(source===b)a.value=b.value}
+function setMode(m){state.mode=m==="advanced"?"advanced":"basic";$$("[data-mode]").forEach(b=>{const on=b.dataset.mode===state.mode;b.classList.toggle("active",on);b.setAttribute("aria-pressed",String(on))});$("basicPanel").hidden=state.mode!=="basic";$("advancedPanel").hidden=state.mode!=="advanced";$("formTitle").textContent=state.mode==="basic"?"Běžnou mzdu a datum nástupu":"Skutečný příjem a dny rozhodného období";$("modeHelp").textContent=state.mode==="basic"?"Pro rychlý odhad předpokládáme stabilní příjem za posledních 12 měsíců.":"Přesnější režim používá skutečný započitatelný příjem a počet dnů z rozhodného období.";updateSource();render()}
+function updateSource(){const osvc=state.mode==="advanced"&&$("incomeSource").value==="osvc";$("osvcOption").hidden=!osvc;$("periodIncomeHelp").textContent=osvc?"Součet základů, ze kterých bylo zaplaceno nemocenské pojištění OSVČ. Nezadávejte obrat ani daňový zisk.":"Příjem zahrnutý do vyměřovacího základu nemocenského pojištění.";$("incomeSourceHelp").textContent=osvc?"U OSVČ je nutné dobrovolné nemocenské pojištění a další čekací doba.":"U zaměstnance se vychází z pojištěného příjmu."}
+$$("[data-mode]").forEach(b=>b.addEventListener("click",()=>setMode(b.dataset.mode)));
+$$("[data-case]").forEach(b=>b.addEventListener("click",()=>{state.caseType=b.dataset.case;$$("[data-case]").forEach(x=>x.classList.toggle("active",x===b));render()}));
+["monthlyIncome","periodIncome","periodDays","insuranceDays","osvcInsuranceDays"].forEach(id=>$(id)?.addEventListener("input",render));
+$("incomeSource").addEventListener("change",()=>{updateSource();render()});$("insuredAtStart").addEventListener("change",render);
+$("startDate").addEventListener("change",e=>{syncDates(e.target);render()});$("startDateAdvanced").addEventListener("change",e=>{syncDates(e.target);render()});
+$("maternityForm").addEventListener("submit",e=>e.preventDefault());
+$("menuBtn").addEventListener("click",()=>{const open=$("mobileNav").classList.toggle("is-open");$("menuBtn").setAttribute("aria-expanded",String(open))});
+const d=new Date();d.setDate(d.getDate()+42);const ds=d.toISOString().slice(0,10);$("startDate").value=ds;$("startDateAdvanced").value=ds;
+window.RV_MAT80_TEST={reduceDvz,benefit,durations};
+setMode("basic");
+})();
+</script>
+</body>
+</html>

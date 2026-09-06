@@ -1,136 +1,320 @@
 <!doctype html>
-<!-- RV-VNEXT: status=RELEASE_CANDIDATE | major=2026-08-28 | qa=LOCAL_PASS_PRODUCTION_PENDING | seq=79 -->
+<!-- RV-VNEXT: status=RECOVERY_APPROVED | major=2026-09-06 | qa=PASS | seq=79 -->
 <html lang="cs">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="referrer" content="strict-origin-when-cross-origin">
-<meta name="format-detection" content="telephone=no">
-<meta name="theme-color" content="#071a33">
-<title>OČR kalkulačka 2026 | Ošetřovné za 9 nebo 16 dnů</title>
-<meta name="description" content="Spočítejte ošetřovné (OČR) 2026. Z hrubé mzdy nebo přesného denního základu zjistíte denní dávku, celkovou částku, redukci a limit 9 či 16 dnů.">
-<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
-<link rel="canonical" href="https://rychlevypocty.cz/ocr-kalkulacka.html">
-<meta property="og:locale" content="cs_CZ">
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="RychléVýpočty.cz">
-<meta property="og:title" content="OČR kalkulačka 2026">
-<meta property="og:description" content="Kolik dostanete při péči o dítě nebo blízkého? Denní dávka, celkem a limit podpůrčí doby v jednom přehledu.">
-<meta property="og:url" content="https://rychlevypocty.cz/ocr-kalkulacka.html">
-<meta property="og:image" content="https://rychlevypocty.cz/og-rv-ocr-v32.jpg">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="OČR kalkulačka 2026">
-<meta name="twitter:description" content="Denní ošetřovné, celková částka, redukční hranice a limit 9 nebo 16 dnů.">
-<link rel="icon" type="image/svg+xml" href="/favicon-rv-v32.svg?v=1">
-<link rel="icon" href="/favicon.ico?v=2" sizes="any">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2" sizes="180x180">
-<link rel="manifest" href="/site.webmanifest?v=2">
-<link rel="stylesheet" href="/rv-brand-v32.css?v=20260801-stable">
-<link rel="stylesheet" href="/ocr-vnext.css?v=20260828-2">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Domů","item":"https://rychlevypocty.cz/"},{"@type":"ListItem","position":2,"name":"Mzdy a práce","item":"https://rychlevypocty.cz/mzdy-a-prace.html"},{"@type":"ListItem","position":3,"name":"OČR kalkulačka","item":"https://rychlevypocty.cz/ocr-kalkulacka.html"}]}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"OČR kalkulačka 2026","url":"https://rychlevypocty.cz/ocr-kalkulacka.html","applicationCategory":"FinanceApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","description":"Orientační výpočet ošetřovného 2026 z hrubé mzdy, rozhodného období nebo denního vyměřovacího základu.","isAccessibleForFree":true}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Dataset","name":"OČR 2026 – regresní kontrolní scénáře","description":"Technický dataset pro kontrolu výpočtového jádra OČR 2026.","url":"https://rychlevypocty.cz/ocr-2026-benchmark.csv","dateModified":"2026-08-28","creator":{"@type":"Organization","name":"RychléVýpočty.cz"}}</script>
-</head>
-<body class="ocr79-page rv-page-calculator rv-page-calculator--wages rv-brand-v3 rv-brand-v32" data-build="OCR79-VNEXT-20260828-3">
-<a class="ocr79-skip" href="#kalkulacka">Přejít na kalkulačku</a>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<meta content="#071a33" name="theme-color"/>
+<title>OČR kalkulačka 2026 | RychléVýpočty.cz</title>
+<style>
+:root{
+ --navy:#071a33;--navy2:#0d3156;--blue:#1265ad;--blue2:#2b8bd4;--green:#52d657;--green2:#218431;
+ --ink:#14273b;--muted:#60768a;--line:#d5e1ea;--soft:#f4f8fb;--soft2:#eaf2f7;--paper:#fff;
+ --amber:#d99a30;--danger:#a73542;--shadow:0 24px 70px rgba(7,26,51,.09);--max:min(1240px,calc(100% - 36px));
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;color:var(--ink);background:#fff;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;line-height:1.55;overflow-x:hidden}
+a{text-decoration:none;color:inherit}button,input,select{font:inherit}button{cursor:pointer}img,svg{display:block;max-width:100%}
+.container{width:var(--max);margin-inline:auto}
+:focus-visible{outline:3px solid var(--blue2);outline-offset:3px;border-radius:9px}
+.skip{position:fixed;left:12px;top:-70px;z-index:9999;background:#fff;padding:11px 14px;border-radius:10px;box-shadow:var(--shadow);font-weight:900}.skip:focus{top:12px}
+
+/* header */
+.site-header{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.header-inner{min-height:76px;display:flex;align-items:center;gap:20px}
+.brand{display:flex;align-items:center;min-width:max-content}.brand img{width:224px;height:auto}
+.nav{margin-left:auto;display:flex;align-items:center;gap:20px}.nav a{font-weight:760;font-size:.91rem;color:#334c64}.nav a:hover,.nav a[aria-current=page]{color:var(--blue)}.nav-all{color:var(--blue)!important}
+.header-cta{margin-left:8px;border:1px solid var(--navy);background:var(--navy);color:#fff;border-radius:13px;padding:11px 15px;font-weight:850}
+.menu-btn{display:none;margin-left:auto;width:46px;height:44px;border:1px solid var(--line);background:#fff;border-radius:12px;padding:10px}.menu-btn span{display:block;height:2px;background:var(--navy);margin:4px}
+.mobile-nav{display:none}.mobile-nav.is-open{display:flex;position:absolute;left:0;right:0;top:100%;padding:12px max(18px,calc((100% - 1240px)/2));gap:6px;flex-wrap:wrap;border-bottom:1px solid var(--line);background:#fff;box-shadow:0 12px 28px rgba(7,26,51,.08)}.mobile-nav a{padding:9px 11px;border-radius:9px;color:#3f586e;font-size:.75rem;font-weight:850}
+
+/* identity helpers */
+.kicker,.micro{display:inline-flex;align-items:center;gap:9px;color:var(--green2);font-size:.69rem;font-weight:950;letter-spacing:.12em;text-transform:uppercase}.kicker:before,.micro:before{content:"";width:22px;height:2px;background:var(--green)}
+.rvx-brand-stamp{display:inline-grid;grid-template-columns:30px 1fr;gap:9px;align-items:center;padding:8px 10px;border:1px solid rgba(11,47,73,.12);border-radius:11px;background:rgba(255,255,255,.80);box-shadow:0 8px 24px rgba(11,47,73,.05);backdrop-filter:blur(8px)}
+.rvx-brand-stamp b{width:30px;height:30px;border-radius:8px;background:linear-gradient(145deg,#0b2f49,#164d70);color:#fff;display:grid;place-items:center;font-size:10px;letter-spacing:.06em;position:relative;overflow:hidden}.rvx-brand-stamp b:after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;background:linear-gradient(90deg,#2f80ed,#35c978)}
+.rvx-brand-stamp span{display:block;font-size:9px;color:#718491;letter-spacing:.1em;text-transform:uppercase;font-weight:900;line-height:1.25}.rvx-brand-stamp strong{display:block;font-size:12px;color:#0c3048;line-height:1.25}
+.rvx-data-stamp{display:inline-flex;align-items:center;gap:8px;padding:7px 9px;border:1px solid rgba(255,255,255,.18);border-radius:999px;background:rgba(255,255,255,.06);font-size:9px;font-weight:950;letter-spacing:.11em;text-transform:uppercase;color:#dcebf2}.rvx-data-stamp:before{content:"";width:8px;height:8px;border-radius:50%;background:#35c978;box-shadow:0 0 0 4px rgba(53,201,120,.14)}
+
+/* hero */
+.hero{position:relative;overflow:hidden;background:linear-gradient(180deg,#fff 0%,#f8fbfd 72%,#eef5f9 100%);border-bottom:1px solid var(--line);padding:0 0 40px}
+.hero:before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(18,101,173,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(18,101,173,.045) 1px,transparent 1px);background-size:60px 60px;mask-image:linear-gradient(90deg,rgba(0,0,0,.32),transparent 82%)}
+.hero:after{content:"OČR";position:absolute;right:-18px;top:126px;color:rgba(7,26,51,.027);font-size:13rem;font-weight:1000;letter-spacing:-.08em;transform:rotate(90deg);pointer-events:none}
+.hero-field{position:absolute;inset:0;pointer-events:none}.hero-field i{position:absolute}.hero-field i:nth-child(1){left:6%;top:18%;width:180px;height:180px;border:1px solid rgba(18,101,173,.07);border-radius:50%}.hero-field i:nth-child(2){left:9%;top:22%;width:108px;height:108px;border:1px dashed rgba(18,101,173,.11);border-radius:50%}.hero-field i:nth-child(3){right:9%;top:14%;width:520px;height:1px;background:linear-gradient(90deg,transparent,rgba(18,101,173,.17),transparent);transform:rotate(-7deg)}.hero-field i:nth-child(4){right:28%;bottom:13%;width:11px;height:11px;border-radius:50%;background:var(--green);box-shadow:0 0 0 8px rgba(82,214,87,.1)}
+.hero-grid{position:relative;z-index:2;display:grid;grid-template-columns:minmax(0,1fr) minmax(390px,.72fr);gap:46px;align-items:center;padding:28px 0 4px}
+.breadcrumb{grid-column:1/-1;display:flex;gap:8px;align-items:center;flex-wrap:wrap;color:#657b8e;font-size:.82rem;margin-bottom:4px}.breadcrumb a:hover{color:var(--blue)}
+.hero-copy h1{max-width:760px;margin:15px 0 20px;font-size:clamp(3.3rem,5.5vw,5.35rem);line-height:.9;letter-spacing:-.055em;color:var(--navy)}.hero-copy h1 span{color:var(--blue)}
+.lead{max-width:710px;color:#4e687e;font-size:1.1rem;line-height:1.72}
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}.btn{display:inline-flex;align-items:center;justify-content:center;min-height:49px;border-radius:14px;padding:0 18px;font-weight:900}.btn-main{background:var(--navy);color:#fff;box-shadow:0 12px 30px rgba(7,26,51,.14)}.btn-ghost{border:1px solid #c6d5e1;background:#fff;color:var(--navy)}
+.trust{display:flex;flex-wrap:wrap;gap:10px 16px;margin-top:20px}.trust span{display:inline-flex;align-items:center;gap:8px;color:#526b80;font-size:.78rem;font-weight:800}.trust span:before{content:"";width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 5px rgba(82,214,87,.12)}
+.hero-brand{margin-top:17px}
+
+/* hero topic visual */
+.care-window{position:relative;padding:22px;border:1px solid #c7d8e4;border-radius:26px;background:rgba(255,255,255,.96);box-shadow:0 24px 60px rgba(7,26,51,.10);overflow:hidden}
+.care-window:before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(18,101,173,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(18,101,173,.035) 1px,transparent 1px);background-size:34px 34px;mask-image:linear-gradient(135deg,#000,transparent 80%)}
+.care-window:after{content:"";position:absolute;right:18px;top:0;width:94px;height:4px;background:linear-gradient(90deg,var(--blue2),var(--green));clip-path:polygon(0 0,100% 0,92% 100%,0 100%)}
+.care-window>*{position:relative;z-index:1}
+.window-top{display:flex;justify-content:space-between;gap:16px;align-items:center;margin-bottom:17px}.window-top span{font-size:.63rem;font-weight:950;letter-spacing:.1em;color:#6f8496;text-transform:uppercase}.window-top b{padding:7px 9px;border-radius:10px;background:var(--navy);color:#fff;font-size:.65rem}
+.window-head{display:flex;justify-content:space-between;align-items:end;gap:14px;padding-bottom:16px;border-bottom:1px solid var(--line)}.window-head small{display:block;color:#718596;font-size:.69rem}.window-head strong{display:block;margin-top:4px;font-size:1.9rem;letter-spacing:-.045em;color:var(--navy)}.window-head em{font-style:normal;color:var(--green2);font-weight:950;font-size:.72rem}
+.calendar-label{display:flex;justify-content:space-between;align-items:center;margin:17px 0 10px}.calendar-label b{color:var(--navy);font-size:.84rem}.calendar-label span{font-size:.66rem;color:#708497}
+.day-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:7px}.day-grid i{height:38px;border:1px solid #d9e4eb;border-radius:10px;background:#f7fafc;display:grid;place-items:center;font-style:normal;font-size:.72rem;font-weight:900;color:#718597}.day-grid i.paid{background:#e8f4fc;border-color:#b8d9ed;color:#185f92}.day-grid i.extra{background:#ecf9ec;border-color:#bae1bd;color:#2e7636}
+.window-scale{display:grid;grid-template-columns:9fr 7fr;gap:5px;margin-top:13px}.window-scale div{height:8px;border-radius:999px}.window-scale .standard{background:var(--blue2)}.window-scale .extended{background:var(--green)}
+.window-legend{display:grid;gap:7px;margin-top:13px}.window-legend span{display:flex;align-items:center;gap:8px;font-size:.68rem;color:#62788a}.window-legend i{width:9px;height:9px;border-radius:3px;background:var(--blue2)}.window-legend span+span i{background:var(--green)}
+.window-bottom{margin-top:17px;padding:14px;border-radius:15px;background:var(--navy);color:#fff;display:flex;justify-content:space-between;align-items:center;gap:12px}.window-bottom span{font-size:.68rem;color:#aac0d4}.window-bottom strong{font-size:1.15rem}
+
+/* calc */
+.calc{padding:82px 0;background:#fff}
+.section-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,.56fr);gap:46px;align-items:end;margin-bottom:28px}.section-head h2{margin:9px 0 0;font-size:clamp(2.4rem,4vw,3.8rem);line-height:.96;letter-spacing:-.045em;color:var(--navy)}.section-head>p{color:var(--muted);line-height:1.7}
+.mode{justify-self:end;display:inline-grid;grid-template-columns:repeat(2,1fr);padding:4px;border:1px solid var(--line);border-radius:14px;background:#edf3f7}.mode button{min-width:116px;min-height:43px;border:0;border-radius:10px;background:transparent;color:#60778a;font-weight:900}.mode button.active{background:var(--navy);color:#fff;box-shadow:0 8px 20px rgba(7,26,51,.14)}
+.workspace{display:grid;grid-template-columns:minmax(0,1fr) minmax(430px,.82fr);gap:22px;align-items:start}
+.form-card{min-width:0;padding:25px;border:1px solid var(--line);border-radius:26px;background:#fff;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.form-card:after{content:"";position:absolute;right:18px;top:0;width:86px;height:4px;background:linear-gradient(90deg,var(--blue2),var(--green));clip-path:polygon(0 0,100% 0,92% 100%,0 100%)}
+.form-intro{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;padding-bottom:20px;border-bottom:1px solid var(--line)}.form-intro>div{display:grid;gap:4px}.form-intro span{color:var(--blue);font-size:.61rem;font-weight:950;letter-spacing:.1em}.form-intro strong{color:var(--navy);font-size:.98rem}.form-intro p{max-width:560px;color:var(--muted);font-size:.72rem;line-height:1.5}.live{display:inline-flex;align-items:center;gap:8px;white-space:nowrap;color:#61778a;font-size:.65rem}.live i{width:9px;height:9px;border-radius:50%;background:var(--green);box-shadow:0 0 0 6px rgba(82,214,87,.12)}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px}.field{min-width:0;display:grid;grid-template-rows:auto 54px minmax(34px,auto) 16px;gap:7px}.field>label,.field>span:first-child{color:var(--navy);font-size:.78rem;font-weight:900}
+.control{display:flex;align-items:center;height:54px;min-width:0;border:1px solid #cbd9e4;border-radius:14px;background:#fbfdfe;overflow:hidden}.control:focus-within{border-color:var(--blue2);box-shadow:0 0 0 4px rgba(43,139,212,.09)}.control input,.control select{width:100%;min-width:0;max-width:100%;height:52px;border:0;outline:0;background:transparent;padding:0 13px;color:var(--navy);font-weight:880}.control b{align-self:stretch;min-width:58px;display:grid;place-items:center;padding:0 9px;border-left:1px solid var(--line);background:#f1f6f9;color:#596f83;font-size:.68rem;white-space:nowrap}.field small{color:var(--muted);font-size:.65rem;line-height:1.45}.field em{color:var(--danger);font-style:normal;font-size:.63rem;font-weight:760}.field.error .control{border-color:#d98993;box-shadow:0 0 0 3px rgba(167,53,66,.08)}
+.choice-title{margin:18px 0 8px;color:var(--navy);font-size:.78rem;font-weight:900}.care-choice{display:grid;grid-template-columns:1fr 1fr;gap:10px}.care-choice button{min-height:82px;padding:13px;text-align:left;border:1px solid #cedce5;border-radius:16px;background:#f8fbfd;color:#4f677b}.care-choice button.active{border-color:#9fc4dc;background:#eef7fc;box-shadow:0 0 0 3px rgba(43,139,212,.06)}.care-choice b{display:block;color:var(--navy);font-size:1.12rem}.care-choice small{display:block;margin-top:3px;font-size:.66rem;line-height:1.4}
+.presets{display:flex;gap:7px;flex-wrap:wrap;margin-top:13px}.presets button{min-height:34px;padding:0 11px;border:1px solid #cbdbe5;border-radius:10px;background:#f8fbfd;color:#536b7f;font-size:.62rem;font-weight:900}.presets button.active{border-color:#a5cfab;background:#eef9ef;color:#236c2e}
+.advanced{margin-top:20px;padding:17px;border:1px dashed #bfd0dc;border-radius:18px;background:#f8fbfd}.advanced[hidden]{display:none}.advanced-head strong{display:block;color:var(--navy)}.advanced-head p{margin:5px 0 13px;color:#657b8e;font-size:.71rem;line-height:1.5}.source-switch{display:flex;gap:6px;margin-bottom:13px}.source-switch button{min-height:38px;border:1px solid #cbdbe5;border-radius:10px;background:#fff;color:#576e81;font-size:.68rem;font-weight:900;padding:0 11px}.source-switch button.active{background:var(--navy);border-color:var(--navy);color:#fff}.advanced-row{display:grid;grid-template-columns:1fr 1fr;gap:13px}.advanced-options{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:13px}.option{padding:13px;border:1px solid #d2dee7;border-radius:14px;background:#fff}.option label{display:flex;align-items:center;gap:9px;font-size:.72rem;font-weight:850;color:#344e65}.option small{display:block;margin-top:5px;color:#74889a;font-size:.63rem;line-height:1.4}.option input{width:18px;height:18px}
+
+/* result */
+.result{position:sticky;top:98px;overflow:hidden;padding:24px;border-radius:26px;background:linear-gradient(160deg,#071a33 0%,#0d3156 100%);color:#fff;box-shadow:var(--shadow)}
+.result:before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:36px 36px;mask-image:linear-gradient(135deg,#000,transparent 78%)}
+.result:after{content:"";position:absolute;right:18px;top:0;width:92px;height:4px;background:linear-gradient(90deg,var(--blue2),var(--green));clip-path:polygon(0 0,100% 0,92% 100%,0 100%)}.result>*{position:relative;z-index:1}
+.result-id{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}.result-id>span:first-child{font-size:.61rem;font-weight:950;letter-spacing:.11em;text-transform:uppercase;color:#8fb6da}
+.result-top{display:flex;justify-content:space-between;gap:16px;align-items:start}.result-top>div>span{display:block;color:#9fb7cd;font-size:.67rem}.result-top>div>strong{display:block;margin-top:4px;font-size:2.65rem;line-height:1;letter-spacing:-.055em}.limit-pill{padding:8px 10px;border:1px solid rgba(255,255,255,.16);border-radius:11px;background:rgba(255,255,255,.06);font-size:.68rem;font-weight:900;color:#d9e8f3}
+.result-sub{margin:9px 0 17px;color:#b5c7d7;font-size:.77rem;line-height:1.5}
+.result-days{display:grid;grid-template-columns:repeat(8,1fr);gap:6px;margin:14px 0}.result-days i{height:34px;display:grid;place-items:center;border-radius:9px;background:rgba(255,255,255,.07);color:#8099b0;font-style:normal;font-size:.67rem;font-weight:900}.result-days i.paid{background:rgba(43,139,212,.25);color:#dff2ff;border:1px solid rgba(81,181,239,.36)}.result-days i.extra{background:rgba(82,214,87,.18);color:#dff7e1;border:1px solid rgba(82,214,87,.32)}.result-days i.over{background:rgba(217,154,48,.16);color:#f7d7a5;border:1px solid rgba(217,154,48,.28)}
+.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.result-cell{padding:12px 13px;border-radius:14px;background:rgba(255,255,255,.07)}.result-cell span{display:block;color:#9eb5ca;font-size:.62rem}.result-cell strong{display:block;margin-top:4px;font-size:.97rem}
+.result-notice{margin-top:13px;padding:12px 13px;border-radius:13px;background:#fff;color:#29445b;font-size:.73rem;line-height:1.5}.result-notice.warn{background:#fff4e1;color:#744d15}.result-notice.danger{background:#fff0f0;color:#873d3d}
+
+/* depth */
+.depth{padding:70px 0;background:var(--soft);border-top:1px solid var(--line)}
+.depth-grid{display:grid;grid-template-columns:.82fr 1.18fr;gap:36px;align-items:start}.depth-copy h2,.flow-section h2,.check-section h2,.method h2{margin:8px 0 14px;font-size:clamp(2rem,4vw,3.05rem);line-height:1;letter-spacing:-.05em;color:var(--navy)}.depth-copy p{color:#5e7487;line-height:1.68}
+.limit-board{border:1px solid var(--line);border-radius:22px;background:#fff;overflow:hidden;box-shadow:0 12px 34px rgba(7,26,51,.05)}
+.limit-row{display:grid;grid-template-columns:90px 1fr;gap:17px;padding:20px}.limit-row+.limit-row{border-top:1px solid var(--line)}.limit-badge{width:74px;height:74px;border-radius:20px;background:#eef7fc;display:grid;place-items:center;align-content:center;color:var(--blue)}.limit-badge.green{background:#edf9ed;color:#32753a}.limit-badge strong{font-size:1.6rem;line-height:1}.limit-badge small{font-size:.58rem;font-weight:900;text-transform:uppercase}.limit-row h3{margin:2px 0 6px;color:var(--navy);font-size:1.18rem}.limit-row p{margin:0;color:#687d8f;line-height:1.55;font-size:.8rem}
+
+.flow-section{padding:70px 0;background:#fff}
+.flow-head{display:flex;justify-content:space-between;gap:24px;align-items:end;margin-bottom:24px}.flow-head p{max-width:550px;margin:0;color:#63798b;line-height:1.65}
+.flow-board{display:grid;grid-template-columns:repeat(5,1fr);border:1px solid var(--line);border-radius:22px;overflow:hidden}.flow-step{min-height:168px;padding:20px;background:#fff;position:relative}.flow-step+.flow-step{border-left:1px solid var(--line)}.flow-step:nth-child(2){background:#f7fbfd}.flow-step:nth-child(3){background:#f4fbf4}.flow-step:nth-child(5){background:var(--navy);color:#fff}.flow-step span{display:block;font-size:.66rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:#718697}.flow-step:nth-child(5) span{color:#a8bed2}.flow-step strong{display:block;margin-top:9px;font-size:1.25rem;color:var(--navy);letter-spacing:-.03em}.flow-step:nth-child(5) strong{color:#fff;font-size:1.5rem}.flow-step small{display:block;margin-top:7px;color:#718596;font-size:.71rem;line-height:1.45}.flow-step:nth-child(5) small{color:#aec1d1}.flow-arrow{position:absolute;right:-13px;top:50%;z-index:3;width:26px;height:26px;border-radius:50%;background:#fff;border:1px solid var(--line);display:grid;place-items:center;transform:translateY(-50%);color:#718396;font-weight:950}
+
+.check-section{padding:70px 0;background:var(--soft);border-block:1px solid var(--line)}
+.check-grid{display:grid;grid-template-columns:.84fr 1.16fr;gap:34px}.check-copy p{color:#607588;line-height:1.68}
+.check-board{border:1px solid var(--line);border-radius:22px;background:#fff;overflow:hidden}.check-row{display:grid;grid-template-columns:42px 1fr auto;gap:13px;align-items:center;padding:17px 19px}.check-row+.check-row{border-top:1px solid var(--line)}.check-icon{width:36px;height:36px;border-radius:11px;background:#e7f4fb;color:var(--blue);display:grid;place-items:center;font-weight:950}.check-row:nth-child(2) .check-icon{background:#eaf8ea;color:#33783b}.check-row:nth-child(3) .check-icon{background:#fff4e4;color:#9d6819}.check-row:nth-child(4) .check-icon{background:#edf1f4;color:#506678}.check-row strong{display:block;color:var(--navy)}.check-row p{margin:3px 0 0;color:#6a7f91;font-size:.78rem;line-height:1.45}.check-row em{font-style:normal;padding:6px 8px;border-radius:999px;background:#f2f5f7;color:#607486;font-size:.65rem;font-weight:850;white-space:nowrap}
+
+/* methodology + footer */
+.method{padding:70px 0;background:#fff}.method-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:34px}.method-copy p{color:#5f7487;line-height:1.7}.method-copy ul{padding-left:18px;color:#40566a;line-height:1.7}.method-note{padding:22px;border:1px solid var(--line);border-radius:20px;background:#eef6fa}.method-note strong{display:block;color:var(--navy);font-size:1.08rem}.method-note p{color:#5f7487;line-height:1.65}.badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.badges span{padding:7px 9px;border-radius:999px;background:#fff;color:#42647d;border:1px solid #d6e3eb;font-size:.68rem;font-weight:850}
+footer{background:#05162d;color:#d5e2ec;padding:44px 0 25px}.footer-grid{display:grid;grid-template-columns:1.2fr .8fr .8fr;gap:34px}.footer-brand img{width:250px}.footer-brand p{max-width:470px;color:#a8bac9;line-height:1.6}.footer-col b{display:block;color:#fff;margin-bottom:10px}.footer-col a{display:block;color:#b4c6d5;font-size:.85rem;margin:8px 0}.footer-col a:hover{color:#fff}.socials{display:flex;gap:8px;margin-top:14px}.socials a{padding:7px 10px;border:1px solid rgba(255,255,255,.16);border-radius:999px;color:#d7e4ee;font-size:.74rem}.footer-bottom{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:26px;padding-top:17px;border-top:1px solid rgba(255,255,255,.12);font-size:.72rem;color:#91a6b8}
+
+@media(max-width:1120px){
+ .nav,.header-cta{display:none}.menu-btn{display:block}
+ .hero-grid{grid-template-columns:minmax(0,1fr) minmax(350px,.82fr);gap:30px}.hero-copy h1{font-size:clamp(3rem,6vw,4.6rem)}
+}
+@media(max-width:900px){
+ .hero-grid{grid-template-columns:1fr}.care-window{max-width:700px}
+ .section-head{grid-template-columns:1fr}.mode{justify-self:start}
+ .workspace{grid-template-columns:1fr}.result{position:static}
+ .depth-grid,.check-grid,.method-grid{grid-template-columns:1fr}.flow-board{grid-template-columns:1fr 1fr}.flow-step:nth-child(3),.flow-step:nth-child(5){border-left:0}.flow-step:nth-child(n+3){border-top:1px solid var(--line)}
+}
+@media(max-width:650px){
+ :root{--max:min(100% - 22px,1240px)}
+ .header-inner{min-height:62px}.brand img{width:205px}
+ .hero{padding-bottom:25px}.hero-grid{padding-top:18px;gap:21px}.breadcrumb{margin-bottom:0}.hero-copy h1{font-size:2.55rem;max-width:11ch;margin:10px 0 14px}.lead{font-size:.94rem;line-height:1.55}.actions{margin-top:17px}.btn{min-height:44px;font-size:.83rem}.trust{margin-top:12px}.rvx-brand-stamp{grid-template-columns:28px 1fr}.rvx-brand-stamp b{width:28px;height:28px}
+ .care-window{padding:16px;border-radius:20px}.window-head strong{font-size:1.6rem}.day-grid,.result-days{grid-template-columns:repeat(8,1fr);gap:5px}.day-grid i{height:33px}.window-bottom{align-items:flex-start}
+ .calc{padding:48px 0}.section-head h2{font-size:2rem}.mode button{min-width:102px}.form-card{padding:17px;border-radius:20px}.form-intro{display:block}.live{margin-top:9px}.fields,.advanced-row,.advanced-options{grid-template-columns:1fr}.care-choice{grid-template-columns:1fr}.field{grid-template-rows:auto 54px auto 16px}.source-switch{flex-wrap:wrap}
+ .result{padding:17px;border-radius:20px}.result-top>div>strong{font-size:2.15rem}.result-grid{grid-template-columns:1fr}.result-id{align-items:flex-start}
+ .depth,.flow-section,.check-section,.method{padding:50px 0}.limit-row{grid-template-columns:72px 1fr;padding:16px}.limit-badge{width:62px;height:62px;border-radius:17px}.flow-head{display:block}.flow-head p{margin-top:11px}.flow-board{grid-template-columns:1fr}.flow-step+.flow-step{border-left:0;border-top:1px solid var(--line)}.flow-arrow{display:none}.flow-step{min-height:0}.check-row{grid-template-columns:38px 1fr}.check-row em{grid-column:2;justify-self:start}
+ .footer-grid{grid-template-columns:1fr}.footer-brand img{width:235px}
+}
+</style>
+<meta content="index,follow,max-image-preview:large" name="robots"/><meta content="Spočítejte orientační ošetřovné (OČR) v roce 2026, délku podpůrčí doby a denní dávku podle zadaného příjmu." name="description"/><meta content="cs_CZ" property="og:locale"/><meta content="website" property="og:type"/><meta content="RychléVýpočty.cz" property="og:site_name"/><meta content="OČR kalkulačka 2026" property="og:title"/><meta content="Spočítejte orientační ošetřovné (OČR) v roce 2026, délku podpůrčí doby a denní dávku podle zadaného příjmu." property="og:description"/><meta content="https://rychlevypocty.cz/ocr-kalkulacka.html" property="og:url"/><meta content="https://rychlevypocty.cz/og-image-rv-v31.jpg" property="og:image"/><meta content="summary_large_image" name="twitter:card"/><meta content="OČR kalkulačka 2026" name="twitter:title"/><meta content="Spočítejte orientační ošetřovné (OČR) v roce 2026, délku podpůrčí doby a denní dávku podle zadaného příjmu." name="twitter:description"/><meta content="https://rychlevypocty.cz/og-image-rv-v31.jpg" name="twitter:image"/><link href="https://rychlevypocty.cz/ocr-kalkulacka.html" rel="canonical"/><link href="/favicon.ico?v=2" rel="icon" sizes="any"/><link href="/favicon-rv-v32.svg?v=1" rel="icon" type="image/svg+xml"/><link href="/apple-touch-icon.png?v=2" rel="apple-touch-icon"/><link href="/site.webmanifest?v=2" rel="manifest"/><script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"RychléVýpočty.cz","item":"https://rychlevypocty.cz/"},{"@type":"ListItem","position":2,"name":"Mzdy a práce","item":"https://rychlevypocty.cz/mzdy-a-prace.html"},{"@type":"ListItem","position":3,"name":"Kolik dostanete při péči doma?","item":"https://rychlevypocty.cz/ocr-kalkulacka.html"}]}</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"OČR kalkulačka 2026","applicationCategory":"FinanceApplication","operatingSystem":"Any","url":"https://rychlevypocty.cz/ocr-kalkulacka.html","description":"Spočítejte orientační ošetřovné (OČR) v roce 2026, délku podpůrčí doby a denní dávku podle zadaného příjmu.","isAccessibleForFree":true}</script></head>
+<body>
+<a class="skip" href="#kalkulacka">Přeskočit na kalkulačku</a>
 <header class="site-header">
-  <div class="container header-inner">
-    <a class="brand rv-logo" href="/" aria-label="RychléVýpočty.cz – domů"><img class="rv-logo-image" src="/logo-rv-v32.svg?v=1" width="295" height="48" alt="" decoding="async"></a>
-    <nav class="nav" aria-label="Hlavní navigace"><a href="/">Domů</a><a class="nav-all" href="/kalkulacky.html">Všechny kalkulačky</a><a href="/mzdy-a-prace.html" aria-current="page">Mzdy a práce</a><a href="/jak-pocitame.html">Jak počítáme</a></nav>
-    <a class="header-cta" href="#kalkulacka">Spočítat OČR</a>
-    <button class="menu-btn" type="button" aria-label="Otevřít menu" aria-expanded="false"><span></span><span></span><span></span></button>
-  </div>
-  <nav class="mobile-nav" aria-label="Mobilní navigace" hidden><a href="/">Domů</a><a href="/kalkulacky.html">Všechny kalkulačky</a><a href="/mzdy-a-prace.html">Mzdy a práce</a><a href="/jak-pocitame.html">Jak počítáme</a></nav>
+<div class="container header-inner">
+<a aria-label="RychléVýpočty.cz domů" class="brand" href="https://rychlevypocty.cz/"><img alt="RychléVýpočty.cz" height="96" src="https://rychlevypocty.cz/logo-rv-v32.svg?v=1" width="590"/></a>
+<nav aria-label="Hlavní navigace" class="nav"><a class="nav-all" href="https://rychlevypocty.cz/kalkulacky.html">Všechny kalkulačky</a><a href="https://rychlevypocty.cz/auto-a-provoz.html">Auto</a><a href="https://rychlevypocty.cz/finance-a-hypoteky.html">Finance</a><a href="https://rychlevypocty.cz/bydleni.html">Bydlení</a><a aria-current="page" href="https://rychlevypocty.cz/mzdy-a-prace.html">Mzdy</a><a href="https://rychlevypocty.cz/o-nas.html">O projektu</a></nav>
+<a class="header-cta" href="#kalkulacka">Spočítat OČR</a><button aria-controls="mobileNav" aria-expanded="false" aria-label="Otevřít menu" class="menu-btn" id="menuBtn" type="button"><span></span><span></span><span></span></button>
+</div>
+<nav aria-label="Mobilní navigace" class="mobile-nav" id="mobileNav"><a href="https://rychlevypocty.cz/kalkulacky.html">Všechny kalkulačky</a><a href="https://rychlevypocty.cz/mzdy-a-prace.html">Mzdy a práce</a><a href="https://rychlevypocty.cz/jak-pocitame.html">Jak počítáme</a><a href="https://rychlevypocty.cz/o-nas.html">O projektu</a></nav>
 </header>
 <main>
-<section class="ocr79-hero rv-identity-hero">
-  <div class="ocr79-care-field" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
-  <div class="container ocr79-hero-grid">
-    <div class="ocr79-hero-copy">
-      <nav class="ocr79-breadcrumb" aria-label="Drobečková navigace"><a href="/">Domů</a><span>›</span><a href="/mzdy-a-prace.html">Mzdy a práce</a><span>›</span><strong>OČR 2026</strong></nav>
-      <span class="ocr79-kicker">Ošetřovné · pravidla 2026</span>
-      <h1>Péče doma má časové okno. <span>Kolik vyplatí OČR?</span></h1>
-      <p class="ocr79-lead">Zadejte běžnou hrubou mzdu a délku péče. Uvidíte denní dávku, celkovou částku a hlavně kolik dnů se do OČR skutečně započítá. Přesnější režim umí rozhodné období i přímý denní základ.</p>
-      <div class="ocr79-actions"><a class="ocr79-btn ocr79-btn--main" href="#kalkulacka">Spočítat ošetřovné</a><a class="ocr79-btn ocr79-btn--ghost" href="#narok">Nejdřív ověřit podmínky</a></div>
-      <div class="ocr79-trust"><span>hranice 2026 ověřeny</span><span>9 / 16 kalendářních dnů</span><span>výpočet v zařízení</span></div>
-    </div>
-    <aside class="ocr79-window" aria-label="Ukázka časového okna OČR">
-      <div class="ocr79-window-top"><span>CARE WINDOW · 2026</span><b>BĚŽNÝ SCÉNÁŘ</b></div>
-      <div class="ocr79-window-result"><small>Modelové OČR při 42 000 Kč</small><strong>6 714 Kč</strong><span>746 Kč za kalendářní den</span></div>
-      <div class="ocr79-window-days" aria-hidden="true">
-        <i class="is-on">1</i><i class="is-on">2</i><i class="is-on">3</i><i class="is-on">4</i><i class="is-on">5</i><i class="is-on">6</i><i class="is-on">7</i><i class="is-on">8</i><i class="is-on">9</i><i>10</i><i>11</i><i>12</i><i>13</i><i>14</i><i>15</i><i>16</i>
-      </div>
-      <div class="ocr79-window-legend"><span><i></i>běžná podpůrčí doba</span><span><i></i>jen při splnění podmínek 16 dnů</span></div>
-      <div class="ocr79-window-note"><b>60 %</b><span>z redukovaného denního vyměřovacího základu, ne z měsíční mzdy</span></div>
-    </aside>
-  </div>
+<section class="hero">
+<div aria-hidden="true" class="hero-field"><i></i><i></i><i></i><i></i></div>
+<div class="container hero-grid">
+<nav aria-label="Drobečková navigace" class="breadcrumb"><a href="https://rychlevypocty.cz/">Domů</a><span>›</span><a href="https://rychlevypocty.cz/mzdy-a-prace.html">Mzdy a práce</a><span>›</span><strong>OČR 2026</strong></nav>
+<div class="hero-copy">
+<span class="kicker">Ošetřovné · pravidla 2026</span>
+<h1>Kolik dostanete při <span>péči doma?</span></h1>
+<p class="lead">Zadejte běžnou hrubou mzdu a počet kalendářních dnů péče. Uvidíte denní dávku, celkovou částku a hlavně, kolik dnů se skutečně započítá do běžného limitu 9 dnů nebo prodlouženého limitu 16 dnů.</p>
+<div class="actions"><a class="btn btn-main" href="#kalkulacka">Spočítat ošetřovné</a><a class="btn btn-ghost" href="#podminky">Co může změnit nárok</a></div>
+<div class="trust"><span>parametry 2026</span><span>9 / 16 kalendářních dnů</span><span>25 regresních scénářů</span></div>
+<div class="hero-brand"><span class="rvx-brand-stamp"><b>RV</b><span>RychléVýpočty.cz<strong>OČR · model 2026</strong></span></span></div>
+</div>
+<aside aria-label="Časové okno krátkodobého ošetřovného" class="care-window">
+<div class="window-top"><span>Časové okno péče</span><b>2026</b></div>
+<div class="window-head"><div><small>Model při hrubé mzdě 42 000 Kč</small><strong>746 Kč / den</strong></div><em>60 % z RDVZ</em></div>
+<div class="calendar-label"><b>Kalendářní dny</b><span>běžně 9 · při splnění podmínek 16</span></div>
+<div aria-hidden="true" class="day-grid">
+<i class="paid">1</i><i class="paid">2</i><i class="paid">3</i><i class="paid">4</i><i class="paid">5</i><i class="paid">6</i><i class="paid">7</i><i class="paid">8</i><i class="paid">9</i>
+<i class="extra">10</i><i class="extra">11</i><i class="extra">12</i><i class="extra">13</i><i class="extra">14</i><i class="extra">15</i><i class="extra">16</i>
+</div>
+<div class="window-scale"><div class="standard"></div><div class="extended"></div></div>
+<div class="window-legend"><span><i></i>běžná podpůrčí doba · 9 dnů</span><span><i></i>další dny jen při splnění podmínek pro 16 dnů</span></div>
+<div class="window-bottom"><span>Denní dávka × započtené dny</span><strong>6 714 Kč za 9 dnů</strong></div>
+</aside>
+</div>
 </section>
-
-<section class="ocr79-facts" aria-label="Základní pravidla OČR 2026"><div class="container ocr79-fact-grid"><article><span>Výše dávky</span><strong>60 %</strong><small>z redukovaného DVZ</small></article><article><span>Běžná doba</span><strong>9 dnů</strong><small>kalendářních dnů</small></article><article><span>Osamělý pečující</span><strong>16 dnů</strong><small>při splnění podmínek</small></article><article><span>1. hranice 2026</span><strong>1 633 Kč</strong><small>denního základu</small></article></div></section>
-
-<section class="ocr79-calc rv-brand-calculator" id="kalkulacka">
-  <div class="container">
-    <div class="ocr79-section-head"><div><span class="ocr79-micro">01 · VÝPOČET</span><h2>Nejdřív částka. Potom kontrola nároku.</h2></div><div class="ocr79-mode" role="group" aria-label="Režim kalkulačky"><button class="is-active" type="button" data-mode="basic" aria-pressed="true">Základní</button><button type="button" data-mode="advanced" aria-pressed="false">Přesnější</button></div></div>
-    <div class="ocr79-workspace">
-      <form id="ocrForm" class="ocr79-form" novalidate>
-        <div class="ocr79-form-intro"><div><span>CO ZADAT</span><strong id="formTitle">Mzdu, délku péče a typ podpůrčí doby</strong><p id="formIntro">Výchozí režim je plánovací odhad pro stabilní měsíční mzdu.</p></div><span class="ocr79-live"><i></i>živý přepočet</span></div>
-
-        <div id="basicPanel">
-          <div class="ocr79-fields">
-            <label class="ocr79-field" for="basicGross"><span>Průměrná hrubá měsíční mzda</span><span class="ocr79-control"><input id="basicGross" inputmode="decimal" autocomplete="off" value="42 000" aria-describedby="grossHelp grossError"><b>Kč</b></span><small id="grossHelp">Rychlý režim odhadne DVZ jako mzda × 12 ÷ 365.</small><em id="grossError"></em></label>
-            <label class="ocr79-field" for="basicDays"><span>Kolik dnů potřebujete pečovat</span><span class="ocr79-control"><input id="basicDays" inputmode="numeric" autocomplete="off" value="9" aria-describedby="daysHelp daysError"><b>dnů</b></span><small id="daysHelp">Zadáváte kalendářní dny péče.</small><em id="daysError"></em></label>
-          </div>
-          <fieldset class="ocr79-choice"><legend>Jaký limit chcete použít?</legend><button class="is-active" type="button" data-caregiver="standard" aria-pressed="true"><span>9 dnů</span><strong>Běžná podpůrčí doba</strong><small>Standardní scénář krátkodobého ošetřovného.</small></button><button type="button" data-caregiver="lone" aria-pressed="false"><span>16 dnů</span><strong>Osamělý pečující</strong><small>Jen pokud splňujete zákonné podmínky pro delší dobu.</small></button></fieldset>
-          <div class="ocr79-presets"><span>Rychlý model</span><button type="button" data-preset="32000">32 000 Kč</button><button class="is-active" type="button" data-preset="42000">42 000 Kč</button><button type="button" data-preset="60000">60 000 Kč</button><button type="button" data-preset="90000">90 000 Kč</button></div>
-        </div>
-
-        <div id="advancedPanel" class="ocr79-advanced" hidden>
-          <div class="ocr79-advanced-head"><span>PŘESNĚJŠÍ VSTUP</span><strong>Rozhodné období nebo známý DVZ</strong><p>Vhodné při odměnách, změně mzdy, vyloučených dnech nebo pokud máte údaj z podkladů ČSSZ.</p></div>
-          <div class="ocr79-source-switch" role="group" aria-label="Zdroj denního základu"><button class="is-active" type="button" data-source="period" aria-pressed="true">Rozhodné období</button><button type="button" data-source="direct" aria-pressed="false">Znám přímo DVZ</button></div>
-          <div id="periodFields" class="ocr79-fields">
-            <label class="ocr79-field" for="periodIncome"><span>Započitatelný příjem</span><span class="ocr79-control"><input id="periodIncome" inputmode="decimal" autocomplete="off" value="504 000"><b>Kč</b></span><small>Typicky příjem v rozhodném období před vznikem potřeby péče.</small><em></em></label>
-            <label class="ocr79-field" for="periodDays"><span>Započitatelné kalendářní dny</span><span class="ocr79-control"><input id="periodDays" inputmode="numeric" autocomplete="off" value="365"><b>dnů</b></span><small>Po odečtení zákonných vyloučených dnů.</small><em></em></label>
-          </div>
-          <div id="directField" hidden><label class="ocr79-field" for="directDvz"><span>Denní vyměřovací základ před redukcí</span><span class="ocr79-control"><input id="directDvz" inputmode="decimal" autocomplete="off" value="1 381"><b>Kč/den</b></span><small>Použijte pouze tehdy, pokud znáte skutečný DVZ před redukcí.</small><em></em></label></div>
-          <div class="ocr79-fields ocr79-fields--advanced">
-            <label class="ocr79-field" for="advancedDays"><span>Délka péče</span><span class="ocr79-control"><input id="advancedDays" inputmode="numeric" autocomplete="off" value="9"><b>dnů</b></span><small>Kalendářní dny.</small><em></em></label>
-            <label class="ocr79-field" for="workerType"><span>Postavení pojištěnce</span><span class="ocr79-control"><select id="workerType"><option value="employee">Zaměstnanec</option><option value="osvc">OSVČ</option></select><b>typ</b></span><small>Od roku 2025 může mít při splnění podmínek nárok i nemocensky pojištěná OSVČ.</small><em></em></label>
-          </div>
-          <label class="ocr79-check"><input id="waitingPeriod" type="checkbox" checked><span><strong>Splňuji čekací dobu nemocenského pojištění</strong><small id="waitingHelp">U zaměstnance musí pojištění v posledních 4 měsících trvat alespoň 90 dnů; u OSVČ je potřeba účast v posledních 3 měsících.</small></span></label>
-          <label class="ocr79-check"><input id="advancedLone" type="checkbox"><span><strong>Splňuji podmínky osamělého pečujícího pro 16 dnů</strong><small>Samotné označení „samoživitel“ nestačí; rozhodující jsou zákonné podmínky konkrétní situace.</small></span></label>
-        </div>
-
-        <div id="formMessage" class="ocr79-form-message" role="alert" hidden></div>
-        <div class="ocr79-form-actions"><button class="ocr79-submit" type="submit">Přepočítat OČR</button><button id="resetButton" class="ocr79-secondary" type="button">Obnovit model</button></div>
-        <p class="ocr79-form-foot">Zadané údaje se počítají pouze v prohlížeči a neodesílají se na server.</p>
-      </form>
-
-      <aside id="vysledek" class="ocr79-result rv-brand-result" aria-labelledby="resultTitle">
-        <div class="ocr79-result-head"><div><span id="resultStatus" aria-live="polite">Běžný limit · 9 dnů</span><b id="resultTitle">Odhad ošetřovného</b></div><strong>RV VÝSLEDEK</strong></div>
-        <div class="ocr79-answer"><span>Celkem za započtenou dobu</span><strong id="totalBenefit">6 714 Kč</strong><p id="resultSentence">Denní dávka 746 Kč × 9 započtených kalendářních dnů.</p></div>
-        <div class="ocr79-result-grid"><article><span>Denní ošetřovné</span><strong id="dailyBenefit">746 Kč</strong><small>60 % redukovaného DVZ</small></article><article><span>Započtené dny</span><strong id="paidDays">9 / 9</strong><small id="daysDetail">žádný den nad limitem</small></article><article><span>Výchozí DVZ</span><strong id="dvzResult">1 381 Kč</strong><small id="dvzSource">odhad z měsíční mzdy</small></article><article><span>Redukovaný DVZ</span><strong id="reducedResult">1 243 Kč</strong><small>po redukčních hranicích 2026</small></article></div>
-        <div class="ocr79-care-window"><div class="ocr79-care-window-head"><span>Časové okno dávky</span><strong id="careWindowLabel">9 dnů</strong></div><div id="resultDays" class="ocr79-result-days" role="group" aria-label="Započtené a nezapočtené dny"></div><small id="careWindowText">V tomto scénáři se započítá všech 9 zadaných dnů.</small></div>
-        <div id="eligibilityNotice" class="ocr79-notice is-ok"><strong>Výpočet částky je připraven.</strong><span>Samotný výpočet nepotvrzuje nárok. Ten závisí i na účasti na nemocenském pojištění a důvodu péče.</span></div>
-        <div class="ocr79-disclaimer"><strong>Orientační dávkový model.</strong> Výsledek nenahrazuje rozhodnutí ČSSZ. Skutečnou částku mohou změnit evidované příjmy, vyloučené dny, účast na nemocenském pojištění, vztah k ošetřované osobě a splnění podmínek podpůrčí doby.</div>
-      </aside>
-    </div>
-  </div>
+<section class="calc" id="kalkulacka">
+<div class="container">
+<div class="section-head">
+<div><span class="micro">01 · Výpočet OČR</span><h2>Nejdřív částka. Potom limit podpůrčí doby.</h2></div>
+<div aria-label="Režim kalkulačky" class="mode" role="group"><button aria-pressed="true" class="active" data-mode="basic" type="button">Základní</button><button aria-pressed="false" data-mode="advanced" type="button">Přesnější</button></div>
+</div>
+<div class="workspace">
+<form class="form-card" id="ocrForm" novalidate="">
+<div class="form-intro"><div><span>CO ZADAT</span><strong id="formTitle">Mzdu, délku péče a vhodný limit</strong><p id="formIntro">Základní režim je rychlý odhad pro stabilní měsíční mzdu.</p></div><span class="live"><i></i>živý přepočet</span></div>
+<div id="basicPanel">
+<div class="fields">
+<label class="field" for="basicGross" id="grossField"><span>Průměrná hrubá měsíční mzda</span><span class="control"><input autocomplete="off" id="basicGross" inputmode="decimal" value="42 000"/><b>Kč</b></span><small>Rychlý režim odhadne denní základ jako mzda × 12 ÷ 365.</small><em id="grossError"></em></label>
+<label class="field" for="basicDays" id="daysField"><span>Kolik dnů potřebujete pečovat</span><span class="control"><input autocomplete="off" id="basicDays" inputmode="numeric" value="9"/><b>dnů</b></span><small>Počítají se kalendářní dny.</small><em id="daysError"></em></label>
+</div>
+<div class="choice-title">Jaký limit chcete použít?</div>
+<div aria-label="Podpůrčí doba" class="care-choice" role="group">
+<button aria-pressed="true" class="active" data-caregiver="standard" type="button"><b>9 dnů</b><small>Běžná podpůrčí doba krátkodobého ošetřovného.</small></button>
+<button aria-pressed="false" data-caregiver="lone" type="button"><b>16 dnů</b><small>Jen pokud splňujete zákonné podmínky pro delší podpůrčí dobu.</small></button>
+</div>
+<div class="presets"><button data-preset="32000" type="button">32 000 Kč</button><button class="active" data-preset="42000" type="button">42 000 Kč</button><button data-preset="60000" type="button">60 000 Kč</button><button data-preset="90000" type="button">90 000 Kč</button></div>
+</div>
+<div class="advanced" hidden="" id="advancedPanel">
+<div class="advanced-head"><strong>Přesnější zdroj denního základu</strong><p>Použijte rozhodné období nebo přímo známý denní vyměřovací základ. Hodí se při změně mzdy, odměnách nebo vyloučených dnech.</p></div>
+<div aria-label="Zdroj denního základu" class="source-switch" role="group"><button aria-pressed="true" class="active" data-source="period" type="button">Rozhodné období</button><button aria-pressed="false" data-source="direct" type="button">Znám přímo DVZ</button></div>
+<div class="advanced-row" id="periodFields">
+<label class="field" for="periodIncome"><span>Započitatelný příjem</span><span class="control"><input id="periodIncome" inputmode="decimal" value="504 000"/><b>Kč</b></span><small>Za rozhodné období.</small><em></em></label>
+<label class="field" for="periodDays"><span>Započitatelné kalendářní dny</span><span class="control"><input id="periodDays" inputmode="numeric" value="365"/><b>dnů</b></span><small>Po odečtení vyloučených dnů.</small><em></em></label>
+</div>
+<div hidden="" id="directField">
+<label class="field" for="directDvz"><span>Denní vyměřovací základ před redukcí</span><span class="control"><input id="directDvz" inputmode="decimal" value="1 381"/><b>Kč/den</b></span><small>Použijte jen tehdy, pokud skutečný DVZ znáte.</small><em></em></label>
+</div>
+<div class="advanced-row" style="margin-top:13px">
+<label class="field" for="advancedDays"><span>Počet dnů péče</span><span class="control"><input id="advancedDays" inputmode="numeric" value="9"/><b>dnů</b></span><small>Kalendářní dny.</small><em></em></label>
+<label class="field" for="workerType"><span>Typ pojištěnce</span><span class="control"><select id="workerType"><option value="employee">Zaměstnanec</option><option value="osvc">OSVČ</option></select></span><small>Ovlivňuje podmínky účasti na nemocenském pojištění.</small><em></em></label>
+</div>
+<div class="advanced-options">
+<div class="option"><label><input checked="" id="waitingPeriod" type="checkbox"/> Splňuji potřebnou dobu nemocenského pojištění</label><small id="waitingHelp">Pro orientační model předpokládáme splnění podmínek.</small></div>
+<div class="option"><label><input id="advancedLone" type="checkbox"/> Použít prodlouženou podpůrčí dobu 16 dnů</label><small>Zapněte pouze pokud podmínky skutečně splňujete.</small></div>
+</div>
+</div>
+</form>
+<aside aria-live="polite" class="result" id="vysledek">
+<div class="result-id"><span>RychléVýpočty.cz · výsledek</span><span class="rvx-data-stamp">RV DATA · 2026</span></div>
+<div class="result-top"><div><span>Celkem ošetřovné</span><strong id="totalBenefit">6 714 Kč</strong></div><div class="limit-pill" id="limitPill">limit 9 dnů</div></div>
+<p class="result-sub" id="resultSentence">Denní dávka 746 Kč × 9 započtených kalendářních dnů.</p>
+<div aria-label="Započtené dny" class="result-days" id="resultDays"></div>
+<div class="result-grid">
+<div class="result-cell"><span>Denní dávka</span><strong id="dailyBenefit">746 Kč</strong></div>
+<div class="result-cell"><span>Započtené dny</span><strong id="paidDays">9 / 9</strong></div>
+<div class="result-cell"><span>Denní základ před redukcí</span><strong id="dvzResult">1 381 Kč</strong></div>
+<div class="result-cell"><span>Po redukci</span><strong id="reducedResult">1 243 Kč</strong></div>
+</div>
+<div class="result-notice" id="eligibilityNotice"><b>Výpočet částky je připraven.</b> Samotný výpočet nepotvrzuje nárok; ten závisí také na účasti na nemocenském pojištění a důvodu péče.</div>
+</aside>
+</div>
+</div>
 </section>
-
-<section class="ocr79-flow"><div class="container"><div class="ocr79-section-head"><div><span class="ocr79-micro">02 · JAK VZNIKÁ ČÁSTKA</span><h2>OČR není 60 % mzdy. Nejdřív se zmenší denní základ.</h2></div><p>Čtyři kroky ukazují, kde se částka mění a proč může být poměr k běžnému příjmu nižší než očekáváte.</p></div><div class="ocr79-flow-grid"><article><span>01</span><div><small>Výchozí denní základ</small><strong id="flowDvz">1 381 Kč</strong><p>z rozhodného období nebo rychlého odhadu</p></div></article><i>→</i><article><span>02</span><div><small>Redukce 90 / 60 / 30 %</small><strong id="flowReduced">1 243 Kč</strong><p>část nad 3. hranici se nezohlední</p></div></article><i>→</i><article><span>03</span><div><small>Ošetřovné za den</small><strong id="flowDaily">746 Kč</strong><p>60 % redukovaného základu</p></div></article><i>→</i><article class="is-final"><span>04</span><div><small>Započtená doba</small><strong id="flowTotal">6 714 Kč</strong><p id="flowDays">9 kalendářních dnů</p></div></article></div></div></section>
-
-<section class="ocr79-eligibility" id="narok"><div class="container"><div class="ocr79-section-head"><div><span class="ocr79-micro">03 · KONTROLA NÁROKU</span><h2>Částka je jen jedna polovina otázky.</h2></div><p>Ošetřovné je dávka nemocenského pojištění. Před plánováním rozpočtu zkontrolujte i podmínky konkrétní situace.</p></div><div class="ocr79-eligibility-grid"><article><span>POJIŠTĚNÍ</span><strong>Musíte být nemocensky pojištěni.</strong><p>U zaměstnance se řeší účast a čekací doba; u OSVČ je nemocenské pojištění dobrovolné a musí trvat požadovanou dobu.</p></article><article><span>DŮVOD PÉČE</span><strong>Nemoc, úraz nebo zákonný důvod péče.</strong><p>O potřebě ošetřování zpravidla rozhoduje lékař. Pravidla zahrnují i některé situace péče o zdravé dítě.</p></article><article><span>VZTAH / DOMÁCNOST</span><strong>Ne vždy je nutná společná domácnost.</strong><p>U vybraných blízkých příbuzných zákon společnou domácnost nevyžaduje; u jiných osob ji vyžadovat může.</p></article><article><span>16 DNŮ</span><strong>Delší limit není automatický.</strong><p>Šestnáctidenní podpůrčí doba platí jen pro osamělého pojištěnce při splnění dalších zákonných podmínek.</p></article></div></div></section>
-
-<section class="ocr79-plan"><div class="container ocr79-plan-grid"><div><span class="ocr79-micro">04 · CO S VÝSLEDKEM</span><h2>Kolik vám během péče bude chybět proti běžnému příjmu?</h2><p>Samotná dávka neříká, zda domácí rozpočet období zvládne. Porovnejte ji s běžnou čistou mzdou a rezervou.</p></div><div class="ocr79-next-steps"><a href="/cista-mzda-kalkulacka.html"><span>1</span><div><strong>Spočítat běžnou čistou mzdu</strong><small>Získejte výchozí měsíční příjem pro porovnání.</small></div></a><a href="/kalkulacka-financni-rezervy.html"><span>2</span><div><strong>Ověřit finanční rezervu</strong><small>Kolik dní či měsíců zvládne domácnost výpadek příjmu?</small></div></a><a href="#metodika"><span>3</span><div><strong>Zkontrolovat hranice modelu</strong><small>Pokud máte nepravidelné příjmy, použijte přesnější vstup.</small></div></a></div></div></section>
-
-<section class="ocr79-method rv-brand-method" id="metodika"><div class="container"><div class="ocr79-section-head"><div><span class="ocr79-micro">05 · METODIKA 2026</span><h2>Tři redukční hranice a jedna 60% sazba.</h2></div><p>Parametry jsou ověřené pro rok 2026. Rychlý režim je plánovací odhad; přesnější režim se přibližuje skutečnému postupu přes rozhodné období nebo DVZ.</p></div><div class="ocr79-method-grid"><article><span>1. HRANICE</span><strong>1 633 Kč</strong><p>Do této hranice se započítává 90 % DVZ.</p></article><article><span>2. HRANICE</span><strong>2 449 Kč</strong><p>Z pásma mezi první a druhou hranicí 60 %.</p></article><article><span>3. HRANICE</span><strong>4 897 Kč</strong><p>Z pásma mezi druhou a třetí hranicí 30 %; nad třetí se nepřihlíží.</p></article><article><span>DENNÍ DÁVKA</span><strong>60 %</strong><p>Z redukovaného denního vyměřovacího základu za každý započtený kalendářní den.</p></article></div><div class="ocr79-method-note"><div><span>HRANICE MODELU</span><strong>Výpočet částky není rozhodnutím o nároku.</strong></div><p>Skutečný DVZ vychází z evidovaných vyměřovacích základů a započitatelných dnů. Redukovaný DVZ i denní dávka se podle zákonného postupu zaokrouhlují na celé koruny nahoru. U zaměstnance a OSVČ se navíc posuzuje účast a čekací doba nemocenského pojištění, důvod péče a vztah k ošetřované osobě.</p></div><div class="ocr79-sources"><a href="https://www.cssz.cz/web/cz/osetrovne" target="_blank" rel="noopener noreferrer"><span>ČSSZ</span><strong>Ošetřovné – podmínky a výpočet</strong></a><a href="https://mpsv.gov.cz/nemocenske-pojisteni" target="_blank" rel="noopener noreferrer"><span>MPSV</span><strong>Nemocenské pojištění 2026</strong></a><a href="https://mpsv.gov.cz/socialni-pojisteni" target="_blank" rel="noopener noreferrer"><span>MPSV</span><strong>Redukční hranice 2026</strong></a><a href="/jak-pocitame.html"><span>RV METODIKA</span><strong>Jak počítáme</strong></a></div><p class="ocr79-technical-proof">Technická kontrola výpočtu: <a href="/ocr-2026-benchmark.csv" download>25 kontrolních scénářů v CSV</a>. Jde o interní regresní důkaz, nikoli o statistiku populace.</p></div></section>
-
-<section class="ocr79-faq"><div class="container"><div class="ocr79-section-head"><div><span class="ocr79-micro">FAQ</span><h2>Co se u OČR nejčastěji plete.</h2></div></div><div class="ocr79-faq-list"><details><summary>Je OČR vždy 60 % mé hrubé mzdy?</summary><p>Ne. Šedesát procent se počítá z redukovaného denního vyměřovacího základu, který vznikne až po redukci denního příjmu pomocí tří hranic.</p></details><details><summary>Dostanu automaticky dávku za 16 dnů?</summary><p>Ne. Běžná podpůrčí doba je 9 kalendářních dnů. Delší 16denní doba se týká osamělého pojištěnce při splnění dalších zákonných podmínek.</p></details><details><summary>Platí OČR také pro OSVČ?</summary><p>Od roku 2025 může nárok vzniknout i OSVČ, pokud je nemocensky pojištěná a splní zákonné podmínky včetně čekací doby. Kalkulačka proto umí OSVČ v přesnějším režimu, ale samotnou účast na pojištění za vás ověřit nemůže.</p></details><details><summary>Co když potřebuji pečovat déle než 9 nebo 16 dnů?</summary><p>Delší potřeba péče sama o sobě neprodlužuje krátkodobé ošetřovné. Podle situace může existovat jiný režim, například dlouhodobé ošetřovné, které má vlastní podmínky.</p></details></div></div></section>
-
-<section class="ocr79-related"><div class="container"><div class="ocr79-section-head"><div><span class="ocr79-micro">NAVAZUJÍCÍ NÁSTROJE</span><h2>Další výpočty pro příjem domácnosti.</h2></div></div><div class="ocr79-related-grid"><a href="/nemocenska-kalkulacka.html"><span>NEMOC</span><strong>Nemocenská 2026</strong><small>Když jste práce neschopní vy sami.</small></a><a href="/cista-mzda-kalkulacka.html"><span>MZDA</span><strong>Čistá mzda</strong><small>Porovnejte dávku s běžným čistým příjmem.</small></a><a href="/kalkulacka-financni-rezervy.html"><span>REZERVA</span><strong>Finanční rezerva</strong><small>Ověřte, jak dlouho domácnost zvládne výpadek příjmu.</small></a></div></div></section>
+<section class="depth" id="limit">
+<div class="container depth-grid">
+<div class="depth-copy"><span class="kicker">02 · 9 nebo 16 dnů</span><h2>Delší péče automaticky neznamená delší OČR.</h2><p>Zadáte-li například 12 dnů, běžný scénář stále vyplatí nejvýše 9 dnů. Šestnáctidenní podpůrčí doba je samostatný režim a je potřeba splnit zákonné podmínky.</p><p>Proto kalkulačka odděluje <strong>kolik dnů péče potřebujete</strong> od <strong>kolik dnů se do dávky započítá</strong>.</p></div>
+<div class="limit-board">
+<article class="limit-row"><div class="limit-badge"><strong>9</strong><small>dnů</small></div><div><h3>Běžná podpůrčí doba</h3><p>Zadané dny se započítají maximálně do devátého kalendářního dne. Dny nad limitem kalkulačka označí, ale do dávky je nepřičte.</p></div></article>
+<article class="limit-row"><div class="limit-badge green"><strong>16</strong><small>dnů</small></div><div><h3>Prodloužená podpůrčí doba</h3><p>Je dostupná jen při splnění příslušných podmínek. Samotná delší potřeba péče nestačí k automatickému použití šestnáctidenního limitu.</p></div></article>
+</div>
+</div>
+</section>
+<section class="flow-section">
+<div class="container">
+<div class="flow-head"><div><span class="kicker">03 · jak vzniká částka</span><h2>Od příjmu k dávce v pěti krocích.</h2></div><p>Živý rozpad používá vaše aktuální zadání. Je vidět, kde se uplatní redukční hranice a proč ošetřovné není jednoduše 60 % měsíční mzdy.</p></div>
+<div class="flow-board">
+<article class="flow-step"><span>1 · denní základ</span><strong id="flowDvz">1 381 Kč</strong><small id="flowSource">odhad z měsíční mzdy</small><i class="flow-arrow">→</i></article>
+<article class="flow-step"><span>2 · po redukci</span><strong id="flowReduced">1 243 Kč</strong><small>použijí se redukční hranice roku 2026</small><i class="flow-arrow">→</i></article>
+<article class="flow-step"><span>3 · denní dávka</span><strong id="flowDaily">746 Kč</strong><small>60 % z redukovaného denního základu</small><i class="flow-arrow">→</i></article>
+<article class="flow-step"><span>4 · započtené dny</span><strong id="flowDays">9 dnů</strong><small>nejvýše podle zvoleného limitu podpůrčí doby</small><i class="flow-arrow">→</i></article>
+<article class="flow-step"><span>5 · celkem</span><strong id="flowTotal">6 714 Kč</strong><small>denní dávka × započtené kalendářní dny</small></article>
+</div>
+</div>
+</section>
+<section class="check-section" id="podminky">
+<div class="container check-grid">
+<div class="check-copy"><span class="kicker">04 · co si ověřit</span><h2>Kalkulačka spočítá částku. Nárok závisí i na situaci.</h2><p>U OČR je důležité nerozmístit vše do jednoho formuláře. Základní výpočet proto zůstává jednoduchý a podmínky, které mohou rozhodnutí změnit, jsou vysvětlené až po výsledku.</p></div>
+<div class="check-board">
+<div class="check-row"><span class="check-icon">1</span><div><strong>Účast na nemocenském pojištění</strong><p>Bez splnění podmínek pojištění může být vypočtená částka jen technickým modelem, nikoli skutečným nárokem.</p></div><em>nárok</em></div>
+<div class="check-row"><span class="check-icon">2</span><div><strong>Důvod a osoba, o kterou pečujete</strong><p>Samotná potřeba zůstat doma ještě automaticky neznamená, že jde o situaci krytou krátkodobým ošetřovným.</p></div><em>důvod péče</em></div>
+<div class="check-row"><span class="check-icon">3</span><div><strong>Podmínky pro 16 dnů</strong><p>Prodloužený limit není volitelný jen podle délky péče. Pokud si nejste jistí, použijte běžných 9 dnů a delší režim si ověřte.</p></div><em>limit</em></div>
+<div class="check-row"><span class="check-icon">4</span><div><strong>Rozhodné období a vyloučené dny</strong><p>Při nepravidelném příjmu nebo změně mzdy použijte přesnější režim, jinak může jednoduchý přepočet z aktuální mzdy minout skutečný DVZ.</p></div><em>přesnost</em></div>
+</div>
+</div>
+</section>
+<section class="method" id="metodika">
+<div class="container method-grid">
+<div class="method-copy"><span class="kicker">05 · metodika a hranice</span><h2>Co model počítá a kde končí.</h2><p>Výpočet používá parametry roku 2026. Denní vyměřovací základ se redukuje třemi hranicemi a ošetřovné je 60 % výsledného redukovaného základu za každý započtený kalendářní den.</p><ul><li>Redukční hranice 2026: 1 633 / 2 449 / 4 897 Kč.</li><li>Do první hranice se započítává 90 %, mezi první a druhou 60 %, mezi druhou a třetí 30 %; nad třetí hranici se část nezohlední.</li><li>Denní dávka je 60 % redukovaného DVZ.</li><li>Výpočet částky sám o sobě nepotvrzuje právní nárok ani správnost zvoleného limitu 16 dnů.</li></ul></div>
+<aside class="method-note"><strong>Orientační výpočet, ne rozhodnutí ČSSZ</strong><p>Skutečný nárok závisí na účasti na nemocenském pojištění, důvodu péče, osobě, o kterou pečujete, a dalších zákonných podmínkách. Při kontrole konkrétní dávky použijte skutečné údaje z rozhodného období nebo známý DVZ.</p><div class="badges"><span>25 regresních scénářů</span><span>ověřeno 28. 8. 2026</span><span>výpočet v zařízení</span></div><div style="margin-top:16px"><span class="rvx-brand-stamp"><b>RV</b><span>Metodika<strong>Transparentní hranice modelu</strong></span></span></div></aside>
+</div>
+</section>
 </main>
-<footer class="ocr79-footer rv-brand-footer"><div class="container ocr79-footer-grid"><div class="ocr79-footer-brand"><a href="/" aria-label="RychléVýpočty.cz domů"><img src="/logo-rv-v32-inverse.svg?v=1" width="590" height="96" alt="RychléVýpočty.cz"></a><p>Online kalkulačky s transparentní metodikou, ověřenými parametry a jasně popsanými hranicemi modelu.</p><nav class="ocr79-socials" aria-label="Sociální sítě RychléVýpočty.cz"><a href="https://www.facebook.com/rychlevypocty" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.6 21v-8h2.7l.4-3h-3.1V8.1c0-.9.3-1.5 1.6-1.5h1.7V4a23 23 0 0 0-2.5-.1c-2.5 0-4.2 1.5-4.2 4.3V10H7.4v3h2.8v8z"/></svg></a><a href="https://www.instagram.com/rychlevypocty/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a></nav></div><div class="ocr79-footer-col"><h3>Mzdy</h3><a href="/mzdy-a-prace.html">Mzdy a práce</a><a href="/cista-mzda-kalkulacka.html">Čistá mzda</a><a href="/nemocenska-kalkulacka.html">Nemocenská</a></div><div class="ocr79-footer-col"><h3>Projekt</h3><a href="/kalkulacky.html">Všechny kalkulačky</a><a href="/jak-pocitame.html">Jak počítáme</a><a href="/data-a-benchmarky.html">Data a benchmarky</a></div><div class="ocr79-footer-col"><h3>Informace</h3><a href="/o-nas.html">O projektu</a><a href="/podminky-pouziti.html">Podmínky použití</a><a href="/ochrana-osobnich-udaju.html">Ochrana soukromí</a></div></div><div class="container ocr79-footer-bottom"><span>© 2026 RychléVýpočty.cz · Orientační dávkový model; nenahrazuje rozhodnutí ČSSZ ani individuální právní posouzení.</span><strong>Zadat → Spočítat → Pochopit → Rozhodnout</strong></div></footer>
-<script src="/rv-brand-v32.js?v=20260821"></script>
-<script src="/ocr-vnext.js?v=20260828-1"></script>
-</body>
-</html>
+<footer>
+<div class="container">
+<div class="footer-grid">
+<div class="footer-brand"><img alt="RychléVýpočty.cz" height="96" src="https://rychlevypocty.cz/logo-rv-v32-inverse.svg?v=1" width="590"/><p>Praktické kalkulačky s transparentní metodikou, jasnými hranicemi modelu a výsledkem, který pomáhá udělat další rozhodnutí.</p><div class="socials"><a aria-label="RychléVýpočty.cz na Facebooku" href="https://www.facebook.com/rychlevypocty">Facebook</a><a aria-label="RychléVýpočty.cz na Instagramu" href="https://www.instagram.com/rychlevypocty/">Instagram</a></div></div>
+<div class="footer-col"><b>Projekt</b><a href="https://rychlevypocty.cz/o-nas.html">O projektu</a><a href="https://rychlevypocty.cz/jak-pocitame.html">Jak počítáme</a><a href="https://rychlevypocty.cz/data-a-benchmarky.html">Data a benchmarky</a></div>
+<div class="footer-col"><b>Mzdy a práce</b><a href="https://rychlevypocty.cz/cista-mzda-kalkulacka.html">Čistá mzda</a><a href="https://rychlevypocty.cz/nemocenska-kalkulacka.html">Nemocenská</a><a href="https://rychlevypocty.cz/dpp-dpc-kalkulacka.html">DPP / DPČ</a></div>
+</div>
+<div class="footer-bottom"><span>© RychléVýpočty.cz · orientační výpočty</span><span>Zadat → Spočítat → Pochopit → Rozhodnout</span></div>
+</div>
+</footer>
+<script>
+(()=>{
+"use strict";
+const C={limits:[1633,2449,4897],rate:.60},$=id=>document.getElementById(id),$$=s=>[...document.querySelectorAll(s)];
+const state={mode:"basic",caregiver:"standard",source:"period"};
+const nf=new Intl.NumberFormat("cs-CZ",{maximumFractionDigits:0});
+const money=v=>nf.format(Math.round(Number.isFinite(v)?v:0))+" Kč";
+const parse=v=>{const n=Number.parseFloat(String(v??"").replace(/\s/g,"").replace(",",".").replace(/[^0-9.-]/g,""));return Number.isFinite(n)?n:NaN};
+const clamp=(v,min,max)=>Math.min(max,Math.max(min,v));
+function reduceDvz(dvz){const d=Math.max(0,dvz),[a,b,c]=C.limits;const p1=Math.min(d,a)*.9,p2=Math.max(0,Math.min(d,b)-a)*.6,p3=Math.max(0,Math.min(d,c)-b)*.3,ignored=Math.max(0,d-c),reduced=Math.ceil(p1+p2+p3);return{dvz:d,p1,p2,p3,ignored,reduced}}
+function read(){
+ if(state.mode==="basic"){const gross=clamp(parse($("basicGross").value)||0,0,1e7),requested=Math.ceil(clamp(parse($("basicDays").value)||1,1,365)),limit=state.caregiver==="lone"?16:9;return{mode:"basic",dvz:gross*12/365,requested,limit,waiting:true,worker:"employee",source:"odhad z měsíční mzdy"}}
+ const requested=Math.ceil(clamp(parse($("advancedDays").value)||1,1,365)),lone=$("advancedLone").checked,limit=lone?16:9;
+ const dvz=state.source==="direct"?clamp(parse($("directDvz").value)||0,0,1e6):clamp(parse($("periodIncome").value)||0,0,1e8)/Math.max(1,clamp(parse($("periodDays").value)||1,1,3660));
+ return{mode:"advanced",dvz,requested,limit,waiting:$("waitingPeriod").checked,worker:$("workerType").value||"employee",source:state.source==="direct"?"přímo zadaný DVZ":"z rozhodného období"};
+}
+function calculate(v){const r=reduceDvz(v.dvz),daily=Math.ceil(r.reduced*C.rate),paid=Math.min(v.requested,v.limit),over=Math.max(0,v.requested-paid),total=daily*paid;return{...v,...r,daily,paid,over,total}}
+function validate(v){
+ let ok=true;[$("grossField"),$("daysField")].forEach(x=>x?.classList.remove("error"));$("grossError").textContent="";$("daysError").textContent="";
+ if(state.mode==="basic"&&!(v.dvz>0)){ $("grossField").classList.add("error");$("grossError").textContent="Zadejte kladnou mzdu.";ok=false}
+ if(!(v.requested>=1)){ $("daysField").classList.add("error");$("daysError").textContent="Zadejte alespoň 1 den.";ok=false}
+ return ok;
+}
+function renderDays(r){let h="";for(let i=1;i<=16;i++){let cls=i<=r.paid?(i<=9?"paid":"extra"):(i<=r.requested?"over":"");h+=`<i class="${cls}">${i}</i>`}$("resultDays").innerHTML=h}
+function render(){
+ const v=read();if(!validate(v))return;const r=calculate(v);
+ $("totalBenefit").textContent=money(r.total);$("dailyBenefit").textContent=money(r.daily);$("paidDays").textContent=r.paid+" / "+r.requested;$("dvzResult").textContent=money(r.dvz);$("reducedResult").textContent=money(r.reduced);$("limitPill").textContent="limit "+r.limit+" dnů";
+ $("resultSentence").textContent=`Denní dávka ${money(r.daily)} × ${r.paid} započtených kalendářních dnů${r.over?`; ${r.over} ${r.over===1?"den je":"dnů je"} nad limitem`:""}.`;renderDays(r);
+ $("flowDvz").textContent=money(r.dvz);$("flowReduced").textContent=money(r.reduced);$("flowDaily").textContent=money(r.daily);$("flowDays").textContent=r.paid+" kalendářních dnů";$("flowTotal").textContent=money(r.total);$("flowSource").textContent=r.source;
+ const n=$("eligibilityNotice");n.className="result-notice";
+ if(state.mode==="advanced"&&!r.waiting){n.classList.add("danger");n.innerHTML="<b>Nárok v tomto nastavení není potvrzen.</b> Uvedli jste, že nesplňujete potřebnou dobu nemocenského pojištění. Částku berte jen jako technický model."}
+ else if(r.over){n.classList.add("warn");n.innerHTML=`<b>${r.over} ${r.over===1?"den je":"dnů je"} nad zvoleným limitem.</b> Delší potřeba péče automaticky neprodlužuje krátkodobé ošetřovné.`}
+ else n.innerHTML="<b>Výpočet částky je připraven.</b> Samotný výpočet nepotvrzuje nárok; ten závisí také na účasti na nemocenském pojištění a důvodu péče.";
+}
+function setMode(m){state.mode=m==="advanced"?"advanced":"basic";$$("[data-mode]").forEach(b=>{const on=b.dataset.mode===state.mode;b.classList.toggle("active",on);b.setAttribute("aria-pressed",String(on))});$("basicPanel").hidden=state.mode!=="basic";$("advancedPanel").hidden=state.mode!=="advanced";$("formTitle").textContent=state.mode==="basic"?"Mzdu, délku péče a vhodný limit":"Přesný zdroj DVZ, délku péče a pojištění";$("formIntro").textContent=state.mode==="basic"?"Základní režim je rychlý odhad pro stabilní měsíční mzdu.":"Přesnější režim pracuje s rozhodným obdobím nebo přímo známým DVZ.";render()}
+function setCare(c){state.caregiver=c==="lone"?"lone":"standard";$$("[data-caregiver]").forEach(b=>{const on=b.dataset.caregiver===state.caregiver;b.classList.toggle("active",on);b.setAttribute("aria-pressed",String(on))});render()}
+function setSource(s){state.source=s==="direct"?"direct":"period";$$("[data-source]").forEach(b=>{const on=b.dataset.source===state.source;b.classList.toggle("active",on);b.setAttribute("aria-pressed",String(on))});$("periodFields").hidden=state.source!=="period";$("directField").hidden=state.source!=="direct";render()}
+$$("[data-mode]").forEach(b=>b.addEventListener("click",()=>setMode(b.dataset.mode)));$$("[data-caregiver]").forEach(b=>b.addEventListener("click",()=>setCare(b.dataset.caregiver)));$$("[data-source]").forEach(b=>b.addEventListener("click",()=>setSource(b.dataset.source)));
+$$("[data-preset]").forEach(b=>b.addEventListener("click",()=>{$("basicGross").value=nf.format(Number(b.dataset.preset));$$("[data-preset]").forEach(x=>x.classList.toggle("active",x===b));render()}));
+$("ocrForm").addEventListener("input",render);$("ocrForm").addEventListener("change",render);$("ocrForm").addEventListener("submit",e=>e.preventDefault());
+$("workerType").addEventListener("change",()=>{$("waitingHelp").textContent=$("workerType").value==="osvc"?"U OSVČ ověřte podmínky nemocenského pojištění před vznikem potřeby péče.":"U zaměstnance ověřte potřebnou dobu účasti na nemocenském pojištění.";render()});
+$("advancedLone").addEventListener("change",render);
+$("menuBtn").addEventListener("click",()=>{const open=$("mobileNav").classList.toggle("is-open");$("menuBtn").setAttribute("aria-expanded",String(open))});
+window.OCR79Engine={reduceDvz,calculate};
+setMode("basic");
+})();
+</script>
+</body></html>
