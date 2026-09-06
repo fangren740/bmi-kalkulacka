@@ -1,0 +1,40 @@
+name: TEMP find next V-next legacy candidates
+on:
+  push:
+    branches: [recovery-closeout-2026-09-06]
+    paths: ['.github/workflows/tmp-find-next-vnext.yml']
+permissions:
+  contents: read
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Compare registry with V-next tracker
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          reg=json.loads(Path('calculators-registry.json').read_text(encoding='utf-8'))
+          prog=json.loads(Path('RV_VNEXT_PROGRESS.json').read_text(encoding='utf-8'))
+          tracked={x.get('file') for x in prog.get('completedPages',[])}
+          tracked|={x.get('file') for x in prog.get('inProgressPages',[])}
+          c=prog.get('currentCandidate')
+          if isinstance(c,dict): tracked.add(c.get('file'))
+          refs={x.get('file') for x in prog.get('referencePages',[])}
+          candidates=[]
+          for item in reg.get('items',[]):
+            if item.get('type')!='calculator' or item.get('status')!='published':
+              continue
+            f=item.get('file')
+            if f in tracked: continue
+            candidates.append((item.get('priority',9999), f, item.get('name'), item.get('categoryId'), 'REFERENCE_ONLY' if f in refs else 'LEGACY'))
+          candidates.sort(key=lambda x:(x[0] if isinstance(x[0],(int,float)) else 9999,x[1]))
+          print('TRACKED',len(tracked))
+          print('REGISTRY CALCULATORS',sum(1 for i in reg.get('items',[]) if i.get('type')=='calculator' and i.get('status')=='published'))
+          print('UNTRACKED',len(candidates))
+          print('--- TOP 40 ---')
+          for row in candidates[:40]: print('\t'.join(map(str,row)))
+          PY
