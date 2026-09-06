@@ -1,0 +1,64 @@
+name: Recovery tracker sync
+
+on:
+  push:
+    branches:
+      - recovery-tracker-sync-2026-09-06
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: recovery-tracker-sync-2026-09-06
+      - name: Synchronize recovery state
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path('RV_VNEXT_PROGRESS.json')
+          data = json.loads(path.read_text(encoding='utf-8'))
+          targets = set(range(75, 85)) | set(range(89, 94))
+          seen = set()
+          for page in data.get('completedPages', []):
+              seq = page.get('sequence')
+              if seq in targets:
+                  seen.add(seq)
+                  page['status'] = 'RECOVERY_APPROVED'
+                  page['majorChangeDate'] = '2026-09-06'
+                  page['qaStatus'] = 'RECOVERY_APPROVED_LOCAL_QA_PRODUCTION_PSI_PENDING'
+                  page['minimumHoldUntil'] = '2026-09-20'
+                  page['holdUntil'] = '2026-10-04'
+                  page['recoveryApprovedAt'] = '2026-09-06'
+                  note = 'Recovery rebuild approved by user and integrated on 2026-09-06. Production PageSpeed/Lighthouse and post-deploy smoke remain required release evidence.'
+                  old = page.get('notes', '')
+                  if note not in old:
+                      page['notes'] = (old.rstrip() + ' ' + note).strip()
+          missing = sorted(targets - seen)
+          if missing:
+              raise SystemExit(f'Missing target sequences in tracker: {missing}')
+          data['updatedAt'] = '2026-09-06'
+          path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          print('updated sequences:', sorted(seen))
+          PY
+
+          python rv-vnext-progress-audit.py --root . --json-out /tmp/progress.json
+
+      - name: Commit synchronized tracker and remove temporary workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f .github/workflows/recovery-tracker-sync.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add RV_VNEXT_PROGRESS.json .github/workflows/recovery-tracker-sync.yml
+          git commit -m "tracking: sync approved recovery pages 75-93"
+          git push origin HEAD:recovery-tracker-sync-2026-09-06
