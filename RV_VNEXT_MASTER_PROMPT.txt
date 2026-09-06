@@ -1,584 +1,288 @@
 RYCHLÉVÝPOČTY.CZ V7 — V-NEXT PORTFOLIO REBUILD MASTER PROMPT
-Verze protokolu: 1.7
+Verze protokolu: 2.0
 Založeno: 17. 8. 2026
-Poslední revize: 27. 8. 2026
+Poslední revize: 6. 9. 2026
 
-ROLE A CÍL
-Pracuješ na projektu RychléVýpočty.cz V7. Hlavní cíl této fáze není vyrábět co nejvíce nových URL. Cílem je systematicky zvednout hodnotu EXISTUJÍCÍHO portfolia kalkulaček tak, aby každá silná URL fungovala jako samostatný, profesionální a užitečný produkt — pro uživatele, organické vyhledávání, důvěryhodnost značky i budoucí monetizaci.
+STATUS
+Tento soubor je ORCHESTRATION MASTER pro pokračování V-next programu. Neobsahuje každý detail výrobního standardu. Pro samotný návrh/build/recovery kalkulačky je závazný a nadřazený aktuální:
 
-Aktuální strategický směr vznikl po zamítnutí Google AdSense kvůli „Obsahu nízké hodnoty“. Toto zamítnutí ber jako kvalitativní feedback, NE jako důvod vyrábět obsah jen pro AdSense. Výsledek musí být lepší produkt i v případě, že by AdSense neexistoval.
+RV-VNEXT-STRICT-BUILD-PROMPT-2026-09-06.md
 
-======================================================================
-1. SOURCE OF TRUTH A OBNOVENÍ STAVU V KAŽDÉM NOVÉM CHATU
-======================================================================
+Produkční/technický standard:
+RV-VNEXT-PRODUCTION-STANDARD.md
 
-Uživatel vždy přiloží NEJNOVĚJŠÍ ZIP aktuálního produkčního projektu. Tento ZIP je pro práci v daném chatu primární source of truth.
-
-PŘED JAKOUKOLI DALŠÍ PRACÍ MUSÍŠ:
-
-1) Rozbalit/projít aktuální ZIP.
-2) Najít a přečíst:
-   - RV_VNEXT_MASTER_PROMPT.txt
-   - RV-VNEXT-PRODUCTION-STANDARD.md
-   - RV-VNEXT-EXPERIENCE-STANDARD-V2.md
-   - RV_VNEXT_PROGRESS.json
-   - calculators-registry.json
-   - sitemap.xml
-   - hlavní index/katalog/huby
-   - relevantní HTML/CSS/JS aktuálně řešené kalkulačky
-   - případné benchmark/data manifesty a datasety
-3) Ověřit stav progress trackeru proti SKUTEČNÝM souborům a povinně spustit `python rv-vnext-progress-audit.py --root .`.
-4) Zjistit:
-   - co už bylo v programu V-next dokončeno,
-   - co je rozpracováno,
-   - co je pouze referenční stránka,
-   - která URL je další kandidát,
-   - zda od posledního chatu nevznikly nové změny.
-5) Pokud progress JSON a skutečný kód nesouhlasí, SKUTEČNÝ KÓD má přednost a tracker oprav.
-6) Neptej se uživatele znovu „co už jsme dělali“, pokud je to možné zjistit z přiloženého ZIPu.
-7) Pokud uživatel výslovně požádá o ověření historie přes GitHub, správný produkční repozitář je:
-   fangren740/bmi-kalkulacka
-   branch main.
-   Nikdy nepoužívej fangren740/GPT jako produkční source of truth.
-
-Na začátku nového chatu po analýze ZIPu napiš krátký STATE RECOVERY:
-- kolik V-next URL je skutečně dokončeno,
-- co je rozpracované,
-- co je další navržená URL,
-- proč právě ona,
-- zda je stav trackeru konzistentní s kódem.
-
-NEZAČÍNEJ generickým plánem od nuly. Pokračuj přesně tam, kde projekt skončil.
+Starší dated prompty (zejména strict build 2026-09-04) jsou historické reference. Pro nový build se nepoužijí, pokud aktuální master/strict prompt říká něco novějšího.
 
 ======================================================================
-2. HLAVNÍ STRATEGICKÉ PRINCIPY
+1. SOURCE OF TRUTH
 ======================================================================
 
-A) KVALITA > KVANTITA
-Nevyráběj nové URL jen proto, abychom rozšiřovali portfolio. Během této fáze mají nové kalkulačky nízkou prioritu. Nová URL může vzniknout jen tehdy, pokud má prokazatelně samostatný search intent a jasně vyšší očekávanou hodnotu než pokračování rebuild programu.
+Primární source of truth je produkční GitHub repository:
+fangren740/bmi-kalkulacka
+branch: main
 
-B) PORTFOLIO ZACHOVAT, ALE NE DOGMATICKY
-Výchozí politika je KEEP URL.
-Existující URL nemaž, nenoindexuj ani neslučuj jen kvůli AdSense.
-Merge/consolidation doporuč pouze tehdy, když dvě URL neobhájí samostatný uživatelský intent, reálně si konkurují a jedna z nich nepřináší unikátní produktovou hodnotu.
-Otázka zní:
-„Proč mají existovat dvě samostatné stránky z pohledu uživatele?“
-Pokud odpověď stojí jen na odlišných keywords, je to varování.
+Nikdy nepoužívej fangren740/GPT jako produkční source of truth.
 
-C) JEDNA KALKULAČKA = JEDEN MALÝ PRODUKT
-Každou kalkulačku posuzuj samostatně. Nejde o „vyplnit nový template“. Jde o navržení nejlepší možné stránky pro konkrétní úlohu.
+Pokud uživatel v konkrétním chatu přiloží novější lokální ZIP/export, porovnej jej s main a zjisti, která verze je skutečně novější. Nevytvářej automaticky paralelní zdroj pravdy.
 
-D) ŽÁDNÁ POVINNÁ DÉLKA
-Nepoužívej slovní kvóty typu 2 500–3 000 slov. Jednoduchá kalkulačka může být výborná s kratším obsahem; složitá právní/finanční kalkulačka může potřebovat hlubší metodiku. Každý blok musí mít účel.
+Před pokračováním vždy načti minimálně:
+- RV_VNEXT_MASTER_PROMPT.txt
+- RV-VNEXT-STRICT-BUILD-PROMPT-2026-09-06.md
+- RV-VNEXT-PRODUCTION-STANDARD.md
+- RV-VNEXT-EXPERIENCE-STANDARD-V2.md, pokud existuje
+- RV_VNEXT_PROGRESS.json
+- calculators-registry.json
+- sitemap.xml
+- relevantní HTML/CSS/JS aktuální a referenčních kalkulaček
+- dostupné benchmark/data manifesty a datasety
+- aktuální recovery/quality locky v main
 
-E) ŽÁDNÝ MASOVÝ TEMPLATE FEEL
-Sdílej značku, základní design systém, komponenty, accessibility a technické standardy, ale nechej každou stránku získat vlastní produktovou identitu podle tématu.
-Hypotéka nesmí působit jako beton.
-Výpovědní doba nesmí působit jako BMI.
-DPH nesmí působit jako menstruační kalendář.
+Ověř skutečný stav programu proti kódu a trackeru. Pokud nesouhlasí, kód + aktuální historie main mají přednost a nesoulad je třeba vyřešit.
 
-F) UŽIVATELSKÁ HODNOTA PŘED SEO
-Stránka musí být užitečná i bez Google návštěvnosti.
-Kontrolní otázka:
-„Kdyby z této stránky zmizel brand a SEO text, bylo by stále okamžitě poznat, že na ní někdo odvedl několik hodin skutečné produktové a odborné práce?“
+NEZAČÍNEJ audit od nuly. Pokračuj přesně tam, kde projekt skončil.
 
 ======================================================================
-3. POVINNÝ WORKFLOW PRO KAŽDOU KALKULAČKU
+2. HLAVNÍ CÍL
 ======================================================================
 
-Každou URL řeš SEKVENČNĚ. Nedělej několik kalkulaček zároveň.
+Cílem není vyrobit co nejvíce URL ani co nejrychleji uzavřít sequence.
 
-FÁZE 0 — RECOVERY + PRIORITA
-- Z progress JSON a projektu zjisti, která URL je další.
-- Pokud není priorita jednoznačná, vyber ji objektivně podle:
-  1. search/business potenciálu,
-  2. aktuální kvalitativní mezery,
-  3. důvěryhodnostního/YMYL rizika,
-  4. topical cluster významu,
-  5. cannibalization/duplication rizika,
-  6. pracnosti a očekávaného dopadu.
-- Pokud jsou k dispozici GSC data, použij je.
-- Nikdy nepřepisuj právě dokončenou URL jen proto, že máš další nápad. Po MAJOR změně ji nech měřit.
+Cílem je systematicky zvednout existující portfolio tak, aby každá silná URL fungovala jako samostatný, profesionální, důvěryhodný a rychlý produkt.
+
+Platí:
+- KVALITA > KVANTITA
+- USER VALUE > SEO VATA
+- JEDNA KALKULAČKA = JEDEN MALÝ PRODUKT
+- JEDNA ZNAČKA, RŮZNÉ SKUTEČNÉ PRODUKTY
+- PAGE SPEED / CORE WEB VITALS SE NESMÍ OBĚTOVAT DESIGNU
+
+======================================================================
+3. KVALITATIVNÍ KALIBRACE
+======================================================================
+
+Quality floor:
+- #74 `cista-mzda-kalkulacka.html`
+
+S-TIER kreativita / craft / product metaphor:
+- #13 Sádrokarton
+- #15 Omítka
+- #19 Rekonstrukce celkem
+- #21 DPH
+- #23 Bod zvratu
+- #25 Minimální fakturace
+
+Sekundární reference:
+- #11 Podlahy
+- #12 Izolace
+- #17 Kuchyň
+- #18 Koupelna
+- #22 Marže
+- #33 Podnikatelská rezerva
+
+Před každým významným buildem otevři skutečné HTML alespoň 2–3 relevantních S-tier referencí.
+
+#74 = minimální kvalita/UX/polish.
+S-tier = laťka kreativity, topic-native grafiky, full-page rytmu a product richness.
+
+Nekopíruj jejich layouty. Přenes úroveň práce.
+
+======================================================================
+4. STABILNÍ UX ZÁKLAD
+======================================================================
+
+Pokud user job nevyžaduje výjimku, používej jako bezpečný základ:
+
+DESKTOP:
+- header
+- hero: text vlevo / topic-native grafika vpravo
+- kalkulačka + dominantní výsledek bez sekundární obsahové bariéry
+- kalkulačka vlevo / výsledek vpravo
+- same-intent hloubka
+- světlá metodika/trust
+- plný tmavý footer
+
+MOBILE:
+- hero text
+- topic visual
+- inputs
+- result
+- hloubka
+- metodika
+- footer
+
+Originalita se nevyrábí layout roulette. Vzniká v native objectu, hero grafice, výsledkové gramatice, data vizualizaci a post-result blocích.
+
+======================================================================
+5. POVINNÝ WORKFLOW PRO KAŽDOU URL
+======================================================================
+
+FÁZE 0 — STATE RECOVERY
+- zjisti poslední dokončenou sekvenci,
+- zjisti další kandidát,
+- ověř quality/recovery freeze,
+- ověř tracker vs. skutečný kód.
 
 FÁZE 1 — PRE-BUILD AUDIT
-Než začneš programovat, proveď hluboký audit:
-- současné HTML/CSS/JS,
-- výpočetní logika a správnost,
-- search intent a Jobs-to-be-Done,
-- český SERP a nejlepší konkurenti,
-- primary/official zdroje pro aktuální fakta,
-- aktuálnost sazeb, limitů, zákonů, metodiky,
-- co konkurence řeší dobře,
-- co neřeší,
-- co může RV nabídnout výrazně lépe,
-- UX problémy současné stránky,
-- slabá/generická místa,
-- překryvy s jinými RV URL,
+- současný HTML/CSS/JS,
+- matematika / logika,
+- benchmark/regression data,
+- search intent / Jobs-to-be-Done,
+- důležité aktuální parametry,
+- YMYL/trust rizika,
+- mobile problémy,
+- cannibalization / overlap,
 - interní linky,
-- možnosti vlastních benchmarků/dat/scénářů,
-- potřebná structured data.
+- současná kvalitativní mezera.
 
-Pokud jde o aktuální zákony, daně, sazby, mzdy, zdravotní/finanční nebo jinak časově proměnlivá data, ověř je na webu. U odborných/technických tvrzení preferuj primární a oficiální zdroje.
+U proměnlivých daní, zákonů, mezd, dávek, financí, zdraví apod. ověř aktuálnost na autoritativních zdrojích.
 
-FÁZE 2 — ROZHODNUTÍ
-Před buildem explicitně rozhodni:
-- KEEP + REBUILD
-- KEEP + MINOR IMPROVEMENT
-- HOLD
-- MERGE / CONSOLIDATE CANDIDATE
+FÁZE 2 — PRODUCT ARCHITECTURE
+Před kódem napiš:
+- „Uživatel přichází, protože chce …“
+- Native object
+- Golden Delta
+- S-tier reference
+- Depth Map
+- section choreography
+- mobile journey
+- Benchmark Delta proti #74
 
-U merge musí být jasné zdůvodnění. Výchozí stav je zachovat URL.
+FÁZE 3 — BUILD
+- kompletní desktop + mobile,
+- live interakce tam, kde dávají smysl,
+- customer-friendly copy,
+- topic-native hero visual,
+- dominantní result,
+- same-intent hloubka,
+- metodika/disclaimer,
+- canonical RV identity + full footer.
 
-FÁZE 3 — PRODUCT BRIEF
-Před vším ostatním napiš jednu větu běžnou češtinou: **„Uživatel přichází, protože chce …“** Tato věta je PRIMARY INTENT LOCK. Pokud ji nelze napsat jednoduše nebo neodpovídá search intentu URL, vrať se do auditu.
+FÁZE 4 — REGRESSION + VISUAL QA
+- benchmark dataset / edge cases,
+- 1440 / 1280 / 1120 / 1024 / 768 / 390 / 320 px,
+- horizontal overflow 0,
+- clipped controls 0,
+- runtime errors 0,
+- duplicate IDs 0,
+- všechny hlavní interaction modes,
+- full-page desktop + mobile review,
+- Customer Copy Scan,
+- S-tier parity check,
+- #74 Quality Scorecard.
 
-Pro rebuild stanov:
-- cílového uživatele,
-- hlavní otázku, na kterou stránka odpovídá,
-- hlavní „job“ uživatele,
-- nejkratší možné vstupy,
-- dominantní výsledek/answer,
-- interpretaci „co to znamená“,
-- případný delta/compare scénář,
-- next action,
-- důležité hraniční případy,
-- důkaz/metodiku,
-- zdroje,
-- případný vlastní benchmark/dataset,
-- vhodnou vizualizaci,
-- interní linkovou cestu dál,
-- vhodný schema typ.
+Uživatel NENÍ beta tester. Polotovar se neposílá.
 
-Typický princip:
-INPUT → ANSWER → WHY → DELTA/INTERPRETATION → NEXT ACTION → EVIDENCE/METHODOLOGY
+FÁZE 5 — USER VISUAL GATE
+Preview ukaž pouze pokud STRICT BUILD PROMPT PASS.
 
-PRIMARY INTENT + PLAIN LANGUAGE GATE — POVINNÉ OD 19. 8. 2026
-- První mód, první vstupy a dominantní výsledek musí řešit nejpřirozenější hlavní otázku URL. Sekundární chytrá vrstva (benchmark, audit nabídky, odborný compare, dataset) nesmí hlavní job vytlačit.
-- První vrstva nesmí mluvit interním produktovým jazykem. `benchmark`, `scope`, `delta`, `anchor`, `extrapolace`, `modelová obálka` a podobné termíny nahraď běžnou češtinou, pokud nejsou nevyhnutelné.
-- Simple front, rigorous back: první odpověď má být jednoduchá; metodická hloubka, zdroje, datové nuance a odborné hranice následují až potom.
-- QA „cizí člověk“: bez znalosti projektu přečti jen hero, první vstupy a hlavní výsledek. Pokud není jasné k čemu stránka je, co zadat a co výsledek znamená, release = FAIL.
-- Produktová originalita není omluva pro změnu user jobu. Chytřejší sekundární funkce patří za hlavní odpověď, ne místo ní.
+Po user approval teprve deploy.
 
-Není povinné použít všechny bloky. Produkt se má přizpůsobit intentu.
+FÁZE 6 — PRODUCTION RELEASE GATE
+Po deployi:
+- live health,
+- production PageSpeed Insights / Lighthouse Mobile + Desktop,
+- LCP / CLS / INP review,
+- Accessibility / Best Practices / SEO,
+- žádná známá actionable performance regrese.
 
-FÁZE 4 — UX A VIZUÁLNÍ ARCHETYP
-Použij skutečnou RV identitu a profesionální navy/blue/green design systém, ale nevyráběj nudné opakující se widgety.
-Každá stránka může mít vlastní relevantní hero/result kompozici:
-- timeline,
-- gauge,
-- waterfall,
-- progress bar,
-- scenario cards,
-- comparison matrix,
-- tabulku,
-- graf,
-- decision tree,
-- amortizační přehled,
-- kalendář,
-- mapu procesu,
-- tematický vizuál/ilustraci,
-- jiný produktově vhodný prvek.
+PREVIEW PASS != DONE.
 
-Obrázky/ilustrace používej pouze tam, kde zvyšují pochopení, emoci nebo profesionalitu. Ne jako výplň.
-
-HERO IDENTITY / WATERMARK RULE — POVINNÉ OD 18. 8. 2026
-- Hero nesmí být ve výchozím stavu pouze text + prázdná/sterilní plocha, pokud pro to není konkrétní produktový důvod. První viewport má mít jemnou vizuální identitní nebo tematickou vrstvu, která stránku dělá rozpoznatelnější a profesionálnější.
-- Použij alespoň jednu smysluplnou hero identity layer; u významných kalkulaček preferuj kombinaci dvou vrstev:
-  1) brand watermark/pattern — jemný motiv RV (logo fragment, šipka, diagonála, grid, linka nebo jiný brand prvek),
-  2) topic watermark — motiv tématu (např. váleček/štětec a tah barvy, rastr dlažby, vrstvy podlahy, kamenivo, časová osa, dům, amortizační křivka),
-  3) product visual proof — mini scénář, schéma nebo náhled výsledku, který zároveň vysvětluje user job.
-- Je dovoleno vytvořit malou knihovnu opakovaně použitelných RV watermarků, ale nesmí z ní vzniknout nový masový template. Společný brand motiv vždy kombinuj s tématickou variací nebo jinou kompozicí podle produktu.
-- Watermark/pattern musí být low-contrast, nesmí soutěžit s H1/CTA, nesmí zhoršit čitelnost, accessibility, Core Web Vitals ani responsive layout. Preferuj CSS/SVG před těžkým bitmapovým obrázkem.
-- Dekorace je legitimní pouze tehdy, když zvyšuje profesionalitu, tematickou rozpoznatelnost nebo pochopení. Generický gradient bez další identity se nepovažuje za splnění tohoto pravidla.
-- Visual gate FAIL, pokud je hero po odstranění textu vizuálně zaměnitelný s desítkami jiných RV stránek nebo působí nedodělaně/sterilně.
-- **Page-level Signature Visual System Gate:** nestačí odlišit pouze hero. Každá hlavní V-next stránka musí mít alespoň 2 nativní vizuální momenty mimo hero (např. materiálový atlas, decision map, technický řez, časovou osu, scénářový diagram, mapu dat, systémový console panel). Pokud se po hero vrátí dlouhá série stejných bílých karet, visual gate = FAIL.
-- **Section choreography gate:** maximálně dvě po sobě jdoucí hlavní sekce mohou používat stejnou gramatiku „headline + stejné cards“. Další musí změnit rytmus (full-width contrast section, diagram, asymetrie, editorial panel, data vizualizace, interaktivní blok).
-- **Anti-template comparison:** před BUILD LOCK porovnej nový návrh minimálně s předchozími 3 dokončenými V-next stránkami. Pokud mají stejný hero split, stejné 3/4-card sekce a stejný dark result dashboard bez produktového důvodu, vrať vizuál do návrhu.
-- **Flexibility gate pro product presets:** pokud kalkulačka používá konkrétní výrobkové presety a vlastní hodnoty lze bezpečně zadat bez falešné metodiky, nabídni také „Vlastní výrobek / technický list“. Preset nesmí uživatele uzamknout do naší databáze.
-- **Přítomnost watermarku sama o sobě NENÍ PASS.** Hero identity gate hodnotí také nápad, tematickou relevanci, odlišitelnost a kompozici. Pouhý velký nápis tématu v nízké opacity bez další vizuální logiky je maximálně podpůrná vrstva, ne finální signaturní motiv.
-- U hlavní kalkulačky musí být před BUILD LOCK jednou větou popsáno, **proč je hero vizuál nativní právě tomuto problému**. Pokud stejný motiv lze beze změny použít na jinou kalkulačku, vrať hero do návrhu.
-
-
-CONTENT SUFFICIENCY / AUTHORITY FLOOR RULE — POVINNÉ OD 18. 8. 2026
-- Žádná slovní kvóta není povinná, ale **krátkost sama o sobě není ctnost**. U středně složitého nebo odborného intentu musí stránka po toolu pokrýt všechny relevantní části rozhodnutí, ne pouze vzorec a FAQ.
-- Před BUILD LOCK vytvoř CONTENT COVERAGE MATRIX. Pro každou stránku označ jako relevantní / nerelevantní minimálně: 1) jak správně zvolit vstup/produkt/režim, 2) jak číst výsledek, 3) rozhodovací nebo compare scénář, 4) nejčastější chyby a hraniční případy, 5) metodika a hranice modelu, 6) konkrétní příklady, 7) zdroje/data, 8) next action.
-- U středně složitého a odborného toolu je release gate FAIL, pokud chybí některý blok, který je pro user job zjevně relevantní. Není nutné mít osm samostatných sekcí — informace mohou být sloučené — ale musí být skutečně viditelné a užitečné.
-- **Authority floor pro technická/YMYL témata:** minimálně jasný výběr/eligibility kontext, interpretace výsledku, metodická hranice, jeden konkrétní scénář/compare, nejčastější chyba/edge case a primární zdroje.
-- Před release polož druhou povinnou otázku: „Kdyby uživatel po výpočtu chtěl udělat reálné rozhodnutí nebo nákup, chybí mu na stránce ještě zásadní otázka, kterou by musel hned googlit?“ Pokud ANO a jde o přirozenou součást intentu, stránka není hotová.
-
-Design musí být:
-- profesionální,
-- důvěryhodný,
-- čistý,
-- responzivní,
-- čitelný,
-- vizuálně zajímavý,
-- konzistentní s RV brandem,
-- ale ne identický stránku po stránce.
-
-FÁZE 5 — BUILD
-Teprve po schváleném pre-build směru stránku uprav.
-
-Technické zásady:
-- zachovej stávající URL,
-- GitHub Pages / flat deployment musí zůstat bezpečný,
-- nepřidávej zbytečné dependency,
-- nevytvářej plošný refactor celého webu kvůli jedné stránce,
-- sdílené komponenty zaváděj jen pokud nevyvolají riziko regresí,
-- logika kalkulačky musí být deterministická a testovatelná,
-- klíčové hodnoty nevkládej bez ověřeného zdroje,
-- zachovej nebo zlepši canonical/meta/indexability,
-- schema musí odpovídat skutečně viditelnému obsahu.
-
-Dataset schema používej pouze tehdy, když stránka opravdu obsahuje/popisuje relevantní dataset nebo na něj jasně navazuje a metadata odpovídají uživatelsky viditelnému obsahu. Neoznačuj běžnou kalkulačku jako Dataset jen kvůli SEO.
-
-FÁZE 6 — QA GATE
-Stránka není DONE, dokud neprojde QA.
-
-Minimální QA:
-- test výpočetní logiky na normálních i hraničních případech,
-- porovnání očekávaných výsledků s metodikou,
-- kontrola desktopu,
-- kontrola mobilu,
-- layout bez horizontálního overflow,
-- fungující formulář a validace,
-- klávesnice/accessibility tam, kde relevantní,
-- title/meta/H1/canonical,
-- structured data,
-- zdroje a datum ověření,
-- disclaimery u citlivých témat,
-- interní odkazy,
-- žádné rozbité lokální assety/HTML odkazy,
-- žádná regresní změna jiných kalkulaček,
-- přiměřený výkon,
-- vizuální kontrola, že stránka nepůsobí jako generický template,
-- hero identity gate: první viewport má brand/topic watermark, pattern nebo produktový vizuální důkaz; hero nesmí působit sterilně či nedokončeně a dekorace nesmí snižovat čitelnost/výkon.
-- content sufficiency gate: relevantní položky CONTENT COVERAGE MATRIX jsou pokryté; odborná stránka nekončí pouze u kalkulačky + metodiky + krátkého FAQ.
-- accessibility / agent-tree gate: před DONE nesmí zůstat známý automatický PageSpeed/Lighthouse accessibility fail. Povinně kontroluj role/ARIA kompatibilitu, required ARIA children, keyboard model vlastních widgetů, kontrast malého textu, touch targety a validní accessibility tree. U `tablist` používej skutečné `role=tab` + `tabpanel` + `aria-controls/aria-labelledby` + roving tabindex/klávesnici. `aria-label` nedávej na generické prvky bez podporované role.
-- post-deploy accessibility gate: cílem je mobilní PageSpeed/Lighthouse Accessibility 100. Pokud produkční audit ukáže automatický fail, stránka zůstává RELEASE_CANDIDATE i když výpočet, SEO a vizuál prošly. Výjimka pouze pro zdokumentovaný false positive / nerelevantní experimentální audit.
-- DONE status je zakázán bez skutečného post-deploy PageSpeed/Lighthouse důkazu na produkční URL, která už servíruje aktuální HTML/CSS/JS. Lokální lint/screenshot/browser smoke test nestačí.
-- U produkčního PSI kontroluj vedle Accessibility také Best Practices, SEO a novou kategorii Procházení agenty / Agentic browsing, pokud ji report nabízí. Cíl deterministických kategorií je plný PASS; agent accessibility tree fail je blokující.
-- Každý input/select/textarea musí mít programmatic label. Placeholder ani sousední vizuální text bez vazby se nepočítá. Nové formulářové prvky dostávají také stabilní `name`, pokud tomu nebrání konkrétní důvod.
-- agent browsing gate: pokud PageSpeed/Chrome reportuje chybný accessibility tree pro AI agenty, považuj to za strukturální QA chybu stejné priority jako běžný ARIA fail; u dostupného agent auditu mířit na plný PASS.
-- systemic regression rule: pokud se po nasazení objeví opakovatelná třída chyby (např. špatný `tablist`, nepodporované `aria-*`, kontrast, touch target, schema, overflow), neopravuj pouze aktuální URL. PŘED dalším buildem proveď cílený sweep všech již dokončených V-next stránek, zjisti rozsah stejného vzoru, oprav pouze skutečně dotčené soubory a přidej tuto chybu do automatického regression/lint gate, aby se nemohla znovu dostat do další kalkulačky.
-- executable a11y lint gate: před RELEASE_CANDIDATE spusť `python rv-vnext-a11y-lint.py <changed HTML...>` nebo ekvivalentní kontrolu. Linter musí minimálně hlídat duplicate IDs, generické `aria-label` bez podporované role, `aria-selected` na nesprávné roli, kompletní `tablist→tab→tabpanel` kontrakt, custom `radiogroup` bez radio potomků a form controls bez programmatic labelu. Statický lint nenahrazuje Lighthouse; oba gate jsou povinné.
-- `rv-vnext-a11y-lint.py --all-vnext` musí načítat aktuální `RV_VNEXT_PROGRESS.json` (`completedPages` + `inProgressPages` + `currentCandidate`), nikdy `nextCandidate`, a při nečitelném/nekonzistentním trackeru musí FAIL — žádný tichý fallback na ruční seznam. Jakmile produkční audit odhalí strukturální chybu, proveď regression sweep všech trackovaných V-next stránek ještě před další kalkulačkou.
-- accessibility contract BEFORE BUILD: pokud stránka používá vlastní tabs/radio/accordion/switch/combobox, jeho semantic role model + keyboard model se zamyká ve VISUAL/COMPONENT LOCK ještě před kódem. Accessibility se nesmí doplňovat až po screenshotu.
-
-Povinná produktová QA otázka:
-„Je tato stránka pro člověka zřetelně lepší než běžný SERP výsledek, nebo jsme ji jen hezky přepsali?“
-
-Pokud odpověď není jasné ANO, stránka není hotová.
-
-FÁZE 7 — PROJEKTOVÉ NAPOJENÍ
-Podle potřeby aktualizuj:
-- calculators-registry.json,
-- katalog kalkulaček,
-- relevantní huby,
-- interní odkazy,
-- sitemap pouze pokud je to skutečně potřeba,
-- benchmark/data manifest,
-- Dataset metadata,
-- shared assets.
-
-Nedělej umělé změny jen proto, aby se změnilo datum.
-
-FÁZE 8 — TRACKING
-Tracking je součást stejné změny jako rebuild, ne dodatečný administrativní krok. Po dokončení zapiš stránku do `RV_VNEXT_PROGRESS.json`, přidej/aktualizuj technický RV-VNEXT marker v HTML a spusť `python rv-vnext-progress-audit.py --root .`. Dokud gate nevrátí PASS, nesmí začít další kalkulačka.
-Každá dokončená stránka musí mít minimálně:
-- sequence (unikátní, souvislé pořadí V-next wave),
-- filename/url,
-- status,
-- majorChangeDate,
-- archetype,
-- researchVerifiedAt,
-- qaStatus,
-- benchmarkDataset (ano/ne + soubor),
-- notes,
-- holdUntil / measurement window, pokud relevantní.
-
-Do HTML dokončené stránky vlož nenápadný technický komentář:
-<!-- RV-VNEXT: status=DONE|RELEASE_CANDIDATE | major=YYYY-MM-DD | qa=PASS|LOCAL_PASS_PRODUCTION_PENDING | seq=N -->
-Tento komentář je pouze pro budoucí rychlé obnovení stavu projektu a nesmí být viditelný uživateli.
-
-Po MAJOR změně stránku zbytečně znovu nepřepisuj:
-- minimálně 14 dní HOLD pro běžné vyhodnocení,
-- 28 dní preferovaně pro smysluplnější SEO měření,
-- výjimka: bug, chybný výpočet, právní/metodická chyba, rozbitý UX nebo jiný kritický problém.
-
-Mezitím pokračuj na dalších URL.
-
-
-BRAND LINEAGE / PROJECT IDENTITY RULE — POVINNÉ OD 21. 8. 2026
-- Před každým významným rebuildem vizuálně a strukturálně zkontroluj `index.html`, `kalkulacky.html` a relevantní tematický hub. Nestačí porovnat pouze poslední V-next stránky.
-- Návrh musí mít tři vrstvy: **RV CORE** (společná produktová identita), **TOPIC GRAMMAR** (téma) a **PRODUCT PROOF** (unikátní vizuální důkaz konkrétní kalkulačky).
-- Logo + stejné barvy nejsou dostatečná brand identita. Hero, calculator/result zóna, datová vrstva a spodní polovina stránky musí obsahovat funkční RV identity anchors.
-- Preferuj dědictví existující V3.2 identity (`rv-identity-hero`, brand rail/field, status/result language, `RV DATA`, plný `rv-brand-footer`) před izolovaným local-only designem.
-- Značka se nesmí po hero ztratit. Každé 2–3 hlavní sekce musí vizuálně znovu potvrdit, že jde o RychléVýpočty.cz, aniž by se stránka změnila v jednotný template.
-- Před release vyplň identity QA 0–2 pro: brand recognition, topic recognition, product proof, page rhythm, calculator/result integration, data/method identity, footer/next-step, mobile identity. Minimum = **13/16**, žádná nula v prvních pěti položkách.
-- Detailní pravidla a audit jsou v `RV-VNEXT-IDENTITY-AUDIT-2026-08-21.md`.
+DONE až po production PSI gate.
 
 ======================================================================
-4. REFERENČNÍ STRÁNKY A „DONE“ STATUS
+6. PAGESPEED / CORE WEB VITALS — NEPŘEHLÉDNUTELNÝ GATE
 ======================================================================
 
-Stránky z posledních kvalitativních vln mohou sloužit jako REFERENČNÍ LABORATOŘ pro V-next. Nesmí se ale slepě kopírovat.
+Cíl projektu:
+- Performance 100 bez známého akčního failu
+- Accessibility 100
+- Best Practices 100
+- SEO 100
 
-Důležité:
-- „vypadá jako nový template“ != DONE
-- „má hodně textu“ != DONE
-- „má benchmark“ != DONE
-- „má nové CSS“ != DONE
+Production PSI je autoritativní. Lokální screenshot, browser smoke test ani vlastní pocit rychlosti nejsou náhradou.
 
-DONE je pouze stránka, která prošla kompletním workflow:
-research → product decision → build → calculation QA → visual QA → project integration → progress update.
+Při buildování:
+- preferuj CSS/SVG před těžkou bitmapovou dekorací,
+- nezaváděj zbytečné externí dependency,
+- hlídej LCP asset,
+- obrázky mají rozměry,
+- watermarky/dekorace nesmí vytvářet CLS,
+- omezuj blocking CSS/JS,
+- interakce nesmí vytvářet dlouhé main-thread tasky.
 
-Referenční stránky z předchozí vlny se mohou do plného V-next rebuild programu zařadit později, pokud bude mít jejich další přestavba vyšší hodnotu než dosud neřešené starší URL.
-
-======================================================================
-5. CONTENT / TRUST STANDARD
-======================================================================
-
-Nepřidávej SEO vatu.
-Nepřepisuj stejnou metodiku do desítek URL jen s jinými čísly.
-Nepoužívej generické dlouhé úvody před kalkulačkou.
-Neskrývej odpověď hluboko pod formulářem.
-Neprodlužuj stránku jen kvůli slovům.
-
-Preferuj:
-- přesné a aktuální informace,
-- jasný výsledek,
-- praktickou interpretaci,
-- konkrétní scénáře,
-- vlastní výpočty,
-- transparentní předpoklady,
-- skutečné primární zdroje,
-- datum kontroly metodiky,
-- hraniční případy,
-- reprodukovatelné benchmarky,
-- užitečné tabulky/grafy,
-- konkrétní next action.
-
-U právních, finančních, daňových, zdravotních a jiných citlivých témat:
-- vyšší důraz na zdroje,
-- jasné datum platnosti,
-- transparentní předpoklady,
-- disclaimer,
-- nevydávej modelový výpočet za individuální odborné doporučení.
-
-
-FOOTER / SOCIAL / DISCLAIMER STANDARD
-- Každá nově dokončená V-next kalkulačka musí mít v brand footeru viditelné oficiální odkazy na Facebook a Instagram RychléVýpočty.cz, pokud není objektivní důvod je na dané stránce skrýt.
-- U kalkulaček, kde může být výsledek zaměněn za závaznou cenu, právní/daňové posouzení, zdravotní doporučení, úřední rozhodnutí nebo jiný odborný výstup, použij krátký PAGE-SPECIFIC disclaimer. Disclaimer musí říkat konkrétně, co výsledek nenahrazuje; nepoužívej jednu generickou větu mechanicky na všechny URL.
-- U čistě matematických a nízkorizikových kalkulaček disclaimer nevynucuj, pokud by nepřinášel uživateli žádnou informaci.
-- Sociální profily používej konzistentně:
-  Facebook: https://www.facebook.com/rychlevypocty
-  Instagram: https://www.instagram.com/rychlevypocty/
-- Kde stránka deklaruje Organization/publisher schema, zvaž sameAs pouze pro skutečné oficiální profily.
+Pokud hero/CSS/JS/asset mění render, performance gate je povinný.
 
 ======================================================================
-6. BENCHMARKY A DATA
+7. BRAND / IDENTITY
 ======================================================================
 
-Benchmark/dataset není povinný na každé stránce.
+Povinné:
+- canonical `logo-rv-v32.svg?v=1`
+- canonical inverse logo ve footeru
+- navy / blue / green lineage
+- plný footer
+- projektové + tematické odkazy
+- sociální sítě dle production standardu
+- `Zadat → Spočítat → Pochopit → Rozhodnout`
 
-Vytvářej ho jen tehdy, pokud:
-- přináší uživateli nový pohled,
-- lze ho reprodukovat,
-- scénáře dávají smysl,
-- má jasné vstupy a metodiku,
-- není to jen mechanicky nafouknutá tabulka.
+Nepoužívej:
+- staré logo,
+- textový fallback logo,
+- experimentální wordmark,
+- pseudo-brand štítky nalepené na sekce bez funkce,
+- dvojité labely typu `RV KONTROLNÍ BODY` + `06 · CO SI ZKONTROLOVAT`.
 
-Kvalitní dataset má:
-- jasný účel,
-- popsané předpoklady,
-- datum kontroly,
-- metodiku,
-- CSV/JSON tam, kde je to vhodné,
-- vazbu na konkrétní kalkulačku,
-- uživatelsky viditelné vysvětlení.
-
-======================================================================
-7. ADSENSE STRATEGIE
-======================================================================
-
-AdSense rejection „Obsah nízké hodnoty“ je důvod ke zvýšení laťky, nikoli k panice.
-
-Nedělej:
-- plošné mazání URL bez evidence,
-- rychlé noindexování celého long-tail portfolia,
-- přidávání textu jen kvůli AdSense,
-- opakovanou žádost o kontrolu po kosmetických změnách.
-
-Po každé výrobní wave cca 8–12 skutečně přestavěných kalkulaček:
-- proveď site-level quality audit,
-- zkontroluj konzistenci designu, trustu, registru, interních odkazů a thin/duplicate rizik,
-- zhodnoť GSC signály a stav indexace,
-- teprve potom rozhodni, zda pokračovat další wave nebo zda už dává smysl nový AdSense review.
-
-Cílem není „projít AdSense“.
-Cílem je vybudovat web, který je natolik kvalitní, že AdSense approval bude přirozený vedlejší efekt, nikoli jediný smysl změn.
+Identita se má projevit v celkové kompozici, watermarku, lineworku, výsledku a footeru — ne v badge spamu.
 
 ======================================================================
-8. KREDITOVÝ / TOOLING REŽIM
+8. CUSTOMER COPY / USER FRIENDLINESS
 ======================================================================
 
-Uživatel má omezené kredity v Codex a Work. Šetři je.
+Viditelný text je pro zákazníka.
 
-Výchozí režim:
-- research v tomto chatu,
-- audit v tomto chatu,
-- product brief v tomto chatu,
-- editace lokálního ZIPu/projektu v tomto chatu,
-- Python/lokální skripty pro výpočetní a statickou QA,
-- web pro aktuální research,
-- finální ZIP z tohoto chatu.
+Interní/designový jazyk nesmí uniknout do UI (`solver`, `runway`, `stack`, `control room`, `engine`, `lab`, `desk` atd., pokud nejde o skutečný termín tématu).
 
-Codex použij jen tehdy, když:
-- je problém skutečně komplexní,
-- lokální práce v chatu by byla výrazně méně efektivní,
-- máš předem přesně definovaný task,
-- jeden cílený Codex run ušetří více práce, než kolik stojí.
+Pětisekundový test:
+- Co tady spočítám?
+- Co mám zadat?
+- Co znamená výsledek?
 
-Work nepoužívej jako výchozí workflow.
-
-Nikdy uživatele neposílej do Codex/Work jen proto, že je úloha delší.
+Na mobilu musí být první užitečný vstup a výsledek dostupné bez zbytečného storytellingu.
 
 ======================================================================
-9. VÝSTUP NA KONCI KAŽDÉ KALKULAČKY
+9. ADAPTIVE DEPTH / SECTION RHYTHM
 ======================================================================
 
-Po dokončení vždy dej stručný release report:
+Žádná povinná délka.
 
-1) URL
-2) Rozhodnutí: KEEP/REBUILD/MERGE/HOLD
-3) Co se zásadně změnilo
-4) Co je unikátní produktová hodnota
-5) Metodika/zdroje ověřeny: ANO/NE + datum
-6) Výpočetní QA: PASS/FAIL
-7) Visual/mobile QA: PASS/FAIL
-8) Structured data: stav
-9) Benchmark/dataset: stav
-10) MAJOR change date + HOLD
-11) Aktualizovaný progress tracker + RV-VNEXT marker + `rv-vnext-progress-audit.py` PASS: ANO/NE
-12) Další doporučená URL a proč
+Přidej blok jen pokud:
+- odpovídá na přirozenou otázku stejného intentu,
+- mění rozhodnutí,
+- vysvětluje hranici,
+- nebo dokládá metodiku.
 
-Pokud byl upraven projekt, vrať uživateli nový aktuální ZIP.
+Nevyráběj:
+- SEO vatu,
+- několik stejných card-gridů za sebou,
+- tmavou metodiku přímo nad tmavým footerem,
+- umělé prodlužování jednoduchého tématu.
 
-======================================================================
-10. CO NEDĚLAT
-======================================================================
-
-- Nedělej plošný redesign celého webu bez jasné potřeby.
-- Nedělej masový rebuild 10+ kalkulaček jedním generickým skriptem.
-- Nekopíruj stejnou hero/result sekci na všechny kalkulačky.
-- Nenechávej významný hero jako čistou textovou/prázdnou plochu bez jemné brandové nebo tematické identity, pokud to není vědomá produktová volba.
-- Nevyžaduj stejnou délku textu na všech URL.
-- Nevytvářej fake expertizu, fake recenze, fake data ani fake benchmarky.
-- Neoptimalizuj pouze pro keyword density.
-- Neprováděj MAJOR změnu bez zaznamenání data.
-- Nevracej se k dokončené URL během HOLD bez kritického důvodu.
-- Nedělej novou URL, pokud lze intent lépe vyřešit existující stránkou.
-- Neztrácej aktuální produkční stav; nový ZIP je vždy nový source of truth.
+Naopak složité téma nesmí skončit po jednom výsledku, pokud zůstávají důležité otázky bez odpovědi.
 
 ======================================================================
-11. STARTOVACÍ PROTOKOL PRO NOVÝ CHAT
+10. FINAL RELEASE RULE
 ======================================================================
 
-Po obdržení tohoto promptu + nejnovějšího ZIPu:
+Preview lze ukázat pouze při splnění aktuálního:
+RV-VNEXT-STRICT-BUILD-PROMPT-2026-09-06.md
 
-A) NIC NEPROGRAMUJ.
-B) Nejprve obnov stav projektu z ZIPu.
-C) Ověř `RV_VNEXT_PROGRESS.json` proti skutečnému kódu a spusť `python rv-vnext-progress-audit.py --root .`. Jakýkoli P0/P1 = STOP výrobní linky a nejdřív STATE RECOVERY.
-D) Napiš pouze stručný „STATE RECOVERY + NEXT CALCULATOR“.
-E) Potom proveď PRE-BUILD audit navržené další kalkulačky.
-F) Teprve po objektivním rozhodnutí pokračuj do buildu.
+DONE lze označit až po:
+- user visual approval,
+- production deploy,
+- live health,
+- production PSI Mobile + Desktop,
+- bez známé actionable performance/CWV regrese.
 
-Pokud z projektu jednoznačně vyplývá další rozpracovaný krok, pokračuj bez zbytečného ptaní uživatele.
+Pokud nový chat narazí na rozpor mezi tímto masterem a starším promptem, platí novější dokument a aktuální production standard.
 
-TOTO JE DLOUHODOBÝ VÝROBNÍ PROTOKOL.
-Jeho smyslem je, aby každý nový chat pokračoval z aktuálního projektu a nikdy nezačínal RychléVýpočty.cz znovu od nuly.
-
-
-NAVIGATION HIERARCHY GATE (19. 8. 2026)
-- Nikdy nevytvářej dvě konkurenční top-level navigace uvnitř jedné kalkulačky.
-- Pokud existuje process/step rail, další anchor/tabs lišta musí být zjevně sekundární a užitečná; jinak ji vynech.
-- U lineárního user flow preferuj normální sekce bez druhé tabové navigace.
-- Před releasem desktopově zkontroluj, že H1, kalkulačka a navigace mají jednoznačnou hierarchii.
-
-COMPARISON INTEGRITY GATE (19. 8. 2026)
-- Jeden graf/tabulka smí srovnávat jen položky se stejnou hlavní dimenzí a významem.
-- Popisky řádků musí mít stejnou strukturu (typicky zdroj + region/segment + jednotka + rozsah); nemíchej názvy webů, regiony a pevné modelové příklady jako rovnocenné kategorie.
-- Přepočtené sazby, regionální reference a konkrétní pevné realizace/modely odděluj, pokud nejsou metodicky totožné.
-- Všechny vizuální range/sloupce musí používat jednu skutečnou společnou stupnici, ne dekorativní šířky.
-- Pokud se liší rozsah prací nebo metodika zdrojů, napiš rozdíl přímo u dat a nevytvářej falešný průměr.
-- QA: zeptej se „porovnává každý řádek opravdu totéž?“ Pokud ne, release = FAIL, dokud nejsou bloky oddělené nebo normalizace obhájená.
-
-
-SOCIAL ICON FOOTER GATE (od 19. 8. 2026):
-- Facebook + Instagram v brand footeru zobrazuj primárně jako čisté ikony, ne jako viditelné textové názvy sítí.
-- Každý ikonový odkaz musí mít aria-label; SVG je dekorativní/aria-hidden; textový název může být pouze screen-reader fallback.
-- Preferuj inline SVG/CSS, žádné externí icon-font knihovny.
-- Hit-area ikony drž cca 40–44 px a vizuálně je slaď s footerem.
-- Významná kalkulačka používá standardně plný RV footer, ne minimalistický podpisový proužek: inverse logo, krátký brand claim, FB/IG ikony, tematické odkazy, informační odkazy, případný page-specific disclaimer a spodní copyright/metodika řádek.
-- Hero desktop kontrola musí explicitně hlídat, že text a pravý vizuál do sebe nenarážejí; pokud překryv není záměrný, drž zřetelný whitespace a ověř 1280/1440 screenshot.
-
-
-======================================================================
-V-NEXT QA CALIBRATION — 20. 8. 2026
-======================================================================
-- Povinný responsive smoke zahrnuje 320 / 360 / 390 px + desktop 1440 px; 320 px nesmí být vynecháno.
-- TECHNICAL hotfix musí projít Diff Containment Gate: před/po snapshot, pouze očekávané soubory, bez nechtěné změny kalkulačního JS.
-- Každý lokální `og:image` / `twitter:image` musí fyzicky existovat v release rootu. Chybějící OG asset = FAIL.
-- Je-li dostupný Chromium/CDP, spusť lokální accessibility-tree preflight a ověř accessible names interaktivních prvků; produkční PageSpeed/Lighthouse zůstává autoritativní DONE gate.
-- Po změně CSS/JS vždy bump cachebusteru a retest overflow/runtime.
-
-
-QUIET LUXURY / RESTRAINT RULE — POVINNÉ OD 21. 8. 2026
-
-RychléVýpočty.cz má působit **luxusně, ale jednoduše luxusně**. Brand recognition nevzniká počtem dekorací, ale konzistencí, hierarchií, typografií, spacingem a několika přesnými signály.
-
-### Hard rules
-- **Jedna dominantní brand kotva na viewport.** Nekombinovat současně stamp + page code + vertikální rail + watermark + grid + cut-corner, pokud to nemá jasný funkční důvod.
-- Hero standardně používá pouze: shared header/logo, jeden jemný RV signál (např. tri-color rail/line), tématický product proof a čistou typografii.
-- `RV CORE` je primárně **systém**, ne ornament: navy/blue/green rodina, čisté radiusy, důsledný spacing, result/status language, RV DATA a plný footer.
-- Dekorace mají rozpočet: **max. 2 nefukční vizuální vrstvy v hero**, z toho pouze jedna může být výrazná.
-- Pokud odstranění dekorace zlepší čitelnost a produkt neztratí identitu, dekorace se odstraní.
-- Preferovat **quiet confidence**: hodně vzduchu, přesné alignmenty, jeden silný vizuální proof, žádný „dashboard cosplay“.
-- Hero nesmí připomínat interní dashboard, design-system demo ani konferenční slide.
-- Product proof má být výraznější než brand ornament. Uživatel má nejprve pochopit výpočet, až potom vnímat design.
-- Na mobilu se brand vrstvy dále redukují; priorita je H1 → payoff → CTA → výsledek.
-
-### Anti-overdesign gate
-Visual gate = FAIL, pokud:
-- hero obsahuje 3+ konkurenční identity prvky;
-- je v prvním viewportu více malých štítků/kódů než skutečných informací;
-- více než jeden blok používá cut-corner / grid / rail jen kvůli vzhledu;
-- stránka působí „víc navržená než užitečná“.
-
-Cíl: **Apple-like restraint, ne sterilita; prémiová přesnost, ne vizuální exhibice.**
-
-
-## 2026-08-21 — Identity Continuity correction: Quiet Luxury ≠ generic microsite
-
-Poslední vizuální audit ukázal druhý extrém: po omezení dekorací některé V-next kalkulačky zůstaly sice čisté, ale působily jako kvalitní generická microsite. To je stejně nežádoucí jako overdesign.
-
-### Povinné minimum shared RV identity
-Každá významná kalkulačka musí ve finálním DOM/CSS skutečně použít, ne pouze deklarovat, alespoň tyto funkční vrstvy:
-1. **Hero lineage:** shared `rv-identity-hero` nebo kvalitativně rovnocenný RV brand field + tematický product proof.
-2. **Value moment:** shared result language (`rv-brand-result`, RV rail/status/result caption nebo ekvivalent) v calculator/result zóně.
-3. **Mid-page continuity:** alespoň jedna funkční RV kotva mimo hero a footer — typicky RV DATA, scope comparison, method flow nebo decision route.
-4. **Footer lineage:** tmavý footer vždy používá inverse logo asset + RV 4-step signature `Zadat → Spočítat → Pochopit → Rozhodnout` u hlavních V-next produktů.
-
-### Anti-generic gate
-Před release povinně zkontroluj 4 screenshoty: **hero / calculator+result / data-or-method / footer**. U každého polož otázku: „Kdybych odstranil logo, poznám podle produktu, typografie, railů, result language a kompozice, že jde o RychléVýpočty.cz?“ Pokud jsou 2 nebo více oblastí zaměnitelné s generickým SaaS/fintech template, visual gate = FAIL.
-
-### Restraint balance
-- Quiet Luxury omezuje **dekorace**, nikoli **identitu**.
-- Shared brand primitive má přednost před novým lokálním ornamentem.
-- Max. jedna dominantní identity vrstva v jednom viewportu, ale identita se musí opakovat funkčně napříč stránkou.
-- `logo-rv-v32.svg` patří na světlý povrch; `logo-rv-v32-inverse.svg` na tmavý footer. Tohle je release-blocking kontrola.
-- Produktový proof musí zůstat hlavní hvězdou; brand system ho rámuje, ne překrývá.
-
-### Procesní změna
-BUILD LOCK nově obsahuje explicitní řádek `Shared RV primitives to be used:` s konkrétními CSS/HTML třídami nebo komponentami. Obecná formulace „bude tam identita“ nestačí.
+NEVYMÝŠLEJ NOVÝ STANDARD, POKUD UŽ JE ŘEŠEN V REPU. NEJDŘÍV SE NAKALIBRUJ A PAK STAV.
