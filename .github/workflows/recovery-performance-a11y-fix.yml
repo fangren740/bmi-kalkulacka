@@ -1,0 +1,174 @@
+name: Recovery performance and accessibility fix
+
+on:
+  push:
+    branches:
+      - recovery-performance-a11y-2026-09-06
+
+permissions:
+  contents: write
+
+jobs:
+  fix-and-verify:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: recovery-performance-a11y-2026-09-06
+          fetch-depth: 0
+
+      - name: Apply deterministic a11y and critical-path fixes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          targets = [
+            'kalkulacka-hrube-mzdy-z-ciste.html',
+            'naklady-zamestnavatele-kalkulacka.html',
+            'dpp-dpc-kalkulacka.html',
+            'nemocenska-kalkulacka.html',
+            'ocr-kalkulacka.html',
+            'materska-kalkulacka.html',
+            'rodicovsky-prispevek-kalkulacka.html',
+            'vyzivne-kalkulacka.html',
+            'podpora-v-nezamestnanosti-kalkulacka.html',
+            'duchodovy-vek-kalkulacka.html',
+            'kolik-stoji-prvni-rok-ditete-kalkulacka.html',
+            'kolik-me-stoji-pleny-kalkulacka.html',
+            'kolik-stoji-umele-mleko-kalkulacka.html',
+            'pribirani-v-tehotenstvi-kalkulacka.html',
+            'cena-za-km-kalkulacka.html',
+          ]
+
+          # Palette values Lighthouse found below 4.5:1 on light surfaces.
+          neutral = {
+            '#718697','#718698','#728698','#728596','#708596','#657a8c','#607486',
+            '#6d8294','#5f7487','#6a7f91','#718596','#6c8192','#61778a','#788b9b',
+            '#5d7386','#80909d','#7b8d9c','#7b8b99','#6e8192','#667c8e','#6b7f90',
+            '#657b8d','#687d8f','#687f91','#6e7f90','#8091a0','#728696','#697f91',
+            '#647a8c','#64798c','#6c8193','#718496','#738697','#617589','#6d7f90',
+            '#65798c','#748798','#718491','#6e8294','#60778a','#607588','#7c8c9a',
+            '#687b8d','#61798b','#708394','#657a8d','#65798a','#63788b','#667e90',
+            '#658094','#64798b','#60768a','#6c8294'
+          }
+          accents = {
+            '#2f887e':'#206e66', '#1784c7':'#12699f', '#1978ba':'#146a9f',
+            '#218431':'#1b7028', '#74e56c':'#237c2c', '#78c9ef':'#16688f',
+            '#9d6819':'#7f5010', '#1674b9':'#125f98'
+          }
+          perf_css = '''\n/* RV recovery gate 2026-09-06: skip layout/paint for deep offscreen sections until needed. */\n@supports (content-visibility:auto){main>section:nth-of-type(n+4){content-visibility:auto;contain-intrinsic-size:auto 900px}}\n'''
+          font_css = '''\n/* RV mobile legibility gate: keep customer copy at >=12 CSS px. */\n@media(max-width:700px){.faq p,.boundary p,.result-disclaimer span,.result-disclaimer strong,.result-meaning,.rate p,.flow article p,.form-foot,.choice small,.children-head small,.neg-side ul,.field small,.footer-bottom,.ask-line span,.kicker,.micro{font-size:.78rem!important;line-height:1.5}}\n'''
+
+          for name in targets:
+            p=Path(name); s=p.read_text(encoding='utf-8')
+            original=s
+            for color in neutral:
+              s=s.replace(color, '#526a7d').replace(color.upper(), '#526a7d')
+            for old,new in accents.items():
+              s=s.replace(old,new).replace(old.upper(),new)
+            if 'RV recovery gate 2026-09-06' not in s:
+              s=s.replace('</style>', perf_css+'</style>', 1)
+            if name=='kalkulacka-hrube-mzdy-z-ciste.html' and 'RV mobile legibility gate' not in s:
+              s=s.replace('</style>', font_css+'</style>', 1)
+
+            if name=='pribirani-v-tehotenstvi-kalkulacka.html' and 'renderContourInitialAware' not in s:
+              needle='function render(){'
+              helper='''let firstContourRender=true;\nfunction renderContourInitialAware(r){\n if(firstContourRender){\n  firstContourRender=false;\n  const run=()=>renderContour(r);\n  if("requestIdleCallback" in window)requestIdleCallback(run,{timeout:1200});else setTimeout(run,0);\n }else renderContour(r);\n}\n'''
+              if needle not in s: raise SystemExit('Missing #92 render anchor')
+              s=s.replace(needle, helper+needle, 1)
+              if ' renderContour(r);\n window.RV_PREG92_LAST=r;' not in s: raise SystemExit('Missing #92 contour call')
+              s=s.replace(' renderContour(r);\n window.RV_PREG92_LAST=r;', ' renderContourInitialAware(r);\n window.RV_PREG92_LAST=r;', 1)
+
+            if name=='podpora-v-nezamestnanosti-kalkulacka.html' and 'renderSecondaryInitialAware' not in s:
+              needle='function render(){'
+              helper='''let firstSecondaryRender=true;\nfunction renderSecondaryInitialAware(arr){\n if(firstSecondaryRender){\n  firstSecondaryRender=false;\n  const run=()=>{renderLedger(arr);renderStepChart(arr)};\n  if("requestIdleCallback" in window)requestIdleCallback(run,{timeout:1200});else setTimeout(run,0);\n }else{renderLedger(arr);renderStepChart(arr)}\n}\n'''
+              if needle not in s: raise SystemExit('Missing #83 render anchor')
+              s=s.replace(needle, helper+needle, 1)
+              old='renderHero(arr,s);renderLedger(arr);renderStepChart(arr);'
+              if old not in s: raise SystemExit('Missing #83 secondary call')
+              s=s.replace(old,'renderHero(arr,s);renderSecondaryInitialAware(arr);',1)
+
+            if s==original: raise SystemExit(f'No change applied: {name}')
+            p.write_text(s,encoding='utf-8')
+          PY
+
+      - name: Static source gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          from html.parser import HTMLParser
+          targets=[p for p in Path('.').glob('*.html') if 'status=RECOVERY_APPROVED' in p.read_text(encoding='utf-8',errors='ignore')]
+          assert len(targets)>=15
+          for p in targets:
+              s=p.read_text(encoding='utf-8')
+              assert 'RV recovery gate 2026-09-06' in s, p
+              assert '<html' in s and '</html>' in s, p
+          print('static gate pages',len(targets))
+          PY
+
+      - name: Install Lighthouse and serve branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --global lighthouse@12.8.2 >/dev/null 2>&1
+          nohup python3 -m http.server 8080 --bind 127.0.0.1 >/tmp/rv-http.log 2>&1 &
+          for i in {1..20}; do curl -fsS http://127.0.0.1:8080/kalkulacka-hrube-mzdy-z-ciste.html >/dev/null && break; sleep 1; done
+
+      - name: Local mobile Lighthouse source gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p lh-local
+          python - <<'PY'
+          import concurrent.futures, subprocess, json, csv, os
+          pages=[
+            'kalkulacka-hrube-mzdy-z-ciste.html','naklady-zamestnavatele-kalkulacka.html','dpp-dpc-kalkulacka.html',
+            'nemocenska-kalkulacka.html','ocr-kalkulacka.html','materska-kalkulacka.html','rodicovsky-prispevek-kalkulacka.html',
+            'vyzivne-kalkulacka.html','podpora-v-nezamestnanosti-kalkulacka.html','duchodovy-vek-kalkulacka.html',
+            'kolik-stoji-prvni-rok-ditete-kalkulacka.html','kolik-me-stoji-pleny-kalkulacka.html','kolik-stoji-umele-mleko-kalkulacka.html',
+            'pribirani-v-tehotenstvi-kalkulacka.html','cena-za-km-kalkulacka.html']
+          def run(page):
+              out='lh-local/'+page[:-5]+'.json'
+              cmd=['lighthouse','http://127.0.0.1:8080/'+page,'--quiet','--output=json','--output-path='+out,
+                   '--only-categories=performance,accessibility,best-practices,seo',
+                   '--chrome-flags=--headless --no-sandbox --disable-dev-shm-usage','--max-wait-for-load=30000']
+              subprocess.run(cmd,check=True,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
+              j=json.load(open(out))
+              return [page]+[round(j['categories'][k]['score']*100) for k in ['performance','accessibility','best-practices','seo']]+[
+                  round(j['audits']['largest-contentful-paint']['numericValue']),
+                  j['audits']['cumulative-layout-shift']['numericValue'],
+                  round(j['audits']['total-blocking-time']['numericValue'])]
+          with concurrent.futures.ThreadPoolExecutor(max_workers=5) as ex:
+              rows=list(ex.map(run,pages))
+          rows.sort()
+          with open('lh-local/results.csv','w',newline='',encoding='utf-8') as f:
+              w=csv.writer(f);w.writerow(['url','performance','accessibility','best_practices','seo','lcp_ms','cls','tbt_ms']);w.writerows(rows)
+          for r in rows: print(','.join(map(str,r)))
+          bad=[r for r in rows if r[2]<100 or r[3]<100 or r[4]<100]
+          assert not bad, f'A11y/BP/SEO gate failed: {bad}'
+          PY
+
+      - name: Commit verified fixes
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f .github/workflows/recovery-performance-a11y-fix.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "perf: recovery accessibility and critical-path pass"
+          git push origin HEAD:recovery-performance-a11y-2026-09-06
+
+      - name: Upload local Lighthouse evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: recovery-local-lighthouse-after-fix
+          path: lh-local/
+          retention-days: 30
