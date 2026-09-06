@@ -1,82 +1,341 @@
 <!doctype html>
-<!-- RV-VNEXT: status=RELEASE_CANDIDATE | major=2026-08-28 | qa=LOCAL_PASS_PRODUCTION_PENDING | seq=83 -->
+<!-- RV-VNEXT: status=RECOVERY_APPROVED | major=2026-09-06 | qa=PASS | seq=83 -->
 <html lang="cs">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="referrer" content="strict-origin-when-cross-origin">
-<meta name="format-detection" content="telephone=no">
-<title>Podpora v nezaměstnanosti 2026: kalkulačka | RychléVýpočty.cz</title>
-<meta name="description" content="Spočítejte podporu v nezaměstnanosti 2026 po jednotlivých měsících. Uvidíte 80/50/40 %, podpůrčí dobu 5/8/11 měsíců, maximum 38 537 Kč a orientační kontrolu nároku.">
-<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
-<link rel="canonical" href="https://rychlevypocty.cz/podpora-v-nezamestnanosti-kalkulacka.html">
-<meta property="og:locale" content="cs_CZ"><meta property="og:type" content="website"><meta property="og:site_name" content="RychléVýpočty.cz">
-<meta property="og:title" content="Podpora v nezaměstnanosti 2026: váš finanční runway"><meta property="og:description" content="Kolik dostanete první měsíc, kdy podpora klesne a kolik činí celkem. Pravidla 2026 bez zbytečné právnické mlhy."><meta property="og:url" content="https://rychlevypocty.cz/podpora-v-nezamestnanosti-kalkulacka.html"><meta property="og:image" content="https://rychlevypocty.cz/og-rv-podpora-vnext-2026.jpg">
-<meta name="twitter:card" content="summary_large_image">
-<link rel="icon" type="image/svg+xml" href="/favicon-rv-v32.svg?v=1"><link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2"><link rel="manifest" href="/site.webmanifest?v=2"><meta name="theme-color" content="#071a33">
-<link rel="stylesheet" href="/podpora-v-nezamestnanosti-vnext.css?v=20260828-2">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Domů","item":"https://rychlevypocty.cz/"},{"@type":"ListItem","position":2,"name":"Mzdy a práce","item":"https://rychlevypocty.cz/mzdy-a-prace.html"},{"@type":"ListItem","position":3,"name":"Podpora v nezaměstnanosti","item":"https://rychlevypocty.cz/podpora-v-nezamestnanosti-kalkulacka.html"}]}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Kalkulačka podpory v nezaměstnanosti 2026","applicationCategory":"FinanceApplication","operatingSystem":"Web","url":"https://rychlevypocty.cz/podpora-v-nezamestnanosti-kalkulacka.html","description":"Orientační výpočet podpory v nezaměstnanosti podle pravidel platných v ČR pro rok 2026."}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Dataset","name":"Kontrolní scénáře podpory v nezaměstnanosti 2026","description":"Kontrolní scénáře sazeb, věkových pásem, maxima a pevné podpory pro výpočetní jádro.","url":"https://rychlevypocty.cz/podpora-nezamestnanost-2026-benchmark.csv","dateModified":"2026-08-28"}</script>
-</head>
-<body class="un83-page rv-page-calculator rv-brand-v3 rv-brand-v32" data-build="UN83-VNEXT-20260828-2">
-<a class="un83-skip" href="#kalkulacka">Přejít na kalkulačku</a>
-<header class="un83-header"><div class="un83-container un83-header-inner">
-<a class="un83-logo" href="/" aria-label="RychléVýpočty.cz – domů"><img src="/logo-rv-v32.svg?v=1" width="590" height="96" alt="RychléVýpočty.cz"></a>
-<nav class="un83-nav" aria-label="Hlavní navigace"><a href="/kalkulacky.html">Kalkulačky</a><a href="/mzdy-a-prace.html" aria-current="page">Mzdy</a><a href="/rodina-a-rozpocet.html">Rodina</a><a href="/jak-pocitame.html">Jak počítáme</a></nav>
-<a class="un83-header-cta" href="#kalkulacka">Spočítat podporu</a><button class="un83-menu" type="button" aria-label="Otevřít menu" aria-expanded="false">☰</button>
-</div><nav class="un83-mobile-nav" aria-label="Mobilní navigace" hidden><a href="/kalkulacky.html">Kalkulačky</a><a href="/mzdy-a-prace.html">Mzdy a práce</a><a href="/rodina-a-rozpocet.html">Rodina</a><a href="/jak-pocitame.html">Jak počítáme</a></nav></header>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<meta content="#071a33" name="theme-color"/>
+<title>Podpora v nezaměstnanosti 2026 – kalkulačka | RychléVýpočty.cz</title>
+<style>
+:root{
+  --navy:#071a33;--navy2:#0d3156;--blue:#1672b8;--blue2:#2d8ed2;--green:#4ed053;--green2:#247c30;
+  --ink:#152b40;--muted:#64798b;--line:#d5e1e9;--soft:#f4f8fa;--soft2:#eaf2f6;--paper:#fff;
+  --amber:#d79a34;--red:#a9444e;--shadow:0 24px 70px rgba(7,26,51,.10);--shell:min(1240px,calc(100% - 36px));
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:var(--ink);background:#fff;line-height:1.55;overflow-x:hidden}
+a{color:inherit;text-decoration:none}button,input,select{font:inherit}button{cursor:pointer}img,svg{display:block;max-width:100%}
+.container{width:var(--shell);margin:auto}
+:focus-visible{outline:3px solid var(--blue2);outline-offset:3px;border-radius:9px}
+.skip{position:fixed;left:12px;top:-80px;z-index:9999;background:#fff;padding:10px 14px;border-radius:10px;box-shadow:var(--shadow);font-weight:900}.skip:focus{top:12px}
 
+/* Header */
+.header{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.header-in{min-height:76px;display:flex;align-items:center;gap:22px}
+.logo{width:224px;flex:0 0 224px}.logo img{width:100%;height:auto}
+.nav{display:flex;gap:20px;margin-left:auto;font-size:.9rem;font-weight:780;color:#344e64}.nav a:hover,.nav a[aria-current=page]{color:var(--blue)}
+.header-cta{padding:11px 15px;border-radius:13px;background:var(--navy);color:#fff;font-weight:900}
+.menu{display:none;margin-left:auto;width:46px;height:44px;border:1px solid var(--line);border-radius:12px;background:#fff;padding:10px}.menu span{display:block;height:2px;background:var(--navy);margin:4px}
+.mobile-nav{display:none}.mobile-nav.open{display:flex;position:absolute;left:0;right:0;top:100%;padding:12px 18px;gap:6px;flex-wrap:wrap;background:#fff;border-bottom:1px solid var(--line);box-shadow:0 12px 28px rgba(7,26,51,.08)}.mobile-nav a{padding:9px 11px;border-radius:9px;font-size:.75rem;font-weight:850;color:#40596e}
+
+/* Shared */
+.kicker{display:inline-flex;align-items:center;gap:9px;font-size:.69rem;font-weight:950;letter-spacing:.12em;text-transform:uppercase;color:var(--green2)}
+.kicker:before{content:"";width:25px;height:3px;border-radius:99px;background:linear-gradient(90deg,var(--navy) 0 34%,var(--blue2) 34% 69%,var(--green) 69%)}
+.section-title h2{margin:8px 0 13px;font-size:clamp(2rem,4vw,3.15rem);line-height:.98;letter-spacing:-.05em;color:var(--navy)}
+.section-title p{color:var(--muted);line-height:1.68;max-width:760px}
+
+/* Hero */
+.hero{position:relative;overflow:hidden;background:linear-gradient(180deg,#fff 0%,#f9fbfd 67%,#edf5f8 100%);border-bottom:1px solid var(--line);padding-bottom:46px}
+.hero:before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(22,114,184,.038) 1px,transparent 1px),linear-gradient(90deg,rgba(22,114,184,.038) 1px,transparent 1px);background-size:62px 62px;mask-image:linear-gradient(90deg,#000 0%,rgba(0,0,0,.5) 52%,transparent 92%)}
+.hero-wm{position:absolute;inset:0;overflow:hidden;pointer-events:none}.hero-wm .w1{position:absolute;right:-20px;top:88px;font-size:11.7rem;font-weight:1000;letter-spacing:-.085em;color:rgba(7,26,51,.023)}.hero-wm .w2{position:absolute;right:27%;bottom:-8px;font-size:5rem;font-weight:1000;letter-spacing:-.05em;color:rgba(22,114,184,.028)}
+.hero-wm .ring{position:absolute;border:1px solid rgba(22,114,184,.07);border-radius:50%}.hero-wm .r1{width:330px;height:330px;right:19%;top:-150px}.hero-wm .r2{width:175px;height:175px;right:25.3%;top:-73px;border-style:dashed}
+.hero-grid{position:relative;z-index:2;display:grid;grid-template-columns:minmax(0,1fr) minmax(470px,.86fr);gap:50px;align-items:center;padding-top:28px}
+.crumbs{grid-column:1/-1;display:flex;gap:8px;align-items:center;flex-wrap:wrap;color:#657b8d;font-size:.81rem}
+.hero-copy h1{max-width:810px;margin:15px 0 18px;font-size:clamp(3.35rem,5.5vw,5.35rem);line-height:.9;letter-spacing:-.058em;color:var(--navy)}.hero-copy h1 em{font-style:normal;color:var(--blue)}
+.hero-lead{max-width:735px;color:#4f687c;font-size:1.08rem;line-height:1.7}
+.hero-actions{display:flex;gap:11px;flex-wrap:wrap;margin-top:24px}.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 17px;border-radius:14px;font-weight:900}.btn.primary{background:var(--navy);color:#fff;box-shadow:0 12px 28px rgba(7,26,51,.14)}.btn.ghost{background:#fff;border:1px solid #c8d7e2;color:var(--navy)}
+.hero-trust{display:flex;gap:10px 16px;flex-wrap:wrap;margin-top:18px}.hero-trust span{display:flex;align-items:center;gap:8px;color:#536b7f;font-size:.76rem;font-weight:820}.hero-trust span:before{content:"";width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 5px rgba(78,208,83,.11)}
+
+/* Hero: physical payment calendar */
+.payment-scene{position:relative;min-height:440px;padding:22px 12px 16px 34px}
+.scene-folder{position:absolute;left:8px;right:40px;bottom:17px;height:245px;background:linear-gradient(150deg,#082741,#0d3e62);border-radius:28px 28px 18px 18px;transform:rotate(-2.5deg);box-shadow:0 28px 56px rgba(7,26,51,.16)}
+.scene-folder:before{content:"";position:absolute;inset:0;border-radius:inherit;background-image:linear-gradient(rgba(255,255,255,.033) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.033) 1px,transparent 1px);background-size:34px 34px}
+.scene-folder:after{content:"38 537";position:absolute;left:20px;bottom:-5px;color:rgba(255,255,255,.04);font-size:4.6rem;font-weight:1000;letter-spacing:-.07em}
+.payment-calendar{position:relative;z-index:2;margin-left:auto;max-width:435px;padding:20px 19px 18px;background:#fff;border:1px solid #c8d8e3;border-radius:10px 10px 22px 22px;box-shadow:0 24px 52px rgba(7,26,51,.13);transform:rotate(1.3deg)}
+.payment-calendar:before{content:"";position:absolute;left:0;right:0;top:0;height:5px;background:linear-gradient(90deg,var(--navy) 0 30%,var(--blue2) 30% 68%,var(--green) 68%)}
+.cal-head{display:flex;justify-content:space-between;gap:12px;align-items:center}.cal-head span{font-size:.61rem;font-weight:950;letter-spacing:.11em;text-transform:uppercase;color:#6e8395}.cal-head b{padding:6px 8px;border-radius:9px;background:#eaf5fb;color:#235f88;font-size:.61rem}
+.cal-primary{display:flex;justify-content:space-between;gap:14px;align-items:end;margin-top:16px;padding-bottom:13px;border-bottom:1px solid var(--line)}.cal-primary small{display:block;color:#718697;font-size:.64rem}.cal-primary strong{display:block;margin-top:3px;color:var(--navy);font-size:1.85rem;letter-spacing:-.05em}.cal-primary em{font-style:normal;color:var(--green2);font-size:.71rem;font-weight:900}
+.hero-months{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin-top:14px;align-items:end}.hero-month{min-width:0;border-radius:11px 11px 8px 8px;background:#eaf4fa;border:1px solid #cee1ec;padding:8px 5px 7px;text-align:center}.hero-month.mid{background:#f2f4f6;border-color:#d9e0e5}.hero-month.low{background:#edf9ee;border-color:#cbe5cd}.hero-month span{display:block;font-size:.53rem;color:#6c8293}.hero-month b{display:block;margin-top:3px;color:#173e59;font-size:.68rem}.hero-month small{display:block;margin-top:3px;font-size:.5rem;color:#708597}.hero-month i{display:block;width:100%;height:var(--h);min-height:8px;max-height:60px;margin-top:7px;border-radius:5px;background:linear-gradient(180deg,var(--blue2),#8ccae9)}.hero-month.mid i{background:linear-gradient(180deg,#7b8e9e,#bdc8d0)}.hero-month.low i{background:linear-gradient(180deg,var(--green),#9edca3)}
+.cal-foot{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-top:13px}.cal-foot div{padding:10px;border-radius:11px;background:#f5f8fa}.cal-foot span{display:block;color:#718697;font-size:.55rem}.cal-foot strong{display:block;margin-top:2px;color:var(--navy);font-size:.76rem}
+.cap-tag{position:absolute;z-index:3;right:0;top:104px;width:116px;padding:10px 9px;border-radius:12px 12px 0 12px;background:var(--green);color:#173c1d;box-shadow:0 10px 22px rgba(30,112,44,.16);transform:rotate(3deg)}.cap-tag span{display:block;font-size:.53rem;font-weight:950;letter-spacing:.08em;text-transform:uppercase}.cap-tag strong{display:block;margin-top:2px;font-size:.8rem}
+.scene-note{position:absolute;z-index:3;left:0;bottom:48px;width:160px;padding:13px 14px;border-radius:14px;background:#fff;border:1px solid #ccdbe4;box-shadow:0 13px 28px rgba(7,26,51,.10);transform:rotate(-4deg)}.scene-note span{display:block;color:#75899a;font-size:.57rem}.scene-note strong{display:block;margin-top:3px;color:var(--navy);font-size:.82rem}.scene-note:after{content:"";position:absolute;right:15px;top:-8px;width:35px;height:15px;background:rgba(78,208,83,.28);transform:rotate(4deg)}
+
+/* Fact strip */
+.fact-strip{background:#071a33;color:#fff}.fact-grid{display:grid;grid-template-columns:repeat(4,1fr)}.fact-grid div{padding:17px 19px}.fact-grid div+div{border-left:1px solid rgba(255,255,255,.11)}.fact-grid span{display:block;color:#80a4c1;font-size:.58rem;font-weight:950;letter-spacing:.1em}.fact-grid strong{display:block;margin-top:3px;font-size:.86rem}.fact-grid small{display:block;margin-top:2px;color:#9fb4c7;font-size:.62rem}
+
+/* Calculator */
+.calc{padding:78px 0 72px;background:#fff}
+.calc-head{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:30px;align-items:end;margin-bottom:25px}.calc-head h2{margin:8px 0 0;font-size:clamp(2.3rem,4vw,3.6rem);line-height:.98;letter-spacing:-.05em;color:var(--navy)}
+.mode{display:flex;gap:5px;padding:4px;border-radius:14px;background:#edf3f6;border:1px solid var(--line)}.mode button{min-width:110px;min-height:42px;border:0;border-radius:10px;background:transparent;color:#5d7386;font-weight:900}.mode button.active{background:var(--navy);color:#fff}
+.workspace{display:grid;grid-template-columns:minmax(0,1fr) minmax(455px,.84fr);gap:23px;align-items:start}
+.form-card{min-width:0;padding:24px;border:1px solid var(--line);border-radius:25px;background:#fff;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.form-card:before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(22,114,184,.022) 1px,transparent 1px),linear-gradient(90deg,rgba(22,114,184,.022) 1px,transparent 1px);background-size:38px 38px;mask-image:linear-gradient(135deg,#000,transparent 76%)}
+.form-card:after{content:"";position:absolute;right:18px;top:0;width:86px;height:4px;background:linear-gradient(90deg,var(--blue2),var(--green));clip-path:polygon(0 0,100% 0,91% 100%,0 100%)}.form-card>*{position:relative;z-index:1}
+.form-top{display:flex;justify-content:space-between;gap:18px;align-items:start;padding-bottom:18px;border-bottom:1px solid var(--line)}.form-top span{font-size:.61rem;color:var(--blue);font-weight:950;letter-spacing:.1em}.form-top strong{display:block;margin-top:2px;color:var(--navy)}.form-top p{margin:4px 0 0;color:var(--muted);font-size:.7rem}.live{display:flex;align-items:center;gap:7px;white-space:nowrap;color:#60778a;font-size:.64rem}.live i{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 5px rgba(78,208,83,.11)}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-top:18px}.field{min-width:0;display:grid;grid-template-rows:auto 54px minmax(33px,auto) 15px;gap:6px}.field.wide{grid-column:1/-1}.field>span:first-child{font-size:.76rem;color:var(--navy);font-weight:900}
+.control{height:54px;min-width:0;display:flex;align-items:center;border:1px solid #cbd9e3;border-radius:14px;background:#fbfdfe;overflow:hidden}.control:focus-within{border-color:var(--blue2);box-shadow:0 0 0 4px rgba(45,142,210,.08)}.control input,.control select{width:100%;min-width:0;max-width:100%;height:52px;border:0;outline:0;background:transparent;padding:0 12px;color:var(--navy);font-weight:880}.control b{align-self:stretch;min-width:58px;padding:0 9px;display:grid;place-items:center;border-left:1px solid var(--line);background:#f1f6f9;color:#5d7184;font-size:.67rem;white-space:nowrap}.field small{font-size:.64rem;line-height:1.42;color:#748899}.field em{font-style:normal;color:var(--red);font-size:.62rem;font-weight:800}
+.presets{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:14px}.presets span{font-size:.65rem;color:#708496;font-weight:850}.presets button{min-height:34px;padding:0 10px;border:1px solid #cbd9e3;border-radius:10px;background:#fff;color:#526b7f;font-size:.62rem;font-weight:900}.presets button.active{background:#eaf8eb;border-color:#b9ddb9;color:#2e7536}
+.advanced{display:none}.advanced.active{display:block}.check-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:13px}.check{padding:12px;border:1px solid #d1dee7;border-radius:14px;background:#f8fbfc}.check label{display:flex;align-items:flex-start;gap:9px}.check input{width:18px;height:18px;margin-top:2px}.check strong{display:block;color:var(--navy);font-size:.7rem}.check small{display:block;margin-top:3px;color:#6e8294;font-size:.62rem;line-height:1.4}
+.reset-field{margin-top:12px}.reset-btn{margin-top:13px;border:0;background:transparent;color:#61778a;font-size:.66rem;font-weight:850;padding:7px 0}
+
+/* Result = payment statement */
+.statement{position:sticky;top:96px;overflow:hidden;border-radius:25px;background:#071a33;color:#fff;box-shadow:0 27px 60px rgba(7,26,51,.16)}
+.statement:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 92% 7%,rgba(78,208,83,.13),transparent 25%),linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:auto,34px 34px,34px 34px}
+.statement:after{content:"80→50→40";position:absolute;right:-10px;bottom:-26px;color:rgba(255,255,255,.035);font-size:4.7rem;font-weight:1000;letter-spacing:-.075em;transform:rotate(-7deg)}
+.statement>*{position:relative;z-index:1}
+.statement-line{height:6px;background:linear-gradient(90deg,var(--blue2) 0 47%,#8496a5 47% 74%,var(--green) 74%)}
+.statement-in{padding:20px 21px 22px}.statement-head{display:flex;justify-content:space-between;gap:12px;align-items:start}.statement-head span{font-size:.61rem;font-weight:950;letter-spacing:.1em;text-transform:uppercase;color:#8db1cd}.statement-head b{padding:7px 9px;border-radius:9px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);font-size:.61rem}
+.statement-primary{margin-top:15px;padding-bottom:15px;border-bottom:1px solid rgba(255,255,255,.13)}.statement-primary small{display:block;color:#a7bed1;font-size:.67rem}.statement-primary strong{display:block;margin-top:3px;font-size:2.6rem;line-height:1;letter-spacing:-.055em}.statement-primary p{margin:8px 0 0;color:#b8c9d7;font-size:.75rem;line-height:1.48}
+.month-ledger{display:grid;gap:7px;margin-top:14px}.month-row{display:grid;grid-template-columns:62px 1fr 92px;gap:9px;align-items:center;padding:8px 9px;border-radius:11px;background:rgba(255,255,255,.055)}.month-row.mid{background:rgba(255,255,255,.075)}.month-row.low{background:rgba(78,208,83,.09)}.month-row span{font-size:.61rem;color:#a9bfd1}.month-row i{height:8px;border-radius:999px;background:rgba(255,255,255,.10);overflow:hidden}.month-row i b{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#5eb1e6,#a1d5f0)}.month-row.mid i b{background:linear-gradient(90deg,#748897,#b2bdc5)}.month-row.low i b{background:linear-gradient(90deg,var(--green),#9edca3)}.month-row strong{text-align:right;font-size:.75rem}
+.statement-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}.statement-metric{padding:11px 12px;border-radius:13px;background:rgba(255,255,255,.065)}.statement-metric span{display:block;color:#9fb6c9;font-size:.58rem}.statement-metric strong{display:block;margin-top:3px;font-size:.9rem}
+.eligibility{margin-top:12px;padding:11px 12px;border-radius:12px;background:rgba(78,208,83,.12);color:#dff5e1;font-size:.68rem;line-height:1.45}.eligibility.warn{background:rgba(215,154,52,.15);color:#f3d8aa}
+
+/* Step chart */
+.steps{padding:72px 0;background:var(--soft);border-top:1px solid var(--line)}
+.steps-head{display:flex;justify-content:space-between;gap:28px;align-items:end;margin-bottom:23px}.steps-head p{max-width:570px;margin:0;color:#60768a;line-height:1.65}
+.step-board{position:relative;padding:26px 25px 22px;border:1px solid var(--line);border-radius:25px;background:#fff;box-shadow:0 12px 32px rgba(7,26,51,.05);overflow:hidden}
+.step-board:before{content:"";position:absolute;left:25px;right:25px;top:74px;height:1px;background:#d7e2e9}.cap-line{position:absolute;left:25px;right:25px;top:58px;border-top:2px dashed rgba(169,68,78,.35)}.cap-line span{position:absolute;right:0;top:-21px;padding:3px 6px;border-radius:7px;background:#fff0f1;color:#8d3d46;font-size:.57rem;font-weight:900}
+.step-chart{display:flex;align-items:end;height:250px;gap:6px;padding-top:22px}.step-col{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:flex-end;height:100%}.step-col .bar{height:var(--h);min-height:20px;border-radius:11px 11px 4px 4px;background:linear-gradient(180deg,#3f9bd5,#86c8ea);position:relative}.step-col.mid .bar{background:linear-gradient(180deg,#718897,#b7c2ca)}.step-col.low .bar{background:linear-gradient(180deg,#3eaa4a,#98d89d)}.step-col .bar strong{position:absolute;left:50%;top:-24px;transform:translateX(-50%);font-size:.66rem;color:var(--navy);white-space:nowrap}.step-col>span{text-align:center;margin-top:7px;font-size:.58rem;color:#6e8395}.step-col>small{text-align:center;margin-top:2px;font-size:.53rem;color:#8a9bab}
+.step-legend{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px}.step-legend span{display:flex;align-items:center;gap:7px;font-size:.62rem;color:#61778a}.step-legend i{width:11px;height:11px;border-radius:3px;background:#5aa9dc}.step-legend span:nth-child(2) i{background:#8193a0}.step-legend span:nth-child(3) i{background:#56b95e}
+
+/* Age ruler */
+.age-sec{padding:72px 0;background:#fff}
+.age-grid{display:grid;grid-template-columns:.78fr 1.22fr;gap:36px;align-items:center}.age-copy p{color:#60768a;line-height:1.68}
+.age-ruler{padding:22px;border:1px solid var(--line);border-radius:23px;background:#fff;box-shadow:0 12px 32px rgba(7,26,51,.05)}
+.age-track{position:relative;height:14px;border-radius:999px;background:linear-gradient(90deg,#e8f4fb 0 43%,#eef2f5 43% 68%,#edf9ee 68% 100%);margin:32px 6px 12px}.age-pin{position:absolute;left:var(--pin);top:-9px;width:3px;height:32px;background:var(--navy);transform:translateX(-50%)}.age-pin b{position:absolute;left:50%;bottom:34px;transform:translateX(-50%);padding:5px 7px;border-radius:8px;background:var(--navy);color:#fff;font-size:.58rem;white-space:nowrap}
+.age-labels{display:grid;grid-template-columns:43fr 25fr 32fr;gap:0}.age-labels div{padding:12px 10px}.age-labels div+div{border-left:1px solid var(--line)}.age-labels span{display:block;color:#718697;font-size:.58rem}.age-labels strong{display:block;margin-top:3px;color:var(--navy);font-size:.86rem}.age-labels small{display:block;margin-top:3px;color:#738697;font-size:.59rem}
+.age-note{margin-top:12px;padding:12px 13px;border-radius:12px;background:#071a33;color:#fff;font-size:.68rem;line-height:1.45}.age-note strong{color:#dff5e1}
+
+/* Cap map */
+.cap-sec{padding:72px 0;background:var(--soft);border-block:1px solid var(--line)}
+.cap-grid{display:grid;grid-template-columns:.84fr 1.16fr;gap:36px;align-items:start}.cap-copy p{color:#60768a;line-height:1.68}
+.cap-board{border:1px solid var(--line);border-radius:24px;background:#fff;box-shadow:0 12px 32px rgba(7,26,51,.05);overflow:hidden}
+.cap-row{display:grid;grid-template-columns:92px 1fr 132px;gap:14px;align-items:center;padding:18px 20px}.cap-row+.cap-row{border-top:1px solid var(--line)}.cap-rate{width:72px;height:55px;border-radius:14px;background:#eaf4fb;color:#24658d;display:grid;place-items:center;font-weight:950}.cap-row:nth-child(2) .cap-rate{background:#f0f3f5;color:#566d7f}.cap-row:nth-child(3) .cap-rate{background:#edf9ee;color:#357b3d}.cap-copyline span{display:block;color:#718697;font-size:.6rem}.cap-copyline strong{display:block;margin-top:3px;color:var(--navy);font-size:.9rem}.cap-result{text-align:right}.cap-result span{display:block;color:#718697;font-size:.58rem}.cap-result strong{display:block;margin-top:3px;color:#a33d48;font-size:.84rem}
+
+/* Fixed support slips */
+.fixed-sec{padding:72px 0;background:#fff}
+.fixed-head{display:flex;justify-content:space-between;gap:28px;align-items:end;margin-bottom:22px}.fixed-head p{max-width:560px;margin:0;color:#60768a;line-height:1.65}
+.fixed-slips{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.slip{position:relative;padding:20px;border:1px solid var(--line);border-radius:6px 6px 18px 18px;background:#fff;box-shadow:0 10px 26px rgba(7,26,51,.05);overflow:hidden}.slip:before{content:"";position:absolute;left:0;right:0;top:0;height:4px;background:#66b3e1}.slip:nth-child(2):before{background:#899ba8}.slip:nth-child(3):before{background:var(--green)}.slip span{display:block;color:#718697;font-size:.61rem;text-transform:uppercase;font-weight:900}.slip strong{display:block;margin-top:6px;color:var(--navy);font-size:1.7rem;letter-spacing:-.04em}.slip small{display:block;margin-top:5px;color:#6a7f91;line-height:1.45}.slip em{display:inline-block;margin-top:12px;font-style:normal;padding:5px 7px;border-radius:999px;background:#f1f5f7;color:#5d7284;font-size:.58rem;font-weight:850}
+
+/* Eligibility path */
+.elig-sec{padding:72px 0;background:linear-gradient(180deg,#f6f9fb,#edf5f8);border-top:1px solid var(--line)}
+.elig-path{display:grid;grid-template-columns:1fr 70px 1fr 70px 1fr;gap:10px;align-items:center;margin-top:22px}.checkpoint{padding:19px;border:1px solid var(--line);border-radius:19px;background:#fff}.checkpoint span{display:block;color:#718697;font-size:.6rem}.checkpoint strong{display:block;margin-top:4px;color:var(--navy);font-size:1.02rem}.checkpoint p{margin:6px 0 0;color:#64798b;font-size:.7rem;line-height:1.45}.path-arrow{height:2px;background:linear-gradient(90deg,var(--blue2),var(--green));position:relative}.path-arrow:after{content:"";position:absolute;right:0;top:-4px;width:8px;height:8px;border-top:2px solid var(--green);border-right:2px solid var(--green);transform:rotate(45deg)}
+
+/* Method + footer */
+.method{padding:72px 0;background:#fff}.method-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:34px}.method-copy p{color:#5f7487;line-height:1.7}.method-copy ul{padding-left:18px;color:#40566a;line-height:1.7}.method-note{padding:22px;border:1px solid var(--line);border-radius:20px;background:#eef6fa}.method-note strong{display:block;color:var(--navy);font-size:1.05rem}.method-note p{color:#5f7487;line-height:1.65}.badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.badges span{padding:7px 9px;border-radius:999px;background:#fff;color:#42647d;border:1px solid #d6e3eb;font-size:.67rem;font-weight:850}
+footer{background:#05162d;color:#d5e2ec;padding:44px 0 25px}.footer-grid{display:grid;grid-template-columns:1.2fr .8fr .8fr;gap:34px}.footer-brand img{width:250px}.footer-brand p{max-width:470px;color:#a8bac9;line-height:1.6}.footer-col b{display:block;color:#fff;margin-bottom:10px}.footer-col a{display:block;color:#b4c6d5;font-size:.85rem;margin:8px 0}.footer-col a:hover{color:#fff}.socials{display:flex;gap:8px;margin-top:14px}.socials a{padding:7px 10px;border:1px solid rgba(255,255,255,.16);border-radius:999px;color:#d7e4ee;font-size:.74rem}.footer-bottom{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:26px;padding-top:17px;border-top:1px solid rgba(255,255,255,.12);font-size:.72rem;color:#91a6b8}
+
+@media(max-width:1120px){
+  .nav,.header-cta{display:none}.menu{display:block}
+  .hero-grid{grid-template-columns:minmax(0,1fr) minmax(400px,.88fr);gap:30px}.hero-copy h1{font-size:clamp(3rem,6vw,4.6rem)}
+  .workspace{grid-template-columns:1fr}.statement{position:relative;top:auto}
+  .elig-path{grid-template-columns:1fr 50px 1fr}.elig-path .checkpoint:nth-of-type(3){grid-column:1/-1}.elig-path .path-arrow:nth-of-type(2){display:none}
+}
+@media(max-width:900px){
+  .hero-grid{grid-template-columns:1fr}.payment-scene{max-width:720px}
+  .calc-head{grid-template-columns:1fr}.mode{justify-self:start}
+  .age-grid,.cap-grid,.method-grid{grid-template-columns:1fr}
+}
+@media(max-width:700px){
+  :root{--shell:min(100% - 22px,1240px)}
+  .header-in{min-height:62px}.logo{width:205px;flex-basis:205px}.menu{flex:0 0 46px}
+  .hero{padding-bottom:28px}.hero-grid{padding-top:18px;gap:18px}.hero-copy h1{font-size:2.55rem;max-width:11ch;margin:10px 0 14px}.hero-lead{font-size:.94rem;line-height:1.55}.hero-actions{margin-top:17px}.btn{min-height:44px;font-size:.82rem}.hero-trust{margin-top:12px}
+  .hero-wm .w1{right:-10px;top:208px;font-size:6.5rem}.hero-wm .w2{font-size:3.2rem}
+  .payment-scene{min-height:395px;padding:18px 7px 10px 18px}.scene-folder{right:22px;height:210px}.payment-calendar{max-width:365px;padding:17px 15px}.cal-primary strong{font-size:1.55rem}.hero-months{grid-template-columns:repeat(5,1fr);gap:5px}.hero-month{padding:7px 3px}.cal-foot{grid-template-columns:1fr}.cap-tag{right:0;top:98px;width:104px}.scene-note{left:0;bottom:35px;width:138px}
+  .fact-grid{grid-template-columns:1fr 1fr}.fact-grid div:nth-child(3){border-left:0;border-top:1px solid rgba(255,255,255,.11)}.fact-grid div:nth-child(4){border-top:1px solid rgba(255,255,255,.11)}
+  .calc{padding:50px 0}.calc-head h2{font-size:2rem}.form-card{padding:17px;border-radius:20px}.form-top{display:block}.live{margin-top:8px}.fields,.check-grid{grid-template-columns:1fr}.field{grid-template-rows:auto 54px auto 15px}.field.wide{grid-column:auto}
+  .statement-in{padding:17px}.statement-primary strong{font-size:2.15rem}.month-row{grid-template-columns:52px 1fr 82px}.statement-grid{grid-template-columns:1fr}
+  .steps,.age-sec,.cap-sec,.fixed-sec,.elig-sec,.method{padding:50px 0}.steps-head,.fixed-head{display:block}.steps-head p,.fixed-head p{margin-top:10px}.step-board{padding:20px 14px}.step-chart{height:220px;gap:4px}.step-col .bar strong{font-size:.56rem}
+  .age-labels{grid-template-columns:1fr}.age-labels div+div{border-left:0;border-top:1px solid var(--line)}
+  .cap-row{grid-template-columns:70px 1fr}.cap-result{grid-column:2;text-align:left}.cap-rate{width:60px;height:50px}
+  .fixed-slips{grid-template-columns:1fr}.elig-path{grid-template-columns:1fr}.path-arrow{width:2px;height:35px;justify-self:center}.path-arrow:after{right:-3px;top:auto;bottom:0;transform:rotate(135deg)}.elig-path .checkpoint:nth-of-type(3){grid-column:auto}.elig-path .path-arrow:nth-of-type(2){display:block}
+  .footer-grid{grid-template-columns:1fr}.footer-brand img{width:235px}
+}
+</style>
+<meta content="index,follow,max-image-preview:large" name="robots"/><meta content="Spočítejte podporu v nezaměstnanosti v roce 2026 po jednotlivých měsících, včetně sazeb 80 %, 50 % a 40 % a zákonného maxima." name="description"/><meta content="cs_CZ" property="og:locale"/><meta content="website" property="og:type"/><meta content="RychléVýpočty.cz" property="og:site_name"/><meta content="Podpora v nezaměstnanosti 2026 – kalkulačka" property="og:title"/><meta content="Spočítejte podporu v nezaměstnanosti v roce 2026 po jednotlivých měsících, včetně sazeb 80 %, 50 % a 40 % a zákonného maxima." property="og:description"/><meta content="https://rychlevypocty.cz/podpora-v-nezamestnanosti-kalkulacka.html" property="og:url"/><meta content="https://rychlevypocty.cz/og-image-rv-v31.jpg" property="og:image"/><meta content="summary_large_image" name="twitter:card"/><meta content="Podpora v nezaměstnanosti 2026 – kalkulačka" name="twitter:title"/><meta content="Spočítejte podporu v nezaměstnanosti v roce 2026 po jednotlivých měsících, včetně sazeb 80 %, 50 % a 40 % a zákonného maxima." name="twitter:description"/><meta content="https://rychlevypocty.cz/og-image-rv-v31.jpg" name="twitter:image"/><link href="https://rychlevypocty.cz/podpora-v-nezamestnanosti-kalkulacka.html" rel="canonical"/><link href="/favicon.ico?v=2" rel="icon" sizes="any"/><link href="/favicon-rv-v32.svg?v=1" rel="icon" type="image/svg+xml"/><link href="/apple-touch-icon.png?v=2" rel="apple-touch-icon"/><link href="/site.webmanifest?v=2" rel="manifest"/><script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"RychléVýpočty.cz","item":"https://rychlevypocty.cz/"},{"@type":"ListItem","position":2,"name":"Mzdy a práce","item":"https://rychlevypocty.cz/mzdy-a-prace.html"},{"@type":"ListItem","position":3,"name":"Kolik dostanete každý měsíc — a kdy podpora klesne?","item":"https://rychlevypocty.cz/podpora-v-nezamestnanosti-kalkulacka.html"}]}</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Podpora v nezaměstnanosti 2026 – kalkulačka","applicationCategory":"FinanceApplication","operatingSystem":"Any","url":"https://rychlevypocty.cz/podpora-v-nezamestnanosti-kalkulacka.html","description":"Spočítejte podporu v nezaměstnanosti v roce 2026 po jednotlivých měsících, včetně sazeb 80 %, 50 % a 40 % a zákonného maxima.","isAccessibleForFree":true}</script></head>
+<body>
+<a class="skip" href="#kalkulacka">Přeskočit na kalkulačku</a>
+<header class="header">
+<div class="container header-in">
+<a aria-label="RychléVýpočty.cz domů" class="logo" href="https://rychlevypocty.cz/"><img alt="RychléVýpočty.cz" height="96" src="https://rychlevypocty.cz/logo-rv-v32.svg?v=1" width="590"/></a>
+<nav aria-label="Hlavní navigace" class="nav"><a href="https://rychlevypocty.cz/kalkulacky.html">Všechny kalkulačky</a><a aria-current="page" href="https://rychlevypocty.cz/mzdy-a-prace.html">Mzdy</a><a href="https://rychlevypocty.cz/rodina-a-rozpocet.html">Rodina</a><a href="https://rychlevypocty.cz/jak-pocitame.html">Jak počítáme</a><a href="https://rychlevypocty.cz/o-nas.html">O projektu</a></nav>
+<a class="header-cta" href="#kalkulacka">Spočítat podporu</a>
+<button aria-expanded="false" aria-label="Otevřít menu" class="menu" id="menuBtn" type="button"><span></span><span></span><span></span></button>
+</div>
+<nav aria-label="Mobilní navigace" class="mobile-nav" id="mobileNav"><a href="https://rychlevypocty.cz/kalkulacky.html">Kalkulačky</a><a href="https://rychlevypocty.cz/mzdy-a-prace.html">Mzdy a práce</a><a href="https://rychlevypocty.cz/jak-pocitame.html">Jak počítáme</a><a href="https://rychlevypocty.cz/o-nas.html">O projektu</a></nav>
+</header>
 <main>
-<section class="un83-hero rv-identity-hero"><div class="un83-container un83-hero-grid">
-<div class="un83-hero-copy"><nav class="un83-breadcrumbs" aria-label="Drobečková navigace"><a href="/">Domů</a><span>›</span><a href="/mzdy-a-prace.html">Mzdy a práce</a><span>›</span><strong>Podpora 2026</strong></nav>
-<p class="un83-eyebrow">ZMĚNA PRÁCE · FINANČNÍ RUNWAY 2026</p><h1>Jak dlouho vám podpora podrží rozpočet?</h1><p class="un83-lead">Zadejte věk a průměrný čistý výdělek. Uvidíte částku po jednotlivých měsících, okamžik prvního poklesu i celkový finanční polštář pro hledání nové práce.</p>
-<div class="un83-hero-actions"><a class="un83-btn un83-btn-primary" href="#kalkulacka">Spočítat můj průběh</a><a class="un83-btn un83-btn-ghost" href="#metodika">Pravidla 2026</a></div>
-<div class="un83-trust"><span>80 → 50 → 40 %</span><span>maximum 38 537 Kč</span><span>Úřad práce / MPSV</span></div></div>
-<aside class="un83-runway" aria-label="Ukázka průběhu podpory"><div class="un83-runway-head"><div><span>FINANČNÍ RUNWAY</span><strong id="heroFirst">32 000 Kč</strong><small>první celý měsíc při základu 40 000 Kč</small></div><b>MODEL 2026</b></div>
-<div class="un83-runway-track" id="heroTrack" aria-label="Měsíční průběh podpory"></div>
-<div class="un83-runway-foot"><article><span>Celkem</span><strong id="heroTotal">120 000 Kč</strong></article><article><span>Délka</span><strong id="heroDuration">5 měsíců</strong></article><article class="is-warm"><span>První pokles</span><strong id="heroDrop">3. měsíc</strong></article></div>
-<p>Nejde o jednu konstantní částku. Pro rok 2026 je podpora nejvyšší na začátku a potom klesá.</p></aside>
-</div></section>
-
-<section class="un83-facts"><div class="un83-container"><article><span>První fáze</span><strong>80 %</strong><small>2 měsíce, nad 52 let 3 měsíce</small></article><article><span>Druhá fáze</span><strong>50 %</strong><small>2 měsíce, nad 52 let 3 měsíce</small></article><article><span>Závěr</span><strong>40 %</strong><small>po zbytek podpůrčí doby</small></article><article><span>Maximum 2026</span><strong>38 537 Kč</strong><small>za celý měsíc</small></article></div></section>
-
-<section class="un83-calc-section" id="kalkulacka"><div class="un83-container"><div class="un83-calc-head"><div><span class="un83-micro">VÁŠ SCÉNÁŘ</span><h2>Nejdřív částka a věk. Detaily až pokud je potřebujete.</h2><p>Základní režim ukáže finanční průběh. Přesnější režim přidá OSVČ, pevnou podporu bez doloženého základu a orientační kontrolu podmínek nároku.</p></div><div class="un83-mode" role="tablist" aria-label="Režim kalkulačky"><button type="button" role="tab" aria-selected="true" aria-controls="un83BasicPanel" id="un83BasicTab" class="is-active" data-mode="basic" tabindex="0">Základní</button><button type="button" role="tab" aria-selected="false" aria-controls="un83AdvancedPanel" id="un83AdvancedTab" data-mode="advanced" tabindex="-1">Přesnější</button></div></div>
-<div class="un83-workspace">
-<form class="un83-form" id="unemploymentForm" novalidate><div class="un83-form-top"><div><span>CO ZADAT</span><h3>Kolik jste běžně dostávali a kolik vám je</h3><p id="modeHelp">U zaměstnance použijte průměrný měsíční čistý výdělek z potvrzení zaměstnavatele, ne jen poslední čistou výplatu.</p></div><span class="un83-live"><i></i> živý přepočet</span></div>
-<div id="un83BasicPanel" role="tabpanel" aria-labelledby="un83BasicTab"><div class="un83-fields">
-<label class="un83-field" for="basicIncome"><span>Průměrný měsíční čistý výdělek</span><span class="un83-control"><input id="basicIncome" inputmode="decimal" value="40 000" autocomplete="off"><b>Kč</b></span><small>Údaj pro výpočet podpory, nikoli hrubá mzda.</small><em id="basicIncomeError"></em></label>
-<label class="un83-field" for="basicAge"><span>Věk při podání žádosti</span><span class="un83-control"><input id="basicAge" inputmode="numeric" value="35" autocomplete="off"><b>let</b></span><small>Určuje délku podpůrčí doby 5 / 8 / 11 měsíců.</small><em id="basicAgeError"></em></label>
-</div><div class="un83-presets" role="group" aria-label="Rychlé volby čistého výdělku"><span>Rychlá volba výdělku</span><div><button type="button" data-income="30000">30 000</button><button type="button" data-income="40000" class="is-active">40 000</button><button type="button" data-income="50000">50 000</button><button type="button" data-income="65000">65 000</button></div></div></div>
-<div id="un83AdvancedPanel" role="tabpanel" aria-labelledby="un83AdvancedTab" hidden><div class="un83-fields">
-<label class="un83-field un83-field-wide" for="sourceMode"><span>Z čeho má Úřad práce vycházet</span><span class="un83-control un83-select"><select id="sourceMode"><option value="employee">Zaměstnanec · průměrný čistý výdělek</option><option value="osvc">OSVČ · měsíční vyměřovací základ</option><option value="fixed">Nelze stanovit / doložit základ</option></select></span><small id="sourceHelp">U zaměstnance se zadává průměrný měsíční čistý výdělek.</small><em></em></label>
-<label class="un83-field" for="advancedIncome" id="advancedIncomeField"><span id="advancedIncomeLabel">Průměrný měsíční čistý výdělek</span><span class="un83-control"><input id="advancedIncome" inputmode="decimal" value="40 000" autocomplete="off"><b>Kč</b></span><small id="advancedIncomeHelp">Částka potvrzená zaměstnavatelem pro ÚP.</small><em id="advancedIncomeError"></em></label>
-<label class="un83-field" for="advancedAge"><span>Věk při podání žádosti</span><span class="un83-control"><input id="advancedAge" inputmode="numeric" value="35" autocomplete="off"><b>let</b></span><small>52 let ještě spadá do pětiměsíčního pásma; 53–57 let do osmiměsíčního.</small><em id="advancedAgeError"></em></label>
-</div><div class="un83-check-grid"><label class="un83-check" for="insuranceCheck"><input id="insuranceCheck" type="checkbox" checked><span><strong>Mám alespoň 12 měsíců pojištění / započitatelných náhradních dob za poslední 2 roky</strong><small>Základní podmínka standardního nároku.</small></span></label><label class="un83-check" for="priorSupportCheck"><input id="priorSupportCheck" type="checkbox"><span><strong>V posledních 2 letech jsem vyčerpal celou podpůrčí dobu</strong><small>Pro nový plný nárok se obvykle řeší dalších 9 měsíců pojištění.</small></span></label></div><label class="un83-reset" for="resetMonths" hidden><span>Pojištění získané od vyčerpání celé podpory</span><span class="un83-control"><input id="resetMonths" inputmode="numeric" value="9" autocomplete="off"><b>měs.</b></span><small>Existují zákonné výjimky, např. některé zdravotní nebo organizační důvody skončení.</small></label></div>
-<div class="un83-form-actions"><button class="un83-btn un83-btn-primary" type="submit">Přepočítat podporu</button><button class="un83-btn un83-btn-ghost" id="resetBtn" type="button">Obnovit model</button></div></form>
-
-<aside class="un83-result rv-brand-result" id="vysledek" aria-live="polite"><div class="un83-result-head"><div><span id="resultPhase">PRVNÍ FÁZE · 80 %</span><h3>Váš finanční runway</h3></div><b>RV VÝSLEDEK</b></div><div class="un83-answer"><span>První celý měsíc</span><strong id="resultFirst">32 000 Kč</strong><p id="resultExplain">Při základu 40 000 Kč a věku 35 let trvá podpůrčí doba 5 měsíců.</p></div>
-<div class="un83-result-summary"><article><span>Celkem za plné měsíce</span><strong id="resultTotal">120 000 Kč</strong></article><article><span>Podpůrčí doba</span><strong id="resultDuration">5 měsíců</strong></article><article><span>Průměr za měsíc</span><strong id="resultAverage">24 000 Kč</strong></article><article><span>První pokles</span><strong id="resultDrop">3. měsíc</strong></article></div>
-<div class="un83-months" id="monthRail" aria-label="Měsíční průběh podpory"></div>
-<div class="un83-eligibility is-ok" id="eligibilityBox"><i></i><div><strong id="eligibilityTitle">Základní podmínka nároku v modelu splněna</strong><p id="eligibilityText">Konečný nárok, potvrzený základ a skutečné poměrné platby vždy stanoví Úřad práce.</p></div></div>
-<div class="un83-result-note"><strong>Orientační model:</strong> počítá celé měsíční částky. První nebo poslední skutečná platba může být poměrná podle kalendářních dnů; výsledek nenahrazuje rozhodnutí Úřadu práce.</div></aside>
-</div></div></section>
-
-<section class="un83-story"><div class="un83-container un83-story-grid"><div><span class="un83-micro">CO NA TOM VIDÍM</span><h2>Nejdůležitější není jen první částka. Je to okamžik, kdy příjem klesne.</h2><p>V prvních měsících máte nejsilnější prostor na hledání nové práce. Potom se podpora snižuje a rozpočet musí zvládnout druhou a třetí fázi.</p></div><div class="un83-story-rail"><article class="is-high"><b>01</b><span><strong>80 %</strong><small>první finanční polštář</small></span></article><i></i><article class="is-mid"><b>02</b><span><strong>50 %</strong><small>první výrazný pokles</small></span></article><i></i><article class="is-low"><b>03</b><span><strong>40 %</strong><small>závěr podpůrčí doby</small></span></article></div></div></section>
-
-<section class="un83-age"><div class="un83-container"><div class="un83-section-head"><span class="un83-micro">DÉLKA PODLE VĚKU</span><h2>Stejný výdělek. Jinak dlouhý čas na hledání práce.</h2><p>Rozhoduje věk ke dni podání žádosti o podporu.</p></div><div class="un83-age-grid"><article><span>do 52 let včetně</span><strong>5 měsíců</strong><div><b>2× 80 %</b><b>2× 50 %</b><b>1× 40 %</b></div></article><article class="is-blue"><span>53–57 let</span><strong>8 měsíců</strong><div><b>3× 80 %</b><b>3× 50 %</b><b>2× 40 %</b></div></article><article class="is-green"><span>nad 57 let</span><strong>11 měsíců</strong><div><b>3× 80 %</b><b>3× 50 %</b><b>5× 40 %</b></div></article></div></div></section>
-
-<section class="un83-cap"><div class="un83-container un83-cap-grid"><div><span class="un83-micro">STROP 2026</span><h2>Vyšší výdělek už první měsíce nezvýší nad 38 537 Kč.</h2><p>Maximum podpory i podpory při rekvalifikaci je v roce 2026 nastaveno na 80 % průměrné mzdy 48 171 Kč.</p><a class="un83-text-link" href="#metodika">Podívat se na zdroje a zaokrouhlení →</a></div><div class="un83-cap-meter"><div><span>Výdělek pro dosažení stropu při 80 %</span><strong>48 171 Kč</strong></div><i><b></b></i><div class="un83-cap-values"><span>0 Kč</span><strong>38 537 Kč maximum</strong></div></div></div></section>
-
-<section class="un83-actions"><div class="un83-container un83-actions-grid"><div><span class="un83-micro">CO S VÝSLEDKEM DÁL</span><h2>Přepočítejte si, co se stane s vaším měsíčním rozpočtem.</h2><p>Podpora je jen jedna strana. Druhá je rozdíl proti běžné čisté mzdě a počet měsíců, které umí překlenout vaše rezerva.</p></div><div class="un83-action-list"><a href="/kalkulacka-financni-rezervy.html"><b>01</b><span><strong>Kolik měsíců vydrží rezerva</strong><small>Propojte podporu s úsporami a pravidelnými výdaji.</small></span></a><a href="/kalkulacka-rozpoctu-domacnosti.html"><b>02</b><span><strong>Upravit rozpočet domácnosti</strong><small>Najděte výdaje, které musí runway skutečně pokrýt.</small></span></a><a href="/cista-mzda-kalkulacka.html"><b>03</b><span><strong>Porovnat novou pracovní nabídku</strong><small>Přepočítejte novou hrubou mzdu na čistou.</small></span></a></div></div></section>
-
-<section class="un83-method" id="metodika"><div class="un83-container un83-method-grid"><div><span class="un83-micro">METODIKA A HRANICE MODELU</span><h2>Co kalkulačka umí spočítat — a co musí potvrdit Úřad práce.</h2><p>U zaměstnance používáme průměrný měsíční čistý výdělek; u OSVČ poslední vyměřovací základ přepočtený na měsíc. Výše se zaokrouhluje na celé koruny nahoru a u běžného základu se omezí maximem 38 537 Kč.</p><div class="un83-formulas"><code>1. fáze = min(základ × 80 %, 38 537 Kč)</code><code>2. fáze = min(základ × 50 %, 38 537 Kč)</code><code>3. fáze = min(základ × 40 %, 38 537 Kč)</code><code>pevný režim = 19 269 / 9 635 / 7 226 Kč</code></div><div class="un83-method-note"><strong>Důležité:</strong> Základní nárok standardně vyžaduje alespoň 12 měsíců důchodového pojištění v posledních 2 letech; lze započítat i zákonné náhradní doby. Kalkulačka neřeší všechny výjimky, zahraniční pojištění, souběhy, výsluhové příspěvky, sankční vyřazení ani individuální obnovu podpůrčí doby.</div></div><aside><h3>Primární zdroje</h3><a href="https://mpsv.gov.cz/up-cz/prava-a-povinnosti-uchazece-a-zajemce" target="_blank" rel="noopener noreferrer">Úřad práce – nárok, délka a výše podpory</a><a href="https://mpsv.gov.cz/up-cz/co-delat-pri-ztrate-zamestnani" target="_blank" rel="noopener noreferrer">Úřad práce – co dělat při ztrátě zaměstnání</a><a href="https://mpsv.gov.cz/prehledne-legislativni-zmeny-z-gesce-mpsv-ucinne-od-1-ledna-2026" target="_blank" rel="noopener noreferrer">MPSV – změny účinné od 1. 1. 2026</a><dl><div><dt>Kontrola metodiky</dt><dd>28. 8. 2026</dd></div><div><dt>Maximum</dt><dd>38 537 Kč</dd></div><div><dt>Průměrná mzda pro limit</dt><dd>48 171 Kč</dd></div></dl></aside></div></section>
-
-<section class="un83-faq"><div class="un83-container"><div class="un83-section-head"><span class="un83-micro">FAQ</span><h2>Krátké odpovědi pro chvíli, kdy řešíte změnu práce.</h2></div><div class="un83-faq-list"><details open><summary>Počítá se podpora z hrubé, nebo čisté mzdy?<span>+</span></summary><p>U zaměstnance z průměrného měsíčního čistého výdělku potvrzeného pro Úřad práce. Není to automaticky poslední čistá výplata.</p></details><details><summary>Dostanu méně, když odejdu sám nebo dohodou?<span>+</span></summary><p>Od roku 2026 se už samotný dobrovolný odchod nebo dohoda bez vážného důvodu nesnižuje na jednotných 45 %. Použije se standardní schéma 80 / 50 / 40 %, pokud jsou splněny ostatní podmínky.</p></details><details><summary>Kolik měsíců podpora trvá?<span>+</span></summary><p>Do 52 let včetně 5 měsíců, od 53 do 57 let 8 měsíců a nad 57 let 11 měsíců. Rozhoduje věk při podání žádosti.</p></details><details><summary>Co když nemohu doložit předchozí výdělek?<span>+</span></summary><p>V zákonem vymezených případech se použijí pevné částky odvozené od průměrné mzdy: v roce 2026 19 269 Kč, 9 635 Kč a 7 226 Kč podle fáze podpory.</p></details><details><summary>Je vypočtené „celkem“ částka, kterou opravdu dostanu?<span>+</span></summary><p>Je to součet plných měsíčních částek pro plánování. Skutečný první nebo poslední měsíc může být poměrný podle počtu kalendářních dnů a konečnou výši stanoví Úřad práce.</p></details></div></div></section>
-
-<section class="un83-related"><div class="un83-container"><div class="un83-section-head"><span class="un83-micro">SOUVISEJÍCÍ NÁSTROJE</span><h2>Uděláte si jasno i v dalších číslech po změně práce.</h2></div><div class="un83-related-grid"><a href="/odstupne-kalkulacka.html"><span>UKONČENÍ PRÁCE</span><strong>Odstupné</strong><small>Kolik může vzniknout podle důvodu a délky pracovního poměru.</small></a><a href="/kalkulacka-financni-rezervy.html"><span>REZERVA</span><strong>Finanční runway domácnosti</strong><small>Kolik měsíců zvládnou úspory při nižším příjmu.</small></a><a href="/cista-mzda-kalkulacka.html"><span>NOVÁ PRÁCE</span><strong>Čistá mzda 2026</strong><small>Porovnejte další nabídku s příjmem během hledání práce.</small></a></div></div></section>
+<section class="hero">
+<div aria-hidden="true" class="hero-wm"><span class="w1">PODPORA</span><span class="w2">80 → 50 → 40</span><i class="ring r1"></i><i class="ring r2"></i></div>
+<div class="container hero-grid">
+<nav aria-label="Drobečková navigace" class="crumbs"><a href="https://rychlevypocty.cz/">Domů</a><span>›</span><a href="https://rychlevypocty.cz/mzdy-a-prace.html">Mzdy a práce</a><span>›</span><strong>Podpora 2026</strong></nav>
+<div class="hero-copy">
+<span class="kicker">Podpora v nezaměstnanosti · pravidla 2026</span>
+<h1>Kolik dostanete každý měsíc — a <em>kdy podpora klesne?</em></h1>
+<p class="hero-lead">Zadejte průměrný čistý výdělek a věk. Uvidíte celý měsíční průběh podpory, první pokles, celkovou částku i to, jestli vás v některé fázi omezuje maximum 38 537 Kč.</p>
+<div class="hero-actions"><a class="btn primary" href="#kalkulacka">Spočítat můj průběh</a><a class="btn ghost" href="#metodika">Pravidla a nárok</a></div>
+<div class="hero-trust"><span>80 → 50 → 40 %</span><span>5 / 8 / 11 měsíců</span><span>25 kontrolních scénářů</span></div>
+</div>
+<aside aria-label="Ukázkový výplatní kalendář podpory" class="payment-scene">
+<div aria-hidden="true" class="scene-folder"></div>
+<div class="payment-calendar">
+<div class="cal-head"><span>Výplatní kalendář podpory</span><b>MODEL 2026</b></div>
+<div class="cal-primary"><div><small>1. celý měsíc</small><strong id="heroFirst">32 000 Kč</strong></div><em id="heroBase">základ 40 000 Kč</em></div>
+<div class="hero-months" id="heroMonths"></div>
+<div class="cal-foot"><div><span>Celkem</span><strong id="heroTotal">120 000 Kč</strong></div><div><span>Délka</span><strong id="heroDuration">5 měsíců</strong></div><div><span>První pokles</span><strong id="heroDrop">3. měsíc</strong></div></div>
+</div>
+<div class="cap-tag"><span>Maximum 2026</span><strong>38 537 Kč</strong></div>
+<div class="scene-note"><span>Věk mění dobu</span><strong id="heroAgeNote">35 let → 5 měsíců</strong></div>
+</aside>
+</div>
+</section>
+<section class="fact-strip">
+<div class="container fact-grid">
+<div><span>PRVNÍ FÁZE</span><strong>80 %</strong><small>2 měsíce; nad 52 let 3</small></div>
+<div><span>DALŠÍ FÁZE</span><strong>50 %</strong><small>2 měsíce; nad 52 let 3</small></div>
+<div><span>ZBÝVAJÍCÍ DOBA</span><strong>40 %</strong><small>do konce podpůrčí doby</small></div>
+<div><span>MAXIMUM 2026</span><strong>38 537 Kč</strong><small>za celý měsíc podpory</small></div>
+</div>
+</section>
+<section class="calc" id="kalkulacka">
+<div class="container">
+<div class="calc-head"><div><span class="kicker">01 · Váš průběh</span><h2>Dvě čísla stačí pro první odpověď.</h2></div><div aria-label="Režim kalkulačky" class="mode" role="group"><button aria-pressed="true" class="active" data-mode="basic" type="button">Základní</button><button aria-pressed="false" data-mode="advanced" type="button">Přesnější</button></div></div>
+<div class="workspace">
+<form class="form-card" id="unemploymentForm" novalidate="">
+<div class="form-top"><div><span>CO ZADAT</span><strong id="formTitle">Průměrný čistý výdělek a věk</strong><p id="formHelp">U zaměstnance použijte průměrný měsíční čistý výdělek z potvrzení zaměstnavatele, ne jen poslední čistou výplatu.</p></div><span class="live"><i></i> živý přepočet</span></div>
+<div id="basicPanel">
+<div class="fields">
+<label class="field" for="basicIncome"><span>Průměrný měsíční čistý výdělek</span><span class="control"><input autocomplete="off" id="basicIncome" inputmode="decimal" value="40 000"/><b>Kč</b></span><small>Údaj pro výpočet podpory, nikoli hrubá mzda.</small><em id="basicIncomeError"></em></label>
+<label class="field" for="basicAge"><span>Věk při podání žádosti</span><span class="control"><input autocomplete="off" id="basicAge" inputmode="numeric" value="35"/><b>let</b></span><small>Určuje délku podpůrčí doby 5 / 8 / 11 měsíců.</small><em id="basicAgeError"></em></label>
+</div>
+<div class="presets"><span>Rychlá volba</span><button data-income="30000" type="button">30 000</button><button class="active" data-income="40000" type="button">40 000</button><button data-income="50000" type="button">50 000</button><button data-income="65000" type="button">65 000</button></div>
+</div>
+<div class="advanced" id="advancedPanel">
+<div class="fields">
+<label class="field wide" for="sourceMode"><span>Z čeho má Úřad práce vycházet</span><span class="control"><select id="sourceMode"><option value="employee">Zaměstnanec · průměrný čistý výdělek</option><option value="osvc">OSVČ · měsíční vyměřovací základ</option><option value="fixed">Nelze stanovit / doložit základ</option></select></span><small id="sourceHelp">U zaměstnance se zadává průměrný měsíční čistý výdělek.</small><em></em></label>
+<label class="field" for="advancedIncome" id="advancedIncomeField"><span id="advancedIncomeLabel">Průměrný měsíční čistý výdělek</span><span class="control"><input id="advancedIncome" inputmode="decimal" value="40 000"/><b>Kč</b></span><small id="advancedIncomeHelp">Částka potvrzená zaměstnavatelem pro ÚP.</small><em id="advancedIncomeError"></em></label>
+<label class="field" for="advancedAge"><span>Věk při podání žádosti</span><span class="control"><input id="advancedAge" inputmode="numeric" value="35"/><b>let</b></span><small>52 let stále spadá do 5 měsíců; od 53 let do 8 měsíců.</small><em id="advancedAgeError"></em></label>
+</div>
+<div class="check-grid">
+<div class="check"><label><input checked="" id="insuranceCheck" type="checkbox"/><span><strong>Alespoň 12 měsíců pojištění / náhradních dob za poslední 2 roky</strong><small>Základní orientační podmínka standardního nároku.</small></span></label></div>
+<div class="check"><label><input id="priorSupportCheck" type="checkbox"/><span><strong>V posledních 2 letech jsem vyčerpal celou podpůrčí dobu</strong><small>Pro nový plný nárok se typicky řeší dalších 9 měsíců pojištění.</small></span></label></div>
+</div>
+<label class="field reset-field" for="resetMonths" hidden="" id="resetWrap"><span>Pojištění získané od vyčerpání celé podpory</span><span class="control"><input id="resetMonths" inputmode="numeric" value="9"/><b>měs.</b></span><small>Existují zákonné výjimky, např. některé zdravotní či organizační důvody skončení.</small><em></em></label>
+</div>
+<button class="reset-btn" id="resetBtn" type="button">Obnovit model</button>
+</form>
+<aside aria-live="polite" class="statement" id="vysledek">
+<div class="statement-line"></div>
+<div class="statement-in">
+<div class="statement-head"><span id="resultPhase">PRVNÍ FÁZE · 80 %</span><b id="sourceBadge">ZAMĚSTNANEC</b></div>
+<div class="statement-primary"><small>První celý měsíc podpory</small><strong id="resultFirst">32 000 Kč</strong><p id="resultExplain">Při základu 40 000 Kč a věku 35 let trvá podpůrčí doba 5 měsíců.</p></div>
+<div class="month-ledger" id="monthLedger"></div>
+<div class="statement-grid">
+<div class="statement-metric"><span>Celkem za celé období</span><strong id="resultTotal">120 000 Kč</strong></div>
+<div class="statement-metric"><span>Délka podpůrčí doby</span><strong id="resultDuration">5 měsíců</strong></div>
+<div class="statement-metric"><span>První pokles částky</span><strong id="resultDrop">3. měsíc</strong></div>
+<div class="statement-metric"><span>Průměr za měsíc</span><strong id="resultAverage">24 000 Kč</strong></div>
+</div>
+<div class="eligibility" id="eligibilityBox"><strong id="eligibilityTitle">Základní podmínka nároku v modelu splněna</strong><br/><span id="eligibilityText">Konečný nárok a potvrzený základ vždy stanoví Úřad práce.</span></div>
+</div>
+</aside>
+</div>
+</div>
+</section>
+<section class="steps">
+<div class="container">
+<div class="steps-head"><div class="section-title"><span class="kicker">02 · Schody podpory</span><h2>Nejde o jednu částku. Příjem klesá po fázích.</h2></div><p>Graf používá váš aktuální výpočet. U vyšších příjmů je vidět i okamžik, kdy procentní výpočet narazí na maximální podporu 38 537 Kč.</p></div>
+<div class="step-board"><div class="cap-line"><span>maximum 38 537 Kč</span></div><div class="step-chart" id="stepChart"></div><div class="step-legend"><span><i></i>80 % fáze</span><span><i></i>50 % fáze</span><span><i></i>40 % fáze</span></div></div>
+</div>
+</section>
+<section class="age-sec">
+<div class="container age-grid">
+<div class="age-copy section-title"><span class="kicker">03 · Věk mění délku</span><h2>Stejný výdělek může znamenat 5, 8 nebo 11 měsíců podpory.</h2><p>Pro rok 2026 se podpůrčí doba odvíjí od věku při podání žádosti. Kalkulačka zároveň prodlužuje první dvě vyšší fáze u lidí nad 52 let.</p></div>
+<div class="age-ruler"><div class="age-track"><i class="age-pin" id="agePin" style="--pin:25%"><b id="agePinLabel">35 let</b></i></div><div class="age-labels"><div><span>do 52 let včetně</span><strong>5 měsíců</strong><small>80 % ×2 · 50 % ×2 · 40 % ×1</small></div><div><span>53–57 let</span><strong>8 měsíců</strong><small>80 % ×3 · 50 % ×3 · 40 % ×2</small></div><div><span>58+ let</span><strong>11 měsíců</strong><small>80 % ×3 · 50 % ×3 · 40 % ×5</small></div></div><div class="age-note"><strong id="ageNoteTitle">Váš scénář: 35 let → 5 měsíců.</strong> <span id="ageNoteText">První pokles nastává ve 3. měsíci.</span></div></div>
+</div>
+</section>
+<section class="cap-sec">
+<div class="container cap-grid">
+<div class="cap-copy section-title"><span class="kicker">04 · Kdy zasáhne maximum</span><h2>38 537 Kč je strop na měsíc, ne další procento.</h2><p>Čím vyšší je předchozí příjem, tím dřív procentní výpočet narazí na maximum. Hranice je jiná pro 80 %, 50 % a 40% fázi.</p></div>
+<div class="cap-board">
+<div class="cap-row"><div class="cap-rate">80 %</div><div class="cap-copyline"><span>Strop začne brzdit při základu zhruba od</span><strong>48 172 Kč</strong></div><div class="cap-result"><span>váš výpočet</span><strong id="cap80Result">32 000 Kč</strong></div></div>
+<div class="cap-row"><div class="cap-rate">50 %</div><div class="cap-copyline"><span>Strop začne brzdit při základu zhruba od</span><strong>77 074 Kč</strong></div><div class="cap-result"><span>váš výpočet</span><strong id="cap50Result">20 000 Kč</strong></div></div>
+<div class="cap-row"><div class="cap-rate">40 %</div><div class="cap-copyline"><span>Strop začne brzdit při základu zhruba od</span><strong>96 343 Kč</strong></div><div class="cap-result"><span>váš výpočet</span><strong id="cap40Result">16 000 Kč</strong></div></div>
+</div>
+</div>
+</section>
+<section class="fixed-sec">
+<div class="container">
+<div class="fixed-head"><div class="section-title"><span class="kicker">05 · Když nelze doložit běžný základ</span><h2>V některých případech se nepoužije procento z výdělku.</h2></div><p>Produkční model umí i zákonný pevný režim. Jde o jiný scénář než zaměstnanec nebo OSVČ s doloženým základem.</p></div>
+<div class="fixed-slips"><article class="slip"><span>První fáze</span><strong>19 269 Kč</strong><small>pevná částka pro první období podpory v modelu 2026</small><em>40 % průměrné mzdy</em></article><article class="slip"><span>Druhá fáze</span><strong>9 635 Kč</strong><small>pevná částka pro další období podpory v modelu 2026</small><em>20 % průměrné mzdy</em></article><article class="slip"><span>Zbývající doba</span><strong>7 226 Kč</strong><small>pevná částka pro závěrečnou fázi podpory v modelu 2026</small><em>15 % průměrné mzdy</em></article></div>
+</div>
+</section>
+<section class="elig-sec">
+<div class="container">
+<div class="section-title"><span class="kicker">06 · Orientační kontrola nároku</span><h2>Výše podpory je jedna věc. Samotný nárok druhá.</h2><p>Přesnější režim proto kontroluje jen dvě časté podmínky, které mohou výsledek zásadně změnit. Nehraje si na kompletní právní rozhodnutí.</p></div>
+<div class="elig-path"><article class="checkpoint"><span>Krok 1</span><strong>12 měsíců pojištění / náhradních dob</strong><p>Standardně se sleduje alespoň 12 měsíců v posledních 2 letech.</p></article><i class="path-arrow"></i><article class="checkpoint"><span>Krok 2 při opakované podpoře</span><strong>Po celé vyčerpané podpoře typicky dalších 9 měsíců</strong><p>Pokud byla předchozí podpůrčí doba vyčerpána celá, řeší se nový plný nárok; zákon obsahuje výjimky.</p></article><i class="path-arrow"></i><article class="checkpoint"><span>Konečné rozhodnutí</span><strong>Úřad práce</strong><p>Potvrdí nárok, rozhodný základ, poměrné platby a individuální situaci.</p></article></div>
+</div>
+</section>
+<section class="method" id="metodika">
+<div class="container method-grid">
+<div class="method-copy section-title"><span class="kicker">07 · Metodika a hranice</span><h2>Co přesně kalkulačka počítá.</h2><p>Model používá pravidla podpory v nezaměstnanosti platná pro rok 2026. U zaměstnance pracuje s průměrným měsíčním čistým výdělkem, u OSVČ s posledním vyměřovacím základem přepočteným na kalendářní měsíc.</p><ul><li>Do 52 let včetně: 5 měsíců, sazby 80 / 80 / 50 / 50 / 40 %.</li><li>53–57 let: 8 měsíců, první 3 měsíce 80 %, další 3 měsíce 50 %, zbytek 40 %.</li><li>58+ let: 11 měsíců se stejnými prvními dvěma tří měsíčními fázemi.</li><li>Maximální měsíční podpora v roce 2026 je 38 537 Kč.</li><li>Pevný režim používá 19 269 / 9 635 / 7 226 Kč.</li></ul></div>
+<aside class="method-note"><strong>Orientační výpočet, ne rozhodnutí Úřadu práce</strong><p>Skutečný nárok, rozhodný výdělek, náhradní doby, opakovaný nárok, poměrná výše za necelý měsíc a další individuální okolnosti potvrzuje Úřad práce. Kalkulačka je určená hlavně k pochopení celého finančního průběhu.</p><div class="badges"><span>25 regresních scénářů</span><span>MPSV / ÚP ověřeno 2026</span><span>výpočet v zařízení</span></div></aside>
+</div>
+</section>
 </main>
-
-<footer class="un83-footer rv-brand-footer"><div class="un83-container un83-footer-grid"><div class="un83-footer-brand"><a href="/" aria-label="RychléVýpočty.cz domů"><img src="/logo-rv-v32-inverse.svg?v=1" width="590" height="96" alt="RychléVýpočty.cz"></a><p>Online kalkulačky s transparentní metodikou, ověřenými parametry a jasně popsanými hranicemi modelu.</p><nav class="un83-socials" aria-label="Sociální sítě RychléVýpočty.cz"><a href="https://www.facebook.com/rychlevypocty" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.6 21v-8h2.7l.4-3h-3.1V8.1c0-.9.3-1.5 1.6-1.5h1.7V4a23 23 0 0 0-2.5-.1c-2.5 0-4.2 1.5-4.2 4.3V10H7.4v3h2.8v8z"/></svg></a><a href="https://www.instagram.com/rychlevypocty/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a></nav></div><div class="un83-footer-col"><h3>Mzdy a práce</h3><a href="/mzdy-a-prace.html">Přehled kategorie</a><a href="/cista-mzda-kalkulacka.html">Čistá mzda</a><a href="/odstupne-kalkulacka.html">Odstupné</a></div><div class="un83-footer-col"><h3>Projekt</h3><a href="/kalkulacky.html">Všechny kalkulačky</a><a href="/jak-pocitame.html">Jak počítáme</a><a href="/data-a-benchmarky.html">Data a benchmarky</a></div><div class="un83-footer-col"><h3>Informace</h3><a href="/o-nas.html">O projektu</a><a href="/podminky-pouziti.html">Podmínky použití</a><a href="/ochrana-osobnich-udaju.html">Ochrana soukromí</a></div></div><div class="un83-container un83-footer-bottom"><span>© 2026 RychléVýpočty.cz · Orientační model podpory; konečný nárok a částku stanoví Úřad práce ČR.</span><strong>Zadat → Spočítat → Pochopit → Rozhodnout</strong></div></footer>
-<script src="/podpora-v-nezamestnanosti-vnext.js?v=20260828-1" defer></script>
-</body></html>
+<footer>
+<div class="container">
+<div class="footer-grid">
+<div class="footer-brand"><img alt="RychléVýpočty.cz" height="96" src="https://rychlevypocty.cz/logo-rv-v32-inverse.svg?v=1" width="590"/><p>Praktické kalkulačky s transparentní metodikou, jasnými hranicemi modelu a výsledkem, který pomáhá udělat další rozhodnutí.</p><div class="socials"><a href="https://www.facebook.com/rychlevypocty">Facebook</a><a href="https://www.instagram.com/rychlevypocty/">Instagram</a></div></div>
+<div class="footer-col"><b>Projekt</b><a href="https://rychlevypocty.cz/o-nas.html">O projektu</a><a href="https://rychlevypocty.cz/jak-pocitame.html">Jak počítáme</a><a href="https://rychlevypocty.cz/data-a-benchmarky.html">Data a benchmarky</a></div>
+<div class="footer-col"><b>Mzdy a práce</b><a href="https://rychlevypocty.cz/cista-mzda-kalkulacka.html">Čistá mzda</a><a href="https://rychlevypocty.cz/dpp-dpc-kalkulacka.html">DPP / DPČ</a><a href="https://rychlevypocty.cz/nemocenska-kalkulacka.html">Nemocenská</a></div>
+</div>
+<div class="footer-bottom"><span>© RychléVýpočty.cz · orientační výpočty</span><span>Zadat → Spočítat → Pochopit → Rozhodnout</span></div>
+</div>
+</footer>
+<script>
+(()=>{
+"use strict";
+const $=id=>document.getElementById(id),$$=s=>[...document.querySelectorAll(s)];
+const CONFIG={max:38537,fixed:[19269,9635,7226]};
+const nf=new Intl.NumberFormat("cs-CZ",{maximumFractionDigits:0});
+const money=v=>nf.format(Math.max(0,Math.ceil((Number.isFinite(v)?v:0)-1e-10)))+" Kč";
+const parse=v=>{const n=Number(String(v??"").replace(/\s/g,"").replace(",","."));return Number.isFinite(n)?n:NaN};
+let mode="basic";
+function duration(age){return age<=52?5:age<=57?8:11}
+function rates(age){const d=duration(age);if(age<=52)return[80,80,50,50,40];return[80,80,80,50,50,50,...Array(d-6).fill(40)]}
+function schedule(age,base,source){const rs=rates(age);if(source==="fixed")return rs.map((_,i)=>i<(age<=52?2:3)?CONFIG.fixed[0]:i<(age<=52?4:6)?CONFIG.fixed[1]:CONFIG.fixed[2]);return rs.map(r=>Math.min(CONFIG.max,Math.ceil(base*r/100-1e-10)))}
+function read(){if(mode==="basic")return{age:parse($("basicAge").value),base:parse($("basicIncome").value),source:"employee",insured:true,prior:false,reset:9};return{age:parse($("advancedAge").value),base:parse($("advancedIncome").value),source:$("sourceMode").value,insured:$("insuranceCheck").checked,prior:$("priorSupportCheck").checked,reset:parse($("resetMonths").value)}}
+function valid(s){let ok=true;["basicIncomeError","basicAgeError","advancedIncomeError","advancedAgeError"].forEach(id=>$(id).textContent="");const checks=mode==="basic"?[["basicIncomeError",s.base,"money"],["basicAgeError",s.age,"age"]]:[["advancedAgeError",s.age,"age"],...(s.source==="fixed"?[]:[["advancedIncomeError",s.base,"money"]])];checks.forEach(([eid,val,type])=>{const bad=!Number.isFinite(val)||(type==="money"?val<0:(val<15||val>100));if(bad){$(eid).textContent=type==="age"?"Zadejte věk 15–100 let.":"Zadejte platnou nezápornou částku.";ok=false}});return ok}
+function eligibility(s){if(!s.insured)return["warn","Nárok podle zadané podmínky není potvrzen","Standardně je potřeba alespoň 12 měsíců pojištění nebo započitatelných náhradních dob v posledních 2 letech."];if(s.prior&&s.reset<9)return["warn","Nová plná podpůrčí doba může být omezená","Po vyčerpání celé podpory se pro nový plný nárok obvykle řeší alespoň 9 dalších měsíců pojištění; existují zákonné výjimky."];return["ok","Základní podmínka nároku v modelu splněna","Konečný nárok, potvrzený základ a skutečné poměrné platby vždy stanoví Úřad práce."]}
+function phaseClass(i,len){const first=len===5?2:3,second=len===5?4:6;return i<first?"":i<second?"mid":"low"}
+function phaseRate(i,len){const first=len===5?2:3,second=len===5?4:6;return i<first?80:i<second?50:40}
+function renderHero(arr,s){const max=Math.max(...arr,1);$("heroMonths").innerHTML=arr.slice(0,5).map((v,i)=>`<div class="hero-month ${phaseClass(i,arr.length)}"><span>M${i+1}</span><b>${money(v)}</b><small>${phaseRate(i,arr.length)} %</small><i style="--h:${Math.max(10,Math.round(v/max*60))}px"></i></div>`).join("");$("heroFirst").textContent=money(arr[0]||0);$("heroTotal").textContent=money(arr.reduce((a,b)=>a+b,0));$("heroDuration").textContent=arr.length+" měsíců";$("heroDrop").textContent=(s.age<=52?3:4)+". měsíc";$("heroBase").textContent=s.source==="fixed"?"pevný zákonný režim":"základ "+money(s.base);$("heroAgeNote").textContent=nf.format(s.age)+" let → "+arr.length+" měsíců"}
+function renderLedger(arr){const max=Math.max(...arr,1);$("monthLedger").innerHTML=arr.map((v,i)=>`<div class="month-row ${phaseClass(i,arr.length)}"><span>${i+1}. měsíc</span><i><b style="width:${Math.round(v/max*100)}%"></b></i><strong>${money(v)}</strong></div>`).join("")}
+function renderStepChart(arr){const max=Math.max(CONFIG.max,...arr,1);$("stepChart").innerHTML=arr.map((v,i)=>`<div class="step-col ${phaseClass(i,arr.length)}"><div class="bar" style="--h:${Math.max(8,v/max*205)}px"><strong>${money(v)}</strong></div><span>${i+1}. měsíc</span><small>${phaseRate(i,arr.length)} %</small></div>`).join("")}
+function render(){
+ const s=read();if(!valid(s))return;const base=s.source==="fixed"?0:s.base,arr=schedule(s.age,base,s.source),total=arr.reduce((a,b)=>a+b,0),avg=total/arr.length,drop=s.age<=52?3:4;
+ $("resultPhase").textContent=s.source==="fixed"?"PEVNÁ PODPORA · BEZ DOLOŽENÉHO ZÁKLADU":"PRVNÍ FÁZE · 80 %";$("sourceBadge").textContent=s.source==="fixed"?"PEVNÝ REŽIM":s.source==="osvc"?"OSVČ":"ZAMĚSTNANEC";
+ $("resultFirst").textContent=money(arr[0]||0);$("resultTotal").textContent=money(total);$("resultDuration").textContent=arr.length+" měsíců";$("resultDrop").textContent=drop+". měsíc";$("resultAverage").textContent=money(avg);$("resultExplain").textContent=s.source==="fixed"?"Model používá zákonné pevné částky pro věk "+nf.format(s.age)+" let.":"Při základu "+money(base)+" a věku "+nf.format(s.age)+" let trvá podpůrčí doba "+arr.length+" měsíců.";
+ const el=eligibility(s),box=$("eligibilityBox");box.className="eligibility"+(el[0]==="warn"?" warn":"");$("eligibilityTitle").textContent=el[1];$("eligibilityText").textContent=el[2];
+ renderHero(arr,s);renderLedger(arr);renderStepChart(arr);
+ const agePin=s.age<=52?Math.max(4,Math.min(41,(s.age-15)/(52-15)*41)):s.age<=57?43+(s.age-52)/5*25:68+Math.min(30,(s.age-57)/(100-57)*30);$("agePin").style.setProperty("--pin",agePin+"%");$("agePinLabel").textContent=nf.format(s.age)+" let";$("ageNoteTitle").textContent="Váš scénář: "+nf.format(s.age)+" let → "+arr.length+" měsíců.";$("ageNoteText").textContent="První pokles nastává ve "+drop+". měsíci.";
+ const calcBase=s.source==="fixed"?0:base;$("cap80Result").textContent=s.source==="fixed"?"pevná částka":money(Math.min(CONFIG.max,Math.ceil(calcBase*.8-1e-10)));$("cap50Result").textContent=s.source==="fixed"?"pevná částka":money(Math.min(CONFIG.max,Math.ceil(calcBase*.5-1e-10)));$("cap40Result").textContent=s.source==="fixed"?"pevná částka":money(Math.min(CONFIG.max,Math.ceil(calcBase*.4-1e-10)));
+ if(mode==="basic")$$("[data-income]").forEach(b=>b.classList.toggle("active",Number(b.dataset.income)===s.base));
+}
+function setMode(next){mode=next==="advanced"?"advanced":"basic";$$("[data-mode]").forEach(b=>{const on=b.dataset.mode===mode;b.classList.toggle("active",on);b.setAttribute("aria-pressed",String(on))});$("basicPanel").style.display=mode==="basic"?"block":"none";$("advancedPanel").classList.toggle("active",mode==="advanced");$("formTitle").textContent=mode==="basic"?"Průměrný čistý výdělek a věk":"Zdroj základu, věk a podmínky nároku";$("formHelp").textContent=mode==="basic"?"U zaměstnance použijte průměrný měsíční čistý výdělek z potvrzení zaměstnavatele, ne jen poslední čistou výplatu.":"Přesnější režim umí zaměstnance, OSVČ i zákonný pevný režim bez doloženého základu.";sourceChanged();render()}
+function sourceChanged(){const source=$("sourceMode").value,fixed=source==="fixed";$("advancedIncomeField").style.display=fixed?"none":"grid";if(source==="employee"){$("advancedIncomeLabel").textContent="Průměrný měsíční čistý výdělek";$("advancedIncomeHelp").textContent="Částka potvrzená zaměstnavatelem pro ÚP.";$("sourceHelp").textContent="U zaměstnance se zadává průměrný měsíční čistý výdělek."}else if(source==="osvc"){$("advancedIncomeLabel").textContent="Měsíční vyměřovací základ OSVČ";$("advancedIncomeHelp").textContent="Poslední vyměřovací základ přepočtený na kalendářní měsíc.";$("sourceHelp").textContent="U OSVČ se vychází z posledního vyměřovacího základu, ne z obratu."}else{$("sourceHelp").textContent="V zákonem vymezených případech model používá pevné částky 19 269 / 9 635 / 7 226 Kč."}}
+$$("[data-mode]").forEach(b=>b.addEventListener("click",()=>setMode(b.dataset.mode)));
+$$("[data-income]").forEach(b=>b.addEventListener("click",()=>{$("basicIncome").value=nf.format(Number(b.dataset.income));render()}));
+document.querySelectorAll("#unemploymentForm input,#unemploymentForm select").forEach(el=>{el.addEventListener("input",render);el.addEventListener("change",render)});
+$("sourceMode").addEventListener("change",()=>{sourceChanged();render()});$("priorSupportCheck").addEventListener("change",()=>{$("resetWrap").hidden=!$("priorSupportCheck").checked;render()});
+$("resetBtn").addEventListener("click",()=>{if(mode==="basic"){$("basicIncome").value="40 000";$("basicAge").value="35"}else{$("advancedIncome").value="40 000";$("advancedAge").value="35";$("sourceMode").value="employee";$("insuranceCheck").checked=true;$("priorSupportCheck").checked=false;$("resetMonths").value="9";$("resetWrap").hidden=true}sourceChanged();render()});
+$("unemploymentForm").addEventListener("submit",e=>e.preventDefault());
+$("menuBtn").addEventListener("click",()=>{const open=$("mobileNav").classList.toggle("open");$("menuBtn").setAttribute("aria-expanded",String(open))});
+window.RV_UN83_TEST={duration,rates,schedule,config:CONFIG};
+setMode("basic");
+})();
+</script>
+</body>
+</html>

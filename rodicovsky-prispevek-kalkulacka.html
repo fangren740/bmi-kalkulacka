@@ -1,88 +1,475 @@
 <!doctype html>
-<!-- RV-VNEXT: status=RELEASE_CANDIDATE | major=2026-08-28 | qa=LOCAL_PASS_PRODUCTION_PENDING | seq=81 -->
+<!-- RV-VNEXT: status=RECOVERY_APPROVED | major=2026-09-06 | qa=PASS | seq=81 -->
 <html lang="cs">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="referrer" content="strict-origin-when-cross-origin">
-<meta name="format-detection" content="telephone=no">
-<title>Rodičovský příspěvek 2026: kolik měsíčně a do kdy | RychléVýpočty.cz</title>
-<meta name="description" content="Naplánujte rodičovský příspěvek 2026. Spočítejte zůstatek, měsíční čerpání, konec rodičáku, limit podle DVZ a částku potřebnou do zvoleného měsíce.">
-<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
-<link rel="canonical" href="https://rychlevypocty.cz/rodicovsky-prispevek-kalkulacka.html">
-<meta property="og:locale" content="cs_CZ"><meta property="og:type" content="website"><meta property="og:site_name" content="RychléVýpočty.cz">
-<meta property="og:title" content="Rodičovský příspěvek 2026"><meta property="og:description" content="Zjistěte, jak dlouho rodičák vydrží, jaká měsíční částka se vejde do limitu a kdy čerpání skončí."><meta property="og:url" content="https://rychlevypocty.cz/rodicovsky-prispevek-kalkulacka.html"><meta property="og:image" content="https://rychlevypocty.cz/og-rv-naklady-dite-v32.jpg">
-<meta name="twitter:card" content="summary_large_image">
-<link rel="icon" type="image/svg+xml" href="/favicon-rv-v32.svg?v=1"><link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2"><link rel="manifest" href="/site.webmanifest?v=2"><meta name="theme-color" content="#071a33">
-<link rel="stylesheet" href="/rodicovsky-vnext.css?v=20260828-1">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Domů","item":"https://rychlevypocty.cz/"},{"@type":"ListItem","position":2,"name":"Rodina a rozpočet","item":"https://rychlevypocty.cz/rodina-a-rozpocet.html"},{"@type":"ListItem","position":3,"name":"Rodičovský příspěvek","item":"https://rychlevypocty.cz/rodicovsky-prispevek-kalkulacka.html"}]}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Rodičovský příspěvek kalkulačka 2026","applicationCategory":"FinanceApplication","operatingSystem":"Web","url":"https://rychlevypocty.cz/rodicovsky-prispevek-kalkulacka.html","description":"Plán čerpání rodičovského příspěvku podle zůstatku, měsíční částky, věku dítěte a limitu podle DVZ."}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Dataset","name":"Kontrolní scénáře rodičovského příspěvku 2026","description":"Kontrolní scénáře pro výpočet zůstatku, délky čerpání a limitu rodičovského příspěvku.","url":"https://rychlevypocty.cz/rodicovsky-prispevek-2026-benchmark.csv","dateModified":"2026-08-28"}</script>
-</head>
-<body class="rp81-page rv-page-calculator rv-brand-v3 rv-brand-v32" data-build="RP81-VNEXT-20260828-1">
-<a class="rp81-skip" href="#kalkulacka">Přejít na kalkulačku</a>
-<header class="rp81-header"><div class="rp81-container rp81-header-inner">
-<a class="rp81-logo" href="/" aria-label="RychléVýpočty.cz – domů"><img src="/logo-rv-v32.svg?v=1" width="590" height="96" alt="RychléVýpočty.cz"></a>
-<nav class="rp81-nav" aria-label="Hlavní navigace"><a href="/kalkulacky.html">Kalkulačky</a><a href="/rodina-a-rozpocet.html" aria-current="page">Rodina</a><a href="/mzdy-a-prace.html">Mzdy</a><a href="/jak-pocitame.html">Jak počítáme</a></nav>
-<a class="rp81-header-cta" href="#kalkulacka">Naplánovat rodičák</a><button class="rp81-menu" type="button" aria-label="Otevřít menu" aria-expanded="false">☰</button>
-</div><nav class="rp81-mobile-nav" aria-label="Mobilní navigace" hidden><a href="/kalkulacky.html">Kalkulačky</a><a href="/rodina-a-rozpocet.html">Rodina</a><a href="/mzdy-a-prace.html">Mzdy</a><a href="/jak-pocitame.html">Jak počítáme</a></nav></header>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<meta content="#071a33" name="theme-color"/>
+<title>Rodičovský příspěvek 2026 – kalkulačka | RychléVýpočty.cz</title>
+<style>
+:root{
+  --navy:#071a33;--navy2:#0d3156;--blue:#1672b8;--blue2:#2d8ed2;--green:#4ed053;--green2:#257e30;
+  --ink:#152b40;--muted:#64798b;--line:#d5e1e9;--soft:#f4f8fa;--soft2:#eaf2f6;--paper:#fff;
+  --amber:#d89a32;--red:#aa3f49;--shadow:0 22px 60px rgba(7,26,51,.10);
+  --shell:min(1240px,calc(100% - 36px));
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:var(--ink);background:#fff;line-height:1.55;overflow-x:hidden}
+a{color:inherit;text-decoration:none}button,input,select{font:inherit}button{cursor:pointer}img{display:block;max-width:100%}
+.container{width:var(--shell);margin:auto}
+:focus-visible{outline:3px solid var(--blue2);outline-offset:3px;border-radius:9px}
+.skip{position:fixed;left:12px;top:-80px;z-index:9999;background:#fff;padding:10px 14px;border-radius:10px;box-shadow:var(--shadow);font-weight:900}.skip:focus{top:12px}
 
+/* HEADER */
+.header{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.header-in{min-height:76px;display:flex;align-items:center;gap:22px}.logo{flex:0 0 224px;width:224px}.logo img{width:100%}
+.nav{display:flex;gap:20px;margin-left:auto;font-size:.9rem;font-weight:780;color:#344e64}.nav a:hover,.nav a[aria-current=page]{color:var(--blue)}
+.header-cta{padding:11px 15px;border-radius:13px;background:var(--navy);color:#fff;font-weight:900}
+.menu{display:none;margin-left:auto;width:46px;height:44px;border:1px solid var(--line);border-radius:12px;background:#fff;padding:10px}.menu span{display:block;height:2px;background:var(--navy);margin:4px}
+.mobile-nav{display:none}.mobile-nav.open{display:flex;position:absolute;left:0;right:0;top:100%;padding:12px 18px;gap:6px;flex-wrap:wrap;background:#fff;border-bottom:1px solid var(--line);box-shadow:0 12px 28px rgba(7,26,51,.08)}.mobile-nav a{padding:9px 11px;border-radius:9px;font-size:.75rem;font-weight:850;color:#40596e}
+
+/* SHARED */
+.kicker{display:inline-flex;align-items:center;gap:9px;font-size:.69rem;font-weight:950;letter-spacing:.12em;text-transform:uppercase;color:var(--green2)}
+.kicker:before{content:"";width:25px;height:3px;border-radius:99px;background:linear-gradient(90deg,var(--navy) 0 34%,var(--blue2) 34% 69%,var(--green) 69%)}
+.section-title h2{margin:8px 0 13px;font-size:clamp(2rem,4vw,3.15rem);line-height:.98;letter-spacing:-.05em;color:var(--navy)}
+.section-title p{color:var(--muted);line-height:1.68;max-width:760px}
+
+/* HERO */
+.hero{position:relative;overflow:hidden;background:linear-gradient(180deg,#fff 0%,#f8fbfd 66%,#edf5f8 100%);border-bottom:1px solid var(--line);padding-bottom:44px}
+.hero:before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(20,93,151,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(20,93,151,.04) 1px,transparent 1px);background-size:58px 58px;mask-image:linear-gradient(90deg,#000 0%,rgba(0,0,0,.55) 48%,transparent 90%)}
+.hero-wm{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.hero-wm .big{position:absolute;right:-28px;top:86px;font-size:12.8rem;font-weight:1000;letter-spacing:-.095em;color:rgba(7,26,51,.023)}
+.hero-wm .amount{position:absolute;left:5%;bottom:-42px;font-size:8rem;font-weight:1000;letter-spacing:-.08em;color:rgba(22,114,184,.025)}
+.hero-wm .circle{position:absolute;border-radius:50%;border:1px solid rgba(22,114,184,.075)}.hero-wm .c1{width:300px;height:300px;right:24%;top:-120px}.hero-wm .c2{width:180px;height:180px;right:29%;top:-58px;border-style:dashed}
+.hero-grid{position:relative;z-index:2;display:grid;grid-template-columns:minmax(0,1fr) minmax(450px,.82fr);gap:50px;align-items:center;padding-top:28px}
+.crumbs{grid-column:1/-1;display:flex;gap:8px;align-items:center;flex-wrap:wrap;color:#657b8d;font-size:.81rem}
+.hero-copy h1{max-width:790px;margin:15px 0 18px;font-size:clamp(3.4rem,5.5vw,5.45rem);line-height:.9;letter-spacing:-.058em;color:var(--navy)}.hero-copy h1 em{font-style:normal;color:var(--blue)}
+.hero-lead{max-width:730px;color:#4f687c;font-size:1.08rem;line-height:1.7}
+.hero-actions{display:flex;gap:11px;flex-wrap:wrap;margin-top:24px}.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 17px;border-radius:14px;font-weight:900}.btn.primary{background:var(--navy);color:#fff;box-shadow:0 12px 28px rgba(7,26,51,.14)}.btn.ghost{background:#fff;border:1px solid #c8d7e2;color:var(--navy)}
+.hero-trust{display:flex;gap:10px 16px;flex-wrap:wrap;margin-top:18px}.hero-trust span{display:flex;align-items:center;gap:8px;color:#536b7f;font-size:.76rem;font-weight:820}.hero-trust span:before{content:"";width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 5px rgba(78,208,83,.11)}
+
+/* HERO: PHYSICAL CALENDAR / ENVELOPE SCENE */
+.family-planner{position:relative;min-height:440px;padding:22px 16px 14px 44px}
+.planner-envelope{position:absolute;left:0;right:46px;bottom:14px;height:235px;border-radius:24px 24px 18px 18px;background:linear-gradient(155deg,#082741,#0d3d62);transform:rotate(-3deg);box-shadow:0 28px 55px rgba(7,26,51,.15)}
+.planner-envelope:before{content:"";position:absolute;inset:0;border-radius:inherit;background:linear-gradient(28deg,transparent 49%,rgba(255,255,255,.06) 50% 51%,transparent 52%),linear-gradient(-28deg,transparent 49%,rgba(255,255,255,.045) 50% 51%,transparent 52%)}
+.planner-envelope:after{content:"350 000";position:absolute;left:23px;bottom:4px;color:rgba(255,255,255,.045);font-size:4.4rem;font-weight:1000;letter-spacing:-.07em}
+.planner-sheet{position:relative;z-index:2;max-width:420px;margin-left:auto;padding:22px 21px 20px;background:#fff;border:1px solid #c9d9e3;border-radius:7px 7px 22px 22px;box-shadow:0 24px 48px rgba(7,26,51,.13);transform:rotate(1.6deg)}
+.planner-sheet:before{content:"";position:absolute;left:-8px;right:-8px;top:42px;height:1px;background:#e2e9ee}
+.planner-sheet:after{content:"";position:absolute;left:0;right:0;top:0;height:5px;background:linear-gradient(90deg,var(--navy) 0 30%,var(--blue2) 30% 68%,var(--green) 68%)}
+.spiral{display:flex;gap:12px;position:absolute;left:24px;top:-10px}.spiral i{display:block;width:11px;height:24px;border:2px solid #60798b;border-radius:7px;background:#f4f7f9}
+.sheet-head{display:flex;justify-content:space-between;gap:14px;align-items:start;padding-top:11px}.sheet-head span{font-size:.61rem;font-weight:950;letter-spacing:.12em;color:#718699;text-transform:uppercase}.sheet-head b{font-size:.63rem;padding:6px 8px;border-radius:9px;background:#eaf5fb;color:#235f88}
+.sheet-main{margin-top:17px;display:grid;grid-template-columns:1fr auto;gap:12px;align-items:end}.sheet-main small{display:block;color:#74889a;font-size:.66rem}.sheet-main strong{display:block;margin-top:3px;color:var(--navy);font-size:2rem;letter-spacing:-.05em}.sheet-main em{font-style:normal;color:var(--green2);font-size:.75rem;font-weight:900;text-align:right}
+.sheet-route{display:grid;grid-template-columns:1fr 38px 1fr;gap:8px;align-items:center;margin-top:15px;padding:13px;border-radius:15px;background:#f5f9fb}.sheet-route div span{display:block;color:#738799;font-size:.61rem}.sheet-route div strong{display:block;margin-top:2px;color:var(--navy);font-size:.9rem}.sheet-route i{height:2px;background:linear-gradient(90deg,var(--blue2),var(--green));position:relative}.sheet-route i:after{content:"";position:absolute;right:0;top:-3px;width:7px;height:7px;border-top:2px solid var(--green);border-right:2px solid var(--green);transform:rotate(45deg)}
+.month-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:5px;margin-top:15px}.month-grid i{height:27px;border-radius:7px;background:#e9f4fb;border:1px solid #cae1ee;color:#256389;display:grid;place-items:center;font-style:normal;font-size:.56rem;font-weight:900}.month-grid i.last{background:#eaf9eb;border-color:#c1e6c3;color:#2f7837}
+.sheet-foot{display:flex;justify-content:space-between;gap:10px;margin-top:13px;padding-top:12px;border-top:1px dashed #cad8e1}.sheet-foot span{font-size:.61rem;color:#718698}.sheet-foot strong{font-size:.7rem;color:var(--navy)}
+.deadline-tag{position:absolute;z-index:3;right:0;top:110px;width:105px;padding:10px 8px;border-radius:12px 12px 0 12px;background:var(--green);color:#173c1d;box-shadow:0 10px 22px rgba(30,112,44,.16);transform:rotate(3deg)}.deadline-tag span{display:block;font-size:.55rem;font-weight:950;letter-spacing:.09em;text-transform:uppercase}.deadline-tag strong{display:block;margin-top:3px;font-size:.77rem}
+.planner-note{position:absolute;z-index:3;left:5px;bottom:48px;width:158px;padding:13px 14px;border-radius:14px;background:#fff;border:1px solid #ccdae4;box-shadow:0 13px 28px rgba(7,26,51,.10);transform:rotate(-4deg)}.planner-note span{display:block;color:#75899a;font-size:.58rem}.planner-note strong{display:block;margin-top:3px;color:var(--navy);font-size:.82rem}.planner-note:after{content:"";position:absolute;right:15px;top:-8px;width:34px;height:15px;background:rgba(78,208,83,.28);transform:rotate(4deg)}
+
+/* PROOF RAIL */
+.proof{background:#071a33;color:#fff}.proof-grid{display:grid;grid-template-columns:repeat(4,1fr)}.proof-grid div{padding:17px 19px}.proof-grid div+div{border-left:1px solid rgba(255,255,255,.11)}.proof-grid span{display:block;color:#81a5c2;font-size:.59rem;font-weight:950;letter-spacing:.1em}.proof-grid strong{display:block;margin-top:4px;font-size:.85rem}.proof-grid small{display:block;margin-top:2px;color:#9fb4c7;font-size:.62rem}
+
+/* CALCULATOR */
+.calc{padding:78px 0 72px;background:#fff}
+.calc-head{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:30px;align-items:end;margin-bottom:25px}.calc-head h2{margin:8px 0 0;font-size:clamp(2.3rem,4vw,3.6rem);line-height:.98;letter-spacing:-.05em;color:var(--navy)}
+.mode{display:flex;gap:5px;padding:4px;border-radius:14px;background:#edf3f6;border:1px solid var(--line)}.mode button{min-width:110px;min-height:42px;border:0;border-radius:10px;background:transparent;color:#5d7386;font-weight:900}.mode button.active{background:var(--navy);color:#fff}
+.workspace{display:grid;grid-template-columns:minmax(0,1fr) minmax(445px,.83fr);gap:23px;align-items:start}
+.form-card{min-width:0;padding:24px;border:1px solid var(--line);border-radius:25px;background:#fff;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.form-card:before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(22,114,184,.022) 1px,transparent 1px),linear-gradient(90deg,rgba(22,114,184,.022) 1px,transparent 1px);background-size:38px 38px;mask-image:linear-gradient(135deg,#000,transparent 76%)}
+.form-card:after{content:"";position:absolute;right:18px;top:0;width:86px;height:4px;background:linear-gradient(90deg,var(--blue2),var(--green));clip-path:polygon(0 0,100% 0,91% 100%,0 100%)}.form-card>*{position:relative;z-index:1}
+.form-top{display:flex;justify-content:space-between;gap:18px;align-items:start;padding-bottom:18px;border-bottom:1px solid var(--line)}.form-top span{font-size:.61rem;color:var(--blue);font-weight:950;letter-spacing:.1em}.form-top strong{display:block;margin-top:2px;color:var(--navy)}.form-top p{margin:4px 0 0;color:var(--muted);font-size:.7rem}.live{display:flex;align-items:center;gap:7px;white-space:nowrap;color:#60778a;font-size:.64rem}.live i{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 5px rgba(78,208,83,.11)}
+.goal{margin-top:18px}.goal-title{display:block;margin-bottom:8px;color:var(--navy);font-size:.77rem;font-weight:900}.goal-buttons{display:grid;grid-template-columns:1fr 1fr;gap:8px}.goal-buttons button{min-height:68px;text-align:left;border:1px solid #cddbe4;border-radius:14px;background:#f8fbfc;padding:11px 12px;color:#526a7e}.goal-buttons button.active{border-color:#9bc4dd;background:#eef7fc;box-shadow:0 0 0 3px rgba(45,142,210,.055)}.goal-buttons strong{display:block;color:var(--navy);font-size:.78rem}.goal-buttons small{display:block;margin-top:3px;font-size:.62rem;line-height:1.35}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-top:18px}.field{min-width:0;display:grid;grid-template-rows:auto 54px minmax(33px,auto) 15px;gap:6px}.field>span:first-child{font-size:.76rem;color:var(--navy);font-weight:900}.control{height:54px;min-width:0;display:flex;align-items:center;border:1px solid #cbd9e3;border-radius:14px;background:#fbfdfe;overflow:hidden}.control:focus-within{border-color:var(--blue2);box-shadow:0 0 0 4px rgba(45,142,210,.08)}.control input,.control select{width:100%;min-width:0;max-width:100%;height:52px;border:0;outline:0;background:transparent;padding:0 12px;color:var(--navy);font-weight:880}.control b{align-self:stretch;min-width:53px;padding:0 9px;display:grid;place-items:center;border-left:1px solid var(--line);background:#f1f6f9;color:#5d7184;font-size:.67rem;white-space:nowrap}.field small{font-size:.64rem;line-height:1.42;color:#748899}.field em{font-style:normal;color:var(--red);font-size:.62rem;font-weight:800}
+.advanced{margin-top:18px;padding:16px;border:1px dashed #bfd0db;border-radius:17px;background:#f8fbfc}.advanced[hidden]{display:none}.advanced strong{color:var(--navy)}.advanced p{margin:4px 0 13px;color:#657a8c;font-size:.69rem}
+.presets{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:14px}.presets span{font-size:.65rem;color:#708496;font-weight:850}.presets button{min-height:34px;padding:0 10px;border:1px solid #cbd9e3;border-radius:10px;background:#fff;color:#526b7f;font-size:.62rem;font-weight:900}.presets button.active{background:#eaf8eb;border-color:#b9ddb9;color:#2e7536}
+
+/* RESULT = BENEFIT CALENDAR SHEET */
+.result-sheet{position:sticky;top:96px;min-width:0;background:#fff;border:1px solid #bfcfda;border-radius:7px 7px 23px 23px;box-shadow:0 25px 55px rgba(7,26,51,.13);overflow:hidden}
+.result-sheet:before{content:"";display:block;height:6px;background:linear-gradient(90deg,var(--navy) 0 31%,var(--blue2) 31% 69%,var(--green) 69%)}
+.result-sheet:after{content:"";position:absolute;right:-22px;bottom:-22px;width:155px;height:155px;border:1px solid rgba(22,114,184,.07);border-radius:50%;box-shadow:0 0 0 24px rgba(22,114,184,.025),0 0 0 48px rgba(22,114,184,.018)}
+.result-inner{position:relative;z-index:1;padding:20px 21px 22px}
+.result-head{display:flex;justify-content:space-between;gap:12px;align-items:start}.result-head span{display:block;color:#6d8294;font-size:.61rem;font-weight:950;letter-spacing:.1em;text-transform:uppercase}.result-badge{padding:7px 9px;border-radius:9px;background:#eaf8eb;color:#2f7437;font-size:.61rem;font-weight:950}.result-badge.warn{background:#fff3de;color:#875d1a}.result-badge.danger{background:#fff0f1;color:#913a43}
+.result-primary{margin-top:16px;padding-bottom:17px;border-bottom:1px solid var(--line)}.result-primary small{display:block;color:#718698;font-size:.68rem}.result-primary strong{display:block;margin-top:3px;color:var(--navy);font-size:2.6rem;line-height:1;letter-spacing:-.055em}.result-primary p{margin:8px 0 0;color:#5f7588;font-size:.76rem;line-height:1.48}
+.calendar-head{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-top:16px}.calendar-head b{color:var(--navy);font-size:.79rem}.calendar-head span{font-size:.62rem;color:#718697}
+.payout-calendar{display:grid;grid-template-columns:repeat(8,1fr);gap:5px;margin-top:9px}.payout-calendar i{height:38px;border-radius:8px;background:#eaf4fa;border:1px solid #cfe0eb;display:grid;place-items:center;align-content:center;font-style:normal;color:#27658d}.payout-calendar i b{font-size:.56rem}.payout-calendar i small{font-size:.48rem;color:#718698}.payout-calendar i.last{background:#eaf9eb;border-color:#c1e5c4;color:#34793b}.payout-calendar i.overflow{background:#fff3df;border-color:#ecd2a8;color:#835b1c}
+.result-metrics{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:13px}.metric{padding:11px 12px;border-radius:13px;background:#f4f8fa}.metric span{display:block;color:#718697;font-size:.59rem}.metric strong{display:block;margin-top:3px;color:#navy;font-size:.9rem}.metric strong{color:var(--navy)}
+.deadline-ruler{margin-top:13px;padding:13px;border-radius:14px;background:#071a33;color:#fff}.ruler-top{display:flex;justify-content:space-between;gap:10px;color:#9fb6ca;font-size:.6rem}.ruler-track{position:relative;height:9px;margin:10px 0 7px;border-radius:999px;background:rgba(255,255,255,.12);overflow:hidden}.ruler-track i{display:block;height:100%;width:var(--coverage);background:linear-gradient(90deg,var(--blue2),var(--green));border-radius:999px}.ruler-bottom{display:flex;justify-content:space-between;gap:10px}.ruler-bottom strong{font-size:.74rem}.ruler-bottom span{font-size:.6rem;color:#a6bdd0}
+.result-note{margin-top:11px;padding:11px 12px;border-radius:12px;background:#eef6fa;color:#345269;font-size:.69rem;line-height:1.45}.result-note.warn{background:#fff4e3;color:#765019}.result-note.danger{background:#fff0f1;color:#843b43}
+
+/* STRATEGIES */
+.strategies{padding:72px 0;background:var(--soft);border-top:1px solid var(--line)}
+.strategy-head{display:flex;justify-content:space-between;gap:28px;align-items:end;margin-bottom:24px}.strategy-head p{max-width:560px;margin:0;color:#60768a;line-height:1.65}
+.strategy-board{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);border-radius:23px;overflow:hidden;background:#fff;box-shadow:0 12px 32px rgba(7,26,51,.05)}
+.strategy{padding:21px;position:relative;min-height:245px;background:#fff}.strategy+.strategy{border-left:1px solid var(--line)}.strategy.middle{background:#f6fbfd}.strategy.fast{background:linear-gradient(180deg,#f5fbf5,#fff)}
+.strategy>span{font-size:.62rem;font-weight:950;letter-spacing:.08em;text-transform:uppercase;color:var(--blue)}.strategy strong.amount{display:block;margin-top:6px;font-size:1.55rem;color:var(--navy);letter-spacing:-.04em}.strategy small{display:block;margin-top:4px;color:#6e8294;line-height:1.42}
+.strategy-months{display:grid;grid-template-columns:repeat(8,1fr);gap:4px;margin-top:15px}.strategy-months i{height:20px;border-radius:5px;background:#e4eef4}.strategy-months i.on{background:#8cc9e9}.strategy.fast .strategy-months i.on{background:#91d695}.strategy-months i.last{background:var(--green)}
+.strategy-foot{display:flex;justify-content:space-between;align-items:center;gap:9px;margin-top:15px;padding-top:12px;border-top:1px solid var(--line)}.strategy-foot span{font-size:.65rem;color:#63788b}.strategy-foot button{min-height:34px;padding:0 10px;border:1px solid #c8d8e2;border-radius:10px;background:#fff;color:var(--navy);font-size:.62rem;font-weight:900}.strategy-foot button:hover{border-color:var(--blue2)}
+
+/* LIMIT */
+.limit-sec{padding:72px 0;background:#fff}
+.limit-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:36px;align-items:start}.limit-copy p{color:#60768a;line-height:1.68}
+.limit-machine{border:1px solid var(--line);border-radius:24px;background:#fff;box-shadow:0 12px 32px rgba(7,26,51,.05);overflow:hidden}
+.machine-top{display:grid;grid-template-columns:1fr 1fr}.machine-top div{padding:17px 19px}.machine-top div+div{border-left:1px solid var(--line);background:#f7fafc}.machine-top span{display:block;color:#718697;font-size:.62rem}.machine-top strong{display:block;margin-top:3px;color:var(--navy);font-size:1.12rem}
+.limit-ruler{padding:24px 20px 20px;border-top:1px solid var(--line)}.limit-ruler-head{display:flex;justify-content:space-between;gap:12px}.limit-ruler-head span{font-size:.65rem;color:#718697}.limit-ruler-head strong{font-size:.78rem;color:var(--navy)}
+.ruler-scale{height:52px;position:relative;margin-top:12px;border-radius:13px;background:linear-gradient(90deg,#eef7fc 0 37%,#edf9ed 37% 100%);border:1px solid #d6e3ea;overflow:hidden}.ruler-scale:before{content:"základní limit";position:absolute;left:12px;top:17px;font-size:.62rem;font-weight:900;color:#2e6588}.ruler-scale:after{content:"vyšší DVZ může posunout maximum";position:absolute;right:12px;top:17px;font-size:.62rem;font-weight:900;color:#37773e}
+.limit-pin{position:absolute;top:-5px;bottom:-5px;width:2px;background:var(--navy);left:var(--pin)}.limit-pin b{position:absolute;top:-21px;left:50%;transform:translateX(-50%);padding:4px 6px;border-radius:7px;background:var(--navy);color:#fff;font-size:.56rem;white-space:nowrap}
+.limit-formula{padding:15px 20px;background:#071a33;color:#fff;display:flex;justify-content:space-between;gap:14px;align-items:center}.limit-formula span{color:#a8bed1;font-size:.64rem}.limit-formula strong{font-size:.78rem}
+
+/* RULES TIMELINE */
+.rules{padding:72px 0;background:var(--soft);border-block:1px solid var(--line)}
+.rule-timeline{margin-top:24px;display:grid;grid-template-columns:1fr 1fr 1fr;border:1px solid var(--line);border-radius:23px;overflow:hidden;background:#fff}
+.rule-era{padding:22px;min-height:210px;position:relative}.rule-era+.rule-era{border-left:1px solid var(--line)}.rule-era:nth-child(2){background:#f8fbfd}.rule-era:nth-child(3){background:#f4fbf4}
+.rule-era>span{font-size:.62rem;color:#647a8c;font-weight:950;letter-spacing:.08em;text-transform:uppercase}.rule-era h3{margin:7px 0 11px;color:var(--navy);font-size:1.22rem}
+.rule-money{display:grid;grid-template-columns:1fr 1fr;gap:7px}.rule-money div{padding:10px;border-radius:11px;background:#f1f5f8}.rule-era:nth-child(2) .rule-money div{background:#edf5fa}.rule-era:nth-child(3) .rule-money div{background:#eaf7eb}.rule-money span{display:block;color:#718697;font-size:.57rem}.rule-money strong{display:block;margin-top:2px;color:#navy;font-size:.83rem}.rule-money strong{color:var(--navy)}
+.rule-era p{margin:12px 0 0;color:#64798c;font-size:.74rem;line-height:1.5}
+
+/* CHANGE CADENCE */
+.cadence{padding:72px 0;background:#fff}
+.cadence-grid{display:grid;grid-template-columns:.78fr 1.22fr;gap:36px;align-items:center}
+.quarter-board{padding:21px;border:1px solid var(--line);border-radius:23px;background:#fff;box-shadow:0 12px 32px rgba(7,26,51,.05)}
+.quarter-head{display:flex;justify-content:space-between;gap:10px;margin-bottom:15px}.quarter-head span{font-size:.62rem;color:#718697;text-transform:uppercase;font-weight:950}.quarter-head b{font-size:.66rem;color:var(--navy)}
+.quarters{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}.quarter{border:1px solid #d4e0e8;border-radius:14px;padding:12px 9px;background:#f8fbfc}.quarter.active{border-color:#a7d4ab;background:#eef9ef}.quarter span{display:block;font-size:.56rem;color:#718697}.quarter strong{display:block;margin-top:4px;color:#navy;font-size:.8rem}.quarter strong{color:var(--navy)}.quarter i{display:block;height:5px;border-radius:99px;background:#d7e5ed;margin-top:9px}.quarter.active i{background:var(--green)}
+.quarter-note{margin-top:14px;padding:12px 13px;border-radius:12px;background:#071a33;color:#fff;font-size:.69rem;line-height:1.45}.quarter-note strong{color:#dff5e1}
+
+/* HANDOFF */
+.handoff{padding:72px 0;background:linear-gradient(180deg,#f6f9fb,#eef5f8);border-top:1px solid var(--line)}
+.handoff-board{display:grid;grid-template-columns:1fr 90px 1fr;gap:15px;align-items:center;margin-top:23px}.handoff-card{padding:21px;border:1px solid var(--line);border-radius:20px;background:#fff}.handoff-card.next{background:#f2faf3}.handoff-card span{display:block;color:#718697;font-size:.62rem}.handoff-card strong{display:block;margin-top:4px;color:var(--navy);font-size:1.18rem}.handoff-card p{margin:6px 0 0;color:#64798b;font-size:.75rem;line-height:1.5}.handoff-arrow{display:grid;place-items:center}.handoff-arrow span{width:50px;height:50px;border-radius:50%;background:#071a33;color:#fff;display:grid;place-items:center;font-weight:950}
+
+/* METHOD + FOOTER */
+.method{padding:72px 0;background:#fff}.method-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:34px}.method-copy p{color:#5f7487;line-height:1.7}.method-copy ul{padding-left:18px;color:#40566a;line-height:1.7}.method-note{padding:22px;border:1px solid var(--line);border-radius:20px;background:#eef6fa}.method-note strong{display:block;color:var(--navy);font-size:1.05rem}.method-note p{color:#5f7487;line-height:1.65}.badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.badges span{padding:7px 9px;border-radius:999px;background:#fff;color:#42647d;border:1px solid #d6e3eb;font-size:.67rem;font-weight:850}
+footer{background:#05162d;color:#d5e2ec;padding:44px 0 25px}.footer-grid{display:grid;grid-template-columns:1.2fr .8fr .8fr;gap:34px}.footer-brand img{width:250px}.footer-brand p{max-width:470px;color:#a8bac9;line-height:1.6}.footer-col b{display:block;color:#fff;margin-bottom:10px}.footer-col a{display:block;color:#b4c6d5;font-size:.85rem;margin:8px 0}.footer-col a:hover{color:#fff}.socials{display:flex;gap:8px;margin-top:14px}.socials a{padding:7px 10px;border:1px solid rgba(255,255,255,.16);border-radius:999px;color:#d7e4ee;font-size:.74rem}.footer-bottom{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:26px;padding-top:17px;border-top:1px solid rgba(255,255,255,.12);font-size:.72rem;color:#91a6b8}
+
+@media(max-width:1120px){
+  .nav,.header-cta{display:none}.menu{display:block}
+  .hero-grid{grid-template-columns:minmax(0,1fr) minmax(390px,.86fr);gap:30px}.hero-copy h1{font-size:clamp(3rem,6vw,4.6rem)}
+  .workspace{grid-template-columns:1fr}.result-sheet{position:relative;top:auto}
+}
+@media(max-width:900px){
+  .hero-grid{grid-template-columns:1fr}.family-planner{max-width:720px}
+  .calc-head{grid-template-columns:1fr}.mode{justify-self:start}
+  .limit-grid,.cadence-grid,.method-grid{grid-template-columns:1fr}
+}
+@media(max-width:700px){
+  :root{--shell:min(100% - 22px,1240px)}
+  .header-in{min-height:62px}.logo{width:205px;flex-basis:205px}.menu{flex:0 0 46px}
+  .hero{padding-bottom:28px}.hero-grid{padding-top:18px;gap:18px}.hero-copy h1{font-size:2.55rem;max-width:11ch;margin:10px 0 14px}.hero-lead{font-size:.94rem;line-height:1.55}.hero-actions{margin-top:17px}.btn{min-height:44px;font-size:.82rem}.hero-trust{margin-top:12px}
+  .hero-wm .big{right:-16px;top:200px;font-size:7rem}.hero-wm .amount{font-size:5rem}
+  .family-planner{min-height:390px;padding:17px 7px 12px 18px}.planner-envelope{right:25px;height:205px}.planner-sheet{max-width:360px;padding:18px 16px}.sheet-main strong{font-size:1.6rem}.month-grid{grid-template-columns:repeat(8,1fr);gap:4px}.month-grid i{height:24px}.deadline-tag{right:0;width:94px;top:95px}.planner-note{left:0;bottom:37px;width:135px}
+  .proof-grid{grid-template-columns:1fr 1fr}.proof-grid div:nth-child(3){border-left:0;border-top:1px solid rgba(255,255,255,.11)}.proof-grid div:nth-child(4){border-top:1px solid rgba(255,255,255,.11)}
+  .calc{padding:50px 0}.calc-head h2{font-size:2rem}.form-card{padding:17px;border-radius:20px}.form-top{display:block}.live{margin-top:8px}.fields{grid-template-columns:1fr}.goal-buttons{grid-template-columns:1fr}.field{grid-template-rows:auto 54px auto 15px}
+  .result-inner{padding:17px}.result-primary strong{font-size:2.15rem}.result-metrics{grid-template-columns:1fr}.payout-calendar{grid-template-columns:repeat(6,1fr)}
+  .strategies,.limit-sec,.rules,.cadence,.handoff,.method{padding:50px 0}.strategy-head{display:block}.strategy-head p{margin-top:10px}.strategy-board{grid-template-columns:1fr}.strategy+.strategy{border-left:0;border-top:1px solid var(--line)}
+  .rule-timeline{grid-template-columns:1fr}.rule-era+.rule-era{border-left:0;border-top:1px solid var(--line)}
+  .quarters{grid-template-columns:1fr 1fr}.handoff-board{grid-template-columns:1fr}.handoff-arrow{height:42px}.handoff-arrow span{transform:rotate(90deg)}
+  .footer-grid{grid-template-columns:1fr}.footer-brand img{width:235px}
+}
+</style>
+<meta content="index,follow,max-image-preview:large" name="robots"/><meta content="Naplánujte rodičovský příspěvek 2026: měsíční tempo, délku čerpání, poslední platbu a termín dočerpání." name="description"/><meta content="cs_CZ" property="og:locale"/><meta content="website" property="og:type"/><meta content="RychléVýpočty.cz" property="og:site_name"/><meta content="Rodičovský příspěvek 2026 – kalkulačka" property="og:title"/><meta content="Naplánujte rodičovský příspěvek 2026: měsíční tempo, délku čerpání, poslední platbu a termín dočerpání." property="og:description"/><meta content="https://rychlevypocty.cz/rodicovsky-prispevek-kalkulacka.html" property="og:url"/><meta content="https://rychlevypocty.cz/og-image-rv-v31.jpg" property="og:image"/><meta content="summary_large_image" name="twitter:card"/><meta content="Rodičovský příspěvek 2026 – kalkulačka" name="twitter:title"/><meta content="Naplánujte rodičovský příspěvek 2026: měsíční tempo, délku čerpání, poslední platbu a termín dočerpání." name="twitter:description"/><meta content="https://rychlevypocty.cz/og-image-rv-v31.jpg" name="twitter:image"/><link href="https://rychlevypocty.cz/rodicovsky-prispevek-kalkulacka.html" rel="canonical"/><link href="/favicon.ico?v=2" rel="icon" sizes="any"/><link href="/favicon-rv-v32.svg?v=1" rel="icon" type="image/svg+xml"/><link href="/apple-touch-icon.png?v=2" rel="apple-touch-icon"/><link href="/site.webmanifest?v=2" rel="manifest"/><script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"RychléVýpočty.cz","item":"https://rychlevypocty.cz/"},{"@type":"ListItem","position":2,"name":"Rodina a rozpočet","item":"https://rychlevypocty.cz/rodina-a-rozpocet.html"},{"@type":"ListItem","position":3,"name":"Rozdělte rodičák do měsíců, které vám dávají smysl.","item":"https://rychlevypocty.cz/rodicovsky-prispevek-kalkulacka.html"}]}</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Rodičovský příspěvek 2026 – kalkulačka","applicationCategory":"FinanceApplication","operatingSystem":"Any","url":"https://rychlevypocty.cz/rodicovsky-prispevek-kalkulacka.html","description":"Naplánujte rodičovský příspěvek 2026: měsíční tempo, délku čerpání, poslední platbu a termín dočerpání.","isAccessibleForFree":true}</script></head>
+<body>
+<a class="skip" href="#kalkulacka">Přeskočit na kalkulačku</a>
+<header class="header">
+<div class="container header-in">
+<a aria-label="RychléVýpočty.cz domů" class="logo" href="https://rychlevypocty.cz/"><img alt="RychléVýpočty.cz" height="96" src="https://rychlevypocty.cz/logo-rv-v32.svg?v=1" width="590"/></a>
+<nav aria-label="Hlavní navigace" class="nav"><a href="https://rychlevypocty.cz/kalkulacky.html">Všechny kalkulačky</a><a aria-current="page" href="https://rychlevypocty.cz/rodina-a-rozpocet.html">Rodina</a><a href="https://rychlevypocty.cz/mzdy-a-prace.html">Mzdy</a><a href="https://rychlevypocty.cz/jak-pocitame.html">Jak počítáme</a><a href="https://rychlevypocty.cz/o-nas.html">O projektu</a></nav>
+<a class="header-cta" href="#kalkulacka">Naplánovat rodičák</a>
+<button aria-controls="mobileNav" aria-expanded="false" aria-label="Otevřít menu" class="menu" id="menuBtn" type="button"><span></span><span></span><span></span></button>
+</div>
+<nav aria-label="Mobilní navigace" class="mobile-nav" id="mobileNav"><a href="https://rychlevypocty.cz/kalkulacky.html">Všechny kalkulačky</a><a href="https://rychlevypocty.cz/rodina-a-rozpocet.html">Rodina</a><a href="https://rychlevypocty.cz/jak-pocitame.html">Jak počítáme</a><a href="https://rychlevypocty.cz/o-nas.html">O projektu</a></nav>
+</header>
 <main>
-<section class="rp81-hero rv-identity-hero"><div class="rp81-container rp81-hero-grid">
-<div class="rp81-hero-copy"><nav class="rp81-breadcrumbs" aria-label="Drobečková navigace"><a href="/">Domů</a><span>›</span><a href="/rodina-a-rozpocet.html">Rodina a rozpočet</a><span>›</span><strong>Rodičovský příspěvek 2026</strong></nav>
-<p class="rp81-eyebrow">RODIČOVSKÝ PŘÍSPĚVEK · PLÁN 2026</p><h1>Jak nastavit rodičák, aby skončil ve správný čas?</h1><p class="rp81-lead">Zadejte, kolik už jste vyčerpali a jakou částku chcete měsíčně. Uvidíte, kolik měsíců rodičák vydrží, kdy skončí a zda se plán vejde do vašeho měsíčního limitu i věku dítěte.</p>
-<div class="rp81-hero-actions"><a class="rp81-btn rp81-btn-primary" href="#kalkulacka">Spočítat plán čerpání</a><a class="rp81-btn rp81-btn-ghost" href="#pravidla">Jaké limity platí</a></div>
-<div class="rp81-trust"><span>350 000 Kč pro dítě narozené od 2024</span><span>15 000 Kč bez vyššího DVZ</span><span>změna částky po 3 měsících</span></div></div>
-<aside class="rp81-envelope" aria-label="Ukázka plánu čerpání rodičovského příspěvku"><div class="rp81-envelope-head"><span>RODINNÝ BALÍK</span><b>MODEL 2026</b></div>
-<div class="rp81-pool"><div><small>Celkový nárok</small><strong id="heroTotal">350 000 Kč</strong></div><div class="rp81-pool-track"><i id="heroUsedBar"></i><span></span></div><div class="rp81-pool-split"><span><b id="heroUsed">0 Kč</b> vyčerpáno</span><span><b id="heroRemaining">350 000 Kč</b> zbývá</span></div></div>
-<div class="rp81-envelope-route"><article><small>Měsíčně</small><strong id="heroMonthly">15 000 Kč</strong></article><i>→</i><article><small>Doba čerpání</small><strong id="heroMonths">24 měsíců</strong></article><i>→</i><article><small>Konec plánu</small><strong id="heroEnd">—</strong></article></div>
-<p id="heroStatus">Výchozí plán se vejde do zákonné lhůty.</p></aside>
-</div></section>
-
-<section class="rp81-facts"><div class="rp81-container"><article><span>Dítě od 1. 1. 2024</span><strong>350 000 Kč</strong><small>nejdéle do 3 let věku</small></article><article><span>Bez / nízký DVZ</span><strong>15 000 Kč</strong><small>měsíční maximum pro jedno dítě</small></article><article><span>Vícerčata od 2026</span><strong>700 000 Kč</strong><small>a základní limit 30 000 Kč</small></article><article><span>Změna volby</span><strong>1× za 3 měsíce</strong><small>výši lze průběžně upravovat</small></article></div></section>
-
-<section class="rp81-calc-section" id="kalkulacka"><div class="rp81-container"><div class="rp81-calc-head"><div><span class="rp81-micro">PLÁN ČERPÁNÍ</span><h2>Nejdřív zůstatek a tempo. Pak teprve detaily.</h2><p>Základní režim počítá s běžným limitem bez vyššího DVZ. Přesnější režim přidá váš DVZ a vlastní měsíc, od kterého plán začíná.</p></div><div class="rp81-mode" role="tablist" aria-label="Režim kalkulačky"><button type="button" role="tab" aria-selected="true" aria-controls="rp81BasicPanel" id="rp81BasicTab" class="is-active" data-mode="basic" tabindex="0">Základní</button><button type="button" role="tab" aria-selected="false" aria-controls="rp81AdvancedPanel" id="rp81AdvancedTab" data-mode="advanced" tabindex="-1">Přesnější</button></div></div>
-<div class="rp81-workspace">
-<form class="rp81-form" id="parentalForm" novalidate>
-<div class="rp81-form-top"><div><span>CO ZADAT</span><h3>Údaje, které skutečně mění délku čerpání</h3><p id="modeHelp">Pro základní plán stačí datum narození, počet dětí, již vyčerpaná částka a vaše měsíční tempo.</p></div><span class="rp81-live"><i></i> živý přepočet</span></div>
-<div class="rp81-goal"><span>Co chcete zjistit?</span><div role="group" aria-label="Cíl výpočtu"><button type="button" class="is-active" data-goal="duration" aria-pressed="true">Jak dlouho vydrží částka</button><button type="button" data-goal="target" aria-pressed="false">Kolik čerpat do cíle</button></div></div>
-<div id="rp81BasicPanel" role="tabpanel" aria-labelledby="rp81BasicTab"><div class="rp81-fields">
-<label class="rp81-field" for="birthDate"><span>Datum narození nejmladšího dítěte</span><span class="rp81-control"><input id="birthDate" type="date" min="2020-01-01" max="2026-12-31" value="2026-05-01"></span><small>Podle data určíme celkový nárok a věkovou hranici.</small><em id="birthDateError"></em></label>
-<label class="rp81-field" for="childrenType"><span>Jedno dítě nebo vícerčata</span><span class="rp81-control rp81-select"><select id="childrenType"><option value="single">Jedno dítě</option><option value="multiple">Dvojčata / vícerčata</option></select></span><small>U vícerčat se celkový balík i měsíční limit liší.</small><em></em></label>
-<label class="rp81-field" for="alreadyUsed"><span>Kolik už bylo vyčerpáno</span><span class="rp81-control"><input id="alreadyUsed" inputmode="decimal" value="0" autocomplete="off"><b>Kč</b></span><small>Najdete v přehledu dávky nebo posledním rozhodnutí.</small><em id="alreadyUsedError"></em></label>
-<label class="rp81-field rp81-duration-field" for="monthlyAmount"><span>Kolik chcete čerpat měsíčně</span><span class="rp81-control"><input id="monthlyAmount" inputmode="decimal" value="15 000" autocomplete="off"><b>Kč</b></span><small>Částka může být nižší než maximum; poslední platba bývá menší.</small><em id="monthlyAmountError"></em></label>
-<label class="rp81-field rp81-target-field" for="targetMonth" hidden><span>Do kterého měsíce chcete dočerpat</span><span class="rp81-control"><input id="targetMonth" type="month" value="2028-07"></span><small>Kalkulačka dopočítá potřebnou měsíční částku.</small><em id="targetMonthError"></em></label>
-</div></div>
-<div id="rp81AdvancedPanel" role="tabpanel" aria-labelledby="rp81AdvancedTab" hidden><div class="rp81-fields rp81-advanced-fields">
-<label class="rp81-field" for="dvz"><span>Denní vyměřovací základ (DVZ)</span><span class="rp81-control"><input id="dvz" inputmode="decimal" value="0" autocomplete="off"><b>Kč</b></span><small>Neznáte-li ho, nechte 0. Pro limit lze použít vyšší DVZ z obou rodičů.</small><em id="dvzError"></em></label>
-<label class="rp81-field" for="startMonth"><span>Měsíc začátku tohoto plánu</span><span class="rp81-control"><input id="startMonth" type="month" value="2026-08"></span><small>Vhodné při návaznosti po PPM nebo plánované změně částky.</small><em id="startMonthError"></em></label>
-</div></div>
-<div class="rp81-presets"><span>Rychlé tempo</span><button type="button" data-amount="10000">10 000 Kč</button><button type="button" class="is-active" data-amount="15000">15 000 Kč</button><button type="button" data-amount="20000">20 000 Kč</button><button type="button" data-amount="30000">30 000 Kč</button></div>
-<button class="rp81-submit" type="submit">Přepočítat rodičák</button><p class="rp81-form-note">Výsledek je plánovací model. Skutečný nárok, DVZ, dostupné maximum a administrativní termín potvrzuje Úřad práce / Jenda.</p>
+<section class="hero">
+<div aria-hidden="true" class="hero-wm"><span class="big">RODIČÁK</span><span class="amount">350 000</span><i class="circle c1"></i><i class="circle c2"></i></div>
+<div class="container hero-grid">
+<nav aria-label="Drobečková navigace" class="crumbs"><a href="https://rychlevypocty.cz/">Domů</a><span>›</span><a href="https://rychlevypocty.cz/rodina-a-rozpocet.html">Rodina a rozpočet</a><span>›</span><strong>Rodičovský příspěvek 2026</strong></nav>
+<div class="hero-copy">
+<span class="kicker">Rodičovský příspěvek · plán čerpání 2026</span>
+<h1>Rozdělte rodičák do měsíců, které <em>vám dávají smysl.</em></h1>
+<p class="hero-lead">Rodičovský příspěvek je konečný balík peněz. Zadejte, kolik už bylo vyčerpáno a jaké měsíční tempo chcete. Uvidíte poslední platbu, měsíc konce i to, zda se plán vejde do vašeho měsíčního limitu a věkové hranice dítěte.</p>
+<div class="hero-actions"><a class="btn primary" href="#kalkulacka">Naplánovat čerpání</a><a class="btn ghost" href="#pravidla">Jaké limity platí</a></div>
+<div class="hero-trust"><span>350 / 700 tis. podle situace</span><span>měsíční limit podle DVZ</span><span>25 regresních scénářů</span></div>
+</div>
+<aside aria-label="Ukázkový výplatní kalendář rodičovského příspěvku" class="family-planner">
+<div aria-hidden="true" class="planner-envelope"></div>
+<div class="planner-sheet">
+<div aria-hidden="true" class="spiral"><i></i><i></i><i></i><i></i><i></i></div>
+<div class="sheet-head"><span>Výplatní kalendář</span><b>MODEL 2026</b></div>
+<div class="sheet-main"><div><small>Zbývá rozdělit</small><strong id="heroRemaining">350 000 Kč</strong></div><em id="heroMonthly">15 000 Kč / měs.</em></div>
+<div class="sheet-route"><div><span>Začátek plánu</span><strong id="heroStart">září 2026</strong></div><i></i><div><span>Poslední platba</span><strong id="heroEnd">srpen 2028</strong></div></div>
+<div aria-hidden="true" class="month-grid" id="heroMonths"></div>
+<div class="sheet-foot"><span id="heroMonthCount">24 měsíců</span><strong id="heroLast">poslední 5 000 Kč</strong></div>
+</div>
+<div class="deadline-tag"><span>Věková hranice</span><strong id="heroDeadline">květen 2029</strong></div>
+<div class="planner-note"><span>Celkový nárok</span><strong id="heroTotal">350 000 Kč</strong></div>
+</aside>
+</div>
+</section>
+<section aria-label="Jak kalkulačka funguje" class="proof">
+<div class="container proof-grid">
+<div><span>01 · BALÍK</span><strong>Určíme celkový nárok</strong><small>rok narození + jedno dítě / vícerčata</small></div>
+<div><span>02 · ZŮSTATEK</span><strong>Odečteme už vyčerpané</strong><small>nic nepřidáváme automaticky</small></div>
+<div><span>03 · TEMPO</span><strong>Nastavíte měsíční částku</strong><small>nebo cílový měsíc dočerpání</small></div>
+<div><span>04 · KALENDÁŘ</span><strong>Uvidíte konec a poslední platbu</strong><small>včetně limitu a věkové hranice</small></div>
+</div>
+</section>
+<section class="calc" id="kalkulacka">
+<div class="container">
+<div class="calc-head">
+<div><span class="kicker">01 · Váš plán</span><h2>Kolik zbývá a jak rychle chcete čerpat?</h2></div>
+<div aria-label="Režim kalkulačky" class="mode" role="group"><button aria-pressed="true" class="active" data-mode="basic" type="button">Základní</button><button aria-pressed="false" data-mode="advanced" type="button">Přesnější</button></div>
+</div>
+<div class="workspace">
+<form class="form-card" id="parentalForm" novalidate="">
+<div class="form-top"><div><span>CO ZADAT</span><strong id="formTitle">Datum narození, zůstatek a měsíční tempo</strong><p id="formHelp">Základní režim používá zákonné minimum měsíčního limitu bez vyššího DVZ.</p></div><span class="live"><i></i> živý přepočet</span></div>
+<div class="goal">
+<span class="goal-title">Co chcete zjistit?</span>
+<div aria-label="Cíl výpočtu" class="goal-buttons" role="group">
+<button aria-pressed="true" class="active" data-goal="duration" type="button"><strong>Jak dlouho vydrží moje částka</strong><small>Zadám měsíční čerpání a zjistím konec.</small></button>
+<button aria-pressed="false" data-goal="target" type="button"><strong>Kolik čerpat do vybraného měsíce</strong><small>Zadám konec a dopočítám potřebné tempo.</small></button>
+</div>
+</div>
+<div class="fields">
+<label class="field" for="birthDate"><span>Datum narození nejmladšího dítěte</span><span class="control"><input id="birthDate" max="2026-12-31" min="2020-01-01" type="date" value="2026-05-01"/></span><small>Podle data určíme celkový balík a věkovou hranici.</small><em id="birthDateError"></em></label>
+<label class="field" for="childrenType"><span>Jedno dítě nebo vícerčata</span><span class="control"><select id="childrenType"><option value="single">Jedno dítě</option><option value="multiple">Dvojčata / vícerčata</option></select></span><small>U vícerčat se balík i základní měsíční limit liší.</small><em></em></label>
+<label class="field" for="alreadyUsed"><span>Kolik už bylo vyčerpáno</span><span class="control"><input autocomplete="off" id="alreadyUsed" inputmode="decimal" value="0"/><b>Kč</b></span><small>Částka z dosavadního čerpání.</small><em id="alreadyUsedError"></em></label>
+<label class="field duration-field" for="monthlyAmount"><span>Kolik chcete čerpat měsíčně</span><span class="control"><input autocomplete="off" id="monthlyAmount" inputmode="decimal" value="15 000"/><b>Kč</b></span><small>Poslední platba může být nižší než běžné tempo.</small><em id="monthlyAmountError"></em></label>
+<label class="field target-field" for="targetMonth" hidden=""><span>Do kterého měsíce chcete dočerpat</span><span class="control"><input id="targetMonth" type="month" value="2028-08"/></span><small>Dopočítáme potřebnou měsíční částku.</small><em id="targetMonthError"></em></label>
+</div>
+<div class="advanced" hidden="" id="advancedPanel">
+<strong>Přesnější měsíční limit a začátek plánu</strong>
+<p>Pokud znáte DVZ, lze orientačně spočítat vyšší měsíční maximum. Start plánu můžete posunout například po skončení PPM nebo po plánované změně částky.</p>
+<div class="fields" style="margin-top:0">
+<label class="field" for="dvz"><span>Denní vyměřovací základ (DVZ)</span><span class="control"><input id="dvz" inputmode="decimal" value="0"/><b>Kč</b></span><small>Neznáte-li DVZ, nechte 0.</small><em id="dvzError"></em></label>
+<label class="field" for="startMonth"><span>Měsíc začátku tohoto plánu</span><span class="control"><input id="startMonth" type="month" value="2026-09"/></span><small>Nemění celkový balík, ale mění dostupný čas.</small><em id="startMonthError"></em></label>
+</div>
+</div>
+<div class="presets"><span>Rychlé tempo</span><button data-amount="10000" type="button">10 000 Kč</button><button class="active" data-amount="15000" type="button">15 000 Kč</button><button data-amount="20000" type="button">20 000 Kč</button><button data-amount="30000" type="button">30 000 Kč</button></div>
 </form>
-
-<aside class="rp81-result rv-brand-result" id="vysledek" aria-live="polite"><div class="rp81-result-head"><div><span id="resultRule">DÍTĚ 2026 · 350 000 KČ</span><strong>Plán rodičovského příspěvku</strong></div><b id="resultBadge">V LIMITU</b></div>
-<div class="rp81-result-main"><span id="primaryLabel">Zbývá vyčerpat</span><output id="primaryResult">350 000 Kč</output><p id="resultSentence">Při 15 000 Kč měsíčně vychází přibližně 24 plateb.</p></div>
-<div class="rp81-runway"><div class="rp81-runway-head"><span id="runwayStart">srpen 2026</span><strong id="runwayEnd">červenec 2028</strong><span id="runwayDeadline">limit: květen 2029</span></div><div class="rp81-runway-track"><i id="runwayFill"></i><b id="deadlinePin"></b></div><p id="runwayText">Plán končí před věkovou hranicí dítěte.</p></div>
-<div class="rp81-result-grid"><article><span>Měsíční čerpání</span><strong id="monthlyResult">15 000 Kč</strong></article><article><span>Doba čerpání</span><strong id="monthsResult">24 měsíců</strong></article><article><span>Měsíční maximum</span><strong id="limitResult">15 000 Kč</strong></article><article><span>Poslední platba</span><strong id="lastPaymentResult">5 000 Kč</strong></article></div>
-<div class="rp81-result-disclaimer"><strong>Důležité:</strong> Kalkulačka plánuje čerpání, ale nerozhoduje o nároku. U příspěvku záleží na skutečném zůstatku, datu narození nejmladšího dítěte, doloženém DVZ a aktuálním rozhodnutí Úřadu práce.</div></aside>
-</div></div></section>
-
-<section class="rp81-options"><div class="rp81-container"><div class="rp81-section-head"><span class="rp81-micro">TŘI TEMPA ČERPÁNÍ</span><h2>Stejný zůstatek může sloužit úplně jinému rodinnému plánu.</h2><p>Nejde o to vybrat nejvyšší částku. Důležité je, kdy má rodičák skončit a co v rozpočtu naváže potom.</p></div><div class="rp81-option-grid" id="optionGrid"><article><span>DO ZÁKONNÉHO KONCE</span><strong id="optionDeadlineAmount">10 295 Kč / měs.</strong><p id="optionDeadlineText">Orientačně do května 2029; využívá téměř celý dostupný čas.</p></article><article class="is-main"><span>VYROVNANĚ</span><strong id="optionBalancedAmount">14 584 Kč / měs.</strong><p id="optionBalancedText">Přibližně 24 měsíců do července 2028.</p></article><article><span>RYCHLEJI</span><strong id="optionFastAmount">15 000 Kč / měs.</strong><p id="optionFastText">Maximum bez vyššího DVZ; přibližně 24 plateb.</p></article></div></div></section>
-
-<section class="rp81-rules" id="pravidla"><div class="rp81-container"><div class="rp81-section-head"><span class="rp81-micro">KTERÝ BALÍK PLATÍ</span><h2>Datum narození dítěte mění celkovou částku i konečný věk.</h2></div><div class="rp81-rule-timeline"><article><span>do 31. 12. 2023</span><strong>300 000 Kč</strong><p>Jedno dítě; u vícerčat 450 000 Kč. Čerpání nejdéle do 4 let věku dítěte.</p></article><article><span>1. 1. 2024 – 31. 12. 2025</span><strong>350 000 Kč</strong><p>Jedno dítě; u vícerčat 525 000 Kč. Čerpání nejdéle do 3 let věku dítěte.</p></article><article class="is-current"><span>od 1. 1. 2026</span><strong>350 000 Kč</strong><p>Jedno dítě; u současně narozených vícerčat 700 000 Kč. Čerpání nejdéle do 3 let.</p></article></div><div class="rp81-limit-note"><div><span>Měsíční maximum od roku 2026</span><h3>15 000 Kč bez vyššího DVZ. S vyšším DVZ může být strop výrazně výš.</h3><p>Pro jedno dítě vychází maximum jako vyšší z částek 15 000 Kč a 70 % třicetinásobku DVZ. U vícerčat je základní limit 30 000 Kč a při vyšším DVZ se používá dvojnásobná hodnota.</p></div><div class="rp81-limit-formula"><code>1 dítě: max(15 000; 0,70 × 30 × DVZ)</code><code>vícerčata: max(30 000; 2 × 0,70 × 30 × DVZ)</code></div></div></div></section>
-
-<section class="rp81-actions"><div class="rp81-container rp81-actions-grid"><div><span class="rp81-micro">CO S VÝSLEDKEM DÁL</span><h2>Rodičák je jen jedna část rodinného cashflow.</h2><p id="actionIntro">Až znáte měsíc konce, zkontrolujte si, co bude příjem domácnosti nahrazovat potom.</p></div><div class="rp81-action-list"><a href="/materska-kalkulacka.html"><b>01</b><span><strong>Návaznost po PPM</strong><small>Porovnejte konec mateřské s měsícem, od kterého chcete rodičák čerpat.</small></span></a><a href="/kalkulacka-rozpoctu-domacnosti.html"><b>02</b><span><strong>Rozpočet domácnosti</strong><small>Ověřte, jestli zvolená měsíční částka pokryje běžné výdaje.</small></span></a><a href="/kalkulacka-financni-rezervy.html"><b>03</b><span><strong>Finanční rezerva</strong><small>Pokud chcete čerpat rychleji, zkontrolujte období po poslední platbě.</small></span></a></div></div></section>
-
-<section class="rp81-mistakes"><div class="rp81-container"><div class="rp81-section-head"><span class="rp81-micro">NEJČASTĚJŠÍ CHYBY</span><h2>Čtyři věci, které umí plán rodičáku posunout o měsíce.</h2></div><div class="rp81-mistake-grid"><article><b>01</b><h3>Počítat s celými 350 000 Kč</h3><p>Pokud už část dávky byla vyplacena, plánujte vždy ze skutečného zůstatku, ne z původního balíku.</p></article><article><b>02</b><h3>Ignorovat měsíční limit</h3><p>Požadovaná částka může matematicky vycházet, ale bez dostatečného DVZ nemusí být dostupná.</p></article><article><b>03</b><h3>Mířit přesně na 3. narozeniny</h3><p>Nechávejte rezervu. Administrativní změny a skutečný měsíc výplaty nejsou totéž co jednoduchý kalendářní model.</p></article><article><b>04</b><h3>Zapomenout na změnu po 3 měsících</h3><p>Výši lze měnit, ale ne libovolně každý měsíc. Při dvoufázovém rodinném plánu myslete na předstih.</p></article></div></div></section>
-
-<section class="rp81-method" id="metodika"><div class="rp81-container rp81-method-grid"><div><span class="rp81-micro">METODIKA 2026</span><h2>Jak plán počítáme a co z něj nelze vyčíst.</h2><p>Kalkulačka nejprve podle data narození a počtu současně narozených dětí určí celkový balík a věkovou hranici. Od celku odečte již vyčerpanou částku. Potom porovná zvolenou měsíční částku s maximem podle DVZ a spočítá počet plateb a orientační měsíc poslední výplaty.</p><div class="rp81-formulas"><code>zůstatek = celkový nárok − již vyčerpáno</code><code>doba = zaokrouhlení nahoru (zůstatek / měsíční částka)</code><code>částka do cíle = zaokrouhlení nahoru (zůstatek / dostupné měsíce)</code><code>limit = max(15 000; 0,70 × 30 × DVZ)</code></div><div class="rp81-method-note"><strong>Důležité omezení:</strong> Jde o orientační rozpočtový model. Neřeší doplatek mezi PPM a rodičovským příspěvkem v měsíci narození, zahraniční koordinaci, individuální rozhodnutí ÚP, přesné datum vzniku/zániku nároku ani jednorázové dočerpání při narození dalšího dítěte. Věkový deadline zobrazuje jako plánovací měsíc, nikoli právní rozhodnutí.</div></div><aside><h3>Ověřeno z primárních zdrojů</h3><a href="https://mpsv.gov.cz/up-cz/rodicovsky-prispevek" target="_blank" rel="noopener noreferrer">Úřad práce / MPSV – rodičovský příspěvek</a><a href="https://mpsv.gov.cz/rodicovsky-prispevek-1" target="_blank" rel="noopener noreferrer">MPSV – podmínky nároku a čerpání</a><a href="https://mpsv.gov.cz/podpora-rodicovstvi" target="_blank" rel="noopener noreferrer">MPSV – přehled podle data narození</a><dl><div><dt>Kontrola metodiky</dt><dd>28. 8. 2026</dd></div><div><dt>Základní limit</dt><dd>15 000 / 30 000 Kč</dd></div><div><dt>Změna výše</dt><dd>jednou za 3 měsíce</dd></div></dl></aside></div></section>
-
-<section class="rp81-faq"><div class="rp81-container"><div class="rp81-section-head"><span class="rp81-micro">FAQ</span><h2>Krátké odpovědi na situace, které plán nejčastěji mění.</h2></div><div class="rp81-faq-list"><details open><summary>Kolik činí rodičovský příspěvek v roce 2026?<span>+</span></summary><p>U jednoho dítěte narozeného od 1. 1. 2024 je celkový balík 350 000 Kč. U vícerčat narozených v letech 2024–2025 je 525 000 Kč a u vícerčat narozených od 1. 1. 2026 je 700 000 Kč. Starší děti mají ještě předchozí režim.</p></details><details><summary>Mohu při rodičovském příspěvku pracovat?<span>+</span></summary><p>Ano. Příjem rodiče se pro nárok na rodičovský příspěvek nesleduje. Musí ale být zajištěna péče o dítě a u dítěte mladšího 2 let se sleduje rozsah docházky do zařízení.</p></details><details><summary>Který DVZ se použije, když ho mají oba rodiče?<span>+</span></summary><p>Pro stanovení maximální měsíční výše lze vycházet z vyššího DVZ z obou rodičů, pokud je doložen.</p></details><details><summary>Mohu změnit měsíční částku každý měsíc?<span>+</span></summary><p>Ne. Výši rodičovského příspěvku lze podle MPSV měnit jednou za tři měsíce. Proto je lepší plánovat změnu s předstihem.</p></details><details><summary>Platí už v roce 2026 zvýšení na 400 000 Kč?<span>+</span></summary><p>Ne pro děti narozené v roce 2026. Zvýšení na 400 000 Kč se týká dětí narozených od 1. ledna 2027; tento kalkulátor používá pravidla roku 2026.</p></details></div></div></section>
-
-<section class="rp81-related"><div class="rp81-container"><div class="rp81-section-head"><span class="rp81-micro">SOUVISEJÍCÍ NÁSTROJE</span><h2>Další výpočty pro příjem rodiny.</h2></div><div class="rp81-related-grid"><a href="/materska-kalkulacka.html"><span>DÁVKY</span><strong>Mateřská / PPM</strong><small>Kolik dostanete před rodičovským příspěvkem a kdy PPM skončí.</small></a><a href="/kalkulacka-rozpoctu-domacnosti.html"><span>ROZPOČET</span><strong>Rozpočet domácnosti</strong><small>Porovnejte zvolený rodičák s pravidelnými výdaji.</small></a><a href="/kalkulacka-financni-rezervy.html"><span>REZERVA</span><strong>Finanční rezerva</strong><small>Ověřte období po rychlejším dočerpání dávky.</small></a></div></div></section>
+<aside aria-live="polite" class="result-sheet" id="vysledek">
+<div class="result-inner">
+<div class="result-head"><div><span id="resultRule">DÍTĚ OD 2026 · 350 000 KČ</span></div><b class="result-badge" id="resultBadge">V LIMITU</b></div>
+<div class="result-primary"><small id="primaryLabel">Zbývá vyčerpat</small><strong id="primaryResult">350 000 Kč</strong><p id="resultSentence">Při 15 000 Kč měsíčně vychází přibližně 24 měsíců.</p></div>
+<div class="calendar-head"><b>Výplatní kalendář</b><span id="calendarCaption">září 2026 → srpen 2028</span></div>
+<div class="payout-calendar" id="payoutCalendar"></div>
+<div class="result-metrics">
+<div class="metric"><span>Měsíční čerpání</span><strong id="monthlyResult">15 000 Kč</strong></div>
+<div class="metric"><span>Doba čerpání</span><strong id="monthsResult">24 měsíců</strong></div>
+<div class="metric"><span>Měsíční maximum</span><strong id="limitResult">15 000 Kč</strong></div>
+<div class="metric"><span>Poslední platba</span><strong id="lastPaymentResult">5 000 Kč</strong></div>
+</div>
+<div class="deadline-ruler"><div class="ruler-top"><span id="rulerStart">září 2026</span><span id="rulerDeadline">hranice květen 2029</span></div><div class="ruler-track"><i id="rulerFill" style="--coverage:69%"></i></div><div class="ruler-bottom"><strong id="rulerEnd">konec srpen 2028</strong><span id="rulerReserve">rezerva 9 měsíců</span></div></div>
+<div class="result-note" id="resultNote">Plán končí před orientační věkovou hranicí dítěte.</div>
+</div>
+</aside>
+</div>
+</div>
+</section>
+<section class="strategies">
+<div class="container">
+<div class="strategy-head"><div class="section-title"><span class="kicker">02 · Tři tempa</span><h2>Stejný zůstatek. Tři různé kalendáře.</h2></div><p>Nejde o doporučení jedné „správné“ částky. Tyto tři varianty se přepočítávají podle vašeho zůstatku, dostupného času a měsíčního limitu.</p></div>
+<div class="strategy-board">
+<article class="strategy"><span>Využít dostupný čas</span><strong class="amount" id="slowAmount">—</strong><small id="slowText">—</small><div aria-hidden="true" class="strategy-months" id="slowMonths"></div><div class="strategy-foot"><span id="slowEnd">—</span><button data-strategy="slow" type="button">Použít tempo</button></div></article>
+<article class="strategy middle"><span>Střední tempo</span><strong class="amount" id="balancedAmount">—</strong><small id="balancedText">—</small><div aria-hidden="true" class="strategy-months" id="balancedMonths"></div><div class="strategy-foot"><span id="balancedEnd">—</span><button data-strategy="balanced" type="button">Použít tempo</button></div></article>
+<article class="strategy fast"><span>Rychlejší čerpání v limitu</span><strong class="amount" id="fastAmount">—</strong><small id="fastText">—</small><div aria-hidden="true" class="strategy-months" id="fastMonths"></div><div class="strategy-foot"><span id="fastEnd">—</span><button data-strategy="fast" type="button">Použít tempo</button></div></article>
+</div>
+</div>
+</section>
+<section class="limit-sec">
+<div class="container limit-grid">
+<div class="limit-copy section-title"><span class="kicker">03 · Měsíční limit</span><h2>DVZ nemění celkový balík. Může změnit rychlost čerpání.</h2><p>Bez vyššího DVZ používá model základní měsíční maximum 15 000 Kč pro jedno dítě a 30 000 Kč pro vícerčata. Pokud znáte vyšší DVZ, přesnější režim orientačně dopočítá vyšší strop.</p></div>
+<div class="limit-machine">
+<div class="machine-top"><div><span>Váš aktuální DVZ</span><strong id="limitDvz">0 Kč / den</strong></div><div><span>Orientační měsíční maximum</span><strong id="limitMax">15 000 Kč</strong></div></div>
+<div class="limit-ruler"><div class="limit-ruler-head"><span>0 Kč</span><strong id="limitRulerValue">15 000 Kč</strong><span>vyšší limit</span></div><div class="ruler-scale"><i class="limit-pin" id="limitPin" style="--pin:37%"><b id="limitPinLabel">15 000</b></i></div></div>
+<div class="limit-formula"><span>Model při známém DVZ</span><strong id="limitFormula">max. základní limit nebo 70 % × 30 × DVZ</strong></div>
+</div>
+</div>
+</section>
+<section class="rules" id="pravidla">
+<div class="container">
+<div class="section-title"><span class="kicker">04 · Rok narození mění pravidla</span><h2>Stejný název dávky, jiný balík a časová hranice.</h2><p>Kalkulačka pravidlo vybírá automaticky podle data narození nejmladšího dítěte a podle toho, zda jde o jedno dítě nebo vícerčata.</p></div>
+<div class="rule-timeline">
+<article class="rule-era"><span>Dítě narozené do konce 2023</span><h3>Starší režim · do 4 let věku</h3><div class="rule-money"><div><span>Jedno dítě</span><strong>300 000 Kč</strong></div><div><span>Vícerčata</span><strong>450 000 Kč</strong></div></div><p>Pro plánování používáme čtyřletou věkovou hranici.</p></article>
+<article class="rule-era"><span>Dítě narozené 2024–2025</span><h3>Novější režim · do 3 let věku</h3><div class="rule-money"><div><span>Jedno dítě</span><strong>350 000 Kč</strong></div><div><span>Vícerčata</span><strong>525 000 Kč</strong></div></div><p>Celkový nárok i časový limit se proti staršímu režimu změnily.</p></article>
+<article class="rule-era"><span>Dítě narozené od 2026</span><h3>Aktuální režim · do 3 let věku</h3><div class="rule-money"><div><span>Jedno dítě</span><strong>350 000 Kč</strong></div><div><span>Vícerčata</span><strong>700 000 Kč</strong></div></div><p>Pro vícerčata od roku 2026 model používá vyšší celkový balík 700 000 Kč.</p></article>
+</div>
+</div>
+</section>
+<section class="cadence">
+<div class="container cadence-grid">
+<div class="section-title"><span class="kicker">05 · Změna měsíční částky</span><h2>Plán nemusí zůstat stejný celé roky.</h2><p>Výši čerpání lze v průběhu času měnit. Proto je lepší vnímat výsledek jako plánovací kalendář, ne jako jednou provždy pevnou měsíční dávku.</p></div>
+<div class="quarter-board">
+<div class="quarter-head"><span>Příklad průběžného plánování</span><b>jedna volba → další po 3 měsících</b></div>
+<div class="quarters"><article class="quarter active"><span>Měsíce 1–3</span><strong>15 000 Kč</strong><i></i></article><article class="quarter"><span>Měsíce 4–6</span><strong>nová volba</strong><i></i></article><article class="quarter"><span>Měsíce 7–9</span><strong>další období</strong><i></i></article><article class="quarter"><span>Měsíce 10–12</span><strong>další období</strong><i></i></article></div>
+<div class="quarter-note"><strong>Praktický dopad:</strong> pokud se změní příjem domácnosti, návrat do práce nebo váš dostupný DVZ, přepočítejte plán z aktuálního zůstatku místo spoléhání na starý konec.</div>
+</div>
+</div>
+</section>
+<section class="handoff">
+<div class="container">
+<div class="section-title"><span class="kicker">06 · Co se stane po poslední platbě</span><h2>Konec čerpání je rozpočtový termín, který má smysl znát dopředu.</h2><p>Výsledek proto nekončí jen částkou. Ukazuje i poslední modelovaný měsíc, abyste měli čas připravit další zdroj příjmu domácnosti nebo změnit tempo ještě před vyčerpáním balíku.</p></div>
+<div class="handoff-board"><article class="handoff-card"><span>Podle aktuálního plánu</span><strong id="handoffCurrent">Poslední platba: srpen 2028</strong><p id="handoffCurrentText">Zbývající balík se při zadaném tempu rozdělí do 24 měsíců.</p></article><div aria-hidden="true" class="handoff-arrow"><span>→</span></div><article class="handoff-card next"><span>Další krok domácnosti</span><strong>Naplánovat příjem po rodičáku</strong><p>Nejde o automatické doporučení konkrétní dávky nebo pracovního režimu. Jde o upozornění na okamžik, kdy se modelovaný příjem mění.</p></article></div>
+</div>
+</section>
+<section class="method">
+<div class="container method-grid">
+<div class="method-copy section-title"><span class="kicker">07 · Metodika a hranice</span><h2>Co model počítá a co musí potvrdit úřad.</h2><p>Výpočet používá pravidla a parametry integrované do produkčního modelu RychléVýpočty.cz pro rok 2026. Celkový balík se odvíjí od data narození a typu porodu, měsíční maximum může ovlivnit DVZ a plán je omezen věkovou hranicí dítěte.</p><ul><li>Jedno dítě od roku 2024: 350 000 Kč.</li><li>Vícerčata 2024–2025: 525 000 Kč; od roku 2026: 700 000 Kč.</li><li>Základní měsíční limit modelu: 15 000 Kč / 30 000 Kč; vyšší DVZ může limit zvýšit.</li><li>Poslední platba se dopočítá ze skutečného zůstatku a může být nižší než běžné měsíční tempo.</li></ul></div>
+<aside class="method-note"><strong>Plánovací kalkulačka, ne rozhodnutí o dávce</strong><p>Skutečný nárok, přesný DVZ, administrativní účinnost změny a dostupné maximum potvrzuje Úřad práce / Jenda. Pokud se vaše situace liší od modelu nebo máte historické změny čerpání, použijte skutečný aktuální zůstatek.</p><div class="badges"><span>25 regresních scénářů</span><span>dataset 28. 8. 2026</span><span>výpočet v zařízení</span></div></aside>
+</div>
+</section>
 </main>
+<footer>
+<div class="container">
+<div class="footer-grid">
+<div class="footer-brand"><img alt="RychléVýpočty.cz" height="96" src="https://rychlevypocty.cz/logo-rv-v32-inverse.svg?v=1" width="590"/><p>Praktické kalkulačky s transparentní metodikou, jasnými hranicemi modelu a výsledkem, který pomáhá udělat další rozhodnutí.</p><div class="socials"><a href="https://www.facebook.com/rychlevypocty">Facebook</a><a href="https://www.instagram.com/rychlevypocty/">Instagram</a></div></div>
+<div class="footer-col"><b>Projekt</b><a href="https://rychlevypocty.cz/o-nas.html">O projektu</a><a href="https://rychlevypocty.cz/jak-pocitame.html">Jak počítáme</a><a href="https://rychlevypocty.cz/data-a-benchmarky.html">Data a benchmarky</a></div>
+<div class="footer-col"><b>Rodina</b><a href="https://rychlevypocty.cz/materska-kalkulacka.html">Mateřská</a><a href="https://rychlevypocty.cz/ocr-kalkulacka.html">Ošetřovné</a><a href="https://rychlevypocty.cz/tehotenstvi-kalkulacka.html">Těhotenství</a></div>
+</div>
+<div class="footer-bottom"><span>© RychléVýpočty.cz · orientační výpočty</span><span>Zadat → Spočítat → Pochopit → Rozhodnout</span></div>
+</div>
+</footer>
+<script>
+(()=>{
+"use strict";
+const $=id=>document.getElementById(id),$$=s=>[...document.querySelectorAll(s)];
+const state={mode:"basic",goal:"duration",strategies:{}};
+const moneyFmt=new Intl.NumberFormat("cs-CZ",{maximumFractionDigits:0});
+const monthFmt=new Intl.DateTimeFormat("cs-CZ",{month:"long",year:"numeric"});
+const shortMonthFmt=new Intl.DateTimeFormat("cs-CZ",{month:"2-digit",year:"2-digit"});
+const clamp=(v,min,max)=>Math.min(Math.max(v,min),max);
+const parseMoney=v=>{const s=String(v??"").replace(/\s/g,"").replace(",",".").replace(/[^0-9.\-]/g,"");const n=Number(s);return Number.isFinite(n)?n:0};
+const money=v=>moneyFmt.format(Math.round(Math.max(0,Number.isFinite(v)?v:0)))+" Kč";
+const pluralMonths=n=>{n=Math.max(0,Math.round(n));if(n===1)return"1 měsíc";if(n>=2&&n<=4)return n+" měsíce";return n+" měsíců"};
+const dateFromInput=v=>{if(!v)return null;const [y,m,d]=v.split("-").map(Number);const x=new Date(y,m-1,d,12);return Number.isNaN(x.getTime())?null:x};
+const monthFromInput=v=>{if(!/^\d{4}-\d{2}$/.test(v||""))return null;const [y,m]=v.split("-").map(Number);return new Date(y,m-1,1,12)};
+const monthStart=d=>new Date(d.getFullYear(),d.getMonth(),1,12);
+const addMonths=(d,n)=>new Date(d.getFullYear(),d.getMonth()+n,1,12);
+const addYears=(d,n)=>new Date(d.getFullYear()+n,d.getMonth(),d.getDate(),12);
+const monthDiff=(a,b)=>(b.getFullYear()-a.getFullYear())*12+(b.getMonth()-a.getMonth());
+const monthsInclusive=(a,b)=>Math.max(0,monthDiff(a,b)+1);
+const formatMonth=d=>d?monthFmt.format(d):"—";
+const maxDate=(a,b)=>a>b?a:b;
 
-<footer class="rp81-footer rv-brand-footer"><div class="rp81-container rp81-footer-grid"><div class="rp81-footer-brand"><a href="/" aria-label="RychléVýpočty.cz domů"><img src="/logo-rv-v32-inverse.svg?v=1" width="590" height="96" alt="RychléVýpočty.cz"></a><p>Online kalkulačky s transparentní metodikou, ověřenými parametry a jasně popsanými hranicemi modelu.</p><nav class="rp81-socials" aria-label="Sociální sítě RychléVýpočty.cz"><a href="https://www.facebook.com/rychlevypocty" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.6 21v-8h2.7l.4-3h-3.1V8.1c0-.9.3-1.5 1.6-1.5h1.7V4a23 23 0 0 0-2.5-.1c-2.5 0-4.2 1.5-4.2 4.3V10H7.4v3h2.8v8z"/></svg></a><a href="https://www.instagram.com/rychlevypocty/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a></nav></div><div class="rp81-footer-col"><h3>Rodina</h3><a href="/rodina-a-rozpocet.html">Rodina a rozpočet</a><a href="/materska-kalkulacka.html">Mateřská</a><a href="/termin-porodu-kalkulacka.html">Termín porodu</a></div><div class="rp81-footer-col"><h3>Projekt</h3><a href="/kalkulacky.html">Všechny kalkulačky</a><a href="/jak-pocitame.html">Jak počítáme</a><a href="/data-a-benchmarky.html">Data a benchmarky</a></div><div class="rp81-footer-col"><h3>Informace</h3><a href="/o-nas.html">O projektu</a><a href="/podminky-pouziti.html">Podmínky použití</a><a href="/ochrana-osobnich-udaju.html">Ochrana soukromí</a></div></div><div class="rp81-container rp81-footer-bottom"><span>© 2026 RychléVýpočty.cz · Orientační plán rodičovského příspěvku; nenahrazuje rozhodnutí Úřadu práce ani individuální sociální či právní posouzení.</span><strong>Zadat → Spočítat → Pochopit → Rozhodnout</strong></div></footer>
-<script src="/rv-brand-v32.js?v=20260821"></script><script src="/rodicovsky-vnext.js?v=20260828-1"></script>
-</body></html>
+function automaticRule(birth,multiple){
+  const d2024=new Date(2024,0,1,12),d2026=new Date(2026,0,1,12);
+  if(birth<d2024)return{total:multiple?450000:300000,years:4,label:multiple?"VÍCERČATA DO 2023 · 450 000 KČ":"DÍTĚ DO 2023 · 300 000 KČ"};
+  if(birth<d2026)return{total:multiple?525000:350000,years:3,label:multiple?"VÍCERČATA 2024–2025 · 525 000 KČ":"DÍTĚ 2024–2025 · 350 000 KČ"};
+  return{total:multiple?700000:350000,years:3,label:multiple?"VÍCERČATA 2026 · 700 000 KČ":"DÍTĚ OD 2026 · 350 000 KČ"};
+}
+function monthlyLimit(dvz,multiple){
+  const floor=multiple?30000:15000;
+  if(!(dvz>0))return floor;
+  const calc=.70*30*dvz*(multiple?2:1);
+  return Math.max(floor,Math.floor(calc));
+}
+function planDuration(remaining,amount,start){
+  if(remaining<=0)return{months:0,end:start,last:0};
+  if(!(amount>0))return{months:Infinity,end:null,last:0};
+  const months=Math.ceil(remaining/amount),last=remaining-amount*(months-1);
+  return{months,end:addMonths(start,Math.max(0,months-1)),last};
+}
+function read(){
+  const birth=dateFromInput($("birthDate").value);
+  const multiple=$("childrenType").value==="multiple";
+  const rule=birth?automaticRule(birth,multiple):{total:350000,years:3,label:"—"};
+  const rawUsed=parseMoney($("alreadyUsed").value),used=clamp(rawUsed,0,rule.total),remaining=Math.max(0,rule.total-used);
+  const defaultStart=new Date(2026,8,1,12);
+  const requestedStart=state.mode==="advanced"?(monthFromInput($("startMonth").value)||defaultStart):defaultStart;
+  const start=birth?maxDate(requestedStart,monthStart(birth)):defaultStart;
+  const deadline=birth?monthStart(addYears(birth,rule.years)):addYears(start,3);
+  const dvz=state.mode==="advanced"?Math.max(0,parseMoney($("dvz").value)):0;
+  const limit=monthlyLimit(dvz,multiple);
+  let monthly=state.goal==="duration"?Math.max(0,parseMoney($("monthlyAmount").value)):0,target=null;
+  if(state.goal==="target"){
+    target=monthFromInput($("targetMonth").value)||deadline;
+    if(target<start)target=start;if(target>deadline)target=deadline;
+    monthly=remaining>0?Math.ceil(remaining/Math.max(1,monthsInclusive(start,target))):0;
+  }
+  return{birth,multiple,rule,rawUsed,used,remaining,start,deadline,dvz,limit,monthly,target};
+}
+function validate(v){
+  ["birthDateError","alreadyUsedError","monthlyAmountError","targetMonthError","dvzError","startMonthError"].forEach(id=>$(id).textContent="");
+  let ok=true;
+  if(!v.birth){$("birthDateError").textContent="Zadejte platné datum narození.";ok=false}
+  else if(v.birth>new Date(2026,11,31,23,59)){$("birthDateError").textContent="Model používá pravidla pro děti narozené nejpozději v roce 2026.";ok=false}
+  if(v.rawUsed<0){$("alreadyUsedError").textContent="Částka nemůže být záporná.";ok=false}
+  if(v.rawUsed>v.rule.total)$("alreadyUsedError").textContent="Celkový nárok v tomto režimu je "+money(v.rule.total)+".";
+  if(state.goal==="duration"&&v.monthly<=0){$("monthlyAmountError").textContent="Zadejte částku vyšší než 0 Kč.";ok=false}
+  if(state.goal==="target"&&!monthFromInput($("targetMonth").value)){$("targetMonthError").textContent="Zadejte cílový měsíc.";ok=false}
+  if(state.mode==="advanced"&&parseMoney($("dvz").value)<0){$("dvzError").textContent="DVZ nemůže být záporný.";ok=false}
+  if(state.mode==="advanced"&&!monthFromInput($("startMonth").value)){$("startMonthError").textContent="Zadejte měsíc začátku plánu.";ok=false}
+  return ok;
+}
+function createMonthCells(box,start,months,amount,last,deadline,compact=false){
+  box.innerHTML="";
+  const max=compact?24:36,show=Math.min(Number.isFinite(months)?months:0,max);
+  for(let i=0;i<show;i++){
+    const d=addMonths(start,i),el=document.createElement("i");
+    if(i===show-1&&months<=max)el.classList.add("last");
+    if(d>deadline)el.classList.add("overflow");
+    if(compact){el.textContent=String(d.getMonth()+1).padStart(2,"0")}
+    else{el.innerHTML="<b>"+shortMonthFmt.format(d)+"</b><small>"+money(i===months-1?last:amount).replace(" Kč","")+"</small>"}
+    box.appendChild(el);
+  }
+  if(months>max&&!compact){const more=document.createElement("i");more.innerHTML="<b>+"+(months-max)+"</b><small>měs.</small>";box.appendChild(more)}
+}
+function createStrategyCells(id,months,type){
+  const box=$(id);box.innerHTML="";
+  const show=Math.min(months,24);
+  for(let i=0;i<show;i++){const el=document.createElement("i");el.className="on"+(i===show-1?" last":"");box.appendChild(el)}
+  if(months>24){const el=document.createElement("i");el.className="on";box.appendChild(el)}
+}
+function renderStrategies(v){
+  if(v.remaining<=0){["slow","balanced","fast"].forEach(k=>state.strategies[k]={amount:0,months:0,end:v.start});return}
+  const available=Math.max(1,monthsInclusive(v.start,v.deadline));
+  const slow=Math.ceil(v.remaining/available);
+  const balMonths=Math.max(1,Math.min(24,available)),balanced=Math.ceil(v.remaining/balMonths);
+  const fast=Math.min(v.limit,Math.max(v.monthly||0,Math.ceil(balanced*1.35)));
+  const defs={slow,balanced,fast};
+  Object.entries(defs).forEach(([key,amount])=>{
+    const p=planDuration(v.remaining,amount,v.start);state.strategies[key]={amount,...p};
+    $(key+"Amount").textContent=money(amount)+" / měs.";
+    $(key+"Text").textContent=amount<=v.limit?pluralMonths(p.months)+" čerpání; částka je v orientačním měsíčním limitu.":"Potřebné tempo je nad orientačním limitem "+money(v.limit)+".";
+    $(key+"End").textContent="konec "+formatMonth(p.end);
+    createStrategyCells(key+"Months",p.months,key);
+  });
+}
+function render(){
+  const v=read();if(!validate(v))return;
+  const available=Math.max(0,monthsInclusive(v.start,v.deadline));
+  const plan=planDuration(v.remaining,v.monthly,v.start);
+  const end=state.goal==="target"&&v.remaining>0?v.target:plan.end;
+  const overLimit=v.monthly>v.limit,expired=v.remaining>0&&v.start>v.deadline,misses=v.remaining>0&&end&&end>v.deadline;
+  const reserve=end?monthDiff(end,v.deadline):0,neededToDeadline=v.remaining>0?Math.ceil(v.remaining/Math.max(1,available)):0;
+  let badge="V LIMITU",cls="",sentence="",note="";
+  if(v.remaining===0){badge="VYČERPÁNO";sentence="Podle zadaných údajů už z celkového nároku nic nezbývá.";note="Celkový balík je podle zadaného stavu vyčerpán."}
+  else if(expired){badge="PO VĚKOVÉ HRANICI";cls="danger";sentence="Zadaný start plánu je až po orientační věkové hranici dítěte.";note="Ověřte skutečný stav nároku v Jendě nebo na Úřadu práce."}
+  else if(overLimit){badge="NAD MĚSÍČNÍM LIMITEM";cls="warn";sentence="Požadované tempo "+money(v.monthly)+" je nad vypočteným maximem "+money(v.limit)+".";note="Pro toto tempo je potřeba vyšší dostupný DVZ nebo nižší měsíční částka."}
+  else if(misses){badge="RIZIKO NEDOČERPÁNÍ";cls="danger";sentence="Současné tempo končí po věkové hranici. Do ní vychází alespoň "+money(neededToDeadline)+" měsíčně.";note="Zvyšte tempo nebo ověřte skutečný zůstatek a začátek plánu."}
+  else if(reserve<=1){badge="TĚSNÁ REZERVA";cls="warn";sentence="Plán se do věkové hranice vejde, ale časová rezerva je malá.";note="Nechte si prostor pro změnu volby nebo nepřesný start."}
+  else{sentence="Při "+money(v.monthly)+" měsíčně vychází přibližně "+pluralMonths(plan.months)+".";note="Plán končí před orientační věkovou hranicí dítěte."}
+  $("resultRule").textContent=v.rule.label;$("resultBadge").textContent=badge;$("resultBadge").className="result-badge"+(cls?" "+cls:"");
+  $("primaryLabel").textContent=state.goal==="target"?"Potřebné měsíční čerpání":"Zbývá vyčerpat";$("primaryResult").textContent=state.goal==="target"?money(v.monthly):money(v.remaining);$("resultSentence").textContent=sentence;
+  $("monthlyResult").textContent=money(v.monthly);$("monthsResult").textContent=Number.isFinite(plan.months)?pluralMonths(plan.months):"—";$("limitResult").textContent=money(v.limit);$("lastPaymentResult").textContent=v.remaining>0&&plan.months>0?money(plan.last):"0 Kč";
+  $("calendarCaption").textContent=formatMonth(v.start)+" → "+formatMonth(end);createMonthCells($("payoutCalendar"),v.start,plan.months,v.monthly,plan.last,v.deadline,false);
+  const coverage=available>0&&Number.isFinite(plan.months)?clamp(plan.months/available*100,0,100):100;$("rulerFill").style.setProperty("--coverage",coverage+"%");$("rulerStart").textContent=formatMonth(v.start);$("rulerDeadline").textContent="hranice "+formatMonth(v.deadline);$("rulerEnd").textContent="konec "+formatMonth(end);$("rulerReserve").textContent=end&&end<=v.deadline?"rezerva "+Math.max(0,reserve)+" měsíců":"za hranicí";$("resultNote").textContent=note;$("resultNote").className="result-note"+(cls?" "+cls:"");
+  $("heroTotal").textContent=money(v.rule.total);$("heroRemaining").textContent=money(v.remaining);$("heroMonthly").textContent=money(v.monthly)+" / měs.";$("heroStart").textContent=formatMonth(v.start);$("heroEnd").textContent=formatMonth(end);$("heroDeadline").textContent=formatMonth(v.deadline);$("heroMonthCount").textContent=Number.isFinite(plan.months)?pluralMonths(plan.months):"—";$("heroLast").textContent="poslední "+money(plan.last);createMonthCells($("heroMonths"),v.start,plan.months,v.monthly,plan.last,v.deadline,true);
+  $("limitDvz").textContent=money(v.dvz)+" / den";$("limitMax").textContent=money(v.limit);$("limitRulerValue").textContent=money(v.limit);$("limitPinLabel").textContent=money(v.limit).replace(" Kč","");const base=v.multiple?30000:15000,pin=clamp(37+(v.limit-base)/90000*52,37,89);$("limitPin").style.setProperty("--pin",pin+"%");$("limitFormula").textContent=v.multiple?"max. 30 000 Kč nebo 70 % × 30 × DVZ × 2":"max. 15 000 Kč nebo 70 % × 30 × DVZ";
+  $("handoffCurrent").textContent="Poslední platba: "+formatMonth(end);$("handoffCurrentText").textContent="Zbývající balík se při zadaném tempu rozdělí do "+pluralMonths(plan.months)+".";
+  renderStrategies(v);
+  $$(".presets button").forEach(b=>b.classList.toggle("active",Math.abs(Number(b.dataset.amount)-v.monthly)<1));
+  window.__RP81_LAST__={...v,plan,end,available};
+}
+function setMode(m){state.mode=m==="advanced"?"advanced":"basic";$$("[data-mode]").forEach(b=>{const on=b.dataset.mode===state.mode;b.classList.toggle("active",on);b.setAttribute("aria-pressed",String(on))});$("advancedPanel").hidden=state.mode!=="advanced";$("formTitle").textContent=state.mode==="basic"?"Datum narození, zůstatek a měsíční tempo":"Stejný plán + DVZ a vlastní měsíc začátku";$("formHelp").textContent=state.mode==="basic"?"Základní režim používá zákonné minimum měsíčního limitu bez vyššího DVZ.":"Přesnější režim umožní použít DVZ a vlastní měsíc začátku plánu.";render()}
+function setGoal(g){state.goal=g==="target"?"target":"duration";$$("[data-goal]").forEach(b=>{const on=b.dataset.goal===state.goal;b.classList.toggle("active",on);b.setAttribute("aria-pressed",String(on))});document.querySelector(".duration-field").hidden=state.goal!=="duration";document.querySelector(".target-field").hidden=state.goal!=="target";render()}
+$$("[data-mode]").forEach(b=>b.addEventListener("click",()=>setMode(b.dataset.mode)));$$("[data-goal]").forEach(b=>b.addEventListener("click",()=>setGoal(b.dataset.goal)));
+$$(".presets button").forEach(b=>b.addEventListener("click",()=>{$("monthlyAmount").value=Number(b.dataset.amount).toLocaleString("cs-CZ");setGoal("duration")}));
+$$("[data-strategy]").forEach(b=>b.addEventListener("click",()=>{const st=state.strategies[b.dataset.strategy];if(st){$("monthlyAmount").value=Math.round(st.amount).toLocaleString("cs-CZ");setGoal("duration");document.getElementById("kalkulacka").scrollIntoView({behavior:"smooth",block:"start"})}}));
+["birthDate","childrenType","alreadyUsed","monthlyAmount","targetMonth","dvz","startMonth"].forEach(id=>$(id).addEventListener("input",render));
+["childrenType","birthDate","targetMonth","startMonth"].forEach(id=>$(id).addEventListener("change",render));
+$("parentalForm").addEventListener("submit",e=>e.preventDefault());
+$("menuBtn").addEventListener("click",()=>{const open=$("mobileNav").classList.toggle("open");$("menuBtn").setAttribute("aria-expanded",String(open))});
+window.RV_RP81_TEST={automaticRule,monthlyLimit,planDuration,monthFromInput,dateFromInput,monthsInclusive};
+setMode("basic");setGoal("duration");
+})();
+</script>
+</body>
+</html>
