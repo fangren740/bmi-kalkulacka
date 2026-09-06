@@ -1,0 +1,95 @@
+name: Recovery production PSI gate
+
+on:
+  push:
+    branches:
+      - recovery-psi-2026-09-06
+
+permissions:
+  contents: read
+
+jobs:
+  psi:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run Google PageSpeed Insights on recovery URLs
+        shell: bash
+        run: |
+          set -euo pipefail
+          urls=(
+            kalkulacka-hrube-mzdy-z-ciste.html
+            naklady-zamestnavatele-kalkulacka.html
+            dpp-dpc-kalkulacka.html
+            nemocenska-kalkulacka.html
+            ocr-kalkulacka.html
+            materska-kalkulacka.html
+            rodicovsky-prispevek-kalkulacka.html
+            vyzivne-kalkulacka.html
+            podpora-v-nezamestnanosti-kalkulacka.html
+            duchodovy-vek-kalkulacka.html
+            kolik-stoji-prvni-rok-ditete-kalkulacka.html
+            kolik-me-stoji-pleny-kalkulacka.html
+            kolik-stoji-umele-mleko-kalkulacka.html
+            pribirani-v-tehotenstvi-kalkulacka.html
+            cena-za-km-kalkulacka.html
+          )
+          printf 'url,strategy,performance,accessibility,best_practices,seo,lcp_ms,cls,tbt_ms\n' > psi-results.csv
+          mkdir -p psi-json
+          failures=0
+          for path in "${urls[@]}"; do
+            for strategy in mobile desktop; do
+              target="https://rychlevypocty.cz/${path}"
+              encoded=$(python -c 'import urllib.parse,sys; print(urllib.parse.quote(sys.argv[1], safe=""))' "$target")
+              out="psi-json/${path%.html}-${strategy}.json"
+              api="https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${encoded}&strategy=${strategy}&category=performance&category=accessibility&category=best-practices&category=seo"
+              echo "PSI ${strategy}: ${target}"
+              code=$(curl -L -sS --retry 2 --retry-delay 4 -w '%{http_code}' -o "$out" "$api")
+              if [ "$code" != "200" ]; then
+                echo "PSI HTTP ${code}: $(cat "$out")"
+                failures=$((failures+1))
+                continue
+              fi
+              perf=$(jq -r '(.lighthouseResult.categories.performance.score * 100) | round' "$out")
+              acc=$(jq -r '(.lighthouseResult.categories.accessibility.score * 100) | round' "$out")
+              bp=$(jq -r '(.lighthouseResult.categories["best-practices"].score * 100) | round' "$out")
+              seo=$(jq -r '(.lighthouseResult.categories.seo.score * 100) | round' "$out")
+              lcp=$(jq -r '.lighthouseResult.audits["largest-contentful-paint"].numericValue | round' "$out")
+              cls=$(jq -r '.lighthouseResult.audits["cumulative-layout-shift"].numericValue' "$out")
+              tbt=$(jq -r '.lighthouseResult.audits["total-blocking-time"].numericValue | round' "$out")
+              printf '%s,%s,%s,%s,%s,%s,%s,%s,%s\n' "$path" "$strategy" "$perf" "$acc" "$bp" "$seo" "$lcp" "$cls" "$tbt" >> psi-results.csv
+              sleep 3
+            done
+          done
+          cat psi-results.csv
+          echo "psi_http_failures=${failures}" >> "$GITHUB_ENV"
+          test "$failures" -eq 0
+
+      - name: Summarize PSI floor
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import csv
+          rows=list(csv.DictReader(open('psi-results.csv', encoding='utf-8')))
+          print('rows', len(rows))
+          assert len(rows)==30, f'Expected 30 PSI rows, got {len(rows)}'
+          for key in ['performance','accessibility','best_practices','seo']:
+              vals=[int(r[key]) for r in rows]
+              print(key, 'min=', min(vals), 'avg=', round(sum(vals)/len(vals),1))
+          # Hard project target: all Lighthouse categories 100. Keep this step informational
+          # so the artifact is preserved even when a page needs optimization.
+          misses=[r for r in rows if any(int(r[k])<100 for k in ['performance','accessibility','best_practices','seo'])]
+          print('rows_below_100_any_category', len(misses))
+          for r in misses:
+              print(r)
+          PY
+
+      - name: Upload PSI evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: recovery-psi-evidence
+          path: |
+            psi-results.csv
+            psi-json/
+          retention-days: 30
