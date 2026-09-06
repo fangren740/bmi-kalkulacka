@@ -9,9 +9,9 @@ permissions:
   contents: read
 
 jobs:
-  lighthouse:
+  smoke:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 5
     steps:
       - name: Verify recovery pages are live
         shell: bash
@@ -34,109 +34,142 @@ jobs:
             pribirani-v-tehotenstvi-kalkulacka.html
             cena-za-km-kalkulacka.html
           )
-          mkdir -p live-html
           failures=0
           for path in "${urls[@]}"; do
             target="https://rychlevypocty.cz/${path}"
-            echo "Smoke: ${target}"
-            code=$(curl -L -sS --retry 4 --retry-delay 3 -w '%{http_code}' -o "live-html/${path}" "$target")
-            if [ "$code" != "200" ]; then
-              echo "HTTP ${code}: ${target}"
-              failures=$((failures+1))
-              continue
-            fi
-            if ! grep -q 'status=RECOVERY_APPROVED' "live-html/${path}"; then
-              echo "Recovery marker missing: ${target}"
+            code=$(curl -L -sS --retry 3 --retry-delay 2 -w '%{http_code}' -o /tmp/page.html "$target")
+            if [ "$code" != "200" ] || ! grep -q 'status=RECOVERY_APPROVED' /tmp/page.html; then
+              echo "Smoke failed: ${target} HTTP=${code}"
               failures=$((failures+1))
             fi
           done
           test "$failures" -eq 0
 
+  lighthouse:
+    needs: smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    strategy:
+      fail-fast: false
+      max-parallel: 20
+      matrix:
+        include:
+          - { path: kalkulacka-hrube-mzdy-z-ciste.html, slug: hruba-z-ciste, strategy: mobile }
+          - { path: kalkulacka-hrube-mzdy-z-ciste.html, slug: hruba-z-ciste, strategy: desktop }
+          - { path: naklady-zamestnavatele-kalkulacka.html, slug: naklady-zamestnavatele, strategy: mobile }
+          - { path: naklady-zamestnavatele-kalkulacka.html, slug: naklady-zamestnavatele, strategy: desktop }
+          - { path: dpp-dpc-kalkulacka.html, slug: dpp-dpc, strategy: mobile }
+          - { path: dpp-dpc-kalkulacka.html, slug: dpp-dpc, strategy: desktop }
+          - { path: nemocenska-kalkulacka.html, slug: nemocenska, strategy: mobile }
+          - { path: nemocenska-kalkulacka.html, slug: nemocenska, strategy: desktop }
+          - { path: ocr-kalkulacka.html, slug: ocr, strategy: mobile }
+          - { path: ocr-kalkulacka.html, slug: ocr, strategy: desktop }
+          - { path: materska-kalkulacka.html, slug: materska, strategy: mobile }
+          - { path: materska-kalkulacka.html, slug: materska, strategy: desktop }
+          - { path: rodicovsky-prispevek-kalkulacka.html, slug: rodicovsky, strategy: mobile }
+          - { path: rodicovsky-prispevek-kalkulacka.html, slug: rodicovsky, strategy: desktop }
+          - { path: vyzivne-kalkulacka.html, slug: vyzivne, strategy: mobile }
+          - { path: vyzivne-kalkulacka.html, slug: vyzivne, strategy: desktop }
+          - { path: podpora-v-nezamestnanosti-kalkulacka.html, slug: podpora, strategy: mobile }
+          - { path: podpora-v-nezamestnanosti-kalkulacka.html, slug: podpora, strategy: desktop }
+          - { path: duchodovy-vek-kalkulacka.html, slug: duchodovy-vek, strategy: mobile }
+          - { path: duchodovy-vek-kalkulacka.html, slug: duchodovy-vek, strategy: desktop }
+          - { path: kolik-stoji-prvni-rok-ditete-kalkulacka.html, slug: prvni-rok-ditete, strategy: mobile }
+          - { path: kolik-stoji-prvni-rok-ditete-kalkulacka.html, slug: prvni-rok-ditete, strategy: desktop }
+          - { path: kolik-me-stoji-pleny-kalkulacka.html, slug: pleny, strategy: mobile }
+          - { path: kolik-me-stoji-pleny-kalkulacka.html, slug: pleny, strategy: desktop }
+          - { path: kolik-stoji-umele-mleko-kalkulacka.html, slug: umele-mleko, strategy: mobile }
+          - { path: kolik-stoji-umele-mleko-kalkulacka.html, slug: umele-mleko, strategy: desktop }
+          - { path: pribirani-v-tehotenstvi-kalkulacka.html, slug: pribirani, strategy: mobile }
+          - { path: pribirani-v-tehotenstvi-kalkulacka.html, slug: pribirani, strategy: desktop }
+          - { path: cena-za-km-kalkulacka.html, slug: cena-za-km, strategy: mobile }
+          - { path: cena-za-km-kalkulacka.html, slug: cena-za-km, strategy: desktop }
+    steps:
       - name: Install Lighthouse
         shell: bash
         run: |
           set -euo pipefail
-          npm install --global lighthouse@12.8.2
-          lighthouse --version
-          google-chrome --version
+          npm install --global lighthouse@12.8.2 >/dev/null 2>&1
 
-      - name: Run Lighthouse against production
+      - name: Run Lighthouse
         shell: bash
         run: |
           set -euo pipefail
-          urls=(
-            kalkulacka-hrube-mzdy-z-ciste.html
-            naklady-zamestnavatele-kalkulacka.html
-            dpp-dpc-kalkulacka.html
-            nemocenska-kalkulacka.html
-            ocr-kalkulacka.html
-            materska-kalkulacka.html
-            rodicovsky-prispevek-kalkulacka.html
-            vyzivne-kalkulacka.html
-            podpora-v-nezamestnanosti-kalkulacka.html
-            duchodovy-vek-kalkulacka.html
-            kolik-stoji-prvni-rok-ditete-kalkulacka.html
-            kolik-me-stoji-pleny-kalkulacka.html
-            kolik-stoji-umele-mleko-kalkulacka.html
-            pribirani-v-tehotenstvi-kalkulacka.html
-            cena-za-km-kalkulacka.html
+          target="https://rychlevypocty.cz/${{ matrix.path }}"
+          out="${{ matrix.slug }}-${{ matrix.strategy }}.json"
+          args=(
+            "$target"
+            --quiet
+            --output=json
+            --output-path="$out"
+            --only-categories=performance,accessibility,best-practices,seo
+            --chrome-flags="--headless --no-sandbox --disable-dev-shm-usage"
+            --max-wait-for-load=45000
           )
-          mkdir -p lighthouse-json
-          printf 'url,strategy,performance,accessibility,best_practices,seo,lcp_ms,cls,tbt_ms\n' > lighthouse-results.csv
-          for path in "${urls[@]}"; do
-            for strategy in mobile desktop; do
-              target="https://rychlevypocty.cz/${path}"
-              out="lighthouse-json/${path%.html}-${strategy}.json"
-              args=(
-                "$target"
-                --quiet
-                --output=json
-                --output-path="$out"
-                --only-categories=performance,accessibility,best-practices,seo
-                --chrome-flags="--headless --no-sandbox --disable-dev-shm-usage"
-                --max-wait-for-load=45000
-              )
-              if [ "$strategy" = "desktop" ]; then
-                args+=(--preset=desktop)
-              fi
-              echo "Lighthouse ${strategy}: ${target}"
-              lighthouse "${args[@]}"
-              perf=$(jq -r '(.categories.performance.score * 100) | round' "$out")
-              acc=$(jq -r '(.categories.accessibility.score * 100) | round' "$out")
-              bp=$(jq -r '(.categories["best-practices"].score * 100) | round' "$out")
-              seo=$(jq -r '(.categories.seo.score * 100) | round' "$out")
-              lcp=$(jq -r '.audits["largest-contentful-paint"].numericValue | round' "$out")
-              cls=$(jq -r '.audits["cumulative-layout-shift"].numericValue' "$out")
-              tbt=$(jq -r '.audits["total-blocking-time"].numericValue | round' "$out")
-              printf '%s,%s,%s,%s,%s,%s,%s,%s,%s\n' "$path" "$strategy" "$perf" "$acc" "$bp" "$seo" "$lcp" "$cls" "$tbt" >> lighthouse-results.csv
-            done
-          done
-          cat lighthouse-results.csv
+          if [ "${{ matrix.strategy }}" = "desktop" ]; then
+            args+=(--preset=desktop)
+          fi
+          lighthouse "${args[@]}"
+          perf=$(jq -r '(.categories.performance.score * 100) | round' "$out")
+          acc=$(jq -r '(.categories.accessibility.score * 100) | round' "$out")
+          bp=$(jq -r '(.categories["best-practices"].score * 100) | round' "$out")
+          seo=$(jq -r '(.categories.seo.score * 100) | round' "$out")
+          lcp=$(jq -r '.audits["largest-contentful-paint"].numericValue | round' "$out")
+          cls=$(jq -r '.audits["cumulative-layout-shift"].numericValue' "$out")
+          tbt=$(jq -r '.audits["total-blocking-time"].numericValue | round' "$out")
+          printf '%s,%s,%s,%s,%s,%s,%s,%s,%s\n' '${{ matrix.path }}' '${{ matrix.strategy }}' "$perf" "$acc" "$bp" "$seo" "$lcp" "$cls" "$tbt" > '${{ matrix.slug }}-${{ matrix.strategy }}.csv'
+          cat '${{ matrix.slug }}-${{ matrix.strategy }}.csv'
+
+      - name: Upload one Lighthouse result
+        uses: actions/upload-artifact@v4
+        with:
+          name: lh-${{ matrix.slug }}-${{ matrix.strategy }}
+          path: |
+            ${{ matrix.slug }}-${{ matrix.strategy }}.csv
+            ${{ matrix.slug }}-${{ matrix.strategy }}.json
+          retention-days: 30
+
+  summarize:
+    needs: lighthouse
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Download Lighthouse matrix evidence
+        uses: actions/download-artifact@v4
+        with:
+          pattern: lh-*
+          path: evidence
+          merge-multiple: true
 
       - name: Summarize Lighthouse floor
         shell: bash
         run: |
           set -euo pipefail
+          printf 'url,strategy,performance,accessibility,best_practices,seo,lcp_ms,cls,tbt_ms\n' > lighthouse-results.csv
+          cat evidence/*.csv | sort >> lighthouse-results.csv
           python - <<'PY'
-          import csv
+          import csv, json
           rows=list(csv.DictReader(open('lighthouse-results.csv', encoding='utf-8')))
+          print('rows', len(rows))
           assert len(rows)==30, f'Expected 30 Lighthouse rows, got {len(rows)}'
           for key in ['performance','accessibility','best_practices','seo']:
               vals=[int(r[key]) for r in rows]
               print(key, 'min=', min(vals), 'avg=', round(sum(vals)/len(vals),1))
           misses=[r for r in rows if any(int(r[k])<100 for k in ['performance','accessibility','best_practices','seo'])]
           print('rows_below_100_any_category', len(misses))
-          for r in misses:
+          for r in sorted(misses, key=lambda r:(int(r['performance']), int(r['accessibility']), int(r['best_practices']), int(r['seo']))):
               print(r)
+          with open('lighthouse-summary.json','w',encoding='utf-8') as f:
+              json.dump({'rows':rows,'misses':misses},f,ensure_ascii=False,indent=2)
           PY
 
-      - name: Upload Lighthouse evidence
-        if: always()
+      - name: Upload aggregate Lighthouse evidence
         uses: actions/upload-artifact@v4
         with:
-          name: recovery-lighthouse-evidence
+          name: recovery-lighthouse-evidence-matrix
           path: |
             lighthouse-results.csv
-            lighthouse-json/
-            live-html/
+            lighthouse-summary.json
+            evidence/
           retention-days: 30
