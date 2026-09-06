@@ -1,0 +1,169 @@
+name: Recovery post-fix production Lighthouse
+
+on:
+  push:
+    branches:
+      - recovery-psi-2026-09-06
+
+permissions:
+  contents: read
+
+jobs:
+  wait-live:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Wait until all 15 fixed pages are live
+        shell: bash
+        run: |
+          set -euo pipefail
+          urls=(
+            kalkulacka-hrube-mzdy-z-ciste.html
+            naklady-zamestnavatele-kalkulacka.html
+            dpp-dpc-kalkulacka.html
+            nemocenska-kalkulacka.html
+            ocr-kalkulacka.html
+            materska-kalkulacka.html
+            rodicovsky-prispevek-kalkulacka.html
+            vyzivne-kalkulacka.html
+            podpora-v-nezamestnanosti-kalkulacka.html
+            duchodovy-vek-kalkulacka.html
+            kolik-stoji-prvni-rok-ditete-kalkulacka.html
+            kolik-me-stoji-pleny-kalkulacka.html
+            kolik-stoji-umele-mleko-kalkulacka.html
+            pribirani-v-tehotenstvi-kalkulacka.html
+            cena-za-km-kalkulacka.html
+          )
+          for attempt in {1..30}; do
+            failures=0
+            for path in "${urls[@]}"; do
+              target="https://rychlevypocty.cz/${path}?rvqa=a0f67159-${attempt}"
+              code=$(curl -L -sS --retry 2 --retry-delay 1 -H 'Cache-Control: no-cache' -w '%{http_code}' -o /tmp/page.html "$target" || true)
+              if [ "$code" != "200" ] || ! grep -q 'RV recovery gate 2026-09-06' /tmp/page.html; then
+                failures=$((failures+1))
+              fi
+            done
+            if [ "$failures" -eq 0 ]; then
+              echo "Fixed production is live on all 15 URLs."
+              exit 0
+            fi
+            echo "Attempt ${attempt}: ${failures}/15 URLs not on fixed deploy yet."
+            sleep 10
+          done
+          echo "Timed out waiting for production deployment."
+          exit 1
+
+  lighthouse:
+    needs: wait-live
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    strategy:
+      fail-fast: false
+      max-parallel: 20
+      matrix:
+        include:
+          - { path: kalkulacka-hrube-mzdy-z-ciste.html, slug: hruba-z-ciste, strategy: mobile }
+          - { path: kalkulacka-hrube-mzdy-z-ciste.html, slug: hruba-z-ciste, strategy: desktop }
+          - { path: naklady-zamestnavatele-kalkulacka.html, slug: naklady-zamestnavatele, strategy: mobile }
+          - { path: naklady-zamestnavatele-kalkulacka.html, slug: naklady-zamestnavatele, strategy: desktop }
+          - { path: dpp-dpc-kalkulacka.html, slug: dpp-dpc, strategy: mobile }
+          - { path: dpp-dpc-kalkulacka.html, slug: dpp-dpc, strategy: desktop }
+          - { path: nemocenska-kalkulacka.html, slug: nemocenska, strategy: mobile }
+          - { path: nemocenska-kalkulacka.html, slug: nemocenska, strategy: desktop }
+          - { path: ocr-kalkulacka.html, slug: ocr, strategy: mobile }
+          - { path: ocr-kalkulacka.html, slug: ocr, strategy: desktop }
+          - { path: materska-kalkulacka.html, slug: materska, strategy: mobile }
+          - { path: materska-kalkulacka.html, slug: materska, strategy: desktop }
+          - { path: rodicovsky-prispevek-kalkulacka.html, slug: rodicovsky, strategy: mobile }
+          - { path: rodicovsky-prispevek-kalkulacka.html, slug: rodicovsky, strategy: desktop }
+          - { path: vyzivne-kalkulacka.html, slug: vyzivne, strategy: mobile }
+          - { path: vyzivne-kalkulacka.html, slug: vyzivne, strategy: desktop }
+          - { path: podpora-v-nezamestnanosti-kalkulacka.html, slug: podpora, strategy: mobile }
+          - { path: podpora-v-nezamestnanosti-kalkulacka.html, slug: podpora, strategy: desktop }
+          - { path: duchodovy-vek-kalkulacka.html, slug: duchodovy-vek, strategy: mobile }
+          - { path: duchodovy-vek-kalkulacka.html, slug: duchodovy-vek, strategy: desktop }
+          - { path: kolik-stoji-prvni-rok-ditete-kalkulacka.html, slug: prvni-rok-ditete, strategy: mobile }
+          - { path: kolik-stoji-prvni-rok-ditete-kalkulacka.html, slug: prvni-rok-ditete, strategy: desktop }
+          - { path: kolik-me-stoji-pleny-kalkulacka.html, slug: pleny, strategy: mobile }
+          - { path: kolik-me-stoji-pleny-kalkulacka.html, slug: pleny, strategy: desktop }
+          - { path: kolik-stoji-umele-mleko-kalkulacka.html, slug: umele-mleko, strategy: mobile }
+          - { path: kolik-stoji-umele-mleko-kalkulacka.html, slug: umele-mleko, strategy: desktop }
+          - { path: pribirani-v-tehotenstvi-kalkulacka.html, slug: pribirani, strategy: mobile }
+          - { path: pribirani-v-tehotenstvi-kalkulacka.html, slug: pribirani, strategy: desktop }
+          - { path: cena-za-km-kalkulacka.html, slug: cena-za-km, strategy: mobile }
+          - { path: cena-za-km-kalkulacka.html, slug: cena-za-km, strategy: desktop }
+    steps:
+      - name: Install Lighthouse
+        shell: bash
+        run: npm install --global lighthouse@12.8.2 >/dev/null 2>&1
+
+      - name: Run production Lighthouse
+        shell: bash
+        run: |
+          set -euo pipefail
+          target="https://rychlevypocty.cz/${{ matrix.path }}?rvqa=a0f67159"
+          out="${{ matrix.slug }}-${{ matrix.strategy }}.json"
+          args=(
+            "$target" --quiet --output=json --output-path="$out"
+            --only-categories=performance,accessibility,best-practices,seo
+            --chrome-flags="--headless --no-sandbox --disable-dev-shm-usage"
+            --max-wait-for-load=45000
+          )
+          if [ "${{ matrix.strategy }}" = "desktop" ]; then args+=(--preset=desktop); fi
+          lighthouse "${args[@]}"
+          perf=$(jq -r '(.categories.performance.score * 100) | round' "$out")
+          acc=$(jq -r '(.categories.accessibility.score * 100) | round' "$out")
+          bp=$(jq -r '(.categories["best-practices"].score * 100) | round' "$out")
+          seo=$(jq -r '(.categories.seo.score * 100) | round' "$out")
+          lcp=$(jq -r '.audits["largest-contentful-paint"].numericValue | round' "$out")
+          cls=$(jq -r '.audits["cumulative-layout-shift"].numericValue' "$out")
+          tbt=$(jq -r '.audits["total-blocking-time"].numericValue | round' "$out")
+          printf '%s,%s,%s,%s,%s,%s,%s,%s,%s\n' '${{ matrix.path }}' '${{ matrix.strategy }}' "$perf" "$acc" "$bp" "$seo" "$lcp" "$cls" "$tbt" > '${{ matrix.slug }}-${{ matrix.strategy }}.csv'
+          cat '${{ matrix.slug }}-${{ matrix.strategy }}.csv'
+
+      - name: Upload one result
+        uses: actions/upload-artifact@v4
+        with:
+          name: postfix-${{ matrix.slug }}-${{ matrix.strategy }}
+          path: |
+            ${{ matrix.slug }}-${{ matrix.strategy }}.csv
+            ${{ matrix.slug }}-${{ matrix.strategy }}.json
+          retention-days: 30
+
+  summarize:
+    needs: lighthouse
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: postfix-*
+          path: evidence
+          merge-multiple: true
+      - name: Build aggregate evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          printf 'url,strategy,performance,accessibility,best_practices,seo,lcp_ms,cls,tbt_ms\n' > post-fix-results.csv
+          cat evidence/*.csv | sort >> post-fix-results.csv
+          python - <<'PY'
+          import csv, json
+          rows=list(csv.DictReader(open('post-fix-results.csv',encoding='utf-8')))
+          assert len(rows)==30, len(rows)
+          for key in ['performance','accessibility','best_practices','seo']:
+              vals=[int(r[key]) for r in rows]
+              print(key,'min=',min(vals),'avg=',round(sum(vals)/len(vals),1))
+          print('mobile performance:')
+          for r in sorted((x for x in rows if x['strategy']=='mobile'), key=lambda x:int(x['performance'])):
+              print(r['url'],r['performance'],'LCP',r['lcp_ms'],'TBT',r['tbt_ms'])
+          json.dump(rows,open('post-fix-results.json','w',encoding='utf-8'),ensure_ascii=False,indent=2)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: recovery-post-fix-lighthouse-evidence
+          path: |
+            post-fix-results.csv
+            post-fix-results.json
+            evidence/
+          retention-days: 30
