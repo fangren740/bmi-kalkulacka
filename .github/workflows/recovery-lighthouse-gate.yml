@@ -1,0 +1,85 @@
+name: Recovery production Lighthouse gate
+
+on:
+  push:
+    branches:
+      - recovery-lighthouse-2026-09-06
+
+permissions:
+  contents: read
+
+jobs:
+  lighthouse:
+    strategy:
+      fail-fast: false
+      matrix:
+        group: [0,1,2,3,4]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Lighthouse
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install -g lighthouse@13
+          google-chrome --version || chromium --version || true
+          lighthouse --version
+
+      - name: Audit production URLs
+        shell: bash
+        run: |
+          set -euo pipefail
+          urls=(
+            kalkulacka-hrube-mzdy-z-ciste.html
+            naklady-zamestnavatele-kalkulacka.html
+            dpp-dpc-kalkulacka.html
+            nemocenska-kalkulacka.html
+            ocr-kalkulacka.html
+            materska-kalkulacka.html
+            rodicovsky-prispevek-kalkulacka.html
+            vyzivne-kalkulacka.html
+            podpora-v-nezamestnanosti-kalkulacka.html
+            duchodovy-vek-kalkulacka.html
+            kolik-stoji-prvni-rok-ditete-kalkulacka.html
+            kolik-me-stoji-pleny-kalkulacka.html
+            kolik-stoji-umele-mleko-kalkulacka.html
+            pribirani-v-tehotenstvi-kalkulacka.html
+            cena-za-km-kalkulacka.html
+          )
+          printf 'url,strategy,performance,accessibility,best_practices,seo,lcp_ms,cls,tbt_ms\n' > "lh-${{ matrix.group }}.csv"
+          mkdir -p "reports-${{ matrix.group }}"
+          start=$(( ${{ matrix.group }} * 3 ))
+          end=$(( start + 3 ))
+          for ((i=start; i<end; i++)); do
+            path="${urls[$i]}"
+            target="https://rychlevypocty.cz/${path}"
+            for strategy in mobile desktop; do
+              out="reports-${{ matrix.group }}/${path%.html}-${strategy}.json"
+              extra=()
+              if [ "$strategy" = desktop ]; then extra+=(--preset=desktop); fi
+              echo "Lighthouse ${strategy}: ${target}"
+              lighthouse "$target" \
+                --output=json --output-path="$out" \
+                --only-categories=performance,accessibility,best-practices,seo \
+                --chrome-flags='--headless --no-sandbox --disable-dev-shm-usage' \
+                --quiet "${extra[@]}"
+              perf=$(jq -r '(.categories.performance.score * 100) | round' "$out")
+              acc=$(jq -r '(.categories.accessibility.score * 100) | round' "$out")
+              bp=$(jq -r '(.categories["best-practices"].score * 100) | round' "$out")
+              seo=$(jq -r '(.categories.seo.score * 100) | round' "$out")
+              lcp=$(jq -r '.audits["largest-contentful-paint"].numericValue | round' "$out")
+              cls=$(jq -r '.audits["cumulative-layout-shift"].numericValue' "$out")
+              tbt=$(jq -r '.audits["total-blocking-time"].numericValue | round' "$out")
+              printf '%s,%s,%s,%s,%s,%s,%s,%s,%s\n' "$path" "$strategy" "$perf" "$acc" "$bp" "$seo" "$lcp" "$cls" "$tbt" >> "lh-${{ matrix.group }}.csv"
+            done
+          done
+          cat "lh-${{ matrix.group }}.csv"
+
+      - name: Upload Lighthouse evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: recovery-lighthouse-${{ matrix.group }}
+          path: |
+            lh-${{ matrix.group }}.csv
+            reports-${{ matrix.group }}/
+          retention-days: 30
