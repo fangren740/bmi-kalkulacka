@@ -130,3 +130,9 @@ A repaired page is not complete until all are true:
 **Confirmed weak/recovery-required pages after sequences #1–#94: 14.**
 
 This is approximately **15% of the upgraded portfolio**. The defect is concentrated enough to repair systematically without reopening the entire V-next program, but large enough that continuing with the old shell would compound the problem.
+
+## Recovery closure — 2026-09-06
+
+**Status: CLOSED.** All 15 recovery-scope pages (#75–#84 and #89–#93) are accepted on live production. Two post-deploy Lighthouse matrices (30 rows each) verified Accessibility 100, Best Practices 100 and SEO 100 throughout. The primary post-fix matrix improved mobile Performance average from 93.9 to 95.3 and desktop from 99.3 to 99.9; #83 improved 82→96/97 and #92 75→95/89. #84 is documented as an edge/third-party/runner performance-variance exception, not an open redesign defect. Canonical evidence: `RV-VNEXT-RECOVERY-CLOSURE-2026-09-06.md`.
+
+No further quality-recovery redesign wave is open. Resume HOLD/measurement and growth prioritization; do not reset MAJOR HOLD for these technical QA fixes.
