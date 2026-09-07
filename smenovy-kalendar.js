@@ -252,7 +252,7 @@
       if (value === valueOfDate(today)) classes.push("is-today");
       if (isWeekend(d)) classes.push("is-weekend");
       if (holiday) classes.push("is-holiday");
-      const aria = `${dateLong.format(d)}, ${s.def.name}${holiday ? `, ${holiday}` : ""}`;
+      const aria = `${day} ${s.def.code} ${s.def.short}, ${dateLong.format(d)}, ${s.def.name}${holiday ? `, ${holiday}` : ""}`;
       cells.push(`<button type="button" class="${classes.join(" ")}" data-date="${value}" aria-label="${aria.replace(/"/g,"&quot;")}"><span class="shift62-day-no">${day}${holiday?"<i></i>":""}</span><b class="shift62-day-code ${s.def.className}">${s.def.code}</b><span class="shift62-day-name">${s.def.short}</span></button>`);
     }
     $("monthGrid").innerHTML = cells.join("");

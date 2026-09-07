@@ -16,9 +16,9 @@ jobs:
     env:
       RV_SEQUENCES: '26,27,28,62,64,68,69,70'
       RV_TARGET_BASE: http://127.0.0.1:8765
-      RV_QA_DEPS: ${{ runner.temp }}/rv-qa
-      NODE_PATH: ${{ runner.temp }}/rv-qa/node_modules
-      RV_QA_OUTPUT: ${{ runner.temp }}/rv-rc-candidate
+      RV_QA_DEPS: /tmp/rv-qa
+      NODE_PATH: /tmp/rv-qa/node_modules
+      RV_QA_OUTPUT: /tmp/rv-rc-candidate
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -41,5 +41,5 @@ jobs:
         if: always()
         with:
           name: rv-rc-repair-candidate
-          path: ${{ runner.temp }}/rv-rc-candidate
+          path: /tmp/rv-rc-candidate
           retention-days: 30
