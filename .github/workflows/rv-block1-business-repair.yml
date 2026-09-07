@@ -5,6 +5,7 @@ on:
       - astra/block-1-business-repairs-2026-09-07
     paths:
       - '.github/scripts/block1-business-repairs.py'
+      - '.github/scripts/block1-business-repairs-pass2.py'
       - '.github/workflows/rv-block1-business-repair.yml'
 permissions:
   contents: write
@@ -22,8 +23,10 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: astra/block-1-business-repairs-2026-09-07
-      - name: Apply targeted repair patch
-        run: python .github/scripts/block1-business-repairs.py
+      - name: Apply targeted repair patches
+        run: |
+          python .github/scripts/block1-business-repairs.py
+          python .github/scripts/block1-business-repairs-pass2.py
       - name: Static diff guard
         run: |
           git diff --check
@@ -37,7 +40,7 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -- '*.html' '*.css'
-          git commit -m 'fix: repair block 1 business calculator accessibility' || true
+          git commit -m 'fix: complete block 1 business accessibility repairs' || true
           git push
       - uses: actions/setup-node@v4
         with:
