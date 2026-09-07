@@ -5,6 +5,7 @@ on:
       - astra/block-1-finance-repairs-2026-09-07
     paths:
       - '.github/scripts/block1-finance-repairs.py'
+      - '.github/scripts/block1-finance-repairs-pass2.py'
       - '.github/workflows/rv-block1-finance-baseline.yml'
 permissions:
   contents: write
@@ -23,7 +24,9 @@ jobs:
         with:
           ref: astra/block-1-finance-repairs-2026-09-07
       - name: Apply targeted finance repairs
-        run: python .github/scripts/block1-finance-repairs.py
+        run: |
+          python .github/scripts/block1-finance-repairs.py
+          python .github/scripts/block1-finance-repairs-pass2.py
       - name: Static diff guard
         run: |
           git diff --check
@@ -37,7 +40,7 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -- '*.html' '*.css'
-          git commit -m 'fix: repair finance release candidate accessibility' || true
+          git commit -m 'fix: complete finance release candidate accessibility' || true
           git push
       - uses: actions/setup-node@v4
         with:
