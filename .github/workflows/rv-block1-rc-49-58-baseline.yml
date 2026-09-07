@@ -1,0 +1,41 @@
+name: RV Block 1 RC 49-58 baseline QA
+on:
+  push:
+    branches:
+      - astra/block-1-rc-repairs-49-58-2026-09-07
+    paths:
+      - '.github/workflows/rv-block1-rc-49-58-baseline.yml'
+permissions:
+  contents: read
+jobs:
+  baseline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      RV_SEQUENCES: '49,50,51,52,53,54,55,56,57,58'
+      RV_TARGET_BASE: http://127.0.0.1:8765
+      RV_QA_DEPS: /tmp/rv-qa
+      NODE_PATH: /tmp/rv-qa/node_modules
+      RV_QA_OUTPUT: /tmp/rv-block1-49-58
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install isolated audit tools
+        run: |
+          npm install --prefix "$RV_QA_DEPS" playwright@1.62.1 lighthouse@13.4.1
+          "$RV_QA_DEPS/node_modules/.bin/playwright" install --with-deps chromium
+      - name: Serve candidate
+        run: python -m http.server 8765 --bind 127.0.0.1 > "$RUNNER_TEMP/rv-server.log" 2>&1 &
+      - name: Responsive and visual baseline
+        run: node .github/scripts/rc-browser-qa.cjs
+      - name: Lighthouse baseline
+        if: ${{ !cancelled() }}
+        run: node .github/scripts/rc-production-audit.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: rv-block1-rc-49-58-baseline
+          path: /tmp/rv-block1-49-58
+          retention-days: 30
