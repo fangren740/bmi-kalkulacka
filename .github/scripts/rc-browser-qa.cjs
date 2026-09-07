@@ -1,11 +1,12 @@
 /* Live production smoke and visual evidence, separate from Lighthouse scoring. */
 const {chromium}=require('playwright');
+const assert=require('node:assert/strict');
 const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
 const root=path.resolve(__dirname,'../..'),output=process.env.RV_QA_OUTPUT||'/tmp/rv-rc-browser';
 const rc=JSON.parse(fs.readFileSync(path.join(root,'RV_VNEXT_PROGRESS.json'))).completedPages.filter(p=>p.status==='RELEASE_CANDIDATE');
 const requested=(process.env.RV_SEQUENCES||'').split(',').filter(Boolean).map(Number);
 const targetBase=process.env.RV_TARGET_BASE||'https://rychlevypocty.cz';
-const report={targetBase,measuredAt:new Date().toISOString(),rows:[],resources:{},failures:[]};
+const report={targetBase,measuredAt:new Date().toISOString(),rows:[],interactions:[],resources:{},failures:[]};
 const hash=b=>crypto.createHash('sha256').update(b).digest('hex');
 fs.mkdirSync(output,{recursive:true});
 (async()=>{
@@ -30,6 +31,22 @@ fs.mkdirSync(output,{recursive:true});
      await page.evaluate(()=>window.scrollTo(0,0));await page.evaluate(()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))));
      await page.screenshot({path:path.join(output,`${item.sequence}-${width}-full.png`),fullPage:true});await style.evaluate(e=>e.remove());
     }
+   }
+   if(item.sequence===62){
+    await page.setViewportSize({width:320,height:900});
+    for(const preset of ['2224','12rot','shortlong','2448','three8']){
+     await page.locator(`[data-preset="${preset}"]`).click();
+     const ratios=await page.locator('#phaseGrid small').evaluateAll(nodes=>{
+      const rgb=s=>s.match(/[\d.]+/g).slice(0,3).map(Number);
+      const luminance=c=>c.map(v=>{v/=255;return v<=.04045?v/12.92:((v+.055)/1.055)**2.4}).reduce((a,v,i)=>a+v*[.2126,.7152,.0722][i],0);
+      return nodes.map(e=>{const a=luminance(rgb(getComputedStyle(e).color)),b=luminance(rgb(getComputedStyle(e.parentElement).backgroundColor));return (Math.max(a,b)+.05)/(Math.min(a,b)+.05)});
+     });
+     assert(ratios.length>0&&ratios.every(r=>r>=4.5),preset+' phase contrast');
+     await page.locator('#monthGrid button').last().click();
+     assert(await page.locator('#monthGrid button').last().evaluate(e=>e.classList.contains('is-selected')),preset+' date selection');
+    }
+    await page.locator('[data-preset="2224"]').click();
+    report.interactions.push({sequence:62,status:'PASS',checks:'five cycle presets, phase text contrast, selecting a day through contained horizontal scrolling at 320px'});
    }
   }catch(e){report.failures.push({sequence:item.sequence,error:e.message});}
   await Promise.allSettled(pending);await context.close();fs.writeFileSync(path.join(output,'report.json'),JSON.stringify(report,null,2));
