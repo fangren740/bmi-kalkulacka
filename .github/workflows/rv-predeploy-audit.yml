@@ -39,6 +39,7 @@ jobs:
             --json-out rv-vnext-progress-report.json | tee rv-vnext-progress-report.txt
 
       - name: Run deterministic audit
+        if: ${{ !cancelled() }}
         id: audit
         shell: bash
         run: |
@@ -48,6 +49,17 @@ jobs:
             --config audits/audit-config.json \
             --check-js \
             --json-out rv-audit-report.json | tee rv-audit-report.txt
+
+      - name: Run V-next accessibility and brand contract
+        if: ${{ !cancelled() }}
+        shell: bash
+        run: |
+          set -o pipefail
+          python rv-vnext-a11y-lint.py --all-vnext | tee rv-a11y-report.txt
+
+      - name: Check complete calculator inventory
+        if: ${{ !cancelled() }}
+        run: python .github/scripts/vnext_inventory.py --check
 
       - name: Upload audit report
         if: always()
@@ -59,5 +71,6 @@ jobs:
             rv-vnext-progress-report.txt
             rv-audit-report.json
             rv-audit-report.txt
+            rv-a11y-report.txt
           if-no-files-found: warn
           retention-days: 30
