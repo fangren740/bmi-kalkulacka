@@ -1,14 +1,15 @@
-name: RV Block 1 RC 59-67 baseline QA
+name: RV Block 1 RC 59-67 repair QA
 on:
   push:
     branches:
       - astra/block-1-rc-repairs-59-67-2026-09-07
     paths:
       - '.github/workflows/rv-block1-rc-59-67-baseline.yml'
+      - '.github/scripts/block1-rc-59-67-repairs.py'
 permissions:
-  contents: read
+  contents: write
 jobs:
-  baseline:
+  repair-and-qa:
     runs-on: ubuntu-latest
     timeout-minutes: 35
     env:
@@ -19,6 +20,26 @@ jobs:
       RV_QA_OUTPUT: /tmp/rv-block1-59-67
     steps:
       - uses: actions/checkout@v4
+      - name: Apply targeted RC repairs
+        run: python .github/scripts/block1-rc-59-67-repairs.py
+      - name: Static diff guard
+        run: |
+          if git diff --name-only | grep -E '\.js$'; then
+            echo 'Unexpected JavaScript change in RC 59-67 repair batch.' >&2
+            exit 1
+          fi
+          git diff --check
+      - name: Commit repair candidate
+        run: |
+          if git diff --quiet; then
+            echo 'No product changes to commit.'
+          else
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add pracovni-dny-kalkulacka.html pracovni-dny-vnext.css kolik-dni-do-data.html dny-do-data-vnext.css planovac-dovolene.html planovac-dovolene-vnext.css kalkulacka-pujcky.html pujcka-vnext.css kalendar-jmen.html kalendar-jmen-vnext.css statni-svatky-a-otevrene-obchody.html statni-svatky-vnext.css kolik-muzu-splacet-kalkulacka.html splatkovy-prostor-vnext.css
+            git commit -m 'fix: repair RC 59-67 accessibility'
+            git push
+          fi
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -28,14 +49,25 @@ jobs:
           "$RV_QA_DEPS/node_modules/.bin/playwright" install --with-deps chromium
       - name: Serve candidate
         run: python -m http.server 8765 --bind 127.0.0.1 > "$RUNNER_TEMP/rv-server.log" 2>&1 &
-      - name: Responsive and visual baseline
+      - name: Responsive and visual QA for RC 59-67
         run: node .github/scripts/rc-browser-qa.cjs
-      - name: Lighthouse baseline
-        if: ${{ !cancelled() }}
-        run: node .github/scripts/rc-production-audit.cjs
+      - name: Lighthouse accessibility and best-practices retest
+        run: |
+          node .github/scripts/rc-production-audit.cjs
+          node - <<'NODE'
+          const fs = require('fs');
+          const p = process.env.RV_QA_OUTPUT + '/summary.json';
+          const data = JSON.parse(fs.readFileSync(p, 'utf8'));
+          if (!Array.isArray(data.rows) || data.rows.length !== 18) throw new Error(`Expected 18 rows, got ${data.rows?.length}`);
+          const bad = data.rows.filter(r => r.status !== 'AUTOMATED_PASS_REQUIRES_REVIEW' || r.scores?.accessibility !== 100 || r.scores?.['best-practices'] !== 100 || (r.findings||[]).length);
+          if (bad.length) {
+            console.error(JSON.stringify(bad, null, 2));
+            process.exit(1);
+          }
+          NODE
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: rv-block1-rc-59-67-baseline
+          name: rv-block1-rc-59-67-repair-qa
           path: /tmp/rv-block1-59-67
           retention-days: 30
