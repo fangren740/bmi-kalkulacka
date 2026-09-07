@@ -6,6 +6,7 @@ on:
     paths:
       - '.github/workflows/rv-block1-rc-59-67-baseline.yml'
       - '.github/scripts/block1-rc-59-67-repairs.py'
+      - '.github/scripts/block1-rc-59-67-repairs-pass2.py'
 permissions:
   contents: write
 jobs:
@@ -21,7 +22,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Apply targeted RC repairs
-        run: python .github/scripts/block1-rc-59-67-repairs.py
+        run: |
+          python .github/scripts/block1-rc-59-67-repairs.py
+          python .github/scripts/block1-rc-59-67-repairs-pass2.py
       - name: Static diff guard
         run: |
           if git diff --name-only | grep -E '\.js$'; then
