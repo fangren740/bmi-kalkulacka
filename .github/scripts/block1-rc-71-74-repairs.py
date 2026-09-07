@@ -54,6 +54,7 @@ patches = {
 .inf73-example-paper>div>b,
 .inf73-mistake-grid article>span{color:#526579}
 .inf73-section-head .inf73-micro{color:#147347}
+.inf73-method .inf73-section-head .inf73-micro{color:#8ee3b3}
 ''',
 'cista-mzda-vnext.css': r'''
 .salary74-mode>button,
@@ -67,9 +68,12 @@ patches = {
 .salary74-example>div.container>div>p,
 .salary74-example-slip>span,
 .salary74-mistake-grid article>span{color:#526579}
+.salary74-cost-line>span{color:#526579}
 .salary74-data-proof>span,
 .salary74-section-head .salary74-micro,
 .salary74-example>div.container>div>span.salary74-micro{color:#147347}
+.salary74-limits .salary74-section-head .salary74-micro,
+.salary74-method .salary74-section-head .salary74-micro{color:#8ee3b3}
 '''
 }
 
