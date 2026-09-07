@@ -9,7 +9,8 @@ patches = {
 .name65-radar .name65-section-head .name65-micro{color:#8ee3b3}
 ''',
     'statni-svatky-vnext.css': r'''
-.holiday66-runway .holiday66-section-head .holiday66-micro{color:#8ee3b3}
+.holiday66-runway .holiday66-section-head .holiday66-micro,
+.holiday66-method .holiday66-section-head .holiday66-micro{color:#8ee3b3}
 ''',
     'splatkovy-prostor-vnext.css': r'''
 .pay67-runway .pay67-section-head .pay67-micro{color:#8ee3b3}
