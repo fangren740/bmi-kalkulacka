@@ -1,14 +1,15 @@
-name: RV Block 1 finance baseline QA
+name: RV Block 1 finance repair QA
 on:
   push:
     branches:
       - astra/block-1-finance-repairs-2026-09-07
     paths:
+      - '.github/scripts/block1-finance-repairs.py'
       - '.github/workflows/rv-block1-finance-baseline.yml'
 permissions:
-  contents: read
+  contents: write
 jobs:
-  baseline:
+  repair-and-qa:
     runs-on: ubuntu-latest
     timeout-minutes: 35
     env:
@@ -19,6 +20,25 @@ jobs:
       RV_QA_OUTPUT: /tmp/rv-block1-finance
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: astra/block-1-finance-repairs-2026-09-07
+      - name: Apply targeted finance repairs
+        run: python .github/scripts/block1-finance-repairs.py
+      - name: Static diff guard
+        run: |
+          git diff --check
+          git diff --name-only
+          if git diff --name-only | grep -E '\.js$'; then
+            echo 'Unexpected JavaScript change in finance recovery patch.' >&2
+            exit 1
+          fi
+      - name: Commit repair candidate
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- '*.html' '*.css'
+          git commit -m 'fix: repair finance release candidate accessibility' || true
+          git push
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -28,14 +48,16 @@ jobs:
           "$RV_QA_DEPS/node_modules/.bin/playwright" install --with-deps chromium
       - name: Serve candidate
         run: python -m http.server 8765 --bind 127.0.0.1 > "$RUNNER_TEMP/rv-server.log" 2>&1 &
-      - name: Responsive and visual baseline
+      - name: Responsive and visual QA for finance batch
         run: node .github/scripts/rc-browser-qa.cjs
-      - name: Lighthouse baseline
+      - name: Lighthouse accessibility and best-practices retest
         if: ${{ !cancelled() }}
-        run: node .github/scripts/rc-production-audit.cjs
+        run: |
+          node .github/scripts/rc-production-audit.cjs
+          node -e "const r=require(process.env.RV_QA_OUTPUT+'/summary.json'); if(r.rows.length!==20){console.error('Expected 20 Lighthouse rows, got',r.rows.length);process.exit(1)}; const bad=r.rows.filter(x=>x.status!=='AUTOMATED_PASS_REQUIRES_REVIEW'); if(bad.length){console.error(JSON.stringify(bad,null,2));process.exit(1)}"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: rv-block1-finance-baseline
+          name: rv-block1-finance-repair-qa
           path: /tmp/rv-block1-finance
           retention-days: 30
