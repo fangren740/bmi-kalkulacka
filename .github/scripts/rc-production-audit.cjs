@@ -7,16 +7,19 @@ const root=path.resolve(__dirname,'../..');
 const output=path.resolve(process.env.RV_QA_OUTPUT||'/tmp/rv-rc-production');
 const shard=Number(process.env.RV_SHARD||0), shards=Number(process.env.RV_SHARDS||1);
 const rc=JSON.parse(fs.readFileSync(path.join(root,'RV_VNEXT_PROGRESS.json'))).completedPages.filter(p=>p.status==='RELEASE_CANDIDATE');
-const selected=rc.filter((p,i)=>i%shards===shard);
+const requested=(process.env.RV_SEQUENCES||'').split(',').filter(Boolean).map(Number);
+const selected=rc.filter((p,i)=>(!requested.length||requested.includes(p.sequence))&&i%shards===shard);
+const targetBase=process.env.RV_TARGET_BASE||'https://rychlevypocty.cz';
 const hash=b=>crypto.createHash('sha256').update(b).digest('hex');
-const report={schemaVersion:1,measuredAt:new Date().toISOString(),candidate:process.env.GITHUB_SHA||null,shard,shards,rows:[]};
+const report={schemaVersion:1,measuredAt:new Date().toISOString(),candidate:process.env.GITHUB_SHA||null,shard,shards,targetBase,rows:[]};
 fs.mkdirSync(output,{recursive:true});
 function save(){fs.writeFileSync(path.join(output,'summary.json'),JSON.stringify(report,null,2));}
 (async()=>{
  for(const item of selected){
+  const targetUrl=targetBase+'/'+item.file;
   let identity;
   try{
-   const res=await fetch(item.url,{signal:AbortSignal.timeout(30000)});
+   const res=await fetch(targetUrl,{signal:AbortSignal.timeout(30000)});
    const body=Buffer.from(await res.arrayBuffer());
    identity={url:res.url,httpStatus:res.status,productionHtmlSha256:hash(body),repositoryHtmlSha256:hash(fs.readFileSync(path.join(root,item.file)))};
    identity.htmlMatchesRepository=identity.productionHtmlSha256===identity.repositoryHtmlSha256;
@@ -24,10 +27,10 @@ function save(){fs.writeFileSync(path.join(output,'summary.json'),JSON.stringify
   for(const device of ['mobile','desktop']){
    const stem=`${item.sequence}-${device}`;
    const jsonPath=path.join(output,stem+'.report.json');
-   const args=[path.join(process.env.RV_QA_DEPS,'node_modules/lighthouse/cli/index.js'),item.url,'--quiet','--chrome-flags=--headless --no-sandbox --disable-dev-shm-usage','--output=json','--output=html','--output-path='+path.join(output,stem),'--only-categories=performance,accessibility,best-practices,seo'];
+   const args=[path.join(process.env.RV_QA_DEPS,'node_modules/lighthouse/cli/index.js'),targetUrl,'--quiet','--chrome-flags=--headless --no-sandbox --disable-dev-shm-usage','--output=json','--output=html','--output-path='+path.join(output,stem),'--only-categories='+(process.env.RV_TARGET_BASE?'accessibility,best-practices':'performance,accessibility,best-practices,seo')];
    if(device==='desktop')args.push('--preset=desktop');
    const run=spawnSync(process.execPath,args,{timeout:180000,encoding:'utf8',maxBuffer:4*1024*1024});
-   const row={sequence:item.sequence,file:item.file,url:item.url,device,identity,exitCode:run.status};
+   const row={sequence:item.sequence,file:item.file,url:targetUrl,device,identity,exitCode:run.status};
    if(fs.existsSync(jsonPath)){
     const lhr=JSON.parse(fs.readFileSync(jsonPath));
     row.lighthouseVersion=lhr.lighthouseVersion;row.fetchTime=lhr.fetchTime;row.finalUrl=lhr.finalDisplayedUrl||lhr.finalUrl;row.runtimeError=lhr.runtimeError||null;
