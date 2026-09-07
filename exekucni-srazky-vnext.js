@@ -207,10 +207,9 @@
     els.advancedPanel.hidden = !advanced;
     els.tabBasic.classList.toggle('is-active', !advanced);
     els.tabAdvanced.classList.toggle('is-active', advanced);
-    els.tabBasic.setAttribute('aria-selected', String(!advanced));
-    els.tabAdvanced.setAttribute('aria-selected', String(advanced));
-    els.tabBasic.tabIndex = advanced ? -1 : 0;
-    els.tabAdvanced.tabIndex = advanced ? 0 : -1;
+    els.tabBasic.setAttribute('aria-pressed', String(!advanced));
+    els.tabAdvanced.setAttribute('aria-pressed', String(advanced));
+    els.tabAdvanced.setAttribute('aria-expanded', String(advanced));
     if (focusButton) (advanced ? els.tabAdvanced : els.tabBasic).focus();
     updateResult();
   }
@@ -278,7 +277,8 @@
   [els.tabBasic, els.tabAdvanced].forEach((tab) => tab.addEventListener('keydown', (event) => {
     if (event.key === 'ArrowRight' || event.key === 'ArrowLeft' || event.key === 'Home' || event.key === 'End') {
       event.preventDefault();
-      setMode(tab === els.tabBasic ? 'advanced' : 'basic', true);
+      const next = event.key === 'Home' ? 'basic' : event.key === 'End' ? 'advanced' : tab === els.tabBasic ? 'advanced' : 'basic';
+      setMode(next, true);
     }
   }));
 

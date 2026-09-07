@@ -1,0 +1,39 @@
+name: RV Block 0 browser regression
+
+on:
+  pull_request:
+    paths:
+      - '*.html'
+      - 'rv-social-links.css'
+      - 'exekucni-srazky-vnext.js'
+      - '.github/scripts/block0-browser-qa.cjs'
+      - '.github/workflows/rv-block0-browser.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install isolated QA dependencies
+        run: |
+          npm install --prefix "$RUNNER_TEMP/rv-browser" playwright@1.62.1
+          "$RUNNER_TEMP/rv-browser/node_modules/.bin/playwright" install --with-deps chromium
+      - name: Test candidate responsive and interaction contracts
+        env:
+          NODE_PATH: ${{ runner.temp }}/rv-browser/node_modules
+          RV_QA_OUTPUT: ${{ runner.temp }}/rv-block0-qa
+        run: node .github/scripts/block0-browser-qa.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: rv-block0-browser-qa
+          path: ${{ runner.temp }}/rv-block0-qa
+          retention-days: 30
