@@ -91,9 +91,9 @@
   const els = {
     netWage: $('netWage'), children: $('children'), spouseEligible: $('spouseEligible'),
     fourExecutions: $('fourExecutions'), pensionException: $('pensionException'), employerFee: $('employerFee'),
-    debtCap: $('debtCap'), calculate: $('calculate'), reset: $('reset'), formError: $('formError'),
+    debtCap: $('debtCap'), calculate: $('calculate'), reset: $('reset'), formError: $('formError'), result: $('executionResult'),
     advancedPanel: $('advancedPanel'), tabBasic: $('tabBasic'), tabAdvanced: $('tabAdvanced'),
-    takeHome: $('takeHome'), resultSentence: $('resultSentence'), protectedAmount: $('protectedAmount'),
+    takeHome: $('takeHome'), resultSentence: $('resultSummary'), protectedAmount: $('protectedAmount'),
     keepExtra: $('keepExtra'), deductionAmount: $('deductionAmount'), oneThird: $('oneThird'),
     fullySeizable: $('fullySeizable'), effectiveMode: $('effectiveMode'), modeReason: $('modeReason'),
     roundRemainder: $('roundRemainder'), barProtected: $('barProtected'), barKeep: $('barKeep'),
@@ -128,8 +128,8 @@
   function validate(input) {
     const wage = Number(input.netWage);
     const deps = Number(input.dependents);
-    if (!Number.isFinite(wage) || wage < 0) return 'Zadejte platnou čistou mzdu.';
-    if (!Number.isFinite(deps) || deps < 0 || !Number.isInteger(deps)) return 'Počet vyživovaných osob musí být celé nezáporné číslo.';
+    if (String(input.netWage).trim() === '' || !Number.isFinite(wage) || wage < 0 || wage > 10000000) return 'Zadejte čistou mzdu od 0 do 10 milionů Kč.';
+    if (String(input.dependents).trim() === '' || !Number.isFinite(deps) || deps < 0 || !Number.isInteger(deps)) return 'Počet vyživovaných osob musí být celé nezáporné číslo.';
     if (deps > 20) return 'Pro tento orientační model zadejte nejvýše 20 vyživovaných osob.';
     return '';
   }
@@ -168,6 +168,7 @@
     const error = validate(input);
     els.formError.hidden = !error;
     els.formError.textContent = error;
+    els.result.hidden = Boolean(error);
     if (error) return null;
 
     const result = calculate(input);
