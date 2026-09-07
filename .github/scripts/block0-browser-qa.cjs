@@ -42,8 +42,14 @@ const server = http.createServer((req,res) => {
     // New common social controls have an explicit 44px touch contract.
     if(await page.locator('.rv-social-links').count())assert(metrics.socials.every(s=>s.width>=44&&s.height>=44),item.file+' social target');
     if([320,390,1440].includes(width)){
+      // Materialize off-screen content before measuring screenshot bounds.
+      // This only disables rendering deferral for captures, not layout styling.
+      const captureStyle=await page.addStyleTag({content:'* { content-visibility: visible !important; }'});
+      await page.locator('footer').scrollIntoViewIfNeeded();
+      await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
       await page.locator('footer').screenshot({path:path.join(output,`${item.sequence}-${width}-footer.png`)});
       if([75,76,84,85,88,94].includes(item.sequence))await page.screenshot({path:path.join(output,`${item.sequence}-${width}-full.png`),fullPage:true});
+      await captureStyle.evaluate(e=>e.remove());
     }
    }
    if(item.sequence===85){
