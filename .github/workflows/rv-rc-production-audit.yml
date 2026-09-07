@@ -1,0 +1,39 @@
+name: RV RC production evidence
+on:
+  pull_request:
+    types: [opened]
+    paths:
+      - '.github/scripts/rc-production-audit.cjs'
+      - '.github/workflows/rv-rc-production-audit.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  production-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      max-parallel: 3
+      matrix:
+        shard: [0, 1, 2, 3, 4, 5, 6]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install audit-only dependencies
+        run: npm install --prefix "$RUNNER_TEMP/rv-lighthouse" lighthouse@13.4.1
+      - name: Audit live production without modifying it
+        env:
+          RV_QA_DEPS: ${{ runner.temp }}/rv-lighthouse
+          RV_QA_OUTPUT: ${{ runner.temp }}/rv-rc-production
+          RV_SHARD: ${{ matrix.shard }}
+          RV_SHARDS: 7
+        run: node .github/scripts/rc-production-audit.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: rv-rc-production-${{ matrix.shard }}
+          path: ${{ runner.temp }}/rv-rc-production
+          retention-days: 30

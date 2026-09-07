@@ -1,0 +1,45 @@
+name: RV RC repair candidate
+on:
+  pull_request:
+    paths:
+      - '*.html'
+      - '*.css'
+      - '.github/scripts/rc-browser-qa.cjs'
+      - '.github/scripts/rc-production-audit.cjs'
+      - '.github/workflows/rv-rc-candidate.yml'
+permissions:
+  contents: read
+jobs:
+  candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      RV_SEQUENCES: '62'
+      RV_TARGET_BASE: http://127.0.0.1:8765
+      RV_QA_DEPS: /tmp/rv-qa
+      NODE_PATH: /tmp/rv-qa/node_modules
+      RV_QA_OUTPUT: /tmp/rv-rc-candidate
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install isolated audit tools
+        run: |
+          npm install --prefix "$RV_QA_DEPS" playwright@1.62.1 lighthouse@13.4.1
+          "$RV_QA_DEPS/node_modules/.bin/playwright" install --with-deps chromium
+      - name: Serve candidate
+        run: python -m http.server 8765 --bind 127.0.0.1 > "$RUNNER_TEMP/rv-server.log" 2>&1 &
+      - name: Responsive and visual QA
+        run: node .github/scripts/rc-browser-qa.cjs
+      - name: Lighthouse accessibility and best practices retest
+        if: ${{ !cancelled() }}
+        run: |
+          node .github/scripts/rc-production-audit.cjs
+          node -e "const r=require(process.env.RV_QA_OUTPUT+'/summary.json');if(r.rows.length!==2||r.rows.some(x=>x.status!=='AUTOMATED_PASS_REQUIRES_REVIEW'))process.exit(1)"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: rv-rc-repair-candidate
+          path: /tmp/rv-rc-candidate
+          retention-days: 30
