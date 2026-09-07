@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
-      RV_SEQUENCES: '62'
+      RV_SEQUENCES: '29,30,31,32,33,34,35,36,37,38'
       RV_TARGET_BASE: http://127.0.0.1:8765
       RV_QA_DEPS: /tmp/rv-qa
       NODE_PATH: /tmp/rv-qa/node_modules
@@ -36,7 +36,7 @@ jobs:
         if: ${{ !cancelled() }}
         run: |
           node .github/scripts/rc-production-audit.cjs
-          node -e "const r=require(process.env.RV_QA_OUTPUT+'/summary.json');if(r.rows.length!==2||r.rows.some(x=>x.status!=='AUTOMATED_PASS_REQUIRES_REVIEW'))process.exit(1)"
+          node -e "const r=require(process.env.RV_QA_OUTPUT+'/summary.json');if(r.rows.length!==20||r.rows.some(x=>x.status!=='AUTOMATED_PASS_REQUIRES_REVIEW'))process.exit(1)"
       - uses: actions/upload-artifact@v4
         if: always()
         with:

@@ -1,0 +1,45 @@
+name: RV first batch postdeploy
+on:
+  pull_request:
+    types: [opened]
+    paths: ['.github/workflows/rv-first-batch-postdeploy.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  production:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        sequences: ['26,27,28,62', '64,68,69,70']
+    env:
+      RV_SEQUENCES: ${{ matrix.sequences }}
+      RV_QA_DEPS: /tmp/rv-qa
+      NODE_PATH: /tmp/rv-qa/node_modules
+      RV_QA_OUTPUT: /tmp/rv-postdeploy
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 2c07c3144a0658a21f1d9b418d618b7590b8f17e
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install audit tools
+        run: |
+          npm install --prefix "$RV_QA_DEPS" playwright@1.62.1 lighthouse@13.4.1
+          "$RV_QA_DEPS/node_modules/.bin/playwright" install --with-deps chromium
+      - name: Live responsive and interaction checks
+        run: node .github/scripts/rc-browser-qa.cjs
+      - name: Live Lighthouse all categories
+        if: ${{ !cancelled() }}
+        run: |
+          node .github/scripts/rc-production-audit.cjs
+          node -e "const r=require(process.env.RV_QA_OUTPUT+'/summary.json');if(r.rows.length!==8||r.rows.some(x=>x.runtimeError||x.exitCode!==0||x.scores.accessibility!==100||x.scores['best-practices']!==100||x.scores.seo!==100))process.exit(1)"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: rv-postdeploy-${{ matrix.sequences }}
+          path: /tmp/rv-postdeploy
+          retention-days: 30
