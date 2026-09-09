@@ -41,8 +41,10 @@ jobs:
       - name: V-next accessibility lint
         run: python rv-vnext-a11y-lint.py --all-vnext
 
-      - name: Inventory check
-        run: python .github/scripts/vnext_inventory.py --check
+      - name: Regenerate and verify inventory
+        run: |
+          python .github/scripts/vnext_inventory.py
+          python .github/scripts/vnext_inventory.py --check
 
       - name: Commit integrated release
         run: |
