@@ -915,5 +915,12 @@ window.RV_TOOL_INDEX = [
     "type": "Sociální dávky",
     "desc": "Spočítejte životní minimum jednotlivce nebo domácnosti. Základní i pokročilý režim ukáže částku do 30. 9. 2026, změnu od 1. 10. 2026 a rozpad po osobách.",
     "keywords": "Životní minimum kalkulačka 2026 Sociální dávky Spočítejte životní minimum jednotlivce nebo domácnosti. Základní i pokročilý režim ukáže částku do 30. 9. 2026, změnu od 1. 10. 2026 a rozpad po osobách. Rodina a rozpočet"
+  },
+  {
+    "title": "Kalkulačka tapet",
+    "url": "/kalkulacka-tapet.html",
+    "type": "Tapety",
+    "desc": "Celé pásy, ořez, raport, sesazení a konkrétní řezný plán jednotlivých rolí.",
+    "keywords": "Kalkulačka tapet tapety počet rolí tapet řezný plán raport sesazení ořez stěna rekonstrukce Rekonstrukce"
   }
 ];
