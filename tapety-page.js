@@ -3,6 +3,8 @@
   'use strict';
   const core = window.RVTapety, $ = id => document.getElementById(id), form = $('tp-form');
   const fmt = core.format, cm = n => `${fmt(n)} cm`, m = n => `${fmt(n, 'm')} m`;
+  let printDetails = [];
+  window.addEventListener('afterprint', () => { printDetails.forEach(([el,open]) => el.open = open); printDetails = []; });
   let current = null, touched = new Set(), removed = null;
   function raw() {
     const v = {};
@@ -32,13 +34,15 @@
   }
   function syncModes() {
     const patterned = $('match').value !== 'free', offset = $('match').value === 'offset';
-    $('pattern-fields').hidden = !patterned; $('repeat').disabled = !patterned; $('aligned').disabled = !patterned;
+    $('pattern-enabled').checked = patterned; $('pattern-options').hidden = !patterned; $('pattern-fields').hidden = !patterned; $('repeat').disabled = !patterned; $('aligned').disabled = !patterned;
     $('offset-wrap').hidden = !offset; $('offset').disabled = !offset; $('half-repeat').disabled = !offset;
     $('match-help').textContent = !patterned ? 'Volné sesazení: vzor při řezání nenavazujete.' : offset ? 'Každý další pás posune motiv po směru odvíjení o zadanou hodnotu. Ověřte, že to odpovídá návodu výrobce.' : 'Všechny pásy začínají stejným motivem. Délku zaokrouhlíme na celý raport.';
     Array.from($('walls').children).forEach((_, i) => {
       const custom = $(`wall-${i}-custom`).checked;
       $(`wall-${i}-height-wrap`).hidden = !custom; $(`wall-${i}-height`).disabled = !custom;
     });
+    const top = core.parseLength($('trimTop').value,'cm'), bottom = core.parseLength($('trimBottom').value,'cm');
+    $('trim-summary').textContent = top.kind === 'valid' && bottom.kind === 'valid' ? `Ořez: ${cm(top.value)} nahoře + ${cm(bottom.value)} dole` : 'Ořez: zkontrolujte hodnoty';
     $('add-wall').disabled = $('walls').children.length >= core.limits.walls;
   }
   // All variable HTML below is generated solely from validated numbers or integer indices.
@@ -46,7 +50,7 @@
     $('walls').replaceChildren();
     walls.forEach((wall, i) => {
       const row = document.createElement('div'); row.className = 'rv-tp-wall'; row.dataset.wall = i;
-      row.innerHTML = `<div class="rv-tp-wall-head"><h3>Stěna ${i+1}</h3>${walls.length > 1 ? `<button type="button" data-remove="${i}" aria-label="Odebrat stěnu ${i+1}">Odebrat</button>` : ''}</div><div class="rv-tp-field"><label for="wall-${i}-width">Šířka stěny ${i+1} <span>(m)</span></label><input id="wall-${i}-width" name="wall-${i}-width" inputmode="decimal" aria-describedby="wall-${i}-width-error"><small class="rv-tp-error" id="wall-${i}-width-error" hidden></small></div><label class="rv-tp-check"><input type="checkbox" id="wall-${i}-custom" name="wall-${i}-custom">Tato stěna má jinou výšku</label><div class="rv-tp-field" id="wall-${i}-height-wrap" hidden><label for="wall-${i}-height">Výška stěny ${i+1} <span>(m)</span></label><input id="wall-${i}-height" name="wall-${i}-height" inputmode="decimal" aria-describedby="wall-${i}-height-error"><small class="rv-tp-error" id="wall-${i}-height-error" hidden></small></div>`;
+      row.innerHTML = `<div class="rv-tp-wall-head"><h3>Stěna ${i+1}</h3>${walls.length > 1 ? `<button type="button" data-remove="${i}" aria-label="Odebrat stěnu ${i+1}">Odebrat</button>` : ''}</div><div class="rv-tp-field"><label for="wall-${i}-width">Šířka stěny ${i+1} <span>(m)</span></label><input id="wall-${i}-width" name="wall-${i}-width" inputmode="decimal" aria-describedby="wall-${i}-width-error"><small class="rv-tp-error" id="wall-${i}-width-error" hidden></small></div><details class="rv-tp-options rv-tp-custom" ${wall.customHeight ? 'open' : ''}><summary>Jiná výška</summary><label class="rv-tp-check"><input type="checkbox" id="wall-${i}-custom" name="wall-${i}-custom">Tato stěna má jinou výšku</label><div class="rv-tp-field" id="wall-${i}-height-wrap" hidden><label for="wall-${i}-height">Výška stěny ${i+1} <span>(m)</span></label><input id="wall-${i}-height" name="wall-${i}-height" inputmode="decimal" aria-describedby="wall-${i}-height-error"><small class="rv-tp-error" id="wall-${i}-height-error" hidden></small></div></details>`;
       $('walls').append(row);
       $(`wall-${i}-width`).value = wall.width; $(`wall-${i}-height`).value = wall.height;
       $(`wall-${i}-custom`).checked = wall.customHeight;
@@ -71,7 +75,7 @@
           const item = document.createElement('li'), link = document.createElement('a');
           const target = id === 'walls' ? 'add-wall' : id;
           link.href = `#${target}`; link.textContent = `${$(id)?.labels?.[0]?.textContent.trim() || 'Stěny'}: ${message}`;
-          link.addEventListener('click', e => { e.preventDefault(); $(target)?.focus(); }); item.append(link); list.append(item);
+          link.addEventListener('click', e => { e.preventDefault(); let el = $(target); for (let p = el?.parentElement; p; p = p.parentElement) if (p.tagName === 'DETAILS') p.open = true; el?.focus(); }); item.append(link); list.append(item);
         });
         summary.append(list); summary.hidden = false; summary.focus();
       } else if (submitted) $('result-heading').focus();
@@ -80,16 +84,16 @@
     const v = current, patterned = v.input.match !== 'free', conservative = patterned && !v.input.aligned;
     const rollWord = v.rolls.length === 1 ? 'roli' : v.rolls.length <= 4 ? 'role' : 'rolí';
     const lengths = [...new Set(v.strips.map(s => s.length))];
-    $('answer').innerHTML = `<p>Podle zadaného řezného plánu</p><h2 id="result-heading" tabindex="-1">Potřebujete ${v.rolls.length} ${rollWord}.</h2><p>${conservative ? 'Včetně rezervy na nalezení vzoru na každé roli.' : 'Celé svislé pásy, bez dodatečné náhradní role.'}</p><dl class="rv-tp-kpis"><div><dt>Počet pásů</dt><dd>${v.strips.length}</dd></div><div><dt>${lengths.length === 1 ? 'Délka pásu' : 'Délky pásů'}</dt><dd>${lengths.length === 1 ? cm(lengths[0]) : `${fmt(Math.min(...lengths))}–${cm(Math.max(...lengths))}`}</dd></div><div><dt>${conservative ? 'Zbytky nejméně' : 'Zbytky rolí'}</dt><dd>${m(v.totalLeftover)}</dd></div></dl>`;
+    $('answer').innerHTML = `<p>VÁŠ NÁKUPNÍ PLÁN</p><h2 id="result-heading" tabindex="-1"><span>Potřebujete</span> <strong>${v.rolls.length}</strong> ${rollWord}</h2><p>${conservative ? 'Včetně rezervy na nalezení vzoru na každé roli.' : 'Celé svislé pásy, bez dodatečné náhradní role.'}</p><dl class="rv-tp-kpis"><div><dt>Počet pásů</dt><dd>${v.strips.length}</dd></div><div><dt>${lengths.length === 1 ? 'Délka pásu' : 'Délky pásů'}</dt><dd>${lengths.length === 1 ? cm(lengths[0]) : `${fmt(Math.min(...lengths))}–${cm(Math.max(...lengths))}`}</dd></div><div><dt>Nařezané pásy</dt><dd>${m(v.totalCut)}</dd></div><div><dt>${conservative ? 'Zbytky nejméně' : 'Zbytky rolí'}</dt><dd>${m(v.totalLeftover)}</dd></div></dl>`;
     const context = `<div class="rv-tp-result-context"><p><strong>Role ${cm(v.input.rollWidth)} × ${m(v.input.rollLength)}.</strong> Ořez ${cm(v.input.trimTop)} nahoře + ${cm(v.input.trimBottom)} dole, již v délce pásů.</p><p>${patterned ? `${v.input.match === 'offset' ? `Přesazené sesazení: raport ${cm(v.input.repeat)}, posun ${cm(v.input.offset)}.` : `Rovné sesazení: raport ${cm(v.input.repeat)}.`} ${conservative ? `Z každé role vyhrazeno ${cm(v.input.repeat)} na nalezení stejného motivu. Uvedené zbytky jsou dolní mez; skutečné mohou být delší.` : 'Předpoklad: ověřený stejný počáteční motiv všech rolí.'}` : 'Bez návaznosti vzoru.'} Každá stěna začíná celým pásem; návaznost přes roh není zahrnuta.</p>${v.input.openings ? '<p><strong>Okna a dveře ponechány ve spotřebě.</strong> Pásy jsou přes celou výšku; materiál na ostění není připočten.</p>' : ''}</div>`;
     const walls = `<div class="rv-tp-wall-summary">${v.wallSummary.map(w => `<p><strong>Stěna ${w.wall}:</strong> ${m(w.width)} × ${m(w.height)} → ${w.count} pásů po ${cm(w.length)}. Poslední pás zakryje ${cm(w.lastWidth)} šířky.</p>`).join('')}</div>`;
-    const cuts = v.rolls.map(roll => {
-      const bar = (value, cls = '') => value ? `<span class="${cls}" style="width:${value/v.input.rollLength*100}%"></span>` : '';
+    const cuts = v.rolls.map((roll, rollIndex) => {
+      const bar = (value, cls = '', label = '') => value ? `<span class="${cls}" style="width:${value/v.input.rollLength*100}%">${value/v.input.rollLength >= .12 ? label : ''}</span>` : '';
       const stripRows = roll.cuts.map(s => `${s.gap ? `<li class="rv-tp-waste"><span>Dorovnat vzor před pásem ${s.id}</span><span>${cm(s.gap)}</span></li>` : ''}<li><div><strong>Pás ${s.id}</strong><br><span>Stěna ${s.wall} · pás ${s.index}${patterned ? ` · poloha vzoru ${cm(s.phase)}` : ''}</span></div><span class="rv-tp-cut-length">${cm(s.length)}</span></li>`).join('');
-      return `<article class="rv-tp-roll"><div class="rv-tp-roll-head"><h3>Role ${roll.number}</h3><span>${roll.cuts.length} pásů z role</span></div><div class="rv-tp-bar" aria-hidden="true">${bar(roll.allowance,'rv-tp-bar-gap')}${roll.cuts.map(s=>bar(s.gap,'rv-tp-bar-gap')+bar(s.length)).join('')}${bar(roll.leftover,'rv-tp-bar-rest')}</div><ol class="rv-tp-cuts">${roll.allowance ? `<li class="rv-tp-waste"><span>Vyhrazeno na nalezení motivu*</span><span>${cm(roll.allowance)}</span></li>` : ''}${stripRows}</ol><div class="rv-tp-leftover"><span>Zbytek${conservative ? ' nejméně' : ''}</span><span>${cm(roll.leftover)}</span></div></article>`;
+      return `${rollIndex === 6 ? `<details class="rv-tp-more-rolls"><summary>Zobrazit dalších ${v.rolls.length-6} rolí</summary>` : ''}<article class="rv-tp-roll"><div class="rv-tp-roll-head"><h3>Role ${roll.number}</h3><span>${roll.cuts.length} pásů · zbytek${conservative ? ' nejméně' : ''} <strong>${m(roll.leftover)}</strong></span></div><div class="rv-tp-bar" aria-hidden="true">${bar(roll.allowance,'rv-tp-bar-gap')}${roll.cuts.map(s=>bar(s.gap,'rv-tp-bar-gap')+bar(s.length,'',s.id)).join('')}${bar(roll.leftover,'rv-tp-bar-rest','Zbytek')}</div><details class="rv-tp-cut-detail"><summary>Zobrazit přesné řezy <span>↓</span></summary><p class="rv-tp-plan-note">Číslo pásu = stěna.pás. Řežte v uvedeném pořadí.${conservative ? ' Nejprve najděte společný motiv; vyhrazený raport neodřezávejte automaticky celý.' : ''}</p><ol class="rv-tp-cuts">${roll.allowance ? `<li class="rv-tp-waste"><span>Vyhrazeno na nalezení motivu*</span><span>${cm(roll.allowance)}</span></li>` : ''}${stripRows}</ol><div class="rv-tp-leftover"><span>Zbytek${conservative ? ' nejméně' : ''}</span><span>${cm(roll.leftover)}</span></div></details></article>${rollIndex === v.rolls.length-1 && rollIndex >= 6 ? '</details>' : ''}`;
     }).join('');
-    details.innerHTML = `${context}${walls}<div class="rv-tp-plan-head"><h3>Doporučený řezný plán</h3><button type="button" id="print-plan">Vytisknout plán</button></div><p class="rv-tp-plan-note">Řežte shora dolů v každé roli. Číslo 2.3 znamená stěnu 2, třetí pás. Na rub napište číslo i směr nahoru. Při lepení dodržte pořadí pásů na stěně.</p>${conservative ? '<p class="rv-tp-plan-note">* Neodřezávejte slepě celý vyhrazený raport. Najděte stejný motiv jako na první roli; odtud teprve odměřujte další dorovnání a pásy.</p>' : ''}${cuts}<section class="rv-tp-accounting" aria-labelledby="material-heading"><h3 id="material-heading">Kam se délka role rozdělila</h3><dl><dt>Délka koupených rolí</dt><dd>${m(v.rolls.length*v.input.rollLength)}</dd><dt>Nařezané pásy celkem</dt><dd>${m(v.totalCut)}</dd><dt>Z toho horní a dolní ořez</dt><dd>${m(v.trimTotal)}</dd><dt>Z toho prodloužení na raport</dt><dd>${m(v.repeatExtra)}</dd><dt>Odřezky mezi pásy na sesazení</dt><dd>${m(v.alignmentWaste)}</dd><dt>Vyhrazeno na počátky rolí</dt><dd>${m(v.startAllowance)}</dd><dt>Zbytky rolí${conservative ? ' nejméně' : ''}</dt><dd>${m(v.totalLeftover)}</dd></dl><small>Ořez a prodloužení na raport jsou už součástí pásů, nepřičítejte je znovu. Toto je rozpad délky, ne výměra odpadu v m². Podélné ořezy ani výřezy otvorů zde nejsou vyčíslené.</small></section><p class="rv-tp-notice">Před řezáním ověřte etiketu, šarži, skutečnou délku a návaznost prvních pásů. Zbytky automaticky nenahrazují náhradní roli na chybu při lepení.</p>`;
-    $('print-plan').addEventListener('click', () => { if (current) window.print(); });
+    details.innerHTML = `<div class="rv-tp-plan-head"><h3>Doporučený řezný plán</h3><button type="button" id="print-plan">Vytisknout plán</button></div><div class="rv-tp-legend"><span><i></i>Celý pás</span><span><i class="rv-tp-bar-gap"></i>Dorovnání vzoru</span><span><i class="rv-tp-bar-rest"></i>Zbytek</span></div><details class="rv-tp-instructions"><summary>Jak podle plánu řezat</summary><p class="rv-tp-plan-note">Řežte shora dolů v každé roli. Číslo 2.3 znamená stěnu 2, třetí pás. Na rub napište číslo i směr nahoru. Při lepení dodržte pořadí pásů na stěně.</p>${conservative ? '<p class="rv-tp-plan-note">* Neodřezávejte slepě celý vyhrazený raport. Najděte stejný motiv jako na první roli; odtud teprve odměřujte další dorovnání a pásy.</p>' : ''}</details>${cuts}<details class="rv-tp-breakdown"><summary>Rozměry, předpoklady a spotřeba podrobně</summary>${context}${walls}<section class="rv-tp-accounting" aria-labelledby="material-heading"><h3 id="material-heading">Kam se délka role rozdělila</h3><dl><dt>Délka koupených rolí</dt><dd>${m(v.rolls.length*v.input.rollLength)}</dd><dt>Nařezané pásy celkem</dt><dd>${m(v.totalCut)}</dd><dt>Z toho horní a dolní ořez</dt><dd>${m(v.trimTotal)}</dd><dt>Z toho prodloužení na raport</dt><dd>${m(v.repeatExtra)}</dd><dt>Odřezky mezi pásy na sesazení</dt><dd>${m(v.alignmentWaste)}</dd><dt>Vyhrazeno na počátky rolí</dt><dd>${m(v.startAllowance)}</dd><dt>Zbytky rolí${conservative ? ' nejméně' : ''}</dt><dd>${m(v.totalLeftover)}</dd></dl><small>Ořez a prodloužení na raport jsou už součástí pásů, nepřičítejte je znovu. Toto je rozpad délky, ne výměra odpadu v m². Podélné ořezy ani výřezy otvorů zde nejsou vyčíslené.</small></section></details><p class="rv-tp-notice">Před řezáním ověřte etiketu, šarži, skutečnou délku a návaznost prvních pásů. Zbytky automaticky nenahrazují náhradní roli na chybu při lepení.</p>`;
+    $('print-plan').addEventListener('click', () => { if (current) { printDetails = [...details.querySelectorAll('details')].map(el => [el,el.open]); printDetails.forEach(([el]) => el.open = true); window.print(); } });
     $('live-status').textContent = `Potřebujete ${v.rolls.length} ${rollWord}, ${v.strips.length} pásů. Řezný plán je připraven.`;
     if (submitted) $('result-heading').focus();
   }
@@ -102,7 +106,8 @@
     return parsed.state === 'parsed' ? core.validate(parsed.value) : parsed;
   }
   form.addEventListener('submit', e => { e.preventDefault(); calculate(true); });
-  form.addEventListener('input', () => { invalidate(); errors(validateRaw()); });
+  $('pattern-enabled').addEventListener('change', () => { $('match').value = $('pattern-enabled').checked ? 'straight' : 'free'; syncModes(); });
+  form.addEventListener('input', e => { if(e.target.id !== 'pattern-enabled') syncModes(); invalidate(); errors(validateRaw()); });
   form.addEventListener('change', () => { syncModes(); invalidate(); errors(validateRaw()); });
   form.addEventListener('focusout', e => { if (e.target.matches('input,select')) { touched.add(e.target.id); errors(validateRaw()); } });
   $('add-wall').addEventListener('click', () => {
@@ -131,7 +136,7 @@
     $('offset').value = fmt(parsed.value/2);invalidate();errors(validateRaw());$('offset').focus();
   });
   $('reset').addEventListener('click', () => {
-    form.reset();touched.clear();removed = null;$('undo-wall').hidden = true;
+    form.reset();form.querySelectorAll('details').forEach(el => el.open = false);touched.clear();removed = null;$('undo-wall').hidden = true;
     renderWalls([{width:'4',height:'2,5',customHeight:false}]);syncModes();calculate();$('height').focus();
   });
   syncModes();calculate();
