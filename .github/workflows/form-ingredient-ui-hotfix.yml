@@ -76,12 +76,13 @@ jobs:
                 assert.notEqual(style.borderRadius,'0px');
                 if(vp.width===390){
                   const name=await row.locator('.ing-name').boundingBox();
-                  const amount=await row.locator('.ing-amount').boundingBox();
-                  const unit=await row.locator('.ing-unit').boundingBox();
-                  const remove=await row.locator('.ing-remove').boundingBox();
-                  assert(name && amount && unit && remove);
+                  const amountControl=await row.locator('.ing-amount input').boundingBox();
+                  const unitControl=await row.locator('.ing-unit select').boundingBox();
+                  const removeControl=await row.locator('.ing-remove .remove').boundingBox();
+                  assert(name && amountControl && unitControl && removeControl);
                   assert(name.width>300,'mobile ingredient name should span full card width');
-                  assert(Math.abs(amount.y-unit.y)<3 && Math.abs(unit.y-remove.y)<3,'mobile amount/unit/remove should share second row');
+                  assert(Math.abs(amountControl.y-unitControl.y)<3 && Math.abs(unitControl.y-removeControl.y)<3,'mobile controls should share second row');
+                  assert(amountControl.height>=44 && unitControl.height>=44 && removeControl.height>=44,'mobile touch targets must be at least 44px high');
                 }
                 console.log('viewport',vp.width,'request failures',failed.length);
                 await page.close();
