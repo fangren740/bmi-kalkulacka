@@ -1,0 +1,48 @@
+name: Recipe form live production diagnostic
+
+on:
+  push:
+    branches:
+      - hotfix/prepocet-formy-add-ingredient-20260911
+
+jobs:
+  live-diagnostic:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install browser
+        run: |
+          npm install --prefix "$RUNNER_TEMP/rv-browser" playwright@1.62.1
+          "$RUNNER_TEMP/rv-browser/node_modules/.bin/playwright" install --with-deps chromium
+      - name: Inspect live production
+        env:
+          NODE_PATH: ${{ runner.temp }}/rv-browser/node_modules
+        run: |
+          node - <<'NODE'
+          const { chromium } = require('playwright');
+          (async()=>{
+            const browser=await chromium.launch({headless:true});
+            try{
+              const page=await browser.newPage({viewport:{width:1440,height:1200}});
+              const errors=[]; const consoleErrors=[];
+              page.on('pageerror',e=>errors.push(String(e)));
+              page.on('console',m=>{if(m.type()==='error') consoleErrors.push(m.text())});
+              const r=await page.goto('https://rychlevypocty.cz/prepocet-formy-na-peceni.html?diag=20260911-2',{waitUntil:'networkidle'});
+              console.log('STATUS',r.status());
+              console.log('FINAL_URL',page.url());
+              console.log('SCRIPT_SRCS',await page.locator('script[src]').evaluateAll(es=>es.map(e=>e.getAttribute('src'))));
+              console.log('PAGE_ERRORS',errors);
+              console.log('CONSOLE_ERRORS',consoleErrors);
+              console.log('ROWS_ID_EXISTS',await page.locator('#rows').count());
+              console.log('INGROWS_ID_EXISTS',await page.locator('#ingRows').count());
+              console.log('ING_ROW_COUNT',await page.locator('#rows .ing-row').count());
+              console.log('ADD_BUTTON',await page.locator('#addIng').count());
+              console.log('STATUS_EL',await page.locator('#status').count());
+              console.log('PAGE_JS_RESPONSE',await page.evaluate(()=>[...document.scripts].map(s=>s.src).find(x=>x.includes('prepocet-formy-page.js'))||''));
+              await page.locator('#addIng').click();
+              console.log('ROWS_AFTER_CLICK',await page.locator('#rows .ing-row').count());
+              console.log('PAGE_ERRORS_AFTER',errors);
+              await page.screenshot({path:'/tmp/live-form.png',fullPage:false});
+            } finally {await browser.close();}
+          })().catch(e=>{console.error(e);process.exit(1)});
+          NODE
