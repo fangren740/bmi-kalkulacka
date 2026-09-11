@@ -17,10 +17,12 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Fix row container mismatch and bust page JS cache
+      - name: Fix DOM contract and bust page JS cache
         run: |
           python - <<'PY'
           from pathlib import Path
+          import re
+
           js=Path('prepocet-formy-page.js')
           text=js.read_text(encoding='utf-8')
           old='const rows=$("ingRows");rows.innerHTML="";'
@@ -31,16 +33,29 @@ jobs:
           js.write_text(text,encoding='utf-8')
 
           html=Path('prepocet-formy-na-peceni.html')
-          text=html.read_text(encoding='utf-8')
+          h=html.read_text(encoding='utf-8')
           old='/prepocet-formy-page.js?v=20260911-1'
           new='/prepocet-formy-page.js?v=20260911-2'
-          if old not in text:
+          if old not in h:
               raise SystemExit('Expected old page JS cachebuster not found')
-          text=text.replace(old,new,1)
-          html.write_text(text,encoding='utf-8')
+          h=h.replace(old,new,1)
+          if 'id="status"' not in h:
+              marker='<script defer src="/rv-brand-v32.js?v=20260801"></script>'
+              if marker not in h:
+                  raise SystemExit('Script marker for status insertion not found')
+              h=h.replace(marker,'<p class="sr" id="status" role="status" aria-live="polite"></p>\n'+marker,1)
+          html.write_text(h,encoding='utf-8')
+
+          ids=set(re.findall(r'id="([^"]+)"',h))
+          refs=set(re.findall(r'\$\("([^"]+)"\)',text))
+          missing=sorted(refs-ids)
+          print('Static JS ID references:',len(refs),'HTML IDs:',len(ids),'missing:',missing)
+          if missing:
+              raise SystemExit('Missing DOM IDs referenced by page JS: '+', '.join(missing))
           PY
           ! grep -q 'ingRows' prepocet-formy-page.js
           grep -q 'id="rows"' prepocet-formy-na-peceni.html
+          grep -q 'id="status"' prepocet-formy-na-peceni.html
           grep -q 'prepocet-formy-page.js?v=20260911-2' prepocet-formy-na-peceni.html
           node --check prepocet-formy-page.js
 
@@ -71,13 +86,17 @@ jobs:
               assert.equal(await page.locator('#rows .ing-row').count(),6,'default recipe should have 6 ingredients');
               await page.locator('#addIng').click();
               assert.equal(await page.locator('#rows .ing-row').count(),7,'Add ingredient must append a row');
+              assert.equal(errors.length,0,'page JS error after add: '+errors.join(' | '));
               await page.locator('[data-recipe="empty"]').click();
               assert.equal(await page.locator('#rows .ing-row').count(),1,'empty preset should contain one editable starter row');
               await page.locator('#addIng').click();
               assert.equal(await page.locator('#rows .ing-row').count(),2,'Add ingredient must still work after preset switch');
               await page.locator('#rows .ing-row').nth(1).locator('input[data-k="name"]').fill('Kakao');
               assert.equal(await page.locator('#scaledGrid .scaled-item').count(),2,'result list should stay in sync');
-              console.log('Browser add-ingredient regression: PASS');
+              await page.locator('#rows .ing-row').nth(1).locator('[data-remove]').click();
+              assert.equal(await page.locator('#rows .ing-row').count(),1,'remove ingredient must work');
+              assert.equal(errors.length,0,'page JS error during interaction flow: '+errors.join(' | '));
+              console.log('Browser add/edit/remove ingredient regression: PASS');
             } finally { await browser.close(); }
           })().catch(e=>{console.error(e);process.exit(1)});
           NODE
