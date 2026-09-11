@@ -67,6 +67,13 @@ def patch_js() -> None:
     new_set_error = 'function setError(id,message){const el=$(id);if(el)el.textContent=message||"";const inputId=id.endsWith("Error")?id.slice(0,-5):"";const input=inputId?$(inputId):null;if(input){input.setAttribute("aria-invalid",message?"true":"false");if(message)input.setAttribute("aria-describedby",id);}}'
     text = must_replace(text, old_set_error, new_set_error, 'aria-invalid handling')
 
+    # Critical interaction bug: body also has data-mode, so the old generic selector
+    # attached a click listener to <body> and could immediately switch Advanced back to Basic.
+    generic = 'document.querySelectorAll("[data-mode]")'
+    if text.count(generic) != 2:
+        raise SystemExit(f'Expected 2 generic mode selectors, got {text.count(generic)}')
+    text = text.replace(generic, 'document.querySelectorAll(".mode-switch button[data-mode]")')
+
     old_run = 'function run(){\n    const {valid,values}=validate();\n    if(!valid)return;\n    render(values,calculate(values));\n  }'
     new_run = '''function renderInvalid(){
     ["heroMonthly","heroWeekly","heroAnnual","heroShift","monthlyTotal","baseMonthly","extraMonthly","annualTotal","effectiveHourly"].forEach(id=>setText(id,"—"));
