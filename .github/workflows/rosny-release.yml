@@ -1,0 +1,51 @@
+name: Rosny bod release integration
+
+on:
+  push:
+    branches:
+      - release/rosny-bod-20260911
+
+permissions:
+  contents: write
+
+jobs:
+  integrate-and-verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout release branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Integrate approved release candidate
+        run: python .tmp-rosny/integrate.py
+
+      - name: Candidate syntax and registry JSON
+        run: |
+          node --check rosny-bod-core.js
+          node --check rosny-bod-page.js
+          python -m json.tool calculators-registry.json >/dev/null
+
+      - name: Static site audit
+        run: python .github/scripts/audit_static_site.py --root . --config audits/audit-config.json --check-js --json-out /tmp/rv-static.json
+
+      - name: V-next tracking audit
+        run: python rv-vnext-progress-audit.py --root . --json-out /tmp/rv-tracking.json
+
+      - name: V-next accessibility lint
+        run: python rv-vnext-a11y-lint.py --all-vnext
+
+      - name: Regenerate and verify inventory
+        run: |
+          python .github/scripts/vnext_inventory.py
+          python .github/scripts/vnext_inventory.py --check
+
+      - name: Commit integrated release
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --check
+          git diff --cached --quiet && { echo "No changes to commit"; exit 1; }
+          git commit -m "Release calculator: dew point and condensation"
+          git push origin HEAD:${GITHUB_REF_NAME}
