@@ -922,5 +922,12 @@ window.RV_TOOL_INDEX = [
     "type": "Tapety",
     "desc": "Celé pásy, ořez, raport, sesazení a konkrétní řezný plán jednotlivých rolí.",
     "keywords": "Kalkulačka tapet tapety počet rolí tapet řezný plán raport sesazení ořez stěna rekonstrukce Rekonstrukce"
+  },
+  {
+    "title": "Kalkulačka sklonu a spádu",
+    "url": "/sklon-a-spad-kalkulacka.html",
+    "type": "Sklon a spád",
+    "desc": "Převod %, °, 1:x a cm/m plus výpočet převýšení a vodorovné vzdálenosti.",
+    "keywords": "Kalkulačka sklonu spádu procenta stupně poměr 1:x cm/m převýšení vodorovná vzdálenost terasa rampa potrubí Stavba domu"
   }
 ];
