@@ -78,7 +78,11 @@ function compact(text) {
       assert.equal(advancedState.hidden, false, `Advanced panel hidden @ ${width}`);
       assert.equal(advancedState.pressed, 'true', `Advanced button state wrong @ ${width}`);
 
-      await page.locator('input[name="basis"][value="actual"]').check();
+      // The radio itself is visually hidden by the card UI, so exercise the control
+      // exactly as a user does: click its visible label/card, then verify checked state.
+      const actualCard = page.locator('label:has(input[name="basis"][value="actual"])');
+      await actualCard.click();
+      assert.equal(await page.locator('input[name="basis"][value="actual"]').isChecked(), true, `Actual basis not selected @ ${width}`);
       await page.locator('#actualHours').fill('168');
       await page.locator('#overtimeHours').fill('10');
       await page.locator('#overtimePremium').fill('25');
