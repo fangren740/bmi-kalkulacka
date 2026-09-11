@@ -6,6 +6,7 @@ Repository: fangren740/bmi-kalkulacka
 Branch: main
 
 CURRENT OPERATIONAL MODE — POVINNĚ ČÍST PRVNÍ
+RV_LIVE_PREVIEW_LOCK_2026-09-11.md
 RV_CONTENT_DEPTH_AND_IDENTITY_LOCK_2026-09-11.md
 RV_METHOD_SOURCE_DISCLAIMER_LOCK_2026-09-11.md
 RV_ADSENSE_FINISH_MODE_2026-09-11.md
@@ -13,24 +14,26 @@ RV_ADSENSE_FINISH_QUEUE_2026-09-11.md
 RV_ADSENSE_REVIEW_REQUIRED_AUDIT_2026-09-11.md
 - Aktivní do explicitního odemčení uživatelem po dokončení AdSense readiness sprintu.
 - Cíl: dokončit celé portfolio a sitewide readiness; žádné nekonečné redesign smyčky jedné URL.
+- `RV_LIVE_PREVIEW_LOCK_2026-09-11.md` je release-blocking workflow rule: vždy jedna kalkulačka; před user approval musí být reálný interaktivní LIVE HTML preview přímo v chatu. Screenshoty jsou pouze doplněk a nenahrazují live preview.
 - `RV_CONTENT_DEPTH_AND_IDENTITY_LOCK_2026-09-11.md` je závazné upřesnění: žádná word-count kvóta; hloubka podle tématu; žádná strohost; canonical V3.2 logo + inverse footer logo + V7/V3.2 watermark/visual field na každé upgradované stránce.
 - `RV_METHOD_SOURCE_DISCLAIMER_LOCK_2026-09-11.md` je release-blocking: metodika musí být skutečně ověřena; M2–M4 vyžadují method verdict; disclaimer se používá podle konkrétního rizika stránky.
-- Pokud se starší workflow dostane do konfliktu s finish modem v otázce pořadí práce / batching / stop-loss, platí finish mode.
+- Pokud se starší workflow dostane do konfliktu s finish modem v otázce pořadí práce / batching / stop-loss, platí finish mode + LIVE PREVIEW LOCK pro jednotlivý review flow.
 - Pokud se starší dokument dá vyložit jako word-count target nebo povolení vizuálně strohého tool shellu, platí CONTENT DEPTH + IDENTITY LOCK.
 - Pokud se starší dokument spokojí pouze s přítomností metodiky/zdrojů bez skutečné verifikace, platí METHOD / SOURCE / DISCLAIMER LOCK.
 - Quality, correctness, methodology, mobile UX, brand a production gates se NESNIŽUJÍ.
 
 POVINNÉ POŘADÍ PRO NOVÝ / NAVAZUJÍCÍ CHAT
-1) RV_CONTENT_DEPTH_AND_IDENTITY_LOCK_2026-09-11.md
-2) RV_METHOD_SOURCE_DISCLAIMER_LOCK_2026-09-11.md
-3) RV_ADSENSE_FINISH_MODE_2026-09-11.md
-4) RV_ADSENSE_FINISH_QUEUE_2026-09-11.md
-5) RV_ADSENSE_REVIEW_REQUIRED_AUDIT_2026-09-11.md
-6) RV_VNEXT_MASTER_PROMPT.txt
-7) RV-VNEXT-STRICT-BUILD-PROMPT-2026-09-06.md
-8) RV-VNEXT-PRODUCTION-STANDARD.md
-9) aktuální recovery / experience / customer-copy dokumenty v main
-10) RV_VNEXT_PROGRESS.json + skutečný relevantní HTML/CSS/JS + benchmark/data files
+1) RV_LIVE_PREVIEW_LOCK_2026-09-11.md
+2) RV_CONTENT_DEPTH_AND_IDENTITY_LOCK_2026-09-11.md
+3) RV_METHOD_SOURCE_DISCLAIMER_LOCK_2026-09-11.md
+4) RV_ADSENSE_FINISH_MODE_2026-09-11.md
+5) RV_ADSENSE_FINISH_QUEUE_2026-09-11.md
+6) RV_ADSENSE_REVIEW_REQUIRED_AUDIT_2026-09-11.md
+7) RV_VNEXT_MASTER_PROMPT.txt
+8) RV-VNEXT-STRICT-BUILD-PROMPT-2026-09-06.md
+9) RV-VNEXT-PRODUCTION-STANDARD.md
+10) aktuální recovery / experience / customer-copy dokumenty v main
+11) RV_VNEXT_PROGRESS.json + skutečný relevantní HTML/CSS/JS + benchmark/data files
 
 KVALITATIVNÍ KALIBRACE
 - Quality floor: #74 cista-mzda-kalkulacka.html
@@ -43,15 +46,16 @@ KVALITATIVNÍ KALIBRACE
 DŮLEŽITÉ
 - Starší `RV-VNEXT-STRICT-BUILD-PROMPT-2026-09-04.md` je HISTORICKÁ REFERENCE; pro nový build použij 2026-09-06.
 - Starší master verze 1.7 byla nahrazena `RV_VNEXT_MASTER_PROMPT.txt` verze 2.0.
+- Pro jednotlivý review flow kalkulačky platí `RV_LIVE_PREVIEW_LOCK_2026-09-11.md`: jedna kalkulačka, live HTML preview přímo v chatu, user approval před DONE/deploy.
 - Pro pořadí finish sprintu a stop-loss platí `RV_ADSENSE_FINISH_MODE_2026-09-11.md`.
 - Pro obsahovou hloubku a V7/V3.2 identitu platí `RV_CONTENT_DEPTH_AND_IDENTITY_LOCK_2026-09-11.md`.
 - Pro metodiku, zdroje, re-verifikaci a disclaimery platí `RV_METHOD_SOURCE_DISCLAIMER_LOCK_2026-09-11.md`.
 - Nezačínej nový audit od nuly. Recovery udělej z produkčního main.
-- Uživatel není beta tester: žádný polotovar před PASS C / batch gate.
+- Uživatel není beta tester: žádný polotovar před PASS C / release gate.
 - PREVIEW PASS != DONE.
 - M2–M4 nemohou být DONE bez `methodVerdict=PASS`.
 - „Ověřeno / aktualizováno k …“ se nesmí zobrazit bez skutečné kontroly metodiky.
-- DONE až po user approval / batch approval podle finish mode + production deploy + live health + PageSpeed Insights/Lighthouse Mobile + Desktop + bez známé actionable CWV/performance regrese.
+- DONE až po user approval + production deploy + live health + PageSpeed Insights/Lighthouse Mobile + Desktop + bez známé actionable CWV/performance regrese.
 
 ZÁKLADNÍ DESIGNOVÝ SMĚR
 - desktop hero: text vlevo / topic-native vizuál vpravo
