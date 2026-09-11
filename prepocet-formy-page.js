@@ -41,7 +41,7 @@ function updatePreview(side){
 }
 function updatePreviews(){updatePreview("old");updatePreview("new")}
 function renderRows(){
-  const rows=$("ingRows");rows.innerHTML="";
+  const rows=$("rows");rows.innerHTML="";
   ingredients.forEach((x,i)=>{
     const row=document.createElement("div");row.className="ing-row";
     row.innerHTML=`<div><input aria-label="Název suroviny" data-i="${i}" data-k="name" value="${String(x.name).replace(/"/g,"&quot;")}"></div>
