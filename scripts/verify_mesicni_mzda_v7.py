@@ -41,9 +41,11 @@ def check_source_contracts():
         'Kalkulačka záměrně neponechává předchozí výsledek.',
         'input.setAttribute("aria-invalid",message?"true":"false")',
         'const minHourly=MIN_HOURLY_2026*40/v.minimumRegime',
+        'document.querySelectorAll(".mode-switch button[data-mode]")',
     ]
     for needle in required_js:
         assert needle in JS, f'Missing JS contract: {needle}'
+    assert 'document.querySelectorAll("[data-mode]")' not in JS, 'Generic data-mode selector would bind body and break Advanced mode'
 
 
 def verify_regression():
