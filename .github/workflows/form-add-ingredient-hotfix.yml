@@ -1,0 +1,100 @@
+name: Recipe form add ingredient hotfix
+
+on:
+  push:
+    branches:
+      - hotfix/prepocet-formy-add-ingredient-20260911
+
+permissions:
+  contents: write
+
+jobs:
+  patch-test-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout hotfix branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Fix row container mismatch and bust page JS cache
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          js=Path('prepocet-formy-page.js')
+          text=js.read_text(encoding='utf-8')
+          old='const rows=$("ingRows");rows.innerHTML="";'
+          new='const rows=$("rows");rows.innerHTML="";'
+          if old not in text:
+              raise SystemExit('Expected ingRows mismatch not found')
+          text=text.replace(old,new,1)
+          js.write_text(text,encoding='utf-8')
+
+          html=Path('prepocet-formy-na-peceni.html')
+          text=html.read_text(encoding='utf-8')
+          old='/prepocet-formy-page.js?v=20260911-1'
+          new='/prepocet-formy-page.js?v=20260911-2'
+          if old not in text:
+              raise SystemExit('Expected old page JS cachebuster not found')
+          text=text.replace(old,new,1)
+          html.write_text(text,encoding='utf-8')
+          PY
+          ! grep -q 'ingRows' prepocet-formy-page.js
+          grep -q 'id="rows"' prepocet-formy-na-peceni.html
+          grep -q 'prepocet-formy-page.js?v=20260911-2' prepocet-formy-na-peceni.html
+          node --check prepocet-formy-page.js
+
+      - name: Install isolated browser QA
+        run: |
+          npm install --prefix "$RUNNER_TEMP/rv-browser" playwright@1.62.1
+          "$RUNNER_TEMP/rv-browser/node_modules/.bin/playwright" install --with-deps chromium
+
+      - name: Browser smoke test add ingredient
+        env:
+          NODE_PATH: ${{ runner.temp }}/rv-browser/node_modules
+        run: |
+          python -m http.server 8765 >/tmp/form-http.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill $SERVER_PID || true' EXIT
+          sleep 1
+          node - <<'NODE'
+          const { chromium } = require('playwright');
+          const assert = require('node:assert/strict');
+          (async()=>{
+            const browser=await chromium.launch({headless:true});
+            try{
+              const page=await browser.newPage({viewport:{width:390,height:844}});
+              const errors=[];
+              page.on('pageerror',e=>errors.push(String(e)));
+              await page.goto('http://127.0.0.1:8765/prepocet-formy-na-peceni.html',{waitUntil:'networkidle'});
+              assert.equal(errors.length,0,'page JS error: '+errors.join(' | '));
+              assert.equal(await page.locator('#rows .ing-row').count(),6,'default recipe should have 6 ingredients');
+              await page.locator('#addIng').click();
+              assert.equal(await page.locator('#rows .ing-row').count(),7,'Add ingredient must append a row');
+              await page.locator('[data-recipe="empty"]').click();
+              assert.equal(await page.locator('#rows .ing-row').count(),1,'empty preset should contain one editable starter row');
+              await page.locator('#addIng').click();
+              assert.equal(await page.locator('#rows .ing-row').count(),2,'Add ingredient must still work after preset switch');
+              await page.locator('#rows .ing-row').nth(1).locator('input[data-k="name"]').fill('Kakao');
+              assert.equal(await page.locator('#scaledGrid .scaled-item').count(),2,'result list should stay in sync');
+              console.log('Browser add-ingredient regression: PASS');
+            } finally { await browser.close(); }
+          })().catch(e=>{console.error(e);process.exit(1)});
+          NODE
+
+      - name: Static release gates
+        run: |
+          python .github/scripts/audit_static_site.py --root . --config audits/audit-config.json --check-js --json-out /tmp/rv-static.json
+          python rv-vnext-progress-audit.py --root . --json-out /tmp/rv-tracking.json
+          python rv-vnext-a11y-lint.py --all-vnext
+          python .github/scripts/vnext_inventory.py --check
+
+      - name: Commit verified hotfix
+        run: |
+          rm .github/workflows/form-add-ingredient-hotfix.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --check
+          git commit -m "Hotfix recipe form ingredient rows"
+          git push origin HEAD:${GITHUB_REF_NAME}
