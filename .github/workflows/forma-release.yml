@@ -17,6 +17,11 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Reconstruct verified release payload
+        run: |
+          python .tmp-forma/reconstruct.py
+          python .tmp-forma/patch_integrator.py
+
       - name: Integrate approved release candidate
         run: python .tmp-forma/integrate.py
 
