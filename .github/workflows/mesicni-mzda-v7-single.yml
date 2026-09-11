@@ -1,0 +1,73 @@
+name: Monthly salary V7 single calculator
+
+on:
+  push:
+    branches:
+      - upgrade/mesicni-mzda-z-hodinove-sazby-v7
+
+permissions:
+  contents: write
+
+jobs:
+  single-calculator:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      RV_QA_DEPS: /tmp/rv-mesicni-mzda-deps
+      NODE_PATH: /tmp/rv-mesicni-mzda-deps/node_modules
+      RV_TARGET_BASE: http://127.0.0.1:8765
+      RV_QA_OUTPUT: /tmp/rv-mesicni-mzda-v7
+    steps:
+      - name: Checkout dedicated calculator branch
+        uses: actions/checkout@v4
+        with:
+          ref: upgrade/mesicni-mzda-z-hodinove-sazby-v7
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Apply only monthly salary changes
+        run: python scripts/apply_mesicni_mzda_v7.py
+
+      - name: Syntax and deterministic correctness
+        run: |
+          node --check mesicni-mzda-z-hodinove-sazby.js
+          node --check .github/scripts/mesicni-mzda-v7-browser.cjs
+          python scripts/verify_mesicni_mzda_v7.py
+
+      - name: Structural accessibility gate
+        run: python rv-vnext-a11y-lint.py mesicni-mzda-z-hodinove-sazby-kalkulacka.html
+
+      - name: Install isolated browser QA
+        run: |
+          npm install --prefix "$RV_QA_DEPS" playwright@1.62.1
+          "$RV_QA_DEPS/node_modules/.bin/playwright" install --with-deps chromium
+
+      - name: Serve calculator candidate
+        run: python -m http.server 8765 --bind 127.0.0.1 > "$RUNNER_TEMP/rv-mesicni-mzda-server.log" 2>&1 &
+
+      - name: Responsive interaction and stale-state QA
+        run: node .github/scripts/mesicni-mzda-v7-browser.cjs
+
+      - name: Upload calculator visual evidence
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mesicni-mzda-v7-preview
+          path: /tmp/rv-mesicni-mzda-v7
+          retention-days: 30
+
+      - name: Commit only this calculator candidate
+        run: |
+          if git diff --quiet; then
+            echo "No generated calculator changes to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add mesicni-mzda-z-hodinove-sazby-kalkulacka.html mesicni-mzda-z-hodinove-sazby.js
+          git commit -m "Monthly salary: V7 focused correctness and identity upgrade"
+          git push origin HEAD:upgrade/mesicni-mzda-z-hodinove-sazby-v7
