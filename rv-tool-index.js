@@ -936,5 +936,12 @@ window.RV_TOOL_INDEX = [
     "type": "Vlhkost a kondenzace",
     "desc": "Rosný bod z teploty a relativní vlhkosti plus kontrola povrchové kondenzace.",
     "keywords": "rosný bod kondenzace relativní vlhkost povrchová teplota okno stěna tepelný most energie domácnost"
+  },
+  {
+    "title": "Přepočet receptu podle velikosti formy",
+    "url": "/prepocet-formy-na-peceni.html",
+    "type": "Přepočet receptu",
+    "desc": "Kulatá, čtvercová a obdélníková forma, poměr ploch nebo objemů a automatický přepočet surovin.",
+    "keywords": "přepočet receptu forma pečení průměr kulatá čtvercová obdélníková plocha objem suroviny"
   }
 ];
