@@ -1,0 +1,64 @@
+name: AdSense Finish Batch 1
+
+on:
+  push:
+    branches:
+      - adsense-finish/batch-1
+
+permissions:
+  contents: write
+
+jobs:
+  finish-batch-1:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: adsense-finish/batch-1
+          fetch-depth: 0
+
+      - name: Apply Batch 1 static polish
+        run: python scripts/apply_adsense_finish_batch1.py
+
+      - name: Syntax check JavaScript
+        run: |
+          node --check rv-adsense-finish-runtime-v7.js
+          node --check procenta.js
+          node --check tco-auta-v3.js
+          node --check hodinova-mzda.js
+          node --check dovolena.js
+          node --check prescasy.js
+          node --check cestovni-nahrady.js
+
+      - name: Deterministic method and identity verification
+        run: python scripts/verify_adsense_finish_batch1.py
+
+      - name: Structural accessibility lint
+        run: >-
+          python rv-vnext-a11y-lint.py
+          procenta-kalkulacka.html
+          kalkulacka-celkove-ceny-vlastnictvi-auta.html
+          kalkulacka-hodinove-mzdy.html
+          kalkulacka-dovolene.html
+          kalkulacka-prescasu.html
+          cestovni-nahrady-kalkulacka.html
+
+      - name: Commit generated Batch 1 page changes
+        run: |
+          if git diff --quiet; then
+            echo "No generated changes to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            procenta-kalkulacka.html \
+            kalkulacka-celkove-ceny-vlastnictvi-auta.html \
+            kalkulacka-hodinove-mzdy.html \
+            kalkulacka-dovolene.html \
+            kalkulacka-prescasu.html \
+            cestovni-nahrady-kalkulacka.html
+          git commit -m "Batch 1: apply V7 identity, trust and disclaimer polish"
+          git push origin HEAD:adsense-finish/batch-1
