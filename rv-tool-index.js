@@ -929,5 +929,12 @@ window.RV_TOOL_INDEX = [
     "type": "Sklon a spád",
     "desc": "Převod %, °, 1:x a cm/m plus výpočet převýšení a vodorovné vzdálenosti.",
     "keywords": "Kalkulačka sklonu spádu procenta stupně poměr 1:x cm/m převýšení vodorovná vzdálenost terasa rampa potrubí Stavba domu"
+  },
+  {
+    "title": "Kalkulačka rosného bodu",
+    "url": "/rosny-bod-kalkulacka.html",
+    "type": "Vlhkost a kondenzace",
+    "desc": "Rosný bod z teploty a relativní vlhkosti plus kontrola povrchové kondenzace.",
+    "keywords": "rosný bod kondenzace relativní vlhkost povrchová teplota okno stěna tepelný most energie domácnost"
   }
 ];
