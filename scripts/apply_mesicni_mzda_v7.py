@@ -31,6 +31,10 @@ def patch_html() -> None:
     text = text.replace('<aside class="result-panel" id="vysledek" aria-live="polite">', '<aside class="result-panel rv-brand-result" id="vysledek" aria-live="polite">', 1)
     text = text.replace('<footer class="site-footer">', '<footer class="site-footer rv-brand-footer">', 1)
 
+    # Existing labels become valid labelled groups instead of generic divs with aria-label.
+    text = text.replace('class="trust-row" aria-label=', 'class="trust-row" role="group" aria-label=', 1)
+    text = text.replace('class="preset-row" aria-label=', 'class="preset-row" role="group" aria-label=')
+
     text = text.replace(
         '<span>Placený fond konkrétního měsíce</span><small>Zadejte hodiny, za které se počítá základní hodinová mzda.</small>',
         '<span>Základní placený fond bez přesčasů</span><small>Zadejte hodiny hrazené základní sazbou. Přesčasové hodiny přidejte níže jen tehdy, pokud skutečně splňují definici práce přesčas.</small>',
