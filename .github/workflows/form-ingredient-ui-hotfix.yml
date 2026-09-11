@@ -40,6 +40,10 @@ jobs:
           python -m http.server 4173 >/tmp/form-ui-http.log 2>&1 &
           SERVER_PID=$!
           trap 'kill $SERVER_PID || true' EXIT
+          for i in $(seq 1 20); do
+            if curl -fsS http://127.0.0.1:4173/prepocet-formy-na-peceni.html >/dev/null; then break; fi
+            sleep .25
+          done
           node - <<'NODE'
           const { chromium }=require('playwright');
           const assert=require('node:assert/strict');
@@ -48,8 +52,12 @@ jobs:
             try{
               for(const vp of [{width:1440,height:1100},{width:390,height:844}]){
                 const page=await browser.newPage({viewport:vp});
-                const errors=[];page.on('pageerror',e=>errors.push(String(e)));
-                await page.goto('http://127.0.0.1:4173/prepocet-formy-na-peceni.html',{waitUntil:'networkidle'});
+                const errors=[]; const failed=[];
+                page.on('pageerror',e=>errors.push(String(e)));
+                page.on('requestfailed',r=>failed.push(r.url()+': '+(r.failure()?.errorText||'')));
+                const response=await page.goto('http://127.0.0.1:4173/prepocet-formy-na-peceni.html',{waitUntil:'networkidle'});
+                assert.equal(response.status(),200);
+                await page.waitForFunction(()=>document.querySelectorAll('#rows .tr').length===6,{timeout:5000});
                 assert.equal(errors.length,0,'page errors '+errors.join('; '));
                 assert.equal(await page.locator('#rows .tr').count(),6);
                 await page.locator('#addIng').click();
@@ -61,7 +69,7 @@ jobs:
                 const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>document.documentElement.clientWidth+1);
                 assert.equal(overflow,false,'horizontal overflow at '+vp.width);
                 const row=page.locator('#rows .tr').first();
-                const style=await row.evaluate(el=>({display:getComputedStyle(el).display,borderRadius:getComputedStyle(el).borderRadius,background:getComputedStyle(el).backgroundColor}));
+                const style=await row.evaluate(el=>({display:getComputedStyle(el).display,borderRadius:getComputedStyle(el).borderRadius}));
                 assert.equal(style.display,'grid');
                 assert.notEqual(style.borderRadius,'0px');
                 if(vp.width===390){
@@ -70,9 +78,10 @@ jobs:
                   const unit=await row.locator('.ing-unit').boundingBox();
                   const remove=await row.locator('.ing-remove').boundingBox();
                   assert(name && amount && unit && remove);
-                  assert(name.width>250,'mobile ingredient name should span row');
+                  assert(name.width>300,'mobile ingredient name should span full card width');
                   assert(Math.abs(amount.y-unit.y)<3 && Math.abs(unit.y-remove.y)<3,'mobile amount/unit/remove should share second row');
                 }
+                console.log('viewport',vp.width,'request failures',failed.length);
                 await page.close();
               }
               console.log('ingredient editor browser regression PASS');
