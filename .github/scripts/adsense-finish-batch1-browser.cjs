@@ -38,16 +38,22 @@ const rows = [];
           const social = [...document.querySelectorAll('footer a')].filter(a => /facebook\.com\/rychlevypocty|instagram\.com\/rychlevypocty/.test(a.href)).length;
           const hero = document.querySelector('.rv-finish-watermark');
           const trust = document.querySelector('[data-rv-finish-trust="1"]');
+          const calc = document.querySelector('#kalkulacka');
           const fixed = [...document.querySelectorAll('body *')].filter(el => getComputedStyle(el).position === 'fixed').map(el => {
             const r = el.getBoundingClientRect();
             return { tag: el.tagName, cls: el.className, w: r.width, h: r.height, area: Math.max(0,r.width)*Math.max(0,r.height) };
           });
+          const visibleInterstitials = [...document.querySelectorAll('.tco-nav,.vpc-anchor,.section-nav,.fact-strip,.travel-subnav')]
+            .filter(el => getComputedStyle(el).display !== 'none' && el.getBoundingClientRect().height > 1)
+            .map(el => el.className);
           return {
             overflow: Math.max(0, root.scrollWidth - root.clientWidth),
             headerLogo, footerLogo, social,
             watermark: hero?.getAttribute('data-rv-watermark') || '',
             trust: Boolean(trust),
+            calculatorTop: calc?.getBoundingClientRect().top ?? null,
             fixedLarge: fixed.filter(x => x.area > innerWidth * innerHeight * .12),
+            visibleInterstitials,
           };
         });
 
@@ -59,7 +65,10 @@ const rows = [];
         assert.ok(metrics.trust, `${file}: trust block missing`);
         assert.deepEqual(pageErrors, [], `${file} @ ${width}: page errors`);
         assert.deepEqual(consoleErrors, [], `${file} @ ${width}: console errors`);
-        if (width <= 390) assert.equal(metrics.fixedLarge.length, 0, `${file}: large fixed mobile overlay detected`);
+        if (width <= 390) {
+          assert.equal(metrics.fixedLarge.length, 0, `${file}: large fixed mobile overlay detected`);
+          assert.deepEqual(metrics.visibleInterstitials, [], `${file}: mobile hero must flow directly into calculator`);
+        }
 
         const resultText = (await page.locator(resultSelector).first().textContent() || '').replace(/\u00a0/g, ' ');
         assert.match(resultText, resultPattern, `${file}: unexpected default result ${JSON.stringify(resultText)}`);
@@ -70,7 +79,7 @@ const rows = [];
         }
         if (file === 'kalkulacka-hodinove-mzdy.html') {
           const minimum = await page.locator('#minimumStatus').textContent();
-          assert.match(minimum || '', /40 h|40hodin|40 hodin/i);
+          assert.match(minimum || '', /40\s*h|40hodin|40 hodin/i);
         }
 
         if (width === 1440 || width === 390) {
