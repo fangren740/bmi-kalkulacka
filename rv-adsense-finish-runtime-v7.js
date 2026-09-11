@@ -35,6 +35,9 @@ function addRuntimeCss(){
     .rv-finish-socials a{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border:1px solid rgba(255,255,255,.25);border-radius:12px;color:inherit;text-decoration:none;transition:transform .18s ease,border-color .18s ease}
     .rv-finish-socials a:hover{transform:translateY(-1px);border-color:currentColor}
     .rv-finish-socials svg{width:20px;height:20px;display:block}
+    @media(max-width:768px){
+      .tco-nav,.vpc-anchor,.section-nav,.fact-strip,.travel-subnav{display:none!important}
+    }
     @media(max-width:640px){.rv-finish-trust{font-size:14px;padding:14px 15px}.rv-finish-watermark::after{font-size:clamp(4.5rem,28vw,8rem);right:-1.5rem;opacity:.023}}
     @media(prefers-reduced-motion:reduce){.rv-finish-socials a{transition:none}}
   `;document.head.appendChild(s);
