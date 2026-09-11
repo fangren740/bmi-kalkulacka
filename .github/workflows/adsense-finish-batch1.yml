@@ -12,12 +12,23 @@ jobs:
   finish-batch-1:
     if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      RV_QA_DEPS: /tmp/rv-batch1-deps
+      NODE_PATH: /tmp/rv-batch1-deps/node_modules
+      RV_TARGET_BASE: http://127.0.0.1:8765
+      RV_QA_OUTPUT: /tmp/rv-batch1-browser
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           ref: adsense-finish/batch-1
           fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
 
       - name: Apply Batch 1 static polish
         run: python scripts/apply_adsense_finish_batch1.py
@@ -31,6 +42,7 @@ jobs:
           node --check dovolena.js
           node --check prescasy.js
           node --check cestovni-nahrady.js
+          node --check .github/scripts/adsense-finish-batch1-browser.cjs
 
       - name: Deterministic method and identity verification
         run: python scripts/verify_adsense_finish_batch1.py
@@ -44,6 +56,25 @@ jobs:
           kalkulacka-dovolene.html
           kalkulacka-prescasu.html
           cestovni-nahrady-kalkulacka.html
+
+      - name: Install isolated browser QA
+        run: |
+          npm install --prefix "$RV_QA_DEPS" playwright@1.62.1
+          "$RV_QA_DEPS/node_modules/.bin/playwright" install --with-deps chromium
+
+      - name: Serve Batch 1 candidate
+        run: python -m http.server 8765 --bind 127.0.0.1 > "$RUNNER_TEMP/rv-batch1-server.log" 2>&1 &
+
+      - name: Responsive runtime and visual QA
+        run: node .github/scripts/adsense-finish-batch1-browser.cjs
+
+      - name: Upload visual evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: adsense-finish-batch1-browser
+          path: /tmp/rv-batch1-browser
+          retention-days: 30
 
       - name: Commit generated Batch 1 page changes
         run: |
