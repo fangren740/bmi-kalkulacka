@@ -55,7 +55,7 @@ function heroIdentity(){
 function socialIcons(){
   const f=document.querySelector('footer');if(!f||f.querySelector('a[href*="facebook.com/rychlevypocty"]'))return;
   const host=f.querySelector('.footer-brand,.mrp-footer__brand,.vpc-footer__grid>div:first-child,.footer-grid>div:first-child')||f.firstElementChild||f;
-  const box=document.createElement('div');box.className='rv-finish-socials';box.setAttribute('aria-label','RychléVýpočty.cz na sociálních sítích');
+  const box=document.createElement('div');box.className='rv-finish-socials';box.setAttribute('role','group');box.setAttribute('aria-label','RychléVýpočty.cz na sociálních sítích');
   box.innerHTML=`<a href="https://www.facebook.com/rychlevypocty" aria-label="RychléVýpočty.cz na Facebooku" rel="me noopener"><svg aria-hidden="true" viewBox="0 0 24 24"><path fill="currentColor" d="M13.7 22v-8h2.7l.4-3h-3.1V9.1c0-.9.3-1.5 1.6-1.5H17V4.9c-.3 0-1.3-.1-2.4-.1-2.5 0-4.2 1.5-4.2 4.3V11H7.6v3h2.8v8h3.3z"/></svg></a><a href="https://www.instagram.com/rychlevypocty/" aria-label="RychléVýpočty.cz na Instagramu" rel="me noopener"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1" fill="currentColor" stroke="none"/></svg></a>`;
   host.appendChild(box);
 }
@@ -71,12 +71,36 @@ function trustBlock(){
   box.innerHTML=html;
   target.appendChild(box);
 }
+function enhanceTablists(){
+  document.querySelectorAll('[role="tablist"]').forEach(list=>{
+    const tabs=[...list.querySelectorAll(':scope > [role="tab"]')];
+    if(!tabs.length)return;
+    const sync=()=>{
+      const active=tabs.find(t=>t.classList.contains('is-active'))||tabs.find(t=>t.getAttribute('aria-selected')==='true')||tabs[0];
+      tabs.forEach(t=>{const on=t===active;t.setAttribute('aria-selected',on?'true':'false');t.tabIndex=on?0:-1;});
+    };
+    tabs.forEach((tab,index)=>{
+      tab.addEventListener('click',()=>requestAnimationFrame(sync));
+      tab.addEventListener('keydown',e=>{
+        let next=-1;
+        if(e.key==='ArrowRight'||e.key==='ArrowDown')next=(index+1)%tabs.length;
+        if(e.key==='ArrowLeft'||e.key==='ArrowUp')next=(index-1+tabs.length)%tabs.length;
+        if(e.key==='Home')next=0;
+        if(e.key==='End')next=tabs.length-1;
+        if(next<0)return;
+        e.preventDefault();tabs[next].focus();tabs[next].click();
+      });
+      new MutationObserver(()=>requestAnimationFrame(sync)).observe(tab,{attributes:true,attributeFilter:['class']});
+    });
+    sync();
+  });
+}
 function pageSpecificFixes(){
   if(page==='kalkulacka-prescasu.html'){
     const input=document.getElementById('overtimeHours');const field=input&&input.closest('.field');const small=field&&field.querySelector('small');
     if(small)small.textContent='Zadejte jen hodiny, které skutečně splňují definici práce přesčas. U kratší pracovní doby není samotné překročení sjednaného kratšího úvazku automaticky přesčasem.';
   }
 }
-function init(){ensureBrandCss();addRuntimeCss();normaliseIdentity();heroIdentity();socialIcons();trustBlock();pageSpecificFixes();}
+function init(){ensureBrandCss();addRuntimeCss();normaliseIdentity();heroIdentity();socialIcons();trustBlock();pageSpecificFixes();enhanceTablists();}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
