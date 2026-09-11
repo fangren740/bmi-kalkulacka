@@ -184,21 +184,21 @@
     if (isNet) {
       setText("minimumStatus", "Čistou hodnotu s hrubým minimem nesrovnávejte");
     } else if (state.cashHourly >= MINIMUM_HOURLY_2026) {
-      setText("minimumStatus", "Nad orientační hranicí 2026");
+      setText("minimumStatus", "≥ 134,40 Kč/h pro 40h režim · kratší stanovený režim ověřte");
     } else {
-      setText("minimumStatus", "Pod orientační hranicí 2026 – ověřte složky");
+      setText("minimumStatus", "Pod 134,40 Kč/h i pro základní 40h režim – ověřte složky");
       $("statusBox").classList.add("is-warning");
     }
 
     if (state.mode === "basic") {
       setText("qualityStatus", "Stejné období je základ");
-      setText("qualityText", "Měsíční příjem i hodiny musí patřit ke stejnému měsíci. Výsledek není zákonný průměrný výdělek.");
+      setText("qualityText", "Měsíční příjem i hodiny musí patřit ke stejnému měsíci. Výsledek není zákonný průměrný výdělek. Sazba 134,40 Kč/h platí pro stanovenou týdenní dobu 40 hodin; u zákonně kratšího režimu se hodinové minimum poměrně zvyšuje.");
     } else if (state.includesBenefits) {
       setText("qualityStatus", "Zobrazená je celková hodnota");
-      setText("qualityText", `Peněžní hodinovka bez benefitů činí ${formatRate(state.cashHourly)}. Pro právní kontrolu minima používejte peněžní složky podle oficiálních pravidel.`);
+      setText("qualityText", `Peněžní hodinovka bez benefitů činí ${formatRate(state.cashHourly)}. Pro právní kontrolu minima používejte peněžní složky a sazbu odpovídající stanovené týdenní pracovní době.`);
     } else {
       setText("qualityStatus", "PRO pracuje s peněžní odměnou");
-      setText("qualityText", "Bonusy i hodiny jsou rozloženy do stejného období. Přesto jde o analytický podíl, nikoli pracovněprávní průměr.");
+      setText("qualityText", "Bonusy i hodiny jsou rozloženy do stejného období. Přesto jde o analytický podíl, nikoli pracovněprávní průměr. Pro kontrolu minimální mzdy zohledněte stanovenou týdenní pracovní dobu.");
     }
 
     if (state.mode === "pro" && state.compareRate > 0) {
