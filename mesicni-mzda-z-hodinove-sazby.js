@@ -23,7 +23,7 @@
   function hours(value){return `${number(value)} h`}
   function rate(value){return `${number(value)} Kč/h`}
   function setText(id,value){const el=$(id);if(el)el.textContent=value}
-  function setError(id,message){const el=$(id);if(el)el.textContent=message||""}
+  function setError(id,message){const el=$(id);if(el)el.textContent=message||"";const inputId=id.endsWith("Error")?id.slice(0,-5):"";const input=inputId?$(inputId):null;if(input){input.setAttribute("aria-invalid",message?"true":"false");if(message)input.setAttribute("aria-describedby",id);}}
   function clamp(value,min,max){return Math.min(max,Math.max(min,value))}
   function selectedBasis(){const el=form.querySelector('input[name="basis"]:checked');return el?el.value:"average"}
 
@@ -168,23 +168,35 @@
     renderMinimum(v,r);renderScenarios(v,r);
   }
 
+  function renderInvalid(){
+    ["heroMonthly","heroWeekly","heroAnnual","heroShift","monthlyTotal","baseMonthly","extraMonthly","annualTotal","effectiveHourly"].forEach(id=>setText(id,"—"));
+    setText("heroBasis","opravte označená pole");
+    setText("heroNote","Výsledek je dočasně skrytý, aby nezůstala zobrazena stará částka po neplatném zadání.");
+    setText("resultStatus","Doplňte vstupy");
+    setText("resultFormula","Výsledek se zobrazí po opravě označených polí.");
+    setText("interpretationTitle","Výsledek není aktuální.");
+    setText("interpretationText","Opravte neplatné nebo neúplné vstupy. Kalkulačka záměrně neponechává předchozí výsledek.");
+    setText("minimumHeadline","Čeká na platné vstupy");
+    setText("minimumText","Kontrolu minima zobrazíme až po opravě vstupů.");
+  }
+
   function run(){
     const {valid,values}=validate();
-    if(!valid)return;
+    if(!valid){renderInvalid();return;}
     render(values,calculate(values));
   }
 
   function setMode(mode){
     state.mode=mode==="advanced"?"advanced":"basic";
     body.dataset.mode=state.mode;
-    document.querySelectorAll("[data-mode]").forEach(btn=>{const active=btn.dataset.mode===state.mode;btn.classList.toggle("is-active",active);btn.setAttribute("aria-pressed",String(active));});
+    document.querySelectorAll(".mode-switch button[data-mode]").forEach(btn=>{const active=btn.dataset.mode===state.mode;btn.classList.toggle("is-active",active);btn.setAttribute("aria-pressed",String(active));});
     const advanced=document.querySelector('[data-panel="advanced"]');if(advanced)advanced.hidden=state.mode!=="advanced";
     run();
   }
   function updateBasis(){const actual=selectedBasis()==="actual";$("actualHoursWrap")?.classList.toggle("is-hidden",!actual);run()}
   function setInput(id,value){const el=$(id);if(el){el.value=value;el.dispatchEvent(new Event("input",{bubbles:true}));}}
 
-  document.querySelectorAll("[data-mode]").forEach(btn=>btn.addEventListener("click",()=>setMode(btn.dataset.mode)));
+  document.querySelectorAll(".mode-switch button[data-mode]").forEach(btn=>btn.addEventListener("click",()=>setMode(btn.dataset.mode)));
   document.querySelectorAll('input[name="basis"]').forEach(input=>input.addEventListener("change",updateBasis));
   document.querySelectorAll("[data-rate]").forEach(btn=>btn.addEventListener("click",()=>setInput("hourlyRate",btn.dataset.rate)));
   document.querySelectorAll("[data-weekly]").forEach(btn=>btn.addEventListener("click",()=>setInput("weeklyHours",btn.dataset.weekly)));
