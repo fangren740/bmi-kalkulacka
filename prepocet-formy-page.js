@@ -43,11 +43,11 @@ function updatePreviews(){updatePreview("old");updatePreview("new")}
 function renderRows(){
   const rows=$("rows");rows.innerHTML="";
   ingredients.forEach((x,i)=>{
-    const row=document.createElement("div");row.className="ing-row";
-    row.innerHTML=`<div><input aria-label="Název suroviny" data-i="${i}" data-k="name" value="${String(x.name).replace(/"/g,"&quot;")}"></div>
-<div><input class="amount" aria-label="Množství" data-i="${i}" data-k="amount" inputmode="decimal" value="${String(x.amount).replace(".",",")}"></div>
-<div><select aria-label="Jednotka" data-i="${i}" data-k="unit">${["g","kg","ml","l","ks","lžíce","lžička"].map(u=>`<option ${u===x.unit?"selected":""}>${u}</option>`).join("")}</select></div>
-<div><button class="remove" aria-label="Odebrat surovinu" data-remove="${i}" type="button">×</button></div>`;
+    const row=document.createElement("div");row.className="tr ing-row";
+    row.innerHTML=`<div class="ing-cell ing-name"><span class="cell-label">Název suroviny</span><input aria-label="Název suroviny" data-i="${i}" data-k="name" value="${String(x.name).replace(/"/g,"&quot;")}"></div>
+<div class="ing-cell ing-amount"><span class="cell-label">Množství</span><input class="amount" aria-label="Množství" data-i="${i}" data-k="amount" inputmode="decimal" value="${String(x.amount).replace(".",",")}"></div>
+<div class="ing-cell ing-unit"><span class="cell-label">Jednotka</span><select aria-label="Jednotka" data-i="${i}" data-k="unit">${["g","kg","ml","l","ks","lžíce","lžička"].map(u=>`<option ${u===x.unit?"selected":""}>${u}</option>`).join("")}</select></div>
+<div class="ing-cell ing-remove"><button class="remove" aria-label="Odebrat surovinu ${String(x.name)}" title="Odebrat surovinu" data-remove="${i}" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5"/></svg></button></div>`;
     rows.appendChild(row);
   });
   rows.querySelectorAll("input,select").forEach(el=>el.addEventListener("input",e=>{
@@ -92,7 +92,7 @@ document.querySelectorAll("[data-scale-mode]").forEach(b=>b.addEventListener("cl
 document.querySelectorAll(".quick-size").forEach(b=>b.addEventListener("click",()=>{const side=b.dataset.side;$(side+"D").value=b.dataset.size;document.querySelectorAll(`.quick-size[data-side="${side}"]`).forEach(x=>x.classList.toggle("active",x===b));updatePreview(side);calc(false)}));
 document.querySelectorAll(".recipe-preset").forEach(b=>b.addEventListener("click",()=>{ingredients=recipeSets[b.dataset.recipe].map(x=>({...x}));document.querySelectorAll(".recipe-preset").forEach(x=>x.classList.toggle("active",x===b));renderRows();calc(false)}));
 ["oldD","oldW","oldL","oldH","newD","newW","newL","newH"].forEach(id=>$(id).addEventListener("input",()=>{updatePreviews();calc(false)}));
-$("addIng").addEventListener("click",()=>{ingredients.push({name:"Nová surovina",amount:100,unit:"g"});renderRows();calc(false)});
+$("addIng").addEventListener("click",()=>{ingredients.push({name:"Nová surovina",amount:100,unit:"g"});renderRows();calc(false);const last=document.querySelector(`#rows [data-i="${ingredients.length-1}"][data-k="name"]`);if(last){last.focus();last.select()}});
 $("calcBtn").addEventListener("click",()=>calc(true));$("resetBtn").addEventListener("click",reset);
 fields("old");fields("new");renderRows();updatePreviews();calc(false);
 })();
