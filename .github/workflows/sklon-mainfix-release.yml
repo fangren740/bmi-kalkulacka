@@ -1,0 +1,64 @@
+name: Sklon spad current-main release
+
+on:
+  push:
+    branches:
+      - release/sklon-spad-mainfix-20260911
+
+permissions:
+  contents: write
+
+jobs:
+  integrate-verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout current-main release branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Copy QA-passed calculator candidate
+        run: |
+          git fetch origin release/sklon-spad-20260910:refs/remotes/origin/release/sklon-spad-20260910
+          git show origin/release/sklon-spad-20260910:sklon-a-spad-kalkulacka.html > sklon-a-spad-kalkulacka.html
+          git show origin/release/sklon-spad-20260910:sklon-spad-core.js > sklon-spad-core.js
+          git show origin/release/sklon-spad-20260910:sklon-spad-page.js > sklon-spad-page.js
+
+      - name: Integrate into current main baseline
+        run: python .tmp-sklon-mainfix/integrate.py
+
+      - name: Candidate syntax and registry JSON
+        run: |
+          node --check sklon-spad-core.js
+          node --check sklon-spad-page.js
+          python -m json.tool calculators-registry.json >/dev/null
+
+      - name: Static site audit
+        run: python .github/scripts/audit_static_site.py --root . --config audits/audit-config.json --check-js --json-out /tmp/rv-static.json
+
+      - name: V-next tracking audit
+        run: python rv-vnext-progress-audit.py --root . --json-out /tmp/rv-tracking.json
+
+      - name: V-next accessibility lint
+        run: python rv-vnext-a11y-lint.py --all-vnext
+
+      - name: Regenerate and verify inventory
+        run: |
+          python .github/scripts/vnext_inventory.py
+          python .github/scripts/vnext_inventory.py --check
+
+      - name: Verify #95 stayed intact
+        run: |
+          test -f naklady-na-provoz-auta-kalkulacka.html
+          grep -q 'naklady-na-provoz-auta-kalkulacka.html' RV_VNEXT_PROGRESS.json
+          grep -q '"nextSequence": 96' RV_VNEXT_PROGRESS.json
+
+      - name: Commit clean release result
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --check
+          git diff --cached --quiet && { echo "No changes to commit"; exit 1; }
+          git commit -m "Release calculator: sklon, spad and prevyseni"
+          git push origin HEAD:${GITHUB_REF_NAME}
