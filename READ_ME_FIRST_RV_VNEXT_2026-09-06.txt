@@ -8,6 +8,7 @@ Branch: main
 CURRENT OPERATIONAL MODE — POVINNĚ ČÍST PRVNÍ
 RV_ADSENSE_FINISH_MODE_2026-09-11.md
 RV_ADSENSE_FINISH_QUEUE_2026-09-11.md
+RV_ADSENSE_REVIEW_REQUIRED_AUDIT_2026-09-11.md
 - Aktivní do explicitního odemčení uživatelem po dokončení AdSense readiness sprintu.
 - Cíl: dokončit celé portfolio a sitewide readiness; žádné nekonečné redesign smyčky jedné URL.
 - Pokud se starší workflow dostane do konfliktu s tímto finish modem v otázce pořadí práce / batching / stop-loss, platí finish mode.
@@ -16,11 +17,12 @@ RV_ADSENSE_FINISH_QUEUE_2026-09-11.md
 POVINNÉ POŘADÍ PRO NOVÝ / NAVAZUJÍCÍ CHAT
 1) RV_ADSENSE_FINISH_MODE_2026-09-11.md
 2) RV_ADSENSE_FINISH_QUEUE_2026-09-11.md
-3) RV_VNEXT_MASTER_PROMPT.txt
-4) RV-VNEXT-STRICT-BUILD-PROMPT-2026-09-06.md
-5) RV-VNEXT-PRODUCTION-STANDARD.md
-6) aktuální recovery / experience / customer-copy dokumenty v main
-7) RV_VNEXT_PROGRESS.json + skutečný relevantní HTML/CSS/JS + benchmark/data files
+3) RV_ADSENSE_REVIEW_REQUIRED_AUDIT_2026-09-11.md
+4) RV_VNEXT_MASTER_PROMPT.txt
+5) RV-VNEXT-STRICT-BUILD-PROMPT-2026-09-06.md
+6) RV-VNEXT-PRODUCTION-STANDARD.md
+7) aktuální recovery / experience / customer-copy dokumenty v main
+8) RV_VNEXT_PROGRESS.json + skutečný relevantní HTML/CSS/JS + benchmark/data files
 
 KVALITATIVNÍ KALIBRACE
 - Quality floor: #74 cista-mzda-kalkulacka.html
