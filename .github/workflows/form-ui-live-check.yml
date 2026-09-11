@@ -1,0 +1,60 @@
+name: Recipe form UI live check
+
+on:
+  push:
+    branches:
+      - hotfix/prepocet-formy-ingredient-ui-20260911
+
+jobs:
+  live-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install browser
+        run: |
+          npm install --prefix "$RUNNER_TEMP/rv-browser" playwright@1.62.1
+          "$RUNNER_TEMP/rv-browser/node_modules/.bin/playwright" install --with-deps chromium
+      - name: Check deployed ingredient editor
+        env:
+          NODE_PATH: ${{ runner.temp }}/rv-browser/node_modules
+        run: |
+          node - <<'NODE'
+          const { chromium }=require('playwright');
+          const assert=require('node:assert/strict');
+          (async()=>{
+            const browser=await chromium.launch({headless:true});
+            try{
+              for(const vp of [{width:1440,height:1000},{width:390,height:844}]){
+                const page=await browser.newPage({viewport:vp});
+                const errors=[];page.on('pageerror',e=>errors.push(String(e)));
+                const r=await page.goto('https://rychlevypocty.cz/prepocet-formy-na-peceni.html?ui=20260911-4',{waitUntil:'networkidle'});
+                assert.equal(r.status(),200);
+                await page.waitForFunction(()=>document.querySelectorAll('#rows .tr').length===6,{timeout:10000});
+                assert.equal(errors.length,0,'page errors: '+errors.join('; '));
+                const row=page.locator('#rows .tr').first();
+                const rowStyle=await row.evaluate(el=>({display:getComputedStyle(el).display,radius:getComputedStyle(el).borderRadius,border:getComputedStyle(el).borderTopWidth}));
+                const inputStyle=await row.locator('input').first().evaluate(el=>({height:getComputedStyle(el).height,radius:getComputedStyle(el).borderRadius,border:getComputedStyle(el).borderTopWidth}));
+                assert.equal(rowStyle.display,'grid');
+                assert.notEqual(rowStyle.radius,'0px');
+                assert.notEqual(rowStyle.border,'0px');
+                assert.notEqual(inputStyle.radius,'0px');
+                assert.notEqual(inputStyle.border,'0px');
+                await page.locator('#addIng').click();
+                assert.equal(await page.locator('#rows .tr').count(),7);
+                assert.equal(await page.locator('#rows .tr').last().locator('.remove svg').count(),1);
+                const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>document.documentElement.clientWidth+1);
+                assert.equal(overflow,false);
+                if(vp.width===390){
+                  const name=await row.locator('.ing-name').boundingBox();
+                  const amount=await row.locator('.ing-amount input').boundingBox();
+                  const unit=await row.locator('.ing-unit select').boundingBox();
+                  const remove=await row.locator('.ing-remove .remove').boundingBox();
+                  assert(name.width>300);
+                  assert(Math.abs(amount.y-unit.y)<3 && Math.abs(unit.y-remove.y)<3);
+                }
+                console.log('LIVE UI PASS',vp.width,rowStyle,inputStyle);
+                await page.close();
+              }
+            }finally{await browser.close()}
+          })().catch(e=>{console.error(e);process.exit(1)});
+          NODE
