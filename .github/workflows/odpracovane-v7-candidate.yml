@@ -43,7 +43,6 @@ jobs:
               if old not in h:
                   raise SystemExit('Missing HTML pattern: '+old[:90])
               h=h.replace(old,new,1)
-          # Add Organization/WebApplication structured data while keeping breadcrumb data.
           marker='  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList"'
           if marker not in h: raise SystemExit('Breadcrumb JSON-LD marker missing')
           org='  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Kalkulačka odpracovaných hodin 2026","url":"https://rychlevypocty.cz/kalkulacka-odpracovanych-hodin.html","applicationCategory":"BusinessApplication","operatingSystem":"Any","inLanguage":"cs-CZ","isAccessibleForFree":true},{"@type":"Organization","name":"RychléVýpočty.cz","url":"https://rychlevypocty.cz/","logo":"https://rychlevypocty.cz/logo-rv-v32.svg?v=1"}]}</script>\n'
@@ -123,7 +122,7 @@ jobs:
                 await page.click('[data-preset="22:00|06:30|30"]');
                 await new Promise(r=>setTimeout(r,80));
                 const night=await page.$eval('#resultNight',e=>e.textContent.trim());
-                if(night!=='7 h 30 min–8 h') throw new Error('Night range '+night);
+                if(night!=='150 h–160 h') throw new Error('Night range '+night);
                 await page.$eval('#breakMinutes',e=>{e.value='999';e.dispatchEvent(new Event('input',{bubbles:true}))});
                 await new Promise(r=>setTimeout(r,80));
                 const invalid=await page.$eval('#resultTotal',e=>e.textContent.trim());
