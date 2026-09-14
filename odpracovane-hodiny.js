@@ -268,14 +268,14 @@
   function render(result) {
     lastResult = result;
     const first = result.blocks[0];
-    const basicLabel = result.sourceMode === "basic" ? `${result.count} stejných směn` : `${result.blocks.length} typy směn`;
+    const basicLabel = result.sourceMode === "basic" ? `Počet směn: ${result.count}` : `Typy směn: ${result.blocks.length}`;
     setText(out.heroTotal, formatHours(result.net, true));
     setText(out.heroMode, basicLabel);
     setText(out.heroClock, result.sourceMode === "basic" ? `${first.start} → ${first.end}` : "součet směnových bloků");
     setText(out.heroShift, formatHours(result.average, true));
     setText(out.heroBreak, formatHours(result.breaks, true));
     setText(out.heroNight, formatNightRange(result, true));
-    setText(out.heroNote, result.sourceMode === "basic" ? `Jedna směna má ${formatHours(first.netPerShift)} čistého času. Celkem je započteno ${result.count} směn.` : `Pokročilý režim sečetl ${result.blocks.length} směnové bloky a ${result.count} směn.`);
+    setText(out.heroNote, result.sourceMode === "basic" ? `Čistý čas jedné směny: ${formatHours(first.netPerShift)}. Celkem směn: ${result.count}.` : `Pokročilý režim kombinuje zadané směnové bloky. Celkem směn: ${result.count}.`);
     const grossShare = result.gross > 0 ? result.net / result.gross * 100 : 0;
     const breakShare = result.gross > 0 ? result.breaks / result.gross * 100 : 0;
     out.heroWorkBar.style.width = `${Math.max(0, Math.min(100, grossShare))}%`;
@@ -285,7 +285,7 @@
     setText(out.statusBadge, state.label);
     out.statusBadge.className = state.className;
     setText(out.resultTotal, formatHours(result.net));
-    setText(out.resultSummary, result.sourceMode === "basic" ? `${result.count} směn po ${formatHours(first.netPerShift)} po odečtení ${first.breakPerShift}minutové pauzy.` : `${result.blocks.length} typy směn, celkem ${result.count} směn a průměr ${formatHours(result.average)} čistého času.`);
+    setText(out.resultSummary, result.sourceMode === "basic" ? `Počet směn: ${result.count}. Čistý čas jedné směny: ${formatHours(first.netPerShift)} po odečtení ${first.breakPerShift}minutové pauzy.` : `Typy směn: ${result.blocks.length}. Celkem směn: ${result.count}. Průměr: ${formatHours(result.average)} čistého času.`);
     setText(out.resultGross, formatHours(result.gross));
     setText(out.resultBreaks, formatHours(result.breaks));
     setText(out.resultNight, formatNightRange(result));
