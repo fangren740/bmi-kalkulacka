@@ -52,10 +52,19 @@ jobs:
         shell: bash
         run: |
           python - <<'PY'
-          import yaml,subprocess
-          data=yaml.safe_load(open('.github/workflows/odpracovane-v7-candidate.yml',encoding='utf-8'))
-          step=next(s for s in data['jobs']['candidate']['steps'] if s.get('name')=='Build self-contained live preview')
-          subprocess.run(['bash','-c',step['run']],check=True)
+          from pathlib import Path
+          import base64,re
+          h=Path('kalkulacka-odpracovanych-hodin.html').read_text(encoding='utf-8')
+          css='\n'.join(Path(p).read_text(encoding='utf-8') for p in ['rv-brand-v32.css','rv-social-links.css','odpracovane-hodiny.css'])
+          js=Path('odpracovane-hodiny.js').read_text(encoding='utf-8')
+          h=re.sub(r'<link rel="stylesheet" href="/rv-brand-v32.css[^>]*>\s*','',h)
+          h=re.sub(r'<link rel="stylesheet" href="/rv-social-links.css[^>]*>\s*','',h)
+          h=re.sub(r'<link rel="stylesheet" href="/odpracovane-hodiny.css[^>]*>',lambda m:'<style>'+css+'</style>',h)
+          h=re.sub(r'<script src="/odpracovane-hodiny.js[^>]*></script>',lambda m:'<script>'+js+'</script>',h)
+          for name in ['logo-rv-v32.svg','logo-rv-v32-inverse.svg','favicon-rv-v32.svg']:
+            data=base64.b64encode(Path(name).read_bytes()).decode('ascii')
+            h=re.sub(r'/'+re.escape(name)+r'(?:\?v=1)?',lambda m:'data:image/svg+xml;base64,'+data,h)
+          Path('RV_ODPRACOVANE_HODINY_V7_LIVE_PREVIEW.html').write_text(h,encoding='utf-8')
           PY
       - uses: actions/upload-artifact@v4
         with:
