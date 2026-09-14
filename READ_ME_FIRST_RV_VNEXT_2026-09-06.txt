@@ -1,5 +1,5 @@
 RYCHLÉVÝPOČTY.CZ V7 — READ ME FIRST / V-NEXT PROMPT STACK
-Aktualizace: 11. 9. 2026
+Aktualizace: 14. 9. 2026
 
 CURRENT SOURCE OF TRUTH
 Repository: fangren740/bmi-kalkulacka
@@ -7,6 +7,7 @@ Branch: main
 
 CURRENT OPERATIONAL MODE — POVINNĚ ČÍST PRVNÍ
 RV_LIVE_PREVIEW_LOCK_2026-09-11.md
+RV_NO_REGRESSION_RELEASE_LOCK_2026-09-14.md
 RV_CONTENT_DEPTH_AND_IDENTITY_LOCK_2026-09-11.md
 RV_METHOD_SOURCE_DISCLAIMER_LOCK_2026-09-11.md
 RV_ADSENSE_FINISH_MODE_2026-09-11.md
@@ -15,25 +16,28 @@ RV_ADSENSE_REVIEW_REQUIRED_AUDIT_2026-09-11.md
 - Aktivní do explicitního odemčení uživatelem po dokončení AdSense readiness sprintu.
 - Cíl: dokončit celé portfolio a sitewide readiness; žádné nekonečné redesign smyčky jedné URL.
 - `RV_LIVE_PREVIEW_LOCK_2026-09-11.md` je release-blocking workflow rule: vždy jedna kalkulačka; před user approval musí být reálný interaktivní LIVE HTML preview přímo v chatu. Screenshoty jsou pouze doplněk a nenahrazují live preview.
+- `RV_NO_REGRESSION_RELEASE_LOCK_2026-09-14.md` je release-blocking: nový kandidát nesmí být v žádné důležité oblasti horší než aktuální live verze; vizuálně silnější, ale obsahově/funkčně/slabší kandidát = FAIL. Před preview je povinný LIVE → CANDIDATE delta review a verdikt SUPERIOR.
 - `RV_CONTENT_DEPTH_AND_IDENTITY_LOCK_2026-09-11.md` je závazné upřesnění: žádná word-count kvóta; hloubka podle tématu; žádná strohost; canonical V3.2 logo + inverse footer logo + V7/V3.2 watermark/visual field na každé upgradované stránce.
 - `RV_METHOD_SOURCE_DISCLAIMER_LOCK_2026-09-11.md` je release-blocking: metodika musí být skutečně ověřena; M2–M4 vyžadují method verdict; disclaimer se používá podle konkrétního rizika stránky.
 - Pokud se starší workflow dostane do konfliktu s finish modem v otázce pořadí práce / batching / stop-loss, platí finish mode + LIVE PREVIEW LOCK pro jednotlivý review flow.
 - Pokud se starší dokument dá vyložit jako word-count target nebo povolení vizuálně strohého tool shellu, platí CONTENT DEPTH + IDENTITY LOCK.
 - Pokud se starší dokument spokojí pouze s přítomností metodiky/zdrojů bez skutečné verifikace, platí METHOD / SOURCE / DISCLAIMER LOCK.
+- Pokud nový redesign ztrácí proti live funkci, obsahovou hodnotu, trust, SEO, mobile UX, accessibility nebo performance, platí NO-REGRESSION LOCK a kandidát se nesmí nasadit.
 - Quality, correctness, methodology, mobile UX, brand a production gates se NESNIŽUJÍ.
 
 POVINNÉ POŘADÍ PRO NOVÝ / NAVAZUJÍCÍ CHAT
 1) RV_LIVE_PREVIEW_LOCK_2026-09-11.md
-2) RV_CONTENT_DEPTH_AND_IDENTITY_LOCK_2026-09-11.md
-3) RV_METHOD_SOURCE_DISCLAIMER_LOCK_2026-09-11.md
-4) RV_ADSENSE_FINISH_MODE_2026-09-11.md
-5) RV_ADSENSE_FINISH_QUEUE_2026-09-11.md
-6) RV_ADSENSE_REVIEW_REQUIRED_AUDIT_2026-09-11.md
-7) RV_VNEXT_MASTER_PROMPT.txt
-8) RV-VNEXT-STRICT-BUILD-PROMPT-2026-09-06.md
-9) RV-VNEXT-PRODUCTION-STANDARD.md
-10) aktuální recovery / experience / customer-copy dokumenty v main
-11) RV_VNEXT_PROGRESS.json + skutečný relevantní HTML/CSS/JS + benchmark/data files
+2) RV_NO_REGRESSION_RELEASE_LOCK_2026-09-14.md
+3) RV_CONTENT_DEPTH_AND_IDENTITY_LOCK_2026-09-11.md
+4) RV_METHOD_SOURCE_DISCLAIMER_LOCK_2026-09-11.md
+5) RV_ADSENSE_FINISH_MODE_2026-09-11.md
+6) RV_ADSENSE_FINISH_QUEUE_2026-09-11.md
+7) RV_ADSENSE_REVIEW_REQUIRED_AUDIT_2026-09-11.md
+8) RV_VNEXT_MASTER_PROMPT.txt
+9) RV-VNEXT-STRICT-BUILD-PROMPT-2026-09-06.md
+10) RV-VNEXT-PRODUCTION-STANDARD.md
+11) aktuální recovery / experience / customer-copy dokumenty v main
+12) RV_VNEXT_PROGRESS.json + skutečný relevantní HTML/CSS/JS + benchmark/data files
 
 KVALITATIVNÍ KALIBRACE
 - Quality floor: #74 cista-mzda-kalkulacka.html
@@ -42,11 +46,13 @@ KVALITATIVNÍ KALIBRACE
 - V finish mode navíc kalibruj obsahovou úplnost proti tématu a user jobu; nevyráběj strohé tool-only shells.
 - Word count NENÍ quality gate. Hloubka má být adekvátní tématu, ne mechanicky stejně dlouhá.
 - Každá upgradovaná stránka musí působit jako jeden RV produkt: canonical logo, watermark/visual field, topic-native hero/result, plný footer a sociální sítě.
+- Každý redesign musí před preview prokázat SUPERIOR delta proti aktuální live verzi. Nic užitečného se nesmí ztratit jen proto, že je nový návrh vizuálně čistší.
 
 DŮLEŽITÉ
 - Starší `RV-VNEXT-STRICT-BUILD-PROMPT-2026-09-04.md` je HISTORICKÁ REFERENCE; pro nový build použij 2026-09-06.
 - Starší master verze 1.7 byla nahrazena `RV_VNEXT_MASTER_PROMPT.txt` verze 2.0.
 - Pro jednotlivý review flow kalkulačky platí `RV_LIVE_PREVIEW_LOCK_2026-09-11.md`: jedna kalkulačka, live HTML preview přímo v chatu, user approval před DONE/deploy.
+- Pro zákaz regresí proti aktuální produkci platí `RV_NO_REGRESSION_RELEASE_LOCK_2026-09-14.md`: current live je povinný baseline; kandidát musí být minimálně stejně dobrý ve všech důležitých oblastech a jako celek zřetelně lepší.
 - Pro pořadí finish sprintu a stop-loss platí `RV_ADSENSE_FINISH_MODE_2026-09-11.md`.
 - Pro obsahovou hloubku a V7/V3.2 identitu platí `RV_CONTENT_DEPTH_AND_IDENTITY_LOCK_2026-09-11.md`.
 - Pro metodiku, zdroje, re-verifikaci a disclaimery platí `RV_METHOD_SOURCE_DISCLAIMER_LOCK_2026-09-11.md`.
