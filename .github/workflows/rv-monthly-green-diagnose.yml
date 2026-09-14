@@ -1,0 +1,48 @@
+name: RV monthly Gold gate diagnosis
+on:
+  push:
+    branches: ['fix/monthly-gold-green']
+    paths: ['.github/workflows/rv-monthly-green-diagnose.yml']
+permissions:
+  contents: read
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 'fix/monthly-gold-green'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Build hotfix candidate in workspace
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('mesicni-mzda-z-hodinove-sazby.js')
+          s=p.read_text(encoding='utf-8')
+          p.write_text(s.replace('document.querySelectorAll("[data-mode]")','document.querySelectorAll(".hm-mode [data-mode]")'),encoding='utf-8')
+          p=Path('mesicni-mzda-z-hodinove-sazby.css')
+          s=p.read_text(encoding='utf-8')
+          rules='''\n.hm-page .header-cta{color:#fff!important}\n.hm-page .hm-mode button:not(.is-active){color:#4b6275}\n.hm-page .hm-basis small{color:#506779}\n.hm-page .hm-private{color:#536a7d}\n.hm-page .hm-min-check p{color:#556b7d}\n.hm-page .hm-disclaimer p{color:#586f82}\n.hm-page .hm-tape-head b{color:#566d80}\n.hm-page .hm-tape-legend{color:#576e81}\n.hm-page .hm-fourweeks-copy>p.hm-kicker{color:#236c2e}\n.hm-page .footer-grid a{min-height:44px;display:flex;align-items:center;margin:0}\n.hm-page .footer-grid .rv-social-links a{display:grid;place-items:center;width:44px;height:44px;min-height:44px}\n@supports (content-visibility:auto){.hm-page .hm-sensitivity,.hm-page .hm-fourweeks,.hm-page .hm-when,.hm-page .hm-paidtime,.hm-page .hm-regime,.hm-page .hm-offer,.hm-page .hm-checklist,.hm-page .hm-method,.hm-page .hm-faq,.hm-page .hm-related,.hm-page .site-footer{content-visibility:auto;contain-intrinsic-size:auto 900px}}\n@media(max-width:720px){.hm-page .site-header{backdrop-filter:none}}\n'''
+          p.write_text(s+rules,encoding='utf-8')
+          PY
+          npm install --prefix "$RUNNER_TEMP/rv-lh" lighthouse@13.4.1
+          python -m http.server 8765 --bind 127.0.0.1 > "$RUNNER_TEMP/server.log" 2>&1 &
+          sleep 1
+      - name: Diagnose mobile Lighthouse
+        shell: bash
+        run: |
+          LH="$RUNNER_TEMP/rv-lh/node_modules/lighthouse/cli/index.js"
+          URL='http://127.0.0.1:8765/mesicni-mzda-z-hodinove-sazby-kalkulacka.html'
+          node "$LH" "$URL" --quiet --chrome-flags='--headless --no-sandbox --disable-dev-shm-usage' --output=json --output-path="$RUNNER_TEMP/mobile.json" --only-categories=performance,accessibility,best-practices,seo
+          node - <<'NODE'
+          const x=require(process.env.RUNNER_TEMP+'/mobile.json');
+          const scores=Object.fromEntries(Object.entries(x.categories).map(([k,v])=>[k,Math.round(v.score*100)]));
+          console.log('SCORES',scores);
+          console.log('CONTRAST',JSON.stringify((x.audits['color-contrast']?.details?.items||[]).map(i=>({snippet:i.node?.snippet,selector:i.node?.selector,explanation:i.node?.explanation})),null,2));
+          console.log('MAIN_THREAD',JSON.stringify(x.audits['mainthread-work-breakdown']?.details?.items||[],null,2));
+          console.log('LONG_TASKS',JSON.stringify(x.audits['long-tasks']?.details?.items||[],null,2));
+          NODE
