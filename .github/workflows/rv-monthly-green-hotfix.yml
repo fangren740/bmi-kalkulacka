@@ -2,7 +2,7 @@ name: RV monthly Gold green hotfix
 on:
   push:
     branches:
-      - fix/monthly-gold-green
+      - 'fix/monthly-gold-green'
     paths:
       - '.github/workflows/rv-monthly-green-hotfix.yml'
 permissions:
@@ -14,7 +14,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: fix/monthly-gold-green
+          ref: 'fix/monthly-gold-green'
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -38,29 +38,25 @@ jobs:
           marker = '/* Gold V4 production gate hotfix 2026-09-14 */'
           if marker in c:
               raise SystemExit('Hotfix marker already present')
-          c += r'''
-
-/* Gold V4 production gate hotfix 2026-09-14 */
-.hm-page .header-cta{color:#fff!important}
-.hm-page .hm-mode button:not(.is-active){color:#4b6275}
-.hm-page .hm-basis small{color:#506779}
-.hm-page .hm-private{color:#536a7d}
-.hm-page .hm-min-check p{color:#556b7d}
-.hm-page .hm-disclaimer p{color:#586f82}
-.hm-page .hm-tape-head b{color:#566d80}
-.hm-page .hm-tape-legend{color:#576e81}
-.hm-page .hm-fourweeks-copy>p.hm-kicker{color:#236c2e}
-.hm-page .footer-grid a{min-height:44px;display:flex;align-items:center;margin:0}
-.hm-page .footer-grid .rv-social-links a{display:grid;place-items:center;width:44px;height:44px;min-height:44px}
-@supports (content-visibility:auto){
-  .hm-page .hm-sensitivity,.hm-page .hm-fourweeks,.hm-page .hm-when,.hm-page .hm-paidtime,.hm-page .hm-regime,.hm-page .hm-offer,.hm-page .hm-checklist,.hm-page .hm-method,.hm-page .hm-faq,.hm-page .hm-related,.hm-page .site-footer{
-    content-visibility:auto;
-    contain-intrinsic-size:auto 900px;
-  }
-}
-@media(max-width:720px){.hm-page .site-header{backdrop-filter:none}}
-'''
-          css.write_text(c, encoding='utf-8')
+          rules = [
+              '',
+              marker,
+              '.hm-page .header-cta{color:#fff!important}',
+              '.hm-page .hm-mode button:not(.is-active){color:#4b6275}',
+              '.hm-page .hm-basis small{color:#506779}',
+              '.hm-page .hm-private{color:#536a7d}',
+              '.hm-page .hm-min-check p{color:#556b7d}',
+              '.hm-page .hm-disclaimer p{color:#586f82}',
+              '.hm-page .hm-tape-head b{color:#566d80}',
+              '.hm-page .hm-tape-legend{color:#576e81}',
+              '.hm-page .hm-fourweeks-copy>p.hm-kicker{color:#236c2e}',
+              '.hm-page .footer-grid a{min-height:44px;display:flex;align-items:center;margin:0}',
+              '.hm-page .footer-grid .rv-social-links a{display:grid;place-items:center;width:44px;height:44px;min-height:44px}',
+              '@supports (content-visibility:auto){.hm-page .hm-sensitivity,.hm-page .hm-fourweeks,.hm-page .hm-when,.hm-page .hm-paidtime,.hm-page .hm-regime,.hm-page .hm-offer,.hm-page .hm-checklist,.hm-page .hm-method,.hm-page .hm-faq,.hm-page .hm-related,.hm-page .site-footer{content-visibility:auto;contain-intrinsic-size:auto 900px}}',
+              '@media(max-width:720px){.hm-page .site-header{backdrop-filter:none}}',
+              ''
+          ]
+          css.write_text(c + '\n'.join(rules), encoding='utf-8')
 
           html = Path('mesicni-mzda-z-hodinove-sazby-kalkulacka.html')
           h = html.read_text(encoding='utf-8')
@@ -94,7 +90,8 @@ jobs:
             const x=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/'+name+'.json'));
             const scores=Object.fromEntries(Object.entries(x.categories).map(([k,v])=>[k,Math.round(v.score*100)]));
             const metrics={LCP:Math.round(x.audits['largest-contentful-paint']?.numericValue||0),CLS:x.audits['cumulative-layout-shift']?.numericValue,TBT:Math.round(x.audits['total-blocking-time']?.numericValue||0),FCP:Math.round(x.audits['first-contentful-paint']?.numericValue||0)};
-            const a11yFailed=Object.values(x.audits).filter(a=>a.score!==null&&a.score<1&&x.categories.accessibility.auditRefs.some(r=>r.id===a.id)).map(a=>a.id);
+            const a11yRefs=new Set(x.categories.accessibility.auditRefs.map(r=>r.id));
+            const a11yFailed=Object.values(x.audits).filter(a=>a.score!==null&&a.score<1&&a11yRefs.has(a.id)).map(a=>a.id);
             console.log(name.toUpperCase(),JSON.stringify({scores,metrics,a11yFailed}));
             const perfFloor=name.startsWith('mobile')?90:95;
             if(scores.performance<perfFloor||scores.accessibility!==100||scores['best-practices']!==100||scores.seo!==100||a11yFailed.length) fail=true;
