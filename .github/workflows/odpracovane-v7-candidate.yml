@@ -1,0 +1,200 @@
+name: RV worked-hours V7 candidate
+on:
+  push:
+    branches: ['upgrade/odpracovane-hodiny-v7']
+    paths: ['.github/workflows/odpracovane-v7-candidate.yml']
+permissions:
+  contents: write
+jobs:
+  candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 'upgrade/odpracovane-hodiny-v7'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Apply focused V7 polish and correctness fixes
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          html=Path('kalkulacka-odpracovanych-hodin.html')
+          h=html.read_text(encoding='utf-8')
+          repl={
+            '<link rel="icon" type="image/svg+xml" href="favicon.svg">':'<link rel="icon" href="/favicon-rv-v32.svg?v=1" type="image/svg+xml">',
+            '<link rel="stylesheet" href="odpracovane-hodiny.css?v=20260728">':'<link rel="stylesheet" href="/rv-brand-v32.css?v=20260801-stable">\n  <link rel="stylesheet" href="/rv-social-links.css?v=20260907-1">\n  <link rel="stylesheet" href="/odpracovane-hodiny.css?v=20260914-v2">',
+            '<body data-mode="basic">':'<body class="rv-brand-v3 rv-brand-v32 worked-hours-page" data-mode="basic">',
+            '<a class="brand" href="/" aria-label="RychléVýpočty.cz – domů"><img src="logo-rychlevypocty.svg" alt="RychléVýpočty.cz" width="190" height="38"></a>':'<a class="brand rv-logo" href="/" aria-label="RychléVýpočty.cz – domů"><img src="/logo-rv-v32.svg?v=1" alt="" width="295" height="48" decoding="async"></a>',
+            '<footer class="footer">':'<footer class="footer site-footer rv-brand-footer">',
+            '<div class="footer-brand"><img src="logo-rychlevypocty-footer.svg" alt="RychléVýpočty.cz" width="190" height="38"><p>Praktické online kalkulačky pro mzdy, finance, bydlení, podnikání i každodenní rozhodování.</p></div>':'<div class="footer-brand"><img src="/logo-rv-v32-inverse.svg?v=1" alt="RychléVýpočty.cz" width="260" height="45"><p>Praktické online kalkulačky pro mzdy, finance, bydlení, podnikání i každodenní rozhodování.</p><div class="socials rv-social-links" role="group" aria-label="Sociální sítě RychléVýpočty.cz"><a href="https://www.facebook.com/rychlevypocty" target="_blank" rel="noopener" aria-label="RychléVýpočty.cz na Facebooku"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M13.7 21v-8h2.8l.4-3h-3.2V8.1c0-.9.3-1.5 1.6-1.5H17V4a23 23 0 0 0-2.4-.1c-2.4 0-4.1 1.5-4.1 4.2V10H8v3h2.5v8h3.2Z"/></svg></a><a href="https://www.instagram.com/rychlevypocty/" target="_blank" rel="noopener" aria-label="RychléVýpočty.cz na Instagramu"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7.2 2h9.6A5.2 5.2 0 0 1 22 7.2v9.6a5.2 5.2 0 0 1-5.2 5.2H7.2A5.2 5.2 0 0 1 2 16.8V7.2A5.2 5.2 0 0 1 7.2 2Zm-.2 2A3 3 0 0 0 4 7v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7Zm10.3 1.5a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4ZM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z"/></svg></a></div></div>',
+            '<div class="method-card-head"><span>Metodická karta</span><b>Kontrola 28. 7. 2026</b></div>':'<div class="method-card-head"><span>Metodická karta</span><b>Ověřeno 14. 9. 2026</b></div>',
+            '<div class="result-metrics">\n            <div><span>Hrubý čas</span>':'<div class="result-metrics">\n            <div><span>Hrubý čas</span>',
+            '<div><span>Noční hodiny</span><strong id="resultNight">0 h</strong><small>orientačně 22:00–06:00</small></div>':'<div><span>Noční čas</span><strong id="resultNight">0 h</strong><small>rozmezí podle polohy nezapočítané pauzy</small></div>',
+            '<article><span>Noční směna</span><h3>22:00–06:30, pauza 30 minut</h3><strong>8 h čistého, 7 h 30 min v noci</strong><p>Výpočet správně přejde přes půlnoc. Noční část končí v 06:00, posledních třicet minut směny už do nočního intervalu nepatří.</p></article>':'<article><span>Noční směna</span><h3>22:00–06:30, pauza 30 minut</h3><strong>8 h čistého, 7 h 30 min–8 h v nočním intervalu</strong><p>Bez přesného času pauzy nelze noční práci určit na minutu. Pokud byla pauza mezi 22:00 a 06:00, noční čas se zkrátí; pokud připadla mimo noční interval, může zůstat celých 8 hodin.</p></article>',
+            '<article><span>Noční čas</span><code>průnik směny s intervalem 22:00–06:00</code></article>':'<article><span>Noční čas</span><code>průnik směny s 22:00–06:00, jako rozmezí podle možné polohy pauzy</code></article>',
+            '<p>Noční práce se pro účely této kalkulačky sleduje v intervalu od 22:00 do 06:00. Nástroj vypočítá, kolik minut z hrubého intervalu směny do tohoto rozmezí spadá, a výsledek omezí tak, aby nepřekročil čistý pracovní čas po pauze. Jde o praktický odhad, protože kalkulačka nezná přesné umístění pauzy uvnitř směny.</p><p>Jestliže má noční směna pauzu 30 minut, může být skutečná noční doba o tuto pauzu kratší, pokud byla čerpána mezi 22:00 a 06:00. Bez údaje o přesném čase pauzy nelze rozdělení určit dokonale. Kalkulačka proto označuje noční čas jako orientační a používá konzervativní omezení čistým časem.</p>':'<p>Noční práce se pro účely této kalkulačky sleduje v intervalu od 22:00 do 06:00. Protože nástroj nezná přesný čas nezapočítané pauzy, neprezentuje u směn zasahujících do noci falešně přesné číslo. Vypočítá nejnižší a nejvyšší možný noční čas podle toho, zda pauza připadla do nočního intervalu, mimo něj, nebo částečně do obou.</p><p>Například u směny 22:00–06:30 s 30minutovou nezapočítanou pauzou je čistý čas 8 hodin, ale noční práce může být 7 hodin 30 minut až 8 hodin. Přesný údaj zjistíte jen tehdy, když znáte skutečné umístění pauzy. Peněžní příplatek se na této stránce nepočítá.</p>',
+            '<script src="odpracovane-hodiny.js?v=20260728"></script>':'<script src="/odpracovane-hodiny.js?v=20260914-v2" defer></script>'
+          }
+          for old,new in repl.items():
+              if old not in h:
+                  raise SystemExit('Missing HTML pattern: '+old[:90])
+              h=h.replace(old,new,1)
+          # Add Organization/WebApplication structured data while keeping breadcrumb data.
+          marker='  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList"'
+          if marker not in h: raise SystemExit('Breadcrumb JSON-LD marker missing')
+          org='  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Kalkulačka odpracovaných hodin 2026","url":"https://rychlevypocty.cz/kalkulacka-odpracovanych-hodin.html","applicationCategory":"BusinessApplication","operatingSystem":"Any","inLanguage":"cs-CZ","isAccessibleForFree":true},{"@type":"Organization","name":"RychléVýpočty.cz","url":"https://rychlevypocty.cz/","logo":"https://rychlevypocty.cz/logo-rv-v32.svg?v=1"}]}</script>\n'
+          h=h.replace(marker,org+marker,1)
+          html.write_text(h,encoding='utf-8')
+
+          js=Path('odpracovane-hodiny.js')
+          s=js.read_text(encoding='utf-8')
+          replacements=[
+          ('document.querySelectorAll(".field.has-error").forEach((field) => field.classList.remove("has-error"));\n    document.querySelectorAll(".field-error").forEach((error) => setText(error, ""));', 'document.querySelectorAll(".field.has-error").forEach((field) => field.classList.remove("has-error"));\n    document.querySelectorAll("[aria-invalid=\\"true\\"]").forEach((field) => field.removeAttribute("aria-invalid"));\n    document.querySelectorAll(".field-error").forEach((error) => setText(error, ""));'),
+          ('if (field) field.classList.add("has-error");\n    if (error) setText(error, message);', 'if (field) field.classList.add("has-error");\n    if (input) input.setAttribute("aria-invalid", "true");\n    if (error) setText(error, message);'),
+          ('const rawNight = nightMinutes(base.start, base.end);\n    const night = Math.min(net, rawNight);', 'const rawNight = nightMinutes(base.start, base.end);\n    const nonNightGross = Math.max(0, base.gross - rawNight);\n    const breakInsideNightMin = Math.max(0, block.breakMinutes - nonNightGross);\n    const breakInsideNightMax = Math.min(block.breakMinutes, rawNight);\n    const nightMax = Math.max(0, rawNight - breakInsideNightMin);\n    const nightMin = Math.max(0, rawNight - breakInsideNightMax);'),
+          ('nightPerShift: night,', 'nightMinPerShift: nightMin,\n      nightMaxPerShift: nightMax,'),
+          ('night: night * block.count', 'nightMin: nightMin * block.count,\n      nightMax: nightMax * block.count'),
+          ('sum.night += block.night;', 'sum.nightMin += block.nightMin;\n      sum.nightMax += block.nightMax;'),
+          ('{ gross: 0, breaks: 0, net: 0, night: 0, count: 0, maxGross: 0,', '{ gross: 0, breaks: 0, net: 0, nightMin: 0, nightMax: 0, count: 0, maxGross: 0,'),
+          ('  function render(result) {', '  function formatNightRange(result, compact = false) {\n    if (Math.round(result.nightMin) === Math.round(result.nightMax)) return formatHours(result.nightMax, compact);\n    return `${formatHours(result.nightMin, compact)}–${formatHours(result.nightMax, compact)}`;\n  }\n\n  function renderInvalid(message = "Opravte označené vstupy. Předchozí výsledek byl skryt, aby nemohl působit jako aktuální.") {\n    lastResult = null;\n    setText(out.heroTotal, "—");\n    setText(out.heroMode, "čeká na platný vstup");\n    setText(out.heroShift, "—");\n    setText(out.heroBreak, "—");\n    setText(out.heroNight, "—");\n    setText(out.heroNote, message);\n    out.heroWorkBar.style.width = "0%";\n    out.heroBreakBar.style.width = "0%";\n    setText(out.statusBadge, "Opravte vstupy");\n    out.statusBadge.className = "is-danger";\n    setText(out.resultTotal, "—");\n    setText(out.resultSummary, message);\n    setText(out.resultGross, "—");\n    setText(out.resultBreaks, "—");\n    setText(out.resultNight, "—");\n    setText(out.resultAverage, "—");\n    setText(out.resultDifference, "—");\n    setText(out.fundInterpretation, "Výsledek znovu zobrazíme po opravě vstupů.");\n    out.fundTrack.style.width = "0%";\n    out.qualityList.replaceChildren();\n    const li=document.createElement("li"); li.className="danger"; li.textContent="Některý vstup není platný."; out.qualityList.append(li);\n    setText(out.qualityScore, "0 / 1");\n  }\n\n  function render(result) {'),
+          ('setText(out.heroNight, formatHours(result.night, true));', 'setText(out.heroNight, formatNightRange(result, true));'),
+          ('setText(out.resultNight, formatHours(result.night));', 'setText(out.resultNight, formatNightRange(result));'),
+          ('const nightText = result.night ? `${formatHours(result.night)} nočního času` : "bez nočního času";', 'const nightText = result.nightMax ? `${formatNightRange(result)} nočního času` : "bez nočního času";'),
+          ('if (!validateBasic(input)) return;', 'if (!validateBasic(input)) { renderInvalid(); return; }'),
+          ('if (!validateAdvanced(input)) return;', 'if (!validateAdvanced(input)) { renderInvalid(); return; }'),
+          ('mode = nextMode;\n    body.dataset.mode = mode;\n    document.querySelectorAll("[data-mode]")', 'mode = nextMode === "advanced" ? "advanced" : "basic";\n    body.dataset.mode = mode;\n    document.querySelectorAll(".mode-switch [data-mode]")'),
+          ('document.querySelectorAll("[data-mode]").forEach((button) => button.addEventListener("click", () => setMode(button.dataset.mode)));', 'document.querySelectorAll(".mode-switch [data-mode]").forEach((button) => button.addEventListener("click", () => setMode(button.dataset.mode)));'),
+          ('`Noční hodiny: ${formatHours(lastResult.night)}`', '`Noční čas: ${formatNightRange(lastResult)}`')
+          ]
+          for old,new in replacements:
+              if old not in s: raise SystemExit('Missing JS pattern: '+old[:100])
+              s=s.replace(old,new,1)
+          js.write_text(s,encoding='utf-8')
+
+          css=Path('odpracovane-hodiny.css')
+          c=css.read_text(encoding='utf-8')
+          marker='/* V7 worked-hours finish 2026-09-14 */'
+          if marker in c: raise SystemExit('CSS marker already present')
+          c += '''\n\n/* V7 worked-hours finish 2026-09-14 */\n.worked-hours-page .hero{position:relative;overflow:hidden}\n.worked-hours-page .hero:before{content:"RV / V7";position:absolute;right:clamp(18px,4vw,64px);top:18px;color:rgba(18,73,108,.055);font-size:clamp(4.6rem,12vw,10rem);font-weight:950;letter-spacing:-.08em;line-height:1;pointer-events:none;user-select:none}\n.worked-hours-page .brand img{width:clamp(220px,24vw,295px);height:auto}\n.worked-hours-page .footer-brand>img{width:min(260px,100%);height:auto}\n.worked-hours-page .footer-brand .rv-social-links{margin-top:16px}\n.worked-hours-page .footer-grid a{min-height:44px;display:flex;align-items:center}\n.worked-hours-page .footer-grid .rv-social-links a{display:inline-flex}\n.worked-hours-page .result-metrics small,.worked-hours-page .privacy-note,.worked-hours-page .field>small,.worked-hours-page .step-heading p{color:#526a7d}\n.worked-hours-page .breadcrumbs{color:#526a7d}\n.worked-hours-page .method-card-head b{color:#d8f8ee}\n@supports (content-visibility:auto){.worked-hours-page .interpretation,.worked-hours-page .method-section,.worked-hours-page .scenarios,.worked-hours-page .decision-section,.worked-hours-page .content-layout,.worked-hours-page .faq-section,.worked-hours-page .site-footer{content-visibility:auto;contain-intrinsic-size:auto 900px}}\n@media(max-width:720px){.worked-hours-page .site-header{backdrop-filter:none}.worked-hours-page .hero:before{top:12px;right:12px;font-size:5rem}}\n'''
+          css.write_text(c,encoding='utf-8')
+          PY
+          node --check odpracovane-hodiny.js
+          grep -q 'Ověřeno 14. 9. 2026' kalkulacka-odpracovanych-hodin.html
+          grep -q '7 h 30 min–8 h' kalkulacka-odpracovanych-hodin.html
+          grep -q 'formatNightRange' odpracovane-hodiny.js
+      - name: Install browser QA tools
+        run: npm install --prefix "$RUNNER_TEMP/rvqa" lighthouse@13.4.1 puppeteer-core@24.16.0
+      - name: Serve candidate
+        shell: bash
+        run: |
+          python -m http.server 8765 --bind 127.0.0.1 > "$RUNNER_TEMP/server.log" 2>&1 &
+          sleep 1
+      - name: Functional browser QA
+        shell: bash
+        run: |
+          CHROME="$(which google-chrome-stable || which google-chrome || which chromium || which chromium-browser)"
+          export CHROME
+          node - <<'NODE'
+          const puppeteer=require(process.env.RUNNER_TEMP+'/rvqa/node_modules/puppeteer-core');
+          (async()=>{
+            const browser=await puppeteer.launch({headless:true,executablePath:process.env.CHROME,args:['--no-sandbox','--disable-dev-shm-usage']});
+            const errors=[];
+            for(const width of [1440,1280,1120,1024,768,390,320]){
+              const page=await browser.newPage();
+              page.on('pageerror',e=>errors.push(String(e)));
+              page.on('console',m=>{if(m.type()==='error') errors.push(m.text())});
+              await page.setViewport({width,height:900});
+              await page.goto('http://127.0.0.1:8765/kalkulacka-odpracovanych-hodin.html',{waitUntil:'networkidle0'});
+              const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>document.documentElement.clientWidth+2);
+              if(overflow) throw new Error('Horizontal overflow at '+width);
+              if(width===390){
+                const defaultResult=await page.$eval('#resultTotal',e=>e.textContent.trim());
+                if(defaultResult!=='160 h') throw new Error('Default result '+defaultResult);
+                await page.click('.mode-switch button[data-mode="advanced"]');
+                const mode=await page.$eval('body',e=>e.dataset.mode);
+                const pressed=await page.$eval('.mode-switch button[data-mode="advanced"]',e=>e.getAttribute('aria-pressed'));
+                const bodyAria=await page.$eval('body',e=>e.getAttribute('aria-pressed'));
+                if(mode!=='advanced'||pressed!=='true'||bodyAria!==null) throw new Error('Mode/ARIA regression');
+                await page.click('.mode-switch button[data-mode="basic"]');
+                await page.click('[data-preset="22:00|06:30|30"]');
+                await new Promise(r=>setTimeout(r,80));
+                const night=await page.$eval('#resultNight',e=>e.textContent.trim());
+                if(night!=='7 h 30 min–8 h') throw new Error('Night range '+night);
+                await page.$eval('#breakMinutes',e=>{e.value='999';e.dispatchEvent(new Event('input',{bubbles:true}))});
+                await new Promise(r=>setTimeout(r,80));
+                const invalid=await page.$eval('#resultTotal',e=>e.textContent.trim());
+                const ariaInvalid=await page.$eval('#breakMinutes',e=>e.getAttribute('aria-invalid'));
+                if(invalid!=='—'||ariaInvalid!=='true') throw new Error('Stale invalid result not cleared');
+                await page.$eval('#breakMinutes',e=>{e.value='30';e.dispatchEvent(new Event('input',{bubbles:true}))});
+                await new Promise(r=>setTimeout(r,80));
+                const recovered=await page.$eval('#resultTotal',e=>e.textContent.trim());
+                if(recovered!=='160 h') throw new Error('Recovery failed '+recovered);
+                const socials=await page.$$eval('.rv-social-links a',a=>a.length);
+                if(socials!==2) throw new Error('Expected 2 socials');
+                const logos=await page.$$eval('img',imgs=>imgs.map(i=>i.getAttribute('src')));
+                if(!logos.some(x=>x&&x.includes('logo-rv-v32.svg'))||!logos.some(x=>x&&x.includes('logo-rv-v32-inverse.svg'))) throw new Error('Brand logos missing');
+              }
+              await page.close();
+            }
+            await browser.close();
+            if(errors.length) throw new Error(errors.join('\n'));
+            console.log('WORKED_HOURS_BROWSER_QA_PASS');
+          })().catch(e=>{console.error(e);process.exit(1)});
+          NODE
+      - name: Lighthouse candidate
+        shell: bash
+        run: |
+          LH="$RUNNER_TEMP/rvqa/node_modules/lighthouse/cli/index.js"
+          URL='http://127.0.0.1:8765/kalkulacka-odpracovanych-hodin.html'
+          for n in 1 2; do node "$LH" "$URL" --quiet --chrome-flags='--headless --no-sandbox --disable-dev-shm-usage' --output=json --output-path="$RUNNER_TEMP/mobile$n.json" --only-categories=performance,accessibility,best-practices,seo; done
+          node "$LH" "$URL" --quiet --preset=desktop --chrome-flags='--headless --no-sandbox --disable-dev-shm-usage' --output=json --output-path="$RUNNER_TEMP/desktop.json" --only-categories=performance,accessibility,best-practices,seo
+          node - <<'NODE'
+          const fs=require('fs');let bad=false,mp=[];
+          for(const name of ['mobile1','mobile2','desktop']){
+            const x=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/'+name+'.json'));
+            const s=Object.fromEntries(Object.entries(x.categories).map(([k,v])=>[k,Math.round(v.score*100)]));
+            const m={LCP:Math.round(x.audits['largest-contentful-paint']?.numericValue||0),CLS:x.audits['cumulative-layout-shift']?.numericValue,TBT:Math.round(x.audits['total-blocking-time']?.numericValue||0)};
+            console.log(name.toUpperCase(),JSON.stringify({scores:s,metrics:m}));
+            if(s.accessibility!==100||s['best-practices']!==100||s.seo!==100) bad=true;
+            if(name.startsWith('mobile')) mp.push(s.performance); else if(s.performance<95) bad=true;
+          }
+          if(Math.max(...mp)<90) bad=true;
+          if(bad){console.error('WORKED_HOURS_LIGHTHOUSE_FAIL');process.exit(1)}
+          console.log('WORKED_HOURS_LIGHTHOUSE_PASS');
+          NODE
+      - name: Build self-contained live preview
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import base64,re
+          h=Path('kalkulacka-odpracovanych-hodin.html').read_text(encoding='utf-8')
+          css='\n'.join(Path(p).read_text(encoding='utf-8') for p in ['rv-brand-v32.css','rv-social-links.css','odpracovane-hodiny.css'])
+          js=Path('odpracovane-hodiny.js').read_text(encoding='utf-8')
+          h=re.sub(r'<link rel="stylesheet" href="/rv-brand-v32.css[^>]*>\s*','',h)
+          h=re.sub(r'<link rel="stylesheet" href="/rv-social-links.css[^>]*>\s*','',h)
+          h=re.sub(r'<link rel="stylesheet" href="/odpracovane-hodiny.css[^>]*>','<style>'+css+'</style>',h)
+          h=re.sub(r'<script src="/odpracovane-hodiny.js[^>]*></script>','<script>'+js+'</script>',h)
+          for name in ['logo-rv-v32.svg','logo-rv-v32-inverse.svg','favicon-rv-v32.svg']:
+            data=base64.b64encode(Path(name).read_bytes()).decode('ascii')
+            h=re.sub(r'/'+re.escape(name)+r'(?:\?v=1)?','data:image/svg+xml;base64,'+data,h)
+          Path('RV_ODPRACOVANE_HODINY_V7_LIVE_PREVIEW.html').write_text(h,encoding='utf-8')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: worked-hours-v7-live-preview
+          path: RV_ODPRACOVANE_HODINY_V7_LIVE_PREVIEW.html
+          retention-days: 30
+      - name: Commit verified candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add kalkulacka-odpracovanych-hodin.html odpracovane-hodiny.css odpracovane-hodiny.js
+          git commit -m 'Polish worked-hours calculator for V7 finish gate'
+          git push origin HEAD:upgrade/odpracovane-hodiny-v7
