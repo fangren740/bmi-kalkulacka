@@ -74,6 +74,7 @@
 
   function clearErrors() {
     document.querySelectorAll(".field.has-error").forEach((field) => field.classList.remove("has-error"));
+    document.querySelectorAll("[aria-invalid=\"true\"]").forEach((field) => field.removeAttribute("aria-invalid"));
     document.querySelectorAll(".field-error").forEach((error) => setText(error, ""));
   }
 
@@ -82,6 +83,7 @@
     const error = $(`${id}Error`);
     const field = input ? input.closest(".field") : null;
     if (field) field.classList.add("has-error");
+    if (input) input.setAttribute("aria-invalid", "true");
     if (error) setText(error, message);
   }
 
@@ -116,7 +118,11 @@
     if (block.count === null || !Number.isInteger(block.count) || block.count < 1 || block.count > 366) return { valid: false, reason: "Počet směn musí být celé číslo." };
     const net = base.gross - block.breakMinutes;
     const rawNight = nightMinutes(base.start, base.end);
-    const night = Math.min(net, rawNight);
+    const nonNightGross = Math.max(0, base.gross - rawNight);
+    const breakInsideNightMin = Math.max(0, block.breakMinutes - nonNightGross);
+    const breakInsideNightMax = Math.min(block.breakMinutes, rawNight);
+    const nightMax = Math.max(0, rawNight - breakInsideNightMin);
+    const nightMin = Math.max(0, rawNight - breakInsideNightMax);
     return {
       valid: true,
       name: block.name || "Směna",
@@ -125,13 +131,15 @@
       grossPerShift: base.gross,
       breakPerShift: block.breakMinutes,
       netPerShift: net,
-      nightPerShift: night,
+      nightMinPerShift: nightMin,
+      nightMaxPerShift: nightMax,
       count: block.count,
       crossesMidnight: base.crossesMidnight,
       gross: base.gross * block.count,
       breaks: block.breakMinutes * block.count,
       net: net * block.count,
-      night: night * block.count
+      nightMin: nightMin * block.count,
+      nightMax: nightMax * block.count
     };
   }
 
@@ -179,14 +187,15 @@
       sum.gross += block.gross;
       sum.breaks += block.breaks;
       sum.net += block.net;
-      sum.night += block.night;
+      sum.nightMin += block.nightMin;
+      sum.nightMax += block.nightMax;
       sum.count += block.count;
       sum.maxGross = Math.max(sum.maxGross, block.grossPerShift);
       sum.minBreakForLongShift = sum.minBreakForLongShift || (block.grossPerShift > 360 && block.breakPerShift < 30);
       sum.crossesMidnight = sum.crossesMidnight || block.crossesMidnight;
       sum.overTwelve = sum.overTwelve || block.grossPerShift > 720;
       return sum;
-    }, { gross: 0, breaks: 0, net: 0, night: 0, count: 0, maxGross: 0, minBreakForLongShift: false, crossesMidnight: false, overTwelve: false });
+    }, { gross: 0, breaks: 0, net: 0, nightMin: 0, nightMax: 0, count: 0, maxGross: 0, minBreakForLongShift: false, crossesMidnight: false, overTwelve: false });
     result.blocks = blocks;
     result.average = result.count ? result.net / result.count : 0;
     result.fundMinutes = fundHours === null ? null : Math.round(fundHours * 60);
@@ -225,6 +234,37 @@
     return { value: formatSignedHours(result.difference), text, ratio: Math.max(4, ratio), state: Math.abs(result.difference) > 60 ? "warn" : "ok" };
   }
 
+  function formatNightRange(result, compact = false) {
+    if (Math.round(result.nightMin) === Math.round(result.nightMax)) return formatHours(result.nightMax, compact);
+    return `${formatHours(result.nightMin, compact)}–${formatHours(result.nightMax, compact)}`;
+  }
+
+  function renderInvalid(message = "Opravte označené vstupy. Předchozí výsledek byl skryt, aby nemohl působit jako aktuální.") {
+    lastResult = null;
+    setText(out.heroTotal, "—");
+    setText(out.heroMode, "čeká na platný vstup");
+    setText(out.heroShift, "—");
+    setText(out.heroBreak, "—");
+    setText(out.heroNight, "—");
+    setText(out.heroNote, message);
+    out.heroWorkBar.style.width = "0%";
+    out.heroBreakBar.style.width = "0%";
+    setText(out.statusBadge, "Opravte vstupy");
+    out.statusBadge.className = "is-danger";
+    setText(out.resultTotal, "—");
+    setText(out.resultSummary, message);
+    setText(out.resultGross, "—");
+    setText(out.resultBreaks, "—");
+    setText(out.resultNight, "—");
+    setText(out.resultAverage, "—");
+    setText(out.resultDifference, "—");
+    setText(out.fundInterpretation, "Výsledek znovu zobrazíme po opravě vstupů.");
+    out.fundTrack.style.width = "0%";
+    out.qualityList.replaceChildren();
+    const li=document.createElement("li"); li.className="danger"; li.textContent="Některý vstup není platný."; out.qualityList.append(li);
+    setText(out.qualityScore, "0 / 1");
+  }
+
   function render(result) {
     lastResult = result;
     const first = result.blocks[0];
@@ -234,7 +274,7 @@
     setText(out.heroClock, result.sourceMode === "basic" ? `${first.start} → ${first.end}` : "součet směnových bloků");
     setText(out.heroShift, formatHours(result.average, true));
     setText(out.heroBreak, formatHours(result.breaks, true));
-    setText(out.heroNight, formatHours(result.night, true));
+    setText(out.heroNight, formatNightRange(result, true));
     setText(out.heroNote, result.sourceMode === "basic" ? `Jedna směna má ${formatHours(first.netPerShift)} čistého času. Celkem je započteno ${result.count} směn.` : `Pokročilý režim sečetl ${result.blocks.length} směnové bloky a ${result.count} směn.`);
     const grossShare = result.gross > 0 ? result.net / result.gross * 100 : 0;
     const breakShare = result.gross > 0 ? result.breaks / result.gross * 100 : 0;
@@ -248,7 +288,7 @@
     setText(out.resultSummary, result.sourceMode === "basic" ? `${result.count} směn po ${formatHours(first.netPerShift)} po odečtení ${first.breakPerShift}minutové pauzy.` : `${result.blocks.length} typy směn, celkem ${result.count} směn a průměr ${formatHours(result.average)} čistého času.`);
     setText(out.resultGross, formatHours(result.gross));
     setText(out.resultBreaks, formatHours(result.breaks));
-    setText(out.resultNight, formatHours(result.night));
+    setText(out.resultNight, formatNightRange(result));
     setText(out.resultAverage, formatHours(result.average));
 
     const fund = fundMessage(result);
@@ -282,20 +322,20 @@
       return;
     }
     setText(value, formatHours(result.net));
-    const nightText = result.night ? `${formatHours(result.night)} nočního času` : "bez nočního času";
+    const nightText = result.nightMax ? `${formatNightRange(result)} nočního času` : "bez nočního času";
     setText(note, `${result.count} ${result.count === 1 ? "směna" : result.count < 5 ? "směny" : "směn"}, ${nightText}`);
   }
 
   function run() {
     if (mode === "basic") {
       const input = basicInput();
-      if (!validateBasic(input)) return;
+      if (!validateBasic(input)) { renderInvalid(); return; }
       const result = calculateBasic(input);
       if (result) render(result);
       return;
     }
     const input = advancedInput();
-    if (!validateAdvanced(input)) return;
+    if (!validateAdvanced(input)) { renderInvalid(); return; }
     const blocks = input.blocks.map(calculateBlock).filter((block) => block.valid);
     render(aggregate(blocks, input.fundHours, "advanced"));
   }
@@ -330,9 +370,9 @@
   }
 
   function setMode(nextMode) {
-    mode = nextMode;
+    mode = nextMode === "advanced" ? "advanced" : "basic";
     body.dataset.mode = mode;
-    document.querySelectorAll("[data-mode]").forEach((button) => {
+    document.querySelectorAll(".mode-switch [data-mode]").forEach((button) => {
       const active = button.dataset.mode === mode;
       button.classList.toggle("is-active", active);
       button.setAttribute("aria-pressed", String(active));
@@ -341,7 +381,7 @@
     run();
   }
 
-  document.querySelectorAll("[data-mode]").forEach((button) => button.addEventListener("click", () => setMode(button.dataset.mode)));
+  document.querySelectorAll(".mode-switch [data-mode]").forEach((button) => button.addEventListener("click", () => setMode(button.dataset.mode)));
   document.querySelectorAll("[data-preset]").forEach((button) => button.addEventListener("click", () => {
     const [start, end, pause] = button.dataset.preset.split("|");
     $("startTime").value = start;
@@ -378,7 +418,7 @@
       `Čistý čas: ${formatHours(lastResult.net)}`,
       `Hrubý čas: ${formatHours(lastResult.gross)}`,
       `Pauzy: ${formatHours(lastResult.breaks)}`,
-      `Noční hodiny: ${formatHours(lastResult.night)}`,
+      `Noční čas: ${formatNightRange(lastResult)}`,
       `Počet směn: ${lastResult.count}`,
       `Rozdíl proti fondu: ${fund.value}`
     ].join("\n");
