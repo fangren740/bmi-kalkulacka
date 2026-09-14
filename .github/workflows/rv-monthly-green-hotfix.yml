@@ -1,0 +1,114 @@
+name: RV monthly Gold green hotfix
+on:
+  push:
+    branches:
+      - fix/monthly-gold-green
+    paths:
+      - '.github/workflows/rv-monthly-green-hotfix.yml'
+permissions:
+  contents: write
+jobs:
+  hotfix:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/monthly-gold-green
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Apply focused a11y and mobile-rendering fixes
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          js = Path('mesicni-mzda-z-hodinove-sazby.js')
+          s = js.read_text(encoding='utf-8')
+          old = 'document.querySelectorAll("[data-mode]")'
+          new = 'document.querySelectorAll(".hm-mode [data-mode]")'
+          count = s.count(old)
+          if count != 2:
+              raise SystemExit(f'Expected exactly 2 mode selectors, found {count}')
+          js.write_text(s.replace(old, new), encoding='utf-8')
+
+          css = Path('mesicni-mzda-z-hodinove-sazby.css')
+          c = css.read_text(encoding='utf-8')
+          marker = '/* Gold V4 production gate hotfix 2026-09-14 */'
+          if marker in c:
+              raise SystemExit('Hotfix marker already present')
+          c += r'''
+
+/* Gold V4 production gate hotfix 2026-09-14 */
+.hm-page .header-cta{color:#fff!important}
+.hm-page .hm-mode button:not(.is-active){color:#4b6275}
+.hm-page .hm-basis small{color:#506779}
+.hm-page .hm-private{color:#536a7d}
+.hm-page .hm-min-check p{color:#556b7d}
+.hm-page .hm-disclaimer p{color:#586f82}
+.hm-page .hm-tape-head b{color:#566d80}
+.hm-page .hm-tape-legend{color:#576e81}
+.hm-page .hm-fourweeks-copy>p.hm-kicker{color:#236c2e}
+.hm-page .footer-grid a{min-height:44px;display:flex;align-items:center;margin:0}
+.hm-page .footer-grid .rv-social-links a{display:grid;place-items:center;width:44px;height:44px;min-height:44px}
+@supports (content-visibility:auto){
+  .hm-page .hm-sensitivity,.hm-page .hm-fourweeks,.hm-page .hm-when,.hm-page .hm-paidtime,.hm-page .hm-regime,.hm-page .hm-offer,.hm-page .hm-checklist,.hm-page .hm-method,.hm-page .hm-faq,.hm-page .hm-related,.hm-page .site-footer{
+    content-visibility:auto;
+    contain-intrinsic-size:auto 900px;
+  }
+}
+@media(max-width:720px){.hm-page .site-header{backdrop-filter:none}}
+'''
+          css.write_text(c, encoding='utf-8')
+
+          html = Path('mesicni-mzda-z-hodinove-sazby-kalkulacka.html')
+          h = html.read_text(encoding='utf-8')
+          if h.count('?v=20260914-v4') != 2:
+              raise SystemExit(f'Expected 2 V4 asset refs, found {h.count("?v=20260914-v4")}')
+          html.write_text(h.replace('?v=20260914-v4','?v=20260914-v4g1'), encoding='utf-8')
+          PY
+          node --check mesicni-mzda-z-hodinove-sazby.js
+          grep -q 'content-visibility:auto' mesicni-mzda-z-hodinove-sazby.css
+          grep -q '20260914-v4g1' mesicni-mzda-z-hodinove-sazby-kalkulacka.html
+      - name: Install Lighthouse
+        run: npm install --prefix "$RUNNER_TEMP/rv-lh" lighthouse@13.4.1
+      - name: Serve patched candidate
+        shell: bash
+        run: |
+          python -m http.server 8765 --bind 127.0.0.1 > "$RUNNER_TEMP/rv-server.log" 2>&1 &
+          sleep 1
+      - name: Lighthouse candidate mobile twice and desktop
+        shell: bash
+        run: |
+          set -euo pipefail
+          LH="$RUNNER_TEMP/rv-lh/node_modules/lighthouse/cli/index.js"
+          URL='http://127.0.0.1:8765/mesicni-mzda-z-hodinove-sazby-kalkulacka.html'
+          node "$LH" "$URL" --quiet --chrome-flags='--headless --no-sandbox --disable-dev-shm-usage' --output=json --output-path="$RUNNER_TEMP/mobile1.json" --only-categories=performance,accessibility,best-practices,seo
+          node "$LH" "$URL" --quiet --chrome-flags='--headless --no-sandbox --disable-dev-shm-usage' --output=json --output-path="$RUNNER_TEMP/mobile2.json" --only-categories=performance,accessibility,best-practices,seo
+          node "$LH" "$URL" --quiet --preset=desktop --chrome-flags='--headless --no-sandbox --disable-dev-shm-usage' --output=json --output-path="$RUNNER_TEMP/desktop.json" --only-categories=performance,accessibility,best-practices,seo
+          node - <<'NODE'
+          const fs=require('fs');
+          let fail=false;
+          for(const name of ['mobile1','mobile2','desktop']){
+            const x=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/'+name+'.json'));
+            const scores=Object.fromEntries(Object.entries(x.categories).map(([k,v])=>[k,Math.round(v.score*100)]));
+            const metrics={LCP:Math.round(x.audits['largest-contentful-paint']?.numericValue||0),CLS:x.audits['cumulative-layout-shift']?.numericValue,TBT:Math.round(x.audits['total-blocking-time']?.numericValue||0),FCP:Math.round(x.audits['first-contentful-paint']?.numericValue||0)};
+            const a11yFailed=Object.values(x.audits).filter(a=>a.score!==null&&a.score<1&&x.categories.accessibility.auditRefs.some(r=>r.id===a.id)).map(a=>a.id);
+            console.log(name.toUpperCase(),JSON.stringify({scores,metrics,a11yFailed}));
+            const perfFloor=name.startsWith('mobile')?90:95;
+            if(scores.performance<perfFloor||scores.accessibility!==100||scores['best-practices']!==100||scores.seo!==100||a11yFailed.length) fail=true;
+          }
+          if(fail){console.error('MONTHLY_GOLD_CANDIDATE_GATE_FAIL');process.exit(1)}
+          console.log('MONTHLY_GOLD_CANDIDATE_GATE_PASS');
+          NODE
+      - name: Commit only verified hotfix
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm .github/workflows/rv-monthly-green-hotfix.yml
+          git add mesicni-mzda-z-hodinove-sazby-kalkulacka.html mesicni-mzda-z-hodinove-sazby.css mesicni-mzda-z-hodinove-sazby.js
+          git commit -m 'Fix monthly Gold accessibility and mobile rendering gate'
+          git push origin HEAD:fix/monthly-gold-green
