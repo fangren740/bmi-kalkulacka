@@ -1,0 +1,72 @@
+name: RV monthly Gold production Lighthouse
+on:
+  push:
+    branches:
+      - upgrade/mesicni-mzda-gold-v4
+    paths:
+      - '.github/workflows/rv-monthly-gold-production-check.yml'
+permissions:
+  contents: read
+jobs:
+  production:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Lighthouse
+        run: npm install --prefix "$RUNNER_TEMP/rv-lh" lighthouse@13.4.1
+      - name: Verify deployed HTML equals main
+        shell: bash
+        run: |
+          set -euo pipefail
+          node - <<'NODE'
+          const fs=require('fs'),crypto=require('crypto');
+          const url='https://rychlevypocty.cz/mesicni-mzda-z-hodinove-sazby-kalkulacka.html?goldv4='+Date.now();
+          const hash=b=>crypto.createHash('sha256').update(b).digest('hex');
+          (async()=>{
+            const r=await fetch(url,{signal:AbortSignal.timeout(30000),headers:{'cache-control':'no-cache'}});
+            if(!r.ok) throw new Error('HTTP '+r.status);
+            const live=Buffer.from(await r.arrayBuffer());
+            const repo=fs.readFileSync('mesicni-mzda-z-hodinove-sazby-kalkulacka.html');
+            console.log('LIVE_HTTP',r.status);
+            console.log('LIVE_SHA256',hash(live));
+            console.log('MAIN_SHA256',hash(repo));
+            console.log('IDENTITY_MATCH',hash(live)===hash(repo));
+            const text=live.toString('utf8');
+            for(const needle of ['Kolik dělá vaše hodinovka za měsíc?','Stejná hodinovka. Jiný fond. Jiná hrubá mzda.','Přítomnost na pracovišti není vždy totéž co placené hodiny.','Šest otázek, které mají větší hodnotu než samotná hodinovka']){
+              if(!text.includes(needle)) throw new Error('Missing Gold V4 marker: '+needle);
+            }
+            if(hash(live)!==hash(repo)) throw new Error('Production HTML does not match main');
+          })().catch(e=>{console.error(e);process.exit(1)});
+          NODE
+      - name: Lighthouse mobile
+        shell: bash
+        run: |
+          set -euo pipefail
+          node "$RUNNER_TEMP/rv-lh/node_modules/lighthouse/cli/index.js" 'https://rychlevypocty.cz/mesicni-mzda-z-hodinove-sazby-kalkulacka.html' --quiet --chrome-flags='--headless --no-sandbox --disable-dev-shm-usage' --output=json --output-path="$RUNNER_TEMP/mobile.json" --only-categories=performance,accessibility,best-practices,seo
+      - name: Lighthouse desktop
+        shell: bash
+        run: |
+          set -euo pipefail
+          node "$RUNNER_TEMP/rv-lh/node_modules/lighthouse/cli/index.js" 'https://rychlevypocty.cz/mesicni-mzda-z-hodinove-sazby-kalkulacka.html' --quiet --preset=desktop --chrome-flags='--headless --no-sandbox --disable-dev-shm-usage' --output=json --output-path="$RUNNER_TEMP/desktop.json" --only-categories=performance,accessibility,best-practices,seo
+      - name: Summarize release scores
+        shell: bash
+        run: |
+          node - <<'NODE'
+          const fs=require('fs');
+          let fail=false;
+          for(const device of ['mobile','desktop']){
+            const x=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/'+device+'.json'));
+            const scores=Object.fromEntries(Object.entries(x.categories).map(([k,v])=>[k,Math.round(v.score*100)]));
+            const metrics={LCP:x.audits['largest-contentful-paint']?.numericValue,CLS:x.audits['cumulative-layout-shift']?.numericValue,TBT:x.audits['total-blocking-time']?.numericValue,FCP:x.audits['first-contentful-paint']?.numericValue};
+            console.log(device.toUpperCase(),JSON.stringify({scores,metrics}));
+            if(scores.performance<90||scores.accessibility<95||scores['best-practices']<95||scores.seo<95) fail=true;
+          }
+          if(fail){console.error('PRODUCTION_LIGHTHOUSE_GATE_FAIL');process.exit(1)}
+          console.log('PRODUCTION_LIGHTHOUSE_GATE_PASS');
+          NODE
