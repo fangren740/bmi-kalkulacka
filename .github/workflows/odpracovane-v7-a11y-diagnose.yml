@@ -1,0 +1,42 @@
+name: RV worked-hours desktop a11y diagnosis
+on:
+  push:
+    branches: ['upgrade/odpracovane-hodiny-v7']
+    paths: ['.github/workflows/odpracovane-v7-a11y-diagnose.yml']
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 'upgrade/odpracovane-hodiny-v7'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Build same candidate
+        shell: bash
+        run: |
+          pip install -q pyyaml
+          python - <<'PY'
+          import yaml,subprocess
+          data=yaml.safe_load(open('.github/workflows/odpracovane-v7-candidate.yml',encoding='utf-8'))
+          step=next(s for s in data['jobs']['candidate']['steps'] if s.get('name')=='Apply focused V7 polish and correctness fixes')
+          subprocess.run(['bash','-c',step['run']],check=True)
+          PY
+          npm install --prefix "$RUNNER_TEMP/rv-lh" lighthouse@13.4.1
+          python -m http.server 8765 --bind 127.0.0.1 > "$RUNNER_TEMP/server.log" 2>&1 &
+          sleep 1
+      - name: Print desktop accessibility failures
+        shell: bash
+        run: |
+          LH="$RUNNER_TEMP/rv-lh/node_modules/lighthouse/cli/index.js"
+          node "$LH" 'http://127.0.0.1:8765/kalkulacka-odpracovanych-hodin.html' --quiet --preset=desktop --chrome-flags='--headless --no-sandbox --disable-dev-shm-usage' --output=json --output-path="$RUNNER_TEMP/d.json" --only-categories=accessibility
+          node - <<'NODE'
+          const x=require(process.env.RUNNER_TEMP+'/d.json');
+          console.log('A11Y',Math.round(x.categories.accessibility.score*100));
+          const refs=new Set(x.categories.accessibility.auditRefs.map(r=>r.id));
+          for(const a of Object.values(x.audits).filter(a=>refs.has(a.id)&&a.score!==null&&a.score<1)){
+            console.log('FAIL',a.id,JSON.stringify(a.details?.items||[],null,2));
+          }
+          NODE
