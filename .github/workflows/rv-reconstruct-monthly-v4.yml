@@ -1,0 +1,59 @@
+name: RV reconstruct approved monthly V4
+
+on:
+  push:
+    branches:
+      - upgrade/mesicni-mzda-gold-v4
+    paths:
+      - '.rv-upload/TRIGGER'
+
+permissions:
+  contents: write
+
+jobs:
+  reconstruct:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: upgrade/mesicni-mzda-gold-v4
+          fetch-depth: 0
+
+      - name: Reconstruct exact approved candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat .rv-upload/html.* | base64 -d | gzip -d > mesicni-mzda-z-hodinove-sazby-kalkulacka.html
+          cat .rv-upload/css.*  | base64 -d | gzip -d > mesicni-mzda-z-hodinove-sazby.css
+          cat .rv-upload/js.*   | base64 -d | gzip -d > mesicni-mzda-z-hodinove-sazby.js
+
+          echo '7f55e995ad52f6e20211696128a510a02786bf1bbc67a413f69fe73cc8ed6e7a  mesicni-mzda-z-hodinove-sazby-kalkulacka.html' | sha256sum -c -
+          echo '802a230e65aec2f72d0cf040fa12ebd8d3b1dafd10688975a99d97054d7cb971  mesicni-mzda-z-hodinove-sazby.css' | sha256sum -c -
+          echo 'f05ee0e8333c87f752608cc6288b8a6715d20430ef026bd2188b581badc2eef9  mesicni-mzda-z-hodinove-sazby.js' | sha256sum -c -
+          node --check mesicni-mzda-z-hodinove-sazby.js
+
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          h=Path('mesicni-mzda-z-hodinove-sazby-kalkulacka.html').read_text(encoding='utf-8')
+          ids=re.findall(r'\\bid="([^"]+)"',h)
+          dup={x for x in ids if ids.count(x)>1}
+          assert not dup, dup
+          assert h.count('<h1')==1
+          required=['/logo-rv-v32.svg?v=1','/logo-rv-v32-inverse.svg?v=1','facebook.com/rychlevypocty','instagram.com/rychlevypocty','id="metodika"','id="placene-hodiny"','id="pracovni-rezim"','id="porovnani-nabidky"','id="kontrola-nabidky"']
+          for x in required: assert x in h, x
+          assert 'logo-rychlevypocty.svg' not in h
+          print('STATIC_QA_PASS')
+          PY
+
+      - name: Replace staging transport with production files
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf .rv-upload
+          rm -f .github/workflows/rv-reconstruct-monthly-v4.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Upgrade monthly salary calculator to approved V7 Gold V4'
+          git push origin HEAD:upgrade/mesicni-mzda-gold-v4
