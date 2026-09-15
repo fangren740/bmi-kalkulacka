@@ -1,0 +1,56 @@
+name: Odstupne final runner
+on:
+  push:
+    branches: [upgrade/odstupne-v7]
+permissions:
+  contents: write
+jobs:
+  run-final:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: upgrade/odstupne-v7
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Execute canonical final-gate commands
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --quiet pyyaml
+          python - <<'PY'
+          from pathlib import Path
+          import yaml, subprocess, os
+          y=yaml.safe_load(Path('.github/workflows/odstupne-gold-fix.yml').read_text())
+          wanted=[
+            'Materialize candidate and repair Gold CSS payload',
+            'Install QA',
+            'Deep browser correctness mobile and UX gate',
+            'Lighthouse Gold gate mobile and desktop',
+            'Build exact preview and screenshots'
+          ]
+          steps=y['jobs']['final-gate']['steps']
+          by={s.get('name'):s.get('run') for s in steps if s.get('name')}
+          for name in wanted:
+            print('\n###',name,flush=True)
+            subprocess.run(['bash','-lc',by[name]],check=True,env=os.environ.copy())
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: odstupne-gold-final-candidate
+          path: |
+            RV_ODSTUPNE_GOLD_LIVE_PREVIEW.html
+            candidate-*.png
+            ${{ runner.temp }}/mobile.json
+            ${{ runner.temp }}/desktop.json
+          retention-days: 30
+      - name: Commit verified candidate and remove QA scaffolding
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]';git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm .github/workflows/odstupne-run-final.yml .github/workflows/odstupne-gold-fix.yml .github/workflows/odstupne-gold-build.yml .github/workflows/odstupne-baseline.yml .github/workflows/odstupne-diagnostic.yml
+          git add odstupne-kalkulacka.html odstupne-kalkulacka.css odstupne.js
+          git commit -m 'Upgrade severance calculator to Gold V7'
+          git push origin HEAD:upgrade/odstupne-v7
