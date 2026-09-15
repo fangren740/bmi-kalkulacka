@@ -26,7 +26,7 @@
     exposure: {
       short: "Nejvyšší přípustná expozice",
       type: "Zákonné odstupné 12×",
-      basis: "§ 67 odst. 2",
+      basis: "§ 67 odst. 3",
       tax: "zdanění ano · pojistné obvykle ne",
       check: "Rozhodnutí o nejvyšší přípustné expozici a přesný důvod skončení."
     },
@@ -103,18 +103,18 @@
     return "2+ roky";
   }
 
-  function legalMultiplier(reason, duration) {
+  function legalMultiplier(reason, duration, workTimeAccount) {
     if (reason === "exposure" || reason === "workHealth") return 12;
     if (reason !== "organizational") return 0;
-    if (duration === "under1") return 1;
-    if (duration === "1to2") return 2;
-    return 3;
+    const base = duration === "under1" ? 1 : duration === "1to2" ? 2 : 3;
+    return base + (workTimeAccount ? 3 : 0);
   }
 
   function getBasicInput() {
     const duration = selected("basicDuration") || "1to2";
     return {
       mode: "basic",
+      workTimeAccount: false,
       earnings: clamp(parseNumber($("basicEarnings").value), 0, 10000000),
       reason: selected("basicReason") || "organizational",
       duration,
@@ -134,6 +134,7 @@
     const totalMonths = currentMonths + previousMonths;
     return {
       mode: "pro",
+      workTimeAccount: $("proReason").value === "organizational" && $("proWorkTimeAccount").checked,
       earnings: clamp(parseNumber($("proEarnings").value), 0, 10000000),
       reason: $("proReason").value,
       duration: durationFromMonths(totalMonths),
@@ -148,7 +149,7 @@
   }
 
   function calculate(input) {
-    const statutoryMultiplier = legalMultiplier(input.reason, input.duration);
+    const statutoryMultiplier = legalMultiplier(input.reason, input.duration, input.workTimeAccount);
     const totalMultiplier = statutoryMultiplier + input.extraMultiplier;
     const statutoryAmount = input.earnings * statutoryMultiplier;
     const extraAmount = input.earnings * input.extraMultiplier;
@@ -156,8 +157,9 @@
     const runway = input.monthlyCosts > 0 ? totalAmount / input.monthlyCosts : null;
     let repayment = 0;
     let repaymentShare = 0;
+    const repaymentEligible = input.reason === "organizational" || input.reason === "exposure";
 
-    if (input.returnEnabled && totalMultiplier > 0 && input.returnAfter < totalMultiplier) {
+    if (repaymentEligible && input.returnEnabled && totalMultiplier > 0 && input.returnAfter < totalMultiplier) {
       repaymentShare = (totalMultiplier - input.returnAfter) / totalMultiplier;
       repayment = totalAmount * repaymentShare;
     }
@@ -171,7 +173,8 @@
       totalAmount,
       runway,
       repayment,
-      repaymentShare
+      repaymentShare,
+      repaymentEligible
     };
   }
 
@@ -192,8 +195,8 @@
 
     if (result.reason === "organizational") {
       return {
-        title: "Organizační důvod",
-        text: `Pro dobu ${durationLabel(result.duration, result.totalMonths)} vychází zákonné minimum ${multiple(result.statutoryMultiplier)} průměrného měsíčního výdělku.${result.extraMultiplier > 0 ? ` Dokumenty přidávají dalších ${multiple(result.extraMultiplier)}.` : ""}`
+        title: result.workTimeAccount ? "Organizační důvod · konto pracovní doby" : "Organizační důvod",
+        text: `Pro dobu ${durationLabel(result.duration, result.totalMonths)} vychází zákonné minimum ${multiple(result.statutoryMultiplier)} průměrného měsíčního výdělku.${result.workTimeAccount ? " Zahrnut je zvláštní příplatek 3× podle § 67 odst. 1 písm. d)." : ""}${result.extraMultiplier > 0 ? ` Dokumenty přidávají dalších ${multiple(result.extraMultiplier)}.` : ""}`
       };
     }
 
@@ -227,9 +230,9 @@
   function tableRows(result) {
     const rows = [
       ["Průměrný měsíční výdělek", money(result.earnings), "Základ použitý pro všechny násobky"],
-      ["Právní scénář", reasonData[result.reason].short, reasonData[result.reason].basis],
+      ["Právní scénář", reasonData[result.reason].short, result.workTimeAccount ? "§ 67 odst. 1 písm. d)" : reasonData[result.reason].basis],
       ["Délka pracovního poměru", durationLabel(result.duration, result.totalMonths), result.mode === "pro" ? "Současná a případně návazná předchozí doba" : "Zvolená hranice v Basic režimu"],
-      ["Zákonný násobek", multiple(result.statutoryMultiplier), result.reason === "organizational" ? "Minimum podle délky poměru" : "Minimum podle zvoleného zvláštního důvodu"],
+      ["Zákonný násobek", multiple(result.statutoryMultiplier), result.reason === "organizational" ? (result.workTimeAccount ? "Běžné minimum podle délky + zvláštní 3× za konto pracovní doby" : "Minimum podle délky poměru") : "Minimum podle zvoleného zvláštního důvodu"],
       ["Zákonná část", money(result.statutoryAmount), `${money(result.earnings)} × ${multiple(result.statutoryMultiplier)}`]
     ];
 
@@ -306,11 +309,24 @@
     $("readingText").textContent = result.totalAmount > 0
       ? `Při základu ${money(result.earnings)} jde o ${money(result.totalAmount)} před zdaněním. ${status.text}`
       : status.text;
-    $("decisionType").textContent = config.basis;
+    $("decisionType").textContent = result.workTimeAccount ? "§ 67 odst. 1 písm. d)" : config.basis;
     $("decisionMultiplier").textContent = multiple(result.totalMultiplier);
     $("decisionAmount").textContent = money(result.totalAmount);
 
-    $("repaymentBox").hidden = !(result.mode === "pro" && result.returnEnabled && result.totalMultiplier > 0);
+    const returnToggle = $("proReturnEnabled");
+    const accountToggle = $("proWorkTimeAccount");
+    const eligibleReturn = result.reason === "organizational" || result.reason === "exposure";
+    returnToggle.disabled = result.mode === "pro" && !eligibleReturn;
+    $("returnToggle").classList.toggle("is-disabled", returnToggle.disabled);
+    $("returnEligibilityNote").textContent = eligibleReturn
+      ? "Model je dostupný pro odstupné podle § 67; zákon stanoví poměrnou část podle kalendářních dnů, proto je výsledek níže jen orientační."
+      : result.reason === "workHealth"
+        ? "Jednorázová náhrada podle § 271ca není odstupné podle § 67; automatickou vratku podle § 68 proto nepočítáme."
+        : "U obecného smluvního plnění nelze vratku odvozovat automaticky z § 68; rozhodují konkrétní dokumenty.";
+    if (!eligibleReturn) $("returnAfterField").hidden = true;
+    accountToggle.disabled = result.mode === "pro" && result.reason !== "organizational";
+    $("accountToggle").classList.toggle("is-disabled", accountToggle.disabled);
+    $("repaymentBox").hidden = !(result.mode === "pro" && result.repaymentEligible && result.returnEnabled && result.totalMultiplier > 0);
     if (!$("repaymentBox").hidden) {
       $("resultRepayment").textContent = money(result.repayment);
       $("returnText").textContent = result.repayment > 0
@@ -348,6 +364,7 @@
     $("proCurrentMonths").value = basic.duration === "under1" ? 8 : basic.duration === "1to2" ? 18 : 30;
     $("proPreviousEligible").checked = false;
     $("proPreviousMonths").value = 0;
+    $("proWorkTimeAccount").checked = false;
     $("previousMonthsField").hidden = true;
   }
 
@@ -364,6 +381,7 @@
     $("proCurrentMonths").value = "18";
     $("proPreviousEligible").checked = false;
     $("proPreviousMonths").value = "0";
+    $("proWorkTimeAccount").checked = false;
     $("proExtraMultiplier").value = "0";
     $("proMonthlyCosts").value = "30000";
     $("proReturnEnabled").checked = false;
