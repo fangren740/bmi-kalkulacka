@@ -26,9 +26,20 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          base64 -d .rv_tmp/wh_html.gz.b64 | gunzip > kalkulacka-odpracovanych-hodin.html
-          base64 -d .rv_tmp/wh_css.gz.b64 | gunzip > odpracovane-hodiny.css
-          base64 -d .rv_tmp/wh_js.gz.b64 | gunzip > odpracovane-hodiny.js
+          python - <<'PY'
+          from pathlib import Path
+          import base64,gzip
+          mapping={
+            '.rv_tmp/wh_html.gz.b64':'kalkulacka-odpracovanych-hodin.html',
+            '.rv_tmp/wh_css.gz.b64':'odpracovane-hodiny.css',
+            '.rv_tmp/wh_js.gz.b64':'odpracovane-hodiny.js',
+          }
+          for src,dst in mapping.items():
+              s=''.join(Path(src).read_text(encoding='utf-8').split())
+              s += '=' * ((4-len(s)%4)%4)
+              raw=base64.b64decode(s,validate=False)
+              Path(dst).write_bytes(gzip.decompress(raw))
+          PY
           node --check odpracovane-hodiny.js
           grep -q 'MPSV ověřeno 15. 9. 2026' kalkulacka-odpracovanych-hodin.html
           grep -q 'logo-rv-v32.svg' kalkulacka-odpracovanych-hodin.html
