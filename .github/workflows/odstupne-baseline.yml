@@ -1,0 +1,34 @@
+name: Odstupne baseline capture
+on:
+  push:
+    branches: [upgrade/odstupne-v7]
+    paths: [.github/workflows/odstupne-baseline.yml]
+permissions:
+  contents: read
+jobs:
+  baseline:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install browser tooling
+        run: npm install --prefix "$RUNNER_TEMP/rvqa" puppeteer-core@24.16.0
+      - name: Capture current production desktop and mobile
+        shell: bash
+        run: |
+          node - <<'NODE'
+          const puppeteer=require(process.env.RUNNER_TEMP+'/rvqa/node_modules/puppeteer-core');
+          (async()=>{const b=await puppeteer.launch({executablePath:'/usr/bin/google-chrome',headless:true,args:['--no-sandbox','--disable-dev-shm-usage']});
+          const url='https://rychlevypocty.cz/odstupne-kalkulacka.html?baseline='+Date.now();
+          for(const [name,w,h] of [['desktop',1440,1100],['tablet',768,1000],['mobile390',390,844],['mobile320',320,780]]){
+            const p=await b.newPage();await p.setViewport({width:w,height:h,deviceScaleFactor:1});await p.goto(url,{waitUntil:'networkidle2'});await p.screenshot({path:name+'-top.png',fullPage:false});await p.evaluate(()=>document.querySelector('#kalkulacka').scrollIntoView());await new Promise(r=>setTimeout(r,300));await p.screenshot({path:name+'-tool.png',fullPage:false});
+            const metrics=await p.evaluate(()=>({sw:document.documentElement.scrollWidth,cw:document.documentElement.clientWidth,result:document.querySelector('#resultTotal')?.textContent.trim(),logo:document.querySelector('header img')?.getAttribute('src'),bodyHeight:document.body.scrollHeight}));console.log(name,metrics);if(metrics.sw>metrics.cw+2)throw new Error('overflow '+name);await p.close();
+          }await b.close();})().catch(e=>{console.error(e);process.exit(1)});
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: odstupne-live-baseline
+          path: '*.png'
+          retention-days: 14
