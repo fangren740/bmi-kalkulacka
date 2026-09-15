@@ -16,7 +16,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Execute canonical redesign gates with mobile containment fix
+      - name: Execute canonical redesign gates with final a11y hardening
         shell: bash
         run: |
           set -euo pipefail
@@ -27,8 +27,21 @@ jobs:
           wf=yaml.safe_load(Path('.github/workflows/odstupne-complete-redesign-gate.yml').read_text())
           steps={s.get('name'):s.get('run') for s in wf['jobs']['redesign-gate']['steps'] if s.get('name') and s.get('run')}
           subprocess.run(['bash','-lc',steps['Materialize complete redesign']],check=True,env=os.environ.copy())
+
+          p=Path('odstupne-kalkulacka.html')
+          h=p.read_text()
+          for a,b in [
+              ('<small>základ</small>','<dd class="sev-fact-note">základ</dd>'),
+              ('<small id="resultDuration">1–2 roky</small>','<dd class="sev-fact-note" id="resultDuration">1–2 roky</dd>'),
+              ('<small>nad minimum</small>','<dd class="sev-fact-note">nad minimum</dd>'),
+              ('<small>podle výdajů</small>','<dd class="sev-fact-note">podle výdajů</dd>')]:
+              if a not in h:
+                  raise SystemExit('missing semantic target: '+a)
+              h=h.replace(a,b,1)
+          p.write_text(h)
+
           with Path('odstupne-kalkulacka.css').open('a') as f:
-              f.write('''\n\n/* Gold V7 mobile containment: audit table scrolls inside its sheet, never the page. */\n@media (max-width:700px){\n  .sev-audit__grid{grid-template-columns:minmax(0,1fr)!important;min-width:0}\n  .sev-audit__paper,.sev-audit__margin,.sev-reading,.sev-table-wrap{min-width:0;max-width:100%;width:100%}\n  .sev-table-wrap{overflow-x:auto;overscroll-behavior-inline:contain;-webkit-overflow-scrolling:touch}\n}\n''')
+              f.write('''\n\n/* Gold V7 final hardening: containment, semantic facts and WCAG AA contrast. */\n.sev-jumpbar span{color:#4b5f5c}\n.sev-reading>p{color:#754b31}\n.sev-table-wrap th{color:#4f625f}\n.sev-sign__list li>span{color:#704020}\n.sev-sign__list p{color:#3d5754}\n.sev-verdict__facts .sev-fact-note{display:block;margin:0;color:#5f716e;font-size:.62rem;font-weight:500}\n@media (max-width:700px){\n  .sev-audit__grid{grid-template-columns:minmax(0,1fr)!important;min-width:0}\n  .sev-audit__paper,.sev-audit__margin,.sev-reading,.sev-table-wrap{min-width:0;max-width:100%;width:100%}\n  .sev-table-wrap{overflow-x:auto;overscroll-behavior-inline:contain;-webkit-overflow-scrolling:touch}\n}\n''')
           for name in ['Install browser QA','Browser correctness responsive UX gate','Lighthouse Gold gate','Build exact preview and screenshots']:
               print('\n### '+name,flush=True)
               subprocess.run(['bash','-lc',steps[name]],check=True,env=os.environ.copy())
@@ -50,7 +63,7 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           rm -rf .redesign
-          rm -f .github/workflows/odstupne-complete-redesign-gate.yml .github/workflows/odstupne-redesign-overflow.yml .github/workflows/odstupne-redesign-final-gate.yml
-          git add -A .redesign .github/workflows/odstupne-complete-redesign-gate.yml .github/workflows/odstupne-redesign-overflow.yml .github/workflows/odstupne-redesign-final-gate.yml odstupne-kalkulacka.html odstupne-kalkulacka.css odstupne.js
+          rm -f .github/workflows/odstupne-complete-redesign-gate.yml .github/workflows/odstupne-redesign-overflow.yml .github/workflows/odstupne-redesign-final-gate.yml .github/workflows/odstupne-redesign-a11y-final.yml
+          git add -A .redesign .github/workflows/odstupne-complete-redesign-gate.yml .github/workflows/odstupne-redesign-overflow.yml .github/workflows/odstupne-redesign-final-gate.yml .github/workflows/odstupne-redesign-a11y-final.yml odstupne-kalkulacka.html odstupne-kalkulacka.css odstupne.js
           git commit -m 'Completely redesign severance calculator Gold V7'
           git push origin HEAD:upgrade/odstupne-complete-redesign-v7
