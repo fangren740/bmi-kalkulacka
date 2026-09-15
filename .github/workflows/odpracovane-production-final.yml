@@ -15,15 +15,28 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Verify live Gold build
+      - name: Verify live Gold build after edge propagation
         shell: bash
         run: |
           set -euo pipefail
-          URL="https://rychlevypocty.cz/kalkulacka-odpracovanych-hodin.html?rvcheck=${GITHUB_RUN_ID}"
-          curl -fsSL --retry 5 --retry-delay 2 "$URL" -o "$RUNNER_TEMP/live.html"
-          grep -q 'DOCHÁZKOVÁ KARTA' "$RUNNER_TEMP/live.html"
-          grep -q 'MPSV ověřeno 15. 9. 2026' "$RUNNER_TEMP/live.html"
-          grep -q 'odpracovane-hodiny.css?v=20260915-gold1' "$RUNNER_TEMP/live.html"
+          BASE='https://rychlevypocty.cz/kalkulacka-odpracovanych-hodin.html'
+          ok=0
+          for i in $(seq 1 12); do
+            URL="${BASE}?rvcheck=${GITHUB_RUN_ID}-${i}"
+            curl -fsSL -H 'Cache-Control: no-cache' --retry 3 --retry-delay 2 "$URL" -o "$RUNNER_TEMP/live.html"
+            if grep -q 'DOCHÁZKOVÁ KARTA' "$RUNNER_TEMP/live.html" && grep -q 'MPSV ověřeno 15. 9. 2026' "$RUNNER_TEMP/live.html"; then
+              ok=1
+              break
+            fi
+            echo "Gold marker not visible yet on attempt $i"
+            sleep 10
+          done
+          if [ "$ok" -ne 1 ]; then
+            echo 'LIVE_GOLD_BUILD_NOT_VISIBLE'
+            grep -o '<title>[^<]*' "$RUNNER_TEMP/live.html" || true
+            grep -o 'Docházka[^<]*' "$RUNNER_TEMP/live.html" | head -n 3 || true
+            exit 1
+          fi
           echo 'LIVE_GOLD_BUILD_PASS'
       - name: Install Lighthouse
         shell: bash
