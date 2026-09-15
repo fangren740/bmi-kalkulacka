@@ -23,6 +23,7 @@ jobs:
           gzip -dc .redesign/odstupne-kalkulacka.html.gz > odstupne-kalkulacka.html
           gzip -dc .redesign/odstupne-kalkulacka.css.gz > odstupne-kalkulacka.css
           node --check odstupne.js
+          python -m pip install --quiet beautifulsoup4
           python - <<'PY'
           from bs4 import BeautifulSoup
           import re
@@ -40,9 +41,7 @@ jobs:
           assert len(soup.select('input[name="basicDuration"]'))==3
           PY
       - name: Install browser QA
-        run: |
-          npm install --prefix "$RUNNER_TEMP/rvqa" puppeteer-core@24.16.0 lighthouse@13.4.1
-          python -m pip install --quiet beautifulsoup4
+        run: npm install --prefix "$RUNNER_TEMP/rvqa" puppeteer-core@24.16.0 lighthouse@13.4.1
       - name: Browser correctness responsive UX gate
         shell: bash
         run: |
@@ -83,7 +82,6 @@ jobs:
                 await setRadio('basicReason','organizational');
                 await setRadio('basicDuration','over2');
                 await p.waitForFunction(()=>document.querySelector('#resultTotal').textContent.replace(/\s/g,'')==='126000Kč');
-
                 await p.click('#proTab');
                 await p.waitForFunction(()=>document.body.dataset.mode==='pro');
                 await p.$eval('#proEarnings',e=>{e.value='42000';e.dispatchEvent(new Event('input',{bubbles:true}))});
@@ -101,7 +99,6 @@ jobs:
                 await p.waitForFunction(()=>document.querySelector('#proReturnEnabled').disabled===true);
                 if(!(await p.$eval('#repaymentBox',e=>e.hidden))) throw new Error('271ca repayment visible');
                 if(!(await p.$eval('#returnEligibilityNote',e=>e.textContent)).includes('§ 271ca')) throw new Error('271ca note missing');
-
                 await p.$eval('#proReason',e=>{e.value='organizational';e.dispatchEvent(new Event('change',{bubbles:true}))});
                 await p.$eval('#proCurrentMonths',e=>{e.value='8';e.dispatchEvent(new Event('input',{bubbles:true}))});
                 await p.waitForFunction(()=>document.querySelector('#resultTotal').textContent.replace(/\s/g,'')==='42000Kč');
@@ -110,7 +107,6 @@ jobs:
                 await p.waitForFunction(()=>document.querySelector('#resultTotal').textContent.replace(/\s/g,'')==='84000Kč');
                 await p.$eval('#proExtraMultiplier',e=>{e.value='2';e.dispatchEvent(new Event('input',{bubbles:true}))});
                 await p.waitForFunction(()=>document.querySelector('#resultTotal').textContent.replace(/\s/g,'')==='168000Kč');
-
                 const bad=await p.$$eval('button,.sev-mode__tab,.sev-choice label,.sev-toggle',els=>els.filter(e=>e.offsetParent!==null).map(e=>({t:e.textContent.trim().slice(0,30),w:e.getBoundingClientRect().width,h:e.getBoundingClientRect().height})).filter(x=>x.w<44||x.h<44));
                 if(bad.length) throw new Error('small targets '+JSON.stringify(bad.slice(0,8)));
                 await p.click('#copyResult');
