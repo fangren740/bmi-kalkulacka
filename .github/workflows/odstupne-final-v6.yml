@@ -1,0 +1,60 @@
+name: Odstupne Gold V7 final v6
+on:
+  push:
+    branches: [upgrade/odstupne-v7]
+    paths: [.github/workflows/odstupne-final-v6.yml]
+permissions:
+  contents: write
+jobs:
+  final-v6:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: upgrade/odstupne-v7
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run canonical final candidate gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --quiet pyyaml
+          python - <<'PY'
+          from pathlib import Path
+          import yaml, subprocess, os
+          v5=yaml.safe_load(Path('.github/workflows/odstupne-final-v5.yml').read_text())
+          v3=yaml.safe_load(Path('.github/workflows/odstupne-final-v3.yml').read_text())
+          s5={s.get('name'):s.get('run') for s in v5['jobs']['final-v5']['steps'] if s.get('name')}
+          s3={s.get('name'):s.get('run') for s in v3['jobs']['final-v3']['steps'] if s.get('name')}
+          sequence=[
+            ('Materialize final candidate',s5['Materialize final candidate']),
+            ('Install QA',s5['Install QA']),
+            ('Browser correctness responsive and UX gate',s3['Browser correctness responsive and UX gate']),
+            ('Lighthouse Gold gate',s5['Lighthouse Gold gate']),
+            ('Build exact preview and screenshots',s5['Build exact preview and screenshots'])
+          ]
+          for name,cmd in sequence:
+              print('\n### '+name,flush=True)
+              subprocess.run(['bash','-lc',cmd],check=True,env=os.environ.copy())
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: odstupne-gold-v7-final-preview
+          path: |
+            RV_ODSTUPNE_GOLD_LIVE_PREVIEW.html
+            candidate-*.png
+            ${{ runner.temp }}/mobile.json
+            ${{ runner.temp }}/desktop.json
+          retention-days: 30
+      - name: Commit only verified production files
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          rm -f .github/workflows/odstupne-baseline.yml .github/workflows/odstupne-gold-build.yml .github/workflows/odstupne-diagnostic.yml .github/workflows/odstupne-gold-fix.yml .github/workflows/odstupne-run-final.yml .github/workflows/odstupne-a11y-diagnostic.yml .github/workflows/odstupne-final-v3.yml .github/workflows/odstupne-final-v4.yml .github/workflows/odstupne-final-v5.yml .github/workflows/odstupne-final-v6.yml
+          git add -A .github/workflows odstupne-kalkulacka.html odstupne-kalkulacka.css odstupne.js
+          git commit -m 'Upgrade severance calculator to Gold V7'
+          git push origin HEAD:upgrade/odstupne-v7
