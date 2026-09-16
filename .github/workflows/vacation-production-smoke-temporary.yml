@@ -1,4 +1,4 @@
-name: Vacation V2 postmerge live smoke
+name: Vacation V2 postmerge live diagnostic
 on:
   push:
     branches: [upgrade/nahrada-dovolena-review2-release]
@@ -11,36 +11,35 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Check public domain version and assets
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Compare public delivered HTML with current main source and test assets
         shell: bash
         run: |
           python3 - <<'PY'
-          import urllib.request,hashlib,time,sys,re
+          from pathlib import Path
+          import urllib.request,hashlib,difflib
           root='https://rychlevypocty.cz/'
-          expected={
-            'nahrada-mzdy-za-dovolenou-kalkulacka.html':'9ec047dd12a36a9a991d87c4b6ce0430a3755b6b7086f9bbb2296ed7da17a5de',
-            'nahrada-dovolena-pro.css':'b0e117e91c02d9d2fb2bb965ee88ac2782d1ec824d1ce6cc45896539140a0f71',
-            'nahrada-dovolena.js':'df7f7438bd54faca1fccd1af5a89b7773dd4c9ae8ba02b1cc8a0ad5f3f8466ee'
-          }
-          for attempt in range(1,7):
-            print('PUBLIC_PROBE_ATTEMPT',attempt,flush=True)
-            ok=True
-            for filename,sha in expected.items():
-              url=root+filename+'?v=20260916-review2&postmerge=1675020-'+str(attempt)
-              try:
-                with urllib.request.urlopen(urllib.request.Request(url,headers={'Cache-Control':'no-cache','User-Agent':'Mozilla/5.0 VacationPostMergeAudit/1.0'}),timeout=17) as resp:
-                  body=resp.read();status=resp.status;final=resp.url
-                actual=hashlib.sha256(body).hexdigest()
-                match=actual==sha
-                print('PUBLIC_ASSET',filename,'http',status,'bytes',len(body),'sha256',actual,'exact_match',match,'final',final,flush=True)
-                if filename.endswith('.html'):
-                  print('V2_MARKER','20260916-review2' in body.decode('utf-8','replace'),'OLD_MARKER','20260718-1' in body.decode('utf-8','replace'),flush=True)
-                  if b'20260916-review2' not in body:match=False
-                ok=ok and match
-              except Exception as exc:
-                print('PUBLIC_ASSET_ERROR',filename,type(exc).__name__,str(exc),flush=True);ok=False
-            if ok:
-              print('PUBLIC_V2_EXACT_BYTES_PASS',flush=True);sys.exit(0)
-            if attempt<6:time.sleep(8)
-          print('PUBLIC_V2_SMOKE_FAIL',flush=True);sys.exit(1)
+          files={'nahrada-mzdy-za-dovolenou-kalkulacka.html':'9ec047dd12a36a9a991d87c4b6ce0430a3755b6b7086f9bbb2296ed7da17a5de','nahrada-dovolena-pro.css':'b0e117e91c02d9d2fb2bb965ee88ac2782d1ec824d1ce6cc45896539140a0f71','nahrada-dovolena.js':'df7f7438bd54faca1fccd1af5a89b7773dd4c9ae8ba02b1cc8a0ad5f3f8466ee'}
+          for filename,sha in files.items():
+            source=Path(filename).read_bytes()
+            url=root+filename+'?delivery-check=167502029bc48f4010ebca0b388b556aa8ee21f7'
+            with urllib.request.urlopen(urllib.request.Request(url,headers={'Cache-Control':'no-cache','User-Agent':'Mozilla/5.0'}),timeout=20) as response:body=response.read();status=response.status
+            print('FILE',filename,'http',status,'local_bytes',len(source),'remote_bytes',len(body),'local_sha',hashlib.sha256(source).hexdigest(),'remote_sha',hashlib.sha256(body).hexdigest(),'same',source==body,flush=True)
+            assert hashlib.sha256(source).hexdigest()==sha,'unexpected main source change'
+            if filename.endswith('.html'):
+              print('MARKER_NEW',b'20260916-review2' in body,'MARKER_OLD',b'20260718-1' in body,flush=True)
+              if source!=body:
+                a=source.decode('utf8','replace').splitlines(keepends=True);b=body.decode('utf8','replace').splitlines(keepends=True)
+                matcher=difflib.SequenceMatcher(None,a,b,autojunk=False)
+                diffs=[(tag,i,j,k,l) for tag,i,j,k,l in matcher.get_opcodes() if tag!='equal']
+                print('DIFF_COUNT',len(diffs),flush=True)
+                for tag,i,j,k,l in diffs[:16]:
+                  print('HTML_DIFF',tag,'source_lines',i+1,j,'remote_lines',k+1,l,flush=True)
+                  for line in a[i:j][:3]:print('SOURCE_SNIP',repr(line[:240]),flush=True)
+                  for line in b[k:l][:3]:print('REMOTE_SNIP',repr(line[:240]),flush=True)
+              assert b'20260916-review2' in body and b'20260718-1' not in body
+            else:assert source==body,'CSS or JS does not match approved V2'
+          print('PUBLIC_V2_MARKER_AND_ASSETS_PASS',flush=True)
           PY
