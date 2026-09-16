@@ -111,12 +111,12 @@
   }
 
   function getBasicInput() {
-    const duration = selected("basicDuration") || "1to2";
+    const duration = selected("basicDuration");
     return {
       mode: "basic",
       workTimeAccount: false,
       earnings: clamp(parseNumber($("basicEarnings").value), 0, 10000000),
-      reason: selected("basicReason") || "organizational",
+      reason: selected("basicReason"),
       duration,
       totalMonths: null,
       extraMultiplier: 0,
@@ -338,7 +338,68 @@
     renderScenarios(result.earnings);
   }
 
+  function completionState() {
+    if (mode === "basic") {
+      const reason = selected("basicReason");
+      const earnings = parseNumber($("basicEarnings").value);
+      const duration = selected("basicDuration");
+      if (!reason) return { complete: false, next: "1. Vyberte důvod skončení pracovního poměru." };
+      if (!(earnings > 0)) return { complete: false, next: "2. Zadejte svůj průměrný měsíční výdělek." };
+      if (!duration) return { complete: false, next: "3. Vyberte délku pracovního poměru." };
+      return { complete: true, next: "" };
+    }
+    const reason = $("proReason").value;
+    const earnings = parseNumber($("proEarnings").value);
+    const currentMonths = parseNumber($("proCurrentMonths").value);
+    if (!reason) return { complete: false, next: "Vyberte právní důvod skončení." };
+    if (!(earnings > 0)) return { complete: false, next: "Zadejte svůj průměrný měsíční výdělek." };
+    if (!(currentMonths > 0)) return { complete: false, next: "Zadejte délku současného pracovního poměru." };
+    return { complete: true, next: "" };
+  }
+
+  function renderIdle(next) {
+    lastResult = null;
+    document.body.dataset.mode = mode;
+    document.body.dataset.resultState = "idle";
+    $("modeStatus").textContent = mode === "pro" ? "Kontrola dokumentů" : "Rychlý výpočet";
+    $("heroMode").textContent = mode === "pro" ? "PRO" : "RYCHLE";
+    $("heroType").textContent = "Výsledek po vyplnění";
+    $("heroAmount").textContent = "Čeká na údaje";
+    $("heroTitle").textContent = next || "Důvod → výdělek → délka poměru";
+    $("heroAverage").textContent = "—";
+    $("heroDuration").textContent = "—";
+    $("heroMultiplier").textContent = "—";
+    $("heroBar").style.width = "0%";
+    $("resultType").textContent = "Čeká na vaše údaje";
+    $("resultTotal").textContent = "— Kč";
+    $("resultMultiplier").textContent = next || "Vyplňte požadované kroky vlevo";
+    $("resultMinimum").textContent = "—";
+    $("resultBar").style.width = "0%";
+    $("resultAverage").textContent = "—";
+    $("resultLegal").textContent = "—";
+    $("resultDuration").textContent = "—";
+    $("resultExtra").textContent = "—";
+    $("resultRunway").textContent = "—";
+    $("resultStatus").textContent = next || "Začněte důvodem skončení";
+    $("resultStatusText").textContent = "Výsledek počítáme až z vašich údajů — nepoužíváme předvyplněný ukázkový nárok.";
+    $("resultTax").textContent = "výsledek se zobrazí po vyplnění";
+    $("readingTitle").textContent = "Kontrolní list se doplní po výpočtu.";
+    $("readingText").textContent = next || "Vyplňte požadované údaje v kalkulačce.";
+    $("decisionType").textContent = "—";
+    $("decisionMultiplier").textContent = "—";
+    $("decisionAmount").textContent = "—";
+    $("summaryTableBody").innerHTML = '<tr><td colspan="3">Výpočet čeká na vaše údaje.</td></tr>';
+    renderScenarios(0);
+    $("repaymentBox").hidden = true;
+  }
+
   function run() {
+    const state = completionState();
+    if (!state.complete) {
+      renderIdle(state.next);
+      return;
+    }
+    document.body.dataset.resultState = "ready";
     render(calculate(mode === "pro" ? getProInput() : getBasicInput()));
   }
 
@@ -354,14 +415,15 @@
     form.dataset.mode = mode;
 
     if (isPro && options && options.copyBasic) copyBasicToPro();
-    run();
+    if (options && options.silent) renderIdle(completionState().next);
+    else run();
   }
 
   function copyBasicToPro() {
     const basic = getBasicInput();
-    $("proEarnings").value = Math.round(basic.earnings);
-    $("proReason").value = basic.reason;
-    $("proCurrentMonths").value = basic.duration === "under1" ? 8 : basic.duration === "1to2" ? 18 : 30;
+    if (basic.earnings > 0) $("proEarnings").value = Math.round(basic.earnings);
+    if (basic.reason) $("proReason").value = basic.reason;
+    if (basic.duration) $("proCurrentMonths").value = basic.duration === "under1" ? 8 : basic.duration === "1to2" ? 18 : 30;
     $("proPreviousEligible").checked = false;
     $("proPreviousMonths").value = 0;
     $("proWorkTimeAccount").checked = false;
@@ -369,16 +431,15 @@
   }
 
   function resetBasic() {
-    $("basicEarnings").value = "42000";
-    form.querySelector('input[name="basicReason"][value="organizational"]').checked = true;
-    form.querySelector('input[name="basicDuration"][value="1to2"]').checked = true;
+    $("basicEarnings").value = "";
+    form.querySelectorAll('input[name="basicReason"],input[name="basicDuration"]').forEach((input) => { input.checked = false; });
     run();
   }
 
   function resetPro() {
-    $("proEarnings").value = "42000";
-    $("proReason").value = "organizational";
-    $("proCurrentMonths").value = "18";
+    $("proEarnings").value = "";
+    $("proReason").value = "";
+    $("proCurrentMonths").value = "";
     $("proPreviousEligible").checked = false;
     $("proPreviousMonths").value = "0";
     $("proWorkTimeAccount").checked = false;
@@ -453,5 +514,5 @@
   $("copyResult").addEventListener("click", copyResult);
   $("printResult").addEventListener("click", () => window.print());
 
-  setMode("basic");
+  setMode("basic", { silent: true });
 })();
