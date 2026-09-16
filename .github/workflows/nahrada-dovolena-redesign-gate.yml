@@ -1,0 +1,159 @@
+name: Vacation pay complete redesign gate
+on:
+  push:
+    branches: [upgrade/nahrada-dovolena-complete-redesign-v7]
+    paths: [.github/workflows/nahrada-dovolena-redesign-gate.yml]
+permissions:
+  contents: write
+jobs:
+  gold-gate:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: upgrade/nahrada-dovolena-complete-redesign-v7
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Materialize complete redesign
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat .vacstage/html-*.txt | tr -d '\\n' | base64 -d | gzip -d > nahrada-mzdy-za-dovolenou-kalkulacka.html
+          cat .vacstage/css-*.txt | tr -d '\\n' | base64 -d | gzip -d > nahrada-dovolena-pro.css
+          cat .vacstage/js-*.txt | tr -d '\\n' | base64 -d | gzip -d > nahrada-dovolena.js
+          node --check nahrada-dovolena.js
+          python - <<'PY2'
+          from pathlib import Path
+          import re
+          h=Path('nahrada-mzdy-za-dovolenou-kalkulacka.html').read_text()
+          j=Path('nahrada-dovolena.js').read_text()
+          ids=set(re.findall(r'id="([^"]+)"',h))
+          refs=set(re.findall(r'\$\("([^"]+)"\)',j))
+          miss=sorted(refs-ids)
+          dup=sorted(x for x in ids if h.count('id="'+x+'"')>1)
+          print('JS_IDS',len(refs),'MISSING',miss,'DUP',dup)
+          if miss or dup: raise SystemExit(1)
+          assert 'KALKULAČKA NÁHRADY ZA DOVOLENOU 2026' in h
+          assert '/logo-rv-v32.svg?v=1' in h
+          assert 'value="265"' not in h and 'value="16"' not in h
+          PY2
+      - name: Install isolated QA
+        shell: bash
+        run: npm install --prefix "$RUNNER_TEMP/rvqa" puppeteer-core@24.16.0 lighthouse@13.4.1
+      - name: Browser correctness responsive UX and Lighthouse gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 8765 --bind 127.0.0.1 > "$RUNNER_TEMP/server.log" 2>&1 &
+          SERVER_PID=$!
+          trap 'kill $SERVER_PID 2>/dev/null || true' EXIT
+          sleep 1
+          node - <<'NODE'
+          const puppeteer=require(process.env.RUNNER_TEMP+'/rvqa/node_modules/puppeteer-core');
+          const norm=s=>String(s||'').replace(/\s/g,'');
+          (async()=>{
+            const browser=await puppeteer.launch({executablePath:'/usr/bin/google-chrome',headless:true,args:['--no-sandbox','--disable-dev-shm-usage']});
+            for(const width of [1440,1280,1024,768,430,390,360,320]){
+              const p=await browser.newPage(); await p.setViewport({width,height:1000}); const errs=[]; p.on('pageerror',e=>errs.push(String(e)));
+              await p.goto('http://127.0.0.1:8765/nahrada-mzdy-za-dovolenou-kalkulacka.html',{waitUntil:'networkidle0'});
+              const init=await p.evaluate(()=>({
+                overflow:document.documentElement.scrollWidth>document.documentElement.clientWidth+2,
+                hero:document.getElementById('heroPay').textContent.trim(), total:document.getElementById('grossVacationPay').textContent.trim(),
+                avg:document.getElementById('basicAverage').value, hours:document.getElementById('basicHours').value,
+                context:document.querySelector('input[name="basicContext"]:checked')?.value||'',
+                h1:document.querySelector('h1')?.textContent.replace(/\s+/g,' ').trim(),
+                logo:document.querySelector('.vac-logo img')?.getAttribute('src')||'',
+                toolTop:Math.round(document.getElementById('kalkulacka').getBoundingClientRect().top+scrollY)
+              }));
+              console.log('INIT',width,init);
+              if(init.overflow) throw Error('global overflow '+width);
+              if(init.hero!=='Čeká na údaje'||norm(init.total)!=='—Kč') throw Error('non-idle initial result '+width);
+              if(init.avg||init.hours||init.context) throw Error('prefilled personal data '+width);
+              if(!init.h1.includes('Kolik dostanete za dovolenou?')) throw Error('unclear H1 '+width);
+              if(!init.logo.includes('logo-rv-v32.svg')) throw Error('wrong logo '+width);
+              if(width<=390&&init.toolTop>900) throw Error('tool too low '+width+' '+init.toolTop);
+              if(width===390){
+                const radio=async(name,value)=>p.$eval(`input[name="${name}"][value="${value}"]`,e=>{e.checked=true;e.dispatchEvent(new Event('change',{bubbles:true}));});
+                const val=async(sel,value)=>p.$eval(sel,(e,v)=>{e.value=v;e.dispatchEvent(new Event('input',{bubbles:true}));e.dispatchEvent(new Event('change',{bubbles:true}));},value);
+                await radio('basicContext','drawing'); if(norm(await p.$eval('#grossVacationPay',e=>e.textContent))!=='—Kč') throw Error('basic calculated after context only');
+                await val('#basicAverage','265'); if(norm(await p.$eval('#grossVacationPay',e=>e.textContent))!=='—Kč') throw Error('basic calculated before hours');
+                await val('#basicHours','16'); await p.waitForFunction(()=>document.getElementById('grossVacationPay').textContent.replace(/\s/g,'')==='4240Kč');
+                await radio('basicContext','termination'); await p.waitForFunction(()=>document.getElementById('resultStatus').textContent.includes('skončení pracovního poměru'));
+                if(norm(await p.$eval('#grossVacationPay',e=>e.textContent))!=='4240Kč') throw Error('termination basic amount');
+                await p.click('#resetBasic'); await p.waitForFunction(()=>document.getElementById('grossVacationPay').textContent.replace(/\s/g,'')==='—Kč'&&!document.getElementById('basicAverage').value&&!document.querySelector('input[name="basicContext"]:checked'));
+                await p.click('#proTab');
+                await val('#proContext','drawing'); await val('#useDate','2026-07-10');
+                await radio('averageMethod','direct'); await val('#proDirectAverage','265'); await radio('vacationMode','hours'); await val('#proVacationHours','16');
+                await p.waitForFunction(()=>document.getElementById('grossVacationPay').textContent.replace(/\s/g,'')==='4240Kč');
+                if((await p.$eval('#resultQuarter',e=>e.textContent.trim()))!=='2. čtvrtletí 2026') throw Error('previous quarter direct');
+                await radio('averageMethod','quarter'); await val('#quarterDays','60'); await val('#quarterGross','156000'); await val('#quarterHours','480');
+                await p.waitForFunction(()=>document.getElementById('grossVacationPay').textContent.replace(/\s/g,'')==='5200Kč');
+                if(!(await p.$eval('#resultHourly',e=>e.textContent)).includes('325')) throw Error('quarter avg 325');
+                await val('#quarterDays','20'); await p.waitForFunction(()=>document.body.dataset.resultState==='blocked');
+                if(norm(await p.$eval('#grossVacationPay',e=>e.textContent))!=='—Kč') throw Error('under21 must block quarter result');
+                if(!(await p.$eval('#qualityStatus',e=>e.textContent)).includes('pravděpodobný')) throw Error('under21 guidance');
+                await val('#quarterProbableAverage','270'); await p.waitForFunction(()=>document.getElementById('grossVacationPay').textContent.replace(/\s/g,'')==='4320Kč');
+                if(!(await p.$eval('#resultSource',e=>e.textContent)).includes('pravděpodobný')) throw Error('under21 source');
+                await radio('vacationMode','irregular'); await val('#proShiftList','8; 11,5; 7,5');
+                await p.waitForFunction(()=>document.getElementById('resultHours').textContent.replace(/\s/g,'')==='27h');
+                if(norm(await p.$eval('#grossVacationPay',e=>e.textContent))!=='7290Kč') throw Error('irregular shifts amount');
+                await val('#ordinaryHourlyRate','250'); await p.waitForFunction(()=>!document.getElementById('comparisonBox').hidden);
+                if(!norm(await p.$eval('#comparisonValue',e=>e.textContent)).includes('540Kč')) throw Error('comparison amount');
+                await val('#proContext','termination'); await p.waitForFunction(()=>document.getElementById('resultStatus').textContent.includes('skončení pracovního poměru'));
+                await p.click('#resetPro'); await p.waitForFunction(()=>document.body.dataset.resultState==='idle'&&!document.getElementById('proContext').value&&!document.getElementById('useDate').value);
+                const targets=await p.evaluate(()=>Array.from(document.querySelectorAll('.vac-mode button,.vac-context label,.vac-action,#copyResult,#printResult')).filter(e=>getComputedStyle(e).display!=='none'&&!e.hidden).map(e=>{const r=e.getBoundingClientRect();return [e.tagName,e.id||e.className,Math.round(r.width),Math.round(r.height)]}));
+                const small=targets.filter(x=>x[2]<44||x[3]<44); console.log('TARGETS',targets); if(small.length) throw Error('small targets '+JSON.stringify(small));
+              }
+              if(errs.length) throw Error(errs.join('\n'));
+              await p.close();
+            }
+            await browser.close(); console.log('VACATION_REDESIGN_BROWSER_PASS');
+          })().catch(e=>{console.error(e);process.exit(1)});
+          NODE
+          LH="$RUNNER_TEMP/rvqa/node_modules/lighthouse/cli/index.js"
+          node "$LH" 'http://127.0.0.1:8765/nahrada-mzdy-za-dovolenou-kalkulacka.html' --quiet --chrome-flags='--headless --no-sandbox --disable-dev-shm-usage' --output=json --output-path="$RUNNER_TEMP/mobile.json" --only-categories=performance,accessibility,best-practices,seo
+          node "$LH" 'http://127.0.0.1:8765/nahrada-mzdy-za-dovolenou-kalkulacka.html' --quiet --preset=desktop --chrome-flags='--headless --no-sandbox --disable-dev-shm-usage' --output=json --output-path="$RUNNER_TEMP/desktop.json" --only-categories=performance,accessibility,best-practices,seo
+          node - <<'NODE'
+          const fs=require('fs');let fail=false;
+          for(const n of ['mobile','desktop']){const x=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/'+n+'.json'));const s=Object.fromEntries(Object.entries(x.categories).map(([k,v])=>[k,Math.round(v.score*100)]));const lcp=Math.round(x.audits['largest-contentful-paint']?.numericValue||0),tbt=Math.round(x.audits['total-blocking-time']?.numericValue||0),cls=x.audits['cumulative-layout-shift']?.numericValue||0;console.log(n.toUpperCase(),s,'LCP',lcp,'TBT',tbt,'CLS',cls);if(s.performance<98||s.accessibility<100||s['best-practices']<100||s.seo<100){fail=true;for(const r of x.categories.accessibility.auditRefs||[]){const a=x.audits[r.id];if(a&&a.score!==1&&a.score!==null)console.log('A11Y_FAIL',n,r.id,a.score,a.title,JSON.stringify(a.details||{}).slice(0,7000));}}} if(fail)process.exit(1);
+          NODE
+          python - <<'PY2'
+          from pathlib import Path
+          import base64
+          h=Path('nahrada-mzdy-za-dovolenou-kalkulacka.html').read_text()
+          brand=Path('rv-brand-v32.css').read_text(); social=Path('rv-social-links.css').read_text(); own=Path('nahrada-dovolena-pro.css').read_text(); js=Path('nahrada-dovolena.js').read_text()
+          svg=Path('logo-rv-v32.svg').read_bytes(); uri='data:image/svg+xml;base64,'+base64.b64encode(svg).decode()
+          h=h.replace('<link rel="stylesheet" href="/rv-brand-v32.css?v=20260801-stable">','<style>'+brand+'</style>')
+          h=h.replace('<link rel="stylesheet" href="/rv-social-links.css?v=20260907-1">','<style>'+social+'</style>')
+          h=h.replace('<link rel="stylesheet" href="/nahrada-dovolena-pro.css?v=20260916-goldv7">','<style>'+own+'</style>')
+          h=h.replace('<script src="/nahrada-dovolena.js?v=20260916-goldv7" defer></script>','<script>'+js+'</script>')
+          h=h.replace('/logo-rv-v32.svg?v=1',uri)
+          Path('RV_NAHRADA_DOVOLENA_GOLD_LIVE_PREVIEW.html').write_text(h)
+          PY2
+          node - <<'NODE'
+          const puppeteer=require(process.env.RUNNER_TEMP+'/rvqa/node_modules/puppeteer-core');
+          (async()=>{const b=await puppeteer.launch({executablePath:'/usr/bin/google-chrome',headless:true,args:['--no-sandbox','--disable-dev-shm-usage']});async function snap(width,name){const p=await b.newPage();await p.setViewport({width,height:1000});await p.goto('http://127.0.0.1:8765/nahrada-mzdy-za-dovolenou-kalkulacka.html',{waitUntil:'networkidle0'});await p.screenshot({path:name+'-top.png',fullPage:false});await p.$eval('#kalkulacka',e=>e.scrollIntoView());await new Promise(r=>setTimeout(r,150));await p.screenshot({path:name+'-tool.png',fullPage:false});if(width===1440||width===390)await p.screenshot({path:name+'-full.jpg',fullPage:true,type:'jpeg',quality:82});await p.close();}await snap(1440,'vac-desktop');await snap(390,'vac-mobile390');await snap(320,'vac-mobile320');await b.close();})().catch(e=>{console.error(e);process.exit(1)})
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: vacation-pay-complete-redesign
+          path: |
+            RV_NAHRADA_DOVOLENA_GOLD_LIVE_PREVIEW.html
+            vac-*.png
+            vac-*.jpg
+            ${{ runner.temp }}/mobile.json
+            ${{ runner.temp }}/desktop.json
+          retention-days: 30
+      - name: Commit only verified redesign
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          rm -rf .vacstage
+          rm -f .github/workflows/nahrada-dovolena-redesign-gate.yml
+          git add -A .vacstage .github/workflows/nahrada-dovolena-redesign-gate.yml nahrada-mzdy-za-dovolenou-kalkulacka.html nahrada-dovolena-pro.css nahrada-dovolena.js
+          git commit -m 'Completely redesign vacation pay calculator Gold V7'
+          git push origin HEAD:upgrade/nahrada-dovolena-complete-redesign-v7
