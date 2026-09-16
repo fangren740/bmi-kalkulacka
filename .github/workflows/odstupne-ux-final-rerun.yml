@@ -1,0 +1,53 @@
+name: Odstupne first-use UX final rerun
+on:
+  push:
+    branches: [upgrade/odstupne-complete-redesign-v7]
+    paths: [.github/workflows/odstupne-ux-final-rerun.yml]
+permissions:
+  contents: write
+jobs:
+  ux-final:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: upgrade/odstupne-complete-redesign-v7
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run corrected UX gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --quiet pyyaml
+          python - <<'PY'
+          from pathlib import Path
+          import yaml,subprocess,os
+          wf=yaml.safe_load(Path('.github/workflows/odstupne-ux-final.yml').read_text())
+          steps={s.get('name'):s.get('run') for s in wf['jobs']['ux-final']['steps'] if s.get('name') and s.get('run')}
+          for name in ['Apply first-use UX hardening','Install QA','Browser correctness and first-use UX gate','Lighthouse Gold gate','Build preview and screenshots']:
+              script=steps[name]
+              if name=='Browser correctness and first-use UX gate':
+                  script=script.replace("if(decisionType.textContent.trim()!=='§ 67 odst. 3')", "if((await p.$eval('#decisionType',e=>e.textContent.trim()))!=='§ 67 odst. 3')")
+              print('\n### '+name,flush=True)
+              subprocess.run(['bash','-lc',script],check=True,env=os.environ.copy())
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: odstupne-gold-ux-final
+          path: |
+            RV_ODSTUPNE_GOLD_UX_FINAL_LIVE_PREVIEW.html
+            ux-*.png
+            ${{ runner.temp }}/mobile.json
+            ${{ runner.temp }}/desktop.json
+      - name: Commit verified UX only
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          rm -f .github/workflows/odstupne-ux-final.yml .github/workflows/odstupne-ux-final-rerun.yml
+          git add -A .github/workflows/odstupne-ux-final.yml .github/workflows/odstupne-ux-final-rerun.yml odstupne-kalkulacka.html odstupne-kalkulacka.css odstupne.js
+          git commit -m 'Polish severance calculator first-use UX'
+          git push origin HEAD:upgrade/odstupne-complete-redesign-v7
