@@ -1,0 +1,130 @@
+name: Vacation V2 approved release gate
+on:
+  push:
+    branches: [upgrade/nahrada-dovolena-review2-release]
+    paths: [.github/workflows/vacation-review2-gate.yml]
+permissions:
+  contents: write
+jobs:
+  approved-v2:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: upgrade/nahrada-dovolena-review2-release
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Restore approved exact preview bytes and assert hashes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib,base64,lzma,subprocess
+          p=Path('.vacstage'); chunks=[(p/f'approved-{i:02d}.txt').read_bytes() for i in range(1,5)]
+          expected=['86d07c4df8a30f6e7de34583fbfdf059c841cc41','4eb197ef3d4680dbffda5746f421f05b61407ca3','d9a70ebcb24b0be061e66f5bd79e9621dab8ea09','80fb387958e2923d0d1c353874f416039bca152b']
+          def git_sha(b):return hashlib.sha1(b'blob '+str(len(b)).encode()+b'\0'+b).hexdigest()
+          for n,c in enumerate(chunks):
+              if git_sha(c)==expected[n]:continue
+              if n!=1 or len(c)!=3267:raise ValueError('unexpected transfer corruption '+str(n))
+              alphabet=b'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/='
+              fixed=None
+              for at in range(len(c)+1):
+                  for letter in alphabet:
+                      candidate=c[:at]+bytes([letter])+c[at:]
+                      if git_sha(candidate)==expected[n]:fixed=candidate;break
+                  if fixed is not None:break
+              assert fixed is not None,'original chunk could not be reconstructed by verified Git blob hash'
+              chunks[n]=fixed
+          assert all(git_sha(c)==expected[n] for n,c in enumerate(chunks))
+          s=b''.join(chunks)
+          assert len(s)==13072 and hashlib.sha256(s).hexdigest()=='2248c9a1773dc35bbc70d058bee2faea2a3d453e98df74482a23cdfe23aac3ba'
+          raw=lzma.decompress(base64.b64decode(s))
+          assert hashlib.sha256(raw).hexdigest()=='8c51bd09f3135b23751e077d1f34d6be2a0cd0cc081320e503c5211dcfa33917'
+          Path('/tmp/approved.patch').write_bytes(raw)
+          subprocess.run(['patch','-p1','--fuzz=0','-i','/tmp/approved.patch'],check=True)
+          names=['nahrada-mzdy-za-dovolenou-kalkulacka.html','nahrada-dovolena-pro.css','nahrada-dovolena.js']
+          sha=['9ec047dd12a36a9a991d87c4b6ce0430a3755b6b7086f9bbb2296ed7da17a5de','b0e117e91c02d9d2fb2bb965ee88ac2782d1ec824d1ce6cc45896539140a0f71','df7f7438bd54faca1fccd1af5a89b7773dd4c9ae8ba02b1cc8a0ad5f3f8466ee']
+          for name,v in zip(names,sha):assert hashlib.sha256(Path(name).read_bytes()).hexdigest()==v,name
+          print('APPROVED_PREVIEW_EXACT_BYTES_PASS')
+          PY
+          node --check nahrada-dovolena.js
+      - name: Validate internal assets and anchors
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re,html
+          s=Path('nahrada-mzdy-za-dovolenou-kalkulacka.html').read_text()
+          ids=re.findall(r'\bid="([^"]+)"',s)
+          assert len(ids)==len(set(ids)), 'duplicate IDs'
+          links=re.findall(r'\b(?:href|src)="([^"]+)"',s)
+          for x in links:
+              x=html.unescape(x)
+              if x.startswith('#'):assert x[1:] in ids, 'missing anchor '+x
+              if x.startswith(('https:','http:','data:','mailto:','#')):continue
+              loc=x.split('#')[0].split('?')[0].lstrip('/') or 'index.html'
+              assert Path(loc).is_file(),'missing local target '+x
+          assert len(re.findall('class="vac-footer__col',s))>=4 or 'vac-footer__grid' in s
+          assert '20260916-review2' in s
+          print('INTERNAL_LINK_AND_ASSET_PASS',len(links))
+          PY
+      - name: Install isolated browser audit
+        run: npm install --prefix "$RUNNER_TEMP/vacqa" --no-audit --no-fund --silent lighthouse@12 puppeteer-core@24
+      - name: Browser correctness and Lighthouse mobile desktop
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 8765 --bind 127.0.0.1 > "$RUNNER_TEMP/vac-server.log" 2>&1 &
+          SERVER=$!
+          trap 'kill "$SERVER" 2>/dev/null || true' EXIT
+          sleep 1
+          node - <<'NODE'
+          const pptr=require(process.env.RUNNER_TEMP+'/vacqa/node_modules/puppeteer-core');
+          const norm=x=>String(x).replace(/\s/g,'');
+          (async()=>{
+            const browser=await pptr.launch({executablePath:'/usr/bin/google-chrome',headless:true,args:['--no-sandbox','--disable-dev-shm-usage']});
+            for(const width of [1440,1024,768,430,390,360,320]){
+              const p=await browser.newPage();await p.setViewport({width,height:900});const errors=[];p.on('pageerror',e=>errors.push(String(e)));
+              await p.goto('http://127.0.0.1:8765/nahrada-mzdy-za-dovolenou-kalkulacka.html',{waitUntil:'networkidle0'});
+              const v=await p.evaluate(()=>({overflow:document.documentElement.scrollWidth>document.documentElement.clientWidth+2,amount:document.querySelector('#grossVacationPay').textContent.trim(),logo:document.querySelector('.vac-logo img').naturalWidth,footer:document.querySelectorAll('.vac-footer__grid>div').length,tool:document.querySelector('#kalkulacka').getBoundingClientRect().top}));
+              console.log('WIDTH',width,v);if(v.overflow||v.amount!=='— Kč'||!v.logo||v.footer!==4||(width<=430&&v.tool>780))throw Error('responsive first use '+width);
+              if(width===390){
+                const val=async(sel,v)=>p.$eval(sel,(e,x)=>{e.value=x;e.dispatchEvent(new Event('input',{bubbles:true}));e.dispatchEvent(new Event('change',{bubbles:true}));},v);
+                await p.click('[data-basic-hours="24"]');await p.$eval('input[name="basicContext"][value="drawing"]',e=>{e.checked=true;e.dispatchEvent(new Event('change',{bubbles:true}))});await val('#basicAverage','265');
+                if(norm(await p.$eval('#grossVacationPay',e=>e.textContent))!=='6360Kč')throw Error('preset arithmetic');
+                await val('#basicAverage','oops');if((await p.$eval('#grossVacationPay',e=>e.textContent)).trim()!=='— Kč')throw Error('stale bad input');
+                await p.click('#resetBasic');await p.click('[data-focus-shifts]');
+                await val('#proContext','drawing');await val('#useDate','2026-07-10');await p.$eval('input[name="averageMethod"][value="quarter"]',e=>{e.checked=true;e.dispatchEvent(new Event('change',{bubbles:true}))});
+                for(const [s,x] of [['#quarterDays','20'],['#quarterGross','156000'],['#quarterHours','480'],['#proShiftList','8; 11,5; 7,5']])await val(s,x);
+                if((await p.$eval('#grossVacationPay',e=>e.textContent)).trim()!=='— Kč')throw Error('under 21 gate');
+                await val('#quarterProbableAverage','270');if(norm(await p.$eval('#grossVacationPay',e=>e.textContent))!=='7290Kč')throw Error('probable average');
+                await val('#quarterDays','21');if(norm(await p.$eval('#grossVacationPay',e=>e.textContent))!=='8775Kč')throw Error('quarter mean');
+                await val('#proShiftList','8; NESMYSL; 7');if((await p.$eval('#grossVacationPay',e=>e.textContent)).trim()!=='— Kč')throw Error('invalid shifts');
+                await p.click('#resetPro');if((await p.$eval('#grossVacationPay',e=>e.textContent)).trim()!=='— Kč')throw Error('reset');
+              }
+              if(errors.length)throw Error(errors.join('\n'));await p.close();
+            }
+            await browser.close();console.log('VACATION_REVIEW2_BROWSER_PASS');
+          })().catch(e=>{console.error(e);process.exit(1)});
+          NODE
+          LH="$RUNNER_TEMP/vacqa/node_modules/lighthouse/cli/index.js"
+          node "$LH" http://127.0.0.1:8765/nahrada-mzdy-za-dovolenou-kalkulacka.html --quiet --chrome-flags='--headless --no-sandbox --disable-dev-shm-usage' --output=json --output-path="$RUNNER_TEMP/vac-mobile.json" --only-categories=performance,accessibility,best-practices,seo
+          node "$LH" http://127.0.0.1:8765/nahrada-mzdy-za-dovolenou-kalkulacka.html --quiet --preset=desktop --chrome-flags='--headless --no-sandbox --disable-dev-shm-usage' --output=json --output-path="$RUNNER_TEMP/vac-desktop.json" --only-categories=performance,accessibility,best-practices,seo
+          node - <<'NODE'
+          const fs=require('fs');let bad=false;for(const mode of ['mobile','desktop']){const x=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/vac-'+mode+'.json'));const s=Object.fromEntries(Object.entries(x.categories).map(([k,v])=>[k,Math.round(v.score*100)]));console.log('LIGHTHOUSE',mode,s);if(s.performance<98||s.accessibility<100||s['best-practices']<100||s.seo<100){bad=true;for(const k of ['accessibility','best-practices','seo'])for(const r of x.categories[k].auditRefs||[]){const a=x.audits[r.id];if(a&&a.score!==1&&a.score!==null)console.log('AUDIT_FAIL',mode,k,r.id,a.title,JSON.stringify(a.details||{}).slice(0,6500));}}}if(bad)process.exit(1);
+          NODE
+      - name: Commit only verified approved product files
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          rm -rf .vacstage
+          rm .github/workflows/vacation-review2-gate.yml
+          git add -A .vacstage .github/workflows/vacation-review2-gate.yml nahrada-mzdy-za-dovolenou-kalkulacka.html nahrada-dovolena-pro.css nahrada-dovolena.js
+          git commit -m 'Approved V2 vacation pay redesign, exact preview and browser Lighthouse gate'
+          git push origin HEAD:upgrade/nahrada-dovolena-review2-release
