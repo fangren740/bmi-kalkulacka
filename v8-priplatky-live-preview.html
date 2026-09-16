@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="cs"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Izolovaný náhled V8 · Příplatky za směny</title><style>body{margin:0;background:#071a33;color:white;font:16px/1.5 system-ui,sans-serif}#preview-status{padding:28px;max-width:760px;margin:16vh auto}</style></head>
+<body><div id="preview-status" role="status">Načítám izolovaný náhled přímo z ověřené verze kalkulačky…</div>
+<script>
+/* Preview loader ONLY; actual product HTML/CSS/JS/SVG come from an immutable
+ * commit of the owner's existing repository. The production site is untouched.
+ */
+(async function(){
+  'use strict';
+  const sha='09352428b75f5145cb11af9f2484e80b6a8e1dd2';
+  const root='https://raw.githack.com/fangren740/bmi-kalkulacka/'+sha+'/';
+  const url=root+'kalkulacka-priplatku-za-smeny.html';
+  const response=await fetch(url,{cache:'no-store'});
+  if(!response.ok)throw new Error('Zdrojový HTML soubor není dostupný: HTTP '+response.status);
+  let html=await response.text();
+  if(!html.includes('20260916-v8-validation1')||!html.includes('id="kalkulacka"'))throw new Error('Neshoduje se ověřená verze kandidáta.');
+  // The real site uses root-relative assets; on isolated preview hosting they
+  // must point to the exact same immutable Git commit, not hosting-domain /.
+  html=html.replace(/\b(src|poster|href)\s*=\s*(["'])\/(?!\/)/gi,(_,attr,quote)=>attr+'='+quote+root);
+  // Navigation (not assets) keeps leading to the public production website.
+  html=html.replace(/(<a\b[^>]*\bhref\s*=\s*["'])https:\/\/raw\.githack\.com\/fangren740\/bmi-kalkulacka\/[a-f0-9]{40}\//gi,'$1https://rychlevypocty.cz/');
+  html=html.replace(/<meta\s+name="robots"[^>]*>/i,'<meta name="robots" content="noindex,nofollow">');
+  html=html.replace(/<link\s+rel="canonical"[^>]*>/i,'');
+  // The original product document is written with all original markup and
+  // unchanged external scripts; no mock calculator, no reimplementation.
+  document.open();document.write(html);document.close();
+})().catch(error=>{document.getElementById('preview-status').textContent='Náhled se nepodařilo ověřeně načíst: '+error.message;});
+</script></body></html>
