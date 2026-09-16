@@ -6,6 +6,7 @@ on:
       - 'priplatky-smeny.js'
       - 'priplatky-smeny.css'
       - '.github/scripts/priplatky-smeny-v8-browser.cjs'
+      - '.github/scripts/priplatky-smeny-v8-preview-check.cjs'
       - '.github/workflows/priplatky-smeny-v8-qa.yml'
 permissions:
   contents: read
@@ -29,6 +30,9 @@ jobs:
         run: python -m http.server 8765 --bind 127.0.0.1 > "$RUNNER_TEMP/rv-priplatky-server.log" 2>&1 &
       - name: Calculator-specific regression, mobile and branding QA
         run: node .github/scripts/priplatky-smeny-v8-browser.cjs
+      - name: Diagnose external preview - not a release gate until verified
+        continue-on-error: true
+        run: node .github/scripts/priplatky-smeny-v8-preview-check.cjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
