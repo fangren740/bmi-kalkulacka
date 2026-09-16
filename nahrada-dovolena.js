@@ -10,8 +10,9 @@
 
   function parseNumber(value){
     if(typeof value==="number")return Number.isFinite(value)?value:0;
-    const normalized=String(value||"").replace(/\s/g,"").replace(/[^0-9,.-]/g,"").replace(",",".");
-    const parsed=Number.parseFloat(normalized);
+    const normalized=String(value??"").replace(/[\s\u00a0]/g,"").replace(",",".");
+    if(!/^\d+(?:\.\d+)?$/.test(normalized))return 0;
+    const parsed=Number(normalized);
     return Number.isFinite(parsed)?parsed:0;
   }
   function clamp(value,min,max){return Math.min(max,Math.max(min,value));}
@@ -25,7 +26,8 @@
     const raw=String(value||"").trim();
     if(!raw)return [];
     const parts=/[;\n]/.test(raw)?raw.split(/[;\n]+/):raw.split(/\s+/);
-    return parts.map(parseNumber).filter((v)=>v>0&&v<=24);
+    const numbers=parts.map(parseNumber);
+    return numbers.length>1000||numbers.some((v)=>!(v>0&&v<=24))?[]:numbers;
   }
 
   function previousQuarterFromDate(value){
@@ -103,7 +105,7 @@
       return {complete:true,vacationHours:shiftCount*shiftLength,shiftLength,shiftCount,shiftList:[]};
     }
     const shiftList=parseShiftList($("proShiftList").value);
-    if(!shiftList.length)return {complete:false,next:"C. Zadejte délky jednotlivých směn."};
+    if(!shiftList.length)return {complete:false,next:"C. Zadejte platné délky všech směn (každá 0–24 hodin)."};
     const vacationHours=shiftList.reduce((s,v)=>s+v,0);
     return {complete:true,vacationHours,shiftLength:vacationHours/shiftList.length,shiftCount:shiftList.length,shiftList};
   }
@@ -236,13 +238,34 @@
 
   function resetBasic(){
     form.querySelectorAll('input[name="basicContext"]').forEach((i)=>i.checked=false);
-    $("basicAverage").value="";$("basicHours").value="";run();
+    $("basicAverage").value="";$("basicHours").value="";syncPresets();run();
   }
   function resetPro(){
     $("proContext").value="";$("useDate").value="";
     form.querySelectorAll('input[name="averageMethod"],input[name="vacationMode"]').forEach((i)=>i.checked=false);
     ["proDirectAverage","quarterGross","quarterHours","quarterDays","quarterProbableAverage","proProbableAverage","proVacationHours","proShiftCount","proShiftLength","proShiftList","ordinaryHourlyRate"].forEach((id)=>$(id).value="");
     updateAverageFields();updateVacationFields();run();
+  }
+
+  function syncPresets(){
+    const current=parseNumber($("basicHours").value);
+    const exact=String($("basicHours").value).trim()!=="";
+    form.querySelectorAll("[data-basic-hours]").forEach((button)=>{
+      const chosen=exact&&current===Number(button.dataset.basicHours);
+      button.classList.toggle("is-active",chosen);
+      button.setAttribute("aria-pressed",String(chosen));
+    });
+  }
+
+  function openProFrom(control){
+    setMode("pro",{copyBasic:mode==="basic"});
+    const shifts=control&&control.hasAttribute("data-focus-shifts");
+    if(shifts){
+      form.querySelector('input[name="vacationMode"][value="irregular"]').checked=true;
+      updateVacationFields();run();
+    }
+    const target=shifts?$("irregularShiftField").closest(".vac-file-row"):$("prumer");
+    target.scrollIntoView({behavior:"auto",block:"start"});
   }
 
   function resultText(r){return ["Kalkulačka náhrady mzdy za dovolenou 2026 – RychléVýpočty.cz",`Situace: ${contextTitle(r.context)}`,`Průměrný hodinový výdělek: ${rate(r.average)}`,`Hodiny dovolené: ${hours(r.vacationHours)}`,`Hrubá náhrada: ${money(r.gross)}`,`Zdroj průměru: ${r.averageSource}`,r.quarterLabel?`Rozhodné období: ${r.quarterLabel}`:null,"Výsledek je orientační a nenahrazuje mzdové ani právní posouzení."].filter(Boolean).join("\n");}
@@ -255,10 +278,15 @@
   form.addEventListener("submit",(e)=>{e.preventDefault();run();});
   $("basicTab").addEventListener("click",()=>setMode("basic"));
   $("proTab").addEventListener("click",()=>setMode("pro",{copyBasic:mode==="basic"}));
-  form.querySelectorAll("[data-open-pro]").forEach((b)=>b.addEventListener("click",()=>setMode("pro",{copyBasic:true})));
+  document.querySelectorAll("[data-open-pro]").forEach((b)=>b.addEventListener("click",()=>openProFrom(b)));
+  form.querySelectorAll("[data-basic-hours]").forEach((button)=>button.addEventListener("click",()=>{
+    $("basicHours").value=button.dataset.basicHours;
+    syncPresets();run();
+  }));
+  $("basicHours").addEventListener("input",syncPresets);
   $("copyFromBasic").addEventListener("click",()=>{copyBasicToPro();run();});
   $("resetBasic").addEventListener("click",resetBasic);$("resetPro").addEventListener("click",resetPro);
   form.querySelectorAll("input,select,textarea").forEach((control)=>{control.addEventListener("input",run);control.addEventListener("change",run);});
   $("copyResult").addEventListener("click",copyResult);$("printResult").addEventListener("click",()=>window.print());
-  updateAverageFields();updateVacationFields();setMode("basic");
+  updateAverageFields();updateVacationFields();syncPresets();setMode("basic");
 })();

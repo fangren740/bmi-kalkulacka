@@ -28,7 +28,7 @@
   <meta name="twitter:image" content="https://rychlevypocty.cz/og-image.jpg">
   <link rel="stylesheet" href="/rv-brand-v32.css?v=20260801-stable">
   <link rel="stylesheet" href="/rv-social-links.css?v=20260907-1">
-  <link rel="stylesheet" href="/nahrada-dovolena-pro.css?v=20260916-goldv7">
+  <link rel="stylesheet" href="/nahrada-dovolena-pro.css?v=20260916-review2">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"RychléVýpočty.cz","item":"https://rychlevypocty.cz/"},{"@type":"ListItem","position":2,"name":"Mzdy a práce","item":"https://rychlevypocty.cz/mzdy-a-prace.html"},{"@type":"ListItem","position":3,"name":"Náhrada mzdy za dovolenou","item":"https://rychlevypocty.cz/nahrada-mzdy-za-dovolenou-kalkulacka.html"}]}</script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Kalkulačka náhrady mzdy za dovolenou 2026","url":"https://rychlevypocty.cz/nahrada-mzdy-za-dovolenou-kalkulacka.html","applicationCategory":"BusinessApplication","operatingSystem":"Any","inLanguage":"cs-CZ","isAccessibleForFree":true}</script>
 </head>
@@ -52,11 +52,11 @@
           <p class="vac-overline"><span>KALKULAČKA NÁHRADY ZA DOVOLENOU 2026</span><b>ověřeno 16. 9. 2026</b></p>
           <h1>Kolik dostanete za dovolenou? <em>Dvě čísla stačí.</em></h1>
           <p class="vac-lead">Vyberte, zda dovolenou čerpáte, nebo řešíte zůstatek při skončení práce. Pak zadejte průměrný hodinový výdělek a počet hodin. Výsledek ukáže hrubou náhradu i to, z čeho vznikla.</p>
-          <div class="vac-hero__actions"><a class="vac-action vac-action--primary" href="#kalkulacka">Spočítat z 2 čísel</a><a class="vac-action vac-action--text" href="#prumer">Nevím svůj průměr <span>→</span></a></div>
+          <div class="vac-hero__actions"><a class="vac-action vac-action--primary" href="#kalkulacka">Spočítat z 2 čísel</a><a class="vac-action vac-action--text" href="#prumer-guide">Nevím svůj průměr <span>→</span></a></div>
           <div class="vac-hero__facts" aria-label="Hlavní pravidla"><span><b>100 %</b> průměrného výdělku</span><span><b>§ 222</b> zákoníku práce</span><span><b>&lt; 21 dnů</b> pravděpodobný výdělek</span></div>
         </div>
 
-        <aside class="vac-ticket" aria-label="Náhled výsledku kalkulačky">
+        <aside class="vac-ticket" aria-label="Výsledek kalkulačky po zadání údajů">
           <div class="vac-ticket__top"><span>PLACENÝ ČAS / VÝPLATNÍ LÍSTEK</span><b id="heroMode">RYCHLE</b></div>
           <div class="vac-ticket__calendar" aria-hidden="true"><i>PO</i><i>ÚT</i><i>ST</i><i>ČT</i><i>PÁ</i><b>7</b><b>8</b><b>9</b><b>10</b><b>11</b></div>
           <div class="vac-ticket__result"><span id="heroType">Výsledek po vyplnění</span><strong id="heroPay">Čeká na údaje</strong><small id="heroFormula">situace → průměr → hodiny</small></div>
@@ -71,7 +71,7 @@
     </div>
   </section>
 
-  <div class="vac-jumpbar"><div class="vac-shell"><span>Na stránce</span><a href="#kalkulacka">Výpočet</a><a href="#rozpad">Rozpad</a><a href="#prumer">Správný průměr</a><a href="#proplaceni">Kdy lze proplatit</a><a href="#zdroje">Zdroje</a><a href="#faq">FAQ</a></div></div>
+  <div class="vac-jumpbar"><div class="vac-shell"><span>Na stránce</span><a href="#kalkulacka">Výpočet</a><a href="#rozpad">Rozpad</a><a href="#metodika">Metodika</a><a href="#prumer-guide">Správný průměr</a><a href="#proplaceni">Kdy lze proplatit</a><a href="#zdroje">Zdroje</a><a href="#faq">FAQ</a></div></div>
 
   <section class="vac-workspace" id="kalkulacka">
     <div class="vac-shell">
@@ -98,6 +98,17 @@
             <label class="vac-field vac-field--money"><span>2. Průměrný hodinový výdělek</span><div><input id="basicAverage" type="text" inputmode="decimal" value="" placeholder="např. 265" aria-describedby="basicAverageHelp"><em>Kč/h</em></div><small id="basicAverageHelp">Použijte průměr platný pro dané období, ne automaticky tarifní hodinovou sazbu. <button type="button" data-open-pro>Nevím průměr →</button></small></label>
 
             <label class="vac-field"><span>3. Kolik hodin dovolené řešíte?</span><div><input id="basicHours" type="text" inputmode="decimal" value="" placeholder="např. 16"><em>h</em></div><small>Sečtěte hodiny rozvržených směn, do kterých dovolená zasahuje.</small></label>
+            <div class="vac-presets" aria-label="Rychlé předvolby počtu hodin dovolené">
+              <div class="vac-presets__head"><strong>Rychle vybrat hodiny</strong><span>Pokud máte směny dlouhé 8 nebo 12 hodin</span></div>
+              <div class="vac-presets__buttons" role="group" aria-label="Zadejte hodiny podle směn">
+                <button type="button" data-basic-hours="8" aria-pressed="false"><b>1 × 8 h</b><small>jedna směna</small></button>
+                <button type="button" data-basic-hours="16" aria-pressed="false"><b>2 × 8 h</b><small>dvě směny</small></button>
+                <button type="button" data-basic-hours="40" aria-pressed="false"><b>5 × 8 h</b><small>pracovní týden</small></button>
+                <button type="button" data-basic-hours="12" aria-pressed="false"><b>1 × 12 h</b><small>dlouhá směna</small></button>
+                <button type="button" data-basic-hours="24" aria-pressed="false"><b>2 × 12 h</b><small>dvě dlouhé</small></button>
+              </div>
+              <p>Jiná délka nebo různě dlouhé směny? Zadejte hodiny ručně, případně je sečtěte v detailní kontrole.</p>
+            </div>
 
             <div class="vac-basic-formula"><span>Výpočet</span><strong>průměrný hodinový výdělek × hodiny dovolené</strong></div>
             <div class="vac-form-actions"><button class="vac-action vac-action--primary" type="submit">Spočítat náhradu</button><button class="vac-action vac-action--outline" type="button" data-open-pro>Zkontrolovat průměr</button><button class="vac-reset" id="resetBasic" type="button">Vymazat</button></div>
@@ -192,6 +203,7 @@
         <article><span>02</span><h3>Chcete kontrolní dopočet?</h3><p>Výchozím rozhodným obdobím je předchozí kalendářní čtvrtletí. Průměr vychází ze započitatelné hrubé mzdy a odpracované doby.</p><b>§ 353–354</b></article>
         <article><span>03</span><h3>Méně než 21 odpracovaných dnů?</h3><p>Pak se použije pravděpodobný výdělek. Kalkulačka čtvrtletní podíl jako zákonný průměr nepoužije a vyžádá odpovídající hodnotu.</p><b>§ 355</b></article>
       </div>
+      <div class="vac-guide__action"><div><strong>Průměr nemáte na výplatní pásce?</strong><span>V detailní kontrole můžete zadat podklady z předchozího čtvrtletí, nebo použít pravděpodobný výdělek určený zaměstnavatelem.</span></div><button type="button" data-open-pro data-focus-average>Otevřít kontrolu průměru <span aria-hidden="true">→</span></button></div>
     </div>
   </section>
 
@@ -199,6 +211,39 @@
     <div class="vac-shell vac-context-guide__grid">
       <div class="vac-context-card is-drawing"><span>ČERPÁNÍ DOVOLENÉ</span><h2>Za dobu dovolené náleží náhrada ve výši průměrného výdělku.</h2><p>Počítá se za hodiny, které podle rozvrhu připadly na dovolenou. Výsledek je hrubou součástí mzdového zúčtování.</p><b>§ 222 odst. 1</b></div>
       <div class="vac-context-card is-termination"><span>NEVYČERPANÁ DOVOLENÁ</span><h2>Proplacení zůstatku je zákonně vázané na skončení pracovního poměru.</h2><p>Během trvání pracovního poměru se běžná dovolená nemá nahrazovat penězi jen proto, že ji zaměstnanec nevyčerpal.</p><b>§ 222 odst. 2–3</b></div>
+    </div>
+  </section>
+
+  <section class="vac-method" id="metodika" aria-labelledby="methodTitle">
+    <div class="vac-shell">
+      <div class="vac-method__heading"><p class="vac-eyebrow">Metodika výpočtu · 2026</p><h2 id="methodTitle">Co přesně zadat, aby částka odpovídala výplatní pásce?</h2><p>Samotné násobení je snadné. Rozdíl mezi orientační částkou a mzdovým podkladem nejčastěji vzniká výběrem nesprávného průměru nebo počtu hodin. Tady jsou hranice, které má smysl ověřit.</p></div>
+      <div class="vac-method__grid">
+        <article>
+          <span>01 / PRŮMĚR</span><h3>Neberte automaticky poslední hodinovou sazbu.</h3>
+          <p>Pracovněprávní průměrný výdělek vychází ze započitatelné hrubé mzdy a odpracované doby v rozhodném období. Obvykle jde o předchozí kalendářní čtvrtletí: pro čerpání v červenci až září se zpravidla použije duben až červen. Tarif a průměr proto nemusí být totožné.</p>
+          <p>Odměny za delší období mohou podléhat zvláštnímu rozdělení. Prosté vydělení všech peněz všemi hodinami je pouze kontrolní model; částku potvrďte s mzdovými podklady zaměstnavatele.</p>
+          <a href="#prumer-guide">Jak zjistit správný průměr <span aria-hidden="true">→</span></a>
+        </article>
+        <article>
+          <span>02 / HODINY</span><h3>Počítejte rozvržené směny, ne kalendářní dny.</h3>
+          <p>Dva dny dovolené mohou znamenat 16 hodin při osmihodinových směnách, ale také 24 hodin při dvanáctihodinových. Při nepravidelném rozvrhu sečtěte jen hodiny směn, které byste jinak odpracovali.</p>
+          <p>Máte-li například směny dlouhé 8, 11,5 a 7,5 hodiny, zadáváte celkem 27 hodin. Detailní režim umí jednotlivé směny sečíst. Předvolby v rychlém režimu použijte pouze tehdy, pokud jejich délka odpovídá vašemu rozvrhu.</p>
+          <button type="button" data-open-pro data-focus-shifts>Sečíst nepravidelné směny <span aria-hidden="true">→</span></button>
+        </article>
+        <article>
+          <span>03 / 21 DNŮ</span><h3>Při 20 dnech už nelze prostý průměr použít.</h3>
+          <p>Pokud v rozhodném období nebylo odpracováno alespoň 21 dnů, nastupuje pravděpodobný výdělek podle § 355. Neurčuje jej automaticky kalkulačka; zaměstnavatel přihlíží k dosažené či předpokládané mzdě a obvyklým složkám.</p>
+          <p>Při 21 a více dnech lze za splnění ostatních podmínek kontrolovat čtvrtletní průměr. Detailní režim u 20 a méně dnů čtvrtletní podíl zablokuje a vyžádá pravděpodobný hodinový výdělek.</p>
+          <a href="#zdroje">Ověřit znění zákona <span aria-hidden="true">→</span></a>
+        </article>
+        <article>
+          <span>04 / VÝPLATA</span><h3>Hrubá náhrada není čistá výplata.</h3>
+          <p>Za čerpanou dovolenou přísluší náhrada ve výši průměrného výdělku. Náhrada za nevyčerpanou dovolenou je vyplácena pouze při skončení pracovního poměru; nevyčerpanou dodatkovou dovolenou takto proplatit nelze.</p>
+          <p>Kalkulačka ukazuje hrubou částku. Výslednou čistou mzdu ovlivňuje celé měsíční zúčtování, pojistné, daň i případné slevy a srážky. Pro kontrolu částky na účet použijte celou výplatu, ne samotnou náhradu.</p>
+          <a href="/cista-mzda-kalkulacka.html">Navázat kalkulačkou čisté mzdy <span aria-hidden="true">→</span></a>
+        </article>
+      </div>
+      <div class="vac-method__note"><strong>Modelový příklad, nikoli váš výsledek:</strong> Při průměru 265 Kč/h a dvou osmihodinových směnách vychází 265 × 16 = <b>4 240 Kč hrubého.</b> Vaše částka se zobrazí až po zadání vlastních údajů nahoře.</div>
     </div>
   </section>
 
@@ -241,14 +286,40 @@
       <details><summary>Co když jsem v předchozím čtvrtletí odpracoval méně než 21 dnů?</summary><p>Použije se pravděpodobný výdělek. Proto detailní režim při méně než 21 dnech čtvrtletní podíl nepovažuje za finální zákonný průměr.</p></details>
       <details><summary>Může mi zaměstnavatel místo dovolené vyplatit peníze?</summary><p>Náhrada za nevyčerpanou dovolenou přísluší pouze při skončení pracovního poměru. Zvláštní pravidlo platí pro dodatkovou dovolenou, kterou nelze takto proplatit.</p></details>
       <details><summary>Je výsledek hrubý nebo čistý?</summary><p>Kalkulačka ukazuje hrubou náhradu. Čistý dopad závisí na celém mzdovém zúčtování a dalších položkách daného měsíce.</p></details>
+      <details><summary>Jak poznám správný počet hodin při nepravidelných směnách?</summary><p>Vezměte konkrétní rozvrh směn platný pro čerpanou dovolenou a sečtěte hodiny, které byste podle něj odpracovali. Detailní režim umí zadat směny samostatně. Není správné automaticky vynásobit kalendářní dny číslem osm.</p></details>
+      <details><summary>Kde najdu průměrný hodinový výdělek?</summary><p>V mzdových podkladech zaměstnavatele nebo na výplatní pásce, pokud ho uvádí. Pokud hodnotu nemáte, využijte detailní kontrolní dopočet z předchozího čtvrtletí; pro konečné zúčtování si výdělek ověřte u mzdové účtárny.</p></details>
+      <details><summary>Patří do průměru i roční odměna?</summary><p>U složek mzdy poskytovaných za delší období než kalendářní čtvrtletí se uplatňuje zvláštní pravidlo rozdělení do rozhodných období. Kalkulačka zjednodušené rozdělení odměn neprovádí; pro přesný výsledek použijte průměr potvrzený zaměstnavatelem.</p></details>
+      <details><summary>Mohu částku přepočítat na čistou mzdu?</summary><p>Samotnou náhradu nelze spolehlivě „očistit“ jednotným procentem. Započtěte ji společně s ostatní mzdou a náhradami do celkového měsíčního zúčtování; navázat můžete na kalkulačku čisté mzdy.</p></details>
     </div></div>
   </section>
 
-  <section class="vac-related"><div class="vac-shell"><p class="vac-eyebrow">Související výpočty</p><div class="vac-related__grid"><a href="/prumerny-vydelek-kalkulacka.html"><span>PRŮMĚR</span><strong>Průměrný výdělek</strong><small>Najděte správný základ pro pracovněprávní výpočty.</small></a><a href="/kalkulacka-odpracovanych-hodin.html"><span>ČAS</span><strong>Odpracované hodiny</strong><small>Spočítejte fond a skutečně odpracovaný čas.</small></a><a href="/mesicni-mzda-z-hodinove-sazby.html"><span>MZDA</span><strong>Měsíční mzda z hodinové sazby</strong><small>Přepočet sazby, hodin a hrubé mzdy.</small></a></div></div></section>
+  <section class="vac-related" aria-labelledby="relatedTitle"><div class="vac-shell">
+    <div class="vac-related__intro"><div><p class="vac-eyebrow">Navazující nástroje</p><h2 id="relatedTitle">Dovolená, směny a výplata. Vše na jednom místě.</h2><p>Každý nástroj řeší jinou část otázky: kolik hodin vám náleží, jaké směny máte rozvržené a jak se náhrada projeví v celkové mzdě.</p></div><a href="/mzdy-a-prace.html">Vše z tématu Mzdy a práce <span aria-hidden="true">→</span></a></div>
+    <div class="vac-related__grid">
+      <a href="/kalkulacka-dovolene.html"><span>01 / NÁROK</span><strong>Kalkulačka dovolené</strong><small>Roční nárok, čerpání a zbývající hodiny.</small><b aria-hidden="true">↗</b></a>
+      <a href="/prumerny-vydelek-kalkulacka.html"><span>02 / PRŮMĚR</span><strong>Průměrný výdělek</strong><small>Podklady pro hodinový pracovněprávní průměr.</small><b aria-hidden="true">↗</b></a>
+      <a href="/kalkulacka-odpracovanych-hodin.html"><span>03 / ČAS</span><strong>Odpracované hodiny</strong><small>Docházka a pracovní fond pro kontrolu.</small><b aria-hidden="true">↗</b></a>
+      <a href="/cista-mzda-kalkulacka.html"><span>04 / VÝPLATA</span><strong>Čistá mzda</strong><small>Celkový měsíční příjem po zúčtování.</small><b aria-hidden="true">↗</b></a>
+      <a href="/kalkulacka-priplatku-za-smeny.html"><span>05 / PŘÍPLATKY</span><strong>Příplatky za směny</strong><small>Noc, víkend a svátek v jednom výpočtu.</small><b aria-hidden="true">↗</b></a>
+      <a href="/kalkulacka-prescasu.html"><span>06 / PŘESČASY</span><strong>Kalkulačka přesčasů</strong><small>Mzda, příplatek a náhradní volno.</small><b aria-hidden="true">↗</b></a>
+    </div>
+  </div></section>
 </main>
 
-<footer class="vac-footer"><div class="vac-shell vac-footer__grid"><div><a class="rv-logo" href="/" aria-label="RychléVýpočty.cz – domů"><img src="/logo-rv-v32.svg?v=1" alt="" width="250" height="41" loading="lazy"></a><p>Rychlé a srozumitelné výpočty pro běžný život. Výsledky slouží jako orientační pomůcka.</p></div><div><strong>Projekt</strong><a href="/jak-pocitame.html">Jak počítáme</a><a href="/o-projektu.html">O projektu</a><a href="/kontakt.html">Kontakt</a></div><div><strong>Právní</strong><a href="/ochrana-soukromi.html">Ochrana soukromí</a><a href="/podminky-pouziti.html">Podmínky použití</a></div></div><div class="vac-shell vac-footer__bottom"><span>© 2026 RychléVýpočty.cz</span><span>Výpočet nenahrazuje mzdové ani právní posouzení.</span></div></footer>
+<footer class="vac-footer" aria-label="Patička webu RychléVýpočty.cz">
+  <div class="vac-shell vac-footer__top">
+    <div><p>RYCHLÉVÝPOČTY.CZ / MZDY A PRÁCE</p><h2>Výpočet je hotový.<br><em>Ověřte i zbytek výplaty.</em></h2></div>
+    <a href="/cista-mzda-kalkulacka.html">Spočítat čistou mzdu <span aria-hidden="true">↗</span></a>
+  </div>
+  <div class="vac-shell vac-footer__grid">
+    <div class="vac-footer__brand"><a class="rv-logo" href="/" aria-label="RychléVýpočty.cz – domů"><img src="/logo-rv-v32-inverse.svg?v=1" alt="RychléVýpočty.cz" width="250" height="41" loading="lazy"></a><p>Praktické online kalkulačky pro mzdy, finance, podnikání, bydlení a každodenní rozhodování. Bez registrace.</p><div class="rv-social-links vac-socials" role="group" aria-label="Sociální sítě RychléVýpočty.cz"><a href="https://www.facebook.com/rychlevypocty" target="_blank" rel="noopener noreferrer" aria-label="Facebook RychléVýpočty.cz (nová karta)">Facebook ↗</a><a href="https://www.instagram.com/rychlevypocty/" target="_blank" rel="noopener noreferrer" aria-label="Instagram RychléVýpočty.cz (nová karta)">Instagram ↗</a></div></div>
+    <div><h3>Mzdy a práce</h3><a href="/mzdy-a-prace.html">Přehled témat</a><a href="/cista-mzda-kalkulacka.html">Čistá mzda</a><a href="/kalkulacka-dovolene.html">Dovolená</a><a href="/kalkulacka-priplatku-za-smeny.html">Příplatky za směny</a></div>
+    <div><h3>Čas a směny</h3><a href="/kalkulacka-odpracovanych-hodin.html">Odpracované hodiny</a><a href="/kalkulacka-prescasu.html">Přesčasy</a><a href="/pracovni-dny-kalkulacka.html">Pracovní dny</a><a href="/prumerny-vydelek-kalkulacka.html">Průměrný výdělek</a></div>
+    <div><h3>O projektu</h3><a href="/kalkulacky.html">Všechny kalkulačky</a><a href="/jak-pocitame.html">Jak počítáme</a><a href="/kontakt.html">Kontakt</a><a href="/podminky-pouziti.html">Podmínky použití</a><a href="/ochrana-osobnich-udaju.html">Ochrana osobních údajů</a></div>
+  </div>
+  <div class="vac-shell vac-footer__bottom"><span>© 2026 RychléVýpočty.cz · Nezávislé online kalkulačky.</span><span>Výpočty jsou orientační a nenahrazují právní, mzdové ani personální posouzení. <a href="/jak-pocitame.html">Metodika a zdroje ↗</a></span></div>
+</footer>
 
-<script src="/nahrada-dovolena.js?v=20260916-goldv7" defer></script>
+<script src="/nahrada-dovolena.js?v=20260916-review2" defer></script>
 </body>
 </html>
