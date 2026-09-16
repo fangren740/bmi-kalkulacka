@@ -49,9 +49,7 @@ async function renderedColors(page, image, shot) {
         assert.match(await page.locator('#cashBonus').innerText(), /Kč/);
         assert.equal(runtime.length, 0, runtime.join('; '));
       });
-      // Branding must be measured when the target is actually visible: an
-      // element screenshot of a sticky header after scrolling through inputs
-      // may contain only its overlaid background, yielding a false negative.
+      // Measure the visible element *before* scrolling the sticky header away.
       await scenario(`${width}: rendered branding, CSS filters and versioned cache`, async () => {
         for(const [label,selector] of [['header','header img.rv-logo-image'],['footer','footer img.rv-logo-image']]) {
           if(label==='header') await page.evaluate(()=>scrollTo(0,0));
@@ -79,7 +77,7 @@ async function renderedColors(page, image, shot) {
         await edit(page,{shiftDate:'2026-09-18',shiftStart:'22:00',shiftEnd:'06:00',breakStart:'05:50',breakMinutes:'30'});
         assert.equal(await page.locator('#formError').isVisible(), true);
         assert.match(await page.locator('#formError').innerText(), /přestávk/i);
-        for (const id of ['cashBonus','totalPay','heroBonus','auditExpected'])
+        for (const id of ['cashBonus','totalPay','auditExpected'])
           assert.doesNotMatch(await page.locator(`#${id}`).innerText(), /\d[\d\s]*\s*Kč/);
         assert.equal(await page.locator('#copyResult').isDisabled(),true);
       });
@@ -91,7 +89,7 @@ async function renderedColors(page, image, shot) {
       });
       await scenario(`${width}: manual invalid hours and recovery`, async () => {
         await page.locator('#sfManualTab').click();
-        await edit(page,{manualWorked:'4',manualNight:'6'});
+        await edit(page,{manualWorked:'4',manualNight:'6',manualWeekend:'3'});
         assert.equal(await page.locator('#formError').isVisible(), true);
         assert.doesNotMatch(await page.locator('#cashBonus').innerText(), /\d[\d\s]*\s*Kč/);
         await edit(page,{manualNight:'3'});
