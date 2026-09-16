@@ -1,94 +1,42 @@
-RYCHLÉVÝPOČTY.CZ V7 — READ ME FIRST / V-NEXT PROMPT STACK
-Aktualizace: 14. 9. 2026
+RYCHLÉVÝPOČTY.CZ V8 — READ ME FIRST / JEDINÉ PROJEKTOVÉ INSTRUKCE
+Aktivace: 16. 9. 2026
 
-CURRENT SOURCE OF TRUTH
-Repository: fangren740/bmi-kalkulacka
-Branch: main
+PROJEKT
+Existující web https://rychlevypocty.cz/. Produkční repository fangren740/bmi-kalkulacka; aktuální main je source of truth. Nevytvářej nový projekt, neobnovuj staré ZIPy jako alternativní pravdu. Pracuj striktně jednu kalkulačku po druhé.
 
-CURRENT OPERATIONAL MODE — POVINNĚ ČÍST PRVNÍ
-RV_QUALITY_CALIBRATION_LOCK_2026-09-14.md
-RV_LIVE_PREVIEW_LOCK_2026-09-11.md
-RV_NO_REGRESSION_RELEASE_LOCK_2026-09-14.md
-RV_CONTENT_DEPTH_AND_IDENTITY_LOCK_2026-09-11.md
-RV_METHOD_SOURCE_DISCLAIMER_LOCK_2026-09-11.md
-RV_ADSENSE_FINISH_MODE_2026-09-11.md
-RV_ADSENSE_FINISH_QUEUE_2026-09-11.md
-RV_ADSENSE_REVIEW_REQUIRED_AUDIT_2026-09-11.md
-- Aktivní do explicitního odemčení uživatelem po dokončení AdSense readiness sprintu.
-- Cíl: dokončit celé portfolio a sitewide readiness; žádné nekonečné redesign smyčky jedné URL.
-- `RV_QUALITY_CALIBRATION_LOCK_2026-09-14.md` je release-blocking quality rule: před buildem povinně kalibruj current LIVE + #74 + minimálně 2 relevantní S-tier reference + poslední schválený Gold upgrade. Uživatel není beta tester; slabé první varianty zůstávají interně a do preview smí jen kandidát s odpovídajícím craftem a vlastním topic-native produktem.
-- `RV_LIVE_PREVIEW_LOCK_2026-09-11.md` je release-blocking workflow rule: vždy jedna kalkulačka; před user approval musí být reálný interaktivní LIVE HTML preview přímo v chatu. Screenshoty jsou pouze doplněk a nenahrazují live preview.
-- `RV_NO_REGRESSION_RELEASE_LOCK_2026-09-14.md` je release-blocking: nový kandidát nesmí být v žádné důležité oblasti horší než aktuální live verze; vizuálně silnější, ale obsahově/funkčně/slabší kandidát = FAIL. Před preview je povinný LIVE → CANDIDATE delta review a verdikt SUPERIOR.
-- `RV_CONTENT_DEPTH_AND_IDENTITY_LOCK_2026-09-11.md` je závazné upřesnění: žádná word-count kvóta; hloubka podle tématu; žádná strohost; canonical V3.2 logo + inverse footer logo + V7/V3.2 watermark/visual field na každé upgradované stránce.
-- `RV_METHOD_SOURCE_DISCLAIMER_LOCK_2026-09-11.md` je release-blocking: metodika musí být skutečně ověřena; M2–M4 vyžadují method verdict; disclaimer se používá podle konkrétního rizika stránky.
-- Pokud kandidát splní technický checklist, ale vizuálně / produktově nedosahuje aktuálního quality floor nebo relevantních referencí, platí QUALITY CALIBRATION LOCK a kandidát se nesmí poslat do user preview ani release.
-- Pokud se starší workflow dostane do konfliktu s finish modem v otázce pořadí práce / batching / stop-loss, platí finish mode + LIVE PREVIEW LOCK pro jednotlivý review flow.
-- Pokud se starší dokument dá vyložit jako word-count target nebo povolení vizuálně strohého tool shellu, platí CONTENT DEPTH + IDENTITY LOCK.
-- Pokud se starší dokument spokojí pouze s přítomností metodiky/zdrojů bez skutečné verifikace, platí METHOD / SOURCE / DISCLAIMER LOCK.
-- Pokud nový redesign ztrácí proti live funkci, obsahovou hodnotu, trust, SEO, mobile UX, accessibility nebo performance, platí NO-REGRESSION LOCK a kandidát se nesmí nasadit.
-- Quality, correctness, methodology, mobile UX, brand a production gates se NESNIŽUJÍ.
+JEDINÁ HIERARCHIE
+1. Aktuální explicitní zadání uživatele určuje cíl, rozsah a udělení schválení.
+2. Tento soubor určuje závazný proces V8.
+3. RV_VNEXT_MASTER_PROMPT.txt je jediný závazný upgrade prompt pro jednu kalkulačku; nesmí odporovat bodu 2.
+4. Aktuální main, skutečný produkční kód, relevantní technické standardy, automatizované testy a CI jsou autoritou pro implementační fakta a neobcházené technické kontroly. Technické požadavky nesmějí samy změnit schvalovací proces.
 
-POVINNÉ POŘADÍ PRO NOVÝ / NAVAZUJÍCÍ CHAT
-1) RV_QUALITY_CALIBRATION_LOCK_2026-09-14.md
-2) RV_LIVE_PREVIEW_LOCK_2026-09-11.md
-3) RV_NO_REGRESSION_RELEASE_LOCK_2026-09-14.md
-4) RV_CONTENT_DEPTH_AND_IDENTITY_LOCK_2026-09-11.md
-5) RV_METHOD_SOURCE_DISCLAIMER_LOCK_2026-09-11.md
-6) RV_ADSENSE_FINISH_MODE_2026-09-11.md
-7) RV_ADSENSE_FINISH_QUEUE_2026-09-11.md
-8) RV_ADSENSE_REVIEW_REQUIRED_AUDIT_2026-09-11.md
-9) RV_VNEXT_MASTER_PROMPT.txt
-10) RV-VNEXT-STRICT-BUILD-PROMPT-2026-09-06.md
-11) RV-VNEXT-PRODUCTION-STANDARD.md
-12) aktuální recovery / experience / customer-copy dokumenty v main
-13) RV_VNEXT_PROGRESS.json + skutečný relevantní HTML/CSS/JS + benchmark/data files
+PŘECHOD Z V7 — BEZ KONKURENČNÍCH PRAVIDEL
+Tato V8 dvojice NAHRAZUJE procesní závaznost všech starších V7 / V-next workflow, master/strict promptů, quality/preview/no-regression/content/identity/method locků a AdSense finish instrukcí, i když uvnitř historického dokumentu stojí ACTIVE, MANDATORY, RELEASE-BLOCKING nebo POVINNĚ ČÍST. Nenačítej starý mandatory prompt stack jako další instrukce. Dokumenty ponech v repozitáři pouze jako datové, historické a odborné reference; vyzvedni z nich dosud platnou znalost, kterou V8 nepřebíjí. Staré kvóty slov, batching, ZIP-first postupy, absolutní povinnost preview přímo v chatu a alternativní DONE definice neplatí. Existující technické CI, ochrany metodiky a ne-regresní testy se nevypínají. Kolizi technického testu s V8 nezakrývej ani neobcházej: vyřeš příčinu před releasem. Nevytvářej další řídicí dokumenty.
 
-KVALITATIVNÍ KALIBRACE
-- Quality floor: #74 cista-mzda-kalkulacka.html
-- S-tier: #13 Sádrokarton, #15 Omítka, #19 Rekonstrukce celkem, #21 DPH, #23 Bod zvratu, #25 Minimální fakturace
-- Secondary refs: #11, #12, #17, #18, #22, #33
-- Poslední schválený Gold reference po produkčním PASS: `mesicni-mzda-z-hodinove-sazby-kalkulacka.html`.
-- Před buildem vždy current LIVE + #74 + minimálně 2 relevantní S-tier + poslední Gold. Přenášej úroveň craftu, ne konkrétní layout.
-- Před user preview proveď interní product/visual self-review. Checklistově správný, ale generický / slabý kandidát se uživateli NEPOSÍLÁ.
-- V finish mode navíc kalibruj obsahovou úplnost proti tématu a user jobu; nevyráběj strohé tool-only shells.
-- Word count NENÍ quality gate. Hloubka má být adekvátní tématu, ne mechanicky stejně dlouhá.
-- Každá upgradovaná stránka musí působit jako jeden RV produkt: canonical logo, watermark/visual field, topic-native hero/result, plný footer a sociální sítě.
-- Každý redesign musí před preview prokázat SUPERIOR delta proti aktuální live verzi. Nic užitečného se nesmí ztratit jen proto, že je nový návrh vizuálně čistší.
-- Každý schválený Gold upgrade zvyšuje kalibrační laťku pro další stránky. Nový chat nesmí resetovat projekt do generic form/dashboard defaultu.
+JEDNA KALKULAČKA / MINIMÁLNÍ DIFF
+Před úpravou otevři aktuální LIVE desktop + mobile a odpovídající HTML/CSS/JS, sdílené závislosti a relevantní testy na main. Inventarizuj existující funkce, výpočty, režimy, obsah, metodiku, SEO a silné stránky. Zvol KEEP / POLISH / REBUILD podle konkrétního důvodu, zachovávej engine a měň cíleně. Žádná významná regrese proti LIVE bez výslovně schválené výjimky. U redesignu porovnej aktuální LIVE, #74 cista-mzda-kalkulacka.html, dvě relevantní S-tier reference a poslední schválený Gold mesicni-mzda-z-hodinove-sazby-kalkulacka.html. Přenes kvalitu, nikoli šablonu. Neposílej uživateli slabé první pokusy.
 
-DŮLEŽITÉ
-- Starší `RV-VNEXT-STRICT-BUILD-PROMPT-2026-09-04.md` je HISTORICKÁ REFERENCE; pro nový build použij 2026-09-06.
-- Starší master verze 1.7 byla nahrazena `RV_VNEXT_MASTER_PROMPT.txt` verze 2.0.
-- Pro kvalitativní kalibraci platí `RV_QUALITY_CALIBRATION_LOCK_2026-09-14.md`: current live + #74 + 2 S-tier + latest Gold; slabé interní iterace se uživateli neposílají.
-- Pro jednotlivý review flow kalkulačky platí `RV_LIVE_PREVIEW_LOCK_2026-09-11.md`: jedna kalkulačka, live HTML preview přímo v chatu, user approval před DONE/deploy.
-- Pro zákaz regresí proti aktuální produkci platí `RV_NO_REGRESSION_RELEASE_LOCK_2026-09-14.md`: current live je povinný baseline; kandidát musí být minimálně stejně dobrý ve všech důležitých oblastech a jako celek zřetelně lepší.
-- Pro pořadí finish sprintu a stop-loss platí `RV_ADSENSE_FINISH_MODE_2026-09-11.md`.
-- Pro obsahovou hloubku a V7/V3.2 identitu platí `RV_CONTENT_DEPTH_AND_IDENTITY_LOCK_2026-09-11.md`.
-- Pro metodiku, zdroje, re-verifikaci a disclaimery platí `RV_METHOD_SOURCE_DISCLAIMER_LOCK_2026-09-11.md`.
-- Nezačínej nový audit od nuly. Recovery udělej z produkčního main.
-- Uživatel není beta tester: žádný polotovar před PASS C / release gate.
-- PREVIEW PASS != DONE.
-- M2–M4 nemohou být DONE bez `methodVerdict=PASS`.
-- „Ověřeno / aktualizováno k …“ se nesmí zobrazit bez skutečné kontroly metodiky.
-- DONE až po user approval + production deploy + live health + PageSpeed Insights/Lighthouse Mobile + Desktop + bez známé actionable CWV/performance regrese.
+SPRÁVNOST / OBSAH / BRAND
+Ověř výpočty, validaci, krajní stavy a podle rizika M0–M4 také proměnlivé parametry, metodiku, skutečné aktuální primární zdroje a konkrétní disclaimer. Nedeklaruj ověření, které neproběhlo. Hloubka obsahu podle tématu, žádné mechanické kvóty slov a žádná SEO vata. Respektuj RV V3.2 identitu, existující oficiální assety, topic-native vizuál, celý footer a sociální odkazy. Header standardně používá logo-rv-v32.svg. Footer variantu neurčuj jen podle názvu historického locku: vyber správný skutečný brand asset podle kontrastu a ověř jeho vykreslené barvy. Zkontroluj CSS filter, opacity, jiné přebarvení, síťové načtení SVG, cache/versioning a skutečný pixelový výsledek desktop + mobil. Pouhá přítomnost img/src není vizuální QA.
 
-ZÁKLADNÍ DESIGNOVÝ SMĚR
-- desktop hero: text vlevo / topic-native vizuál vpravo
-- defaultně hero → rovnou kalkulačka; nevkládat před tool marketingové bloky bez skutečného produktového důvodu
-- kalkulačka + dominantní výsledek vedle sebe, pokud user job nevyžaduje jinak
-- mobil: hero → visual → inputs → result → depth → metodika → footer
-- žádné překážející floating result bary
-- text nesmí být mikro / strohý; každá indexovatelná kalkulačka musí být obsahově dokončený produkt, ne jen formulář
-- obsahová hloubka se řídí tématem; žádné povinné 1000/1800/3000 slov
-- každá upgradovaná stránka musí mít canonical V3.2 logo, inverse footer logo a jemný topic/brand-specific V7/V3.2 watermark/visual field
-- originalita přes skutečný topic object / result grammar / data vizualizaci / depth, ne přes náhodné přehazování layoutu
-- žádné staré logo, fake logo, badge spam nebo dvojité section labels
-- plný footer + Facebook + Instagram
-- PageSpeed/Core Web Vitals se nesmí obětovat designu
+IDENTITA KANDIDÁTA JIŽ PŘED PREVIEW
+Založ samostatnou větev z ověřeného main a vytvoř dokončený produktový commit. PŘED poskytnutím preview eviduj commit SHA, výchozí main SHA, release manifest obsahující SHA-256 všech změněných produktových souborů, přesné identity používaných sdílených závislostí a assetů, způsob a identitu preview a předem povolený rozsah administrativního release diffu. Manifest musí být dohledatelný jako review artefakt a jeho hash musí být známý před schválením. Manifest vytvořený po schválení nebo zaměněný kandidát jsou FAIL.
 
-METODIKA / TRUST — HARD RULE
-- před buildem určit M0–M4 method risk class
-- zkontrolovat výpočet, jednotky, rounding, edge cases a proměnlivé parametry
-- M2–M4 vyžadují aktuální primární zdroje a dohledatelný method verification record
-- disclaimer se nepřidává plošně; tam, kde je potřeba, musí být page-specific, stručný a viditelný v kontextu výsledku/metodiky
-- chybný zákonný parametr / chybná metodika / zavádějící health nebo financial claim = P0/P1 a spouští portfolio regression sweep
+VĚRNÉ PREVIEW
+Preferuj interaktivní HTML preview přímo v chatu, pouze pokud opravdu provozuje totožné produkční HTML/CSS/JS a assety kandidáta. Není-li to možné, použij dostupný skutečný izolovaný webový náhled, otevři jej a ověř, že funguje, odpovídá kandidátovi a nemění produkci. Screenshot, mockup, ZIP, zdrojový odkaz ani produkční stránka vydávaná za kandidáta náhled nenahradí. Pokud věrné preview nelze poskytnout, řekni přesně proč; schválení kandidáta si nevyžaduj. Po produktové změně vytvoř nový commit, manifest, preview a nové schválení.
+
+JEDINÝ RELEASE TOK
+PREVIEW → SCHVÁLENÍ → AUDIT → DEPLOY → LIVE KONTROLA.
+PREVIEW = dokončený interně otestovaný kandidát + fungující věrný náhled + commit a manifest.
+SCHVÁLENÍ = explicitní souhlas uživatele s konkrétním commitem, manifestem a preview; V8 jako proces není souhlas s konkrétním produkčním deployem.
+AUDIT = kontrola identity/hashe, diffu vůči aktuálnímu main, relevantní browser/regression QA a povinných CI. Nový main znamená znovu ověřit kompatibilitu, ne přepsat cizí práci.
+DEPLOY = jen schválený/auditovaný produkt přes PR a GitHub do main, bez auto-merge před schválením.
+LIVE KONTROLA = otevři skutečnou URL a ověř servírovanou identitu HTML/CSS/JS/assetů, interakce, rendering včetně footeru a loga, Pages/Live Health a podle dopadu PageSpeed/Lighthouse. DONE pouze po úspěšné produkční kontrole.
+Po schválení je bez nového kola povolen jen předem deklarovaný, explicitně auditovaný administrativní diff trackerů/markerů/release metadat, nikoliv změna produktu. Každá jiná úprava HTML/CSS/JS/assetu/obsahu/chování vyžaduje nové preview i schválení. Blokující problém: oprava s novým schválením nebo rollback, nikdy tichý hotfix.
+
+AUDIT PODLE DOPADU
+HOTFIX: minimální diff, reprodukce konkrétní závady, cílený test opravy a okolních funkcí, relevantní browser a vizuální QA, všechny existující povinné CI. Změna CSS/brand/assetu = také pixelové ověření barev, CSS filtrů, síťových assetů a cache. Změna sdílené závislosti rozšíří test na závislé kalkulačky.
+REDESIGN: kompletní funkční a obsahová regrese, metodika/zdroje, SEO, a11y, interaktivní browser QA, full-page desktop + mobile (včetně 320/390/768/1440 px dle relevance), vizuální branding a produkční PSI/Lighthouse mobile + desktop. U ostatních zásahů rozsah urči podle skutečného dopadu. Existující CI nikdy nezaměňuj za test konkrétní kalkulačky, pokud ji doopravdy netestuje.
+
+KOMUNIKACE
+GitHub operace provádí asistent; žádné rutinní manuální ZIPy. Před schválením předlož věrný preview, stručné změny, kandidátní commit, manifest/hash a případné otevřené problémy; potom STOP. Po nasazení sděl produkční URL, kandidátní a release commit, kontrolu identity, výsledky auditů, LIVE výsledek a DONE/FAIL. Nepřecházej automaticky na další kalkulačku. Nikdy neoznačuj plán, zelené nesouvisející CI, pouhý merge ani neprovedený test za dokončenou práci.
