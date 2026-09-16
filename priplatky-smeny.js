@@ -93,7 +93,7 @@
       breakStart = new Date(start.getFullYear(),start.getMonth(),start.getDate(),Math.floor(breakTime/60),breakTime%60,0,0);
       if (breakStart < start) breakStart.setDate(breakStart.getDate()+1);
       breakEnd = new Date(breakStart.getTime()+breakMinutes*60000);
-      if (breakStart >= end || breakEnd <= start) return { error:'Zadaná přestávka neleží uvnitř směny.' };
+      if (breakStart < start || breakEnd > end) return { error:'Neplacená přestávka musí celá ležet uvnitř směny.' };
     }
 
     const totalElapsed = Math.round((end-start)/60000);
@@ -151,7 +151,11 @@
     });
   }
   function renderTimeline(shift) {
-    if(!shift || shift.error){ ['workTrack','nightTrack','weekendTrack','holidayTrack'].forEach(id=>$(id)?.replaceChildren()); return; }
+    if(!shift || shift.error){
+      ['workTrack','nightTrack','weekendTrack','holidayTrack'].forEach(id=>$(id)?.replaceChildren());
+      ['timelineStart','timelineEnd','timelineRange','autoWorked','autoNight','autoWeekend','autoHoliday'].forEach(id=>setText(id,'—'));
+      return;
+    }
     renderTrack('workTrack',shift.minuteRows,'active','work');
     renderTrack('nightTrack',shift.minuteRows,'night','night');
     renderTrack('weekendTrack',shift.minuteRows,'weekend','weekend');
@@ -233,6 +237,25 @@
     return errors;
   }
 
+  function clearInvalidResults() {
+    // Validation errors must not leave plausible amounts in the result, hero,
+    // payslip comparison or share/print actions.
+    ['cashBonus','basePay','totalPay','repeatBonus','heroBonus','heroTotal',
+     'auditExpected','benchmarkPhv','nightLegalKc','weekendLegalKc',
+     'overtimeLegalKc','holidayLegalKc'].forEach(id=>setText(id,'—'));
+    ['timeOff','heroWorked','heroLeave'].forEach(id=>setText(id,'—'));
+    setText('resultSummary','Opravte neplatné zadání.');
+    setText('heroCaption','Neplatné zadání');
+    setText('overlapText','Opravte údaje pro nový výpočet.');
+    setText('auditMessage','Nejprve opravte zadání směny.');
+    $('breakdownList').replaceChildren();
+    $('overlapChips').replaceChildren();
+    $('auditResult').classList.remove('is-good','is-warn','is-bad');
+    const note=$('resultNote')?.querySelector('p');
+    if(note) note.textContent='Výsledek nelze vypočítat, dokud neopravíte označené údaje.';
+    ['copyResult','copyLink','printResult'].forEach(id=>{ const el=$(id); if(el)el.disabled=true; });
+  }
+
   function calculate() {
     const h=currentHours();
     if(inputMode==='shift') renderTimeline(lastShift);
@@ -241,8 +264,15 @@
     const overtime=regime==='agreement'?0:clamp(n('overtimeHours'),0,24);
     const errors=validateHours(h,overtime);
     const errorBox=$('formError');
-    if(errors.length){ errorBox.hidden=false; errorBox.textContent=errors.join(' '); }
-    else errorBox.hidden=true;
+    if(errors.length){
+      errorBox.hidden=false;
+      errorBox.textContent=errors.join(' ');
+      lastCalc=null;
+      clearInvalidResults();
+      return null;
+    }
+    errorBox.hidden=true;
+    ['copyResult','copyLink','printResult'].forEach(id=>{ const el=$(id); if(el)el.disabled=false; });
 
     const r=effectiveRates();
     const base=hourly*h.worked;
@@ -302,7 +332,7 @@
   }
 
   function renderAudit() {
-    if(!lastCalc) return;
+    if(!lastCalc){ setText('auditExpected','—'); setText('auditMessage','Nejprve opravte zadání směny.'); return; }
     const count=Math.max(1,Math.round(n('auditCount',lastCalc.repeat)));
     const expected=lastCalc.bonus*count; setText('auditExpected',money(expected));
     const paidRaw=$('paidBonus').value.trim(); const box=$('auditResult'); box.classList.remove('is-good','is-warn','is-bad');
