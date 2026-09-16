@@ -29,3 +29,10 @@ jobs:
         run: python -m http.server 8765 --bind 127.0.0.1 > "$RUNNER_TEMP/rv-priplatky-server.log" 2>&1 &
       - name: Calculator-specific regression, mobile and branding QA
         run: node .github/scripts/priplatky-smeny-v8-browser.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: rv-priplatky-v8-visual-qa
+          path: /tmp/rv-priplatky-v8
+          if-no-files-found: warn
+          retention-days: 14
