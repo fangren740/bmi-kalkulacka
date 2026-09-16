@@ -1,507 +1,264 @@
-(function () {
+(function(){
   "use strict";
+  const form=document.getElementById("vacationPayForm");
+  if(!form)return;
+  const $=(id)=>document.getElementById(id);
+  const moneyFmt=new Intl.NumberFormat("cs-CZ",{style:"currency",currency:"CZK",maximumFractionDigits:0});
+  const numFmt=new Intl.NumberFormat("cs-CZ",{maximumFractionDigits:2});
+  let mode="basic";
+  let lastResult=null;
 
-  const form = document.getElementById("vacationPayForm");
-  if (!form) return;
+  function parseNumber(value){
+    if(typeof value==="number")return Number.isFinite(value)?value:0;
+    const normalized=String(value||"").replace(/\s/g,"").replace(/[^0-9,.-]/g,"").replace(",",".");
+    const parsed=Number.parseFloat(normalized);
+    return Number.isFinite(parsed)?parsed:0;
+  }
+  function clamp(value,min,max){return Math.min(max,Math.max(min,value));}
+  function money(value){return moneyFmt.format(Math.round(Math.max(0,value||0)));}
+  function number(value){return numFmt.format(Math.max(0,value||0));}
+  function rate(value){return `${number(value)} Kč/h`;}
+  function hours(value){return `${number(value)} h`;}
+  function selected(name){const input=form.querySelector(`input[name="${name}"]:checked`);return input?input.value:"";}
 
-  const $ = (id) => document.getElementById(id);
-  const moneyFormatter = new Intl.NumberFormat("cs-CZ", {
-    style: "currency",
-    currency: "CZK",
-    maximumFractionDigits: 0
-  });
-
-  let mode = "basic";
-  let lastResult = null;
-
-  function parseNumber(value) {
-    if (typeof value === "number") return Number.isFinite(value) ? value : 0;
-    const normalized = String(value || "")
-      .replace(/\s/g, "")
-      .replace(/[^0-9,.-]/g, "")
-      .replace(",", ".");
-    const parsed = Number.parseFloat(normalized);
-    return Number.isFinite(parsed) ? parsed : 0;
+  function parseShiftList(value){
+    const raw=String(value||"").trim();
+    if(!raw)return [];
+    const parts=/[;\n]/.test(raw)?raw.split(/[;\n]+/):raw.split(/\s+/);
+    return parts.map(parseNumber).filter((v)=>v>0&&v<=24);
   }
 
-  function clamp(value, min, max) {
-    return Math.min(max, Math.max(min, value));
+  function previousQuarterFromDate(value){
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(String(value||"")))return "";
+    const [y,m]=value.split("-").map(Number);
+    const q=Math.floor((m-1)/3)+1;
+    return q===1?`4. čtvrtletí ${y-1}`:`${q-1}. čtvrtletí ${y}`;
   }
 
-  function money(value) {
-    return moneyFormatter.format(Math.round(Math.max(0, value || 0)));
-  }
-
-  function number(value, digits) {
-    const maximumFractionDigits = Number.isInteger(digits) ? digits : 2;
-    return new Intl.NumberFormat("cs-CZ", { maximumFractionDigits: maximumFractionDigits }).format(Math.max(0, value || 0));
-  }
-
-  function rate(value) {
-    return number(value, 2) + " Kč/h";
-  }
-
-  function hours(value) {
-    return number(value, 2) + " h";
-  }
-
-  function selected(name) {
-    const input = form.querySelector('input[name="' + name + '"]:checked');
-    return input ? input.value : "";
-  }
-
-  function shiftLabel(value) {
-    const rounded = Math.round(value * 100) / 100;
-    if (rounded === 1) return "1 směna";
-    if (rounded >= 2 && rounded <= 4 && Number.isInteger(rounded)) return number(rounded, 0) + " směny";
-    return number(rounded, 2) + " směn";
-  }
-
-  function parseShiftList(value) {
-    const raw = String(value || "").trim();
-    if (!raw) return [];
-
-    let parts;
-    if (/[;\n]/.test(raw)) {
-      parts = raw.split(/[;\n]+/);
-    } else if (/,\s+/.test(raw) || (raw.match(/,/g) || []).length > 1) {
-      parts = raw.split(/,\s*/);
-    } else {
-      parts = raw.split(/\s+/);
-    }
-
-    return parts
-      .map((part) => parseNumber(part))
-      .filter((item) => Number.isFinite(item) && item > 0 && item <= 24);
-  }
-
-  function previousQuarter(quarter, year) {
-    const q = clamp(Math.round(quarter || 1), 1, 4);
-    const y = clamp(Math.round(year || 2026), 2000, 2200);
-    if (q === 1) return "4. čtvrtletí " + (y - 1);
-    return (q - 1) + ". čtvrtletí " + y;
-  }
-
-  function basicInput() {
-    const average = clamp(parseNumber($("basicAverage").value), 0, 100000);
-    const vacationHours = clamp(parseNumber($("basicHours").value), 0, 10000);
-    const shiftLength = clamp(parseNumber($("basicShiftLength").value), 0, 24);
-    const shiftCount = shiftLength > 0 ? vacationHours / shiftLength : 0;
-    const weeklyHours = shiftLength > 0 ? shiftLength * 5 : 40;
-
+  function basicInput(){
     return {
-      mode: "basic",
-      averageMethod: "direct",
-      average: average,
-      averageSource: "Přímé zadání",
-      sourceShort: "přímé zadání",
-      quarterLabel: "Rozhodné období: ověřte",
-      qualityStatus: "Ověřte průměr v podkladech",
-      qualityText: "Přímé zadání je přesné pouze tehdy, pokud používáte průměrný hodinový výdělek platný pro dané období.",
-      vacationMode: "hours",
-      vacationHours: vacationHours,
-      shiftLength: shiftLength,
-      shiftCount: shiftCount,
-      shiftList: [],
-      weeklyHours: weeklyHours,
-      ordinaryRate: 0,
-      payContext: "drawing",
-      quarterDays: null
+      mode:"basic",
+      context:selected("basicContext"),
+      average:clamp(parseNumber($("basicAverage").value),0,100000),
+      vacationHours:clamp(parseNumber($("basicHours").value),0,10000),
+      averageSource:"Průměr z podkladů",
+      sourceShort:"z podkladů",
+      quarterLabel:"ověřte platnost průměru",
+      qualityStatus:"Použijte platný průměrný hodinový výdělek",
+      qualityText:"Rychlý výpočet předpokládá, že zadaný průměrný hodinový výdělek je správný a platný pro dané období.",
+      ordinaryRate:0,
+      shiftLength:0,
+      shiftCount:0,
+      shiftList:[]
     };
   }
 
-  function proAverage() {
-    const method = selected("averageMethod") || "direct";
-    const useYear = clamp(parseNumber($("useYear").value), 2000, 2200);
-    const useQuarter = clamp(parseNumber($("useQuarter").value), 1, 4);
-    const quarterLabel = "Rozhodné období: " + previousQuarter(useQuarter, useYear);
+  function proAverageState(){
+    const method=selected("averageMethod");
+    const date=$("useDate").value;
+    const quarterLabel=previousQuarterFromDate(date);
+    if(!method)return {complete:false,next:"B. Vyberte, odkud máte průměrný výdělek."};
+    if(!date)return {complete:false,next:"A. Zadejte datum čerpání nebo skončení pracovního poměru."};
 
-    if (method === "quarter") {
-      const gross = clamp(parseNumber($("quarterGross").value), 0, 1000000000);
-      const workedHours = clamp(parseNumber($("quarterHours").value), 0, 100000);
-      const workedDays = clamp(parseNumber($("quarterDays").value), 0, 366);
-      const average = workedHours > 0 ? gross / workedHours : 0;
-      const underLimit = workedDays < 21;
-
-      return {
-        method: method,
-        average: average,
-        source: "Dopočet z čtvrtletí",
-        sourceShort: "čtvrtletní dopočet",
-        quarterLabel: quarterLabel,
-        quarterDays: workedDays,
-        qualityStatus: underLimit ? "Pod 21 dnů: použijte pravděpodobný výdělek" : "Kontrolní dopočet je připraven",
-        qualityText: underLimit
-          ? "V rozhodném období nebylo zadáno alespoň 21 odpracovaných dnů. Zákonný výpočet proto obvykle pracuje s pravděpodobným výdělkem určeným zaměstnavatelem."
-          : "Dopočet dělí zadanou započitatelnou hrubou mzdu odpracovanými hodinami. Ověřte, že vstupy odpovídají mzdové metodice."
-      };
+    if(method==="direct"){
+      const average=clamp(parseNumber($("proDirectAverage").value),0,100000);
+      if(!(average>0))return {complete:false,next:"B. Zadejte průměrný hodinový výdělek z podkladů."};
+      return {complete:true,average,source:"Průměr z podkladů",sourceShort:"z podkladů",quarterLabel,qualityStatus:"Přímý průměr připraven",qualityText:`Pro zadané datum vychází jako obecné rozhodné období ${quarterLabel}. Ověřte, že použitý průměr je pro toto období platný.`};
     }
 
-    if (method === "probable") {
-      return {
-        method: method,
-        average: clamp(parseNumber($("proProbableAverage").value), 0, 100000),
-        source: "Pravděpodobný výdělek",
-        sourceShort: "pravděpodobný výdělek",
-        quarterLabel: quarterLabel,
-        quarterDays: null,
-        qualityStatus: "Hodnotu musí určit zaměstnavatel",
-        qualityText: "Kalkulačka používá zadaný pravděpodobný výdělek, ale sama neposuzuje mzdy srovnatelných zaměstnanců ani očekávané příplatky."
-      };
+    if(method==="probable"){
+      const average=clamp(parseNumber($("proProbableAverage").value),0,100000);
+      if(!(average>0))return {complete:false,next:"B. Zadejte pravděpodobný hodinový výdělek určený zaměstnavatelem."};
+      return {complete:true,average,source:"Pravděpodobný výdělek",sourceShort:"pravděpodobný",quarterLabel,qualityStatus:"Použit pravděpodobný výdělek",qualityText:"Kalkulačka používá zadanou hodnotu. Samotné určení pravděpodobného výdělku je věcí zaměstnavatele podle § 355."};
     }
 
-    return {
-      method: "direct",
-      average: clamp(parseNumber($("proDirectAverage").value), 0, 100000),
-      source: "Přímé zadání",
-      sourceShort: "přímé zadání",
-      quarterLabel: quarterLabel,
-      quarterDays: null,
-      qualityStatus: "Ověřte průměr v podkladech",
-      qualityText: "Použijte průměrný hodinový výdělek platný pro zvolené čtvrtletí, nikoli automaticky tarifní nebo běžnou hodinovou sazbu."
-    };
-  }
-
-  function proVacation() {
-    const vacationMode = selected("vacationMode") || "hours";
-    const weeklyHours = clamp(parseNumber($("weeklyHours").value), 0, 168);
-
-    if (vacationMode === "equal") {
-      const shiftCount = clamp(parseNumber($("proShiftCount").value), 0, 1000);
-      const shiftLength = clamp(parseNumber($("proShiftLength").value), 0, 24);
-      return {
-        vacationMode: vacationMode,
-        vacationHours: shiftCount * shiftLength,
-        shiftLength: shiftLength,
-        shiftCount: shiftCount,
-        shiftList: [],
-        weeklyHours: weeklyHours
-      };
+    const gross=clamp(parseNumber($("quarterGross").value),0,1000000000);
+    const workedHours=clamp(parseNumber($("quarterHours").value),0,100000);
+    const workedDays=clamp(parseNumber($("quarterDays").value),0,366);
+    if(!(workedDays>0))return {complete:false,next:"B. Doplňte počet odpracovaných dnů v rozhodném období."};
+    if(workedDays<21){
+      const probable=clamp(parseNumber($("quarterProbableAverage").value),0,100000);
+      if(!(probable>0))return {complete:false,blocked:true,next:"B. Méně než 21 odpracovaných dnů: zadejte pravděpodobný hodinový výdělek."};
+      return {complete:true,average:probable,source:"Pravděpodobný výdělek · pod 21 dnů",sourceShort:"pravděpodobný",quarterLabel,qualityStatus:"Čtvrtletní podíl nebyl použit",qualityText:`Zadáno ${number(workedDays)} odpracovaných dnů. Pod hranicí 21 dnů kalkulačka používá pravděpodobný výdělek podle § 355.`};
     }
+    if(!(gross>0))return {complete:false,next:"B. Doplňte započitatelnou hrubou mzdu za rozhodné období."};
+    if(!(workedHours>0))return {complete:false,next:"B. Doplňte odpracované hodiny za rozhodné období."};
+    const average=gross/workedHours;
+    return {complete:true,average,source:"Kontrolní dopočet z čtvrtletí",sourceShort:"čtvrtletní dopočet",quarterLabel,qualityStatus:"Kontrolní dopočet připraven",qualityText:`Zadáno ${number(workedDays)} odpracovaných dnů. Kontrolní průměr vychází z poměru započitatelné hrubé mzdy a odpracovaných hodin za ${quarterLabel}.`};
+  }
 
-    if (vacationMode === "irregular") {
-      const shiftList = parseShiftList($("proShiftList").value);
-      const vacationHours = shiftList.reduce((sum, item) => sum + item, 0);
-      const shiftCount = shiftList.length;
-      const shiftLength = shiftCount > 0 ? vacationHours / shiftCount : 0;
-      return {
-        vacationMode: vacationMode,
-        vacationHours: vacationHours,
-        shiftLength: shiftLength,
-        shiftCount: shiftCount,
-        shiftList: shiftList,
-        weeklyHours: weeklyHours
-      };
+  function proVacationState(){
+    const method=selected("vacationMode");
+    if(!method)return {complete:false,next:"C. Vyberte, jak chcete zadat rozsah dovolené."};
+    if(method==="hours"){
+      const vacationHours=clamp(parseNumber($("proVacationHours").value),0,10000);
+      if(!(vacationHours>0))return {complete:false,next:"C. Zadejte počet hodin dovolené."};
+      return {complete:true,vacationHours,shiftLength:0,shiftCount:0,shiftList:[]};
     }
-
-    return {
-      vacationMode: "hours",
-      vacationHours: clamp(parseNumber($("proVacationHours").value), 0, 10000),
-      shiftLength: 0,
-      shiftCount: 0,
-      shiftList: [],
-      weeklyHours: weeklyHours
-    };
-  }
-
-  function proInput() {
-    const averageData = proAverage();
-    const vacationData = proVacation();
-    return {
-      mode: "pro",
-      averageMethod: averageData.method,
-      average: averageData.average,
-      averageSource: averageData.source,
-      sourceShort: averageData.sourceShort,
-      quarterLabel: averageData.quarterLabel,
-      qualityStatus: averageData.qualityStatus,
-      qualityText: averageData.qualityText,
-      quarterDays: averageData.quarterDays,
-      vacationMode: vacationData.vacationMode,
-      vacationHours: vacationData.vacationHours,
-      shiftLength: vacationData.shiftLength,
-      shiftCount: vacationData.shiftCount,
-      shiftList: vacationData.shiftList,
-      weeklyHours: vacationData.weeklyHours,
-      ordinaryRate: clamp(parseNumber($("ordinaryHourlyRate").value), 0, 100000),
-      payContext: selected("payContext") || "drawing"
-    };
-  }
-
-  function calculate(input) {
-    const gross = input.average * input.vacationHours;
-    const perShift = input.shiftLength > 0 ? input.average * input.shiftLength : 0;
-    const weekPay = input.average * input.weeklyHours;
-    const ordinaryTotal = input.ordinaryRate > 0 ? input.ordinaryRate * input.vacationHours : 0;
-    const comparison = input.ordinaryRate > 0 ? gross - ordinaryTotal : null;
-    return Object.assign({}, input, {
-      gross: gross,
-      perShift: perShift,
-      weekPay: weekPay,
-      ordinaryTotal: ordinaryTotal,
-      comparison: comparison
-    });
-  }
-
-  function tableRow(label, value, meaning) {
-    return '<tr><td data-label="Položka">' + label + '</td><td data-label="Hodnota">' + value + '</td><td data-label="Význam">' + meaning + "</td></tr>";
-  }
-
-  function renderTable(result) {
-    const context = result.payContext === "termination"
-      ? "Proplacení zůstatku při skončení pracovního poměru"
-      : "Náhrada za dobu čerpání dovolené";
-    const shiftMeaning = result.vacationMode === "irregular"
-      ? "Sečtené směny: " + result.shiftList.map((item) => number(item, 2)).join(" + ") + " h"
-      : result.shiftLength > 0
-        ? shiftLabel(result.shiftCount) + " při délce " + hours(result.shiftLength)
-        : "Hodiny byly zadány přímo bez převodu na směny";
-
-    const rows = [
-      tableRow("Průměrný hodinový výdělek", rate(result.average), result.averageSource),
-      tableRow("Rozhodné období", result.quarterLabel.replace("Rozhodné období: ", ""), "Obvykle předchozí kalendářní čtvrtletí"),
-      tableRow("Rozsah dovolené", hours(result.vacationHours), shiftMeaning),
-      tableRow("Hrubá náhrada", money(result.gross), rate(result.average) + " × " + hours(result.vacationHours)),
-      tableRow("Kontext výplaty", result.payContext === "termination" ? "Skončení práce" : "Čerpání", context),
-      tableRow("Model pracovního týdne", money(result.weekPay), hours(result.weeklyHours) + " × " + rate(result.average))
-    ];
-
-    if (result.comparison !== null) {
-      const sign = result.comparison > 0 ? "+" : result.comparison < 0 ? "−" : "";
-      rows.push(tableRow(
-        "Rozdíl proti běžné sazbě",
-        sign + money(Math.abs(result.comparison)),
-        "Srovnávací sazba " + rate(result.ordinaryRate) + "; nemění zákonný výsledek"
-      ));
+    if(method==="equal"){
+      const shiftCount=clamp(parseNumber($("proShiftCount").value),0,1000);
+      const shiftLength=clamp(parseNumber($("proShiftLength").value),0,24);
+      if(!(shiftCount>0))return {complete:false,next:"C. Zadejte počet směn."};
+      if(!(shiftLength>0))return {complete:false,next:"C. Zadejte délku jedné směny."};
+      return {complete:true,vacationHours:shiftCount*shiftLength,shiftLength,shiftCount,shiftList:[]};
     }
-
-    $("summaryTableBody").innerHTML = rows.join("");
+    const shiftList=parseShiftList($("proShiftList").value);
+    if(!shiftList.length)return {complete:false,next:"C. Zadejte délky jednotlivých směn."};
+    const vacationHours=shiftList.reduce((s,v)=>s+v,0);
+    return {complete:true,vacationHours,shiftLength:vacationHours/shiftList.length,shiftCount:shiftList.length,shiftList};
   }
 
-  function render(result) {
-    const valid = result.average > 0 && result.vacationHours > 0;
-    const contextTitle = result.payContext === "termination"
-      ? "Náhrada za nevyčerpanou dovolenou"
-      : "Náhrada za čerpanou dovolenou";
-    const contextShort = result.payContext === "termination" ? "Proplacení při skončení" : "Čerpaná dovolená";
-    const shiftText = result.shiftLength > 0 ? hours(result.shiftLength) : "délka neuvedena";
-    const countText = result.shiftCount > 0 ? shiftLabel(result.shiftCount) : "zadáno v hodinách";
-    const barWidth = result.weeklyHours > 0
-      ? clamp((result.vacationHours / result.weeklyHours) * 100, valid ? 5 : 0, 100)
-      : 0;
+  function proState(){
+    const context=$("proContext").value;
+    if(!context)return {complete:false,next:"A. Vyberte, zda dovolenou čerpáte, nebo řešíte zůstatek při skončení."};
+    const averageState=proAverageState();
+    if(!averageState.complete)return averageState;
+    const vacationState=proVacationState();
+    if(!vacationState.complete)return vacationState;
+    return {complete:true,input:{mode:"pro",context,average:averageState.average,vacationHours:vacationState.vacationHours,averageSource:averageState.source,sourceShort:averageState.sourceShort,quarterLabel:averageState.quarterLabel,qualityStatus:averageState.qualityStatus,qualityText:averageState.qualityText,ordinaryRate:clamp(parseNumber($("ordinaryHourlyRate").value),0,100000),shiftLength:vacationState.shiftLength,shiftCount:vacationState.shiftCount,shiftList:vacationState.shiftList}};
+  }
 
-    $("modeStatus").textContent = result.mode === "basic" ? "Basic výpočet" : "PRO scénář";
-    $("resultType").textContent = contextTitle;
-    $("grossVacationPay").textContent = valid ? money(result.gross) : "Doplňte hodnoty";
-    $("resultFormula").textContent = valid ? rate(result.average) + " × " + hours(result.vacationHours) : "Průměr × hodiny dovolené";
-    $("resultLead").textContent = result.payContext === "termination"
-      ? "Jde o hrubý model vypořádání nevyčerpané dovolené při skončení pracovního poměru, nikoli o možnost proplatit volno kdykoli během zaměstnání."
-      : "Jde o hrubou náhradu před zúčtováním daně, pojistného a ostatních položek výplaty.";
-    $("resultBar").style.width = barWidth + "%";
-    $("resultHours").textContent = hours(result.vacationHours);
-    $("resultHourly").textContent = rate(result.average);
-    $("resultSource").textContent = result.sourceShort;
-    $("resultPerShift").textContent = result.shiftLength > 0 ? money(result.perShift) : "—";
-    $("resultShift").textContent = shiftText;
-    $("resultDays").textContent = countText;
-    $("resultWeek").textContent = money(result.weekPay);
-    $("resultWeekHours").textContent = hours(result.weeklyHours);
-    $("qualityStatus").textContent = result.qualityStatus;
-    $("qualityText").textContent = result.qualityText;
-    $("resultQuarter").textContent = result.quarterLabel;
-
-    if (result.comparison === null) {
-      $("resultComparison").textContent = "není zadáno";
-      $("resultComparisonText").textContent = result.mode === "basic"
-        ? "V Basic režimu se náhrada nesrovnává s tarifní nebo smluvní sazbou."
-        : "Volitelné srovnání nemění náhradu. Doplňte běžnou hodinovou sazbu, pokud chcete vidět rozdíl.";
-    } else {
-      const sign = result.comparison > 0 ? "+" : result.comparison < 0 ? "−" : "";
-      $("resultComparison").textContent = sign + money(Math.abs(result.comparison));
-      if (result.comparison === 0) {
-        $("resultComparisonText").textContent = "Náhrada je při zadané běžné sazbě shodná. Srovnání je pouze informativní.";
-      } else {
-        const direction = result.comparison > 0 ? "vyšší" : "nižší";
-        $("resultComparisonText").textContent = "Náhrada je o " + money(Math.abs(result.comparison)) + " " + direction + " než prostý výpočet z běžné sazby " + rate(result.ordinaryRate) + ". Srovnání je pouze informativní.";
-      }
+  function completionState(){
+    if(mode==="basic"){
+      const input=basicInput();
+      if(!input.context)return {complete:false,next:"1. Vyberte, co právě řešíte."};
+      if(!(input.average>0))return {complete:false,next:"2. Zadejte svůj průměrný hodinový výdělek."};
+      if(!(input.vacationHours>0))return {complete:false,next:"3. Zadejte počet hodin dovolené."};
+      return {complete:true,input};
     }
-
-    $("readingTitle").textContent = valid
-      ? "Za " + hours(result.vacationHours) + " dovolené vychází " + money(result.gross) + " hrubého."
-      : "Doplňte průměrný výdělek a hodiny dovolené.";
-    $("readingText").textContent = result.shiftCount > 0
-      ? "Jde orientačně o " + shiftLabel(result.shiftCount) + ". Výsledek používá " + result.averageSource.toLowerCase() + " ve výši " + rate(result.average) + "."
-      : "Hodiny byly zadány přímo. Výsledek používá " + result.averageSource.toLowerCase() + " ve výši " + rate(result.average) + " a nepřevádí rozsah na univerzální osmihodinové dny.";
-    $("decisionSource").textContent = result.averageSource;
-    $("decisionHours").textContent = hours(result.vacationHours);
-    $("decisionContext").textContent = contextShort;
-
-    $("heroPay").textContent = valid ? money(result.gross) : "—";
-    $("heroFormula").textContent = valid ? rate(result.average) + " × " + hours(result.vacationHours) : "Průměr × hodiny";
-    $("heroHours").textContent = hours(result.vacationHours);
-    $("heroShift").textContent = result.shiftLength > 0 ? money(result.perShift) : "—";
-    $("heroSource").textContent = result.averageMethod === "quarter"
-      ? "Čtvrtletí"
-      : result.averageMethod === "probable"
-        ? "Pravděpodobný"
-        : "Přímý průměr";
-    $("heroMode").textContent = result.mode === "basic" ? "Basic" : "PRO";
-    $("heroBar").style.width = barWidth + "%";
-
-    renderTable(result);
-    lastResult = result;
+    return proState();
   }
 
-  function syncConditionals() {
-    const averageMethod = selected("averageMethod") || "direct";
-    $("directAverageField").hidden = averageMethod !== "direct";
-    $("quarterFields").hidden = averageMethod !== "quarter";
-    $("probableAverageField").hidden = averageMethod !== "probable";
-
-    const vacationMode = selected("vacationMode") || "hours";
-    $("proHoursField").hidden = vacationMode !== "hours";
-    $("equalShiftFields").hidden = vacationMode !== "equal";
-    $("irregularShiftField").hidden = vacationMode !== "irregular";
+  function calculate(input){
+    const gross=input.average*input.vacationHours;
+    const ordinaryTotal=input.ordinaryRate>0?input.ordinaryRate*input.vacationHours:0;
+    const comparison=input.ordinaryRate>0?gross-ordinaryTotal:null;
+    return Object.assign({},input,{gross,ordinaryTotal,comparison});
   }
 
-  function run() {
-    syncConditionals();
-    const input = mode === "basic" ? basicInput() : proInput();
-    render(calculate(input));
+  function contextTitle(context){return context==="termination"?"Náhrada za nevyčerpanou dovolenou při skončení":"Náhrada za čerpanou dovolenou";}
+  function contextStatus(context){return context==="termination"?"Proplacení zůstatku je vázané na skončení pracovního poměru.":"Za dobu čerpání dovolené náleží náhrada ve výši průměrného výdělku.";}
+
+  function renderIdle(state){
+    lastResult=null;
+    document.body.dataset.mode=mode;
+    document.body.dataset.resultState=state&&state.blocked?"blocked":"idle";
+    const next=(state&&state.next)||"Vyplňte požadované údaje.";
+    $("modeStatus").textContent=mode==="pro"?"Detailní kontrola":"Rychlý výpočet";
+    $("heroMode").textContent=mode==="pro"?"PRO":"RYCHLE";
+    $("heroType").textContent=state&&state.blocked?"Je potřeba jiný průměr":"Výsledek po vyplnění";
+    $("heroPay").textContent="Čeká na údaje";
+    $("heroFormula").textContent=next;
+    $("heroAverage").textContent="—";$("heroHours").textContent="—";$("heroSource").textContent="—";
+    $("resultType").textContent=state&&state.blocked?"Výpočet čeká na pravděpodobný výdělek":"Čeká na vaše údaje";
+    $("grossVacationPay").textContent="— Kč";
+    $("resultFormula").textContent=next;
+    $("resultStatus").textContent=next;
+    $("resultLead").textContent=state&&state.blocked?"Když v rozhodném období nebylo alespoň 21 odpracovaných dnů, nepoužíváme čtvrtletní podíl jako zákonný průměr.":"Výsledek počítáme až z vašich údajů. Žádná ukázková částka se nevydává za váš výsledek.";
+    $("resultHourly").textContent="—";$("resultHours").textContent="—";$("resultSource").textContent="—";$("resultQuarter").textContent="—";
+    $("qualityStatus").textContent=state&&state.blocked?"Použijte pravděpodobný výdělek":"Čeká na údaje";
+    $("qualityText").textContent=state&&state.blocked?"Doplňte pravděpodobný hodinový výdělek určený zaměstnavatelem.":"Pokud průměr neznáte, použijte detailní kontrolu.";
+    $("comparisonBox").hidden=true;
+    $("equationAverage").textContent="— Kč/h";$("equationHours").textContent="— h";$("equationTotal").textContent="— Kč";
   }
 
-  function setMode(nextMode) {
-    mode = nextMode === "pro" ? "pro" : "basic";
-    form.dataset.mode = mode;
-    document.body.dataset.mode = mode;
+  function render(result){
+    lastResult=result;
+    document.body.dataset.mode=result.mode;
+    document.body.dataset.resultState="ready";
+    const type=contextTitle(result.context);
+    const formula=`${rate(result.average)} × ${hours(result.vacationHours)}`;
+    $("modeStatus").textContent=result.mode==="pro"?"Detailní kontrola":"Rychlý výpočet";
+    $("heroMode").textContent=result.mode==="pro"?"PRO":"RYCHLE";
+    $("heroType").textContent=type;$("heroPay").textContent=money(result.gross);$("heroFormula").textContent=formula;$("heroAverage").textContent=rate(result.average);$("heroHours").textContent=hours(result.vacationHours);$("heroSource").textContent=result.sourceShort;
+    $("resultType").textContent=type;$("grossVacationPay").textContent=money(result.gross);$("resultFormula").textContent=formula;$("resultStatus").textContent=contextStatus(result.context);
+    $("resultLead").textContent=result.context==="termination"?"Výsledek je hrubý model náhrady za zůstatek dovolené při skončení pracovního poměru.":"Výsledek je hrubá náhrada za hodiny dovolené před zúčtováním celé mzdy.";
+    $("resultHourly").textContent=rate(result.average);$("resultHours").textContent=hours(result.vacationHours);$("resultSource").textContent=result.sourceShort;$("resultQuarter").textContent=result.quarterLabel||"—";
+    $("qualityStatus").textContent=result.qualityStatus;$("qualityText").textContent=result.qualityText;
+    $("equationAverage").textContent=rate(result.average);$("equationHours").textContent=hours(result.vacationHours);$("equationTotal").textContent=money(result.gross);
+    if(result.comparison!==null){
+      $("comparisonBox").hidden=false;
+      const prefix=result.comparison>0?"+":result.comparison<0?"−":"";
+      $("comparisonValue").textContent=`${prefix}${money(Math.abs(result.comparison))}`;
+      $("comparisonText").textContent=`Srovnání s běžnou sazbou ${rate(result.ordinaryRate)}; zákonný výsledek se tím nemění.`;
+    }else $("comparisonBox").hidden=true;
+  }
 
-    document.querySelectorAll("[data-mode-button]").forEach((button) => {
-      const active = button.dataset.modeButton === mode;
-      button.classList.toggle("is-active", active);
-      button.setAttribute("aria-selected", String(active));
-    });
+  function updateQuarterUI(){
+    const date=$("useDate").value;
+    const q=previousQuarterFromDate(date);
+    $("quarterLabel").textContent=q?`Rozhodné období: ${q}`:"Rozhodné období se určí podle data";
+    const days=parseNumber($("quarterDays").value);
+    const under=days>0&&days<21;
+    $("probableGate").hidden=!under;
+    $("quarterProbableField").hidden=!under;
+  }
 
-    document.querySelectorAll("[data-mode-panel]").forEach((panel) => {
-      panel.hidden = panel.dataset.modePanel !== mode;
-    });
+  function updateAverageFields(){
+    const method=selected("averageMethod");
+    $("directAverageField").hidden=method!=="direct";
+    $("quarterFields").hidden=method!=="quarter";
+    $("probableAverageField").hidden=method!=="probable";
+    updateQuarterUI();
+  }
+  function updateVacationFields(){
+    const method=selected("vacationMode");
+    $("vacationHoursField").hidden=method!=="hours";
+    $("equalShiftFields").hidden=method!=="equal";
+    $("irregularShiftField").hidden=method!=="irregular";
+  }
 
+  function run(){
+    updateAverageFields();updateVacationFields();
+    const state=completionState();
+    if(!state.complete){renderIdle(state);return;}
+    render(calculate(state.input));
+  }
+
+  function copyBasicToPro(){
+    const b=basicInput();
+    if(b.context)$("proContext").value=b.context;
+    if(b.average>0){form.querySelector('input[name="averageMethod"][value="direct"]').checked=true;$("proDirectAverage").value=number(b.average);}
+    if(b.vacationHours>0){form.querySelector('input[name="vacationMode"][value="hours"]').checked=true;$("proVacationHours").value=number(b.vacationHours);}
+    updateAverageFields();updateVacationFields();
+  }
+
+  function setMode(next,options){
+    mode=next==="pro"?"pro":"basic";
+    const pro=mode==="pro";
+    $("basicPanel").hidden=pro;$("proPanel").hidden=!pro;
+    $("basicTab").classList.toggle("is-active",!pro);$("proTab").classList.toggle("is-active",pro);
+    $("basicTab").setAttribute("aria-selected",String(!pro));$("proTab").setAttribute("aria-selected",String(pro));
+    form.dataset.mode=mode;
+    if(pro&&options&&options.copyBasic)copyBasicToPro();
     run();
   }
 
-  function setPreset(preset) {
-    const shift = clamp(parseNumber($("basicShiftLength").value), 0, 24) || 8;
-    const multiplier = preset === "one" ? 1 : preset === "week" ? 5 : 2;
-    $("basicHours").value = number(shift * multiplier, 2).replace(/\s/g, "");
-    document.querySelectorAll("[data-basic-preset]").forEach((button) => {
-      button.classList.toggle("is-active", button.dataset.basicPreset === preset);
-    });
-    run();
+  function resetBasic(){
+    form.querySelectorAll('input[name="basicContext"]').forEach((i)=>i.checked=false);
+    $("basicAverage").value="";$("basicHours").value="";run();
+  }
+  function resetPro(){
+    $("proContext").value="";$("useDate").value="";
+    form.querySelectorAll('input[name="averageMethod"],input[name="vacationMode"]').forEach((i)=>i.checked=false);
+    ["proDirectAverage","quarterGross","quarterHours","quarterDays","quarterProbableAverage","proProbableAverage","proVacationHours","proShiftCount","proShiftLength","proShiftList","ordinaryHourlyRate"].forEach((id)=>$(id).value="");
+    updateAverageFields();updateVacationFields();run();
   }
 
-  function copyBasicToPro() {
-    $("proDirectAverage").value = $("basicAverage").value;
-    $("proVacationHours").value = $("basicHours").value;
-    $("weeklyHours").value = number((parseNumber($("basicShiftLength").value) || 8) * 5, 2).replace(/\s/g, "");
-    form.querySelector('input[name="averageMethod"][value="direct"]').checked = true;
-    form.querySelector('input[name="vacationMode"][value="hours"]').checked = true;
-    setMode("pro");
+  function resultText(r){return ["Kalkulačka náhrady mzdy za dovolenou 2026 – RychléVýpočty.cz",`Situace: ${contextTitle(r.context)}`,`Průměrný hodinový výdělek: ${rate(r.average)}`,`Hodiny dovolené: ${hours(r.vacationHours)}`,`Hrubá náhrada: ${money(r.gross)}`,`Zdroj průměru: ${r.averageSource}`,r.quarterLabel?`Rozhodné období: ${r.quarterLabel}`:null,"Výsledek je orientační a nenahrazuje mzdové ani právní posouzení."].filter(Boolean).join("\n");}
+  async function copyResult(){
+    if(!lastResult)return;
+    const text=resultText(lastResult);
+    try{await navigator.clipboard.writeText(text);$("copyResult").textContent="Zkopírováno";setTimeout(()=>$("copyResult").textContent="Kopírovat výsledek",1500);}catch(e){const t=document.createElement("textarea");t.value=text;t.style.position="fixed";t.style.opacity="0";document.body.appendChild(t);t.select();document.execCommand("copy");t.remove();}
   }
 
-  function resetBasic() {
-    $("basicAverage").value = "265";
-    $("basicHours").value = "16";
-    $("basicShiftLength").value = "8";
-    document.querySelectorAll("[data-basic-preset]").forEach((button) => {
-      button.classList.toggle("is-active", button.dataset.basicPreset === "two");
-    });
-    setMode("basic");
-  }
-
-  function resetPro() {
-    form.querySelector('input[name="averageMethod"][value="direct"]').checked = true;
-    form.querySelector('input[name="vacationMode"][value="hours"]').checked = true;
-    form.querySelector('input[name="payContext"][value="drawing"]').checked = true;
-    $("proDirectAverage").value = "265";
-    $("quarterGross").value = "126500";
-    $("quarterHours").value = "480";
-    $("quarterDays").value = "60";
-    $("proProbableAverage").value = "265";
-    $("useYear").value = "2026";
-    $("useQuarter").value = "3";
-    $("proVacationHours").value = "16";
-    $("proShiftCount").value = "2";
-    $("proShiftLength").value = "8";
-    $("proShiftList").value = "8, 12, 8";
-    $("ordinaryHourlyRate").value = "250";
-    $("weeklyHours").value = "40";
-    setMode("pro");
-  }
-
-  function resultText() {
-    if (!lastResult) return "";
-    return [
-      "Náhrada mzdy za dovolenou – orientační výpočet",
-      "Hrubá náhrada: " + money(lastResult.gross),
-      "Průměrný hodinový výdělek: " + rate(lastResult.average),
-      "Dovolená: " + hours(lastResult.vacationHours),
-      "Zdroj průměru: " + lastResult.averageSource,
-      "Rozhodné období: " + lastResult.quarterLabel.replace("Rozhodné období: ", ""),
-      "Kontext: " + (lastResult.payContext === "termination" ? "proplacení při skončení" : "čerpání dovolené"),
-      "Výsledek je hrubý a orientační."
-    ].join("\n");
-  }
-
-  async function copyResult() {
-    const button = $("copyResult");
-    const text = resultText();
-    try {
-      await navigator.clipboard.writeText(text);
-      button.textContent = "Zkopírováno";
-    } catch (error) {
-      const area = document.createElement("textarea");
-      area.value = text;
-      area.setAttribute("readonly", "");
-      area.style.position = "fixed";
-      area.style.opacity = "0";
-      document.body.appendChild(area);
-      area.select();
-      document.execCommand("copy");
-      area.remove();
-      button.textContent = "Zkopírováno";
-    }
-    window.setTimeout(() => {
-      button.textContent = "Kopírovat výsledek";
-    }, 1800);
-  }
-
-  form.addEventListener("submit", (event) => {
-    event.preventDefault();
-    run();
-  });
-
-  form.querySelectorAll("input, select, textarea").forEach((element) => {
-    element.addEventListener("input", run);
-    element.addEventListener("change", run);
-  });
-
-  document.querySelectorAll("[data-mode-button]").forEach((button) => {
-    button.addEventListener("click", () => setMode(button.dataset.modeButton));
-  });
-
-  document.querySelectorAll("[data-basic-preset]").forEach((button) => {
-    button.addEventListener("click", () => setPreset(button.dataset.basicPreset));
-  });
-
-  document.querySelectorAll("[data-open-pro]").forEach((button) => {
-    button.addEventListener("click", copyBasicToPro);
-  });
-
-  $("copyFromBasic").addEventListener("click", copyBasicToPro);
-  $("resetBasic").addEventListener("click", resetBasic);
-  $("resetPro").addEventListener("click", resetPro);
-  $("copyResult").addEventListener("click", copyResult);
-  $("printResult").addEventListener("click", () => window.print());
-
-  syncConditionals();
-  run();
+  form.addEventListener("submit",(e)=>{e.preventDefault();run();});
+  $("basicTab").addEventListener("click",()=>setMode("basic"));
+  $("proTab").addEventListener("click",()=>setMode("pro",{copyBasic:mode==="basic"}));
+  form.querySelectorAll("[data-open-pro]").forEach((b)=>b.addEventListener("click",()=>setMode("pro",{copyBasic:true})));
+  $("copyFromBasic").addEventListener("click",()=>{copyBasicToPro();run();});
+  $("resetBasic").addEventListener("click",resetBasic);$("resetPro").addEventListener("click",resetPro);
+  form.querySelectorAll("input,select,textarea").forEach((control)=>{control.addEventListener("input",run);control.addEventListener("change",run);});
+  $("copyResult").addEventListener("click",copyResult);$("printResult").addEventListener("click",()=>window.print());
+  updateAverageFields();updateVacationFields();setMode("basic");
 })();
