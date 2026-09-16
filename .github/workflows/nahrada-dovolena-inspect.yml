@@ -1,0 +1,33 @@
+name: Vacation visual diagnostic
+on:
+  push:
+    branches: [upgrade/nahrada-dovolena-complete-redesign-v7]
+    paths: [.github/workflows/nahrada-dovolena-inspect.yml]
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: upgrade/nahrada-dovolena-complete-redesign-v7
+      - name: Decode staged product for visual inspection
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import gzip,base64
+          for stem,target in [('html','nahrada-mzdy-za-dovolenou-kalkulacka.html'),('css','nahrada-dovolena-pro.css'),('js','nahrada-dovolena.js')]:
+              Path(target).write_bytes(gzip.decompress(base64.b64decode(''.join(p.read_text().strip() for p in sorted(Path('.vacstage').glob(stem+'-*.txt'))))))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: vacation-visual-diagnostic
+          path: |
+            nahrada-mzdy-za-dovolenou-kalkulacka.html
+            nahrada-dovolena-pro.css
+            nahrada-dovolena.js
+            rv-brand-v32.css
+            rv-social-links.css
+            logo-rv-v32.svg
+          retention-days: 7
