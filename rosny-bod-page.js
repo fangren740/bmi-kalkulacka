@@ -2,12 +2,17 @@
 "use strict";
 const core=window.RVDewPointCore;if(!core)return;
 const $=id=>document.getElementById(id);let mode="dew";
-const parse=v=>{const n=Number(String(v).trim().replace(/\s/g,"").replace(",","."));return Number.isFinite(n)?n:NaN};
+// An empty required input must never silently become zero.
+const parse=v=>{const s=String(v).trim().replace(/\s/g,"").replace(",",".");if(!s)return NaN;const n=Number(s);return Number.isFinite(n)?n:NaN};
 const fmt=(n,d=1)=>Number(n).toLocaleString("cs-CZ",{minimumFractionDigits:d,maximumFractionDigits:d});
 const clamp=(n,a,b)=>Math.min(b,Math.max(a,n));
 const ids={air:$("air"),airRange:$("airRange"),rh:$("rh"),rhRange:$("rhRange"),surface:$("surface"),surfaceRange:$("surfaceRange")};
+// The current production HTML has no #status or #heroDot. They are optional
+// embellishments, never a reason to abort the actual user calculation.
+const status=message=>{const node=$("status");if(node)node.textContent=message};
 function invalidate(message){
-  $("resultHeadline").innerHTML="Zkontrolujte <strong>zadání</strong>";$("resultHint").textContent=message;$("kpiDew").textContent="—";$("kpiVapor").textContent="—";$("kpiAbs").textContent="—";$("kpiMargin").textContent="—";$("formula").innerHTML="<b>Výpočet:</b> Čeká na platné vstupy.";$("meaningTitle").textContent="Výsledek není aktuální.";$("meaningText").textContent=message;$("status").textContent=message;
+  $("resultHeadline").innerHTML="Zkontrolujte <strong>zadání</strong>";$("resultHint").textContent=message;$("kpiDew").textContent="—";$("kpiVapor").textContent="—";$("kpiAbs").textContent="—";$("kpiMargin").textContent="—";$("formula").innerHTML="<b>Výpočet:</b> Čeká na platné vstupy.";$("meaningTitle").textContent="Výsledek není aktuální.";$("meaningText").textContent=message;status(message);
+  for(const id of ['heroAir','heroRh','heroDew']){const node=$(id);if(node)node.textContent="—";}
 }
 function pos(t,min,max){return 13+74*clamp((t-min)/(max-min),0,1)}
 function setMode(next){mode=next;document.querySelectorAll("[data-mode]").forEach(b=>b.classList.toggle("active",b.dataset.mode===mode));$("surfaceField").hidden=mode!=="surface";calc(false)}
@@ -28,7 +33,8 @@ function render(r,scroll){
     $("meaningText").textContent=r.condensationPossible?"Za těchto podmínek může na povrchu docházet ke kondenzaci vodní páry.":"Teplotní rezerva je přibližně "+fmt(r.marginC)+" °C. Odhad relativní vlhkosti těsně u povrchu je "+fmt(r.surfaceRhDisplayPct,0)+" %.";
   }
   $("formula").innerHTML="<b>Výpočet:</b> Magnusova aproximace (Alduchov–Eskridge); parciální tlak vodní páry "+fmt(r.vaporKPa,3)+" kPa a rosný bod "+fmt(r.dewPointC,2)+" °C.";
-  $("heroDot").style.left=(35+clamp(r.rhPct,10,100)*.45)+"%";$("status").textContent="Výsledek byl přepočítán.";if(scroll)document.querySelector(".results").scrollIntoView({behavior:"smooth",block:"start"});
+  const dot=$("heroDot");if(dot)dot.style.left=(35+clamp(r.rhPct,10,100)*.45)+"%";
+  status("Výsledek byl přepočítán.");if(scroll)document.querySelector(".results")?.scrollIntoView({behavior:"smooth",block:"start"});
 }
 function calc(scroll){const input={airTempC:parse(ids.air.value),rhPct:parse(ids.rh.value)};if(mode==="surface")input.surfaceTempC=parse(ids.surface.value);const r=core.calculate(input);if(!r.ok){invalidate(r.error);return}render(r,scroll)}
 document.querySelectorAll("[data-mode]").forEach(b=>b.addEventListener("click",()=>setMode(b.dataset.mode)));
