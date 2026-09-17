@@ -11,11 +11,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Export candidate product, shared assets and test
+      - name: Export candidate product and authentic shared assets
         shell: bash
         run: |
           mkdir -p /tmp/rv-rosny-source
-          for f in rosny-bod-kalkulacka.html rosny-bod-core.js rosny-bod-page.js rv-brand-v32.css rv-brand-v32.js logo-rv-v32.svg logo-rv-footer-v32.svg .github/scripts/v8-rosny-browser.cjs .github/workflows/v8-rosny-candidate-qa.yml cista-mzda-kalkulacka.html mesicni-mzda-z-hodinove-sazby-kalkulacka.html; do
+          for f in rosny-bod-kalkulacka.html rosny-bod-core.js rosny-bod-page.js rv-brand-v32.css rv-brand-v32.js logo-rv-v32.svg logo-rv-v32-inverse.svg .github/scripts/v8-rosny-browser.cjs .github/workflows/v8-rosny-candidate-qa.yml cista-mzda-kalkulacka.html mesicni-mzda-z-hodinove-sazby-kalkulacka.html; do
             if test -f "$f"; then mkdir -p "/tmp/rv-rosny-source/$(dirname "$f")"; cp "$f" "/tmp/rv-rosny-source/$f"; fi
           done
           git rev-parse HEAD > /tmp/rv-rosny-source/SOURCE_COMMIT.txt
