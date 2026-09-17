@@ -1,0 +1,36 @@
+name: V8 portfolio read-only worst-first triage
+on:
+  push:
+    branches:
+      - v8/worst-first-portfolio-audit-20260917
+    paths:
+      - .github/scripts/v8-portfolio-triage.cjs
+      - .github/workflows/v8-portfolio-triage.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  portfolio-triage:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    env:
+      NODE_PATH: /tmp/rv-portfolio-node/node_modules
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install real browser
+        run: |
+          npm install --prefix /tmp/rv-portfolio-node playwright@1.62.1
+          /tmp/rv-portfolio-node/node_modules/.bin/playwright install --with-deps chromium
+      - name: Inspect all registered live calculators at desktop and mobile widths
+        run: node .github/scripts/v8-portfolio-triage.cjs
+      - name: Upload evidence (JSON and actual rendered screenshots)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v8-worst-first-live-portfolio-evidence
+          path: /tmp/rv-v8-portfolio-triage/
+          if-no-files-found: warn
+          retention-days: 30
