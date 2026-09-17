@@ -36,7 +36,7 @@ def data_uri(uri):
     assets[str(file.relative_to(ROOT))] = hashlib.sha256(data).hexdigest()
     return 'data:'+mime+';base64,'+base64.b64encode(data).decode('ascii')
 
-# Inlining CSS retains the exact stylesheet cascade and removes all remote CSS requests.
+# Inlining CSS retains exact cascade and removes all remote CSS requests.
 stylesheet = re.compile(r'<link\b[^>]*\brel=["\']stylesheet["\'][^>]*\bhref=["\'](?P<src>[^"\']+)["\'][^>]*>', re.I)
 def inline_css(match):
     src = match.group('src')
@@ -53,7 +53,7 @@ def inline_css(match):
 text, css_count = stylesheet.subn(inline_css, text)
 assert css_count >= 2, 'Stylesheets missing'
 
-# Inline all local images (including branding) as data URLs, no external image dependencies.
+# Inline all local images and actual branding as data URLs.
 image = re.compile(r'(<(?:img|source)\b[^>]*\bsrc=["\'])(?P<src>[^"\']+)(["\'])', re.I)
 def inline_image(match):
     src = match.group('src')
@@ -62,16 +62,16 @@ def inline_image(match):
 text = image.sub(inline_image, text)
 assert 'data:image/svg+xml;base64,' in text, 'Brand assets were not inlined'
 
-# Remove external favicons/manifest and canonical from preview: never silently fall back to production.
+# Remove external favicons/manifest and canonical from preview.
 text = re.sub(r'<link\b[^>]*\brel=["\'](?:icon|apple-touch-icon|manifest|canonical)["\'][^>]*>\s*', '', text, flags=re.I)
 text = re.sub(r'<meta\s+name=["\']robots["\'][^>]*>', '<meta name="robots" content="noindex,nofollow">', text, count=1, flags=re.I)
 
-# Keep live navigation to the production site; leave in-page anchors untouched.
+# Keep navigation to production; in-page anchors remain native.
 def link_to_site(m):
     return m.group(1)+'https://rychlevypocty.cz/'+m.group(2)
 text = re.sub(r'(<a\b[^>]*\bhref=["\'])/([^"\']*)', link_to_site, text, flags=re.I)
 
-# DOM-dependent JS must execute at document end, preserving source order (brand then calculator).
+# Move DOM-dependent scripts to end in original order (brand, calculator).
 script = re.compile(r'<script\b(?P<attrs>[^>]*)\bsrc=["\'](?P<src>[^"\']+)["\'][^>]*>\s*</script>', re.I)
 scripts = []
 def collect_js(match):
@@ -84,7 +84,8 @@ def collect_js(match):
     return '<!-- Script moved intact to end of document: '+src+' -->'
 text, js_count = script.subn(collect_js, text)
 assert js_count == 2, f'Expected brand and calculator JS, got {js_count}'
-text = re.sub(r'</body>', '\n'+'\n'.join(scripts)+'\n</body>', text, count=1, flags=re.I)
+# A callable replacement prevents Python's regex replacement-template parser from corrupting JS escapes.
+text = re.sub(r'</body>', lambda _: '\n'+'\n'.join(scripts)+'\n</body>', text, count=1, flags=re.I)
 assert re.search(r'<script\b[^>]*\bsrc=', text, re.I) is None, 'External script remains'
 assert re.search(r'<link\b[^>]*\brel=["\']stylesheet', text, re.I) is None, 'External CSS remains'
 assert '<iframe' not in text.lower(), 'Iframes forbidden in native preview'
