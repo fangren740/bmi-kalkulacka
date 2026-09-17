@@ -1,0 +1,42 @@
+name: V8 rosny bod candidate browser QA
+on:
+  push:
+    branches:
+      - v8/rosny-bod-product-rebuild-20260917
+    paths:
+      - rosny-bod-page.js
+      - rosny-bod-core.js
+      - rosny-bod-kalkulacka.html
+      - rosny-bod-v8.css
+      - .github/scripts/v8-rosny-browser.cjs
+      - .github/workflows/v8-rosny-candidate-qa.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  rosny:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      NODE_PATH: /tmp/rv-rosny-node/node_modules
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install test browser
+        run: |
+          npm install --prefix /tmp/rv-rosny-node playwright@1.62.1
+          /tmp/rv-rosny-node/node_modules/.bin/playwright install --with-deps chromium
+      - name: Serve exact candidate on loopback and execute actual scenarios
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/rv-rosny-http.log 2>&1 &
+          sleep 2
+          node .github/scripts/v8-rosny-browser.cjs
+      - name: Capture actual full-page browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v8-rosny-candidate-browser-evidence
+          path: /tmp/v8-rosny/
+          if-no-files-found: warn

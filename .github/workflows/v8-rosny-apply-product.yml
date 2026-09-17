@@ -1,0 +1,28 @@
+name: V8 rosný bod verified product install
+on:
+  push:
+    branches: [v8/rosny-bod-product-rebuild-20260917]
+    paths: ['.github/workflows/v8-rosny-apply-product.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: v8/rosny-bod-product-rebuild-20260917
+          persist-credentials: true
+      - name: Verify and assemble exact product bytes
+        shell: bash
+        run: |
+          python3 .github/scripts/v8-rosny-install.py
+          git diff --stat
+          git add rosny-bod-kalkulacka.html rosny-bod-v8.css rosny-bod-page.js
+          git diff --cached --quiet && { echo 'ERROR: product was not changed'; exit 1; } || true
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'product: rebuild dew point around original condensation instrument with full mobile UX and content'
+          git push origin HEAD:v8/rosny-bod-product-rebuild-20260917
+          git rev-parse HEAD
