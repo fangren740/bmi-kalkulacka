@@ -1,0 +1,87 @@
+name: RV V8 native chat preview artifact
+on:
+  push:
+    branches:
+      - v8/preview-priplatky-20260916
+    paths:
+      - '.github/scripts/priplatky-v8-native-preview-build.py'
+      - '.github/workflows/priplatky-v8-native-preview.yml'
+permissions:
+  contents: read
+jobs:
+  native-preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      NODE_PATH: /tmp/rv-preview-node/node_modules
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Build standalone calculator preview pinned to source commit
+        run: |
+          test "$(git rev-parse 09352428b75f5145cb11af9f2484e80b6a8e1dd2:kalkulacka-priplatku-za-smeny.html)" = "$(git rev-parse HEAD:kalkulacka-priplatku-za-smeny.html)"
+          test "$(git rev-parse 09352428b75f5145cb11af9f2484e80b6a8e1dd2:priplatky-smeny.js)" = "$(git rev-parse HEAD:priplatky-smeny.js)"
+          test "$(git rev-parse 09352428b75f5145cb11af9f2484e80b6a8e1dd2:priplatky-smeny.css)" = "$(git rev-parse HEAD:priplatky-smeny.css)"
+          python3 .github/scripts/priplatky-v8-native-preview-build.py
+          sha256sum RV_PRIPLATKY_V8_NATIVE_LIVE_PREVIEW.html RV_PRIPLATKY_V8_NATIVE_LIVE_PREVIEW.manifest.json
+      - name: Install Chromium for native-file smoke test
+        run: |
+          npm install --prefix /tmp/rv-preview-node playwright@1.62.1
+          /tmp/rv-preview-node/node_modules/.bin/playwright install --with-deps chromium
+      - name: Verify standalone native HTML without iframe or remote CSS JS
+        run: |
+          node - <<'NODE'
+          const {chromium}=require('playwright');
+          const fs=require('fs'); const assert=require('assert/strict');
+          (async()=>{
+            const name='RV_PRIPLATKY_V8_NATIVE_LIVE_PREVIEW.html';
+            const html=fs.readFileSync(name,'utf8');
+            assert(!/<iframe\b/i.test(html));
+            assert(!/<script[^>]+src=/i.test(html));
+            assert(!/<link[^>]+rel=["']stylesheet/i.test(html));
+            const browser=await chromium.launch();
+            for(const width of [390,1440]){
+              const page=await browser.newPage({viewport:{width,height:900}});
+              const errors=[]; const unexpected=[];
+              page.on('pageerror',e=>errors.push(e.message));
+              page.on('request',r=>{if(/\.(css|js|svg|png|jpg|woff)(?:\?|$)/i.test(r.url())&&r.url().startsWith('http'))unexpected.push(r.url())});
+              await page.goto('file://'+process.cwd()+'/'+name,{waitUntil:'networkidle'});
+              assert.equal(await page.locator('#formError').isVisible(),false);
+              assert.match(await page.locator('#cashBonus').innerText(),/Kč/);
+              for(const selector of ['header img.rv-logo-image','footer img.rv-logo-image']){
+                assert.equal(await page.locator(selector).evaluate(el=>el.complete&&el.naturalWidth>0),true,selector);
+              }
+              const edit=async(o)=>{for(const [id,v] of Object.entries(o)){await page.locator('#'+id).fill(String(v));await page.locator('#'+id).dispatchEvent('input')}};
+              await edit({shiftDate:'2026-09-18',shiftStart:'22:00',shiftEnd:'06:00',breakStart:'05:50',breakMinutes:'30'});
+              assert.equal(await page.locator('#formError').isVisible(),true);
+              assert.doesNotMatch(await page.locator('#cashBonus').innerText(),/\d[\d\s]*\s*Kč/);
+              await edit({breakStart:'01:00',breakMinutes:'30'});
+              assert.equal(await page.locator('#formError').isVisible(),false);
+              assert.match(await page.locator('#cashBonus').innerText(),/Kč/);
+              await page.locator('#sfManualTab').click();
+              await edit({manualWorked:'4',manualNight:'6',manualWeekend:'3'});
+              assert.equal(await page.locator('#formError').isVisible(),true);
+              await edit({manualNight:'3'});
+              assert.equal(await page.locator('#formError').isVisible(),false);
+              assert.deepEqual(errors,[]);assert.deepEqual(unexpected,[]);
+              await page.screenshot({path:'/tmp/native-v8-'+width+'.png'});
+              console.log('NATIVE_FILE_QA_PASS',width);
+              await page.close();
+            }
+            await browser.close();
+          })().catch(e=>{console.error(e);process.exit(1)})
+          NODE
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: rv-priplatky-v8-native-chat-preview
+          path: |
+            RV_PRIPLATKY_V8_NATIVE_LIVE_PREVIEW.html
+            RV_PRIPLATKY_V8_NATIVE_LIVE_PREVIEW.manifest.json
+            /tmp/native-v8-*.png
+          if-no-files-found: error
+          retention-days: 30
