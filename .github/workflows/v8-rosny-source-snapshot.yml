@@ -1,0 +1,26 @@
+name: V8 rosny source snapshot
+on:
+  push:
+    branches: [v8/rosny-bod-product-rebuild-20260917]
+    paths: ['.github/workflows/v8-rosny-source-snapshot.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Export candidate product, shared assets and test
+        shell: bash
+        run: |
+          mkdir -p /tmp/rv-rosny-source
+          for f in rosny-bod-kalkulacka.html rosny-bod-core.js rosny-bod-page.js rv-brand-v32.css rv-brand-v32.js logo-rv-v32.svg logo-rv-footer-v32.svg .github/scripts/v8-rosny-browser.cjs .github/workflows/v8-rosny-candidate-qa.yml cista-mzda-kalkulacka.html mesicni-mzda-z-hodinove-sazby-kalkulacka.html; do
+            if test -f "$f"; then mkdir -p "/tmp/rv-rosny-source/$(dirname "$f")"; cp "$f" "/tmp/rv-rosny-source/$f"; fi
+          done
+          git rev-parse HEAD > /tmp/rv-rosny-source/SOURCE_COMMIT.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: v8-rosny-source-for-product-rebuild
+          path: /tmp/rv-rosny-source/
+          retention-days: 3
