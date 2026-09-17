@@ -1,44 +1,85 @@
-(function(){
-"use strict";
+/* Rosný bod V8 — UI only; physics stays in rosny-bod-core.js. */
+(function(){'use strict';
 const core=window.RVDewPointCore;if(!core)return;
-const $=id=>document.getElementById(id);let mode="dew";
-// An empty required input must never silently become zero.
-const parse=v=>{const s=String(v).trim().replace(/\s/g,"").replace(",",".");if(!s)return NaN;const n=Number(s);return Number.isFinite(n)?n:NaN};
-const fmt=(n,d=1)=>Number(n).toLocaleString("cs-CZ",{minimumFractionDigits:d,maximumFractionDigits:d});
+const $=id=>document.getElementById(id),fmt=(n,d=1)=>n.toLocaleString('cs-CZ',{minimumFractionDigits:d,maximumFractionDigits:d});
+const parse=value=>{const s=String(value??'').trim().replace(/\s/g,'').replace(',','.');if(!s)return NaN;const n=Number(s);return Number.isFinite(n)?n:NaN};
 const clamp=(n,a,b)=>Math.min(b,Math.max(a,n));
-const ids={air:$("air"),airRange:$("airRange"),rh:$("rh"),rhRange:$("rhRange"),surface:$("surface"),surfaceRange:$("surfaceRange")};
-// The current production HTML has no #status or #heroDot. They are optional
-// embellishments, never a reason to abort the actual user calculation.
-const status=message=>{const node=$("status");if(node)node.textContent=message};
+const inputs={air:$('air'),rh:$('rh'),surface:$('surface')};let mode='dew';
+const put=(id,value)=>{const el=$(id);if(el)el.textContent=value};
 function invalidate(message){
-  $("resultHeadline").innerHTML="Zkontrolujte <strong>zadání</strong>";$("resultHint").textContent=message;$("kpiDew").textContent="—";$("kpiVapor").textContent="—";$("kpiAbs").textContent="—";$("kpiMargin").textContent="—";$("formula").innerHTML="<b>Výpočet:</b> Čeká na platné vstupy.";$("meaningTitle").textContent="Výsledek není aktuální.";$("meaningText").textContent=message;status(message);
-  for(const id of ['heroAir','heroRh','heroDew']){const node=$(id);if(node)node.textContent="—";}
+ $('resultHeadline').innerHTML='Zkontrolujte <strong>zadání</strong>';
+ put('resultHint',message);put('glassStatus','Nejprve opravte vstupní hodnoty.');put('resultState','NEPLATNÉ ZADÁNÍ');
+ for(const id of ['quickDew','kpiDew','kpiVapor','kpiAbs','kpiMargin','dewLegend','surfaceLegend','dewLabel','surfaceLabel','thresholdValue','scenarioCurrent','scenario40','scenario50','scenario60','scenario70','scenario80'])put(id,'—');
+ put('meaningTitle','Výsledek není aktuální.');put('meaningText',message);put('marginHint','Čeká na platné hodnoty.');
+ $('glassPane').classList.remove('is-wet');$('thresholdWrap').hidden=true;put('formula','Zadejte platné vstupy. Předchozí výsledek byl odstraněn.');put('status',message);
 }
-function pos(t,min,max){return 13+74*clamp((t-min)/(max-min),0,1)}
-function setMode(next){mode=next;document.querySelectorAll("[data-mode]").forEach(b=>b.classList.toggle("active",b.dataset.mode===mode));$("surfaceField").hidden=mode!=="surface";calc(false)}
-function sync(i,r,src){if(src==="input"){const n=parse($(i).value);if(Number.isFinite(n))$(r).value=n}else $(i).value=$(r).value;calc(false)}
+function drawScale(dew,surface,hasSurface){
+ const min=Math.min(dew,surface)-4,max=Math.max(dew,surface)+4;
+ const at=n=>clamp((n-min)/(max-min)*84+8,8,92)+'%';
+ $('dewMarker').style.left=at(dew);$('surfaceMarker').style.left=at(surface);
+ $('dewFill').style.width=at(dew);
+ put('dewLabel','Rosný bod '+fmt(dew)+' °C');put('surfaceLabel',(hasSurface?'Povrch ':'Vzduch ')+fmt(surface)+' °C');
+ put('scaleCaption',hasSurface?'Rosný bod × měřený povrch':'Rosný bod × vzduch');
+}
+function drawScenarios(t,rh){
+ put('scenarioCurrent',fmt(rh,0)+' % RH');
+ for(const preset of [40,50,60,70,80]){
+  const calc=core.calculate({airTempC:t,rhPct:preset});put('scenario'+preset,calc.ok?fmt(calc.dewPointC)+' °C':'—');
+ }
+ document.querySelectorAll('[data-rh-preset]').forEach(button=>{
+  const active=Number(button.dataset.rhPreset)===rh;button.classList.toggle('is-current',active);button.setAttribute('aria-pressed',String(active));
+ });
+}
 function render(r,scroll){
-  $("heroAir").textContent=fmt(r.airTempC)+" °C";$("heroRh").textContent=fmt(r.rhPct,0)+" %";$("heroDew").textContent=fmt(r.dewPointC)+" °C";
-  $("kpiDew").textContent=fmt(r.dewPointC)+" °C";$("kpiVapor").textContent=fmt(r.vaporKPa,2)+" kPa";$("kpiAbs").textContent=fmt(r.absoluteHumidityGm3)+" g/m³";
-  const surface=mode==="surface"?r.surfaceTempC:r.airTempC;const min=Math.min(r.dewPointC,surface)-8,max=Math.max(30,r.dewPointC+10,surface+10);const dp=pos(r.dewPointC,min,max),sp=pos(surface,min,max);
-  $("dewMarker").style.left=dp+"%";$("surfaceMarker").style.left=sp+"%";$("dewLabel").style.left=dp+"%";$("surfaceLabel").style.left=sp+"%";$("dewLabel").textContent="Rosný bod "+fmt(r.dewPointC)+" °C";$("surfaceLabel").textContent=(mode==="surface"?"Povrch ":"Vzduch ")+fmt(surface)+" °C";
-  if(mode==="dew"){
-    $("resultHeadline").innerHTML="Rosný bod je <strong>"+fmt(r.dewPointC)+" °C</strong>";$("resultHint").textContent="Při teplotě vzduchu "+fmt(r.airTempC)+" °C a relativní vlhkosti "+fmt(r.rhPct,0)+" %.";$("kpiMargin").textContent="—";$("meaningTitle").textContent="Co tato teplota znamená?";$("meaningText").textContent="Povrch ochlazený přibližně na "+fmt(r.dewPointC)+" °C nebo níž může při stejném stavu vzduchu dosáhnout podmínek pro kondenzaci.";
-  }else{
-    $("kpiMargin").textContent=(r.marginC>=0?"+":"")+fmt(r.marginC)+" °C";
-    $("resultHeadline").innerHTML=r.condensationPossible?"Povrch je <strong>v oblasti kondenzace</strong>":"Povrch je <strong>nad rosným bodem</strong>";
-    const rhText=r.condensationPossible?"u povrchu je dosaženo hranice nasycení":"odhad povrchové RH "+fmt(r.surfaceRhDisplayPct,0)+" %";
-    $("resultHint").textContent="Povrch "+fmt(r.surfaceTempC)+" °C · rosný bod "+fmt(r.dewPointC)+" °C · "+rhText+".";
-    $("meaningTitle").textContent=r.condensationPossible?"Povrch je na nebo pod rosným bodem.":"Povrch je nad rosným bodem.";
-    $("meaningText").textContent=r.condensationPossible?"Za těchto podmínek může na povrchu docházet ke kondenzaci vodní páry.":"Teplotní rezerva je přibližně "+fmt(r.marginC)+" °C. Odhad relativní vlhkosti těsně u povrchu je "+fmt(r.surfaceRhDisplayPct,0)+" %.";
-  }
-  $("formula").innerHTML="<b>Výpočet:</b> Magnusova aproximace (Alduchov–Eskridge); parciální tlak vodní páry "+fmt(r.vaporKPa,3)+" kPa a rosný bod "+fmt(r.dewPointC,2)+" °C.";
-  const dot=$("heroDot");if(dot)dot.style.left=(35+clamp(r.rhPct,10,100)*.45)+"%";
-  status("Výsledek byl přepočítán.");if(scroll)document.querySelector(".results")?.scrollIntoView({behavior:"smooth",block:"start"});
+ const hasSurface=mode==='surface';
+ const surface=hasSurface?r.surfaceTempC:r.airTempC;
+ const dry=!hasSurface||!r.condensationPossible;
+ const dew=fmt(r.dewPointC)+' °C';
+ $('resultHeadline').innerHTML='Rosný bod je <strong>'+dew+'</strong>';
+ put('resultHint','Při teplotě '+fmt(r.airTempC)+' °C a relativní vlhkosti '+fmt(r.rhPct,0)+' %.');
+ put('resultState',hasSurface?(r.condensationPossible?'KONDENZACE MOŽNÁ':'POVRCH NAD HRANICÍ'):'ROSNÝ BOD VYPOČTEN');
+ put('quickDew',dew);put('kpiDew',dew);put('kpiVapor',fmt(r.vaporKPa,2)+' kPa');put('kpiAbs',fmt(r.absoluteHumidityGm3)+' g/m³');
+ put('dewLegend',dew);put('surfaceLegend',hasSurface?fmt(surface)+' °C':'nezadán');
+ $('glassPane').classList.toggle('is-wet',hasSurface&&r.condensationPossible);
+ put('glassStatus',!hasSurface?'Změřte i povrch a ověřte kondenzaci.':r.condensationPossible?'Povrch je na nebo pod hranicí.':'Povrch zůstává nad hranicí.');
+ if(!hasSurface){
+  put('kpiMargin','—');put('marginHint','Zapněte kontrolu povrchu.');put('meaningTitle','Co tato teplota znamená?');
+  put('meaningText','Povrch ochlazený přibližně na '+dew+' nebo níž může za daných podmínek začít rosit. Samotný rosný bod neříká, jak teplé je vaše okno či stěna.');
+  $('thresholdWrap').hidden=true;
+ }else{
+  put('kpiMargin',(r.marginC>=0?'+':'')+fmt(r.marginC)+' °C');
+  put('marginHint',r.condensationPossible?'Podmínky pro kondenzaci jsou možné.':'Povrch je nad rosným bodem.');
+  put('meaningTitle',r.condensationPossible?'Povrch je v oblasti možné kondenzace.':'Povrch je nyní nad rosným bodem.');
+  put('meaningText',r.condensationPossible?'Povrch o teplotě '+fmt(surface)+' °C je na nebo pod rosným bodem '+dew+'. Při odpovídajících podmínkách na něm může kondenzovat voda.':'Naměřený povrch má rezervu +'+fmt(r.marginC)+' °C vůči rosnému bodu. Odhad relativní vlhkosti těsně u povrchu je '+fmt(r.surfaceRhDisplayPct,0)+' %.');
+  $('thresholdWrap').hidden=false;
+  const threshold=100*core.saturationVaporPressureKPa(surface)/core.saturationVaporPressureKPa(r.airTempC);
+  if(threshold>100){put('thresholdValue','nad 100 %');put('thresholdText','Při současné teplotě vzduchu a povrchu hranice kondenzace vychází nad 100 % RH; zadaný povrch je teplejší než vzduch. Jde o matematický model, ne o záruku chování konstrukce.');}
+  else {put('thresholdValue',fmt(threshold,1)+' % RH');put('thresholdText','Při zachování teploty vzduchu '+fmt(r.airTempC)+' °C a povrchu '+fmt(surface)+' °C je to orientační hranice relativní vlhkosti vzduchu pro dosažení rosného bodu.');}
+ }
+ drawScale(r.dewPointC,surface,hasSurface);
+ drawScenarios(r.airTempC,r.rhPct);
+ $('formula').innerHTML='<b>Výpočet:</b> Magnusova aproximace (Alduchov–Eskridge); tlak vodní páry '+fmt(r.vaporKPa,3)+' kPa a rosný bod '+fmt(r.dewPointC,2)+' °C. Orientační model za předpokladu rovnováhy.';
+ put('status','Výsledek byl aktualizován.');if(scroll)document.getElementById('vysledek')?.scrollIntoView({behavior:'smooth',block:'start'});
 }
-function calc(scroll){const input={airTempC:parse(ids.air.value),rhPct:parse(ids.rh.value)};if(mode==="surface")input.surfaceTempC=parse(ids.surface.value);const r=core.calculate(input);if(!r.ok){invalidate(r.error);return}render(r,scroll)}
-document.querySelectorAll("[data-mode]").forEach(b=>b.addEventListener("click",()=>setMode(b.dataset.mode)));
-[["air","airRange"],["rh","rhRange"],["surface","surfaceRange"]].forEach(([i,r])=>{$(i).addEventListener("input",()=>sync(i,r,"input"));$(r).addEventListener("input",()=>sync(i,r,"range"))});
-$("calcBtn").addEventListener("click",()=>calc(true));$("resetBtn").addEventListener("click",()=>{ids.air.value="22";ids.airRange.value="22";ids.rh.value="60";ids.rhRange.value="60";ids.surface.value="17";ids.surfaceRange.value="17";setMode("dew");calc(false)});
-calc(false);
+function calculate(scroll=false){
+ const values={airTempC:parse(inputs.air.value),rhPct:parse(inputs.rh.value)};
+ if(mode==='surface')values.surfaceTempC=parse(inputs.surface.value);
+ const r=core.calculate(values);if(!r.ok){invalidate(r.error);return false;}render(r,scroll);return true;
+}
+function setMode(next){
+ if(next!=='dew'&&next!=='surface')return;
+ mode=next;$('surfaceField').hidden=mode!=='surface';
+ document.querySelectorAll('[data-mode]').forEach(b=>{const active=b.dataset.mode===mode;b.classList.toggle('is-active',active);b.setAttribute('aria-pressed',String(active));});
+ calculate();
+}
+for(const id of ['air','rh','surface']){
+ const input=$(id),slider=$(id+'Range');
+ input.addEventListener('input',()=>{const n=parse(input.value);if(Number.isFinite(n)&&n>=Number(slider.min)&&n<=Number(slider.max))slider.value=n;calculate();});
+ slider.addEventListener('input',()=>{input.value=slider.value;calculate();});
+}
+document.querySelectorAll('[data-mode]').forEach(b=>b.addEventListener('click',()=>setMode(b.dataset.mode)));
+document.querySelectorAll('[data-rh-preset]').forEach(b=>b.addEventListener('click',()=>{inputs.rh.value=b.dataset.rhPreset;$('rhRange').value=b.dataset.rhPreset;calculate();}));
+$('dpForm').addEventListener('submit',e=>{e.preventDefault();calculate(true)});
+$('resetBtn').addEventListener('click',()=>{for(const [id,val] of [['air','22'],['rh','60'],['surface','17']]){$(id).value=val;$(id+'Range').value=val;}setMode('dew');calculate();});
+calculate();
 })();
