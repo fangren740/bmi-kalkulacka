@@ -30,6 +30,10 @@ const results=[];
     assert.equal(item.vulnerable.length,5);
     for(const amount of [...item.standard,...item.vulnerable])assert.ok(Number.isSafeInteger(amount)&&amount>0);
    }
+   if(width===390||width===1440){
+    await page.evaluate(()=>{document.documentElement.style.scrollBehavior='auto';window.scrollTo(0,0);});
+    await page.screenshot({path:path.join(out,'superdavka-oct-first-use-'+width+'.png'),fullPage:true,animations:'disabled'});
+   }
    assert.equal(await page.locator('#basicRegion option').count(),78);
    assert.equal(await page.locator('#region option').count(),78);
    const before=await page.locator('#totalBenefit').innerText();
