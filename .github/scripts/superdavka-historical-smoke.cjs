@@ -42,6 +42,8 @@ fs.mkdirSync(output, { recursive: true });
       const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
       assert.ok(overflow <= 2, 'horizontal overflow ' + width + 'px: ' + overflow);
       if (width === 390 || width === 1440) {
+        await page.evaluate(() => { document.documentElement.style.scrollBehavior = 'auto'; window.scrollTo(0, 0); });
+        await page.waitForTimeout(120);
         await page.screenshot({ path: path.join(output, 'superdavka-' + width + '.png'), fullPage: true });
       }
       if (width === 390) {
