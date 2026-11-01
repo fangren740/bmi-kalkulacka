@@ -44,6 +44,25 @@ fs.mkdirSync(output, { recursive: true });
       if (width === 390 || width === 1440) {
         await page.screenshot({ path: path.join(output, 'superdavka-' + width + '.png'), fullPage: true });
       }
+      if (width === 390) {
+        // Existing 25 scenario benchmark protects the historical calculation, independent of the new warning copy.
+        const csv = fs.readFileSync(path.join(__dirname, '../../superdavka-2026-benchmark.csv'), 'utf8').replace(/^\\uFEFF/, '');
+        const rows = csv.trim().split(/\\r?\\n/).slice(1).map(line => line.split(','));
+        for (const cols of rows) {
+          const [id, template, workIncome, otherIncome, rent, energy, region, housingType, expectedTotal] = cols;
+          await page.locator('[data-template="' + template + '"]').click();
+          await page.locator('#basicWorkIncome').fill(workIncome);
+          await page.locator('#basicOtherIncome').fill(otherIncome);
+          await page.locator('#basicRent').fill(rent);
+          await page.locator('#basicEnergy').fill(energy);
+          await page.locator('#basicRegion').selectOption(region);
+          await page.locator('#basicHousingType').selectOption(housingType);
+          const amount = await page.locator('#totalBenefit').innerText();
+          const actual = Number(amount.replace(/[^0-9]/g, ''));
+          assert.equal(actual, Number(expectedTotal), 'historical benchmark scenario ' + id + ' total');
+        }
+        results.push({ width: 390, benchmarkScenarios: rows.length, status: 'BENCHMARK_PASS' });
+      }
       results.push({ width, before, after, errors, overflow, status: 'AUTOMATED_PASS_REQUIRES_VISUAL_REVIEW' });
       await page.close();
     }
