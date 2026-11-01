@@ -137,6 +137,8 @@ async function smoke() {
   const browser = await chromium.launch({headless:true});
   const base = process.env.RV_TARGET_BASE || 'http://127.0.0.1:8765';
   const rows = [];
+  const baselineRows = [];
+  let liveAvailable = true;
   let failed = false;
   try {
     for (const item of manifest.affected) {
@@ -179,6 +181,29 @@ async function smoke() {
             await page.waitForTimeout(75);
             const shot = item.html.replace(/[^a-zA-Z0-9._-]/g, '_') + '-' + width + '-CANDIDATE.png';
             await page.screenshot({path:path.join(OUTPUT,shot),fullPage:true,animations:'disabled'});
+            // A screenshot is evidence for review, not an automated product PASS.
+            if (!manifest.canaryOnly) {
+              if (!liveAvailable) {
+                baselineRows.push({html:item.html,width,status:'NOT_RUN',reason:'LIVE capture failed previously'});
+              } else {
+                const livePage = await browser.newPage({viewport:{width,height:900},locale:'cs-CZ',reducedMotion:'reduce'});
+                try {
+                  const liveResponse = await livePage.goto(SITE_ORIGIN + '/' + item.html, {waitUntil:'load',timeout:15000});
+                  if (!liveResponse || liveResponse.status() !== 200) {
+                    baselineRows.push({html:item.html,width,status:'NOT_AVAILABLE',http:liveResponse && liveResponse.status()});
+                  } else {
+                    await livePage.evaluate(() => { document.documentElement.style.scrollBehavior='auto'; window.scrollTo(0,0); });
+                    await livePage.waitForTimeout(75);
+                    const liveShot = item.html.replace(/[^a-zA-Z0-9._-]/g, '_') + '-' + width + '-LIVE.png';
+                    await livePage.screenshot({path:path.join(OUTPUT,liveShot),fullPage:true,animations:'disabled'});
+                    baselineRows.push({html:item.html,width,status:'CAPTURED',file:liveShot});
+                  }
+                } catch(e) {
+                  liveAvailable = false;
+                  baselineRows.push({html:item.html,width,status:'NOT_RUN',reason:e.message});
+                } finally { await livePage.close(); }
+              }
+            }
           }
         } catch(e) {
           errors.push('NAVIGATION_OR_RENDER: ' + e.message);
@@ -202,9 +227,9 @@ async function smoke() {
     }
   } finally {
     await browser.close();
-    save('smoke.json', {candidateSha:manifest.candidateSha, canaryOnly:manifest.canaryOnly, rows, browserSmokeStatus:failed?'FAIL':'PASS', arithmeticTests:'NOT_RUN', productVisualReview:'NOT_RUN'});
+    save('smoke.json', {candidateSha:manifest.candidateSha, canaryOnly:manifest.canaryOnly, rows, baselineRows, browserSmokeStatus:failed?'FAIL':'PASS', arithmeticTests:'NOT_RUN', productVisualReview:'NOT_RUN'});
   }
-  console.log(JSON.stringify({status:failed?'FAIL':'BROWSER_SMOKE_PASS', rows:rows.length, affected:manifest.affected.length, arithmeticTests:'NOT_RUN', productVisualReview:'NOT_RUN', failures:rows.filter(x=>x.problems.length).map(x=>({page:x.html,width:x.width,problems:x.problems}))}));
+  console.log(JSON.stringify({status:failed?'FAIL':'BROWSER_SMOKE_PASS', rows:rows.length, affected:manifest.affected.length, liveCaptures:baselineRows.filter(x=>x.status==='CAPTURED').length, arithmeticTests:'NOT_RUN', productVisualReview:'NOT_RUN', failures:rows.filter(x=>x.problems.length).map(x=>({page:x.html,width:x.width,problems:x.problems}))}));
   if (failed) process.exitCode = 1;
 }
 async function run() {
