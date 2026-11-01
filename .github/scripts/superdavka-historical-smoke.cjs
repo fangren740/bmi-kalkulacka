@@ -45,6 +45,14 @@ fs.mkdirSync(output, { recursive: true });
         await page.evaluate(() => { document.documentElement.style.scrollBehavior = 'auto'; window.scrollTo(0, 0); });
         await page.waitForTimeout(120);
         await page.screenshot({ path: path.join(output, 'superdavka-' + width + '.png'), fullPage: true });
+        // Capture identical LIVE viewport for manual no-regression comparison.
+        const livePage = await browser.newPage({viewport: {width, height: 900}, locale: 'cs-CZ', reducedMotion: 'reduce'});
+        try {
+          await livePage.goto('https://rychlevypocty.cz/superdavka-kalkulacka.html', {waitUntil: 'networkidle', timeout: 45000});
+          await livePage.evaluate(() => {document.documentElement.style.scrollBehavior = 'auto'; window.scrollTo(0, 0);});
+          await livePage.waitForTimeout(120);
+          await livePage.screenshot({path: path.join(output, 'superdavka-LIVE-' + width + '.png'), fullPage: true});
+        } finally { await livePage.close(); }
       }
       if (width === 390) {
         // Existing 25 scenario benchmark protects the historical calculation, independent of the new warning copy.
