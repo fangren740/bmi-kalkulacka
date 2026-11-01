@@ -40,6 +40,13 @@ jobs:
         run: python -m http.server 8765 --bind 127.0.0.1 > "$RUNNER_TEMP/rv-candidate-server.log" 2>&1 &
       - name: Render every changed page at 320 / 390 / 768 / 1440
         run: node .github/scripts/rv-change-aware-qa.cjs smoke
+      - name: Integration check on actual calculator JS dependency
+        env:
+          RV_QA_CHANGED_FILES: superdavka-vnext.js
+          RV_QA_OUTPUT: /tmp/rv-change-aware-integration
+        run: |
+          node .github/scripts/rv-change-aware-qa.cjs discover
+          node .github/scripts/rv-change-aware-qa.cjs smoke
       - name: Show QA scope and explicit limitations
         if: always()
         shell: bash
@@ -56,6 +63,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: rv-v8-change-aware-qa
-          path: /tmp/rv-change-aware
+          path: |
+            /tmp/rv-change-aware
+            /tmp/rv-change-aware-integration
           if-no-files-found: warn
           retention-days: 30
