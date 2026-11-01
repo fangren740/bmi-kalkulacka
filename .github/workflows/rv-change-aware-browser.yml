@@ -12,8 +12,8 @@ jobs:
     env:
       RV_QA_BASE_SHA: ${{ github.event.pull_request.base.sha }}
       RV_TARGET_BASE: http://127.0.0.1:8765
-      RV_QA_OUTPUT: ${{ runner.temp }}/rv-change-aware
-      NODE_PATH: ${{ runner.temp }}/rv-qa-deps/node_modules
+      RV_QA_OUTPUT: /tmp/rv-change-aware
+      NODE_PATH: /tmp/rv-qa-deps/node_modules
     steps:
       - name: Checkout exact candidate commit and complete history
         uses: actions/checkout@v4
@@ -34,8 +34,8 @@ jobs:
         run: node .github/scripts/rv-change-aware-qa.cjs discover
       - name: Install isolated browser dependencies
         run: |
-          npm install --prefix "$RUNNER_TEMP/rv-qa-deps" playwright@1.62.1
-          "$RUNNER_TEMP/rv-qa-deps/node_modules/.bin/playwright" install --with-deps chromium
+          npm install --prefix "/tmp/rv-qa-deps" playwright@1.62.1
+          "/tmp/rv-qa-deps/node_modules/.bin/playwright" install --with-deps chromium
       - name: Serve exact PR candidate
         run: python -m http.server 8765 --bind 127.0.0.1 > "$RUNNER_TEMP/rv-candidate-server.log" 2>&1 &
       - name: Render every changed page at 320 / 390 / 768 / 1440
@@ -56,6 +56,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: rv-v8-change-aware-qa
-          path: ${{ runner.temp }}/rv-change-aware
+          path: /tmp/rv-change-aware
           if-no-files-found: warn
           retention-days: 30
