@@ -46,8 +46,8 @@ fs.mkdirSync(output, { recursive: true });
       }
       if (width === 390) {
         // Existing 25 scenario benchmark protects the historical calculation, independent of the new warning copy.
-        const csv = fs.readFileSync(path.join(__dirname, '../../superdavka-2026-benchmark.csv'), 'utf8').replace(/^\\uFEFF/, '');
-        const rows = csv.trim().split(/\\r?\\n/).slice(1).map(line => line.split(','));
+        const csv = fs.readFileSync(path.join(__dirname, '../../superdavka-2026-benchmark.csv'), 'utf8').replace(/^\uFEFF/, '');
+        const rows = csv.trim().split(/\r?\n/).slice(1).map(line => line.split(','));
         for (const cols of rows) {
           const [id, template, workIncome, otherIncome, rent, energy, region, housingType, expectedTotal] = cols;
           await page.locator('[data-template="' + template + '"]').click();
