@@ -1,0 +1,61 @@
+name: RV V8 change-aware browser gate
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+permissions:
+  contents: read
+jobs:
+  change-aware-browser:
+    name: Changed calculator browser smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      RV_QA_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+      RV_TARGET_BASE: http://127.0.0.1:8765
+      RV_QA_OUTPUT: ${{ runner.temp }}/rv-change-aware
+      NODE_PATH: ${{ runner.temp }}/rv-qa-deps/node_modules
+    steps:
+      - name: Checkout exact candidate commit and complete history
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify QA script syntax
+        run: |
+          node --check .github/scripts/rv-change-aware-qa.cjs
+          node --check .github/scripts/rv-change-aware-qa.test.cjs
+      - name: Exercise real dependency discovery on production repo
+        run: node --test .github/scripts/rv-change-aware-qa.test.cjs
+      - name: Find changed calculator URLs from PR diff
+        run: node .github/scripts/rv-change-aware-qa.cjs discover
+      - name: Install isolated browser dependencies
+        run: |
+          npm install --prefix "$RUNNER_TEMP/rv-qa-deps" playwright@1.62.1
+          "$RUNNER_TEMP/rv-qa-deps/node_modules/.bin/playwright" install --with-deps chromium
+      - name: Serve exact PR candidate
+        run: python -m http.server 8765 --bind 127.0.0.1 > "$RUNNER_TEMP/rv-candidate-server.log" 2>&1 &
+      - name: Render every changed page at 320 / 390 / 768 / 1440
+        run: node .github/scripts/rv-change-aware-qa.cjs smoke
+      - name: Show QA scope and explicit limitations
+        if: always()
+        shell: bash
+        run: |
+          echo '## V8 changed calculator QA' >> "$GITHUB_STEP_SUMMARY"
+          if [ -f "$RV_QA_OUTPUT/affected.json" ]; then
+            echo '### Affected pages' >> "$GITHUB_STEP_SUMMARY"
+            node -e "const r=require(process.env.RV_QA_OUTPUT+'/affected.json');console.log('Pages: '+r.affectedCount+'; canary only: '+r.canaryOnly);r.affected.forEach(x=>console.log('- '+x.html+' (causes: '+x.causes.join(', ')+')'))" >> "$GITHUB_STEP_SUMMARY"
+          fi
+          echo '' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Browser smoke does NOT certify numerical correctness or product/visual quality. Both require separate evidence and review.' >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload exact-commit QA evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rv-v8-change-aware-qa
+          path: ${{ runner.temp }}/rv-change-aware
+          if-no-files-found: warn
+          retention-days: 30
