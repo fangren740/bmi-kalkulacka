@@ -59,6 +59,7 @@ async function captureLive(browser,width) {
      }
      await p.locator('#surface').fill('');
      assert.equal(await p.locator('#inputFeedback').isVisible(),true,'invalid surface should be visibly explained');
+     assert.equal(await p.locator('.scale').isVisible(),false,'never show stale chart for invalid data');
      assert.equal(await p.locator('#surface').getAttribute('aria-invalid'),'true');
      assert.equal((await p.locator('#kpiDew').innerText()).trim(),'—');
      assert.equal((await p.locator('#heroDew').innerText()).trim(),'—','no stale hero');
@@ -68,6 +69,7 @@ async function captureLive(browser,width) {
      }
      await p.locator('#surface').fill('17');
      assert.equal(await p.locator('#inputFeedback').isVisible(),false,'valid surface restores result');
+     assert.equal(await p.locator('.scale').isVisible(),true,'valid chart restores after repair');
      assert.notEqual((await p.locator('#heroDew').innerText()).trim(),'—');
      await p.locator('[data-mode="dew"]').click();
      await p.locator('#air').fill('');
