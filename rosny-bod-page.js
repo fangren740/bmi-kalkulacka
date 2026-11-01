@@ -2,17 +2,18 @@
 "use strict";
 const core=window.RVDewPointCore;if(!core)return;
 const $=id=>document.getElementById(id);let mode="dew";
-const parse=v=>{const n=Number(String(v).trim().replace(/\s/g,"").replace(",","."));return Number.isFinite(n)?n:NaN};
+const parse=v=>{const text=String(v??"").trim().replace(/[\s\u00a0\u202f]/g,"").replace(",",".");if(!text||!/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)$/.test(text))return NaN;const n=Number(text);return Number.isFinite(n)?n:NaN};
 const fmt=(n,d=1)=>Number(n).toLocaleString("cs-CZ",{minimumFractionDigits:d,maximumFractionDigits:d});
 const clamp=(n,a,b)=>Math.min(b,Math.max(a,n));
 const ids={air:$("air"),airRange:$("airRange"),rh:$("rh"),rhRange:$("rhRange"),surface:$("surface"),surfaceRange:$("surfaceRange")};
 function invalidate(message){
-  $("resultHeadline").innerHTML="Zkontrolujte <strong>zadání</strong>";$("resultHint").textContent=message;$("kpiDew").textContent="—";$("kpiVapor").textContent="—";$("kpiAbs").textContent="—";$("kpiMargin").textContent="—";$("formula").innerHTML="<b>Výpočet:</b> Čeká na platné vstupy.";$("meaningTitle").textContent="Výsledek není aktuální.";$("meaningText").textContent=message;$("status").textContent=message;
+  $("resultHeadline").innerHTML="Zkontrolujte <strong>zadání</strong>";$("resultHint").textContent=message;$("kpiDew").textContent="—";$("kpiVapor").textContent="—";$("kpiAbs").textContent="—";$("kpiMargin").textContent="—";$("formula").innerHTML="<b>Výpočet:</b> Čeká na platné vstupy.";$("meaningTitle").textContent="Výsledek není aktuální.";$("meaningText").textContent=message;$("status").textContent=message;$("heroAir").textContent="—";$("heroRh").textContent="—";$("heroDew").textContent="—";$("dewLabel").textContent="—";$("surfaceLabel").textContent="—";["dewMarker","surfaceMarker"].forEach(id=>$(id).style.visibility="hidden");const notice=$("inputFeedback");if(notice){notice.textContent=message;notice.hidden=false}
 }
 function pos(t,min,max){return 13+74*clamp((t-min)/(max-min),0,1)}
-function setMode(next){mode=next;document.querySelectorAll("[data-mode]").forEach(b=>b.classList.toggle("active",b.dataset.mode===mode));$("surfaceField").hidden=mode!=="surface";calc(false)}
-function sync(i,r,src){if(src==="input"){const n=parse($(i).value);if(Number.isFinite(n))$(r).value=n}else $(i).value=$(r).value;calc(false)}
+function setMode(next){if(next!=="dew"&&next!=="surface")return;mode=next;document.querySelectorAll("[data-mode]").forEach(b=>{const active=b.dataset.mode===mode;b.classList.toggle("active",active);b.setAttribute("aria-pressed",String(active))});$("surfaceField").hidden=mode!=="surface";calc(false)}
+function sync(i,r,src){if(src==="input"){const n=parse($(i).value),range=$(r);if(Number.isFinite(n)&&n>=Number(range.min)&&n<=Number(range.max))range.value=n}else $(i).value=$(r).value;calc(false)}
 function render(r,scroll){
+  ["dewMarker","surfaceMarker"].forEach(id=>$(id).style.visibility="visible");const notice=$("inputFeedback");if(notice){notice.textContent="";notice.hidden=true}
   $("heroAir").textContent=fmt(r.airTempC)+" °C";$("heroRh").textContent=fmt(r.rhPct,0)+" %";$("heroDew").textContent=fmt(r.dewPointC)+" °C";
   $("kpiDew").textContent=fmt(r.dewPointC)+" °C";$("kpiVapor").textContent=fmt(r.vaporKPa,2)+" kPa";$("kpiAbs").textContent=fmt(r.absoluteHumidityGm3)+" g/m³";
   const surface=mode==="surface"?r.surfaceTempC:r.airTempC;const min=Math.min(r.dewPointC,surface)-8,max=Math.max(30,r.dewPointC+10,surface+10);const dp=pos(r.dewPointC,min,max),sp=pos(surface,min,max);
@@ -28,9 +29,9 @@ function render(r,scroll){
     $("meaningText").textContent=r.condensationPossible?"Za těchto podmínek může na povrchu docházet ke kondenzaci vodní páry.":"Teplotní rezerva je přibližně "+fmt(r.marginC)+" °C. Odhad relativní vlhkosti těsně u povrchu je "+fmt(r.surfaceRhDisplayPct,0)+" %.";
   }
   $("formula").innerHTML="<b>Výpočet:</b> Magnusova aproximace (Alduchov–Eskridge); parciální tlak vodní páry "+fmt(r.vaporKPa,3)+" kPa a rosný bod "+fmt(r.dewPointC,2)+" °C.";
-  $("heroDot").style.left=(35+clamp(r.rhPct,10,100)*.45)+"%";$("status").textContent="Výsledek byl přepočítán.";if(scroll)document.querySelector(".results").scrollIntoView({behavior:"smooth",block:"start"});
+  const heroDot=$("heroDot");if(heroDot)heroDot.style.left=(35+clamp(r.rhPct,10,100)*.45)+"%";$("status").textContent="Výsledek byl přepočítán.";if(scroll)document.querySelector(".results").scrollIntoView({behavior:"smooth",block:"start"});
 }
-function calc(scroll){const input={airTempC:parse(ids.air.value),rhPct:parse(ids.rh.value)};if(mode==="surface")input.surfaceTempC=parse(ids.surface.value);const r=core.calculate(input);if(!r.ok){invalidate(r.error);return}render(r,scroll)}
+function calc(scroll){const input={airTempC:parse(ids.air.value),rhPct:parse(ids.rh.value)};if(mode==="surface")input.surfaceTempC=parse(ids.surface.value);const checks=[[ids.air,Number.isFinite(input.airTempC)&&input.airTempC>=-40&&input.airTempC<=50],[ids.rh,Number.isFinite(input.rhPct)&&input.rhPct>=1&&input.rhPct<=100],[ids.surface,mode!=="surface"||(Number.isFinite(input.surfaceTempC)&&input.surfaceTempC>=-50&&input.surfaceTempC<=80)]];checks.forEach(([el,valid])=>el.setAttribute("aria-invalid",String(!valid)));const r=core.calculate(input);if(!r.ok){invalidate(r.error);return false}render(r,scroll);return true}
 document.querySelectorAll("[data-mode]").forEach(b=>b.addEventListener("click",()=>setMode(b.dataset.mode)));
 [["air","airRange"],["rh","rhRange"],["surface","surfaceRange"]].forEach(([i,r])=>{$(i).addEventListener("input",()=>sync(i,r,"input"));$(r).addEventListener("input",()=>sync(i,r,"range"))});
 $("calcBtn").addEventListener("click",()=>calc(true));$("resetBtn").addEventListener("click",()=>{ids.air.value="22";ids.airRange.value="22";ids.rh.value="60";ids.rhRange.value="60";ids.surface.value="17";ids.surfaceRange.value="17";setMode("dew");calc(false)});
