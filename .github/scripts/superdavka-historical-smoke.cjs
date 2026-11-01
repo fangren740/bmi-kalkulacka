@@ -48,6 +48,7 @@ fs.mkdirSync(output, { recursive: true });
         // Existing 25 scenario benchmark protects the historical calculation, independent of the new warning copy.
         const csv = fs.readFileSync(path.join(__dirname, '../../superdavka-2026-benchmark.csv'), 'utf8').replace(/^\uFEFF/, '');
         const rows = csv.trim().split(/\r?\n/).slice(1).map(line => line.split(','));
+        assert.equal(rows.length, 25, 'all 25 historical benchmark scenarios must load');
         for (const cols of rows) {
           const [id, template, workIncome, otherIncome, rent, energy, region, housingType, expectedTotal] = cols;
           await page.locator('[data-template="' + template + '"]').click();
