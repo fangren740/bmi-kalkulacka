@@ -1,0 +1,45 @@
+name: RV rosný bod — cílená výstupní kontrola
+on:
+  pull_request:
+    paths:
+      - 'rosny-bod-kalkulacka.html'
+      - 'rosny-bod-page.js'
+      - 'rosny-bod-core.js'
+      - '.github/scripts/rosny-functional-smoke.cjs'
+      - '.github/workflows/rv-rosny-hotfix-qa.yml'
+permissions:
+  contents: read
+jobs:
+  focused-browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      NODE_PATH: /tmp/rv-rosny-deps/node_modules
+      RV_TARGET_BASE: http://127.0.0.1:8765
+      RV_QA_OUTPUT: /tmp/rv-rosny-fix
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify JS syntax
+        run: |
+          node --check rosny-bod-page.js
+          node --check rosny-bod-core.js
+          node --check .github/scripts/rosny-functional-smoke.cjs
+      - name: Install isolated browser
+        run: |
+          npm install --prefix /tmp/rv-rosny-deps playwright@1.62.1
+          /tmp/rv-rosny-deps/node_modules/.bin/playwright install --with-deps chromium
+      - name: Serve actual candidate
+        run: python -m http.server 8765 --bind 127.0.0.1 > /tmp/rv-rosny-server.log 2>&1 &
+      - name: Browser scenarios and screenshot evidence
+        run: node .github/scripts/rosny-functional-smoke.cjs
+      - name: Attach screenshots and test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rv-rosny-fixed-calculator
+          path: /tmp/rv-rosny-fix
+          if-no-files-found: warn
+          retention-days: 21
