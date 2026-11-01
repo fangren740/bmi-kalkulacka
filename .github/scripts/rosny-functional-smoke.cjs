@@ -76,7 +76,7 @@ async function captureLive(browser,width) {
      assert.equal(await p.locator('#air').inputValue(),'22');
      assert.equal(await p.locator('#rh').inputValue(),'60');
      assert.equal(await p.locator('#inputFeedback').isVisible(),false);
-     await p.locator('#rhRange').fill('70');
+     await p.locator('#rhRange').evaluate(el=>{el.value='70';el.dispatchEvent(new Event('input',{bubbles:true}));});
      assert.equal(await p.locator('#rh').inputValue(),'70');
      const overflow=await p.evaluate(()=>Math.max(document.documentElement.scrollWidth,document.body.scrollWidth)-innerWidth);
      assert.ok(overflow<=2,'horizontal overflow '+width+': '+overflow);
