@@ -53,11 +53,19 @@ async function captureLive(browser,width) {
      await p.locator('#surface').fill('10');
      assert.match(await p.locator('#resultHeadline').innerText(),/kondenzace/i);
      assert.match((await p.locator('#kpiMargin').innerText()).replace(/\s/g,' '),/-3,9\s*°C/);
+     if([390,1440].includes(width)){
+       await p.evaluate(()=>window.scrollTo(0,0));
+       await p.screenshot({path:path.join(out,'rosny-CANDIDATE-SURFACE-'+width+'.png'),fullPage:true,animations:'disabled'});
+     }
      await p.locator('#surface').fill('');
      assert.equal(await p.locator('#inputFeedback').isVisible(),true,'invalid surface should be visibly explained');
      assert.equal(await p.locator('#surface').getAttribute('aria-invalid'),'true');
      assert.equal((await p.locator('#kpiDew').innerText()).trim(),'—');
      assert.equal((await p.locator('#heroDew').innerText()).trim(),'—','no stale hero');
+     if([390,1440].includes(width)){
+       await p.evaluate(()=>window.scrollTo(0,0));
+       await p.screenshot({path:path.join(out,'rosny-CANDIDATE-INVALID-'+width+'.png'),fullPage:true,animations:'disabled'});
+     }
      await p.locator('#surface').fill('17');
      assert.equal(await p.locator('#inputFeedback').isVisible(),false,'valid surface restores result');
      assert.notEqual((await p.locator('#heroDew').innerText()).trim(),'—');
@@ -81,10 +89,6 @@ async function captureLive(browser,width) {
      const overflow=await p.evaluate(()=>Math.max(document.documentElement.scrollWidth,document.body.scrollWidth)-innerWidth);
      assert.ok(overflow<=2,'horizontal overflow '+width+': '+overflow);
      assert.deepEqual(errors,[],'JS runtime errors '+width);
-     if([390,1440].includes(width)){
-       await p.evaluate(()=>window.scrollTo(0,0));
-       await p.screenshot({path:path.join(out,'rosny-CANDIDATE-SURFACE-'+width+'.png'),fullPage:true,animations:'disabled'});
-     }
      summary.push({width,http:200,independentPhysicsBenchmarks:2,errorClearing:true,surfaceMode:true,overflow,jsErrors:errors});
      await p.close();
    }
