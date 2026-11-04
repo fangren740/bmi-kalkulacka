@@ -57,6 +57,11 @@ const normalize=s=>s.replace(/[\u00a0\u202f]/g,' ');
    assert.match(ics,/BEGIN:VCALENDAR\r\n/);
    assert.match(ics,/RRULE:FREQ=YEARLY\r\n/);
    assert.match(ics,/TRIGGER:-P1D\r\n/);
+   await page.goto(base+'/kalendar-jmen.html?datum=11-04',{waitUntil:'networkidle'});
+   const [multiDownload]=await Promise.all([page.waitForEvent('download'),page.locator('#downloadIcs').click()]);
+   const multiPath=path.join(out,'karel-karla-'+width+'.ics');await multiDownload.saveAs(multiPath);
+   assert.match(fs.readFileSync(multiPath,'utf8'),/SUMMARY:Svátek: Karel\\, Karla\r\n/,'calendar TEXT comma escaping for multiple namedays');
+   await page.goto(base+'/kalendar-jmen.html?jmeno=Petr&datum=06-29',{waitUntil:'networkidle'});
    await page.locator('#saveName').click();
    assert.match(await page.locator('#savedNames').innerText(),/Petr/);
    await page.reload({waitUntil:'networkidle'});
@@ -80,6 +85,15 @@ const normalize=s=>s.replace(/[\u00a0\u202f]/g,' ');
    }
    reports.push({width,status:'PASS',inputTop:Math.round(inputTop),months:12,leapYear:'2028-02-29',doubleName:'Petr',ics:true,overflow,logo:'ok',jsErrors:jsErrors.length});
    await page.close();
+  }
+  for(const width of [390,1440]){
+   const live=await browser.newPage({viewport:{width,height:900},locale:'cs-CZ',reducedMotion:'reduce'});
+   try{
+    const response=await live.goto('https://rychlevypocty.cz/kalendar-jmen.html',{waitUntil:'domcontentloaded',timeout:20000});
+    await live.screenshot({path:path.join(out,'JMENA-LIVE-first-'+width+'.png'),fullPage:true,animations:'disabled'});
+    reports.push({liveWidth:width,status:response.status()});
+   }catch(e){reports.push({liveWidth:width,status:'UNAVAILABLE',reason:e.message.slice(0,160)})}
+   finally{await live.close()}
   }
   const nojs=await browser.newPage({javaScriptEnabled:false});
   await nojs.goto(base+'/kalendar-jmen.html',{waitUntil:'domcontentloaded'});
