@@ -21,6 +21,12 @@ const normalize=s=>s.replace(/[\u00a0\u202f]/g,' ');
    assert.equal(await page.locator('h1').count(),1);
    assert.equal(await page.locator('#nameForm').count(),1);
    assert.equal(await page.locator('#nameSearch').isVisible(),true);
+   assert.equal(await page.locator('#suggestions').isVisible(),false,'empty suggestions must never leave a fake input bar');
+   if(width<=390){
+    assert.equal(await page.locator('#todayInline').isVisible(),true,'today must be visible before form on mobile');
+    assert.notEqual((await page.locator('#todayInline').innerText()).trim(),'—');
+    assert.equal(await page.locator('.name65-today').isVisible(),false,'avoid duplicate large day card on mobile');
+   }
    const inputTop=await page.locator('#nameSearch').evaluate(el=>el.getBoundingClientRect().top);
    if(width<=390)assert.ok(inputTop>0&&inputTop<650,'search field must appear quickly '+width+' '+inputTop);
    assert.equal(await page.locator('#yearMap .name65-month').count(),12);
