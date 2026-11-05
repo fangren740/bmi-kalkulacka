@@ -1,0 +1,46 @@
+name: RV jmeniny V8 – produktový průchod
+on:
+  pull_request:
+    paths:
+      - 'kalendar-jmen.html'
+      - 'kalendar-jmen-vnext.css'
+      - 'kalendar-jmen-vnext.js'
+      - 'kalendar-jmen-data.js'
+      - '.github/scripts/kalendar-jmen-v8-smoke.cjs'
+      - '.github/workflows/rv-kalendar-jmen-v8.yml'
+permissions:
+  contents: read
+jobs:
+  jmeniny-browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    env:
+      NODE_PATH: /tmp/rv-jmeniny-deps/node_modules
+      RV_TARGET_BASE: http://127.0.0.1:8765
+      RV_QA_OUTPUT: /tmp/rv-jmeniny-v8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate JS syntax
+        run: |
+          node --check kalendar-jmen-vnext.js
+          node --check kalendar-jmen-data.js
+          node --check .github/scripts/kalendar-jmen-v8-smoke.cjs
+      - name: Install isolated Chromium
+        run: |
+          npm install --prefix /tmp/rv-jmeniny-deps playwright@1.62.1
+          /tmp/rv-jmeniny-deps/node_modules/.bin/playwright install --with-deps chromium
+      - name: Serve candidate
+        run: python -m http.server 8765 --bind 127.0.0.1 >/tmp/rv-jmeniny-server.log 2>&1 &
+      - name: Test real user interactions and capture review views
+        run: node .github/scripts/kalendar-jmen-v8-smoke.cjs
+      - name: Attach screenshots and report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kalendar-jmen-v8-k-posouzeni
+          path: /tmp/rv-jmeniny-v8
+          retention-days: 21
+          if-no-files-found: warn
