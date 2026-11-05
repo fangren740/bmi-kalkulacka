@@ -70,11 +70,27 @@ const results=[];
    await page.locator('[data-mode="advanced"]').click();
    assert.equal(await page.locator('#region').inputValue(),'Praha-východ','district must survive mode switch');
    assert.equal(await page.locator('#sd87AdvancedPanel').isVisible(),true);
+   // Regression: editing members in advanced cannot silently change the visible basic preset.
+   assert.equal(await page.locator('#memberList .sd87-member').count(),2);
+   await page.locator('#addMember').click();
+   assert.equal(await page.locator('#memberList .sd87-member').count(),3);
    await page.locator('[data-mode="basic"]').click();
+   assert.equal(await page.locator('#memberList .sd87-member').count(),2,'basic mode must use selected two-person preset');
+   assert.equal(await page.locator('[data-template="couple"]').evaluate(el=>el.classList.contains('is-active')),true);
    await page.locator('#basicWorkIncome').fill('neplatné');
    assert.equal(await page.locator('#totalBenefit').innerText(),'—','invalid text must not become zero');
+   for(const id of ['lifeMinimum','incomeRatio','recognisedHousing','assetLimit']){
+    assert.equal(await page.locator('#'+id).innerText(),'—','invalid entry must clear stale '+id);
+   }
+   for(const id of ['housingBar','livingBar','childBar','workBar']){
+    assert.equal(await page.locator('#'+id).evaluate(el=>el.style.width),'0%','invalid entry must clear stale '+id);
+   }
    assert.equal(await page.locator('#basicWorkIncome').getAttribute('aria-invalid'),'true');
    await page.locator('#basicWorkIncome').fill('20000');
+   assert.match(await page.locator('#totalBenefit').innerText(),/Kč/);
+   // A reset of the model must not silently discard the district chosen by the user.
+   await page.locator('#resetBtn').click();
+   assert.equal(await page.locator('#basicRegion').inputValue(),'Praha-východ');
    assert.match(await page.locator('#totalBenefit').innerText(),/Kč/);
    const overflow=await page.evaluate(()=>Math.max(document.documentElement.scrollWidth,document.body.scrollWidth)-innerWidth);
    assert.ok(overflow<=2,'horizontal overflow at '+width+': '+overflow);
