@@ -47,6 +47,9 @@ function validateMoneyInputs(){
 function showFormError(){
  setText('totalBenefit','—');setText('housingComponent','—');setText('livingComponent','—');setText('childComponent','—');setText('workComponent','—');
  if(el.heroTotal)el.heroTotal.textContent='—';
+ // Never keep the previously calculated supporting metrics or bars after invalid input.
+ ['lifeMinimum','incomeRatio','recognisedHousing','assetLimit'].forEach(id=>setText(id,'—'));
+ ['housingBar','livingBar','childBar','workBar'].forEach(id=>{const n=$(id);if(n)n.style.width='0%'});
  el.status.textContent='Opravte vstupy';el.status.className='is-risk';
  el.explanation.textContent='Některá částka chybí nebo není platné nezáporné číslo. Označená pole opravte a výsledek se přepočítá.';
  if(el.heroGate)el.heroGate.textContent='Opravte zadané údaje';
@@ -69,7 +72,7 @@ function calculate(){
  }
  const r=engine(v);render(r);return r;
 }
-function setMode(mode,focus=false){activeMode=mode;el.modeBtns.forEach(b=>{const a=b.dataset.mode===mode;b.classList.toggle('is-active',a);b.setAttribute('aria-selected',String(a));b.tabIndex=a?0:-1;if(a&&focus)b.focus()});el.basic.hidden=mode!=='basic';el.advanced.hidden=mode!=='advanced';$('modeHelp').textContent=mode==='basic'?'Začněte okresem bydliště. Potom nastavte domácnost, příjmy a bydlení. Majetek ověříte v přesnějším režimu.':'Přesnější režim přidá konkrétní členy domácnosti, pracovní aktivitu, zranitelnost a základní majetkový test.';calculate()}
+function setMode(mode,focus=false){if(mode==='basic'&&activeMode==='advanced'){members=clone(basicTemplate);renderMembers()}activeMode=mode;el.modeBtns.forEach(b=>{const a=b.dataset.mode===mode;b.classList.toggle('is-active',a);b.setAttribute('aria-selected',String(a));b.tabIndex=a?0:-1;if(a&&focus)b.focus()});el.basic.hidden=mode!=='basic';el.advanced.hidden=mode!=='advanced';$('modeHelp').textContent=mode==='basic'?'Začněte okresem bydliště. Potom nastavte domácnost, příjmy a bydlení. Majetek ověříte v přesnějším režimu.':'Přesnější režim přidá konkrétní členy domácnosti, pracovní aktivitu, zranitelnost a základní majetkový test.';calculate()}
 function syncBasicToAdvanced(){$('workIncome').value=$('basicWorkIncome').value;$('otherIncome').value=$('basicOtherIncome').value;$('housingType').value=$('basicHousingType').value;$('region').value=$('basicRegion').value;$('rentCosts').value=$('basicRent').value;$('energyCosts').value=$('basicEnergy').value;$('allPeople').value=members.length;renderMembers()}
 function applyTemplate(key){basicTemplate=key;members=clone(key);qsa('[data-template]').forEach(b=>b.classList.toggle('is-active',b.dataset.template===key));syncBasicToAdvanced();calculate()}
 qsa('[data-template]').forEach(b=>b.addEventListener('click',()=>applyTemplate(b.dataset.template)));
@@ -77,7 +80,7 @@ el.modeBtns.forEach((b,i)=>{b.addEventListener('click',()=>{if(b.dataset.mode===
 ['basicWorkIncome','basicOtherIncome','basicRent','basicEnergy','workIncome','otherIncome','rentCosts','energyCosts','allPeople','savings','cars','homes'].forEach(id=>{const n=$(id);n?.addEventListener('input',calculate);n?.addEventListener('change',()=>{if(!['allPeople','cars','homes'].includes(id))formatInput(n);calculate()})});
 ['basicHousingType','basicRegion','housingType','region','schoolOk','solidFuel','secondHomeException'].forEach(id=>$(id)?.addEventListener('change',calculate));
 el.add?.addEventListener('click',()=>{if(members.length>=12)return;members.push({type:'adult',active:true,vulnerable:false,plan:false});renderMembers();syncAllPeople();calculate()});
-el.form?.addEventListener('submit',e=>{e.preventDefault();calculate()});el.reset?.addEventListener('click',()=>{members=clone('coupleTwoChildren');basicTemplate='coupleTwoChildren';$('basicWorkIncome').value='36 000';$('basicOtherIncome').value='0';$('basicHousingType').value='rent';$('basicRegion').value='large';$('basicRent').value='18 000';$('basicEnergy').value='4 000';qsa('[data-template]').forEach(b=>b.classList.toggle('is-active',b.dataset.template==='coupleTwoChildren'));syncBasicToAdvanced();$('savings').value='80 000';$('cars').value='1';$('homes').value='1';$('schoolOk').checked=true;$('solidFuel').checked=false;$('secondHomeException').checked=false;setMode('basic')});
+el.form?.addEventListener('submit',e=>{e.preventDefault();calculate()});el.reset?.addEventListener('click',()=>{const selectedDistrict=$('basicRegion').value;members=clone('coupleTwoChildren');basicTemplate='coupleTwoChildren';$('basicWorkIncome').value='36 000';$('basicOtherIncome').value='0';$('basicHousingType').value='rent';$('basicRegion').value=selectedDistrict;$('basicRent').value='18 000';$('basicEnergy').value='4 000';qsa('[data-template]').forEach(b=>b.classList.toggle('is-active',b.dataset.template==='coupleTwoChildren'));syncBasicToAdvanced();$('savings').value='80 000';$('cars').value='1';$('homes').value='1';$('schoolOk').checked=true;$('solidFuel').checked=false;$('secondHomeException').checked=false;setMode('basic')});
 function updateDeadline(){if(el.days)el.days.textContent=new Date()>=new Date(2027,0,1)?'Model říjen–prosinec 2026 (archivní období)':'Pravidla platná 1. 10.–31. 12. 2026'}
 if(el.menu&&el.mobile){el.menu.addEventListener('click',()=>{const open=el.menu.getAttribute('aria-expanded')==='true';el.menu.setAttribute('aria-expanded',String(!open));el.mobile.hidden=open});el.mobile.addEventListener('click',e=>{if(e.target.closest('a')){el.mobile.hidden=true;el.menu.setAttribute('aria-expanded','false')}})}
 function initDistricts(){
