@@ -41,6 +41,7 @@ const norm=s=>s.replace(/[\u00a0\u202f]/g,' ');
    await p.locator('.tx-details summary').click();
    await p.locator('#cashCosts').fill('950000');
    assert.equal(norm(await p.locator('#afterCash').innerText()),'−83 064 Kč','net negative cash position scenario');
+   assert.equal(norm(await p.locator('#socialResult').innerText()),'64 240 Kč','exact-integer pension payment must not ceil floating noise to 64 241');
    assert.equal(await p.locator('#afterCash').evaluate(el=>el.classList.contains('is-negative')),true);
    await p.locator('#expenseMode').selectOption('actual');
    await p.locator('#actualTaxExpenses').fill('1000001');
