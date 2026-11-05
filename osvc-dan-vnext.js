@@ -21,7 +21,8 @@
   const num = (id, fallback=0) => { const v=Number($(id)?.value); return Number.isFinite(v) ? Math.max(0,v) : fallback; };
   const checked = id => Boolean($(id)?.checked);
   const selected = id => $(id)?.value || '';
-  const ceil = v => Math.ceil(Math.max(0,v));
+  // Eliminate IEEE-754 noise (e.g. 220000 * 0.292 = 64240.00000000001) before legally rounding up whole crowns.
+  const ceil = v => Math.ceil(Number(Math.max(0,v).toFixed(8)));
   const floor100 = v => Math.floor(Math.max(0,v)/100)*100;
   const money = v => `${Math.round(Math.max(0,v)).toLocaleString('cs-CZ')} Kč`;
   const balance = v => v < 0 ? `−${money(-v)}` : money(v);
