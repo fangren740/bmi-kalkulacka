@@ -14,7 +14,7 @@ fs.mkdirSync(out,{recursive:true});
    assert.equal(response.status(),200);
    assert.equal(await p.locator('#formError').isVisible(),false);
    assert.ok(await p.locator('.site-header img').evaluate(el=>el.complete&&el.naturalWidth>0),'brand logo');
-   if(width===390||width===1440)await p.screenshot({path:path.join(out,'pracovni-CANDIDATE-'+width+'.png'),fullPage:true,animations:'disabled'});
+   if(width===390||width===1440){await p.evaluate(()=>window.scrollTo({top:0,behavior:'instant'}));await p.screenshot({path:path.join(out,'pracovni-CANDIDATE-'+width+'.png'),fullPage:true,animations:'disabled'});}
    await p.locator('#modeAdd').click();
    await p.locator('#anchorDate').fill('2026-12-23');
    await p.locator('#workdayAmount').fill('1');
@@ -41,7 +41,7 @@ fs.mkdirSync(out,{recursive:true});
    assert.equal((await p.locator('#primaryValue').innerText()).trim(),'—');
    assert.equal(await p.locator('#dayStrip').locator('.wd59-day').count(),0,'no stale timeline');
    assert.equal(await p.locator('#weekdaySelector button[aria-pressed="true"]').count(),0);
-   if(width===390||width===1440)await p.screenshot({path:path.join(out,'pracovni-CANDIDATE-error-'+width+'.png'),fullPage:true,animations:'disabled'});
+   if(width===390||width===1440){await p.evaluate(()=>{document.activeElement?.blur();window.scrollTo({top:0,behavior:'instant'})});await p.screenshot({path:path.join(out,'pracovni-CANDIDATE-error-'+width+'.png'),fullPage:true,animations:'disabled'});}
    await p.locator('#weekdaySelector button[data-day="1"]').click();
    assert.equal(await p.locator('#formError').isVisible(),false,'recovered after selecting one workday');
    await p.locator('#resetBtn').click();
