@@ -80,6 +80,17 @@ const results=[];
    await page.locator('[data-mode="basic"]').click();
    assert.equal(await page.locator('#memberList .sd87-member').count(),2,'basic mode must use selected two-person preset');
    assert.equal(await page.locator('[data-template="couple"]').evaluate(el=>el.classList.contains('is-active')),true);
+   await page.locator('[data-mode="advanced"]').click();
+   assert.equal(await page.locator('#memberList .sd87-member').count(),3,'advanced edits must survive a round-trip through basic mode');
+   assert.equal(await page.locator('#allPeople').inputValue(),'3','household count must follow restored advanced list');
+   await page.locator('[data-mode="basic"]').click();
+   assert.equal(await page.locator('#memberList .sd87-member').count(),2);
+   // Selecting a different basic preset intentionally replaces the advanced structure.
+   await page.locator('[data-template="single"]').click();
+   await page.locator('[data-mode="advanced"]').click();
+   assert.equal(await page.locator('#memberList .sd87-member').count(),1,'new preset must clear old saved advanced structure');
+   await page.locator('[data-mode="basic"]').click();
+   await page.locator('[data-template="couple"]').click();
    await page.locator('#basicWorkIncome').fill('neplatné');
    assert.equal(await page.locator('#totalBenefit').innerText(),'—','invalid text must not become zero');
    for(const id of ['lifeMinimum','incomeRatio','recognisedHousing','assetLimit']){
