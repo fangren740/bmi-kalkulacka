@@ -10,7 +10,7 @@ const results=[];
 (async()=>{
  const browser=await chromium.launch({headless:true});
  try{
-  for(const width of [320,390,768,1440]){
+  for(const width of [320,390,768,1100,1440,1920]){
    const page=await browser.newPage({viewport:{width,height:900},locale:'cs-CZ',reducedMotion:'reduce'});
    const errors=[];
    page.on('pageerror',e=>errors.push(e.message));
@@ -19,6 +19,8 @@ const results=[];
    const firstInputTop=await page.locator('#basicRegion').evaluate(el=>el.getBoundingClientRect().top);
    if(width<=390)assert.ok(firstInputTop>0&&firstInputTop<900,
      'first mobile district select must be reachable in the initial 900px view, '+width+'px: '+firstInputTop);
+   if(width===1440)assert.ok(firstInputTop>0&&firstInputTop<900,
+     'first desktop district select should be in initial 900px view: '+firstInputTop);
    const data=await page.evaluate(()=>window.__RV_SUPERDAVKA_OCT26__);
    assert.equal(data.periodFrom,'2026-10-01');
    assert.equal(data.periodTo,'2026-12-31');
@@ -33,7 +35,7 @@ const results=[];
     assert.equal(item.vulnerable.length,5);
     for(const amount of [...item.standard,...item.vulnerable])assert.ok(Number.isSafeInteger(amount)&&amount>0);
    }
-   if(width===390||width===1440){
+   if(width===390||width===1100||width===1440){
     await page.evaluate(()=>{document.documentElement.style.scrollBehavior='auto';window.scrollTo(0,0);});
     await page.screenshot({path:path.join(out,'superdavka-oct-first-use-'+width+'.png'),fullPage:true,animations:'disabled'});
    }
@@ -42,6 +44,12 @@ const results=[];
    const before=await page.locator('#totalBenefit').innerText();
    assert.equal(before,'—','must NOT invent a zero result before district selection');
    assert.match(await page.locator('#resultExplanation').innerText(),/zvolte okres/i);
+   for(const id of ['heroHousing','heroLiving','heroChild','heroWork']){
+    assert.equal(await page.locator('#'+id).innerText(),'—','hero cannot invent a component before district selection');
+   }
+   for(const type of ['is-house','is-life','is-child','is-work']){
+    assert.equal(await page.locator('.sd87-stack-lines .'+type+' i').evaluate(el=>el.style.getPropertyValue('--sd87-share')),'0%','hero chart starts empty');
+   }
    await page.locator('[data-template="single"]').click();
    await page.locator('#basicRegion').selectOption('Praha');
    await page.locator('#basicHousingType').selectOption('rent');
@@ -51,6 +59,10 @@ const results=[];
    await page.locator('#basicEnergy').fill('3000');
    const comparable=text=>text.replace(/[\u00a0\u202f]/g,' ');
    assert.equal(comparable(await page.locator('#totalBenefit').innerText()),'7 560 Kč','independently calculated one-person statutory scenario');
+   assert.equal(comparable(await page.locator('#heroHousing').innerText()),comparable(await page.locator('#housingComponent').innerText()),'desktop hero housing amount must equal the real result');
+   assert.equal(comparable(await page.locator('#heroWork').innerText()),comparable(await page.locator('#workComponent').innerText()),'desktop hero work amount must equal the real result');
+   const totalBars=await page.locator('.sd87-stack-lines i').evaluateAll(nodes=>nodes.reduce((a,n)=>a+parseFloat(n.style.getPropertyValue('--sd87-share')||'0'),0));
+   assert.ok(Math.abs(totalBars-100)<0.3,'hero shares should sum to 100% of displayed components: '+totalBars);
    // Same inputs in cheaper district must change housing component.
    await page.locator('#basicRegion').selectOption('Bruntál');
    const bruntal=await page.locator('#totalBenefit').innerText();
@@ -93,6 +105,8 @@ const results=[];
    await page.locator('[data-template="couple"]').click();
    await page.locator('#basicWorkIncome').fill('neplatné');
    assert.equal(await page.locator('#totalBenefit').innerText(),'—','invalid text must not become zero');
+   assert.equal(await page.locator('#heroHousing').innerText(),'—','invalid input clears misleading hero amounts');
+   assert.equal(await page.locator('.sd87-stack-lines .is-house i').evaluate(el=>el.style.getPropertyValue('--sd87-share')),'0%','invalid input clears hero chart');
    for(const id of ['lifeMinimum','incomeRatio','recognisedHousing','assetLimit']){
     assert.equal(await page.locator('#'+id).innerText(),'—','invalid entry must clear stale '+id);
    }
@@ -109,7 +123,7 @@ const results=[];
    const overflow=await page.evaluate(()=>Math.max(document.documentElement.scrollWidth,document.body.scrollWidth)-innerWidth);
    assert.ok(overflow<=2,'horizontal overflow at '+width+': '+overflow);
    assert.deepEqual(errors,[],'browser JavaScript errors '+width);
-   if(width===390||width===1440){
+   if(width===390||width===1100||width===1440){
     await page.evaluate(()=>{document.documentElement.style.scrollBehavior='auto';window.scrollTo(0,0);});
     await page.screenshot({path:path.join(out,'superdavka-oct-'+width+'.png'),fullPage:true,animations:'disabled'});
    }
