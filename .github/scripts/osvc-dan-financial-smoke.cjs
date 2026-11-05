@@ -19,6 +19,7 @@ const norm=s=>s.replace(/[\u00a0\u202f]/g,' ');
    const inputTop=await p.locator('#revenue').evaluate(el=>el.getBoundingClientRect().top);
    if(width<=390)assert.ok(inputTop>0&&inputTop<800,'mobile input must appear early '+width+' '+inputTop);
    if(width<=390)assert.equal(await p.locator('.tx-statement').isVisible(),false,'decorative statement not displace mobile form');
+   if(width<=390){const gap=await p.evaluate(()=>{const badge=document.querySelector('.tx-year-note .tx-year-badge').getBoundingClientRect(),para=document.querySelector('.tx-year-note p').getBoundingClientRect();return para.top-badge.bottom});assert.ok(gap>=4,'year badge must not overlap warning text at '+width+': gap '+gap)}
    if(width===390||width===1440){
     await p.evaluate(()=>window.scrollTo(0,0));
     await p.screenshot({path:path.join(out,'OSVC-CANDIDATE-initial-'+width+'.png'),fullPage:true,animations:'disabled'});
