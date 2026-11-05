@@ -100,6 +100,13 @@ const results=[];
    assert.equal((await page.locator('#workIncome').inputValue()).replace(/\D/g,''),'32123','advanced income must survive tab switches');
    assert.equal((await page.locator('#savings').inputValue()).replace(/\D/g,''),'120000','advanced assets must survive tab switches');
    assert.equal(await page.locator('#allPeople').inputValue(),'5','advanced extra household count must survive tabs');
+   // A failed savings eligibility test must not show positive "payable" parts next to a zero total.
+   await page.locator('#savings').fill('500000');
+   assert.equal(await page.locator('#totalBenefit').innerText(),'0 Kč','savings hard stop makes result zero');
+   assert.equal(await page.locator('#housingComponent').innerText(),'—','no imaginary payable housing after hard stop');
+   assert.equal(await page.locator('#heroHousing').innerText(),'—','hero also must not show blocked housing amount');
+   assert.equal(await page.locator('#housingBar').evaluate(el=>el.style.width),'0%','blocked component bar must disappear');
+   await page.locator('#savings').fill('120000');
    await page.locator('[data-mode="basic"]').click();
    assert.equal(await page.locator('#memberList .sd87-member').count(),2);
    await page.locator('#basicWorkIncome').fill('30000');
