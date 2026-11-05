@@ -1,0 +1,44 @@
+name: RV pracovní dny – cílená funkční oprava
+on:
+  pull_request:
+    paths:
+      - 'pracovni-dny-kalkulacka.html'
+      - 'pracovni-dny-vnext.js'
+      - 'pracovni-dny-vnext.css'
+      - '.github/scripts/pracovni-dny-critical-smoke.cjs'
+      - '.github/workflows/rv-pracovni-dny-critical.yml'
+permissions:
+  contents: read
+jobs:
+  real-browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    env:
+      NODE_PATH: /tmp/rv-workdays-deps/node_modules
+      RV_TARGET_BASE: http://127.0.0.1:8765
+      RV_QA_OUTPUT: /tmp/rv-workdays-fix
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check scripts
+        run: |
+          node --check pracovni-dny-vnext.js
+          node --check .github/scripts/pracovni-dny-critical-smoke.cjs
+      - name: Install browser
+        run: |
+          npm install --prefix /tmp/rv-workdays-deps playwright@1.62.1
+          /tmp/rv-workdays-deps/node_modules/.bin/playwright install --with-deps chromium
+      - name: Serve candidate
+        run: python -m http.server 8765 --bind 127.0.0.1 >/tmp/rv-workdays-server.log 2>&1 &
+      - name: Verify actual UI, safety and screenshot evidence
+        run: node .github/scripts/pracovni-dny-critical-smoke.cjs
+      - name: Review screenshots and report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pracovni-dny-funkcni-oprava
+          path: /tmp/rv-workdays-fix
+          if-no-files-found: warn
+          retention-days: 21
