@@ -16,6 +16,9 @@ const results=[];
    page.on('pageerror',e=>errors.push(e.message));
    const response=await page.goto(base+'/superdavka-kalkulacka.html',{waitUntil:'networkidle',timeout:45000});
    assert.equal(response.status(),200);
+   const firstInputTop=await page.locator('#basicRegion').evaluate(el=>el.getBoundingClientRect().top);
+   if(width<=390)assert.ok(firstInputTop>0&&firstInputTop<900,
+     'first mobile district select must be reachable in the initial 900px view, '+width+'px: '+firstInputTop);
    const data=await page.evaluate(()=>window.__RV_SUPERDAVKA_OCT26__);
    assert.equal(data.periodFrom,'2026-10-01');
    assert.equal(data.periodTo,'2026-12-31');
