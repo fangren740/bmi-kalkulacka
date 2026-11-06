@@ -136,3 +136,29 @@
 }
 /* On touch screens, the submit button takes the user directly to the answer. */
 @media (max-width:930px){.sd87-result{scroll-margin-top:82px}}
+
+
+/* UX round: the calculation remains in sight during the long mobile form.
+   Nothing floats above the desktop result; the sticky bar only exists below 931px. */
+.sd87-mobile-summary[hidden]{display:none!important}
+.sd87-mobile-summary{display:none}
+@media(max-width:930px){
+ .sd87-mobile-summary:not([hidden]){
+  display:flex;justify-content:space-between;align-items:center;gap:12px;
+  position:sticky;top:76px;z-index:32;min-width:0;
+  margin:0 0 8px;padding:8px 12px;
+  border:1px solid #c1d5e6;border-left:4px solid #2387dc;border-radius:13px;
+  background:rgba(255,255,255,.97);box-shadow:0 9px 26px rgba(10,23,51,.11);
+  backdrop-filter:blur(8px)
+ }
+ .sd87-mobile-summary small{display:block;color:#54758e;font-size:.58rem;font-weight:850;letter-spacing:.08em}
+ .sd87-mobile-summary strong{display:block;color:#0a1733;font-size:1.06rem;line-height:1.25;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+ .sd87-mobile-summary a{display:inline-flex;flex:0 0 auto;align-items:center;justify-content:center;min-height:40px;padding:7px 10px;border:1px solid #d1e0ec;border-radius:10px;background:#edf6fd;color:#1d669a;font-weight:850;font-size:.7rem}
+ .sd87-mobile-summary a:focus-visible{outline:3px solid #2387dc;outline-offset:2px}
+}
+@media(max-width:620px){.sd87-mobile-summary:not([hidden]){top:68px}}
+@media(max-width:355px){
+ .sd87-mobile-summary{gap:6px;padding:7px 8px}
+ .sd87-mobile-summary a{font-size:.65rem;padding:7px 8px}
+ .sd87-mobile-summary strong{font-size:.96rem}
+}
