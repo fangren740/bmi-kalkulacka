@@ -66,7 +66,6 @@ let firstIssue=null;
 function showResultSections(result){
  for(const id of ['resultComponents','resultMetrics','resultNext','mobileSummary'])$(id).hidden=!result;
  $('resultProof').hidden=!result||result.hard;
- if(!result)$('resultProof').open=false;
 }
 
 function showWarnings(warnings){
@@ -205,7 +204,7 @@ function setMode(mode,focus=false){
  });
  el.basic.hidden=mode!=='basic';
  el.advanced.hidden=mode!=='advanced';
- setText('modeHelp',mode==='basic'?'Zadejte vlastní údaje nebo si nejdřív vyzkoušejte ukázku.':'Přidejte konkrétní osoby a doplňte údaje pro majetkový test.');
+ setText('modeHelp',mode==='basic'?'Vlastní výpočet začněte výběrem okresu.':'Přidejte konkrétní osoby a doplňte údaje pro majetkový test.');
  formSubmitted=false;
  calculate();
 }

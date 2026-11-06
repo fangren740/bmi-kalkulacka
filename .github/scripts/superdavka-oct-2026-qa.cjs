@@ -52,6 +52,12 @@ const results=[];
    assert.equal(await page.locator('#basicRegion option').count(),78);
    assert.equal(await page.locator('#region option').count(),78);
    if(width<=768)assert.equal(await page.locator('#mobileSummary').isHidden(),true,'mobile shortcut must not invent a result before district');
+   await page.locator('#sd87BasicTab').focus();
+   await page.keyboard.press('ArrowRight');
+   assert.equal(await page.locator('#sd87AdvancedTab').getAttribute('aria-selected'),'true');
+   assert.equal(await page.evaluate(()=>document.activeElement.id),'sd87AdvancedTab');
+   await page.keyboard.press('ArrowLeft');
+   assert.equal(await page.locator('#sd87BasicTab').getAttribute('aria-selected'),'true');
    const before=await page.locator('#totalBenefit').innerText();
    assert.equal(before,'—','must NOT invent a zero result before district selection');
    assert.match(await page.locator('#resultExplanation').innerText(),/zvolte okres/i);
@@ -65,7 +71,10 @@ const results=[];
    await page.locator('#basicWorkIncome').fill('20000');
    await page.locator('#basicOtherIncome').fill('0');
    await page.locator('#basicRent').fill('12000');
+   const formOffset=await page.locator('#dsspForm').evaluate(form=>form.getBoundingClientRect().top+scrollY);
    await page.locator('#basicEnergy').fill('3000');
+   const afterOffset=await page.locator('#dsspForm').evaluate(form=>form.getBoundingClientRect().top+scrollY);
+   assert.ok(Math.abs(formOffset-afterOffset)<1,'the result shortcut must not shift the form');
    const comparable=text=>text.replace(/[\u00a0\u202f]/g,' ');
    assert.equal(comparable(await page.locator('#totalBenefit').innerText()),'7 560 Kč','independently calculated one-person statutory scenario');
    if(width<=768){
@@ -84,6 +93,7 @@ const results=[];
      assert.equal(await page.evaluate(()=>document.activeElement.id),'vysledek','result shortcut should take keyboard focus to the result');
     }
    }
+   assert.equal(await page.locator('#resultProof').getAttribute('open'),'','housing explanation starts open');
    assert.equal(comparable(await page.locator('#proofBase').textContent()),'12 000 Kč');
    assert.equal(comparable(await page.locator('#proofEnergy').textContent()),'2 300 Kč');
    assert.equal(comparable(await page.locator('#proofDeduction').textContent()),'6 900 Kč');
@@ -131,6 +141,7 @@ const results=[];
    // A failed savings eligibility test must not show positive "payable" parts next to a zero total.
    await page.locator('#savings').fill('500000');
    assert.equal(await page.locator('#totalBenefit').innerText(),'0 Kč','savings hard stop makes result zero');
+   assert.equal(await page.locator('#resultProof').isHidden(),true,'blocked state hides the housing receipt');
    assert.equal(await page.locator('#housingComponent').innerText(),'—','no imaginary payable housing after hard stop');
    assert.equal(await page.locator('#housingBar').evaluate(el=>el.style.width),'0%','blocked component bar must disappear');
    await page.locator('#savings').fill('120000');
@@ -174,7 +185,7 @@ const results=[];
     assert.equal(sticky,'sticky','long-form desktop result must stay visible alongside its inputs');
    }
    if(width===390||width===1440){
-    await page.locator('#resultProof summary').click();
+    assert.equal(await page.locator('#resultProof').getAttribute('open'),'','housing explanation starts open');
     await page.locator('#vysledek').evaluate(el=>el.scrollIntoView({block:'start'}));
     await page.screenshot({path:path.join(out,'superdavka-rozpis-'+width+'.png'),animations:'disabled'});
    }
@@ -231,6 +242,7 @@ const results=[];
    await expectHousing('10 000 Kč','2 300 Kč','8 100 Kč');
    await page.locator('[data-index="0"][data-key="active"]').uncheck();
    await expectHousing('0 Kč','0 Kč','0 Kč');
+   assert.equal(await page.locator('#resultStatus').textContent(),'Bez kladné částky');
    await page.locator('[data-index="0"][data-key="active"]').check();
 
    await page.locator('#otherIncome').fill('12000');
