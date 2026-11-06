@@ -1,6 +1,7 @@
 from pathlib import Path
 from urllib.parse import urlsplit
-from playwright.sync_api import sync_playwright
+from playwright.sync_api import expect, sync_playwright
+import json
 import os
 out = Path(os.environ.get('RV_QA_OUTPUT', '/tmp/rv-shift51'))
 out.mkdir(parents=True, exist_ok=True)
@@ -120,6 +121,23 @@ with sync_playwright() as p:
         check(page,**{'difference-night':'0 Kč','difference-weekend':'+20 Kč',
                      'difference-holidayCash':'−100 Kč','difference-overtimeCash':'−100 Kč','difference-custom':'—'})
         assert 'Svátek −100 Kč' in norm(page.locator('#auditLargest').text_content())
+        check(page,auditPaid='1 830 Kč',auditDifference='—')
+        assert '4 z 5' in page.locator('#auditMessage').text_content()
+        page.locator('#paid-custom').fill('0')
+        check(page,auditPaid='1 830 Kč',auditDifference='−180 Kč')
+        page.locator('#paid-custom').fill('250')
+        check(page,auditPaid='2 080 Kč',auditDifference='+70 Kč')
+        page.locator('#paidBonus').fill('2050')
+        assert 'liší o −30 Kč' in norm(page.locator('#auditMessage').text_content())
+        page.locator('#paidBonus').fill('2100')
+        assert 'liší o +20 Kč' in norm(page.locator('#auditMessage').text_content())
+        with page.expect_download() as download:
+            page.locator('#exportAudit').click()
+        csv=download.value.path().read_text(encoding='utf-8-sig')
+        assert '"Celkem";"2010";"2080";"70"' in csv
+        assert '"Přesčas";"100";"0";"-100"' in csv
+        page.locator('#paid-custom').fill('')
+        check(page,auditPaid='1 830 Kč',auditDifference='—')
         page.locator('#auditView').select_option('total')
         page.locator('#paidBonus').fill('1830')
         check(page,auditExpected='2 010 Kč',auditDifference='−180 Kč')
@@ -149,9 +167,41 @@ with sync_playwright() as p:
         check(page,monthBonus='410 Kč')
         assert page.locator('#monthRows li').first.get_by_text('5. 12. 2026').is_visible()
         page.locator('[data-month-action=edit]').first.click()
-        fill(page,averageEarnings=220)
+        fill(page,averageEarnings=220,weekendPercent=15)
         page.locator('#saveShift').click()
-        check(page,monthBonus='425 Kč')
+        check(page,monthBonus='507,5 Kč')
+        # Real browser download, refresh, then validated import of heterogeneous shifts.
+        with page.expect_download() as download:
+            page.locator('#exportMonth').click()
+        backup=download.value.path().read_bytes()
+        payload=json.loads(backup)
+        assert sorted(shift['values']['averageEarnings'] for shift in payload['shifts'])==['200','220']
+        assert sorted(shift['values']['weekendPercent'] for shift in payload['shifts'])==['10','15']
+        page.reload()
+        assert page.locator('#monthRows li').count()==0
+        with page.expect_file_chooser() as chooser:
+            page.locator('#importMonth').click()
+        chooser.value.set_files({'name':'evidence.json','mimeType':'application/json','buffer':backup})
+        expect(page.locator('#monthStatus')).to_contain_text('Přidáno 2')
+        check(page,monthBonus='507,5 Kč',monthBase='3 000 Kč',monthTotal='3 507,5 Kč',monthWorked='15 h')
+        assert page.locator('#monthRows li').count()==2
+        file_input=page.locator('#monthBackupFile')
+        file_input.set_input_files({'name':'evidence.json','mimeType':'application/json','buffer':backup})
+        expect(page.locator('#monthStatus')).to_contain_text('přeskočeno 2')
+        conflict=json.loads(backup)
+        conflict['shifts'][0]['values']['averageEarnings']='999'
+        file_input.set_input_files({'name':'konflikt.json','mimeType':'application/json','buffer':json.dumps(conflict).encode()})
+        expect(page.locator('#monthStatus')).to_contain_text('překrývá')
+        malformed=json.loads(backup)
+        malformed['shifts'][0]['values']['shiftDate']='15. 12. 2026'
+        malformed['shifts'][1]['values']['averageEarnings']='neplatné'
+        file_input.set_input_files({'name':'vadna.json','mimeType':'application/json','buffer':json.dumps(malformed).encode()})
+        expect(page.locator('#monthStatus')).to_contain_text('beze změny')
+        assert page.locator('#monthRows li').count()==2
+        check(page,monthBonus='507,5 Kč')
+        page.locator('[data-month-action=edit]').first.click()
+        assert page.locator('#averageEarnings').input_value()=='220'
+        page.locator('#cancelShiftEdit').click()
         page.locator('[data-month-action=remove]').first.click()
         check(page,monthBonus='260 Kč')
         page.locator('[data-month-action=duplicate]').click()

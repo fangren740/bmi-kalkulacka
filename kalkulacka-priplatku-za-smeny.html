@@ -29,7 +29,7 @@
 <meta name="twitter:description" content="Směna podle času, právní režim, souběhy příplatků, náhradní volno a kontrola výplatnice.">
 <meta name="twitter:image" content="https://rychlevypocty.cz/og-rv-priplatky-smeny-v32.jpg">
 <link rel="stylesheet" href="/rv-brand-v32.css?v=20260801-stable">
-<link rel="stylesheet" href="/priplatky-smeny.css?v=20261106-mesic1">
+<link rel="stylesheet" href="/priplatky-smeny.css?v=20261106-zaloha1">
 <script defer src="/rv-brand-v32.js?v=20260801"></script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"RychléVýpočty.cz","item":"https://rychlevypocty.cz/"},{"@type":"ListItem","position":2,"name":"Mzdy a práce","item":"https://rychlevypocty.cz/mzdy-a-prace.html"},{"@type":"ListItem","position":3,"name":"Kalkulačka příplatků za směny","item":"https://rychlevypocty.cz/kalkulacka-priplatku-za-smeny.html"}]}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Kalkulačka příplatků za směny 2026","url":"https://rychlevypocty.cz/kalkulacka-priplatku-za-smeny.html","applicationCategory":"BusinessApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","inLanguage":"cs-CZ","isAccessibleForFree":true,"description":"Kalkulačka nočních, víkendových, svátečních a přesčasových příplatků pro mzdu, plat a DPP/DPČ s automatickým rozdělením konkrétní směny.","publisher":{"@type":"Organization","name":"RychléVýpočty.cz","url":"https://rychlevypocty.cz/","sameAs":["https://www.facebook.com/rychlevypocty","https://www.instagram.com/rychlevypocty/"]}}</script>
@@ -187,6 +187,13 @@
 <section class="sf-month-section" id="mesic" aria-labelledby="monthHeading">
  <div class="sf-shell">
   <div class="sf-stage-heading"><div><p class="sf-eyebrow">02 / EVIDENCE SMĚN</p><h2 id="monthHeading" tabindex="-1">Měsíční přehled</h2><p>Sečtěte jen směny ze stejného období a stejné výplatnice.</p></div><button class="sf-btn sf-btn-secondary" id="monthSample" type="button">Vyzkoušet tři různé směny</button></div>
+  <div class="sf-file-actions" aria-describedby="monthBackupNote">
+   <button class="sf-btn sf-btn-secondary" id="exportMonth" type="button" disabled>Exportovat přehled (JSON)</button>
+   <button class="sf-btn sf-btn-secondary" id="importMonth" type="button">Načíst uložený soubor</button>
+   <input id="monthBackupFile" type="file" accept=".json,application/json" hidden>
+  </div>
+  <p id="monthBackupNote" class="sf-month-note">Před zavřením nebo obnovením stránky exportujte své směny. Záloha obsahuje mzdové údaje a zůstává ve vašem zařízení. Obnoví směny a jejich sazby ze všech zadaných měsíců. Import přidá nové směny a přeskočí totožné. Částky z pásky a ukázkové směny v záloze nejsou.</p>
+  <p id="monthStatus" role="status" class="sf-month-note"></p>
   <div id="monthEmpty" class="sf-month-empty"><strong>V přehledu zatím nejsou směny</strong><p>U výpočtu klikněte na Přidat do měsíce. Každá směna může mít jiné časy, sazby a kompenzaci.</p><a href="#kalkulacka">Přejít k zadání směny ↑</a></div>
   <div id="monthDashboard" hidden>
    <div class="sf-month-top"><label>Měsíc <select id="monthSelect" class="sf-control"></select></label><a href="#kontrola-pasky" class="sf-btn sf-btn-primary" id="auditMonthJump">Zkontrolovat měsíc na pásce →</a></div>
@@ -198,8 +205,7 @@
    <p class="sf-month-note">Příplatkové hodiny se překrývají. Jejich součet není odpracovaná doba. Částky za zadané směny nepředstavují celou měsíční mzdu ani plat.</p>
    <ul id="monthRows" class="sf-month-ledger" aria-label="Uložené směny"></ul>
   </div>
-  <p id="monthStatus" role="status" class="sf-month-note"></p>
-  <small class="sf-month-note">Až 62 záznamů v této kartě. Při obnovení nebo zavření stránky se smažou. Tlačítko Přidat uloží jednu směnu bez opakování z rychlého výpočtu. Kalkulačka údaje o směnách ani výplatnici nikam neodesílá. Směnu přes hranici měsíců rozdělte podle docházky na dvě části.</small>
+  <small class="sf-month-note">Až 62 záznamů v této kartě. Tlačítko Přidat uloží jednu směnu bez opakování z rychlého výpočtu. Kalkulačka údaje o směnách ani výplatnici nikam neodesílá. Směnu přes hranici měsíců rozdělte podle docházky na dvě části.</small>
  </div>
 </section>
 
@@ -210,11 +216,10 @@
       <div class="sf-audit-controls"><label>Co porovnáváte <select class="sf-control" id="auditScope"><option value="shift">Stejné směny</option><option value="month">Vybraný měsíc</option></select></label><label>Jak jsou položky na pásce <select class="sf-control" id="auditView"><option value="total">Jedna souhrnná částka</option><option value="categories">Samostatné příplatky</option></select></label></div>
       <p class="sf-month-note" id="auditScopeNote"></p>
       <label class="sf-field" id="auditCountField"><span>Počet takových směn na pásce</span><div class="sf-unit-input"><input id="auditCount" type="number" min="1" max="31" step="1" value="1"><b>×</b></div></label>
-      <div id="auditQuick">
-      <div class="sf-two-fields"><label class="sf-field"><span>Na pásce mám příplatky celkem</span><div class="sf-unit-input"><input id="paidBonus" type="number" min="0" max="1000000" step="0.01" inputmode="decimal" placeholder="např. 240"><b>Kč</b></div></label></div>
-      <div class="sf-audit-result" id="auditResult"><span>Model očekává</span><strong id="auditExpected">—</strong><div class="sf-audit-values"><div><span>Vyplaceno na pásce</span><b id="auditPaid">—</b></div><div><span>Rozdíl proti modelu</span><b id="auditDifference">—</b></div></div><p id="auditMessage">Zadejte částku z pásky a uvidíte rozdíl.</p></div>
-      </div>
-      <div id="auditCategories" hidden><div id="auditCategoryRows"></div><p id="auditLargest" class="sf-audit-largest" aria-live="polite"></p><p class="sf-month-note">Prázdná položka se neporovnává. Nulu zadejte, jen pokud za položku skutečně nebylo nic vyplaceno. U sloučených položek použijte souhrnnou částku.</p></div>
+      <div class="sf-two-fields"><label class="sf-field"><span>Souhrnná částka z pásky <em id="auditTotalOptional" hidden>(nepovinná kontrola součtu)</em></span><div class="sf-unit-input"><input id="paidBonus" type="number" min="0" max="1000000" step="0.01" inputmode="decimal" placeholder="např. 240"><b>Kč</b></div></label></div>
+      <div id="auditCategories" hidden><div id="auditCategoryRows"></div><p id="auditLargest" class="sf-audit-largest"></p><p class="sf-month-note">Pro úplné porovnání vyplňte všech pět položek. Nulu zadejte, pokud za položku nebylo nic vyplaceno. U sloučených položek přepněte na souhrnnou částku.</p></div>
+      <div class="sf-audit-result" id="auditResult"><span>Model očekává</span><strong id="auditExpected">—</strong><div class="sf-audit-values"><div><span id="auditPaidLabel">Vyplaceno na pásce</span><b id="auditPaid">—</b></div><div><span>Rozdíl proti modelu</span><b id="auditDifference">—</b></div></div><p id="auditMessage" role="status">Zadejte částku z pásky a uvidíte rozdíl.</p></div>
+      <div class="sf-file-actions"><button class="sf-btn sf-btn-secondary" id="exportAudit" type="button" disabled>Stáhnout porovnání (CSV)</button></div>
       <div class="sf-audit-checklist"><strong>Pokud čísla nesedí, ověřte postupně:</strong><ol><li>průměrný hodinový výdělek použitý zaměstnavatelem,</li><li>skutečný počet nočních, víkendových, svátečních a přesčasových hodin,</li><li>kolektivní smlouvu / vnitřní předpis,</li><li>náhradní volno a případné přesčasy zahrnuté ve mzdě.</li></ol></div>
     </div>
   </div>
@@ -307,7 +312,7 @@
   </div>
   <div class="sf-shell sf-footer-bottom"><span>© 2026 RychléVýpočty.cz.</span><span><strong>Upozornění:</strong> Výsledek je transparentní kontrolní model. Nenahrazuje evidenci pracovní doby, mzdové podklady zaměstnavatele ani individuální právní posouzení.</span></div>
 </footer>
-<script src="/priplatky-smeny.js?v=20261106-mesic1" defer></script>
+<script src="/priplatky-smeny.js?v=20261106-zaloha1" defer></script>
 <!-- RV-VNEXT: status=DONE | major=2026-08-17 | qa=PASS | seq=7 -->
 </body>
 </html>
