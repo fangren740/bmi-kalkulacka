@@ -989,7 +989,10 @@
         $('vysledek').scrollIntoView({block:'start'});
         $('vysledek').focus({preventScroll:true});
       }
-      else $('formError').scrollIntoView({block:'center'});
+      else {
+        $('formError').scrollIntoView({block:'center'});
+        $('formError').focus({preventScroll:true});
+      }
     });
     qsa('[data-input-mode]').forEach(b=>b.addEventListener('click',()=>setInputMode(b.dataset.inputMode)));
     qsa('[data-regime]').forEach(b=>b.addEventListener('click',()=>{regime=b.dataset.regime;ratesDirty=false;updateRegimeUi();rateDefaults(true);calculate();}));

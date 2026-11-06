@@ -75,6 +75,26 @@ with sync_playwright() as p:
         page.locator('.sf-show-result').click()
         page.screenshot(path=out/f'candidate-{width}-vysledek.png')
         check(page,cashBonus='260 Kč',totalPay='1 760 Kč')
+        for selector in ('#shiftDateHelp','.sf-timeline-head small','.sf-detected-grid span','.sf-breakdown-row small'):
+            assert page.locator(selector).first.evaluate("el=>parseFloat(getComputedStyle(el).fontSize)>=14"),selector
+        quick=page.locator('#quickShiftResult')
+        if width==390:
+            assert quick.bounding_box()['y']<page.locator('#compDetails').bounding_box()['y']
+            assert quick.bounding_box()['height']>=48
+            saved_scroll=page.locator('.sf-show-result').bounding_box()['y']-quick.bounding_box()['y']
+            assert saved_scroll>100,saved_scroll
+            print(f'Mobile result action: {saved_scroll:.0f} px above the bottom action',flush=True)
+            quick.scroll_into_view_if_needed()
+            page.screenshot(path=out/'quick-result-390.png')
+            quick.click()
+            expect(page.locator('#vysledek')).to_be_focused()
+            expect(page.locator('#cashBonus')).to_be_in_viewport()
+            fill(page,averageEarnings=0)
+            quick.click()
+            expect(page.locator('#formError')).to_be_focused()
+            fill(page,averageEarnings=200)
+        else:
+            expect(quick).to_be_hidden()
         assert page.locator('#shiftDate').input_value()=='6. 11. 2026', 'ISO URL/test date should be normalized visually to Czech format'
         fill(page,shiftStart='2200')
         page.locator('#shiftEnd').click()
