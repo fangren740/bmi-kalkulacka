@@ -132,8 +132,20 @@ const results=[];
     assert.equal(await page.locator('#'+id).evaluate(el=>el.style.width),'0%','invalid entry must clear stale '+id);
    }
    assert.equal(await page.locator('#basicWorkIncome').getAttribute('aria-invalid'),'true');
+   await page.locator('button[type="submit"]').click();
+   assert.equal(await page.evaluate(()=>document.activeElement.id),'basicWorkIncome','submit should focus the first invalid input');
    await page.locator('#basicWorkIncome').fill('20000');
    assert.match(await page.locator('#totalBenefit').innerText(),/Kč/);
+   await page.locator('button[type="submit"]').click();
+   if(width<=768){
+    assert.equal(await page.evaluate(()=>document.activeElement.id),'vysledek','mobile submit must focus the result');
+    const resultTop=await page.locator('#vysledek').evaluate(el=>el.getBoundingClientRect().top);
+    assert.ok(resultTop>=50&&resultTop<=240,'mobile submit must reveal the result near header, width '+width+': '+resultTop);
+   }
+   if(width===1440){
+    const sticky=await page.locator('#vysledek').evaluate(el=>getComputedStyle(el).position);
+    assert.equal(sticky,'sticky','long-form desktop result must stay visible alongside its inputs');
+   }
    // A reset of the model must not silently discard the district chosen by the user.
    await page.locator('#resetBtn').click();
    assert.equal(await page.locator('#basicRegion').inputValue(),'Praha-východ');
