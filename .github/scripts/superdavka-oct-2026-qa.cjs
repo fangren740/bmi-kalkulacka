@@ -55,12 +55,10 @@ const results=[];
    const before=await page.locator('#totalBenefit').innerText();
    assert.equal(before,'—','must NOT invent a zero result before district selection');
    assert.match(await page.locator('#resultExplanation').innerText(),/zvolte okres/i);
-   for(const id of ['heroHousing','heroLiving','heroChild','heroWork']){
-    assert.equal(await page.locator('#'+id).innerText(),'—','hero cannot invent a component before district selection');
-   }
-   for(const type of ['is-house','is-life','is-child','is-work']){
-    assert.equal(await page.locator('.sd87-stack-lines .'+type+' i').evaluate(el=>el.style.getPropertyValue('--sd87-share')),'0%','hero chart starts empty');
-   }
+   await page.locator('#basicRegion').selectOption('Praha');
+   assert.equal(await page.locator('#totalBenefit').innerText(),'—','district alone cannot produce an example amount');
+   assert.equal(await page.locator('#resultComponents').isHidden(),true);
+   assert.equal(await page.locator('#basicWorkIncome').inputValue(),'');
    await page.locator('[data-template="single"]').click();
    await page.locator('#basicRegion').selectOption('Praha');
    await page.locator('#basicHousingType').selectOption('rent');
@@ -84,10 +82,11 @@ const results=[];
      assert.equal(await page.evaluate(()=>document.activeElement.id),'vysledek','result shortcut should take keyboard focus to the result');
     }
    }
-   assert.equal(comparable(await page.locator('#heroHousing').innerText()),comparable(await page.locator('#housingComponent').innerText()),'desktop hero housing amount must equal the real result');
-   assert.equal(comparable(await page.locator('#heroWork').innerText()),comparable(await page.locator('#workComponent').innerText()),'desktop hero work amount must equal the real result');
-   const totalBars=await page.locator('.sd87-stack-lines i').evaluateAll(nodes=>nodes.reduce((a,n)=>a+parseFloat(n.style.getPropertyValue('--sd87-share')||'0'),0));
-   assert.ok(Math.abs(totalBars-100)<0.3,'hero shares should sum to 100% of displayed components: '+totalBars);
+   assert.equal(comparable(await page.locator('#proofBase').textContent()),'12 000 Kč');
+   assert.equal(comparable(await page.locator('#proofEnergy').textContent()),'2 300 Kč');
+   assert.equal(comparable(await page.locator('#proofDeduction').textContent()),'6 900 Kč');
+   const totalBars=await page.locator('.sd87-components article i b').evaluateAll(nodes=>nodes.reduce((sum,node)=>sum+parseFloat(node.style.width),0));
+   assert.ok(Math.abs(totalBars-100)<0.3,'result shares should sum to 100%');
    // Same inputs in cheaper district must change housing component.
    await page.locator('#basicRegion').selectOption('Bruntál');
    const bruntal=await page.locator('#totalBenefit').innerText();
@@ -116,6 +115,8 @@ const results=[];
    assert.equal(await page.locator('#memberList .sd87-member').count(),3);
    await page.locator('#workIncome').fill('32123');
    await page.locator('#savings').fill('120000');
+   await page.locator('#cars').fill('0');
+   await page.locator('#homes').fill('0');
    await page.locator('#allPeople').fill('5');
    await page.locator('[data-mode="basic"]').click();
    assert.equal(await page.locator('#memberList .sd87-member').count(),2,'basic mode must use selected two-person preset');
@@ -129,7 +130,6 @@ const results=[];
    await page.locator('#savings').fill('500000');
    assert.equal(await page.locator('#totalBenefit').innerText(),'0 Kč','savings hard stop makes result zero');
    assert.equal(await page.locator('#housingComponent').innerText(),'—','no imaginary payable housing after hard stop');
-   assert.equal(await page.locator('#heroHousing').innerText(),'—','hero also must not show blocked housing amount');
    assert.equal(await page.locator('#housingBar').evaluate(el=>el.style.width),'0%','blocked component bar must disappear');
    await page.locator('#savings').fill('120000');
    await page.locator('[data-mode="basic"]').click();
@@ -149,8 +149,6 @@ const results=[];
    await page.locator('#basicWorkIncome').fill('neplatné');
    assert.equal(await page.locator('#totalBenefit').innerText(),'—','invalid text must not become zero');
    if(width<=768)assert.equal(await page.locator('#mobileSummary').isHidden(),true,'invalid calculations must hide misleading mobile summary');
-   assert.equal(await page.locator('#heroHousing').innerText(),'—','invalid input clears misleading hero amounts');
-   assert.equal(await page.locator('.sd87-stack-lines .is-house i').evaluate(el=>el.style.getPropertyValue('--sd87-share')),'0%','invalid input clears hero chart');
    for(const id of ['lifeMinimum','incomeRatio','recognisedHousing','assetLimit']){
     assert.equal(await page.locator('#'+id).innerText(),'—','invalid entry must clear stale '+id);
    }
@@ -172,10 +170,31 @@ const results=[];
     const sticky=await page.locator('#vysledek').evaluate(el=>getComputedStyle(el).position);
     assert.equal(sticky,'sticky','long-form desktop result must stay visible alongside its inputs');
    }
-   // A reset of the model must not silently discard the district chosen by the user.
+   if(width===390||width===1440){
+    await page.locator('#resultProof summary').click();
+    await page.locator('#vysledek').evaluate(el=>el.scrollIntoView({block:'start'}));
+    await page.screenshot({path:path.join(out,'superdavka-rozpis-'+width+'.png'),animations:'disabled'});
+   }
    await page.locator('#resetBtn').click();
-   assert.equal(await page.locator('#basicRegion').inputValue(),'Praha-východ');
-   assert.match(await page.locator('#totalBenefit').innerText(),/Kč/);
+   assert.equal(await page.locator('#basicRegion').inputValue(),'');
+   assert.equal(await page.locator('#totalBenefit').innerText(),'—');
+   await page.locator('#exampleBtn').click();
+   assert.equal(await page.locator('#exampleNotice').isVisible(),true);
+   assert.equal(comparable(await page.locator('#totalBenefit').innerText()),'7 560 Kč');
+   await page.locator('[data-template="coupleTwoChildren"]').click();
+   await page.locator('#basicWorkIncome').fill('25000');
+   await page.locator('[data-mode="advanced"]').click();
+   const childBonus=await page.locator('#childComponent').innerText();
+   assert.equal(comparable(childBonus),'2 000 Kč');
+   await page.locator('[data-key="schoolPenalty"]').first().check();
+   assert.equal(comparable(await page.locator('#childComponent').innerText()),'1 000 Kč','one sanctioned child leaves the other child bonus intact');
+   await page.locator('#homes').fill('2');
+   assert.equal(await page.locator('#totalBenefit').innerText(),'0 Kč');
+   await page.locator('#usesOwnHome').check();
+   assert.equal(await page.locator('#resultStatus').innerText(),'Podmíněný odhad');
+   await page.locator('#housingType').selectOption('owner');
+   assert.equal(await page.locator('#rentCosts').isHidden(),true);
+   await page.locator('#clearExample').click();
    const overflow=await page.evaluate(()=>Math.max(document.documentElement.scrollWidth,document.body.scrollWidth)-innerWidth);
    assert.ok(overflow<=2,'horizontal overflow at '+width+': '+overflow);
    assert.deepEqual(errors,[],'browser JavaScript errors '+width);
@@ -183,7 +202,7 @@ const results=[];
     await page.evaluate(()=>{document.documentElement.style.scrollBehavior='auto';window.scrollTo(0,0);});
     await page.screenshot({path:path.join(out,'superdavka-oct-'+width+'.png'),fullPage:true,animations:'disabled'});
    }
-   results.push({width,model:'October-Dec 2026',norms:77,referenceSingle:'7 560 Kč',bruntal,parentResult,overflow,jsErrors:errors.length,status:'PASS'});
+   results.push({width,firstInputTop,model:'October-Dec 2026',norms:77,referenceSingle:'7 560 Kč',bruntal,parentResult,overflow,jsErrors:errors.length,status:'PASS'});
    await page.close();
   }
  }finally{
