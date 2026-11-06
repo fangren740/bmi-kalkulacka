@@ -198,6 +198,61 @@ const results=[];
    await page.locator('#housingType').selectOption('owner');
    assert.equal(await page.locator('#rentCosts').isHidden(),true);
    await page.locator('#clearExample').click();
+   // Fixed expectations from the independent statutory worksheet in audits/.
+   await page.locator('#exampleBtn').click();
+   await page.locator('[data-template="couple"]').click();
+   await page.locator('[data-mode="advanced"]').click();
+   await page.locator('#workIncome').fill('0');
+   await page.locator('#otherIncome').fill('14000');
+   await page.locator('#rentCosts').fill('40000');
+   await page.locator('#energyCosts').fill('8000');
+   await page.locator('#allPeople').fill('4');
+
+   async function expectHousing(base,energy,housing){
+    for(const [id,value] of Object.entries({proofBase:base,proofEnergy:energy,housingComponent:housing,totalBenefit:housing})){
+     assert.equal(comparable(await page.locator('#'+id).textContent()),value,id+' at '+width+'px');
+    }
+   }
+
+   await expectHousing('16 190 Kč','2 800 Kč','14 790 Kč');
+   await page.locator('#housingType').selectOption('owner');
+   await expectHousing('5 725 Kč','2 800 Kč','4 325 Kč');
+   await page.locator('#housingType').selectOption('rent');
+
+   await page.locator('#otherIncome').fill('12000');
+   await page.locator('#rentCosts').fill('12000');
+   await expectHousing('6 000 Kč','3 360 Kč','5 760 Kč');
+
+   const secondActive=page.locator('[data-index="1"][data-key="active"]');
+   await page.locator('#otherIncome').fill('14000');
+   await page.locator('#rentCosts').fill('20000');
+   await page.locator('#allPeople').fill('2');
+   await secondActive.uncheck();
+   await expectHousing('10 000 Kč','2 300 Kč','8 100 Kč');
+   await page.locator('[data-index="0"][data-key="active"]').uncheck();
+   await expectHousing('0 Kč','0 Kč','0 Kč');
+   await page.locator('[data-index="0"][data-key="active"]').check();
+
+   await page.locator('#otherIncome').fill('12000');
+   await page.locator('#rentCosts').fill('24000');
+   await page.locator('#energyCosts').fill('12000');
+   await page.locator('#allPeople').fill('4');
+   await expectHousing('6 000 Kč','2 760 Kč','5 160 Kč');
+   await page.locator('#addMember').click();
+   assert.equal(await page.locator('#allPeople').inputValue(),'5');
+   await page.locator('[data-remove="2"]').click();
+   assert.equal(await page.locator('#allPeople').inputValue(),'4');
+   await expectHousing('6 000 Kč','2 760 Kč','5 160 Kč');
+
+   await secondActive.check();
+   await page.locator('#allPeople').fill('2');
+   await expectHousing('16 190 Kč','3 360 Kč','15 950 Kč');
+   await page.locator('#addMember').click();
+   assert.equal(await page.locator('#allPeople').inputValue(),'3');
+   await page.locator('[data-remove="2"]').click();
+   assert.equal(await page.locator('#allPeople').inputValue(),'2');
+   await expectHousing('16 190 Kč','3 360 Kč','15 950 Kč');
+   await page.locator('#clearExample').click();
    const overflow=await page.evaluate(()=>Math.max(document.documentElement.scrollWidth,document.body.scrollWidth)-innerWidth);
    assert.ok(overflow<=2,'horizontal overflow at '+width+': '+overflow);
    assert.deepEqual(errors,[],'browser JavaScript errors '+width);
