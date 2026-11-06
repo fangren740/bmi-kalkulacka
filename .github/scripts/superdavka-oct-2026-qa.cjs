@@ -69,12 +69,14 @@ const results=[];
    const comparable=text=>text.replace(/[\u00a0\u202f]/g,' ');
    assert.equal(comparable(await page.locator('#totalBenefit').innerText()),'7 560 Kč','independently calculated one-person statutory scenario');
    if(width<=768){
+    await page.locator('#basicRegion').evaluate(el=>el.scrollIntoView({block:'center'}));
+    await page.locator('#mobileSummary').waitFor({state:'visible'});
     assert.equal(await page.locator('#mobileSummary').isVisible(),true,'mobile summary appears only after valid district and calculation');
     assert.equal(comparable(await page.locator('#mobileSummaryValue').innerText()),'7 560 Kč / měsíc','summary must equal actual total');
     const summaryPosition=await page.locator('#mobileSummary').evaluate(el=>getComputedStyle(el).position);
     assert.equal(summaryPosition,'sticky','mobile total must stay visible while editing long form');
     if(width===390){
-     await page.evaluate(()=>{document.documentElement.style.scrollBehavior='auto';window.scrollTo(0,950)});
+     await page.evaluate(()=>{document.documentElement.style.scrollBehavior='auto';window.scrollTo(0,600)});
      const top=await page.locator('#mobileSummary').evaluate(el=>el.getBoundingClientRect().top);
      assert.ok(top>=60&&top<=95,'mobile shortcut should stick just under navigation: '+top);
      await page.screenshot({path:path.join(out,'superdavka-mobile-sticky-result-390.png'),animations:'disabled'});
@@ -163,6 +165,7 @@ const results=[];
    await page.locator('button[type="submit"]').click();
    if(width<=768){
     assert.equal(await page.evaluate(()=>document.activeElement.id),'vysledek','mobile submit must focus the result');
+    await page.locator('#mobileSummary').waitFor({state:'hidden'});
     const resultTop=await page.locator('#vysledek').evaluate(el=>el.getBoundingClientRect().top);
     assert.ok(resultTop>=50&&resultTop<=240,'mobile submit must reveal the result near header, width '+width+': '+resultTop);
    }

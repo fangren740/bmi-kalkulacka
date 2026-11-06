@@ -256,6 +256,14 @@ function focusResult(){
  panel.focus({preventScroll:true});
 }
 $('mobileSummaryLink').addEventListener('click',event=>{event.preventDefault();focusResult()});
+const mobileSummary=$('mobileSummary');
+const resultObserver=new IntersectionObserver(([entry])=>{
+ const resultVisible=entry.isIntersecting;
+ mobileSummary.classList.toggle('is-result-visible',resultVisible);
+ mobileSummary.inert=resultVisible;
+},{rootMargin:'-128px 0px -20% 0px',threshold:0.35});
+resultObserver.observe(document.querySelector('.sd87-main-result'));
+
 el.form.addEventListener('submit',event=>{
  event.preventDefault();
  formSubmitted=true;
