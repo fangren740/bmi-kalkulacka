@@ -64,8 +64,8 @@
   function isoDate(value) {
     const t=String(value||'').trim();
     let year,month,day;
-    const iso=/^(\\d{4})-(\\d{2})-(\\d{2})$/.exec(t);
-    const cz=/^(\\d{1,2})\\.\\s*(\\d{1,2})\\.\\s*(\\d{4})\\.?$/.exec(t);
+    const iso=/^(\d{4})-(\d{2})-(\d{2})$/.exec(t);
+    const cz=/^(\d{1,2})\.\s*(\d{1,2})\.\s*(\d{4})\.?$/.exec(t);
     if(iso){year=Number(iso[1]);month=Number(iso[2]);day=Number(iso[3]);}
     else if(cz){day=Number(cz[1]);month=Number(cz[2]);year=Number(cz[3]);}
     else return null;
