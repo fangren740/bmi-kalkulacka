@@ -36,6 +36,34 @@ with sync_playwright() as p:
         errors=[]
         page.on('pageerror',lambda e:errors.append(str(e)))
         load(page,root)
+        brand=page.get_by_role('link',name='RychléVýpočty.cz – domů').first
+        assert brand.inner_text()=='RychléVýpočty.cz'
+        logo=brand.bounding_box()
+        masthead=page.locator('.sf-header-inner').bounding_box()
+        assert logo['x']>=masthead['x'] and logo['x']+logo['width']<=masthead['x']+masthead['width']
+        toggle=page.locator('#menuToggle')
+        if width==390:
+            button=toggle.bounding_box()
+            assert button['width']>=44 and logo['x']+logo['width']<button['x']
+            assert abs(logo['y']+logo['height']/2-button['y']-button['height']/2)<=1
+            expect(page.get_by_role('navigation',name='Mobilní navigace')).to_be_hidden()
+            toggle.focus()
+            page.keyboard.press('Enter')
+            expect(toggle).to_have_attribute('aria-expanded','true')
+            expect(page.get_by_role('navigation',name='Mobilní navigace').get_by_role('link',name='Spočítat směnu')).to_be_visible()
+            page.screenshot(path=out/'header-390-menu.png')
+            page.keyboard.press('Tab')
+            page.keyboard.press('Escape')
+            expect(toggle).to_be_focused()
+            expect(toggle).to_have_attribute('aria-expanded','false')
+            toggle.blur()
+        else:
+            expect(toggle).to_be_hidden()
+            nav=page.get_by_role('navigation',name='Hlavní navigace').bounding_box()
+            cta=page.locator('.sf-header-cta').bounding_box()
+            assert logo['x']+logo['width']<nav['x']<nav['x']+nav['width']<cta['x']
+            assert abs(nav['x']+nav['width']/2-width/2)<=1
+        page.screenshot(path=out/f'header-{width}.png')
         fill(page,shiftDate='2026-11-06',shiftStart='22:00',shiftEnd='06:00',breakMinutes=30,breakStart='02:00',hourlyRate=200,averageEarnings=200)
         page.evaluate('window.scrollTo(0,0)')
         page.screenshot(path=out/f'candidate-{width}.png')

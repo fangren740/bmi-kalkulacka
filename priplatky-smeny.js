@@ -1014,8 +1014,19 @@
     });
     $('printResult').addEventListener('click',()=>window.print());
     const toggle=$('menuToggle'),nav=$('mainNavMobile');
-    toggle?.addEventListener('click',()=>{const open=nav.classList.toggle('is-open');toggle.setAttribute('aria-expanded',String(open));});
-    nav?.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{nav.classList.remove('is-open');toggle?.setAttribute('aria-expanded','false');}));
+    const setMenu=open=>{
+      nav.classList.toggle('is-open',open);
+      toggle.setAttribute('aria-expanded',String(open));
+      toggle.setAttribute('aria-label',open?'Zavřít navigaci':'Otevřít navigaci');
+    };
+    toggle.addEventListener('click',()=>setMenu(toggle.getAttribute('aria-expanded')==='false'));
+    nav.querySelectorAll('a').forEach(link=>link.addEventListener('click',()=>setMenu(false)));
+    toggle.closest('header').addEventListener('keydown',event=>{
+      if(event.key!=='Escape'||toggle.getAttribute('aria-expanded')!=='true')return;
+      setMenu(false);
+      toggle.focus();
+    });
+    window.matchMedia('(max-width:860px)').addEventListener('change',()=>setMenu(false));
     setInputMode(inputMode); updateRegimeUi(); calculate();
   }
   initMonth();
