@@ -11,8 +11,8 @@ const ENERGY=[2300,2800,3300,3800,4300];
 const SOLID=[1500,2000,2500,3000,3500];
 const LEGAL=window.__RV_SUPERDAVKA_OCT26__;if(!LEGAL||!LEGAL.districts||Object.keys(LEGAL.districts).length!==77)throw new Error("Superdávka: zákonné normativy pro říjen 2026 nejsou k dispozici.");const NORM=LEGAL.districts;
 const templates={single:[{type:'adult',active:true,vulnerable:false,plan:false}],singleChild:[{type:'adult',active:true,vulnerable:true,plan:false},{type:'child6to15',active:false,vulnerable:true,plan:false}],couple:[{type:'adult',active:true,vulnerable:false,plan:false},{type:'adult',active:true,vulnerable:false,plan:false}],coupleTwoChildren:[{type:'adult',active:true,vulnerable:false,plan:false},{type:'adult',active:true,vulnerable:false,plan:false},{type:'childUnder6',active:false,vulnerable:true,plan:false},{type:'child6to15',active:false,vulnerable:true,plan:false}]};
-let members=structuredClone(templates.coupleTwoChildren);let activeMode='basic';let basicTemplate='coupleTwoChildren';let advancedMembersSnapshot=null;let basicChangedSinceAdvanced=false;
-const el={form:$('dsspForm'),modeBtns:qsa('.sd87-mode [data-mode]'),basic:$('sd87BasicPanel'),advanced:$('sd87AdvancedPanel'),memberList:$('memberList'),add:$('addMember'),reset:$('resetBtn'),status:$('resultStatus'),total:$('totalBenefit'),explanation:$('resultExplanation'),housing:$('housingComponent'),living:$('livingComponent'),child:$('childComponent'),work:$('workComponent'),life:$('lifeMinimum'),ratio:$('incomeRatio'),recognised:$('recognisedHousing'),asset:$('assetLimit'),warnBox:$('warningBox'),warnList:$('warningList'),heroTotal:$('heroTotal'),heroGate:$('heroGateStatus'),days:$('daysToOctober'),menu:document.querySelector('.sd87-menu'),mobile:document.querySelector('.sd87-mobile-nav')};
+let members=structuredClone(templates.coupleTwoChildren);let activeMode='basic';let basicTemplate=null;let advancedMembersSnapshot=null;
+const el={form:$('dsspForm'),modeBtns:qsa('.sd87-mode [data-mode]'),basic:$('sd87BasicPanel'),advanced:$('sd87AdvancedPanel'),memberList:$('memberList'),add:$('addMember'),reset:$('resetBtn'),status:$('resultStatus'),total:$('totalBenefit'),explanation:$('resultExplanation'),housing:$('housingComponent'),living:$('livingComponent'),child:$('childComponent'),work:$('workComponent'),life:$('lifeMinimum'),ratio:$('incomeRatio'),recognised:$('recognisedHousing'),asset:$('assetLimit'),warnBox:$('warningBox'),warnList:$('warningList'),days:$('daysToOctober'),menu:document.querySelector('.sd87-menu'),mobile:document.querySelector('.sd87-mobile-nav')};
 function clone(t){return structuredClone(templates[t]);}
 function countAdults(list){return list.filter(m=>m.type==='adult').length}
 function countChildren(list){return list.filter(m=>m.type!=='adult').length}
@@ -21,114 +21,395 @@ function savingsLimit(count){return Math.min(400000,150000+50000*count)}
 function memberLabel(type){return type==='adult'?'Dospělá osoba':type==='childUnder6'?'Dítě do 6 let':type==='child6to15'?'Dítě 6–15 let':'Dítě 15–26 let'}
 function lifeMinimum(list){if(list.length===1)return list[0].type==='adult'?LIFE.individual:LIFE[list[0].type];let first=false;return list.reduce((s,m)=>{if(m.type==='adult'){const v=first?LIFE.otherAdult:LIFE.firstAdult;first=true;return s+v}return s+LIFE[m.type]},0)}
 function adultLifeMinimum(member,index,list){if(list.length===1)return LIFE.individual;const a=list.map((m,i)=>m.type==='adult'?i:-1).filter(i=>i>=0);return index===a[0]?LIFE.firstAdult:LIFE.otherAdult}
-function formatInput(node){if(!node)return;const n=num(node.value);if(!Number.isFinite(n)||n<0)return;node.value=Math.round(n).toLocaleString('cs-CZ')}
-function renderMembers(){if(!el.memberList)return;el.memberList.innerHTML=members.map((m,i)=>`<article class="sd87-member" data-member-card="${i}"><div class="sd87-member-head"><strong>Osoba ${i+1}</strong>${members.length>1?`<button type="button" data-remove="${i}">Odebrat</button>`:''}</div><div class="sd87-member-grid"><label><select data-index="${i}" data-key="type" aria-label="Typ osoby ${i+1}"><option value="adult" ${m.type==='adult'?'selected':''}>Dospělá osoba</option><option value="childUnder6" ${m.type==='childUnder6'?'selected':''}>Dítě do 6 let</option><option value="child6to15" ${m.type==='child6to15'?'selected':''}>Dítě 6–15 let</option><option value="child15to26" ${m.type==='child15to26'?'selected':''}>Dítě 15–26 let</option></select></label><div class="sd87-member-checks ${m.type!=='adult'?'is-child':''}"><label><input type="checkbox" data-index="${i}" data-key="active" ${m.active?'checked':''} ${m.type!=='adult'?'disabled':''}> aktivní / evidence ÚP</label><label><input type="checkbox" data-index="${i}" data-key="vulnerable" ${m.vulnerable?'checked':''} ${m.type!=='adult'?'disabled':''}> zranitelná osoba</label><label><input type="checkbox" data-index="${i}" data-key="plan" ${m.plan?'checked':''} ${m.type!=='adult'?'disabled':''}> podpůrný plán</label></div></div></article>`).join('');
-el.memberList.querySelectorAll('[data-index]').forEach(c=>c.addEventListener('change',()=>{const i=+c.dataset.index,key=c.dataset.key;if(key==='type'){members[i].type=c.value;if(c.value!=='adult'){members[i].active=false;members[i].vulnerable=true;members[i].plan=false}renderMembers()}else members[i][key]=c.checked;syncAllPeople();calculate()}));
-el.memberList.querySelectorAll('[data-remove]').forEach(b=>b.addEventListener('click',()=>{members.splice(+b.dataset.remove,1);if(!members.length)members.push({type:'adult',active:true,vulnerable:false,plan:false});renderMembers();syncAllPeople();calculate()}));}
-function syncAllPeople(){const a=$('allPeople');if(a&&num(a.value)<members.length)a.value=members.length}
-function basicValues(){return{workIncome:Math.max(0,num($('basicWorkIncome').value)),otherIncome:Math.max(0,num($('basicOtherIncome').value)),housingType:$('basicHousingType').value,region:$('basicRegion').value,rent:Math.max(0,num($('basicRent').value)),energyActual:Math.max(0,num($('basicEnergy').value)),allPeople:members.length,solidFuel:false,schoolOk:true,savings:0,cars:Math.min(1,countAdults(members)),homes:1,secondHomeException:false,assumeAssets:true}}
-function advancedValues(){return{workIncome:Math.max(0,num($('workIncome').value)),otherIncome:Math.max(0,num($('otherIncome').value)),housingType:$('housingType').value,region:$('region').value,rent:Math.max(0,num($('rentCosts').value)),energyActual:Math.max(0,num($('energyCosts').value)),allPeople:Math.max(members.length,Math.floor(num($('allPeople').value)||members.length)),solidFuel:$('solidFuel').checked,schoolOk:$('schoolOk').checked,savings:Math.max(0,num($('savings').value)),cars:Math.max(0,Math.floor(num($('cars').value))),homes:Math.max(0,Math.floor(num($('homes').value))),secondHomeException:$('secondHomeException').checked,assumeAssets:false}}
-function engine(v){const work=v.workIncome,other=v.otherIncome,income=work+other,count=members.length,adults=countAdults(members),children=countChildren(members),allVulnerable=members.every(m=>m.type!=='adult'||m.vulnerable),allRequiredActive=members.filter(m=>m.type==='adult').every(m=>m.vulnerable||m.active),eligible=members.filter(m=>m.type!=='adult'||m.active||m.vulnerable),effectiveCount=Math.max(1,eligible.length),life=lifeMinimum(members),ratio=life?income/life:0,i=idx(effectiveCount),group=allVulnerable?'vulnerable':'standard',norm=NORM[v.region][group][i],service=SERVICE[group][i],energyP=ENERGY[i]*(allVulnerable?1.4:1),solid=v.solidFuel?SOLID[i]*(allVulnerable?1.4:1):0;let recEnergy=ratio>=1.43?energyP:Math.min(v.energyActual+solid,energyP*1.2);let recBase;if(v.housingType==='owner')recBase=.3*Math.max(0,norm-service)+service;else if(v.housingType==='other')recBase=Math.min(v.rent,norm*.8);else recBase=Math.min(v.rent,norm);let recHousing=(recBase+recEnergy)*(count/v.allPeople);const determined=.3*income+(income>2*life?.1*(income-2*life):0);const housing=Math.max(0,recHousing-determined);let needs=0;members.forEach((m,index)=>{if(m.type!=='adult')needs+=LIFE[m.type];else if(m.active||m.vulnerable)needs+=m.plan?adultLifeMinimum(m,index,members):LIFE.existence});const living=ratio<=1.43?Math.max(0,needs-.7*income):0;let childPer=0;if(children&&allRequiredActive&&v.schoolOk&&ratio<=4){if(ratio<=1.43)childPer=allVulnerable?1000:500;else if(ratio<3)childPer=1000;else childPer=Math.max(0,1000*(4-ratio))}const child=children*childPer;let workBonus=0;if(work>0&&(housing>0||living>0||child>0)){if(ratio<=1.6)workBonus=.4*work;else{const excess=Math.max(0,income-1.6*life);workBonus=Math.max(0,.4*Math.max(0,work-excess)-.3*excess)}}const limit=savingsLimit(count);const issues=[];if(!v.assumeAssets){if(v.savings>limit)issues.push(`Úspory překračují limit ${money(limit)}.`);if(v.cars>adults)issues.push(`Počet aut je vyšší než počet dospělých (${adults}).`);if(v.homes>2)issues.push('Domácnost vlastní více nemovitostí, než připouští základní majetkový test.');if(v.homes===2&&!v.secondHomeException)issues.push('Druhá nemovitost vyžaduje ověření časově omezené výjimky.')}if(count===1&&adults===1&&!members[0].active&&!members[0].vulnerable)issues.push('Jednočlenná domácnost bez pracovní aktivity a bez zranitelnosti podle základního pravidla neprochází.');if(children&&!v.schoolOk)issues.push('Bonus na dítě je vypnutý, protože není potvrzena školní docházka.');if(!allRequiredActive&&children)issues.push('Bonus na dítě může zaniknout kvůli pracovní neaktivitě nezranitelného dospělého.');const hard=issues.some(x=>x.includes('Úspory')||x.includes('Počet aut')||x.includes('více nemovitostí')||x.includes('Jednočlenná'));const raw=Math.ceil(housing+living+child+workBonus);return{total:hard?0:raw,housing,living,child,work:workBonus,life,ratio,recHousing,limit,issues,hard,assumeAssets:v.assumeAssets}}
+function formatInput(node){if(!node)return;const n=num(node.value);if(!Number.isFinite(n)||n<0)return;node.value=n.toLocaleString('cs-CZ',{maximumFractionDigits:20})}
+function renderMembers(){if(!el.memberList)return;el.memberList.innerHTML=members.map((m,i)=>`<article class="sd87-member" data-member-card="${i}"><div class="sd87-member-head"><strong>Osoba ${i+1}</strong>${members.length>1?`<button type="button" data-remove="${i}">Odebrat</button>`:''}</div><div class="sd87-member-grid"><label><select data-index="${i}" data-key="type" aria-label="Typ osoby ${i+1}"><option value="adult" ${m.type==='adult'?'selected':''}>Dospělá osoba</option><option value="childUnder6" ${m.type==='childUnder6'?'selected':''}>Dítě do 6 let</option><option value="child6to15" ${m.type==='child6to15'?'selected':''}>Dítě 6–15 let</option><option value="child15to26" ${m.type==='child15to26'?'selected':''}>Dítě 15–26 let</option></select></label><div class="sd87-member-checks ${m.type!=='adult'?'is-child':''}"><label><input type="checkbox" data-index="${i}" data-key="active" ${m.active?'checked':''} ${m.type!=='adult'?'disabled':''}> aktivní / evidence ÚP</label><label><input type="checkbox" data-index="${i}" data-key="vulnerable" ${m.vulnerable?'checked':''} ${m.type!=='adult'?'disabled':''}> zranitelná osoba</label><label><input type="checkbox" data-index="${i}" data-key="plan" ${m.plan?'checked':''} ${m.type!=='adult'?'disabled':''}> podpůrný plán</label></div>${m.type!=='adult'? '<label class="sd89-penalty"><input type="checkbox" data-index="'+i+'" data-key="schoolPenalty" '+(m.schoolPenalty?'checked':'')+'> U tohoto dítěte běží tříměsíční sankce za pravomocně potvrzený přestupek týkající se školní docházky nebo předškolního vzdělávání.</label>':''}</div></article>`).join('');
+el.memberList.querySelectorAll('[data-index]').forEach(c=>c.addEventListener('change',()=>{const i=+c.dataset.index,key=c.dataset.key;if(key==='type'){members[i].type=c.value;if(c.value!=='adult'){members[i].active=false;members[i].vulnerable=true;members[i].plan=false}else members[i].schoolPenalty=false;renderMembers();focusMember(i)}else members[i][key]=c.checked;calculate()}));
+el.memberList.querySelectorAll('[data-remove]').forEach(b=>b.addEventListener('click',()=>{const previousCount=members.length;members.splice(+b.dataset.remove,1);if(!members.length)members.push({type:'adult',active:true,vulnerable:false,plan:false});renderMembers();syncAllPeople(previousCount);calculate();focusMember(Math.min(+b.dataset.remove,members.length-1))}));}
+function syncAllPeople(previousCount){
+ const field=$('allPeople');
+ const total=num(field.value);
+ if(Number.isSafeInteger(total)&&total>=previousCount){
+  field.value=members.length+(total-previousCount);
+ }
+}
+function basicValues(){return{workIncome:Math.max(0,num($('basicWorkIncome').value)),otherIncome:Math.max(0,num($('basicOtherIncome').value)),housingType:$('basicHousingType').value,region:$('basicRegion').value,rent:Math.max(0,num($('basicRent').value)),energyActual:Math.max(0,num($('basicEnergy').value)),allPeople:members.length,solidFuel:false,savings:0,cars:Math.min(1,countAdults(members)),homes:1,usesOwnHome:false,secondHomeException:false,assumeAssets:true}}
+function advancedValues(){return{workIncome:Math.max(0,num($('workIncome').value)),otherIncome:Math.max(0,num($('otherIncome').value)),housingType:$('housingType').value,region:$('region').value,rent:Math.max(0,num($('rentCosts').value)),energyActual:Math.max(0,num($('energyCosts').value)),allPeople:Math.max(members.length,Math.floor(num($('allPeople').value)||members.length)),solidFuel:$('solidFuel').checked,savings:Math.max(0,num($('savings').value)),cars:Math.max(0,Math.floor(num($('cars').value))),homes:Math.max(0,Math.floor(num($('homes').value))),usesOwnHome:$('usesOwnHome').checked,secondHomeException:$('secondHomeException').checked,assumeAssets:false}}
+function housingCosts(v,eligible,ratio){
+ if(!eligible.length)return {recBase:0,recEnergy:0,recHousing:0,energyP:0,rentShare:0,share:0};
+ const i=idx(eligible.length);
+ const vulnerable=eligible.every(member=>member.type!=='adult'||member.vulnerable);
+ const group=vulnerable?'vulnerable':'standard';
+ const norm=NORM[v.region][group][i];
+ const service=SERVICE[group][i];
+ const energyP=ENERGY[i]*(vulnerable?1.4:1);
+ const solid=v.solidFuel?SOLID[i]*(vulnerable?1.4:1):0;
+ // Allocate actual costs across all occupants before applying household limits.
+ const share=eligible.length/v.allPeople;
+ const rentShare=v.rent*share;
+ const rentCap=v.housingType==='other'?norm*.8:norm;
+ const recBase=v.housingType==='owner'
+  ?.3*Math.max(0,norm-service)+service
+  :Math.min(rentShare,rentCap);
+ const recEnergy=ratio>=1.43?energyP:Math.min(v.energyActual*share+solid,energyP*1.2);
+ return {recBase,recEnergy,recHousing:recBase+recEnergy,energyP,rentShare,share};
+}
+
+function engine(v){const work=v.workIncome,other=v.otherIncome,income=work+other,count=members.length,adults=countAdults(members),children=countChildren(members),allVulnerable=members.every(m=>m.type!=='adult'||m.vulnerable),allRequiredActive=members.filter(m=>m.type==='adult').every(m=>m.vulnerable||m.active),eligible=members.filter(m=>m.type!=='adult'||m.active||m.vulnerable),life=lifeMinimum(members),ratio=life?income/life:0;const costs=housingCosts(v,eligible,ratio);const {recHousing}=costs;const determined=.3*income+(income>2*life?.1*(income-2*life):0);const housing=Math.max(0,recHousing-determined);let needs=0;members.forEach((m,index)=>{if(m.type!=='adult')needs+=LIFE[m.type];else if(m.active||m.vulnerable)needs+=m.plan?adultLifeMinimum(m,index,members):LIFE.existence});const living=ratio<=1.43?Math.max(0,needs-.7*income):0;const eligibleChildren=members.filter(m=>m.type!=='adult'&&!m.schoolPenalty).length;let childPer=0;if(eligibleChildren&&allRequiredActive&&ratio<=4){if(ratio<=1.43)childPer=allVulnerable?1000:500;else if(ratio<3)childPer=1000;else childPer=Math.max(0,1000*(4-ratio))}const child=eligibleChildren*childPer;let workBonus=0;if(work>0&&(housing>0||living>0||child>0)){if(ratio<=1.6)workBonus=.4*work;else{const excess=Math.max(0,income-1.6*life);workBonus=Math.max(0,.4*Math.max(0,work-excess)-.3*excess)}}const limit=savingsLimit(count);const unusedHomes=Math.max(0,v.homes-(v.usesOwnHome?1:0));const assetUncertain=!v.assumeAssets&&unusedHomes===1&&!v.secondHomeException;const issues=[];if(!v.assumeAssets){if(v.savings>limit)issues.push(`Úspory překračují limit ${money(limit)}.`);if(v.cars>adults)issues.push(`Počet aut je vyšší než počet dospělých (${adults}).`);if(unusedHomes>1)issues.push('Více než jedna započitatelná stavba mimo vlastní bydlení překračuje základní majetkový test.');if(assetUncertain)issues.push('Stavba mimo vlastní bydlení vyžaduje ověření tříleté výjimky.')}if(count===1&&adults===1&&!members[0].active&&!members[0].vulnerable)issues.push('Jednočlenná domácnost bez pracovní aktivity a bez zranitelnosti podle základního pravidla neprochází.');if(eligibleChildren<children)issues.push('U označených dětí se po dobu zákonné sankce bonus nezapočítává.');if(!allRequiredActive&&children)issues.push('Bonus na dítě může zaniknout kvůli pracovní neaktivitě nezranitelného dospělého.');const hard=issues.some(x=>x.includes('Úspory')||x.includes('Počet aut')||x.includes('Více než jedna')||x.includes('Jednočlenná'));const raw=Math.ceil(housing+living+child+workBonus);return{total:hard?0:raw,housing,living,child,work:workBonus,life,ratio,...costs,determined,limit,issues,hard,assetUncertain,assumeAssets:v.assumeAssets}}
 function setText(id,v){const n=$(id);if(n)n.textContent=v}
-function renderHeroBreakdown(result=null){
- const parts=[['is-house','heroHousing','housing'],['is-life','heroLiving','living'],['is-child','heroChild','child'],['is-work','heroWork','work']];
- const active=Boolean(result&&!result.hard);
- const total=active?parts.reduce((sum,[,,key])=>sum+Math.max(0,result[key]),0):0;
- for(const [className,id,key] of parts){
-  const value=active?Math.max(0,result[key]):0;
-  setText(id,active?money(value):'—');
-  const bar=document.querySelector('.sd87-stack-lines .'+className+' i');
-  if(bar)bar.style.setProperty('--sd87-share',total>0?(100*value/total).toFixed(1)+'%':'0%');
+const sharedFields=[['basicWorkIncome','workIncome'],['basicOtherIncome','otherIncome'],['basicHousingType','housingType'],['basicRegion','region'],['basicRent','rentCosts'],['basicEnergy','energyCosts']];
+const proofMoney=value=>value.toLocaleString('cs-CZ',{style:'currency',currency:'CZK',minimumFractionDigits:0,maximumFractionDigits:2});
+const amountIds=['totalBenefit','housingComponent','livingComponent','childComponent','workComponent','lifeMinimum','incomeRatio','recognisedHousing','assetLimit'];
+const barIds=['housingBar','livingBar','childBar','workBar'];
+let formSubmitted=false;
+let firstIssue=null;
+
+const stepButtons=qsa('[data-step]');
+const componentButtons=qsa('[data-component]');
+let stepIssues=[];
+let selectedComponent=0;
+let currentResult=null;
+
+function goToStep(index){
+ el.basic.dataset.current=index;
+ stepButtons.forEach((button,position)=>{
+  if(position===index)button.setAttribute('aria-current','step');
+  else button.removeAttribute('aria-current');
+ });
+}
+
+function updateSteps(region,needsTemplate,issues){
+ stepIssues=[
+  region.value?null:region,
+  needsTemplate?document.querySelector('[data-template]'):null,
+  issues.find(({field})=>field.closest('[data-guide-step]')?.dataset.guideStep==='2')?.field,
+  issues.find(({field})=>field.closest('[data-guide-step]')?.dataset.guideStep==='3')?.field
+ ];
+ stepButtons.forEach((button,index)=>{
+  const done=!stepIssues[index];
+  button.classList.toggle('is-done',done);
+  button.setAttribute('aria-label','Krok '+(index+1)+' '+button.lastChild.textContent+(done?', hotovo':', k vyplnění'));
+ });
+ const completed=stepIssues.filter(issue=>!issue).length;
+ el.form.classList.toggle('is-guiding',completed<4);
+ setText('stepProgress',completed+' ze 4 kroků hotovo');
+}
+
+function editStep(index,advancedId){
+ if(activeMode==='advanced'){
+  $(advancedId)?.focus();
+  return;
  }
+ goToStep(index);
+ $('sd91-step-'+index).querySelector('select, input, [data-template]')?.focus();
 }
-function updateMobileSummary(result=null){const summary=$('mobileSummary');if(!summary)return;summary.hidden=!result;if(result)setText('mobileSummaryValue',`${money(result.total)} / měsíc`)}
-function render(result){updateMobileSummary(result);renderHeroBreakdown(result);if(el.heroGate)el.heroGate.className=result.hard?'is-risk':result.total>0?'is-success':'is-neutral';setText('totalBenefit',money(result.total));setText('housingComponent',result.hard?'—':money(result.housing));setText('livingComponent',result.hard?'—':money(result.living));setText('childComponent',result.hard?'—':money(result.child));setText('workComponent',result.hard?'—':money(result.work));setText('lifeMinimum',money(result.life));setText('incomeRatio',`${result.ratio.toLocaleString('cs-CZ',{maximumFractionDigits:2})}× minima`);setText('recognisedHousing',money(result.recHousing));setText('assetLimit',money(result.limit));if(el.heroTotal)el.heroTotal.textContent=money(result.total);const comps=[['housingBar',result.hard?0:result.housing],['livingBar',result.hard?0:result.living],['childBar',result.hard?0:result.child],['workBar',result.hard?0:result.work]],max=Math.max(1,...comps.map(x=>x[1]));comps.forEach(([id,v])=>{const n=$(id);if(n)n.style.width=`${Math.min(100,(v/max)*100)}%`});if(result.hard){el.status.textContent='Základní test neprošel';el.status.className='is-risk';el.explanation.textContent='Zadaný scénář obsahuje překážku, která podle základního modelu může nárok vyloučit.';if(el.heroGate)el.heroGate.textContent='Něco blokuje nárok'}else if(result.total>0){el.status.textContent=result.assumeAssets?'Orientační částka':'Předběžně prochází';el.status.className='is-success';el.explanation.textContent=result.assumeAssets?'Výsledek předpokládá splněný majetkový test. Přesnější režim ho umí orientačně prověřit.':'Podle zadaných údajů nevznikla v základních testech zjevná překážka.';if(el.heroGate)el.heroGate.textContent='Scénář předběžně prochází'}else{el.status.textContent='Bez vypočtené dávky';el.status.className='is-neutral';el.explanation.textContent='Podle zadaných hodnot nevychází kladná částka jednotlivých složek.';if(el.heroGate)el.heroGate.textContent='Bez kladné složky'}const warnings=[...result.issues];if(result.assumeAssets)warnings.unshift('Základní režim neověřuje skutečné úspory, auta ani další nemovitosti.');if(new Date()>=new Date(2027,0,1))warnings.unshift('Tento model obsahuje parametry platné pouze od října do prosince 2026. Pro nový rok ověřte aktuální model MPSV.');el.warnList.innerHTML=warnings.map(x=>`<li>${x}</li>`).join('');el.warnBox.hidden=!warnings.length}
-function validateMoneyInputs(){
- const ids=activeMode==='basic'
-  ?['basicWorkIncome','basicOtherIncome','basicRent','basicEnergy']
-  :['workIncome','otherIncome','rentCosts','energyCosts','allPeople','savings','cars','homes'];
- let okay=true;
- for(const id of ids){
-   const node=$(id),n=num(node?.value);
-   const integer=['allPeople','cars','homes'].includes(id);
-   const invalid=!(Number.isFinite(n)&&n>=0&&(!integer||Number.isInteger(n))&&(id!=='allPeople'||n>=members.length));
-   if(node){node.setAttribute('aria-invalid',String(invalid));if(invalid)okay=false}
+
+stepButtons.forEach((button,index)=>button.addEventListener('click',()=>editStep(index)));
+qsa('[data-continue]').forEach(button=>button.addEventListener('click',()=>{
+ const index=Number(button.dataset.continue);
+ formSubmitted=true;
+ calculate();
+ if(stepIssues[index]){
+  setText('resultAnnouncement','Doplňte údaje v tomto kroku.');
+  stepIssues[index].focus();
+ }else{
+  formSubmitted=false;
+  calculate();
+  editStep(index+1);
  }
- return okay;
+}));
+$('showAllSteps').addEventListener('click',event=>{
+ const button=event.currentTarget;
+ const expanded=el.basic.classList.toggle('show-all');
+ button.setAttribute('aria-pressed',String(expanded));
+ button.textContent=expanded?'Po krocích':'Všechna pole';
+});
+
+function renderComponent(){
+ const available=currentResult&&!currentResult.hard;
+ $('resultProof').hidden=!available||selectedComponent!==0;
+ $('componentStory').hidden=!available||selectedComponent===0;
+ if(!available||selectedComponent===0)return;
+ const {living,life,child,work}=currentResult;
+ const stories=[
+  null,
+  ['Živobytí',living>0?'Při zadaném příjmu model započetl částku na základní potřeby. Životní minimum domácnosti je '+money(life)+'.':'Příjem a životní minimum domácnosti v tomto zadání nevytvořily kladnou složku živobytí.'],
+  ['Bonus na dítě',child>0?'V zadání vychází příspěvek na nezaopatřené děti. Výši ovlivňuje příjem i složení domácnosti.':'V zadání nevychází kladný bonus. Ovlivňuje ho počet nezaopatřených dětí, příjem a splnění podmínek.'],
+  ['Pracovní bonus',work>0?'Část rozhodného příjmu je v tomto scénáři započtena pro pracovní bonus.':'Kladný pracovní bonus vyžaduje započitatelný příjem pro bonus a alespoň jednu další kladnou složku.']
+ ];
+ setText('componentTitle',stories[selectedComponent][0]);
+ setText('componentText',stories[selectedComponent][1]);
+ setText('componentEdit',selectedComponent===2?'Upravit členy domácnosti →':'Upravit příjmy →');
 }
-function showFormError(){
- updateMobileSummary(null);
- renderHeroBreakdown(null);
- setText('totalBenefit','—');setText('housingComponent','—');setText('livingComponent','—');setText('childComponent','—');setText('workComponent','—');
- if(el.heroTotal)el.heroTotal.textContent='—';
- // Never keep the previously calculated supporting metrics or bars after invalid input.
- ['lifeMinimum','incomeRatio','recognisedHousing','assetLimit'].forEach(id=>setText(id,'—'));
- ['housingBar','livingBar','childBar','workBar'].forEach(id=>{const n=$(id);if(n)n.style.width='0%'});
- el.status.textContent='Opravte vstupy';el.status.className='is-risk';
- el.explanation.textContent='Některá částka chybí nebo není platné nezáporné číslo. Označená pole opravte a výsledek se přepočítá.';
- if(el.heroGate){el.heroGate.textContent='Opravte zadané údaje';el.heroGate.className='is-risk'}
- el.warnList.innerHTML='<li>Vyplňte všechna číselná pole platnými hodnotami. Prázdný údaj není automaticky nula.</li>';el.warnBox.hidden=false;
- return null;
+componentButtons.forEach((button,index)=>button.addEventListener('click',()=>{
+ selectedComponent=index;
+ componentButtons.forEach((item,position)=>item.setAttribute('aria-pressed',String(position===index)));
+ renderComponent();
+}));
+$('componentEdit').addEventListener('click',event=>{
+ event.preventDefault();
+ if(selectedComponent===2&&activeMode==='advanced')el.memberList.querySelector('select')?.focus();
+ else editStep(selectedComponent===2?1:2,'workIncome');
+});
+$('proofEdit').addEventListener('click',event=>{event.preventDefault();editStep(3,'housingType')});
+qsa('[data-edit-step]').forEach(link=>link.addEventListener('click',event=>{event.preventDefault();editStep(Number(link.dataset.editStep),'housingType')}));
+$('guideAssets').addEventListener('click',event=>{event.preventDefault();setMode('advanced',true)});
+
+function showResultSections(result){
+ for(const id of ['resultComponents','resultMetrics','resultNext','mobileSummary'])$(id).hidden=!result;
+ currentResult=result;
+ $('resultWait').hidden=Boolean(result);
+ $('resultComponents').hidden=!result||result.hard;
+ $('resultMetrics').hidden=!result||result.hard;
+ $('componentChart').hidden=!result?.total||result.hard;
+ renderComponent();
 }
+
+function showWarnings(warnings){
+ el.warnList.replaceChildren(...warnings.map(message=>{
+  const item=document.createElement('li');
+  item.textContent=message;
+  return item;
+ }));
+ el.warnBox.hidden=!warnings.length;
+}
+
+function setStatus(text,style,explanation){
+ el.status.textContent=text;
+ el.status.className=style;
+ el.explanation.textContent=explanation;
+}
+
+function render(result,v){
+ showResultSections(result);
+ const {total,hard,assumeAssets,assetUncertain,issues}=result;
+ const components=[result.housing,result.living,result.child,result.work];
+ const scale=components.reduce((sum,value)=>sum+value,0)||1;
+ const values=[money(total),...components.map(value=>hard?'—':proofMoney(value)),money(result.life),result.ratio.toLocaleString('cs-CZ',{maximumFractionDigits:2})+'× minima',proofMoney(result.recHousing),money(result.limit)];
+ amountIds.forEach((id,index)=>setText(id,values[index]));
+ barIds.forEach((id,index)=>$(id).style.width=hard?'0%':(100*components[index]/scale)+'%');
+ setText('mobileSummaryValue',money(total)+' / měsíc');
+ if(hard)setStatus('Překážka v modelu','is-risk','Zadané údaje ukazují překážku. Její důvod najdete níže.');
+ else if(assetUncertain)setStatus('Podmíněný odhad','is-neutral','Částka platí za předpokladu, že se u stavby mimo vlastní bydlení uplatní tříletá výjimka.');
+ else if(!total)setStatus('Bez kladné částky','is-neutral','Ze zadaných údajů vychází 0 Kč.');
+ else setStatus(assumeAssets?'Rychlý odhad':'Podrobný odhad','is-success',assumeAssets?'Částka předpokládá splnění majetkového testu a podmínek zvolené domácnosti.':'Výsledek vychází ze zadaných údajů a základních testů modelu.');
+
+ setText('warningHeading',hard?'Proč se dávka nevyplatí':'Co potřebuje pozornost');
+ const warnings=[...issues];
+ if(!$('exampleNotice').hidden)warnings.unshift('Počítáte s údaji z ukázky nebo s jejich upravenou verzí.');
+ if(total>0&&total<300)warnings.push('Částky pod 300 Kč se mohou vyplácet souhrnně podle § 47.');
+ if(new Date()>=new Date(2027,0,1))warnings.unshift('Archivní model. Pro měsíce od ledna 2027 ověřte aktuální parametry.');
+ showWarnings(warnings);
+ $('checkAssets').hidden=!assumeAssets||hard;
+ $('applicationLink').hidden=hard||assumeAssets||assetUncertain||total===0;
+ if(hard){
+  setText('nextTitle','Ověřte uvedenou překážku');
+  setText('nextDescription','Při výjimce nebo nejasnostech se obraťte na Úřad práce.');
+ }else if(assumeAssets){
+  setText('nextTitle','Majetek a přesné složení domácnosti zatím neověřeny');
+  setText('nextDescription','Rychlá verze používá typovou domácnost. Úspory, auta a nemovitosti můžete zadat v podrobném výpočtu.');
+ }else if(assetUncertain){
+  setText('nextTitle','Ověřte výjimku pro další stavbu');
+  setText('nextDescription','Podmínky výjimky posuzuje Úřad práce.');
+ }else{
+  setText('nextTitle',total?'Připravte si podklady k žádosti':'Zkontrolujte, jak vznikla nula');
+  setText('nextDescription',total?'Připravte příjmy, náklady na bydlení a údaje o domácnosti.':'Otevřete rozpis bydlení a ověřte příjmy, osoby i započtené náklady.');
+ }
+
+ setText('proofBaseLabel',v.housingType==='owner'?'Vlastnický paušál':'Započtený nájem a služby');
+ setText('proofEnergyLabel',result.ratio>=1.43?'Energetický paušál':'Započtené skutečné energie');
+ setText('proofBase',proofMoney(result.recBase));
+ setText('proofEnergy',proofMoney(result.recEnergy));
+ setText('proofCosts',proofMoney(result.recHousing));
+ setText('proofDeduction',proofMoney(result.determined));
+ let baseReason='Zadaný nájem se službami se vešel do stropu modelu.';
+ if(v.housingType==='owner')baseReason='U vlastního a družstevního bydlení se použil vlastnický paušál.';
+ else if(result.rentShare>result.recBase)baseReason='Započitatelný podíl nájmu se službami převyšuje strop o '+proofMoney(result.rentShare-result.recBase)+'.';
+ const energyReason=result.ratio>=1.43
+  ?'Při tomto příjmu se energie počítají paušálem.'
+  :'Při tomto příjmu se uznávají skutečné energie nejvýš do '+proofMoney(result.energyP*1.2)+'.';
+ const allocation=result.share<1?'Ze skutečných nákladů celého bytu se započítává '+result.share.toLocaleString('cs-CZ',{style:'percent',maximumFractionDigits:2})+' před použitím zákonných stropů. ':'';
+ setText('proofReason',result.share===0?'Pro složku na bydlení se nezohledňuje žádný člen domácnosti.':allocation+baseReason+' '+energyReason+(result.housing===0?' Po odečtení části příjmu vychází bydlení na 0 Kč.':''));
+}
+
+function moneyIssue(id){
+ const field=$(id);
+ const label=field.closest('label');
+ const n=num(field.value);
+ const integer=['allPeople','cars','homes'].includes(id);
+ const message=!field.value.trim()?(integer?'Doplňte počet.':'Doplňte částku nebo zadejte 0.'):
+  !Number.isFinite(n)||n>Number.MAX_SAFE_INTEGER?'Zadejte platné nezáporné číslo.':
+  integer&&!Number.isInteger(n)?'Zadejte celé číslo.':
+  id==='allPeople'&&n<members.length?'Zadejte alespoň '+members.length+' osob.':'';
+ const error=label.querySelector('em');
+ const show=Boolean(message&&(formSubmitted||field.value.trim()));
+ error.id ||= id+'Error';
+ field.setAttribute('aria-describedby',error.id);
+ field.setAttribute('aria-invalid',String(show));
+ error.textContent=show?message:'';
+ return message?{field,label:label.firstElementChild.textContent}:null;
+}
+
 function calculate(){
- if(!validateMoneyInputs())return showFormError();
- const v=activeMode==='basic'?basicValues():advancedValues();
- if(!v.region||!NORM[v.region]){
-   updateMobileSummary(null);
-   renderHeroBreakdown(null);
-   setText('totalBenefit','—');setText('housingComponent','—');setText('livingComponent','—');setText('childComponent','—');setText('workComponent','—');
-   setText('lifeMinimum','—');setText('incomeRatio','—');setText('recognisedHousing','—');setText('assetLimit','—');
-   if(el.heroTotal)el.heroTotal.textContent='—';
-   el.status.textContent='Vyberte okres';el.status.className='is-neutral';
-   el.explanation.textContent='Pro výpočet zvolte okres bydliště. Od října 2026 se uznatelné nájemné liší podle 77 okresů.';
-   if(el.heroGate){el.heroGate.textContent='Čeká se na výběr okresu';el.heroGate.className='is-neutral'}
-   ['housingBar','livingBar','childBar','workBar'].forEach(id=>{const n=$(id);if(n)n.style.width='0%'});
-   el.warnList.innerHTML='<li>Výpočet nezačíná bez okresu — staré kategorie velikosti obce už neplatí.</li>';el.warnBox.hidden=false;
-   return null;
+ const basic=activeMode==='basic';
+ const region=$(basic?'basicRegion':'region');
+ const rent=$(basic?'basicRent':'rentCosts');
+ const owner=$(basic?'basicHousingType':'housingType').value==='owner';
+ rent.closest('label').hidden=owner;
+ rent.disabled=owner;
+ if(!basic){
+  const homes=num($('homes').value);
+  $('homeUseField').hidden=!(homes>0);
+  $('homeExceptionField').hidden=homes-($('usesOwnHome').checked?1:0)!==1;
  }
- const r=engine(v);render(r);return r;
+ const ids=basic?['basicWorkIncome','basicOtherIncome','basicRent','basicEnergy']:['workIncome','otherIncome','rentCosts','energyCosts','allPeople','savings','cars','homes'];
+ const issues=ids.filter(id=>!$(id).disabled).map(moneyIssue).filter(Boolean);
+ const needsTemplate=basic&&!basicTemplate;
+ if(basic)updateSteps(region,needsTemplate,issues);
+ firstIssue=!region.value?region:needsTemplate?document.querySelector('[data-template]'):issues[0]?.field;
+ if(firstIssue){
+  showResultSections(null);
+  amountIds.forEach(id=>setText(id,'—'));
+  barIds.forEach(id=>$(id).style.width='0%');
+  showWarnings([]);
+  const explanation=!region.value?'Nejprve zvolte okres bydliště.':needsTemplate?'Vyberte typ domácnosti nebo přejděte na podrobný výpočet.':'Doplňte nebo opravte pole „'+issues[0].label+'“.';
+  const invalid=formSubmitted||issues.some(({field})=>field.getAttribute('aria-invalid')==='true');
+  setStatus(invalid?'Doplňte vstupy':'Čeká na údaje',invalid?'is-risk':'is-neutral',explanation);
+  return null;
+ }
+ const v=basic?basicValues():advancedValues();
+ if(owner)v.rent=0;
+ const result=engine(v);
+ render(result,v);
+ return result;
 }
+
 function setMode(mode,focus=false){
- if(mode==='basic'&&activeMode==='advanced'){
-   advancedMembersSnapshot=structuredClone(members);basicChangedSinceAdvanced=false;
-   members=clone(basicTemplate);renderMembers();
- }else if(mode==='advanced'&&activeMode==='basic'){
-   if(advancedMembersSnapshot){
-     members=structuredClone(advancedMembersSnapshot);renderMembers();
-     if(basicChangedSinceAdvanced){
-       const previousAllPeople=num($('allPeople').value);
-       syncBasicToAdvanced();
-       if(Number.isFinite(previousAllPeople))$('allPeople').value=Math.max(members.length,previousAllPeople);
-     }else syncAllPeople();
-   }else syncBasicToAdvanced();
+ if(mode!==activeMode){
+  if(mode==='basic'){
+   advancedMembersSnapshot=structuredClone(members);
+   members=basicTemplate?clone(basicTemplate):clone('single');
+  }else{
+   members=advancedMembersSnapshot?structuredClone(advancedMembersSnapshot):basicTemplate?clone(basicTemplate):clone('single');
+  }
+  renderMembers();
  }
- activeMode=mode;el.modeBtns.forEach(b=>{const a=b.dataset.mode===mode;b.classList.toggle('is-active',a);b.setAttribute('aria-selected',String(a));b.tabIndex=a?0:-1;if(a&&focus)b.focus()});el.basic.hidden=mode!=='basic';el.advanced.hidden=mode!=='advanced';$('modeHelp').textContent=mode==='basic'?'Začněte okresem bydliště. Potom nastavte domácnost, příjmy a bydlení. Majetek ověříte v přesnějším režimu.':'Přesnější režim přidá konkrétní členy domácnosti, pracovní aktivitu, zranitelnost a základní majetkový test.';calculate()}
-function syncBasicToAdvanced(){$('workIncome').value=$('basicWorkIncome').value;$('otherIncome').value=$('basicOtherIncome').value;$('housingType').value=$('basicHousingType').value;$('region').value=$('basicRegion').value;$('rentCosts').value=$('basicRent').value;$('energyCosts').value=$('basicEnergy').value;$('allPeople').value=members.length;renderMembers()}
-function applyTemplate(key){basicTemplate=key;advancedMembersSnapshot=null;basicChangedSinceAdvanced=false;members=clone(key);qsa('[data-template]').forEach(b=>b.classList.toggle('is-active',b.dataset.template===key));syncBasicToAdvanced();calculate()}
+ activeMode=mode;
+ el.modeBtns.forEach(button=>{
+  const selected=button.dataset.mode===mode;
+  button.classList.toggle('is-active',selected);
+  button.setAttribute('aria-selected',String(selected));
+  button.tabIndex=selected?0:-1;
+  if(selected&&focus)button.focus();
+ });
+ el.basic.hidden=mode!=='basic';
+ el.advanced.hidden=mode!=='advanced';
+ setText('modeHelp',mode==='basic'?'Vlastní výpočet začněte výběrem okresu.':'Přidejte konkrétní osoby a doplňte údaje pro majetkový test.');
+ formSubmitted=false;
+ calculate();
+}
+
+function applyTemplate(key){
+ basicTemplate=key;
+ advancedMembersSnapshot=null;
+ members=key?clone(key):clone('single');
+ qsa('[data-template]').forEach(button=>{
+  const selected=button.dataset.template===key;
+  button.classList.toggle('is-active',selected);
+  button.setAttribute('aria-pressed',String(selected));
+ });
+ $('allPeople').value=members.length;
+ renderMembers();
+ calculate();
+}
+
+function resetForm(example=false){
+ el.form.reset();
+ $('exampleNotice').hidden=!example;
+ $('exampleBtn').hidden=example;
+ for(const [basic,advanced] of sharedFields)$(advanced).value=$(basic).value;
+ setMode('basic');
+ applyTemplate(example?'single':null);
+ if(example){
+  const values=['20000','0','rent','Praha','12000','3000'];
+  sharedFields.forEach((pair,index)=>pair.forEach(id=>$(id).value=values[index]));
+  for(const id of ['savings','cars','homes'])$(id).value='0';
+ }
+ calculate();
+ goToStep(0);
+ $(example?'basicRegion':'exampleBtn').focus();
+}
+
 qsa('[data-template]').forEach(b=>b.addEventListener('click',()=>applyTemplate(b.dataset.template)));
-el.modeBtns.forEach((b,i)=>{b.addEventListener('click',()=>{setMode(b.dataset.mode)});b.addEventListener('keydown',e=>{if(!['ArrowLeft','ArrowRight','Home','End'].includes(e.key))return;e.preventDefault();let next=i;if(e.key==='ArrowRight')next=(i+1)%el.modeBtns.length;if(e.key==='ArrowLeft')next=(i-1+el.modeBtns.length)%el.modeBtns.length;if(e.key==='Home')next=0;if(e.key==='End')next=el.modeBtns.length-1;const n=el.modeBtns[next];setMode(n.dataset.mode,true)})});
-['basicWorkIncome','basicOtherIncome','basicRent','basicEnergy','workIncome','otherIncome','rentCosts','energyCosts','allPeople','savings','cars','homes'].forEach(id=>{const n=$(id);n?.addEventListener('input',()=>{if(id.startsWith('basic')&&advancedMembersSnapshot)basicChangedSinceAdvanced=true;calculate()});n?.addEventListener('change',()=>{if(id.startsWith('basic')&&advancedMembersSnapshot)basicChangedSinceAdvanced=true;if(!['allPeople','cars','homes'].includes(id))formatInput(n);calculate()})});
-['basicHousingType','basicRegion','housingType','region','schoolOk','solidFuel','secondHomeException'].forEach(id=>$(id)?.addEventListener('change',()=>{if(id.startsWith('basic')&&advancedMembersSnapshot)basicChangedSinceAdvanced=true;calculate()}));
-el.add?.addEventListener('click',()=>{if(members.length>=12)return;members.push({type:'adult',active:true,vulnerable:false,plan:false});renderMembers();syncAllPeople();calculate()});
-$('mobileSummaryLink')?.addEventListener('click',()=>{$('vysledek')?.focus({preventScroll:true})});
-el.form?.addEventListener('submit',e=>{
- e.preventDefault();
+el.modeBtns.forEach((button,index)=>{
+ button.addEventListener('click',()=>setMode(button.dataset.mode));
+ button.addEventListener('keydown',event=>{
+  const target={ArrowLeft:1-index,ArrowRight:1-index,Home:0,End:1}[event.key];
+  if(target===undefined)return;
+  event.preventDefault();
+  setMode(el.modeBtns[target].dataset.mode,true);
+ });
+});
+for(const pair of sharedFields){
+ pair.forEach((id,index)=>{
+  const field=$(id);
+  const counterpart=$(pair[1-index]);
+  function update(){
+   counterpart.value=field.value;
+   calculate();
+  }
+  field.addEventListener(field.tagName==='SELECT'?'change':'input',update);
+  if(field.tagName!=='SELECT')field.addEventListener('change',()=>{formatInput(field);update()});
+ });
+}
+for(const id of ['allPeople','savings','cars','homes'])$(id).addEventListener('input',calculate);
+for(const id of ['solidFuel','usesOwnHome','secondHomeException'])$(id).addEventListener('change',calculate);
+function focusMember(index){
+ el.memberList.querySelector('[data-index="'+index+'"][data-key="type"]')?.focus();
+}
+el.add.addEventListener('click',()=>{
+ if(members.length>=12)return;
+ const previousCount=members.length;
+ members.push({type:'adult',active:true,vulnerable:false,plan:false});
+ renderMembers();
+ syncAllPeople(previousCount);
+ calculate();
+ focusMember(members.length-1);
+});
+function focusResult(){
+ const panel=$('vysledek');
+ panel.scrollIntoView({block:'start'});
+ panel.focus({preventScroll:true});
+}
+$('mobileSummaryLink').addEventListener('click',event=>{event.preventDefault();focusResult()});
+const mobileSummary=$('mobileSummary');
+const resultObserver=new IntersectionObserver(([entry])=>{
+ const resultVisible=entry.isIntersecting;
+ mobileSummary.classList.toggle('is-result-visible',resultVisible);
+ mobileSummary.inert=resultVisible;
+},{rootMargin:'-128px 0px -20% 0px',threshold:0.35});
+resultObserver.observe(document.querySelector('.sd87-main-result'));
+
+el.form.addEventListener('submit',event=>{
+ event.preventDefault();
+ formSubmitted=true;
  const result=calculate();
  if(!result){
-  const current=activeMode==='basic'?el.basic:el.advanced;
-  const invalid=current?.querySelector('[aria-invalid="true"]');
-  const missingDistrict=$(activeMode==='basic'?'basicRegion':'region');
-  const firstIssue=invalid||(!missingDistrict?.value?missingDistrict:null);
+  setText('resultAnnouncement',el.explanation.textContent);
+  const step=firstIssue?.closest('[data-guide-step]');
+  if(step)goToStep(Number(step.dataset.guideStep));
   firstIssue?.focus();
   return;
  }
- if(window.matchMedia('(max-width:930px)').matches){
-  const panel=$('vysledek');
-  const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  panel?.scrollIntoView({behavior:reduced?'auto':'smooth',block:'start'});
-  panel?.focus({preventScroll:true});
- }
-});el.reset?.addEventListener('click',()=>{const selectedDistrict=$('basicRegion').value;advancedMembersSnapshot=null;basicChangedSinceAdvanced=false;members=clone('coupleTwoChildren');basicTemplate='coupleTwoChildren';$('basicWorkIncome').value='36 000';$('basicOtherIncome').value='0';$('basicHousingType').value='rent';$('basicRegion').value=selectedDistrict;$('basicRent').value='18 000';$('basicEnergy').value='4 000';qsa('[data-template]').forEach(b=>b.classList.toggle('is-active',b.dataset.template==='coupleTwoChildren'));syncBasicToAdvanced();$('savings').value='80 000';$('cars').value='1';$('homes').value='1';$('schoolOk').checked=true;$('solidFuel').checked=false;$('secondHomeException').checked=false;setMode('basic');advancedMembersSnapshot=null});
+ setText('resultAnnouncement','Orientační výsledek '+money(result.total)+' měsíčně.');
+ focusResult();
+});
+$('checkAssets').addEventListener('click',()=>{
+ setMode('advanced',true);
+ $('kalkulacka').scrollIntoView({block:'start'});
+});
+$('exampleBtn').addEventListener('click',()=>resetForm(true));
+$('clearExample').addEventListener('click',()=>resetForm());
+el.reset.addEventListener('click',()=>resetForm());
 function updateDeadline(){if(el.days)el.days.textContent=new Date()>=new Date(2027,0,1)?'Model říjen–prosinec 2026 (archivní období)':'Pravidla platná 1. 10.–31. 12. 2026'}
 if(el.menu&&el.mobile){el.menu.addEventListener('click',()=>{const open=el.menu.getAttribute('aria-expanded')==='true';el.menu.setAttribute('aria-expanded',String(!open));el.mobile.hidden=open});el.mobile.addEventListener('click',e=>{if(e.target.closest('a')){el.mobile.hidden=true;el.menu.setAttribute('aria-expanded','false')}})}
 function initDistricts(){
@@ -143,6 +424,6 @@ function initDistricts(){
    }
  }
 }
-initDistricts();renderMembers();syncBasicToAdvanced();updateDeadline();calculate();
+initDistricts();applyTemplate(null);updateDeadline();calculate();
 window.__RV_SD87__={engine,templates,LIFE,NORM,LEGAL};
 })();
