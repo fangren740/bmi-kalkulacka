@@ -107,7 +107,24 @@ el.modeBtns.forEach((b,i)=>{b.addEventListener('click',()=>{setMode(b.dataset.mo
 ['basicWorkIncome','basicOtherIncome','basicRent','basicEnergy','workIncome','otherIncome','rentCosts','energyCosts','allPeople','savings','cars','homes'].forEach(id=>{const n=$(id);n?.addEventListener('input',()=>{if(id.startsWith('basic')&&advancedMembersSnapshot)basicChangedSinceAdvanced=true;calculate()});n?.addEventListener('change',()=>{if(id.startsWith('basic')&&advancedMembersSnapshot)basicChangedSinceAdvanced=true;if(!['allPeople','cars','homes'].includes(id))formatInput(n);calculate()})});
 ['basicHousingType','basicRegion','housingType','region','schoolOk','solidFuel','secondHomeException'].forEach(id=>$(id)?.addEventListener('change',()=>{if(id.startsWith('basic')&&advancedMembersSnapshot)basicChangedSinceAdvanced=true;calculate()}));
 el.add?.addEventListener('click',()=>{if(members.length>=12)return;members.push({type:'adult',active:true,vulnerable:false,plan:false});renderMembers();syncAllPeople();calculate()});
-el.form?.addEventListener('submit',e=>{e.preventDefault();calculate()});el.reset?.addEventListener('click',()=>{const selectedDistrict=$('basicRegion').value;advancedMembersSnapshot=null;basicChangedSinceAdvanced=false;members=clone('coupleTwoChildren');basicTemplate='coupleTwoChildren';$('basicWorkIncome').value='36 000';$('basicOtherIncome').value='0';$('basicHousingType').value='rent';$('basicRegion').value=selectedDistrict;$('basicRent').value='18 000';$('basicEnergy').value='4 000';qsa('[data-template]').forEach(b=>b.classList.toggle('is-active',b.dataset.template==='coupleTwoChildren'));syncBasicToAdvanced();$('savings').value='80 000';$('cars').value='1';$('homes').value='1';$('schoolOk').checked=true;$('solidFuel').checked=false;$('secondHomeException').checked=false;setMode('basic');advancedMembersSnapshot=null});
+el.form?.addEventListener('submit',e=>{
+ e.preventDefault();
+ const result=calculate();
+ if(!result){
+  const current=activeMode==='basic'?el.basic:el.advanced;
+  const invalid=current?.querySelector('[aria-invalid="true"]');
+  const missingDistrict=$(activeMode==='basic'?'basicRegion':'region');
+  const firstIssue=invalid||(!missingDistrict?.value?missingDistrict:null);
+  firstIssue?.focus();
+  return;
+ }
+ if(window.matchMedia('(max-width:930px)').matches){
+  const panel=$('vysledek');
+  const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  panel?.scrollIntoView({behavior:reduced?'instant':'smooth',block:'start'});
+  panel?.focus({preventScroll:true});
+ }
+});el.reset?.addEventListener('click',()=>{const selectedDistrict=$('basicRegion').value;advancedMembersSnapshot=null;basicChangedSinceAdvanced=false;members=clone('coupleTwoChildren');basicTemplate='coupleTwoChildren';$('basicWorkIncome').value='36 000';$('basicOtherIncome').value='0';$('basicHousingType').value='rent';$('basicRegion').value=selectedDistrict;$('basicRent').value='18 000';$('basicEnergy').value='4 000';qsa('[data-template]').forEach(b=>b.classList.toggle('is-active',b.dataset.template==='coupleTwoChildren'));syncBasicToAdvanced();$('savings').value='80 000';$('cars').value='1';$('homes').value='1';$('schoolOk').checked=true;$('solidFuel').checked=false;$('secondHomeException').checked=false;setMode('basic');advancedMembersSnapshot=null});
 function updateDeadline(){if(el.days)el.days.textContent=new Date()>=new Date(2027,0,1)?'Model říjen–prosinec 2026 (archivní období)':'Pravidla platná 1. 10.–31. 12. 2026'}
 if(el.menu&&el.mobile){el.menu.addEventListener('click',()=>{const open=el.menu.getAttribute('aria-expanded')==='true';el.menu.setAttribute('aria-expanded',String(!open));el.mobile.hidden=open});el.mobile.addEventListener('click',e=>{if(e.target.closest('a')){el.mobile.hidden=true;el.menu.setAttribute('aria-expanded','false')}})}
 function initDistricts(){
