@@ -121,7 +121,7 @@ el.form?.addEventListener('submit',e=>{
  if(window.matchMedia('(max-width:930px)').matches){
   const panel=$('vysledek');
   const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  panel?.scrollIntoView({behavior:reduced?'instant':'smooth',block:'start'});
+  panel?.scrollIntoView({behavior:reduced?'auto':'smooth',block:'start'});
   panel?.focus({preventScroll:true});
  }
 });el.reset?.addEventListener('click',()=>{const selectedDistrict=$('basicRegion').value;advancedMembersSnapshot=null;basicChangedSinceAdvanced=false;members=clone('coupleTwoChildren');basicTemplate='coupleTwoChildren';$('basicWorkIncome').value='36 000';$('basicOtherIncome').value='0';$('basicHousingType').value='rent';$('basicRegion').value=selectedDistrict;$('basicRent').value='18 000';$('basicEnergy').value='4 000';qsa('[data-template]').forEach(b=>b.classList.toggle('is-active',b.dataset.template==='coupleTwoChildren'));syncBasicToAdvanced();$('savings').value='80 000';$('cars').value='1';$('homes').value='1';$('schoolOk').checked=true;$('solidFuel').checked=false;$('secondHomeException').checked=false;setMode('basic');advancedMembersSnapshot=null});
