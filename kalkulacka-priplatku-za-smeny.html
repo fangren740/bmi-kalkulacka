@@ -29,7 +29,7 @@
 <meta name="twitter:description" content="Směna podle času, právní režim, souběhy příplatků, náhradní volno a kontrola výplatnice.">
 <meta name="twitter:image" content="https://rychlevypocty.cz/og-rv-priplatky-smeny-v32.jpg">
 <link rel="stylesheet" href="/rv-brand-v32.css?v=20260801-stable">
-<link rel="stylesheet" href="/priplatky-smeny.css?v=20261107-readable1">
+<link rel="stylesheet" href="/priplatky-smeny.css?v=20261107-product2">
 <script defer src="/rv-brand-v32.js?v=20260801"></script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"RychléVýpočty.cz","item":"https://rychlevypocty.cz/"},{"@type":"ListItem","position":2,"name":"Mzdy a práce","item":"https://rychlevypocty.cz/mzdy-a-prace.html"},{"@type":"ListItem","position":3,"name":"Kalkulačka příplatků za směny","item":"https://rychlevypocty.cz/kalkulacka-priplatku-za-smeny.html"}]}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Kalkulačka příplatků za směny 2026","url":"https://rychlevypocty.cz/kalkulacka-priplatku-za-smeny.html","applicationCategory":"BusinessApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","inLanguage":"cs-CZ","isAccessibleForFree":true,"description":"Kalkulačka nočních, víkendových, svátečních a přesčasových příplatků pro mzdu, plat a DPP/DPČ s automatickým rozdělením konkrétní směny.","publisher":{"@type":"Organization","name":"RychléVýpočty.cz","url":"https://rychlevypocty.cz/","sameAs":["https://www.facebook.com/rychlevypocty","https://www.instagram.com/rychlevypocty/"]}}</script>
@@ -119,7 +119,7 @@
           <input type="hidden" id="payRegime" value="wage">
           <div class="sf-two-fields">
             <label class="sf-field"><span>Základní sazba pro odhad celku</span><div class="sf-unit-input"><input id="hourlyRate" type="number" min="0" max="10000" step="1" value="180" inputmode="decimal"><b>Kč/h</b></div><small>Pro odhad celku. Měsíční mzdu či plat převeďte na hodinovou sazbu.</small></label>
-            <label class="sf-field"><span>Průměrný hodinový výdělek</span><div class="sf-unit-input"><input id="averageEarnings" type="number" min="0" max="10000" step="1" value="180" inputmode="decimal"><b>Kč/h</b></div><small>Z něj počítáme příplatky. <button class="sf-inline-action" id="syncAverage" type="button">Použít stejnou sazbu</button></small></label>
+            <label class="sf-field"><span>Průměrný hodinový výdělek</span><div class="sf-unit-input"><input id="averageEarnings" type="number" min="0" max="10000" step="1" value="180" inputmode="decimal"><b>Kč/h</b></div><small>Z něj počítáme příplatky. <a href="/prumerny-vydelek-kalkulacka.html">Jak zjistit PHV</a>. <button class="sf-inline-action" id="syncAverage" type="button">Použít stejnou sazbu</button></small></label>
           </div>
         </section>
 
@@ -178,7 +178,15 @@
         <div class="sf-result-top"><span>VÝSLEDEK SMĚNY</span><small id="resultRegime">mzda</small></div>
         <div class="sf-result-primary"><span>Očekávané hrubé příplatky za směnu</span><strong id="cashBonus" aria-live="polite">—</strong><small id="resultSummary">noční + víkend</small></div>
         <div class="sf-result-kpis"><div><span>Modelový základ</span><strong id="basePay">1 440 Kč</strong></div><div><span>Modelový hrubý součet</span><strong id="totalPay">1 728 Kč</strong></div><div><span>Náhradní volno</span><strong id="timeOff">0 h</strong></div><div><span>Příplatky × směny</span><strong id="repeatBonus">2 880 Kč</strong></div></div>
-        <div id="resultDetails"><div id="resultTimeline">          <div class="sf-timeline-card" role="group" aria-label="Automatické rozdělení směny">
+        <div class="sf-result-links"><a class="sf-audit-jump" href="#kontrola-pasky" id="auditSingleJump">Zkontrolovat na pásce →</a><button type="button" id="saveResultShift" class="sf-small-btn">Přidat do měsíce</button></div>
+<a class="sf-audit-jump" href="#rozbor">Proč vyšla tato částka ↓</a>
+        <div class="sf-result-note" id="resultNote"><strong>Co tento výsledek říká</strong><p>Peněžní příplatky jsou model podle zadaného průměrného výdělku, hodin a sazeb. Neurčuje, zda zaměstnavatel hodiny právně správně klasifikoval.</p></div>
+        <div class="sf-result-actions"><button type="button" id="copyResult">Kopírovat souhrn</button><button type="button" id="copyLink">Zkopírovat odkaz</button><button type="button" id="printResult">Vytisknout</button></div>
+      </aside>
+    </div>
+  </div>
+</section>
+<section class="sf-section sf-analysis" id="rozbor"><div class="sf-shell"><div class="sf-section-head"><p class="sf-eyebrow">Minuty → hodiny → koruny</p><h2>Jak se noční, víkend a přesčas sčítají</h2><p>Osa ukazuje skutečnou délku směny. Stejná minuta může patřit do více příplatků.</p></div>        <div id="resultDetails"><div id="resultTimeline">          <div class="sf-timeline-card" role="group" aria-label="Automatické rozdělení směny">
             <div class="sf-timeline-head"><div><strong id="timelineTitle">Rozpad směny</strong><small id="timelineRange">—</small></div><span id="autoStatus">Český čas</span></div>
             <div class="sf-timeline-lanes" id="timelineLanes"><div class="sf-time-cursor" aria-hidden="true"></div><div class="sf-track-row"><span>Práce</span><div class="sf-track" id="workTrack"></div></div>
             <div class="sf-track-row"><span>Noční</span><div class="sf-track" id="nightTrack"></div></div>
@@ -192,17 +200,11 @@
           <div class="sf-detected-grid"><div><span>Odpracováno</span><strong id="autoWorked">—</strong></div><div><span>Noční</span><strong id="autoNight">—</strong></div><div><span>Víkend</span><strong id="autoWeekend">—</strong></div><div><span>Svátek</span><strong id="autoHoliday">—</strong></div></div>
           <p class="sf-edge-note" id="calendarRuleNote">Osa má délku skutečně uplynulého času v Praze. Při dvojznačném nebo neexistujícím čase použijte docházku. Pokud firma používá posun dne pracovního klidu dle § 91 odst. 6, zadejte evidované hodiny ručně.</p>
 </div>
-        <div class="sf-result-links"><a class="sf-audit-jump" href="#kontrola-pasky" id="auditSingleJump">Zkontrolovat na pásce →</a><button type="button" id="saveResultShift" class="sf-small-btn">Přidat do měsíce</button></div>
         <div class="sf-overlap-box" id="overlapBox"><strong>Souběh příplatků</strong><div id="overlapChips" class="sf-overlap-chips"></div><p id="overlapText"></p></div>
         <div class="sf-standard"><span id="rateBasis">Výchozí zákonné sazby</span><strong id="standardBonus">—</strong><small>Srovnání se stejnými hodinami a stejným typem kompenzace. Firemní sazby a zvláštní příplatky zadejte podle dokumentů zaměstnavatele.</small></div><p class="sf-leave-detail" id="leaveBreakdown"></p><p class="sf-leave-detail" id="leaveNote" hidden></p>
         <h3 class="sf-pay-heading">Z čeho se skládá hrubý součet</h3><div class="sf-pay-strip" id="payStrip" aria-hidden="true"></div><div class="sf-breakdown" id="breakdownList"></div>
         </div>
-        <div class="sf-result-note" id="resultNote"><strong>Co tento výsledek říká</strong><p>Peněžní příplatky jsou model podle zadaného průměrného výdělku, hodin a sazeb. Neurčuje, zda zaměstnavatel hodiny právně správně klasifikoval.</p></div>
-        <div class="sf-result-actions"><button type="button" id="copyResult">Kopírovat souhrn</button><button type="button" id="copyLink">Zkopírovat odkaz</button><button type="button" id="printResult">Vytisknout</button></div>
-      </aside>
-    </div>
-  </div>
-</section>
+</div></section>
 
 <section class="sf-month-section" id="mesic" aria-labelledby="monthHeading">
  <div class="sf-shell">
@@ -223,7 +225,7 @@
    </div>
    <p id="monthLeaveSplit" class="sf-month-note"></p>
    <p class="sf-month-note">Příplatkové hodiny se překrývají. Jejich součet není odpracovaná doba. Částky za zadané směny nepředstavují celou měsíční mzdu ani plat.</p>
-   <ul id="monthRows" class="sf-month-ledger" aria-label="Uložené směny"></ul>
+   <div id="monthComposition" class="sf-month-composition" aria-label="Příplatky po druzích"></div><p class="sf-month-note">Délka barevných pruhů odpovídá částce příplatku. Základní odměna a náhradní volno se do pruhů nezapočítávají.</p><ul id="monthRows" class="sf-month-ledger" aria-label="Uložené směny"></ul>
   </div>
   <small class="sf-month-note">Až 62 záznamů v této kartě. Tlačítko Přidat uloží jednu směnu bez opakování z rychlého výpočtu. Kalkulačka údaje o směnách ani výplatnici nikam neodesílá. Směnu přes hranici měsíců rozdělte podle docházky na dvě části.</small>
  </div>
@@ -335,7 +337,7 @@
 
 <section class="sf-section sf-soft" id="faq">
   <div class="sf-shell sf-faq-grid">
-    <div class="sf-section-head"><p class="sf-eyebrow">Časté otázky</p><h2>Nejčastější místa, kde se výpočet směn plete</h2><p>Největší rozdíly obvykle nevznikají ve vzorci, ale ve špatném právním režimu, průměrném výdělku nebo klasifikaci hodin.</p></div>
+    <div class="sf-section-head"><p class="sf-eyebrow">Časté otázky</p><h2>Příplatky za noční, víkend a svátek — časté otázky</h2><p>Největší rozdíly obvykle nevznikají ve vzorci, ale ve špatném právním režimu, průměrném výdělku nebo klasifikaci hodin.</p></div>
     <div class="sf-faq-list">
       <details><summary>Kolik je příplatek za noční práci v roce 2026?</summary><p>U mzdy je zákonný výchozí model 10 % průměrného výdělku, přičemž lze sjednat jinou minimální výši a způsob určení. U platu činí příplatek 20 % průměrného hodinového výdělku. Noční doba je 22:00–06:00.</p></details>
       <details><summary>Kolik je příplatek za sobotu a neděli?</summary><p>U mzdy vychází zákonný výchozí model z 10 % průměrného výdělku a lze sjednat jinou minimální výši a způsob určení. U platu činí příplatek 25 % průměrného hodinového výdělku.</p></details>
@@ -363,7 +365,7 @@
   </div>
   <div class="sf-shell sf-footer-bottom"><span>© 2026 RychléVýpočty.cz.</span><span><strong>Upozornění:</strong> Výsledek je transparentní kontrolní model. Nenahrazuje evidenci pracovní doby, mzdové podklady zaměstnavatele ani individuální právní posouzení.</span></div>
 </footer>
-<script src="/priplatky-smeny.js?v=20261107-readable1" defer></script>
+<script src="/priplatky-smeny.js?v=20261107-product2" defer></script>
 <!-- RV-VNEXT: status=DONE | major=2026-08-17 | qa=PASS | seq=7 -->
 </body>
 </html>

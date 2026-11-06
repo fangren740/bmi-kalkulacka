@@ -68,6 +68,11 @@ with sync_playwright() as p:
             cta=page.locator('.sf-header-cta').bounding_box()
             assert logo['x']+logo['width']<nav['x']<nav['x']+nav['width']<cta['x']
             assert abs(nav['x']+nav['width']/2-width/2)<=1
+        start=page.locator('#shiftStart').bounding_box()
+        end=page.locator('#shiftEnd').bounding_box()
+        assert abs(start['y']-end['y'])<2
+        if width==1440:
+            assert page.locator('#vysledek').bounding_box()['height']<page.locator('#shiftForm').bounding_box()['height']
         page.screenshot(path=out/f'header-{width}.png')
         fill(page,shiftDate='2026-11-06',shiftStart='22:00',shiftEnd='06:00',breakMinutes=30,breakStart='02:00',hourlyRate=200,averageEarnings=200)
         page.evaluate('window.scrollTo(0,0)')
@@ -165,6 +170,9 @@ with sync_playwright() as p:
               monthWorked='22,5 h',monthNight='7,5 h',monthWeekend='13 h',
               monthHoliday='7,5 h',monthOvertime='2 h',monthLeave='0 h')
         assert page.locator('#monthRows li').count()==3
+        assert page.locator('#monthComposition').inner_text().count('Kč')==5
+        page.locator('#mesic').scroll_into_view_if_needed()
+        page.screenshot(path=out/f'month-{width}.png')
         check(page,**{'expected-night':'150 Kč','expected-weekend':'260 Kč',
                      'expected-holidayCash':'1 500 Kč','expected-overtimeCash':'100 Kč','expected-custom':'0 Kč'})
         page.locator('#paid-night').fill('150')

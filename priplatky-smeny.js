@@ -541,7 +541,23 @@
       button.setAttribute('aria-label',label+' směnu '+date.textContent+', '+subtitle.textContent);
       actions.append(button);
     }
-    row.append(identity,amount,actions);
+    const bar=doc.createElement('div');
+    bar.className='sf-shift-amounts';
+    bar.setAttribute('aria-label','Složení příplatků');
+    const maximum=Math.max(1,...monthEntries().map(item=>item.bonus));
+    for(const [key,label] of categories){
+      if(entry.amounts[key]<=0)continue;
+      const segment=doc.createElement('span');
+      segment.dataset.kind=key;
+      segment.style.width=(entry.amounts[key]/maximum*100)+'%';
+      segment.title=label+' '+money(entry.amounts[key]);
+      const description=doc.createElement('span');
+      description.className='sf-amount-label';
+      description.textContent=label+' '+money(entry.amounts[key]);
+      amount.append(description);
+      bar.append(segment);
+    }
+    row.append(identity,amount,actions,bar);
     return row;
   }
 
@@ -554,6 +570,16 @@
     $('monthDashboard').hidden=!rows.length;
     $('monthSelect').replaceChildren(...months.map(month=>new Option(monthName(month),month,false,month===selectedMonth)));
     $('monthRows').replaceChildren(...rows.map(monthRow));
+    $('monthComposition').replaceChildren(...categories.map(([key,label])=>{
+      const item=doc.createElement('div');
+      item.dataset.kind=key;
+      const caption=doc.createElement('span');
+      caption.textContent=label;
+      const value=doc.createElement('strong');
+      value.textContent=money(total.amounts[key]);
+      item.append(caption,value);
+      return item;
+    }));
     setText('monthBonus',money(total.bonus));
     setText('monthBase',money(total.base));
     setText('monthTotal',money(total.base+total.bonus));
