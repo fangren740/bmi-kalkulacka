@@ -63,9 +63,105 @@ const barIds=['housingBar','livingBar','childBar','workBar'];
 let formSubmitted=false;
 let firstIssue=null;
 
+const stepButtons=qsa('[data-step]');
+const componentButtons=qsa('[data-component]');
+let stepIssues=[];
+let selectedComponent=0;
+let currentResult=null;
+
+function goToStep(index){
+ el.basic.dataset.current=index;
+ stepButtons.forEach((button,position)=>{
+  if(position===index)button.setAttribute('aria-current','step');
+  else button.removeAttribute('aria-current');
+ });
+}
+
+function updateSteps(region,needsTemplate,issues){
+ stepIssues=[
+  region.value?null:region,
+  needsTemplate?document.querySelector('[data-template]'):null,
+  issues.find(({field})=>field.closest('[data-guide-step]')?.dataset.guideStep==='2')?.field,
+  issues.find(({field})=>field.closest('[data-guide-step]')?.dataset.guideStep==='3')?.field
+ ];
+ stepButtons.forEach((button,index)=>{
+  const done=!stepIssues[index];
+  button.classList.toggle('is-done',done);
+  button.setAttribute('aria-label','Krok '+(index+1)+' '+button.lastChild.textContent+(done?', hotovo':', k vyplnění'));
+ });
+ const completed=stepIssues.filter(issue=>!issue).length;
+ el.form.classList.toggle('is-guiding',completed<4);
+ setText('stepProgress',completed+' ze 4 kroků hotovo');
+}
+
+function editStep(index,advancedId){
+ if(activeMode==='advanced'){
+  $(advancedId)?.focus();
+  return;
+ }
+ goToStep(index);
+ $('sd91-step-'+index).querySelector('select, input, [data-template]')?.focus();
+}
+
+stepButtons.forEach((button,index)=>button.addEventListener('click',()=>editStep(index)));
+qsa('[data-continue]').forEach(button=>button.addEventListener('click',()=>{
+ const index=Number(button.dataset.continue);
+ formSubmitted=true;
+ calculate();
+ if(stepIssues[index]){
+  setText('resultAnnouncement','Doplňte údaje v tomto kroku.');
+  stepIssues[index].focus();
+ }else{
+  formSubmitted=false;
+  calculate();
+  editStep(index+1);
+ }
+}));
+$('showAllSteps').addEventListener('click',event=>{
+ const button=event.currentTarget;
+ const expanded=el.basic.classList.toggle('show-all');
+ button.setAttribute('aria-pressed',String(expanded));
+ button.textContent=expanded?'Po krocích':'Všechna pole';
+});
+
+function renderComponent(){
+ const available=currentResult&&!currentResult.hard;
+ $('resultProof').hidden=!available||selectedComponent!==0;
+ $('componentStory').hidden=!available||selectedComponent===0;
+ if(!available||selectedComponent===0)return;
+ const {living,life,child,work}=currentResult;
+ const stories=[
+  null,
+  ['Živobytí',living>0?'Při zadaném příjmu model započetl částku na základní potřeby. Životní minimum domácnosti je '+money(life)+'.':'Příjem a životní minimum domácnosti v tomto zadání nevytvořily kladnou složku živobytí.'],
+  ['Bonus na dítě',child>0?'V zadání vychází příspěvek na nezaopatřené děti. Výši ovlivňuje příjem i složení domácnosti.':'V zadání nevychází kladný bonus. Ovlivňuje ho počet nezaopatřených dětí, příjem a splnění podmínek.'],
+  ['Pracovní bonus',work>0?'Část rozhodného příjmu je v tomto scénáři započtena pro pracovní bonus.':'Kladný pracovní bonus vyžaduje započitatelný příjem pro bonus a alespoň jednu další kladnou složku.']
+ ];
+ setText('componentTitle',stories[selectedComponent][0]);
+ setText('componentText',stories[selectedComponent][1]);
+ setText('componentEdit',selectedComponent===2?'Upravit členy domácnosti →':'Upravit příjmy →');
+}
+componentButtons.forEach((button,index)=>button.addEventListener('click',()=>{
+ selectedComponent=index;
+ componentButtons.forEach((item,position)=>item.setAttribute('aria-pressed',String(position===index)));
+ renderComponent();
+}));
+$('componentEdit').addEventListener('click',event=>{
+ event.preventDefault();
+ if(selectedComponent===2&&activeMode==='advanced')el.memberList.querySelector('select')?.focus();
+ else editStep(selectedComponent===2?1:2,'workIncome');
+});
+$('proofEdit').addEventListener('click',event=>{event.preventDefault();editStep(3,'housingType')});
+qsa('[data-edit-step]').forEach(link=>link.addEventListener('click',event=>{event.preventDefault();editStep(Number(link.dataset.editStep),'housingType')}));
+$('guideAssets').addEventListener('click',event=>{event.preventDefault();setMode('advanced',true)});
+
 function showResultSections(result){
  for(const id of ['resultComponents','resultMetrics','resultNext','mobileSummary'])$(id).hidden=!result;
- $('resultProof').hidden=!result||result.hard;
+ currentResult=result;
+ $('resultWait').hidden=Boolean(result);
+ $('resultComponents').hidden=!result||result.hard;
+ $('resultMetrics').hidden=!result||result.hard;
+ $('componentChart').hidden=!result?.total||result.hard;
+ renderComponent();
 }
 
 function showWarnings(warnings){
@@ -97,6 +193,7 @@ function render(result,v){
  else if(!total)setStatus('Bez kladné částky','is-neutral','Ze zadaných údajů vychází 0 Kč.');
  else setStatus(assumeAssets?'Rychlý odhad':'Podrobný odhad','is-success',assumeAssets?'Částka předpokládá splnění majetkového testu a podmínek zvolené domácnosti.':'Výsledek vychází ze zadaných údajů a základních testů modelu.');
 
+ setText('warningHeading',hard?'Proč se dávka nevyplatí':'Co potřebuje pozornost');
  const warnings=[...issues];
  if(!$('exampleNotice').hidden)warnings.unshift('Počítáte s údaji z ukázky nebo s jejich upravenou verzí.');
  if(total>0&&total<300)warnings.push('Částky pod 300 Kč se mohou vyplácet souhrnně podle § 47.');
@@ -108,7 +205,7 @@ function render(result,v){
   setText('nextTitle','Ověřte uvedenou překážku');
   setText('nextDescription','Při výjimce nebo nejasnostech se obraťte na Úřad práce.');
  }else if(assumeAssets){
-  setText('nextTitle','Prověřte předpoklady rychlého odhadu');
+  setText('nextTitle','Majetek a přesné složení domácnosti zatím neověřeny');
   setText('nextDescription','Rychlá verze používá typovou domácnost. Úspory, auta a nemovitosti můžete zadat v podrobném výpočtu.');
  }else if(assetUncertain){
   setText('nextTitle','Ověřte výjimku pro další stavbu');
@@ -167,6 +264,7 @@ function calculate(){
  const ids=basic?['basicWorkIncome','basicOtherIncome','basicRent','basicEnergy']:['workIncome','otherIncome','rentCosts','energyCosts','allPeople','savings','cars','homes'];
  const issues=ids.filter(id=>!$(id).disabled).map(moneyIssue).filter(Boolean);
  const needsTemplate=basic&&!basicTemplate;
+ if(basic)updateSteps(region,needsTemplate,issues);
  firstIssue=!region.value?region:needsTemplate?document.querySelector('[data-template]'):issues[0]?.field;
  if(firstIssue){
   showResultSections(null);
@@ -174,7 +272,8 @@ function calculate(){
   barIds.forEach(id=>$(id).style.width='0%');
   showWarnings([]);
   const explanation=!region.value?'Nejprve zvolte okres bydliště.':needsTemplate?'Vyberte typ domácnosti nebo přejděte na podrobný výpočet.':'Doplňte nebo opravte pole „'+issues[0].label+'“.';
-  setStatus('Čeká na údaje','is-neutral',explanation);
+  const invalid=formSubmitted||issues.some(({field})=>field.getAttribute('aria-invalid')==='true');
+  setStatus(invalid?'Doplňte vstupy':'Čeká na údaje',invalid?'is-risk':'is-neutral',explanation);
   return null;
  }
  const v=basic?basicValues():advancedValues();
@@ -236,6 +335,7 @@ function resetForm(example=false){
   for(const id of ['savings','cars','homes'])$(id).value='0';
  }
  calculate();
+ goToStep(0);
  $(example?'basicRegion':'exampleBtn').focus();
 }
 
@@ -295,6 +395,8 @@ el.form.addEventListener('submit',event=>{
  const result=calculate();
  if(!result){
   setText('resultAnnouncement',el.explanation.textContent);
+  const step=firstIssue?.closest('[data-guide-step]');
+  if(step)goToStep(Number(step.dataset.guideStep));
   firstIssue?.focus();
   return;
  }

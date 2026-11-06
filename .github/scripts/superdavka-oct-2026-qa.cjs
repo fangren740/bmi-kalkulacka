@@ -65,7 +65,20 @@ const results=[];
    assert.equal(await page.locator('#totalBenefit').innerText(),'—','district alone cannot produce an example amount');
    assert.equal(await page.locator('#resultComponents').isHidden(),true);
    assert.equal(await page.locator('#basicWorkIncome').inputValue(),'');
+   if(width<=620){
+    assert.equal(await page.locator('#basicWorkIncome').isHidden(),true);
+    await page.locator('[data-continue="0"]').click();
+    assert.equal(await page.locator('[data-step="1"]').getAttribute('aria-current'),'step');
+   }
    await page.locator('[data-template="single"]').click();
+   if(width<=620){
+    await page.locator('[data-continue="1"]').click();
+    assert.equal(await page.locator('[data-step="2"]').getAttribute('aria-current'),'step');
+    await page.locator('#basicWorkIncome').fill('20000');
+    await page.locator('[data-continue="2"]').click();
+    assert.equal(await page.locator('[data-step="3"]').getAttribute('aria-current'),'step');
+    await page.locator('#showAllSteps').click();
+   }
    await page.locator('#basicRegion').selectOption('Praha');
    await page.locator('#basicHousingType').selectOption('rent');
    await page.locator('#basicWorkIncome').fill('20000');
@@ -97,8 +110,14 @@ const results=[];
    assert.equal(comparable(await page.locator('#proofBase').textContent()),'12 000 Kč');
    assert.equal(comparable(await page.locator('#proofEnergy').textContent()),'2 300 Kč');
    assert.equal(comparable(await page.locator('#proofDeduction').textContent()),'6 900 Kč');
-   const totalBars=await page.locator('.sd87-components article i b').evaluateAll(nodes=>nodes.reduce((sum,node)=>sum+parseFloat(node.style.width),0));
+   const totalBars=await page.locator('.sd91-segment').evaluateAll(nodes=>nodes.reduce((sum,node)=>sum+parseFloat(node.style.width),0));
    assert.ok(Math.abs(totalBars-100)<0.3,'result shares should sum to 100%');
+   assert.equal(await page.locator('#stepProgress').textContent(),'4 ze 4 kroků hotovo');
+   await page.locator('[data-component="3"]').click();
+   assert.equal(await page.locator('#componentTitle').textContent(),'Pracovní bonus');
+   assert.equal(await page.locator('#resultProof').isHidden(),true);
+   await page.locator('[data-component="0"]').click();
+   assert.equal(await page.locator('#resultProof').isVisible(),true);
    // Same inputs in cheaper district must change housing component.
    await page.locator('#basicRegion').selectOption('Bruntál');
    const bruntal=await page.locator('#totalBenefit').innerText();
@@ -142,6 +161,8 @@ const results=[];
    await page.locator('#savings').fill('500000');
    assert.equal(await page.locator('#totalBenefit').innerText(),'0 Kč','savings hard stop makes result zero');
    assert.equal(await page.locator('#resultProof').isHidden(),true,'blocked state hides the housing receipt');
+   assert.equal(await page.locator('#resultComponents').isHidden(),true);
+   assert.equal(await page.locator('#warningHeading').textContent(),'Proč se dávka nevyplatí');
    assert.equal(await page.locator('#housingComponent').innerText(),'—','no imaginary payable housing after hard stop');
    assert.equal(await page.locator('#housingBar').evaluate(el=>el.style.width),'0%','blocked component bar must disappear');
    await page.locator('#savings').fill('120000');
