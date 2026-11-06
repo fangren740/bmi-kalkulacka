@@ -6,6 +6,7 @@ on:
       - 'priplatky-smeny.js'
       - 'priplatky-smeny.css'
       - '.github/scripts/shift51-browser.py'
+      - '.github/scripts/shift52-review.py'
       - '.github/workflows/rv-shift51.yml'
 permissions:
   contents: read
@@ -22,6 +23,11 @@ jobs:
       # Ubuntu runner already provides browser system libraries; avoid slow apt font downloads.
       - run: playwright install --only-shell chromium
       - run: python .github/scripts/shift51-browser.py
+      - uses: actions/checkout@v4
+        with:
+          ref: 412eb76a34366844e3aa3a1f09c90b8cf313bb00
+          path: .shift52-before
+      - run: python .github/scripts/shift52-review.py
       - uses: actions/upload-artifact@v4
         if: always()
         with:
