@@ -97,6 +97,69 @@ with sync_playwright() as p:
         check(page,cashBonus='0 Kč',totalPay='0 Kč')
         fill(page,manualNight=1)
         check(page,cashBonus='—')
+        page.locator('#sfShiftTab').click()
+        fill(page,shiftDate='31. 11. 2026')
+        check(page,cashBonus='—')
+        fill(page,shiftDate='30. 11. 2026',shiftStart='22:00',shiftEnd='06:00')
+        page.locator('#saveShift').click()
+        assert 'dalšího měsíce' in page.locator('#shiftSaveStatus').text_content()
+        assert page.locator('#monthRows li').count()==0
+
+        # Independent December ledger: 150 + 260 + (7.5 × 200 + 2 × 50).
+        page.locator('#monthSample').click()
+        check(page,monthBonus='2 010 Kč',monthBase='4 500 Kč',monthTotal='6 510 Kč',
+              monthWorked='22,5 h',monthNight='7,5 h',monthWeekend='13 h',
+              monthHoliday='7,5 h',monthOvertime='2 h',monthLeave='0 h')
+        assert page.locator('#monthRows li').count()==3
+        check(page,**{'expected-night':'150 Kč','expected-weekend':'260 Kč',
+                     'expected-holidayCash':'1 500 Kč','expected-overtimeCash':'100 Kč','expected-custom':'0 Kč'})
+        page.locator('#paid-night').fill('150')
+        page.locator('#paid-weekend').fill('280')
+        page.locator('#paid-holidayCash').fill('1400')
+        page.locator('#paid-overtimeCash').fill('0')
+        check(page,**{'difference-night':'0 Kč','difference-weekend':'+20 Kč',
+                     'difference-holidayCash':'−100 Kč','difference-overtimeCash':'−100 Kč','difference-custom':'—'})
+        assert 'Svátek −100 Kč' in norm(page.locator('#auditLargest').text_content())
+        page.locator('#auditView').select_option('total')
+        page.locator('#paidBonus').fill('1830')
+        check(page,auditExpected='2 010 Kč',auditDifference='−180 Kč')
+        page.locator('#auditScope').select_option('shift')
+        assert page.locator('#paidBonus').input_value()=='500'
+        page.locator('#auditScope').select_option('month')
+        assert page.locator('#paidBonus').input_value()=='1830'
+        page.locator('#auditView').select_option('categories')
+        assert page.locator('#paid-holidayCash').input_value()=='1400'
+        page.locator('#monthSample').click()
+        assert page.locator('#monthRows li').count()==0
+
+        fill(page,shiftDate='11. 12. 2026',shiftStart='22:00',shiftEnd='06:00',
+             breakMinutes=30,breakStart='02:00',repeatCount=3)
+        page.locator('#timelineCursor').fill('240')
+        check(page,timelineCursorFlags='Neplacená pauza')
+        page.locator('#timelineCursor').fill('120')
+        check(page,timelineCursorFlags='Práce · Noční · Víkend')
+        page.locator('#saveShift').click()
+        check(page,monthBonus='260 Kč',monthWorked='7,5 h')
+        page.locator('#saveShift').click()
+        assert 'překrývá' in page.locator('#shiftSaveStatus').text_content()
+        page.locator('[data-month-action=duplicate]').click()
+        assert page.locator('#shiftDate').input_value()==''
+        fill(page,shiftDate='5. 12. 2026',shiftStart='06:00',shiftEnd='14:00',breakStart='10:00')
+        page.locator('#saveShift').click()
+        check(page,monthBonus='410 Kč')
+        assert page.locator('#monthRows li').first.get_by_text('5. 12. 2026').is_visible()
+        page.locator('[data-month-action=edit]').first.click()
+        fill(page,averageEarnings=220)
+        page.locator('#saveShift').click()
+        check(page,monthBonus='425 Kč')
+        page.locator('[data-month-action=remove]').first.click()
+        check(page,monthBonus='260 Kč')
+        page.locator('[data-month-action=duplicate]').click()
+        fill(page,shiftDate='2. 1. 2027',shiftStart='06:00',shiftEnd='14:00',breakStart='10:00')
+        page.locator('#saveShift').click()
+        check(page,monthBonus='150 Kč')
+        page.locator('#monthSelect').select_option('2026-12')
+        check(page,monthBonus='260 Kč',monthWorked='7,5 h')
         assert page.evaluate('document.documentElement.scrollWidth<=innerWidth')
         assert not errors,errors
         print(width,'PASS',flush=True)

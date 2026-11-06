@@ -220,8 +220,28 @@
       host.appendChild(el);
     });
   }
+  let displayedShift;
+  const timelineClock=new Intl.DateTimeFormat('cs-CZ',{timeZone:'Europe/Prague',hour:'2-digit',minute:'2-digit',hourCycle:'h23',timeZoneName:'shortOffset'});
+  function inspectMinute(shift){
+    const control=$('timelineCursor');
+    const index=Number(control.value);
+    const row=shift.minuteRows[index];
+    const time=timelineClock.format(shift.start.getTime()+index*minuteMs);
+    const labels={night:'Noční',weekend:'Víkend',holiday:'Svátek',overtime:'Přesčas'};
+    const flags=row.active?['Práce',...Object.keys(labels).filter(key=>row[key]).map(key=>labels[key])]:['Neplacená pauza'];
+    setText('timelineCursorTime',time);
+    setText('timelineCursorFlags',flags.join(' · '));
+    control.setAttribute('aria-valuetext',time+', '+flags.join(', '));
+    $('timelineLanes').style.setProperty('--cursor',(index+.5)/shift.minuteRows.length*100+'%');
+  }
+
   function renderTimeline(shift) {
     if(!shift || shift.error){ ['workTrack','nightTrack','weekendTrack','holidayTrack','overtimeTrack'].forEach(id=>$(id)?.replaceChildren()); return; }
+    if(shift===displayedShift)return;
+    displayedShift=shift;
+    $('timelineCursor').max=shift.minuteRows.length-1;
+    $('timelineCursor').value='0';
+    inspectMinute(shift);
     renderTrack('workTrack',shift.minuteRows,'active','work');
     renderTrack('nightTrack',shift.minuteRows,'night','night');
     renderTrack('weekendTrack',shift.minuteRows,'weekend','weekend');
@@ -421,23 +441,326 @@
     setText('overlapText',chips.children.length?'Stejná minuta může nést více samostatných příplatků. Přesčas se přidává zvlášť podle vašeho zadání.':'V této směně jsme nenašli překryv nočního, víkendu a svátku.');
   }
 
-  function renderAudit() {
-    const box=$('auditResult');
-    box.classList.remove('is-good','is-warn','is-bad');
+  const categories = [
+    ['night','Noční'], ['weekend','Víkend'], ['holidayCash','Svátek'],
+    ['overtimeCash','Přesčas'], ['custom','Ostatní']
+  ];
+  const hourKeys = ['worked','night','weekend','holiday','overtime','leave','holidayLeave','overtimeLeave'];
+  const shiftFields = [
+    'shiftDate','shiftStart','shiftEnd','breakStart','breakMinutes','hourlyRate','averageEarnings',
+    'manualWorked','manualNight','manualWeekend','manualHoliday','overtimeHours','overtimeStart',
+    'overtimeCompensation','holidayCompensation','repeatCount','nightPercent','weekendPercent',
+    'holidayPercent','overtimePercent','customFixedRate','customHours'
+  ];
+  const shiftChecks = ['salaryRestDay','wageOvertimeIncluded'];
+  const entries = [];
+  const payslips = new Map();
+  const monthFormat = new Intl.DateTimeFormat('cs-CZ',{month:'long',year:'numeric',timeZone:'UTC'});
+  let entryId = 0;
+  let editingId = null;
+  let selectedMonth = '';
+  let auditKey = '';
+
+  function snapshot() {
+    return {
+      regime, inputMode,
+      values:Object.fromEntries(shiftFields.map(id=>[id,$(id).value])),
+      checks:Object.fromEntries(shiftChecks.map(id=>[id,$(id).checked]))
+    };
+  }
+
+  function restoreShift(saved) {
+    regime=saved.regime;
+    Object.entries(saved.values).forEach(([id,value])=>{$(id).value=value;});
+    Object.entries(saved.checks).forEach(([id,checked])=>{$(id).checked=checked;});
+    $('shiftDateNative').value=isoDate($('shiftDate').value)||'';
+    ratesDirty=true;
+    updateRegimeUi();
+    return setInputMode(saved.inputMode);
+  }
+
+  function makeEntry(result, date, id, sample=false) {
+    const {h}=result;
+    const saved=snapshot();
+    saved.values.shiftDate=czechDate(date);
+    return {
+      id, date, sample, saved,
+      start:h.start?.getTime(), end:h.end?.getTime(),
+      hours:Object.fromEntries(hourKeys.map(key=>[key,h[key]??result[key]])),
+      amounts:Object.fromEntries(categories.map(([key])=>[key,result[key]])),
+      base:result.base, bonus:result.bonus
+    };
+  }
+
+  function monthEntries() {
+    return entries.filter(entry=>entry.date.startsWith(selectedMonth))
+      .sort((a,b)=>a.date.localeCompare(b.date)||(a.start??0)-(b.start??0)||a.id-b.id);
+  }
+
+  function monthName(month) {
+    return monthFormat.format(new Date(month+'-01T00:00Z'));
+  }
+
+  function monthTotals(rows) {
+    const hours=Object.fromEntries(hourKeys.map(key=>[key,0]));
+    const amounts=Object.fromEntries(categories.map(([key])=>[key,0]));
+    let base=0,bonus=0;
+    for(const row of rows){
+      base+=row.base; bonus+=row.bonus;
+      for(const key of hourKeys)hours[key]+=row.hours[key];
+      for(const [key] of categories)amounts[key]+=row.amounts[key];
+    }
+    return {hours,amounts,base,bonus};
+  }
+
+  function monthRow(entry) {
+    const row=doc.createElement('li');
+    const identity=doc.createElement('div');
+    const date=doc.createElement('strong');
+    const subtitle=doc.createElement('small');
+    date.textContent=czechDate(entry.date);
+    const {values,inputMode,regime}=entry.saved;
+    subtitle.textContent=(inputMode==='shift'?normalizedClock(values.shiftStart)+' → '+normalizedClock(values.shiftEnd):'Hodiny z docházky')+' · '+LABEL[regime];
+    identity.append(date,subtitle);
+    const amount=doc.createElement('div');
+    const amountValue=doc.createElement('strong');
+    amountValue.textContent=money(entry.bonus);
+    const amountLabel=doc.createElement('small');
+    amountLabel.textContent=hrs(entry.hours.worked)+' práce · '+hrs(entry.hours.leave)+' volna';
+    amount.append(amountValue,amountLabel);
+    const actions=doc.createElement('div');
+    actions.className='sf-month-actions';
+    for(const [action,label] of [['edit','Upravit'],['duplicate','Duplikovat'],['remove','Odebrat']]){
+      if(entry.sample)break;
+      const button=doc.createElement('button');
+      button.type='button';
+      button.dataset.monthAction=action;
+      button.dataset.entry=entry.id;
+      button.textContent=label;
+      button.setAttribute('aria-label',label+' směnu '+date.textContent+', '+subtitle.textContent);
+      actions.append(button);
+    }
+    row.append(identity,amount,actions);
+    return row;
+  }
+
+  function renderMonth() {
+    const months=[...new Set(entries.map(entry=>entry.date.slice(0,7)))].sort().reverse();
+    if(!months.includes(selectedMonth))selectedMonth=months[0]||'';
+    const rows=monthEntries();
+    const total=monthTotals(rows);
+    $('monthEmpty').hidden=Boolean(rows.length);
+    $('monthDashboard').hidden=!rows.length;
+    $('monthSelect').replaceChildren(...months.map(month=>new Option(monthName(month),month,false,month===selectedMonth)));
+    $('monthRows').replaceChildren(...rows.map(monthRow));
+    setText('monthBonus',money(total.bonus));
+    setText('monthBase',money(total.base));
+    setText('monthTotal',money(total.base+total.bonus));
+    for(const key of hourKeys.slice(0,6)){
+      setText('month'+key[0].toUpperCase()+key.slice(1),hrs(total.hours[key]));
+    }
+    setText('monthLeaveSplit','Volno ze svátků '+hrs(total.hours.holidayLeave)+' · z přesčasů '+hrs(total.hours.overtimeLeave));
+    const sample=entries.some(entry=>entry.sample);
+    $('monthSample').textContent=sample?'Odebrat ukázkové směny':'Vyzkoušet tři různé směny';
+    $('monthSample').disabled=!sample&&entries.some(entry=>entry.date.startsWith('2026-12'));
+    $('auditScope').options[1].disabled=!months.length;
+    if(!months.length)$('auditScope').value='shift';
+    renderAudit();
+  }
+
+  function setEditing(entry) {
+    editingId=entry?.id??null;
+    $('cancelShiftEdit').hidden=editingId===null;
+    const label=editingId===null?'Přidat do měsíce':'Uložit upravenou směnu';
+    setText('saveShift',label);
+    setText('saveResultShift',label);
+  }
+
+  function focusMonth() {
+    $('monthHeading').scrollIntoView({block:'start'});
+    $('monthHeading').focus({preventScroll:true});
+  }
+
+  function saveShift() {
+    const result=calculate();
+    const date=isoDate($('shiftDate').value);
+    const reject=message=>{
+      setText('shiftSaveStatus',message);
+      if(message&&doc.activeElement===$('saveResultShift'))$('shiftSaveStatus').scrollIntoView({block:'center'});
+    };
+    if(!result||!date){reject('Před uložením opravte směnu a doplňte platné datum.');return;}
+    const month=date.slice(0,7);
+    if(entries.length>=62&&editingId===null){reject('Přehled pojme 62 směn. Odeberte některou položku.');return;}
+    if(entries.some(entry=>entry.sample&&entry.date.startsWith(month))){reject('Pro tento měsíc nejprve odeberte ukázkové směny.');return;}
+    const entry=makeEntry(result,date,editingId??entryId+1);
+    if(entry.end&&pragueClock.format(entry.end-1).slice(0,7)!==month){
+      reject('Směna zasahuje do dalšího měsíce. Rozdělte ji podle docházky a uložte obě části zvlášť.');return;
+    }
+    if(entries.some(other=>other.id!==editingId&&(
+      entry.start!==undefined&&other.start!==undefined&&entry.start<other.end&&entry.end>other.start||
+      entry.start===undefined&&other.start===undefined&&JSON.stringify(entry.saved)===JSON.stringify(other.saved)
+    ))){reject('Tato směna se překrývá s již uloženým záznamem nebo je s ním totožná.');return;}
+    if(editingId===null){entryId++;entries.push(entry);}
+    else entries[entries.findIndex(other=>other.id===editingId)]=entry;
+    selectedMonth=month;
+    $('auditScope').value='month';
+    setEditing(null);
+    reject('');
+    setText('monthStatus','Směna '+czechDate(date)+' je v měsíčním přehledu.');
+    renderMonth();
+    focusMonth();
+  }
+
+  function loadMonthSample() {
+    if(entries.some(entry=>entry.sample)){
+      for(let i=entries.length-1;i>=0;i--)if(entries[i].sample)entries.splice(i,1);
+      payslips.delete('2026-12');
+      setText('monthStatus','Ukázkové směny byly odebrány.');
+      renderMonth();
+      return;
+    }
+    if(entries.length>59){setText('monthStatus','Pro ukázku potřebujete místo pro tři směny.');return;}
+    const previous=snapshot();
+    const sample=[
+      ['2026-12-05','06:00','14:00','10:00','0',''],
+      ['2026-12-11','22:00','06:00','02:00','0',''],
+      ['2026-12-25','08:00','16:00','12:00','2','14:00']
+    ];
+    for(const [date,shiftStart,shiftEnd,breakStart,overtimeHours,overtimeStart] of sample){
+      const result=restoreShift({regime:'wage',inputMode:'shift',checks:{salaryRestDay:false,wageOvertimeIncluded:false},
+        values:{...previous.values,shiftDate:czechDate(date),shiftStart,shiftEnd,breakStart,breakMinutes:'30',
+          hourlyRate:'200',averageEarnings:'200',overtimeHours,overtimeStart,repeatCount:'1',
+          overtimeCompensation:'pay',holidayCompensation:'pay',nightPercent:'10',weekendPercent:'10',
+          holidayPercent:'100',overtimePercent:'25',customFixedRate:'0',customHours:'0'}});
+      entries.push(makeEntry(result,date,++entryId,true));
+    }
+    restoreShift(previous);
+    selectedMonth='2026-12';
+    $('auditScope').value='month';
+    $('auditView').value='categories';
+    setText('monthStatus','Zobrazují se tři ukázkové směny. Před zadáním vlastního prosince ukázku odeberte.');
+    renderMonth();
+    focusMonth();
+  }
+
+  function initMonth() {
+    $('timelineCursor').addEventListener('input',()=>{if(displayedShift)inspectMinute(displayedShift);});
+    $('saveShift').addEventListener('click',saveShift);
+    $('saveResultShift').addEventListener('click',saveShift);
+    $('cancelShiftEdit').addEventListener('click',()=>{setEditing(null);setText('shiftSaveStatus','Úprava zrušena. Uložená směna zůstala beze změny.');});
+    $('monthSample').addEventListener('click',loadMonthSample);
+    $('monthSelect').addEventListener('change',event=>{selectedMonth=event.target.value;renderMonth();});
+    $('monthRows').addEventListener('click',event=>{
+      const button=event.target.closest('[data-month-action]');
+      if(!button)return;
+      const index=entries.findIndex(entry=>entry.id===Number(button.dataset.entry));
+      const entry=entries[index];
+      if(!entry||entry.sample)return;
+      if(button.dataset.monthAction==='remove'){
+        entries.splice(index,1);
+        if(editingId===entry.id)setEditing(null);
+        setText('monthStatus','Směna '+czechDate(entry.date)+' byla odebrána.');
+        renderMonth();
+        focusMonth();
+        return;
+      }
+      const edit=button.dataset.monthAction==='edit';
+      setEditing(edit?entry:null);
+      const saved={...entry.saved,values:{...entry.saved.values}};
+      if(!edit)saved.values.shiftDate='';
+      restoreShift(saved);
+      setText('shiftSaveStatus',edit?'Upravujete uloženou směnu '+czechDate(entry.date)+'.':'Zkopírované zadání. Doplňte datum nové směny.');
+      $('shiftDate').focus();
+    });
+    $('auditSingleJump').addEventListener('click',()=>{$('auditScope').value='shift';renderAudit();});
+    $('auditMonthJump').addEventListener('click',()=>{$('auditScope').value='month';renderAudit();});
+    ['auditScope','auditView'].forEach(id=>$(id).addEventListener('change',renderAudit));
+    $('auditCategoryRows').replaceChildren(...categories.map(([key,label])=>{
+      const row=doc.createElement('div');
+      row.className='sf-audit-row';
+      row.innerHTML='<strong>'+label+'</strong><div><span>Model</span><b id="expected-'+key+'">—</b></div>'+
+        '<label>Na pásce (Kč)<input aria-label="'+label+' na pásce v Kč" id="paid-'+key+'" type="number" min="0" max="1000000" step="0.01" inputmode="decimal"></label>'+
+        '<div><span>Rozdíl</span><b id="difference-'+key+'">—</b></div>';
+      row.querySelector('input').addEventListener('input',renderAudit);
+      return row;
+    }));
+    renderMonth();
+  }
+
+  function paidValue(field) {
+    return Number.isFinite(field.valueAsNumber)&&!field.validity.rangeUnderflow&&!field.validity.rangeOverflow
+      ?field.valueAsNumber:null;
+  }
+
+  function difference(paid,expected) {
+    return Math.round((paid-expected)*100)/100;
+  }
+
+  function signedMoney(value) {
+    return (value>0?'+':value<0?'−':'')+money(Math.abs(value));
+  }
+
+  function auditContext() {
+    const monthly=$('auditScope').value==='month';
+    const rows=monthly?monthEntries():[];
     const count=$('auditCount').valueAsNumber;
-    const paid=$('paidBonus').valueAsNumber;
     const validCount=Number.isInteger(count)&&count>=1&&count<=31;
-    const expected=lastCalc&&validCount?lastCalc.bonus*count:null;
+    if(monthly&&rows.length)return monthTotals(rows);
+    if(monthly||!lastCalc||!validCount)return null;
+    return {
+      bonus:lastCalc.bonus*count,
+      amounts:Object.fromEntries(categories.map(([key])=>[key,lastCalc[key]*count]))
+    };
+  }
+
+  function renderAudit() {
+    const monthly=$('auditScope').value==='month';
+    const detailed=$('auditView').value==='categories';
+    const key=monthly?selectedMonth:'shift';
+    const fields=['paidBonus',...categories.map(([name])=>'paid-'+name)];
+    if(auditKey!==key){
+      const previous=payslips.get(key);
+      fields.forEach(id=>{$(id).value=previous?.[id]??'';});
+      auditKey=key;
+    }else{
+      payslips.set(key,Object.fromEntries(fields.map(id=>[id,$(id).value])));
+    }
+    $('auditCountField').hidden=monthly;
+    $('auditQuick').hidden=detailed;
+    $('auditCategories').hidden=!detailed;
+    setText('auditScopeNote',monthly?'Porovnáváte uložené směny za '+monthName(selectedMonth)+'.':'Porovnáváte příplatky z aktuální směny, případně její totožná opakování.');
+    const context=auditContext();
+    const expected=context?.bonus??null;
+    const paid=paidValue($('paidBonus'));
+    const box=$('auditResult');
+    box.classList.remove('is-good','is-warn');
     setText('auditExpected',expected===null?'—':money(expected));
-    setText('auditPaid',Number.isFinite(paid)&&paid>=0?money(paid):'—');
+    setText('auditPaid',paid===null?'—':money(paid));
     setText('auditDifference','—');
-    if(expected===null){setText('auditMessage',lastCalc?'Zadejte počet stejných směn od 1 do 31.':'Nejprve opravte zadání směny.');return;}
-    if(!$('paidBonus').value&&!$('paidBonus').validity.badInput){setText('auditMessage','Zadejte částku stejných příplatků z pásky.');return;}
-    if(!Number.isFinite(paid)||paid<0||$('paidBonus').validity.rangeOverflow){setText('auditMessage','Zadejte platnou nezápornou částku z pásky.');return;}
-    const diff=Math.round((paid-expected)*100)/100;
-    setText('auditDifference',(diff>0?'+':diff<0?'−':'')+money(Math.abs(diff)));
-    box.classList.add(diff<0?'is-warn':'is-good');
-    setText('auditMessage',diff<0?'Na pásce je proti modelu méně. Ověřte stejné hodiny, PHV a zvolenou kompenzaci.':diff>0?'Na pásce je proti modelu více. Zkontrolujte firemní sazby a další příplatky.':'Zadané příplatky odpovídají modelu.');
+    let message=monthly?'Přidejte směny do vybraného měsíce.':lastCalc?'Zadejte počet stejných směn od 1 do 31.':'Nejprve opravte zadání směny.';
+    if(expected!==null&&paid===null){
+      message=$('paidBonus').value||$('paidBonus').validity.badInput?'Zadejte platnou nezápornou částku z pásky.':'Zadejte částku stejných příplatků z pásky.';
+    }else if(expected!==null){
+      const diff=difference(paid,expected);
+      setText('auditDifference',signedMoney(diff));
+      box.classList.add(diff<0?'is-warn':'is-good');
+      message=diff<0?'Na pásce je proti modelu méně. Ověřte stejné hodiny, PHV a zvolenou kompenzaci.':diff>0?'Na pásce je proti modelu více. Zkontrolujte firemní sazby a další příplatky.':'Zadané příplatky odpovídají modelu.';
+    }
+    setText('auditMessage',message);
+
+    let largest=null;
+    for(const [category,label] of categories){
+      const value=context?.amounts[category]??null;
+      const field=$('paid-'+category);
+      const entered=paidValue(field);
+      const diff=value===null||entered===null?null:difference(entered,value);
+      setText('expected-'+category,value===null?'—':money(value));
+      setText('difference-'+category,diff===null?'—':signedMoney(diff));
+      $('difference-'+category).dataset.sign=diff===null?'':diff<0?'less':diff>0?'more':'equal';
+      field.setAttribute('aria-invalid',String(entered===null&&Boolean(field.value||field.validity.badInput)));
+      if(diff!==null&&(!largest||Math.abs(diff)>Math.abs(largest.diff)))largest={label,diff};
+    }
+    setText('auditLargest',!context?'Nejdřív potřebujete platný výpočet.':!largest?'Zadejte alespoň jednu položku z pásky.':largest.diff===0?'Zadané položky odpovídají modelu.':'Největší odchylka: '+largest.label+' '+signedMoney(largest.diff)+' proti modelu. Ověřte hodiny, sazby, PHV a období zúčtování.');
   }
 
   function renderBenchmark(x) {
@@ -487,7 +810,7 @@
   function setInputMode(mode) {
     inputMode=mode==='manual'?'manual':'shift';
     qsa('[data-input-mode]').forEach(b=>{const active=b.dataset.inputMode===inputMode;b.classList.toggle('is-active',active);b.setAttribute('aria-selected',String(active));});
-    $('shiftModePanel').hidden=inputMode!=='shift'; $('manualModePanel').hidden=inputMode!=='manual'; calculate();
+    $('shiftModePanel').hidden=inputMode!=='shift'; $('manualModePanel').hidden=inputMode!=='manual'; return calculate();
   }
 
   function copy(text,button){
@@ -541,6 +864,7 @@
     nav?.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{nav.classList.remove('is-open');toggle?.setAttribute('aria-expanded','false');}));
     setInputMode(inputMode); updateRegimeUi(); calculate();
   }
+  initMonth();
   wire();
 
   // RV V-next accessibility hardening: complete keyboard model for ARIA tabs.

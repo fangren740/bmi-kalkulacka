@@ -29,7 +29,7 @@
 <meta name="twitter:description" content="Směna podle času, právní režim, souběhy příplatků, náhradní volno a kontrola výplatnice.">
 <meta name="twitter:image" content="https://rychlevypocty.cz/og-rv-priplatky-smeny-v32.jpg">
 <link rel="stylesheet" href="/rv-brand-v32.css?v=20260801-stable">
-<link rel="stylesheet" href="/priplatky-smeny.css?v=20261106-cz-input-r1">
+<link rel="stylesheet" href="/priplatky-smeny.css?v=20261106-mesic1">
 <script defer src="/rv-brand-v32.js?v=20260801"></script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"RychléVýpočty.cz","item":"https://rychlevypocty.cz/"},{"@type":"ListItem","position":2,"name":"Mzdy a práce","item":"https://rychlevypocty.cz/mzdy-a-prace.html"},{"@type":"ListItem","position":3,"name":"Kalkulačka příplatků za směny","item":"https://rychlevypocty.cz/kalkulacka-priplatku-za-smeny.html"}]}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Kalkulačka příplatků za směny 2026","url":"https://rychlevypocty.cz/kalkulacka-priplatku-za-smeny.html","applicationCategory":"BusinessApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","inLanguage":"cs-CZ","isAccessibleForFree":true,"description":"Kalkulačka nočních, víkendových, svátečních a přesčasových příplatků pro mzdu, plat a DPP/DPČ s automatickým rozdělením konkrétní směny.","publisher":{"@type":"Organization","name":"RychléVýpočty.cz","url":"https://rychlevypocty.cz/","sameAs":["https://www.facebook.com/rychlevypocty","https://www.instagram.com/rychlevypocty/"]}}</script>
@@ -52,7 +52,8 @@
 <section class="sf-hero sf-clock-intro"><div class="sf-shell">
 <p class="sf-eyebrow"><span aria-hidden="true">▰ ▰ ▰</span> MZDY A PRÁCE / KONTROLA SMĚNY</p>
 <h1>Příplatky za směny <em>2026</em></h1>
-<p>Zadejte směnu. Uvidíte, za které minuty příplatek vzniká a jak částka sedí s výplatní páskou.</p>
+<p>Rozložte směnu na minuty, sečtěte různé směny a porovnejte jednotlivé příplatky s páskou.</p>
+<nav class="sf-flow" aria-label="Průchod kalkulačkou"><a href="#kalkulacka"><b>01</b> Směna</a><a href="#mesic"><b>02</b> Měsíc</a><a href="#kontrola-pasky"><b>03</b> Páska</a></nav>
 </div></section>
 
 <section class="sf-calculator-section" id="kalkulacka">
@@ -65,11 +66,12 @@
 
     <div class="sf-calculator-grid">
       <form class="sf-cockpit" id="shiftForm" novalidate>
+        <div class="sf-date-top"><label class="sf-field"><span>Datum začátku</span><div class="sf-date-entry"><input class="sf-control" id="shiftDate" type="text" inputmode="numeric" autocomplete="off" maxlength="12" placeholder="6. 11. 2026" aria-describedby="shiftDateHelp"><input class="sf-date-native" id="shiftDateNative" type="date" aria-label="Vybrat datum v kalendáři" title="Vybrat datum v kalendáři"></div><small id="shiftDateHelp">Den. měsíc. rok · nebo použijte kalendář</small></label></div>
         <section class="sf-input-section" id="shiftModePanel" role="tabpanel" aria-labelledby="sfShiftTab" tabindex="0">
           <div class="sf-input-title"><span>01</span><div><strong>Kdy směna proběhla?</strong><small>Český čas. Dřívější konec znamená další den. Předvyplněné hodnoty jsou ukázka.</small></div></div>
 
           <div class="sf-shift-fields">
-            <label class="sf-field"><span>Datum začátku</span><div class="sf-date-entry"><input class="sf-control" id="shiftDate" type="text" inputmode="numeric" autocomplete="off" maxlength="12" placeholder="6. 11. 2026" aria-describedby="shiftDateHelp"><input class="sf-date-native" id="shiftDateNative" type="date" aria-label="Vybrat datum v kalendáři" title="Vybrat datum v kalendáři"></div><small id="shiftDateHelp">Den. měsíc. rok · nebo použijte kalendář</small></label>
+
             <label class="sf-field"><span>Začátek</span><input class="sf-control" id="shiftStart" type="text" inputmode="numeric" pattern="(?:[01][0-9]|2[0-3]):[0-5][0-9]" maxlength="5" spellcheck="false" autocomplete="off" placeholder="HH:MM" value="22:00"></label>
             <label class="sf-field"><span>Konec</span><input class="sf-control" id="shiftEnd" type="text" inputmode="numeric" pattern="(?:[01][0-9]|2[0-3]):[0-5][0-9]" maxlength="5" spellcheck="false" autocomplete="off" placeholder="HH:MM" value="06:00"></label>
             <label class="sf-field"><span>Neplacená přestávka</span><div class="sf-unit-input"><input id="breakMinutes" type="number" min="0" max="240" step="5" value="30"><b>min</b></div></label>
@@ -147,24 +149,30 @@
             <button class="sf-small-btn" type="button" id="resetRates">Vrátit výchozí sazby režimu</button>
           </div>
         </details>
-        <div class="sf-form-error" id="formError" role="alert" hidden></div><button class="sf-btn sf-btn-primary sf-show-result" type="submit">Zobrazit výsledek ↓</button>
+        <div class="sf-form-error" id="formError" role="alert" hidden></div>
+        <div class="sf-form-footer"><button class="sf-btn sf-btn-primary sf-show-result" type="submit">Zobrazit výsledek ↓</button><button class="sf-btn sf-btn-secondary" id="saveShift" type="button">+ Přidat do měsíce</button><button class="sf-small-btn" id="cancelShiftEdit" type="button" hidden>Zrušit úpravu</button></div>
+        <p id="shiftSaveStatus" class="sf-save-status" role="status"></p>
       </form>
 
       <aside class="sf-result" id="vysledek" tabindex="-1" aria-label="Výsledek směny">
         <div class="sf-result-top"><span>VÝSLEDEK SMĚNY</span><small id="resultRegime">mzda</small></div>
         <div class="sf-result-primary"><span>Očekávané hrubé příplatky za směnu</span><strong id="cashBonus" aria-live="polite">—</strong><small id="resultSummary">noční + víkend</small></div>
         <div class="sf-result-kpis"><div><span>Modelový základ</span><strong id="basePay">1 440 Kč</strong></div><div><span>Modelový hrubý součet</span><strong id="totalPay">1 728 Kč</strong></div><div><span>Náhradní volno</span><strong id="timeOff">0 h</strong></div><div><span>Příplatky × směny</span><strong id="repeatBonus">2 880 Kč</strong></div></div>
-        <div id="resultDetails"><a class="sf-audit-jump" href="#kontrola-pasky">Porovnat s výplatní páskou ↓</a><div id="resultTimeline">          <div class="sf-timeline-card" role="group" aria-label="Automatické rozdělení směny">
+        <div id="resultDetails"><div id="resultTimeline">          <div class="sf-timeline-card" role="group" aria-label="Automatické rozdělení směny">
             <div class="sf-timeline-head"><div><strong id="timelineTitle">Rozpad směny</strong><small id="timelineRange">—</small></div><span id="autoStatus">Český čas</span></div>
-            <div class="sf-track-row"><span>Práce</span><div class="sf-track" id="workTrack"></div></div>
+            <div class="sf-timeline-lanes" id="timelineLanes"><div class="sf-time-cursor" aria-hidden="true"></div><div class="sf-track-row"><span>Práce</span><div class="sf-track" id="workTrack"></div></div>
             <div class="sf-track-row"><span>Noční</span><div class="sf-track" id="nightTrack"></div></div>
             <div class="sf-track-row"><span>Víkend</span><div class="sf-track" id="weekendTrack"></div></div>
             <div class="sf-track-row"><span>Svátek</span><div class="sf-track" id="holidayTrack"></div></div>
-            <div class="sf-track-row"><span>Přesčas</span><div class="sf-track" id="overtimeTrack"></div></div><p id="overtimeTrackNote"></p><div class="sf-timeline-scale"><span id="timelineStart">22:00</span><span id="timelineEnd">06:00</span></div>
+            <div class="sf-track-row"><span>Přesčas</span><div class="sf-track" id="overtimeTrack"></div></div></div><div class="sf-timeline-scale"><span id="timelineStart"></span><span id="timelineEnd"></span></div>
+            <label class="sf-timeline-scrub"><span>Prozkoumat minutu směny</span><input type="range" id="timelineCursor" min="0" max="0" value="0"></label>
+            <div class="sf-time-reading"><strong id="timelineCursorTime">—</strong><span id="timelineCursorFlags"></span></div>
+            <p id="overtimeTrackNote"></p>
           </div>
           <div class="sf-detected-grid"><div><span>Odpracováno</span><strong id="autoWorked">—</strong></div><div><span>Noční</span><strong id="autoNight">—</strong></div><div><span>Víkend</span><strong id="autoWeekend">—</strong></div><div><span>Svátek</span><strong id="autoHoliday">—</strong></div></div>
           <p class="sf-edge-note" id="calendarRuleNote">Osa má délku skutečně uplynulého času v Praze. Při dvojznačném nebo neexistujícím čase použijte docházku. Pokud firma používá posun dne pracovního klidu dle § 91 odst. 6, zadejte evidované hodiny ručně.</p>
 </div>
+        <div class="sf-result-links"><a class="sf-audit-jump" href="#kontrola-pasky" id="auditSingleJump">Zkontrolovat na pásce →</a><button type="button" id="saveResultShift" class="sf-small-btn">Přidat do měsíce</button></div>
         <div class="sf-overlap-box" id="overlapBox"><strong>Souběh příplatků</strong><div id="overlapChips" class="sf-overlap-chips"></div><p id="overlapText"></p></div>
         <div class="sf-standard"><span id="rateBasis">Výchozí zákonné sazby</span><strong id="standardBonus">—</strong><small>Srovnání se stejnými hodinami a stejným typem kompenzace. Firemní sazby a zvláštní příplatky zadejte podle dokumentů zaměstnavatele.</small></div><p class="sf-leave-detail" id="leaveBreakdown"></p><p class="sf-leave-detail" id="leaveNote" hidden></p>
         <h3 class="sf-pay-heading">Z čeho se skládá hrubý součet</h3><div class="sf-pay-strip" id="payStrip" aria-hidden="true"></div><div class="sf-breakdown" id="breakdownList"></div>
@@ -176,12 +184,37 @@
   </div>
 </section>
 
+<section class="sf-month-section" id="mesic" aria-labelledby="monthHeading">
+ <div class="sf-shell">
+  <div class="sf-stage-heading"><div><p class="sf-eyebrow">02 / EVIDENCE SMĚN</p><h2 id="monthHeading" tabindex="-1">Měsíční přehled</h2><p>Sečtěte jen směny ze stejného období a stejné výplatnice.</p></div><button class="sf-btn sf-btn-secondary" id="monthSample" type="button">Vyzkoušet tři různé směny</button></div>
+  <div id="monthEmpty" class="sf-month-empty"><strong>V přehledu zatím nejsou směny</strong><p>U výpočtu klikněte na Přidat do měsíce. Každá směna může mít jiné časy, sazby a kompenzaci.</p><a href="#kalkulacka">Přejít k zadání směny ↑</a></div>
+  <div id="monthDashboard" hidden>
+   <div class="sf-month-top"><label>Měsíc <select id="monthSelect" class="sf-control"></select></label><a href="#kontrola-pasky" class="sf-btn sf-btn-primary" id="auditMonthJump">Zkontrolovat měsíc na pásce →</a></div>
+   <div class="sf-month-balance"><div><span>Hrubé příplatky z uložených směn</span><strong id="monthBonus">—</strong></div><div><span>Modelový základ směn</span><b id="monthBase">—</b></div><div><span>Modelový součet směn</span><b id="monthTotal">—</b></div></div>
+   <div class="sf-month-hours">
+    <div><span>Odpracováno</span><b id="monthWorked">—</b></div><div><span>Noční</span><b id="monthNight">—</b></div><div><span>Víkend</span><b id="monthWeekend">—</b></div><div><span>Svátek</span><b id="monthHoliday">—</b></div><div><span>Přesčas</span><b id="monthOvertime">—</b></div><div><span>Náhradní volno</span><b id="monthLeave">—</b></div>
+   </div>
+   <p id="monthLeaveSplit" class="sf-month-note"></p>
+   <p class="sf-month-note">Příplatkové hodiny se překrývají. Jejich součet není odpracovaná doba. Částky za zadané směny nepředstavují celou měsíční mzdu ani plat.</p>
+   <ul id="monthRows" class="sf-month-ledger" aria-label="Uložené směny"></ul>
+  </div>
+  <p id="monthStatus" role="status" class="sf-month-note"></p>
+  <small class="sf-month-note">Až 62 záznamů v této kartě. Při obnovení nebo zavření stránky se smažou. Tlačítko Přidat uloží jednu směnu bez opakování z rychlého výpočtu. Kalkulačka údaje o směnách ani výplatnici nikam neodesílá. Směnu přes hranici měsíců rozdělte podle docházky na dvě části.</small>
+ </div>
+</section>
+
 <section class="sf-section sf-soft" id="kontrola-pasky">
   <div class="sf-shell sf-audit-grid">
-    <div class="sf-section-head"><p class="sf-eyebrow">02 · Kontrola výplatní pásky</p><h2>Neřešte jen „kolik mi vyšlo“. Zkontrolujte i rozdíl proti pásce.</h2><p>Porovnání používá stejný model směny a stejné sazby. Případný rozdíl nejdřív ověřte podle PHV, firemní sazby a hodin uvedených na pásce.</p></div>
+    <div class="sf-section-head"><p class="sf-eyebrow">03 / ZÚČTOVÁNÍ</p><h2>Kontrola výplatnice</h2><p>Porovnání používá stejný model směny a stejné sazby. Případný rozdíl nejdřív ověřte podle PHV, firemní sazby a hodin uvedených na pásce.</p></div>
     <div class="sf-audit-card">
-      <div class="sf-two-fields"><label class="sf-field"><span>Na pásce mám příplatky celkem</span><div class="sf-unit-input"><input id="paidBonus" type="number" min="0" max="1000000" step="0.01" inputmode="decimal" placeholder="např. 240"><b>Kč</b></div></label><label class="sf-field"><span>Počet takových směn na pásce</span><div class="sf-unit-input"><input id="auditCount" type="number" min="1" max="31" step="1" value="1"><b>×</b></div></label></div>
+      <div class="sf-audit-controls"><label>Co porovnáváte <select class="sf-control" id="auditScope"><option value="shift">Stejné směny</option><option value="month">Vybraný měsíc</option></select></label><label>Jak jsou položky na pásce <select class="sf-control" id="auditView"><option value="total">Jedna souhrnná částka</option><option value="categories">Samostatné příplatky</option></select></label></div>
+      <p class="sf-month-note" id="auditScopeNote"></p>
+      <label class="sf-field" id="auditCountField"><span>Počet takových směn na pásce</span><div class="sf-unit-input"><input id="auditCount" type="number" min="1" max="31" step="1" value="1"><b>×</b></div></label>
+      <div id="auditQuick">
+      <div class="sf-two-fields"><label class="sf-field"><span>Na pásce mám příplatky celkem</span><div class="sf-unit-input"><input id="paidBonus" type="number" min="0" max="1000000" step="0.01" inputmode="decimal" placeholder="např. 240"><b>Kč</b></div></label></div>
       <div class="sf-audit-result" id="auditResult"><span>Model očekává</span><strong id="auditExpected">—</strong><div class="sf-audit-values"><div><span>Vyplaceno na pásce</span><b id="auditPaid">—</b></div><div><span>Rozdíl proti modelu</span><b id="auditDifference">—</b></div></div><p id="auditMessage">Zadejte částku z pásky a uvidíte rozdíl.</p></div>
+      </div>
+      <div id="auditCategories" hidden><div id="auditCategoryRows"></div><p id="auditLargest" class="sf-audit-largest" aria-live="polite"></p><p class="sf-month-note">Prázdná položka se neporovnává. Nulu zadejte, jen pokud za položku skutečně nebylo nic vyplaceno. U sloučených položek použijte souhrnnou částku.</p></div>
       <div class="sf-audit-checklist"><strong>Pokud čísla nesedí, ověřte postupně:</strong><ol><li>průměrný hodinový výdělek použitý zaměstnavatelem,</li><li>skutečný počet nočních, víkendových, svátečních a přesčasových hodin,</li><li>kolektivní smlouvu / vnitřní předpis,</li><li>náhradní volno a případné přesčasy zahrnuté ve mzdě.</li></ol></div>
     </div>
   </div>
@@ -243,7 +276,7 @@
   </div>
 </section>
 
-<section class="sf-section sf-practical" aria-labelledby="sf-example"><div class="sf-shell"><div class="sf-section-head"><h2 id="sf-example">Páteční noc krok za krokem</h2><p>Směna 22:00–06:00, pauza 02:00–02:30, mzda a PHV 200 Kč/h. Při výchozích sazbách vyjde 150 Kč za 7,5 nočních hodin a 110 Kč za 5,5 sobotních hodin. Na pásce s 240 Kč za stejné položky chybí vůči modelu 20 Kč.</p><p>Pásku porovnávejte za stejné hodiny, se stejným PHV a pouze se stejnými položkami. Opakování násobí totožné směny se stejnými podmínkami. Různé směny nebo směny s jiným PHV počítejte zvlášť.</p></div></div></section>
+<section class="sf-section sf-practical" aria-labelledby="sf-example"><div class="sf-shell"><div class="sf-section-head"><h2 id="sf-example">Páteční noc krok za krokem</h2><p>Směna 22:00–06:00, pauza 02:00–02:30, mzda a PHV 200 Kč/h. Při výchozích sazbách vyjde 150 Kč za 7,5 nočních hodin a 110 Kč za 5,5 sobotních hodin. Na pásce s 240 Kč za stejné položky chybí vůči modelu 20 Kč.</p><p>V měsíční ukázce přidejte denní sobotu 5. 12. (150 Kč za víkend), noční pátek 11. 12. (260 Kč za noc a víkend) a svátek 25. 12. s dvěma hodinami přesčasu (1 600 Kč při dohodnuté peněžní kompenzaci). Hrubé příplatky za tyto tři směny vyjdou na 2 010 Kč. Při stejném PHV 200 Kč/h by samotná páteční noc u platu dala 575 Kč za noc a víkend místo 260 Kč u mzdy.</p><p>Pásku porovnávejte za stejné hodiny, se stejným PHV a pouze se stejnými položkami. Opakování násobí totožné směny se stejnými podmínkami. Různé směny nebo směny s jiným PHV počítejte zvlášť.</p></div></div></section>
 <section class="sf-section sf-soft" id="faq">
   <div class="sf-shell sf-faq-grid">
     <div class="sf-section-head"><p class="sf-eyebrow">06 · FAQ</p><h2>Nejčastější místa, kde se výpočet směn plete</h2><p>Největší rozdíly obvykle nevznikají ve vzorci, ale ve špatném právním režimu, průměrném výdělku nebo klasifikaci hodin.</p></div>
@@ -274,7 +307,7 @@
   </div>
   <div class="sf-shell sf-footer-bottom"><span>© 2026 RychléVýpočty.cz.</span><span><strong>Upozornění:</strong> Výsledek je transparentní kontrolní model. Nenahrazuje evidenci pracovní doby, mzdové podklady zaměstnavatele ani individuální právní posouzení.</span></div>
 </footer>
-<script src="/priplatky-smeny.js?v=20261106-cz-input-r1" defer></script>
+<script src="/priplatky-smeny.js?v=20261106-mesic1" defer></script>
 <!-- RV-VNEXT: status=DONE | major=2026-08-17 | qa=PASS | seq=7 -->
 </body>
 </html>
