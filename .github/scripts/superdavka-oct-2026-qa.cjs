@@ -41,6 +41,7 @@ const results=[];
    }
    assert.equal(await page.locator('#basicRegion option').count(),78);
    assert.equal(await page.locator('#region option').count(),78);
+   if(width<=768)assert.equal(await page.locator('#mobileSummary').isHidden(),true,'mobile shortcut must not invent a result before district');
    const before=await page.locator('#totalBenefit').innerText();
    assert.equal(before,'—','must NOT invent a zero result before district selection');
    assert.match(await page.locator('#resultExplanation').innerText(),/zvolte okres/i);
@@ -59,6 +60,20 @@ const results=[];
    await page.locator('#basicEnergy').fill('3000');
    const comparable=text=>text.replace(/[\u00a0\u202f]/g,' ');
    assert.equal(comparable(await page.locator('#totalBenefit').innerText()),'7 560 Kč','independently calculated one-person statutory scenario');
+   if(width<=768){
+    assert.equal(await page.locator('#mobileSummary').isVisible(),true,'mobile summary appears only after valid district and calculation');
+    assert.equal(comparable(await page.locator('#mobileSummaryValue').innerText()),'7 560 Kč / měsíc','summary must equal actual total');
+    const summaryPosition=await page.locator('#mobileSummary').evaluate(el=>getComputedStyle(el).position);
+    assert.equal(summaryPosition,'sticky','mobile total must stay visible while editing long form');
+    if(width===390){
+     await page.evaluate(()=>{document.documentElement.style.scrollBehavior='auto';window.scrollTo(0,950)});
+     const top=await page.locator('#mobileSummary').evaluate(el=>el.getBoundingClientRect().top);
+     assert.ok(top>=60&&top<=95,'mobile shortcut should stick just under navigation: '+top);
+     await page.screenshot({path:path.join(out,'superdavka-mobile-sticky-result-390.png'),animations:'disabled'});
+     await page.locator('#mobileSummaryLink').click();
+     assert.equal(await page.evaluate(()=>document.activeElement.id),'vysledek','result shortcut should take keyboard focus to the result');
+    }
+   }
    assert.equal(comparable(await page.locator('#heroHousing').innerText()),comparable(await page.locator('#housingComponent').innerText()),'desktop hero housing amount must equal the real result');
    assert.equal(comparable(await page.locator('#heroWork').innerText()),comparable(await page.locator('#workComponent').innerText()),'desktop hero work amount must equal the real result');
    const totalBars=await page.locator('.sd87-stack-lines i').evaluateAll(nodes=>nodes.reduce((a,n)=>a+parseFloat(n.style.getPropertyValue('--sd87-share')||'0'),0));
@@ -123,6 +138,7 @@ const results=[];
    await page.locator('[data-template="couple"]').click();
    await page.locator('#basicWorkIncome').fill('neplatné');
    assert.equal(await page.locator('#totalBenefit').innerText(),'—','invalid text must not become zero');
+   if(width<=768)assert.equal(await page.locator('#mobileSummary').isHidden(),true,'invalid calculations must hide misleading mobile summary');
    assert.equal(await page.locator('#heroHousing').innerText(),'—','invalid input clears misleading hero amounts');
    assert.equal(await page.locator('.sd87-stack-lines .is-house i').evaluate(el=>el.style.getPropertyValue('--sd87-share')),'0%','invalid input clears hero chart');
    for(const id of ['lifeMinimum','incomeRatio','recognisedHousing','assetLimit']){
