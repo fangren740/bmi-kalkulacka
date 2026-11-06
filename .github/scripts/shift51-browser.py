@@ -37,7 +37,12 @@ with sync_playwright() as p:
         page.on('pageerror',lambda e:errors.append(str(e)))
         load(page,root)
         brand=page.get_by_role('link',name='RychléVýpočty.cz – domů').first
-        assert brand.inner_text()=='RychléVýpočty.cz'
+        original=brand.locator('img')
+        assert original.get_attribute('src')=='/logo-rv-v32.svg?v=1'
+        assert original.evaluate('img=>img.complete && img.naturalWidth>0')
+        example=page.locator('#priklad')
+        expect(example.get_by_text('260 Kč',exact=True)).to_be_visible()
+        expect(example.get_by_text('−20 Kč',exact=True)).to_be_visible()
         logo=brand.bounding_box()
         masthead=page.locator('.sf-header-inner').bounding_box()
         assert logo['x']>=masthead['x'] and logo['x']+logo['width']<=masthead['x']+masthead['width']

@@ -121,7 +121,6 @@ body.sf-page{background:#f3f5f6;color:#132630}
 .sf-audit-values{display:grid;grid-template-columns:1fr 1fr;gap:10px;border-top:1px solid #b9cbd4;margin:8px 0;padding-top:7px}
 .sf-audit-values span,.sf-audit-values b{display:block}
 .sf-audit-values b{font-size:1.17rem}
-.sf-practical .sf-section-head{max-width:760px}
 @media(max-width:850px){.sf-calculator-grid{grid-template-columns:minmax(0,1fr)}}
 @media(max-width:560px){
  .sf-hero.sf-clock-intro{padding:15px 0 18px}
@@ -273,10 +272,8 @@ body.sf-page{background:#f3f5f6;color:#132630}
 /* The masthead uses the RV mark and a live wordmark on a fixed light surface. */
 .sf-header{position:sticky;z-index:100;top:0;background:#fff;border-bottom:1px solid #dce5e9}
 .sf-header-inner{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:24px;min-height:76px}
-.sf-logo{display:inline-flex;align-items:center;justify-self:start;gap:9px;min-height:48px;color:#071a33;text-decoration:none}
-.sf-logo svg{display:block;flex:none}
-.sf-wordmark{font-size:1.5rem;font-weight:800;letter-spacing:-.045em;line-height:1.15;white-space:nowrap}
-.sf-wordmark span{color:#116733}
+.sf-logo{display:flex;align-items:center;justify-self:start;width:min(248px,100%);min-height:48px;text-decoration:none}
+.sf-logo img{display:block;width:100%;height:auto}
 .sf-main-nav{display:flex;align-items:center;gap:clamp(16px,2.4vw,36px)}
 .sf-main-nav a,.sf-mobile-nav a{display:flex;align-items:center;min-height:44px;color:#294961;font-size:.875rem;font-weight:680;text-decoration:none}
 .sf-main-nav a:hover,.sf-mobile-nav a:not(.sf-mobile-cta):hover{color:#116733;text-decoration:underline;text-underline-offset:.24em}
@@ -285,13 +282,11 @@ body.sf-page{background:#f3f5f6;color:#132630}
 .sf-header-cta:hover,.sf-mobile-nav .sf-mobile-cta:hover{background:#1a4051}
 .sf-menu-toggle,.sf-mobile-nav,.sf-menu-close{display:none}
 .sf-header :is(a,button):focus-visible{outline:2px solid #087747;outline-offset:3px}
-.sf-page #kalkulacka{scroll-margin-top:84px}
+.sf-page main>section[id],#monthHeading{scroll-margin-top:92px}
 @media(max-width:860px){
   .sf-header-inner{grid-template-columns:minmax(0,1fr) auto;gap:8px;min-height:64px}
   .sf-main-nav,.sf-header-cta{display:none}
-  .sf-logo{gap:7px}
-  .sf-logo svg{width:36px;height:36px}
-  .sf-wordmark{font-size:clamp(1.14rem,5.55vw,1.38rem)}
+  .sf-logo{width:min(232px,100%)}
   .sf-menu-toggle{display:grid;place-items:center;width:44px;height:44px;padding:0;border:1px solid #d2dfe5;border-radius:8px;background:#fff;color:#102c3a;cursor:pointer}
   .sf-menu-toggle[aria-expanded=true]{background:#edf4f6}
   .sf-menu-toggle[aria-expanded=true] .sf-menu-lines{display:none}
@@ -299,5 +294,50 @@ body.sf-page{background:#f3f5f6;color:#132630}
   .sf-mobile-nav.is-open{position:absolute;inset:100% 0 auto;display:grid;gap:2px;padding:8px max(14px,calc((100% - 1240px) / 2)) 14px;background:#fff;border-bottom:1px solid #dce5e9;box-shadow:0 14px 26px #071a331c}
   .sf-mobile-nav a{padding-inline:10px}
   .sf-mobile-nav .sf-mobile-cta{justify-self:start;margin-top:6px;padding-inline:15px}
-  .sf-page #kalkulacka{scroll-margin-top:72px}
+  .sf-page main>section[id],#monthHeading{scroll-margin-top:76px}
+}
+
+/* Supporting sections use the same reading scale as the calculator. */
+.sf-page .sf-section,.sf-page .sf-related{padding-block:clamp(34px,5vw,68px)}
+.sf-page .sf-section-head>p:not(.sf-eyebrow){max-width:65ch;font-size:1rem;line-height:1.6;color:#425962}
+.sf-page :is(.sf-benchmark-card,.sf-method-flow article,.sf-boundary-grid article,.sf-source-list a,.sf-faq-list details,.sf-related-grid a){border-radius:6px;border-color:var(--sf-line)}
+.sf-page :is(.sf-method-flow,.sf-boundary-grid,.sf-related-grid) :is(h3,strong),
+.sf-source-list strong,.sf-faq-list summary,.sf-benchmark-card:not(.sf-benchmark-primary)>strong,.sf-audit-checklist strong{font-size:1rem}
+.sf-benchmark-card p,.sf-method-flow p,.sf-boundary-grid p,.sf-related-grid p,.sf-source-list small,.sf-faq-list p,.sf-audit-checklist ol,.sf-data-note{font-size:.9rem;line-height:1.55}
+.sf-page .sf-source-list small,.sf-page .sf-related-grid p,.sf-page .sf-faq-list p{color:#425962}
+.sf-page .sf-source-list a:hover,.sf-page .sf-related-grid a:hover{border-color:#297481;background:#f0f7f8}
+.sf-page .sf-faq-list summary{min-height:44px}
+.sf-formula-grid strong{font-size:.87rem;line-height:1.5;overflow-wrap:anywhere}
+.sf-benchmark-card.sf-benchmark-primary{grid-column:1/-1;display:flex;flex-wrap:wrap;align-items:center;gap:8px 22px}
+.sf-benchmark-card.sf-benchmark-primary p{margin:0;max-width:44ch}
+.sf-audit-card #auditCountField,.sf-audit-total{max-width:22rem;margin-top:12px}
+.sf-audit-total{margin-bottom:12px}
+.sf-audit-result span,.sf-audit-result p{font-size:.86rem}
+.sf-month-note{line-height:1.55}
+#monthBackupNote{max-width:75ch}
+.sf-page .sf-footer-grid a:not(.rv-logo),.sf-page .sf-footer-brand>p{font-size:.88rem;line-height:1.5;overflow-wrap:anywhere}
+.sf-page .sf-footer-brand .rv-logo{min-width:0;max-width:100%}
+.sf-page .sf-footer-grid h3{font-size:.95rem}
+.sf-page .sf-footer-bottom{font-size:.75rem}
+
+.sf-practical{background:#e9f0f1;border-block:1px solid var(--sf-line)}
+.sf-example-grid{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:12px;margin-top:20px}
+.sf-example-grid h3,.sf-example-month h3{margin:0;font-size:1.12rem;line-height:1.3}
+.sf-example-sheet,.sf-example-receipt,.sf-example-month{padding:clamp(15px,2.4vw,28px);border:1px solid var(--sf-line);border-radius:6px}
+.sf-example-sheet,.sf-example-month{background:#fff}
+.sf-example-lines{margin:12px 0}
+.sf-example-lines>div{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--sf-line)}
+.sf-example-lines>div:last-child{font-weight:800}
+.sf-example-lines dd{margin:0;font-size:1.1rem;font-weight:800;white-space:nowrap;font-variant-numeric:tabular-nums}
+.sf-example-lines small,.sf-example-receipt small{display:block;margin-top:3px;font-size:.875rem}
+.sf-example-lines small,.sf-example-sheet p,.sf-example-month p{color:#425962}
+.sf-example-grid p,.sf-example-month p{margin:.55em 0 0;line-height:1.55}
+.sf-example-receipt{background:#102531;color:#fff;border-top:4px solid var(--sf-orange)}
+.sf-example-receipt>strong{display:block;margin-top:10px;color:#ffc681;font:800 clamp(2.15rem,5vw,4rem)/1.1 var(--sf-mono);letter-spacing:-.055em}
+.sf-example-receipt a{display:inline-flex;align-items:center;min-height:44px;margin-top:7px;color:#fff;font-size:.9rem;text-underline-offset:.2em}
+.sf-example-month{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-top:12px}
+.sf-example-month>div{flex:1 1 31rem}
+@media(max-width:700px){
+ .sf-example-grid,.sf-page .sf-sources-grid,.sf-page .sf-faq-grid{grid-template-columns:minmax(0,1fr);gap:12px}
+ .sf-page .sf-footer-grid{gap:22px 14px}
 }
