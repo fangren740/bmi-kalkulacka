@@ -19,7 +19,8 @@ jobs:
         with:
           python-version: '3.12'
       - run: pip install playwright==1.58.0
-      - run: playwright install --with-deps chromium
+      # Ubuntu runner already provides browser system libraries; avoid slow apt font downloads.
+      - run: playwright install --only-shell chromium
       - run: python .github/scripts/shift51-browser.py
       - uses: actions/upload-artifact@v4
         if: always()
