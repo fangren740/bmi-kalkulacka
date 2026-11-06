@@ -41,6 +41,19 @@
     const hh=Number(m[1]),mm=Number(m[2]);
     return hh<=23&&mm<=59?hh*60+mm:null;
   }
+  function normalizedClock(value) {
+    let t=String(value||'').trim();
+    if(/^\d{1,4}$/.test(t)){
+      if(t.length<=2)t=t.padStart(2,'0')+'00';
+      else t=t.padStart(4,'0');
+      t=t.slice(0,2)+':'+t.slice(2);
+    } else {
+      const match=/^(\d{1,2}):(\d{1,2})$/.exec(t);
+      if(match)t=match[1].padStart(2,'0')+':'+match[2].padStart(2,'0');
+    }
+    return timeToMinutes(t)===null?null:t;
+  }
+  
   function dateKey(date) {
     return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
   }
@@ -506,6 +519,8 @@
     qsa('[data-preset]').forEach(b=>b.addEventListener('click',()=>setPreset(b.dataset.preset)));
     $('shiftDateNative').addEventListener('change',()=>{$('shiftDate').value=czechDate($('shiftDateNative').value);calculate();});
     $('shiftDate').addEventListener('input',()=>{$('shiftDateNative').value=isoDate($('shiftDate').value)||'';});
+    $('shiftDate').addEventListener('blur',()=>{const normalized=isoDate($('shiftDate').value);if(normalized)$('shiftDate').value=czechDate(normalized);});
+    ['shiftStart','shiftEnd','breakStart'].forEach(id=>$(id).addEventListener('blur',()=>{const normalized=normalizedClock($(id).value);if(normalized){$(id).value=normalized;calculate();}}));
     ['hourlyRate','averageEarnings','shiftDate','shiftStart','shiftEnd','breakMinutes','breakStart','manualWorked','manualNight','manualWeekend','manualHoliday','overtimeHours','overtimeStart','repeatCount','customFixedRate','customHours'].forEach(id=>$(id)?.addEventListener('input',calculate));
     ['overtimeCompensation','holidayCompensation'].forEach(id=>$(id)?.addEventListener('change',calculate));
     ['salaryRestDay','wageOvertimeIncluded'].forEach(id=>$(id)?.addEventListener('change',()=>{if(id==='salaryRestDay'&&!ratesDirty)rateDefaults(true);calculate();}));

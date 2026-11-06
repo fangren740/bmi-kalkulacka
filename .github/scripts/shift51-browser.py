@@ -41,6 +41,11 @@ with sync_playwright() as p:
         page.locator('.sf-show-result').click()
         page.screenshot(path=out/f'candidate-{width}-vysledek.png')
         check(page,cashBonus='260 Kč',totalPay='1 760 Kč')
+        assert page.locator('#shiftDate').input_value()=='6. 11. 2026', 'ISO URL/test date should be normalized visually to Czech format'
+        fill(page,shiftStart='2200')
+        page.locator('#shiftEnd').click()
+        assert page.locator('#shiftStart').input_value()=='22:00', 'compact 24h value must normalize on blur'
+        check(page,cashBonus='260 Kč')
         assert page.locator('#shiftStart').get_attribute('type')=='text', '24h time must never render AM/PM'
         assert page.locator('#shiftDate').get_attribute('type')=='text', 'date field must have stable Czech format'
         fill(page,shiftDate='6. 11. 2026')
