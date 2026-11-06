@@ -17,10 +17,20 @@ const results=[];
    const response=await page.goto(base+'/superdavka-kalkulacka.html',{waitUntil:'networkidle',timeout:45000});
    assert.equal(response.status(),200);
    const firstInputTop=await page.locator('#basicRegion').evaluate(el=>el.getBoundingClientRect().top);
-   if(width<=390)assert.ok(firstInputTop>0&&firstInputTop<900,
-     'first mobile district select must be reachable in the initial 900px view, '+width+'px: '+firstInputTop);
+   if(width<=390||width===768)assert.ok(firstInputTop>0&&firstInputTop<900,
+     'first mobile/tablet district select must be reachable in the initial 900px view, '+width+'px: '+firstInputTop);
    if(width===1440)assert.ok(firstInputTop>0&&firstInputTop<900,
      'first desktop district select should be in initial 900px view: '+firstInputTop);
+   const contentQuality=await page.evaluate(()=>{
+     const text=document.body.textContent.replace(/\\s+/g,' ').trim();
+     return {words:text.split(/\\s+/).length,faq:document.querySelectorAll('#otazky details').length,
+       scenarios:document.querySelectorAll('.sd88-story-grid article').length,
+       officialLinks:document.querySelectorAll('.sd88-source-grid a[href^="https://"]').length};
+   });
+   assert.ok(contentQuality.words>=2800,'substantive editorial content must remain: '+contentQuality.words);
+   assert.equal(contentQuality.faq,10,'FAQ must remain practical and structured');
+   assert.equal(contentQuality.scenarios,3,'three independently described real-world scenarios');
+   assert.equal(contentQuality.officialLinks,3,'methodology anchored in independent official evidence');
    const data=await page.evaluate(()=>window.__RV_SUPERDAVKA_OCT26__);
    assert.equal(data.periodFrom,'2026-10-01');
    assert.equal(data.periodTo,'2026-12-31');
