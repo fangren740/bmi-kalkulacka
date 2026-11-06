@@ -41,6 +41,18 @@ with sync_playwright() as p:
         page.locator('.sf-show-result').click()
         page.screenshot(path=out/f'candidate-{width}-vysledek.png')
         check(page,cashBonus='260 Kč',totalPay='1 760 Kč')
+        assert page.locator('#shiftStart').get_attribute('type')=='text', '24h time must never render AM/PM'
+        assert page.locator('#shiftDate').get_attribute('type')=='text', 'date field must have stable Czech format'
+        fill(page,shiftDate='6. 11. 2026')
+        check(page,cashBonus='260 Kč')
+        assert page.locator('#shiftDateNative').input_value()=='2026-11-06'
+        page.locator('#shiftDateNative').fill('2026-11-07')
+        assert page.locator('#shiftDate').input_value()=='7. 11. 2026'
+        fill(page,shiftDate='6. 11. 2026')
+        check(page,cashBonus='260 Kč')
+        fill(page,shiftStart='25:00')
+        check(page,cashBonus='—')
+        fill(page,shiftStart='22:00')
         fill(page,paidBonus=240,auditCount=1)
         check(page,auditExpected='260 Kč',auditPaid='240 Kč',auditDifference='−20 Kč')
         fill(page,paidBonus=0)

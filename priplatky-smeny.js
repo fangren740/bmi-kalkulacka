@@ -37,7 +37,9 @@
   }
   function timeToMinutes(value) {
     const m = /^(\d{1,2}):(\d{2})$/.exec(value || '');
-    return m ? Number(m[1]) * 60 + Number(m[2]) : null;
+    if(!m)return null;
+    const hh=Number(m[1]),mm=Number(m[2]);
+    return hh<=23&&mm<=59?hh*60+mm:null;
   }
   function dateKey(date) {
     return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
@@ -59,8 +61,29 @@
     return out;
   }
 
+  function isoDate(value) {
+    const t=String(value||'').trim();
+    let year,month,day;
+    const iso=/^(\\d{4})-(\\d{2})-(\\d{2})$/.exec(t);
+    const cz=/^(\\d{1,2})\\.\\s*(\\d{1,2})\\.\\s*(\\d{4})\\.?$/.exec(t);
+    if(iso){year=Number(iso[1]);month=Number(iso[2]);day=Number(iso[3]);}
+    else if(cz){day=Number(cz[1]);month=Number(cz[2]);year=Number(cz[3]);}
+    else return null;
+    if(year<1900||year>2100||month<1||month>12||day<1||day>31)return null;
+    const dt=new Date(Date.UTC(year,month-1,day));
+    if(dt.getUTCFullYear()!==year||dt.getUTCMonth()!==month-1||dt.getUTCDate()!==day)return null;
+    return String(year)+'-'+String(month).padStart(2,'0')+'-'+String(day).padStart(2,'0');
+  }
+  function czechDate(date) {
+    const iso=isoDate(date);
+    if(!iso)return '';
+    const [y,m,d]=iso.split('-');
+    return Number(d)+'. '+Number(m)+'. '+y;
+  }
+
   function defaultDate() {
-    if (!$('shiftDate').value) $('shiftDate').value = pragueClock.format(new Date()).slice(0,10);
+    if (!$('shiftDate').value) $('shiftDate').value = czechDate(pragueClock.format(new Date()).slice(0,10));
+    $('shiftDateNative').value = isoDate($('shiftDate').value)||'';
   }
 
   const pragueClock = new Intl.DateTimeFormat('sv-SE', {
@@ -83,7 +106,7 @@
 
   const clockError = 'Čas v Praze neexistuje nebo je dvojznačný při změně času. Použijte skutečné hodiny z docházky.';
   function getShiftDates() {
-    const date = $('shiftDate').value;
+    const date = isoDate($('shiftDate').value);
     const startMin = timeToMinutes($('shiftStart').value);
     const endMin = timeToMinutes($('shiftEnd').value);
     if (!date || startMin===null || endMin===null || startMin===endMin) return null;
@@ -414,19 +437,20 @@
   function setPreset(name) {
     const today=pragueClock.format(new Date()).slice(0,10);
     if(name==='fridayNight'){
-      $('shiftDate').value=nextWeekday(today,5); $('shiftStart').value='22:00'; $('shiftEnd').value='06:00'; $('breakStart').value='02:00'; $('breakMinutes').value=30;
+      $('shiftDate').value=czechDate(nextWeekday(today,5)); $('shiftStart').value='22:00'; $('shiftEnd').value='06:00'; $('breakStart').value='02:00'; $('breakMinutes').value=30;
     } else if(name==='saturdayDay') {
-      $('shiftDate').value=nextWeekday(today,6); $('shiftStart').value='06:00'; $('shiftEnd').value='14:00'; $('breakStart').value='10:00'; $('breakMinutes').value=30;
+      $('shiftDate').value=czechDate(nextWeekday(today,6)); $('shiftStart').value='06:00'; $('shiftEnd').value='14:00'; $('breakStart').value='10:00'; $('breakMinutes').value=30;
     } else if(name==='christmas') {
-      const y=today.slice(0,4); $('shiftDate').value=`${y}-12-24`; $('shiftStart').value='08:00'; $('shiftEnd').value='16:00'; $('breakStart').value='12:00'; $('breakMinutes').value=30;
+      const y=today.slice(0,4); $('shiftDate').value=czechDate(`${y}-12-24`); $('shiftStart').value='08:00'; $('shiftEnd').value='16:00'; $('breakStart').value='12:00'; $('breakMinutes').value=30;
     }
+    $('shiftDateNative').value=isoDate($('shiftDate').value)||'';
     calculate();
   }
 
   function shareParams() {
     const p=new URLSearchParams();
     p.set('rezim',regime);p.set('mode',inputMode);p.set('sazba',n('hourlyRate'));p.set('phv',n('averageEarnings'));
-    if(inputMode==='shift'){['shiftDate','shiftStart','shiftEnd','breakStart','breakMinutes'].forEach(id=>p.set(id,$(id).value));}
+    if(inputMode==='shift'){p.set('shiftDate',isoDate($('shiftDate').value)||'');['shiftStart','shiftEnd','breakStart','breakMinutes'].forEach(id=>p.set(id,$(id).value));}
     else {['manualWorked','manualNight','manualWeekend','manualHoliday'].forEach(id=>p.set(id,$(id).value));}
     p.set('prescas',n('overtimeHours'));if(inputMode==='shift'&&$('overtimeStart').value)p.set('prescasOd',$('overtimeStart').value);
     ['nightPercent','weekendPercent','holidayPercent','overtimePercent','customFixedRate','customHours'].forEach(id=>p.set(id,$(id).value));p.set('prescasForma',$('overtimeCompensation').value);p.set('svatekForma',$('holidayCompensation').value);p.set('opakovat',n('repeatCount'));
@@ -438,7 +462,8 @@
     if(p.has('rezim')&&Object.hasOwn(LEGAL,p.get('rezim'))) regime=p.get('rezim');
     if(p.get('mode')==='manual') inputMode='manual';
     const map={sazba:'hourlyRate',phv:'averageEarnings',shiftDate:'shiftDate',shiftStart:'shiftStart',shiftEnd:'shiftEnd',breakStart:'breakStart',breakMinutes:'breakMinutes',manualWorked:'manualWorked',manualNight:'manualNight',manualWeekend:'manualWeekend',manualHoliday:'manualHoliday',prescas:'overtimeHours',opakovat:'repeatCount'};
-    Object.entries(map).forEach(([key,id])=>{if(p.has(key))$(id).value=p.get(key);});
+    Object.entries(map).forEach(([key,id])=>{if(p.has(key))$(id).value=key==='shiftDate'?(czechDate(p.get(key))||p.get(key)):p.get(key);});
+    $('shiftDateNative').value=isoDate($('shiftDate').value)||'';
     if(['pay','leave'].includes(p.get('prescasForma')))$('overtimeCompensation').value=p.get('prescasForma');
     if(['pay','leave'].includes(p.get('svatekForma')))$('holidayCompensation').value=p.get('svatekForma');
     if(p.has('prescasOd'))$('overtimeStart').value=p.get('prescasOd');
@@ -479,6 +504,8 @@
     qsa('[data-input-mode]').forEach(b=>b.addEventListener('click',()=>setInputMode(b.dataset.inputMode)));
     qsa('[data-regime]').forEach(b=>b.addEventListener('click',()=>{regime=b.dataset.regime;ratesDirty=false;updateRegimeUi();rateDefaults(true);calculate();}));
     qsa('[data-preset]').forEach(b=>b.addEventListener('click',()=>setPreset(b.dataset.preset)));
+    $('shiftDateNative').addEventListener('change',()=>{$('shiftDate').value=czechDate($('shiftDateNative').value);calculate();});
+    $('shiftDate').addEventListener('input',()=>{$('shiftDateNative').value=isoDate($('shiftDate').value)||'';});
     ['hourlyRate','averageEarnings','shiftDate','shiftStart','shiftEnd','breakMinutes','breakStart','manualWorked','manualNight','manualWeekend','manualHoliday','overtimeHours','overtimeStart','repeatCount','customFixedRate','customHours'].forEach(id=>$(id)?.addEventListener('input',calculate));
     ['overtimeCompensation','holidayCompensation'].forEach(id=>$(id)?.addEventListener('change',calculate));
     ['salaryRestDay','wageOvertimeIncluded'].forEach(id=>$(id)?.addEventListener('change',()=>{if(id==='salaryRestDay'&&!ratesDirty)rateDefaults(true);calculate();}));
