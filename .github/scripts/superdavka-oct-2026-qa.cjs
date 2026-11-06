@@ -22,8 +22,8 @@ const results=[];
    if(width===1440)assert.ok(firstInputTop>0&&firstInputTop<900,
      'first desktop district select should be in initial 900px view: '+firstInputTop);
    const contentQuality=await page.evaluate(()=>{
-     const text=document.body.textContent.replace(/\\s+/g,' ').trim();
-     return {words:text.split(/\\s+/).length,faq:document.querySelectorAll('#otazky details').length,
+     const text=document.body.textContent.replace(/\s+/g,' ').trim();
+     return {words:text.split(/\s+/).length,faq:document.querySelectorAll('#otazky details').length,
        scenarios:document.querySelectorAll('.sd88-story-grid article').length,
        officialLinks:document.querySelectorAll('.sd88-source-grid a[href^="https://"]').length};
    });
