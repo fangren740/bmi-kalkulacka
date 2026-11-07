@@ -1109,3 +1109,40 @@
 
 // Inline mobile summary occupies normal flow: no fixed layer covers fields or keyboard.
 (()=>{const source=document.getElementById('cashBonus'),target=document.getElementById('mobileCash');if(!source||!target)return;const sync=()=>{target.textContent=source.textContent};new MutationObserver(sync).observe(source,{childList:true,characterData:true,subtree:true});sync()})();
+
+
+// Progressive disclosure and provenance labels; does not alter the calculation.
+(()=>{
+ const $=id=>document.getElementById(id),form=$('shiftForm');
+ let personal=false;
+ const notice=$('exampleNotice'),label=$('resultContext');
+ function provenance(){
+   const phv=$('averageEarnings').value;
+   label.textContent=personal?'Model podle vašeho zadání · ověřte PHV a podmínky':'Ukázkový výsledek · předvyplněné údaje nejsou váš osobní nárok';
+   notice.querySelector('strong').textContent=personal?'Vaše zadání':'Ukázkové zadání';
+   notice.querySelector('span').textContent=personal?'Výsledek vychází z vámi zadaných hodnot.':'Předvyplněná směna a PHV '+phv+' Kč/h slouží k vyzkoušení. Zadejte své údaje.';
+   $('confirmOwnShift').hidden=personal;
+ }
+ $('confirmOwnShift').addEventListener('click',()=>{personal=true;provenance()});
+ // Editing another field does not silently turn the demo PHV into a personal value.
+ $('averageEarnings').addEventListener('input',()=>{personal=false;provenance()});
+ form.addEventListener('input',provenance);
+ document.querySelectorAll('[data-preset]').forEach(b=>b.addEventListener('click',()=>{personal=false;provenance()}));
+ $('phvHelpToggle').addEventListener('click',()=>{const open=$('phvHelp').hidden;$('phvHelp').hidden=!open;$('phvHelpToggle').setAttribute('aria-expanded',String(open))});
+ function update(){
+  $('pauseDetails').querySelector('summary').textContent='Neplacená pauza: '+$('breakMinutes').value+' min'+(Number($('breakMinutes').value)?' od '+$('breakStart').value:'')+' · upravit';
+  const comp=$('holidayCompensation').value==='leave'?'náhradní volno':'příplatek v penězích';
+  $('compDetails').querySelector('summary').textContent='Přesčas: '+$('overtimeHours').value+' h · svátek: '+comp+' · upravit';
+  const list=$('simpleBreakdown');list.replaceChildren();
+  if($('cashBonus').textContent==='—')return;
+  [...$('breakdownList').children].filter(row=>row.dataset.kind!=='base'&&!row.classList.contains('is-zero')).forEach(row=>{
+   const item=document.createElement('div'),left=document.createElement('span'),amount=document.createElement('strong');
+   left.textContent=row.querySelector('strong').textContent;
+   const note=document.createElement('small');note.textContent=row.querySelector('small').textContent;left.append(note);
+   amount.textContent=row.querySelector('b').textContent;item.append(left,amount);list.append(item);
+  });
+ }
+ new MutationObserver(update).observe($('breakdownList'),{childList:true,subtree:true,characterData:true});
+ form.addEventListener('input',update);form.addEventListener('change',update);
+ provenance();update();
+})();

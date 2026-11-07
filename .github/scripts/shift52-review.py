@@ -7,7 +7,7 @@ out=Path('/tmp/rv-shift51');out.mkdir(exist_ok=True)
 scenarios=[('sobota','2026-12-05','06:00','14:00','10:00',0,'150 Kč'),('noc','2026-12-11','22:00','06:00','02:00',0,'260 Kč'),('svatek','2026-12-25','08:00','16:00','12:00',2,'1 600 Kč')]
 with sync_playwright() as p:
  b=p.chromium.launch()
- for version,folder in [('pred',root/'.shift52-before'),('po',root)]:
+ for version,folder in [('pred',root/'.shift53-before'),('po',root)]:
   for width in [320,390,1440]:
    page=b.new_page(viewport={'width':width,'height':1000 if width==1440 else 844},locale='cs-CZ',reduced_motion='reduce')
    def route(req):
@@ -35,3 +35,4 @@ with sync_playwright() as p:
    page.close()
  b.close()
 print('PASS: three independent totals, 320/390/1440 overflow, paired entry/result/month captures')
+

@@ -74,12 +74,23 @@ with sync_playwright() as p:
         if width==1440:
             assert page.locator('#vysledek').bounding_box()['height']<page.locator('#shiftForm').bounding_box()['height']
         page.screenshot(path=out/f'header-{width}.png')
+        assert not page.locator('#pauseDetails').evaluate('e=>e.open')
+        assert not page.locator('#baseDetails').evaluate('e=>e.open')
+        assert not page.locator('#resultExtra').evaluate('e=>e.open')
+        expect(page.locator('#resultContext')).to_contain_text('Ukázkový')
+        page.screenshot(path=out/f'simple-entry-{width}.png')
         fill(page,shiftDate='2026-11-06',shiftStart='22:00',shiftEnd='06:00',breakMinutes=30,breakStart='02:00',hourlyRate=200,averageEarnings=200)
         page.evaluate('window.scrollTo(0,0)')
         page.screenshot(path=out/f'candidate-{width}.png')
         page.locator('.sf-show-result').click()
         page.screenshot(path=out/f'candidate-{width}-vysledek.png')
         check(page,cashBonus='260 Kč',totalPay='1 760 Kč')
+        expect(page.locator('#resultContext')).to_contain_text('Ukázkový')
+        page.locator('#confirmOwnShift').click()
+        expect(page.locator('#resultContext')).to_contain_text('vašeho zadání')
+        expect(page.locator('#simpleBreakdown')).to_contain_text('150 Kč')
+        expect(page.locator('#simpleBreakdown')).to_contain_text('110 Kč')
+        page.screenshot(path=out/f'simple-result-{width}.png')
         expect(page.locator('#mobileCash')).to_have_text('260 Kč')
         if width==390:
             assert page.locator('.sf-live-inline').evaluate("e=>getComputedStyle(e).position==='static'")
@@ -285,3 +296,4 @@ with sync_playwright() as p:
         print(width,'PASS',flush=True)
         if not executable:
             page.close()
+
