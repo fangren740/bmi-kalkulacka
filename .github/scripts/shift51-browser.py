@@ -80,6 +80,13 @@ with sync_playwright() as p:
         page.locator('.sf-show-result').click()
         page.screenshot(path=out/f'candidate-{width}-vysledek.png')
         check(page,cashBonus='260 Kč',totalPay='1 760 Kč')
+        expect(page.locator('#mobileCash')).to_have_text('260 Kč')
+        if width==390:
+            assert page.locator('.sf-live-inline').evaluate("e=>getComputedStyle(e).position==='static'")
+            page.locator('#averageEarnings').focus()
+            assert page.locator('#averageEarnings').evaluate("e=>document.elementFromPoint(e.getBoundingClientRect().x+10,e.getBoundingClientRect().y+10)===e")
+        assert page.locator('#pruvodce .article section').count()==6
+        page.locator('#pruvodce .guide-cover').screenshot(path=out/f'guide-{width}.png')
         for selector in ('#shiftDateHelp','.sf-timeline-head small','.sf-detected-grid span','.sf-breakdown-row small'):
             assert page.locator(selector).first.evaluate("el=>parseFloat(getComputedStyle(el).fontSize)>=14"),selector
         quick=page.locator('#quickShiftResult')
@@ -186,6 +193,8 @@ with sync_playwright() as p:
         assert '4 z 5' in page.locator('#auditMessage').text_content()
         page.locator('#paid-custom').fill('0')
         check(page,auditPaid='1 830 Kč',auditDifference='−180 Kč')
+        page.locator('#kontrola-pasky').scroll_into_view_if_needed()
+        page.screenshot(path=out/f'payroll-{width}.png')
         page.locator('#paid-custom').fill('250')
         check(page,auditPaid='2 080 Kč',auditDifference='+70 Kč')
         page.locator('#paidBonus').fill('2050')
