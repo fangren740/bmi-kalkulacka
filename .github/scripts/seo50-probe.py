@@ -43,3 +43,26 @@ for name,hrefs in links.items():
    if path.endswith('.html') and path not in pages:bad.append({'source':name,'target':h})
 (OUT/'graph.json').write_text(json.dumps(graph,ensure_ascii=False,indent=2));(OUT/'broken-internal.json').write_text(json.dumps(bad,ensure_ascii=False,indent=2))
 print(json.dumps({'http':results,'broken_internal':bad},ensure_ascii=False))
+# Guard only verified behavior; do not equate successful fetches with Google indexing.
+failures=[]
+for row in results:
+ url=row['url'];status=row.get('status')
+ if url.endswith('/prevodnik-men.html'):
+  if status!=404:failures.append(url+': review changed retired-URL behavior')
+  continue
+ if status!=200:failures.append(url+': expected final HTTP 200; '+str(row))
+ if url.startswith(('http:','https://www.')):
+  if len(row['redirects'])!=1 or row['redirects'][0]['status']!=301:failures.append(url+': expected one permanent redirect')
+ if row.get('final_url','').endswith('.html'):
+  expected='https://rychlevypocty.cz/'+urlsplit(url).path.lstrip('/')
+  if url.endswith('/index.html'):expected='https://rychlevypocty.cz/'
+  if url.endswith('/dpp-nebo-dpc-co-se-vyplati.html'):expected='https://rychlevypocty.cz/dpp-vs-dpc-vs-pracovni-pomer.html'
+  if row.get('canonical')!=[expected]:failures.append(url+': unexpected canonical '+str(row.get('canonical')))
+for row in results:
+ if row.get('status')!=200 or not row.get('final_url','').endswith('.html'):continue
+ noindex=any('noindex' in x.lower() for x in row.get('robots',[]))
+ expected_noindex=row['url'].endswith('/dpp-nebo-dpc-co-se-vyplati.html')
+ if noindex!=expected_noindex:failures.append(row['url']+': unexpected noindex state')
+if bad:failures.append('Broken source hyperlinks: '+str(bad))
+assert not failures,'\n'.join(failures)
+print('PASS: 12 verified URL behaviors and source hyperlinks; this is not an indexing verdict')
