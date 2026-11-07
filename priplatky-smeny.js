@@ -1109,3 +1109,53 @@
 
 // Inline mobile summary occupies normal flow: no fixed layer covers fields or keyboard.
 (()=>{const source=document.getElementById('cashBonus'),target=document.getElementById('mobileCash');if(!source||!target)return;const sync=()=>{target.textContent=source.textContent};new MutationObserver(sync).observe(source,{childList:true,characterData:true,subtree:true});sync()})();
+
+
+// Progressive disclosure and provenance labels; does not alter the calculation.
+(()=>{
+ const $=id=>document.getElementById(id),form=$('shiftForm');
+ let shiftEdited=false,phvEdited=new URLSearchParams(location.search).has('phv'),preset=false;
+ const notice=$('exampleNotice'),label=$('resultContext');
+ function provenance(){
+   const phv=$('averageEarnings').value,valid=Number.isFinite(Number(phv))&&Number(phv)>0;
+   let title,text,mobile;
+   if(!valid){title='Doplňte platný PHV';text='Pro výpočet zadejte průměrný hodinový výdělek vyšší než nula.';mobile='Příplatky ';}
+   else if(preset){
+     title='Ukázková směna';text=phvEdited?'Ukázková směna s vaším PHV '+phv+' Kč/h. Ověřte i ostatní předvyplněné podmínky.':'Ukázkové zadání s PHV '+phv+' Kč/h. Nejde o váš osobní nárok.';mobile='Ukázka · příplatky ';
+   }else if(phvEdited){title='Model podle vašeho zadání';text='Používáme vámi zadaný PHV '+phv+' Kč/h. Ověřte časy, přestávku, sazby a kompenzaci.';mobile='Hrubé příplatky ';}
+   else if(shiftEdited){title='Orientační výpočet s ukázkovým PHV';text='Směnu nebo podmínky jste upravili. PHV '+phv+' Kč/h je stále ukázkový; doplňte vlastní údaj z výplatní pásky.';mobile='Odhad · ukázkový PHV ';}
+   else{title='Ukázkový výsledek';text='Předvyplněná směna a PHV '+phv+' Kč/h slouží k vyzkoušení. Nejde o váš osobní nárok.';mobile='Ukázka · příplatky ';}
+   $('mobileCash').parentElement.firstChild.nodeValue=mobile;
+   label.textContent=title+' · '+text;
+   notice.querySelector('strong').textContent=title;
+   notice.querySelector('span').textContent=text;
+ }
+ function edited(event){
+   if(event.target.id==='averageEarnings')phvEdited=true;
+   else if(event.target.matches('input,select'))shiftEdited=true;
+   preset=false;provenance();
+ }
+ form.addEventListener('input',edited);form.addEventListener('change',edited);
+ form.querySelectorAll('[data-regime],[data-input-mode]').forEach(b=>b.addEventListener('click',()=>{shiftEdited=true;preset=false;provenance()}));
+ $('syncAverage').addEventListener('click',()=>{phvEdited=true;preset=false;provenance()});
+ $('resetRates').addEventListener('click',()=>{shiftEdited=true;preset=false;provenance()});
+ document.querySelectorAll('[data-preset]').forEach(b=>b.addEventListener('click',()=>{shiftEdited=false;preset=true;provenance()}));
+ $('monthRows').addEventListener('click',event=>{if(event.target.closest('[data-month-action="edit"],[data-month-action="duplicate"]')){shiftEdited=true;phvEdited=true;preset=false;provenance()}});
+ $('phvHelpToggle').addEventListener('click',()=>{const open=$('phvHelp').hidden;$('phvHelp').hidden=!open;$('phvHelpToggle').setAttribute('aria-expanded',String(open))});
+ function update(){
+  $('pauseDetails').querySelector('summary').textContent='Neplacená pauza: '+$('breakMinutes').value+' min'+(Number($('breakMinutes').value)?' od '+$('breakStart').value:'')+' · upravit';
+  const comp=$('holidayCompensation').value==='leave'?'náhradní volno':'příplatek v penězích';
+  $('compDetails').querySelector('summary').textContent='Přesčas: '+$('overtimeHours').value+' h · svátek: '+comp+' · upravit';
+  const list=$('simpleBreakdown');list.replaceChildren();
+  if($('cashBonus').textContent==='—')return;
+  [...$('breakdownList').children].filter(row=>row.dataset.kind!=='base'&&!row.classList.contains('is-zero')).forEach(row=>{
+   const item=document.createElement('div'),left=document.createElement('span'),amount=document.createElement('strong');
+   left.textContent=row.querySelector('strong').textContent;
+   const note=document.createElement('small');note.textContent=row.querySelector('small').textContent;left.append(note);
+   amount.textContent=row.querySelector('b').textContent;item.append(left,amount);list.append(item);
+  });
+ }
+ new MutationObserver(update).observe($('breakdownList'),{childList:true,subtree:true,characterData:true});
+ form.addEventListener('input',update);form.addEventListener('change',update);
+ provenance();update();
+})();

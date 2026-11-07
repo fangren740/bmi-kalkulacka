@@ -29,7 +29,7 @@
 <meta name="twitter:description" content="Směna podle času, právní režim, souběhy příplatků, náhradní volno a kontrola výplatnice.">
 <meta name="twitter:image" content="https://rychlevypocty.cz/og-rv-priplatky-smeny-v32.jpg">
 <link rel="stylesheet" href="/rv-brand-v32.css?v=20260801-stable">
-<link rel="stylesheet" href="/priplatky-smeny.css?v=20261107-finalA">
+<link rel="stylesheet" href="/priplatky-smeny.css?v=20261107-simple">
 <script defer src="/rv-brand-v32.js?v=20260801"></script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"RychléVýpočty.cz","item":"https://rychlevypocty.cz/"},{"@type":"ListItem","position":2,"name":"Mzdy a práce","item":"https://rychlevypocty.cz/mzdy-a-prace.html"},{"@type":"ListItem","position":3,"name":"Kalkulačka příplatků za směny","item":"https://rychlevypocty.cz/kalkulacka-priplatku-za-smeny.html"}]}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Kalkulačka příplatků za směny 2026","url":"https://rychlevypocty.cz/kalkulacka-priplatku-za-smeny.html","applicationCategory":"BusinessApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","inLanguage":"cs-CZ","isAccessibleForFree":true,"description":"Kalkulačka nočních, víkendových, svátečních a přesčasových příplatků pro mzdu, plat a DPP/DPČ s automatickým rozdělením konkrétní směny.","publisher":{"@type":"Organization","name":"RychléVýpočty.cz","url":"https://rychlevypocty.cz/","sameAs":["https://www.facebook.com/rychlevypocty","https://www.instagram.com/rychlevypocty/"]}}</script>
@@ -75,14 +75,14 @@
 <section class="sf-calculator-section" id="kalkulacka">
   <div class="sf-shell">
     <div class="sf-console-head"><h2>Spočítat příplatky</h2><a href="#metodika">Pravidla výpočtu ↓</a></div>
-    <div class="sf-live-inline"><span>Hrubé příplatky <strong id="mobileCash">—</strong></span><a href="#vysledek">Výsledek ↓</a></div><div class="sf-mode-tabs" role="tablist" aria-label="Způsob zadání hodin">
+    <div class="sf-live-inline"><span>Ukázka · příplatky <strong id="mobileCash">—</strong></span><a href="#vysledek">Výsledek ↓</a></div><div class="sf-mode-tabs" role="tablist" aria-label="Způsob zadání hodin">
       <button type="button" class="is-active" id="sfShiftTab" role="tab" data-input-mode="shift" aria-selected="true" aria-controls="shiftModePanel" tabindex="0"><strong>Podle konkrétní směny</strong><small>datum, začátek, konec, přestávka</small></button>
       <button type="button" id="sfManualTab" role="tab" data-input-mode="manual" aria-selected="false" aria-controls="manualModePanel" tabindex="-1"><strong>Mám hodiny z docházky</strong><small>zadám hotové součty hodin</small></button>
     </div>
 
     <div class="sf-calculator-grid">
       <form class="sf-cockpit" id="shiftForm" novalidate>
-        <section class="sf-input-section" id="shiftModePanel" role="tabpanel" aria-labelledby="sfShiftTab" tabindex="0">
+        <div class="sf-example-notice" id="exampleNotice" role="status"><strong>Ukázkové zadání</strong><span>Předvyplněná směna a PHV 180 Kč/h slouží k vyzkoušení. Zadejte své údaje.</span></div><section class="sf-input-section" id="shiftModePanel" role="tabpanel" aria-labelledby="sfShiftTab" tabindex="0">
           <div class="sf-input-title"><span>01</span><div><strong>Kdy směna proběhla?</strong><small>Český čas. Konec před začátkem znamená další den.</small></div></div>
 
           <div class="sf-shift-fields">
@@ -90,13 +90,12 @@
             <div class="sf-date-top"><label class="sf-field"><span>Datum začátku</span><div class="sf-date-entry"><input class="sf-control" id="shiftDate" type="text" inputmode="numeric" autocomplete="off" maxlength="12" placeholder="6. 11. 2026" aria-describedby="shiftDateHelp"><input class="sf-date-native" id="shiftDateNative" type="date" aria-label="Vybrat datum v kalendáři" title="Vybrat datum v kalendáři"></div><small id="shiftDateHelp">Den. měsíc. rok</small></label></div>
         <label class="sf-field"><span>Začátek</span><input class="sf-control" id="shiftStart" type="text" inputmode="numeric" pattern="(?:[01][0-9]|2[0-3]):[0-5][0-9]" maxlength="5" spellcheck="false" autocomplete="off" placeholder="HH:MM" value="22:00"></label>
             <label class="sf-field"><span>Konec</span><input class="sf-control" id="shiftEnd" type="text" inputmode="numeric" pattern="(?:[01][0-9]|2[0-3]):[0-5][0-9]" maxlength="5" spellcheck="false" autocomplete="off" placeholder="HH:MM" value="06:00"></label>
-            <label class="sf-field"><span>Neplacená přestávka</span><div class="sf-unit-input"><input id="breakMinutes" type="number" min="0" max="240" step="5" value="30"><b>min</b></div></label>
+            </div>
+
+
+                  <details id="pauseDetails" class="sf-advanced sf-simple-detail"><summary>Neplacená pauza: 30 min od 02:00 · upravit</summary><div class="sf-advanced-body sf-two-fields"><label class="sf-field"><span>Neplacená přestávka</span><div class="sf-unit-input"><input id="breakMinutes" type="number" min="0" max="240" step="5" value="30"><b>min</b></div></label>
             <label class="sf-field"><span>Začátek přestávky</span><input class="sf-control" id="breakStart" type="text" inputmode="numeric" pattern="(?:[01][0-9]|2[0-3]):[0-5][0-9]" maxlength="5" spellcheck="false" autocomplete="off" placeholder="HH:MM" value="02:00"></label>
-          </div>
-
-
-                  <div class="sf-preset-row" role="group" aria-label="Rychlé příklady"><button type="button" data-preset="fridayNight">Pá 22:00 → So 06:00</button><button type="button" data-preset="saturdayDay">Sobota 06:00 → 14:00</button><button type="button" data-preset="christmas">24. 12. 08:00 → 16:00</button></div>
-        </section>
+          </div></details></section>
 
         <section class="sf-input-section" id="manualModePanel" role="tabpanel" aria-labelledby="sfManualTab" tabindex="0" hidden>
           <div class="sf-input-title"><span>01</span><div><strong>Hodiny z docházky</strong><small>Jedna hodina může současně patřit do více příplatkových režimů.</small></div></div>
@@ -118,9 +117,8 @@
           </div>
           <input type="hidden" id="payRegime" value="wage">
           <div class="sf-two-fields">
-            <label class="sf-field"><span>Základní sazba pro odhad celku</span><div class="sf-unit-input"><input id="hourlyRate" type="number" min="0" max="10000" step="1" value="180" inputmode="decimal"><b>Kč/h</b></div><small>Pro odhad celku. Měsíční mzdu či plat převeďte na hodinovou sazbu.</small></label>
-            <label class="sf-field"><span>Průměrný hodinový výdělek</span><div class="sf-unit-input"><input id="averageEarnings" type="number" min="0" max="10000" step="1" value="180" inputmode="decimal"><b>Kč/h</b></div><small>Z něj počítáme příplatky. <a href="/prumerny-vydelek-kalkulacka.html">Jak zjistit PHV</a>. <button class="sf-inline-action" id="syncAverage" type="button">Použít stejnou sazbu</button></small></label>
-          </div>
+            <label class="sf-field"><span>Průměrný výdělek (PHV)</span><div class="sf-unit-input"><input id="averageEarnings" type="number" min="0" max="10000" step="1" value="180" inputmode="decimal"><b>Kč/h</b></div><small>Najdete na výplatní pásce. Není to automaticky základní hodinová mzda. <button type="button" class="sf-inline-action" id="phvHelpToggle" aria-expanded="false" aria-controls="phvHelp">Nevím PHV</button></small></label>
+          <p id="phvHelp" hidden class="sf-phv-help">Hledejte „průměrný hodinový výdělek“ nebo se zeptejte mzdové účtárny. Bez něj je výsledek jen orientační. <a href="/prumerny-vydelek-kalkulacka.html">Jak určit PHV</a>.</p></div>
         </section>
 
         <div class="sf-mobile-result">
@@ -128,7 +126,7 @@
           <p>Přesčas, svátek a vlastní sazby upravíte níže.</p>
         </div>
         <details class="sf-advanced" id="compDetails">
-          <summary>Přesčas, svátek a opakování směny</summary>
+          <summary>Přesčas: 0 h · svátek: náhradní volno · upravit</summary>
           <div class="sf-advanced-body"><p>Přesčas zadejte podle evidence a rozvrhu. Délka směny ho sama neurčuje.</p>
           <div class="sf-compensation-layout">
             <div class="sf-comp-card">
@@ -169,20 +167,22 @@
             <button class="sf-small-btn" type="button" id="resetRates">Vrátit výchozí sazby režimu</button>
           </div>
         </details>
-        <div class="sf-form-error" id="formError" role="alert" tabindex="-1" hidden></div>
+        <details id="baseDetails" class="sf-advanced sf-simple-detail"><summary>Modelový základ a celková hrubá odměna (nepovinné)</summary><div class="sf-advanced-body"><label class="sf-field"><span>Základní sazba pro odhad celku</span><div class="sf-unit-input"><input id="hourlyRate" type="number" min="0" max="10000" step="1" value="180" inputmode="decimal"><b>Kč/h</b></div><small>Pro odhad celku. Měsíční mzdu či plat převeďte na hodinovou sazbu.</small></label>
+            <button class="sf-inline-action" id="syncAverage" type="button">Použít stejnou sazbu</button></div></details><details id="exampleDetails" class="sf-advanced sf-simple-detail"><summary>Vyzkoušet jinou ukázkovou směnu</summary><div class="sf-advanced-body"><div class="sf-preset-row" role="group" aria-label="Rychlé příklady"><button type="button" data-preset="fridayNight">Pá 22:00 → So 06:00</button><button type="button" data-preset="saturdayDay">Sobota 06:00 → 14:00</button><button type="button" data-preset="christmas">24. 12. 08:00 → 16:00</button></div>
+        </div></details><div class="sf-form-error" id="formError" role="alert" tabindex="-1" hidden></div>
         <div class="sf-form-footer"><button class="sf-btn sf-btn-primary sf-show-result" type="submit">Zobrazit výsledek ↓</button><button class="sf-btn sf-btn-secondary" id="saveShift" type="button">+ Přidat do měsíce</button><button class="sf-small-btn" id="cancelShiftEdit" type="button" hidden>Zrušit úpravu</button></div>
         <p id="shiftSaveStatus" class="sf-save-status" role="status"></p>
       </form>
 
       <aside class="sf-result" id="vysledek" tabindex="-1" aria-label="Výsledek směny">
         <div class="sf-result-top"><span>VÝSLEDEK SMĚNY</span><small id="resultRegime">mzda</small></div>
-        <div class="sf-result-primary"><span>Očekávané hrubé příplatky za směnu</span><strong id="cashBonus" aria-live="polite">—</strong><small id="resultSummary">noční + víkend</small></div>
-        <div class="sf-result-kpis"><div><span>Modelový základ</span><strong id="basePay">1 440 Kč</strong></div><div><span>Modelový hrubý součet</span><strong id="totalPay">1 728 Kč</strong></div><div><span>Náhradní volno</span><strong id="timeOff">0 h</strong></div><div><span>Příplatky × směny</span><strong id="repeatBonus">2 880 Kč</strong></div></div>
-        <div class="sf-result-links"><a class="sf-audit-jump" href="#kontrola-pasky" id="auditSingleJump">Zkontrolovat na pásce →</a><button type="button" id="saveResultShift" class="sf-small-btn">Přidat do měsíce</button></div>
+        <p class="sf-result-context" id="resultContext">Výsledek ukázkových hodnot · nejde o váš osobní nárok</p><div class="sf-result-primary"><span>Hrubé příplatky za tuto směnu</span><strong id="cashBonus" aria-live="polite">—</strong><small id="resultSummary">noční + víkend</small></div>
+        <div id="simpleBreakdown" class="sf-simple-breakdown" aria-label="Z čeho se skládají příplatky" role="group"></div><div class="sf-result-links"><a class="sf-audit-jump" href="#kontrola-pasky" id="auditSingleJump">Zkontrolovat na pásce →</a><button type="button" id="saveResultShift" class="sf-small-btn">Přidat do měsíce</button></div>
 <a class="sf-audit-jump" href="#rozbor">Proč vyšla tato částka ↓</a>
         <div class="sf-result-note" id="resultNote"><strong>Co tento výsledek říká</strong><p>Peněžní příplatky jsou model podle zadaného průměrného výdělku, hodin a sazeb. Neurčuje, zda zaměstnavatel hodiny právně správně klasifikoval.</p></div>
+        <details id="resultExtra" class="sf-advanced sf-simple-detail"><summary>Modelový celek, opakování a sdílení</summary><div class="sf-advanced-body"><div class="sf-result-kpis"><div><span>Modelový základ</span><strong id="basePay">1 440 Kč</strong></div><div><span>Modelový hrubý součet</span><strong id="totalPay">1 728 Kč</strong></div><div><span>Náhradní volno</span><strong id="timeOff">0 h</strong></div><div><span>Příplatky × směny</span><strong id="repeatBonus">2 880 Kč</strong></div></div>
         <div class="sf-result-actions"><button type="button" id="copyResult">Kopírovat souhrn</button><button type="button" id="copyLink">Zkopírovat odkaz</button><button type="button" id="printResult">Vytisknout</button></div>
-      </aside>
+      </div></details></aside>
     </div>
   </div>
 </section>
@@ -374,7 +374,7 @@
   </div>
   <div class="sf-shell sf-footer-bottom"><span>© 2026 RychléVýpočty.cz.</span><span><strong>Upozornění:</strong> Výsledek je transparentní kontrolní model. Nenahrazuje evidenci pracovní doby, mzdové podklady zaměstnavatele ani individuální právní posouzení.</span></div>
 </footer>
-<script src="/priplatky-smeny.js?v=20261107-finalA" defer></script>
+<script src="/priplatky-smeny.js?v=20261107-simple" defer></script>
 <!-- RV-VNEXT: status=DONE | major=2026-08-17 | qa=PASS | seq=7 -->
 </body>
 </html>
