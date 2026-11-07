@@ -1,0 +1,16 @@
+name: SEO50 evidence probe
+on:
+  push:
+    branches: ['codex/seo50-evidence']
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python .github/scripts/seo50-probe.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seo50-evidence
+          path: seo50-output
