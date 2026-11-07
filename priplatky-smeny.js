@@ -1106,3 +1106,6 @@
     });
   })();
 })();
+
+// Inline mobile summary occupies normal flow: no fixed layer covers fields or keyboard.
+(()=>{const source=document.getElementById('cashBonus'),target=document.getElementById('mobileCash');if(!source||!target)return;const sync=()=>{target.textContent=source.textContent};new MutationObserver(sync).observe(source,{childList:true,characterData:true,subtree:true});sync()})();
