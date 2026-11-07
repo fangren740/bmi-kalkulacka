@@ -1,0 +1,25 @@
+name: PR52 design concepts
+on:
+  pull_request:
+    paths: ['design-concepts/**', '.github/workflows/rv-design52.yml']
+permissions:
+  contents: read
+jobs:
+  prototypes:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install playwright==1.58.0
+      - run: playwright install --only-shell chromium
+      - run: mkdir -p design-concepts/dist && python design-concepts/build.py
+      - run: python design-concepts/capture.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: PR52-two-functional-concepts
+          path: |
+            design-concepts/dist
+            /tmp/concepts52
