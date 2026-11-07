@@ -1118,6 +1118,7 @@
  const notice=$('exampleNotice'),label=$('resultContext');
  function provenance(){
    const phv=$('averageEarnings').value;
+   $('mobileCash').parentElement.firstChild.nodeValue=personal?'Hrubé příplatky ':'Ukázka · příplatky ';
    label.textContent=personal?'Model podle vašeho zadání · ověřte PHV a podmínky':'Ukázkový výsledek · předvyplněné údaje nejsou váš osobní nárok';
    notice.querySelector('strong').textContent=personal?'Vaše zadání':'Ukázkové zadání';
    notice.querySelector('span').textContent=personal?'Výsledek vychází z vámi zadaných hodnot.':'Předvyplněná směna a PHV '+phv+' Kč/h slouží k vyzkoušení. Zadejte své údaje.';
