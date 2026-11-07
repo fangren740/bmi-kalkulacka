@@ -5,7 +5,7 @@ html=(source/'kalkulacka-priplatku-za-smeny.html').read_text()
 core=re.search(r'<body[^>]*>([\s\S]*?)</body>',html).group(1)
 core=re.sub(r'<script\b[^>]*>[\s\S]*?</script>','',core)
 core=re.sub(r'<img\b[^>]*>','',core)
-js=(source/'priplatky-smeny.js').read_text();idx=js.rfind('})();');js=js[:idx]+(r/'bridge.js').read_text()+js[idx:]
+js=(source/'priplatky-smeny.js').read_text().split('// Inline mobile summary occupies normal flow:')[0];idx=js.rfind('})();');js=js[:idx]+(r/'bridge.js').read_text()+js[idx:]
 logo='data:image/svg+xml;base64,'+base64.b64encode((source/'logo-rv-v32.svg').read_bytes()).decode()
 ui=(r/'ui.js').read_text().replace("const v=id=>E.snapshot().values[id];", "const v=id=>{let s=E.snapshot().values[id];if(id==='shiftDate'&&/^\\d{1,2}\\./.test(s)){const a=s.match(/(\\d+)\\.\\s*(\\d+)\\.\\s*(\\d+)/);s=a[3]+'-'+a[2].padStart(2,'0')+'-'+a[1].padStart(2,'0')}return s};")
 for mode,title in [('a','A — Směna na první pohled'),('b','B — Nejdřív váš úkol')]:
