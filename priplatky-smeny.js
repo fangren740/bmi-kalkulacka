@@ -1114,21 +1114,33 @@
 // Progressive disclosure and provenance labels; does not alter the calculation.
 (()=>{
  const $=id=>document.getElementById(id),form=$('shiftForm');
- let personal=false;
+ let shiftEdited=false,phvEdited=new URLSearchParams(location.search).has('phv'),preset=false;
  const notice=$('exampleNotice'),label=$('resultContext');
  function provenance(){
-   const phv=$('averageEarnings').value;
-   $('mobileCash').parentElement.firstChild.nodeValue=personal?'Hrubé příplatky ':'Ukázka · příplatky ';
-   label.textContent=personal?'Model podle vašeho zadání · ověřte PHV a podmínky':'Ukázkový výsledek · předvyplněné údaje nejsou váš osobní nárok';
-   notice.querySelector('strong').textContent=personal?'Vaše zadání':'Ukázkové zadání';
-   notice.querySelector('span').textContent=personal?'Výsledek vychází z vámi zadaných hodnot.':'Předvyplněná směna a PHV '+phv+' Kč/h slouží k vyzkoušení. Zadejte své údaje.';
-   $('confirmOwnShift').hidden=personal;
+   const phv=$('averageEarnings').value,valid=Number.isFinite(Number(phv))&&Number(phv)>0;
+   let title,text,mobile;
+   if(!valid){title='Doplňte platný PHV';text='Pro výpočet zadejte průměrný hodinový výdělek vyšší než nula.';mobile='Příplatky ';}
+   else if(preset){
+     title='Ukázková směna';text=phvEdited?'Ukázková směna s vaším PHV '+phv+' Kč/h. Ověřte i ostatní předvyplněné podmínky.':'Ukázkové zadání s PHV '+phv+' Kč/h. Nejde o váš osobní nárok.';mobile='Ukázka · příplatky ';
+   }else if(phvEdited){title='Model podle vašeho zadání';text='Používáme vámi zadaný PHV '+phv+' Kč/h. Ověřte časy, přestávku, sazby a kompenzaci.';mobile='Hrubé příplatky ';}
+   else if(shiftEdited){title='Orientační výpočet s ukázkovým PHV';text='Směnu nebo podmínky jste upravili. PHV '+phv+' Kč/h je stále ukázkový; doplňte vlastní údaj z výplatní pásky.';mobile='Odhad · ukázkový PHV ';}
+   else{title='Ukázkový výsledek';text='Předvyplněná směna a PHV '+phv+' Kč/h slouží k vyzkoušení. Nejde o váš osobní nárok.';mobile='Ukázka · příplatky ';}
+   $('mobileCash').parentElement.firstChild.nodeValue=mobile;
+   label.textContent=title+' · '+text;
+   notice.querySelector('strong').textContent=title;
+   notice.querySelector('span').textContent=text;
  }
- $('confirmOwnShift').addEventListener('click',()=>{personal=true;provenance()});
- // Editing another field does not silently turn the demo PHV into a personal value.
- $('averageEarnings').addEventListener('input',()=>{personal=false;provenance()});
- form.addEventListener('input',provenance);
- document.querySelectorAll('[data-preset]').forEach(b=>b.addEventListener('click',()=>{personal=false;provenance()}));
+ function edited(event){
+   if(event.target.id==='averageEarnings')phvEdited=true;
+   else if(event.target.matches('input,select'))shiftEdited=true;
+   preset=false;provenance();
+ }
+ form.addEventListener('input',edited);form.addEventListener('change',edited);
+ form.querySelectorAll('[data-regime],[data-input-mode]').forEach(b=>b.addEventListener('click',()=>{shiftEdited=true;preset=false;provenance()}));
+ $('syncAverage').addEventListener('click',()=>{phvEdited=true;preset=false;provenance()});
+ $('resetRates').addEventListener('click',()=>{shiftEdited=true;preset=false;provenance()});
+ document.querySelectorAll('[data-preset]').forEach(b=>b.addEventListener('click',()=>{shiftEdited=false;preset=true;provenance()}));
+ $('monthRows').addEventListener('click',event=>{if(event.target.closest('[data-month-action="edit"],[data-month-action="duplicate"]')){shiftEdited=true;phvEdited=true;preset=false;provenance()}});
  $('phvHelpToggle').addEventListener('click',()=>{const open=$('phvHelp').hidden;$('phvHelp').hidden=!open;$('phvHelpToggle').setAttribute('aria-expanded',String(open))});
  function update(){
   $('pauseDetails').querySelector('summary').textContent='Neplacená pauza: '+$('breakMinutes').value+' min'+(Number($('breakMinutes').value)?' od '+$('breakStart').value:'')+' · upravit';
