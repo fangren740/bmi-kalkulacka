@@ -28,7 +28,7 @@ with sync_playwright() as p:
    assert '2\xa0010' in page.locator('.month-hero .big-money').inner_text() or '2 010' in page.locator('.month-hero .big-money').inner_text()
    page.screenshot(path=out/f'{mode}-{width}-mesic.png',full_page=True)
    page.locator('[data-nav=guide]').first.click()
-   assert page.locator('.article section').count()==6
+   assert page.locator('#surface .article section').count()==6
    page.screenshot(path=out/f'{mode}-{width}-pruvodce.png',full_page=True)
    assert not errors,errors
    page.close()
