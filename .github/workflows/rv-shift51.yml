@@ -1,0 +1,51 @@
+name: RV příplatky za směny
+on:
+  pull_request:
+    paths:
+      - 'kalkulacka-priplatku-za-smeny.html'
+      - 'priplatky-smeny.js'
+      - 'priplatky-smeny.css'
+      - '.github/scripts/shift51-browser.py'
+      - '.github/scripts/shift52-review.py'
+      - '.github/workflows/rv-shift51.yml'
+permissions:
+  contents: read
+jobs:
+  payroll-browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install playwright==1.58.0
+      # Ubuntu runner already provides browser system libraries; avoid slow apt font downloads.
+      - run: playwright install --only-shell chromium
+      - run: python .github/scripts/shift51-browser.py
+      - uses: actions/checkout@v4
+        with:
+          ref: 412eb76a34366844e3aa3a1f09c90b8cf313bb00
+          path: .shift52-before
+      - run: python .github/scripts/shift52-review.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: rv-shift51-browser
+          path: /tmp/rv-shift51
+
+      # Keep a self-contained review package accessible to the project owner.
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: rv-shift51-source-preview
+          path: |
+            kalkulacka-priplatku-za-smeny.html
+            priplatky-smeny.css
+            priplatky-smeny.js
+            rv-brand-v32.css
+            rv-brand-v32.js
+            rv-brand-field-v32.svg
+            logo-rv-v32.svg
+            logo-rv-v32-inverse.svg
+          if-no-files-found: warn
