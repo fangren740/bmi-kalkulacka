@@ -121,3 +121,12 @@ test('mobile safe contracts for search and large calculated numbers',()=>{
  assert.ok(css.includes('.answer-number{white-space:normal;overflow-wrap:anywhere}'),'offer result must wrap safely');
  assert.ok(css.includes('.studio-calc-workspace .calc-result-main strong{white-space:normal;overflow-wrap:anywhere}'),'salary result must wrap safely');
 });
+
+test('2026 salary educational section retains source depth and honest traceability',()=>{
+ const h=read('cista-mzda-kalkulacka.html');
+ assert.ok(h.indexOf('id="s-form"')<h.indexOf('id="podrobna-metodika"'));
+ for(const item of ['7,1 %','4,5 %','24,8 %','2 570 Kč','146 901 Kč','2 350 416 Kč','35 600 Kč','60 210 Kč'])assert.ok(h.includes(item),'missing 2026 parameter '+item);
+ for(const domain of ['financnisprava.gov.cz','mpsv.gov.cz','www.cssz.gov.cz','www.vzp.cz'])assert.ok(h.includes(domain),'source missing: '+domain);
+ assert.ok((h.match(/<details><summary>/g)||[]).length>=5);
+ assert.ok(Buffer.byteLength(read('rv3/salary-guide.css'),'utf8')<4000);
+});
