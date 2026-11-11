@@ -102,3 +102,14 @@ test('search inventory covers actual existing tools and is fetched only on deman
  assert.ok(build.includes("writeFile(path.join(output,'rv3/tool-search-index.json')"),'build must emit the search asset');
  assert.ok(build.includes("Invalid search destination:"),'build must reject stale destinations');
 });
+
+test('bottom-of-page rhythm: no duplicate motivational green sections',()=>{
+ const home=read('index.html');
+ const css=read('rv3/foundation.css');
+ assert.ok(!home.includes('class="closing-note"'),'remove repetitive green stripe above trust prelude');
+ assert.ok(!css.includes('.closing-note{'),'retired section stylesheet must not bloat CSS');
+ assert.ok(css.includes('.rv3-footer-prelude{background:#fff;'),'trust prelude is distinct neutral surface');
+ const trust=home.indexOf('class="rv3-footer-prelude"'),catalog=home.indexOf('class="library-section"');
+ assert.ok(catalog>=0&&trust>catalog,'trust section must follow the catalog');
+ assert.equal((home.match(/Nedáváme vám/g)||[]).length,1,'unique trust message');
+});
