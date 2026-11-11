@@ -35,6 +35,28 @@ await rm(output,{recursive:true,force:true});
 await mkdir(output,{recursive:true});
 await walk(root);
 
+/* Generate the V3 search catalog from the actual existing, verified public tool index.
+   No new URLs are invented and no request contains user-entered search text. */
+const indexSource=await readFile(path.join(root,'rv-tool-index.js'),'utf8');
+const firstBracket=indexSource.indexOf('['),lastBracket=indexSource.lastIndexOf(']');
+const sourceItems=JSON.parse(indexSource.slice(firstBracket,lastBracket+1));
+if(!Array.isArray(sourceItems)||sourceItems.length<100)throw Error('Tool search source incomplete');
+const searchIndex=[];const seenUrls=new Set();
+for(const item of sourceItems){
+ if(!item?.url?.startsWith('/')||!item.url.endsWith('.html'))continue;
+ if(seenUrls.has(item.url))continue;
+ const filename=path.join(output,item.url.slice(1));
+ await stat(filename).catch(()=>{throw Error('Invalid search destination: '+item.url)});
+ seenUrls.add(item.url);
+ searchIndex.push([String(item.title||'').trim().slice(0,90),
+   String(item.desc||item.type||'').trim().slice(0,140),item.url,
+   String(item.keywords||'').slice(0,300)]);
+}
+if(searchIndex.length<100)throw Error('Search index incomplete or unexpected loss of valid tools');
+await mkdir(path.join(output,'rv3'),{recursive:true});
+await writeFile(path.join(output,'rv3/tool-search-index.json'),JSON.stringify(searchIndex)+'\n');
+console.log('Validated lazy search index:',searchIndex.length,'working tool URLs.');
+
 const critical=['index.html','cista-mzda-kalkulacka.html','mzdy-a-prace.html','kalkulacka-priplatku-za-smeny.html','sitemap.xml','rv-tool-index.js'];
 for(const f of critical){await stat(path.join(output,f)).catch(()=>{throw Error('CRITICAL ASSET MISSING: '+f)})}
 if(html<180)throw Error('Too few HTML files in preview ('+html+'). Deployment intentionally blocked.');

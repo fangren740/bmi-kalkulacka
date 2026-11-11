@@ -87,3 +87,18 @@ test('night-shift artwork shows a truthful 12-hour time split with labels',()=>{
  assert.ok(home.includes('--hours:3')&&home.includes('--hours:8')&&home.includes('--hours:1'));
  assert.ok(home.includes('19:00')&&home.includes('22:00')&&home.includes('06:00')&&home.includes('07:00'));
 });
+
+test('search inventory covers actual existing tools and is fetched only on demand',()=>{
+ const source=read('rv-tool-index.js');
+ const items=JSON.parse(source.slice(source.indexOf('['),source.lastIndexOf(']')+1));
+ assert.ok(items.length>=100,'original real catalog was unexpectedly truncated');
+ for(const item of items){
+  assert.match(item.url,/^\\/[a-z0-9-]+\\.html$/);
+  assert.ok(existsSync(fileURLToPath(new URL('../..'+item.url,import.meta.url))),'catalog dead link: '+item.url);
+ }
+ const ui=read('rv3/product-ui.js');
+ assert.ok(ui.includes("fetch('/rv3/tool-search-index.json'"),'search should load the verified index lazily');
+ const build=read('scripts/build-cloudflare-preview.mjs');
+ assert.ok(build.includes("writeFile(path.join(output,'rv3/tool-search-index.json')"),'build must emit the search asset');
+ assert.ok(build.includes("Invalid search destination:"),'build must reject stale destinations');
+});

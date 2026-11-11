@@ -49,6 +49,9 @@ const ALIASES={
 };
 const STOPWORDS=new Set(['kolik','co','jak','kde','mi','me','mam','muzu','muze','jsem','je','to','ten','ta','se','si','za','do','na','o','v','ve','z','ze','po','pro','by','dostanu','spocitam','spocitat','kalkulacka','kalkulacku']);
 function searchStem(s){return s.replace(/(oveho|ove|ove|ovou|ech|ich|ami|emi|ova|ove|ovy|eho|eho|ka|ky|ek|ku|ce|ci|u|e|y|a)$/,'')}
+/* Lazy-load the real tool inventory only on search interaction.
+   Initial render stays instant with handpicked popular tools. */
+let discoveredTools=null;
 function initSearch(){
  const input=byId('tool-search'),out=byId('tool-results');if(!input||!out)return;
  function render(){
@@ -56,9 +59,12 @@ function initSearch(){
   if(q.length<2){out.hidden=true;return}
   let terms=q.split(/[^a-z0-9]+/).filter(Boolean).filter(t=>!STOPWORDS.has(t));
   if(!terms.length)terms=q.split(/[^a-z0-9]+/).filter(Boolean);
-  const scored=CATALOG.map(([title,desc,href],index)=>{
+  const tools=discoveredTools
+   ? [...CATALOG,...discoveredTools.filter(item=>!CATALOG.some(curated=>curated[2]===item[2]))]
+   : CATALOG;
+  const scored=tools.map(([title,desc,href,keywords],index)=>{
    const titleText=normal(title),descText=normal(desc),alias=ALIASES[href]||'';
-   const pool=titleText+' '+descText+' '+alias;
+   const pool=titleText+' '+descText+' '+alias+' '+normal(keywords||'');
    const words=pool.split(/[^a-z0-9]+/).filter(Boolean);
    let score=0;
    for(const term of terms){
@@ -78,7 +84,19 @@ function initSearch(){
   }
   out.hidden=false;
  }
- input.addEventListener('input',render);
+ let requested=false;
+ function requestIndex(){
+  if(requested||typeof fetch!=='function')return;
+  requested=true;
+  fetch('/rv3/tool-search-index.json',{credentials:'same-origin',cache:'force-cache'})
+   .then(response=>{if(!response.ok)throw Error('Catalog HTTP '+response.status);return response.json()})
+   .then(items=>{if(Array.isArray(items)&&items.length>=100){
+     discoveredTools=items.filter(item=>Array.isArray(item)&&item.length>=3&&/^\/[a-z0-9-]+\.html$/.test(item[2]));
+     if(input.value.trim().length>=2)render();
+   }}).catch(()=>{/* Curated, locally available fallback keeps search usable. */});
+ }
+ input.addEventListener('focus',requestIndex);
+ input.addEventListener('input',()=>{render();requestIndex()});
  input.addEventListener('keydown',e=>{
   if(e.key==='Escape')out.hidden=true;
   if(e.key==='Enter'){
