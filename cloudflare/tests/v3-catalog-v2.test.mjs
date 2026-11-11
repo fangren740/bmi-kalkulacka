@@ -80,6 +80,28 @@ test('Czech search prefers relevant tools, supports diacritics and normal questi
  assert.deepEqual(rankTools(index,'a'),[]);
 });
 
+
+test('typo recovery is conservative: exact results first, one full-word typo only',()=>{
+ const chosen=new Set(taxonomy.quickRoutes.map(r=>r.url));
+ const categories=new Map(taxonomy.groups.flatMap(g=>g.routes.map(url=>[url,g.title])));
+ const index=tools.map(item=>({
+  href:item.url,title:item.title,description:item.desc,
+  search:[item.title,taxonomy.aliases[item.url]||'',categories.get(item.url),item.type,item.desc,item.keywords].filter(Boolean).join(' ').slice(0,260),
+  quick:chosen.has(item.url)
+ }));
+ for(const [query,target] of [
+  ['hipoteka','/hypotecni-kalkulacka.html'],
+  ['hypotkea','/hypotecni-kalkulacka.html'],
+  ['dovloena','/kalkulacka-dovolene.html'],
+  ['priplatki za smeny','/kalkulacka-priplatku-za-smeny.html']
+ ]){
+  assert.equal(rankTools(index,query)[0]?.href,target,'one typo should recover '+query);
+ }
+ assert.equal(rankTools(index,'hypotéka')[0]?.href,'/hypotecni-kalkulacka.html');
+ assert.deepEqual(rankTools(index,'xzzqprmn'),[],'unknown words should not create irrelevant matches');
+ assert.deepEqual(rankTools(index,'a'),[],'short queries must not trigger typo search');
+});
+
 test('taxonomy and routing fail closed rather than silently dropping or inventing pages',()=>{
  assert.throws(()=>renderCatalogV2(tools.slice(1),taxonomy),/expected 135/);
  const t=structuredClone(taxonomy);
