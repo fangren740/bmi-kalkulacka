@@ -35,3 +35,6 @@ Nesmí se tvrdit, že URL/HTTP kontrola prošla, dokud není odpověď skutečn�
 
 ## Budoucí migrace – samostatné schválení
 Do produkce nepřenášet preview konfiguraci s `noindex`. Nejprve otestovat všechny sitemap URL, přesměrování, consent/analytics, 404, metadata a numerické regrese; připravit separátní produkční konfiguraci, rollback na GitHub Pages a ověřit zvolenou immutable verzi. Teprve poté schválit individuální převod DNS/custom domain. `main`, aktuální DNS a GitHub Pages nyní nedotčeny.
+
+## Automatický preview build bez instalací
+Cloudflare Worker Preview se aktualizuje přímo při změnách na větvi `rv3/pilot`. GitHub Actions lze pro servisní commit vynechat pomocí samostatného GitHub traileru `skip-checks: true`; build a status přesto ověřovat samostatně ve službě Cloudflare. Tato větev se nikdy neslučuje do produkce bez schválení.
