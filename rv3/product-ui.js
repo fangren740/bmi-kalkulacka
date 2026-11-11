@@ -28,19 +28,53 @@ const CATALOG=[
  ['Náklady na bydlení','Měsíční výdaje za bydlení','/mesicni-naklady-na-bydleni-kalkulacka.html']
 ];
 
+// Intent-oriented Czech typeahead. Entirely local: no personal queries leave the browser.
+const ALIASES={
+  '/kalkulacka-priplatku-za-smeny.html':'priplatek priplatky vikend vikendove noc nocni nocni smena smeny svatek svatky prescas vyplata kolik dostanu za vikend noc vikendovy priplatek',
+  '/cista-mzda-kalkulacka.html':'cista hruba mzda vyplata vypocet dane odvody plat penez na ucet',
+  '/kalkulacka-dovolene.html':'volno dovolena narok kolik dni volna',
+  '/dpp-dpc-kalkulacka.html':'dohoda brigada dpp dpc prace privydelek',
+  '/vypovedni-doba-kalkulacka.html':'vypoved vypovedni lhuta pracovni pomer konec zamestnani',
+  '/podpora-v-nezamestnanosti-kalkulacka.html':'urad prace pracaku podpora nezamestnanost',
+  '/hypotecni-kalkulacka.html':'hypoteka banka splatka urok uver bydleni',
+  '/naklady-zamestnavatele-kalkulacka.html':'cena prace zamestnavatel superhruba',
+  '/nemocenska-kalkulacka.html':'nemoc nemocenska neschopenka nemocny',
+  '/ocr-kalkulacka.html':'ocr osetrovne nemocne dite pecovani o dite',
+  '/kalkulacka-prescasu.html':'prescasy prescas prace navic',
+  '/odstupne-kalkulacka.html':'odstupne vypoved ukonceni pracovniho pomeru',
+  '/procenta-kalkulacka.html':'procenta procent procentni zmena',
+  '/dph-kalkulacka.html':'dph dan cena s dani',
+  '/kalkulacka-odpracovanych-hodin.html':'smena hodiny odpracovano doba',
+  '/mesicni-naklady-na-bydleni-kalkulacka.html':'najem najemne energie naklady na byt bydleni'
+};
+const STOPWORDS=new Set(['kolik','co','jak','kde','mi','me','mam','muzu','muze','jsem','je','to','ten','ta','se','si','za','do','na','o','v','ve','z','ze','po','pro','by','dostanu','spocitam','spocitat','kalkulacka','kalkulacku']);
+function searchStem(s){return s.replace(/(oveho|ove|ove|ovou|ech|ich|ami|emi|ova|ove|ovy|eho|eho|ka|ky|ek|ku|ce|ci|u|e|y|a)$/,'')}
 function initSearch(){
- const input=byId('tool-search'),out=byId('tool-results');
- if(!input||!out)return;
+ const input=byId('tool-search'),out=byId('tool-results');if(!input||!out)return;
  function render(){
   const q=normal(input.value);out.replaceChildren();
   if(q.length<2){out.hidden=true;return}
-  const terms=q.split(/\s+/).filter(Boolean);
-  const hits=CATALOG.filter(item=>terms.every(t=>normal(item[0]+' '+item[1]).includes(t))).slice(0,6);
-  if(!hits.length){const message=document.createElement('div');message.className='empty';message.textContent='Zkuste kratší nebo jiný výraz.';out.append(message)}
-  for(const [title,desc,link] of hits){
-   const a=document.createElement('a');a.href=link;const left=document.createElement('span');
-   const b=document.createElement('strong');b.textContent=title;const s=document.createElement('small');s.textContent=desc;
-   left.append(b,s);const arr=document.createElement('span');arr.textContent='↗';a.append(left,arr);out.append(a);
+  let terms=q.split(/[^a-z0-9]+/).filter(Boolean).filter(t=>!STOPWORDS.has(t));
+  if(!terms.length)terms=q.split(/[^a-z0-9]+/).filter(Boolean);
+  const scored=CATALOG.map(([title,desc,href],index)=>{
+   const titleText=normal(title),descText=normal(desc),alias=ALIASES[href]||'';
+   const pool=titleText+' '+descText+' '+alias;
+   const words=pool.split(/[^a-z0-9]+/).filter(Boolean);
+   let score=0;
+   for(const term of terms){
+    const stem=searchStem(term);
+    const match=words.some(w=>w===term||w.startsWith(stem)||searchStem(w)===stem);
+    if(!match)return null;
+    score+=titleText.includes(stem)?5:descText.includes(stem)?3:1;
+   }
+   return {title,desc,href,index,score};
+  }).filter(Boolean).sort((a,b)=>b.score-a.score||a.index-b.index).slice(0,6);
+  if(!scored.length){const empty=document.createElement('div');empty.className='empty';empty.textContent='Nenašli jsme přesnou shodu. Zkuste například „mzda“, „příplatky“ nebo „hypotéka“.';out.append(empty)}
+  for(const item of scored){
+   const a=document.createElement('a');a.href=item.href;
+   const text=document.createElement('span');const strong=document.createElement('strong');strong.textContent=item.title;
+   const small=document.createElement('small');small.textContent=item.desc;text.append(strong,small);
+   const icon=document.createElement('span');icon.textContent='↗';icon.setAttribute('aria-hidden','true');a.append(text,icon);out.append(a);
   }
   out.hidden=false;
  }
@@ -48,8 +82,7 @@ function initSearch(){
  input.addEventListener('keydown',e=>{
   if(e.key==='Escape')out.hidden=true;
   if(e.key==='Enter'){
-   const a=out.querySelector('a[href]');
-   if(a){e.preventDefault();a.click()}
+   const a=out.querySelector('a[href]');if(a){e.preventDefault();a.click()}
   }
  });
  document.querySelectorAll('[data-search]').forEach(b=>b.addEventListener('click',()=>{input.value=b.dataset.search;render();input.focus()}));
