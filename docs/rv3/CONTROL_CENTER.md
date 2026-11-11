@@ -46,3 +46,9 @@ Portál má být nejlepší české místo pro praktická rozhodnutí pomocí v�
 
 ## Pro příští chat
 Načti `RV3_START_HERE.md`, `docs/rv3/HANDOFF.md` a tento dokument. **Ověř HEAD**, pak pokračuj bodem #60 a připrav první proof of concept V3 layout enginu podle #61. Na konci práce napiš: větev/SHA, co je PASS/NEOVĚŘENO, konkrétní výsledky, URL preview, další úkol, souhlas požadovaný od vlastníka.
+
+## 2026-11-11 večerní round #60
+- **Doloženo 5 technických archetypů** (katalog / externí směny / externí hypotéka / inline DPP-DPČ / legislativní superdávka) a rizika v [ARCHETYPES_60.md](ARCHETYPES_60.md), commit `4d7406f`.
+- Z původních 40 unclassified **5 individuálně prohlédnuto**: 2 legacy landing/redirect, 1 standalone kalkulačka, 2 guide; **35 stále neověřeno**. Registr záměrně zatím nepřeznačen, aby nedošlo k falešné klasifikaci.
+- Paralelní [draft PR #65](https://github.com/fangren740/bmi-kalkulacka/pull/65) již obsahuje izolovaný engine PoC a katalog; neduplikovat. Build PASS dle textu PR, nezávislé browser QA/HTTP preview stále UNKNOWN.
+- **Další:** ověřit zbývajících 35 URL a browser QA PR #65; žádný merge/produkce.
