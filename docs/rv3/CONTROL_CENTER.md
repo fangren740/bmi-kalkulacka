@@ -18,7 +18,7 @@ Portál má být nejlepší české místo pro praktická rozhodnutí pomocí v�
 | Vizuální směr V3 | **PILOT PREVIEW** na homepage, mzdy-a-prace, čistá mzda | [PR #58](https://github.com/fangren740/bmi-kalkulacka/pull/58); čeká na kompletní integrační schválení |
 | Cloudflare preview bez změny prod | **FUNGUJE** | build pro commit `50893e2` PASS; novější commity ověřit live |
 | V3 route registry | **207 URL ZAPSÁNO** | `route-registry.json`; technické klasifikace zbývají |
-| Nový sdílený V3 build engine | **DESIGN PROPOSAL**, NENÍ IMPLEMENTOVÁNO | [#61](https://github.com/fangren740/bmi-kalkulacka/issues/61) |
+| Nový sdílený V3 build engine | **IMPLEMENTED POC, QA PENDING** na izolované větvi | [draft PR #65](https://github.com/fangren740/bmi-kalkulacka/pull/65), build ad6ea655 SUCCESS; neschváleno, neprodukční |
 | 135 nových šablon nástrojů | **NENÍ HOTOVO** | migrovat postupně; nejprve typologie a adaptéry |
 | Katalog a všechny huby | **NENÍ HOTOVO** | [#62](https://github.com/fangren740/bmi-kalkulacka/issues/62) |
 | 390px/1440px browser screenshoty, Lighthouse, live HTTP headers | **NEOVĚŘENO** | před schválením releasu skutečně změřit |
@@ -46,3 +46,6 @@ Portál má být nejlepší české místo pro praktická rozhodnutí pomocí v�
 
 ## Pro příští chat
 Načti `RV3_START_HERE.md`, `docs/rv3/HANDOFF.md` a tento dokument. **Ověř HEAD**, pak pokračuj bodem #60 a připrav první proof of concept V3 layout enginu podle #61. Na konci práce napiš: větev/SHA, co je PASS/NEOVĚŘENO, konkrétní výsledky, URL preview, další úkol, souhlas požadovaný od vlastníka.
+
+### Paralelní větev pro architektonický PoC
+Build-time V3 engine P1 se vyvíjí na `rv3/engine-poc` (PR #65 proti `rv3/clean-slate`), aby večerní automatizace mohla bezpečně pracovat na původní pilotní větvi bez konfliktu. Viz `docs/rv3/ENGINE_POC.md`. Následující uživatelovo schválení A až po screenshotovém a funkčním browser testu; nezaměňovat s hotovým enginem pro 207 URL.
