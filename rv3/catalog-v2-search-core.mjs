@@ -27,7 +27,7 @@ export function rankTools(entries,query){
      else score+=8;
    }
    // Direct, editorially selected calculator wins generic searches over related explainers.
-   if(item.quick)score+=300;
+   if(item.quick)score+=useful.length<=2?650:140;
    return {item,score,index};
  }).filter(Boolean).sort((a,b)=>b.score-a.score||a.index-b.index).map(r=>r.item);
 }
