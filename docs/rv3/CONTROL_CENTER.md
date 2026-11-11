@@ -49,3 +49,6 @@ Načti `RV3_START_HERE.md`, `docs/rv3/HANDOFF.md` a tento dokument. **Ověř HEA
 
 ### Paralelní větev pro architektonický PoC
 Build-time V3 engine P1 se vyvíjí na `rv3/engine-poc` (PR #65 proti `rv3/clean-slate`), aby večerní automatizace mohla bezpečně pracovat na původní pilotní větvi bez konfliktu. Viz `docs/rv3/ENGINE_POC.md`. Následující uživatelovo schválení A až po screenshotovém a funkčním browser testu; nezaměňovat s hotovým enginem pro 207 URL.
+
+### 2026-11-11 — P2 katalogový PoC navazuje na engine
+**PILOT PREVIEW BUILT**: [draft PR #65](https://github.com/fangren740/bmi-kalkulacka/pull/65) vytváří samostatnou generovanou `/rv3/poc/studio-katalog.html` s 135 odkazy v 9 skupinách. Cloudflare pro `da5b0dd` PASS, ale skutečné browser/390/1440/Lighthouse/HTTP **NEOVĚŘENO**. Původní `kalkulacky.html` zůstává beze změny. Následuje #61 integrace a #62 přechod reálného katalogu až po schválení.

@@ -36,3 +36,12 @@
 - **Důležité:** skrytý/inert starý header/footer je přechodný compatibility shim pro legacy JS, ne konečná produkční architektura.
 - **Další rozhodnutí:** nejprve reálný browser E2E + odstranit shim bezpečným adapterem; následně předat vlastníkovi architektonické schválení A. Bez souhlasu žádné další masové migrace.
 - **Současný master pro automatizaci:** issue #59 a #61 nyní obsahují odkaz na PR #65; jestli se mezitím pohnula `rv3/clean-slate`, nezačínat bez ověření aktuálního HEAD.
+
+## 2026-11-11 — Studio katalog z nového enginu (PR #65, další round)
+- **Vytvořeno:** `rv3/engine/catalog.mjs`, `rv3/catalog-studio.css`, `rv3/catalog-studio.js`, `cloudflare/tests/v3-catalog-studio.test.mjs`. `scripts/build-v3-engine-poc.mjs` generuje nový `/rv3/poc/studio-katalog.html` z `rv-tool-index.js` společně se třemi legacy-adapter PoC.
+- **Funkce:** 135 skutečných URL, devět kategorií, statický obsah a odkazy bez JS, místní hledání bez síťového požadavku, klávesové Ctrl/⌘+K, přístupné filtry a empty state. Vlastní původní logo a společný V3 shell.
+- **Výkon / bezpečnost:** přibližně 121,5 kB zdrojového HTML (před HTTP kompresí), ~8,7 kB CSS, ~2 kB JS; escape uživatelsky zobrazovaných metadat, fail-closed při změně pořadí zdrojového indexu a neexistující URL. Není to Lighthouse skóre.
+- **Oprava enginu:** odstraněno chybné `<base href="/">`, které přesměrovávalo `#kalkulacka` mimo vloženou stránku; testy nyní chrání fragmenty a relativní odkazy.
+- **Cloudflare:** build pro produktový commit `da5b0dd6277e5f7bd15bf5f734ec0101fafa7ee3` = **SUCCESS**. [Build detail](https://dash.cloudflare.com/69c821d02b55b2645d0f1059623d1dde/workers/services/view/rychlevypocty-v3-preview/production/previews/rv3-engine-poc/builds/3a90f60d-825e-4e21-b147-b7ee06bd0a31).
+- **Není ověřeno:** skutečný browser 390/1440, runtime výpočtů hypotéky/DPP, PageSpeed/Lighthouse, veřejné HTTP noindex. Nepřevádět na produkci bez skutečných testů a schválení.
+- **Následuje:** browser QA a odstranění legacy shim, potom migrační strategie #62 pro skutečnou root stránku `kalkulacky.html`. Source-of-truth zůstává issue #59, #61, #62 a tento HANDOFF; vždy před prací ověřit nejnovější branch HEAD.
