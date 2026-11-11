@@ -30,3 +30,8 @@
 
 ## Aktualita: katalog V2 po uživatelské kritice (11. 11. 2026)
 Před dalším vývojem katalogu otevři [CATALOG_RETHINK_2026.md](docs/rv3/CATALOG_RETHINK_2026.md). **Původní Studio V1 zamítnuté**: 135 karet/9 filtrů bylo nepřehledných. Nový `/rv3/poc/katalog-v2.html` (draft PR #65) je rozhodovací rozcestník se 6 přímými cestami a 8 rozbalovacími oblastmi; Cloudflare build prošel, ale chybí uživatelské vizuální schválení a nezávislý browser QA. Nevracet se k 135-card řešení bez jasného důkazu. `main` nedotčeno.
+
+## Noční autonomní vývoj 11.–12. 11. 2026
+- Rozpis prací: [OVERNIGHT_PLAN_2026-11-12.md](docs/rv3/OVERNIGHT_PLAN_2026-11-12.md). Devět hodinových plánovaných spuštění 21:15–05:15 CET, souhrnný report 05:50 CET; skutečnou aktivitu potvrzuje GitHub log, ne samotný kalendář.
+- Průběžné zápisy: [NIGHT_RUN_LOG_2026-11-12.md](docs/rv3/NIGHT_RUN_LOG_2026-11-12.md).
+- Nezačínat automatické masové migrace ani produkční nasazení. Všechny zásadní designové změny zůstanou v preview do ranního schválení.

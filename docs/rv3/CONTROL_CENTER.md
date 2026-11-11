@@ -52,3 +52,6 @@ Načti `RV3_START_HERE.md`, `docs/rv3/HANDOFF.md` a tento dokument. **Ověř HEA
 - Z původních 40 unclassified **5 individuálně prohlédnuto**: 2 legacy landing/redirect, 1 standalone kalkulačka, 2 guide; **35 stále neověřeno**. Registr záměrně zatím nepřeznačen, aby nedošlo k falešné klasifikaci.
 - Paralelní [draft PR #65](https://github.com/fangren740/bmi-kalkulacka/pull/65) již obsahuje izolovaný engine PoC a katalog; neduplikovat. Build PASS dle textu PR, nezávislé browser QA/HTTP preview stále UNKNOWN.
 - **Další:** ověřit zbývajících 35 URL a browser QA PR #65; žádný merge/produkce.
+
+### Autonomní noční kola 11.–12. 11. 2026
+Uživatel autorizoval izolovaný noční vývoj a testování, nikoliv merge produkce. Devět samostatných plánovaných roundů 21:15–05:15, shrnutí 05:50. Pravdivé výstupy a pracovní postup v [OVERNIGHT_PLAN_2026-11-12.md](OVERNIGHT_PLAN_2026-11-12.md) a [NIGHT_RUN_LOG_2026-11-12.md](NIGHT_RUN_LOG_2026-11-12.md). Katalog V2 čeká na vizuální schválení; `main` nedotčeno.
