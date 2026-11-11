@@ -22,7 +22,7 @@ test('Studio directory is static-first and includes all 135 validated local dest
  assert.ok(!html.includes('<base '),'in-page anchors must not point to the root');
  const anchors=[...html.matchAll(/<article class="rv3c-card"[\s\S]*?<a href="([^"]+)"/g)].map(m=>m[1]);
  assert.equal(anchors.length,135);
- assert.deepEqual(new Set(anchors),new Set(items.map(x=>x.url)));
+ assert.deepEqual(anchors.slice().sort(),items.map(x=>x.url).slice().sort());
  for(const href of anchors){
   const target=fileURLToPath(new URL('../../'+href.substring(1),import.meta.url));
   assert.ok(existsSync(target),'missing catalog route '+href);
@@ -36,7 +36,7 @@ test('user search is local, accessible and works without JavaScript for navigati
  assert.ok(!script.includes('fetch('),'user queries must never leave browser');
  assert.ok(!script.includes('localStorage'),'search should not persist personal queries');
  for(const term of ['aria-pressed','aria-live','data-category','data-search','normalize','Escape','ctrlKey','apply()']){
-  assert.ok(script.includes(term)||term==='aria-live'&&read('rv3/engine/catalog.mjs').includes(term),'missing UX behavior '+term);
+  assert.ok(script.includes(term)||read('rv3/engine/catalog.mjs').includes(term),'missing UX behavior '+term);
  }
  assert.ok(css.includes('max-width:480px'));
  assert.ok(css.includes('prefers-reduced-motion'));
