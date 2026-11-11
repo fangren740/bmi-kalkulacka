@@ -11,6 +11,8 @@ permissions:
 
 jobs:
   static-audit:
+    # The isolated RV3 Cloudflare preview has its own checks; avoid GitHub Actions runner minutes.
+    if: ${{ github.event_name != 'pull_request' || !startsWith(github.head_ref, 'rv3/') }}
     name: Static release gate
     runs-on: ubuntu-latest
     timeout-minutes: 10
