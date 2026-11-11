@@ -49,6 +49,14 @@ function replaceOne(h,regex,replacement,name){
 export function renderPrototypePage(source,route){
  if(!POC_ROUTES.some(r=>r.source===route?.source&&r.type===route.type))throw Error('Unapproved POC route');
  if(!/<!doctype html>/i.test(source))throw Error('Missing doctype');
+ // <base href="/"> would break #fragment navigation on nested preview URLs.
+ // These opted-in sources are all root-absolute; refuse future relative URLs until an adapter handles them.
+ const refs=[...source.matchAll(/\b(?:href|src|action|poster)=(["'])(.*?)\1/gi)].map(m=>m[2]);
+ const relative=refs.filter(u=>u&&!u.startsWith('/')&&!u.startsWith('#')
+   && !/^[a-z][a-z0-9+.-]*:/i.test(u));
+ if(relative.length)throw Error('Relative URL needs route adapter: '+relative[0]);
+ if(/<base\b/i.test(source))throw Error('Unexpected original base element');
+
  const main=extractMain(source);
  if(!main)throw Error('Missing main');
  const canonical=getCanonical(source);
@@ -64,7 +72,7 @@ export function renderPrototypePage(source,route){
  html=replaceOne(html,/<footer\b[^>]*>[\s\S]*?<\/footer>/i,
    footer()+'<div class="rv3e-legacy-shell" hidden inert aria-hidden="true">'+originalFooter[0]+'</div>','footer');
  html=replaceOne(html,/<\/head>/i,
-   '<base href="/"><meta name="robots" content="noindex,nofollow">'+
+   '<meta name="robots" content="noindex,nofollow">'+
    '<meta name="rv3-engine" content="poc-'+escape(route.type)+'">'+
    '<link rel="stylesheet" href="/rv3/poc-theme.css"></head>','head close');
  html=replaceOne(html,/<body\b[^>]*>/i,function(tag){

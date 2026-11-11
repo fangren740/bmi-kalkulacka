@@ -12,7 +12,12 @@ test('three different architectures render with one safe shared shell',()=>{
   assert.deepEqual(scriptsOf(html),scriptsOf(source),route.source+' scripts changed');
   assert.equal(getCanonical(html),getCanonical(source),route.source+' canonical changed');
   assert.equal((html.match(/<h1\b/gi)||[]).length,(source.match(/<h1\b/gi)||[]).length);
-  assert.ok(html.includes('<base href="/">'),'asset base');
+  assert.ok(!/<base\\b/i.test(html),'fragment links must resolve in the preview page, not site root');
+  const allSourceRefs=[...source.matchAll(/\\b(?:href|src|action|poster)=(["'])(.*?)\\1/gi)].map(m=>m[2]);
+  assert.ok(allSourceRefs.every(u=>u.startsWith('/')||u.startsWith('#')||/^[a-z][a-z0-9+.-]*:/i.test(u)));
+  for(const local of [...html.matchAll(/href="#([^"]+)"/g)].map(m=>m[1])){
+    assert.ok(html.includes('id="'+local+'"')||html.includes("id='"+local+"'")||local==='','fragment target missing: '+local);
+  }
   assert.ok(html.includes('class="rv3e-footer"'));
   assert.ok(html.includes('class="rv3e-header"'));
   assert.ok(html.includes('hidden inert aria-hidden="true"'));
@@ -27,6 +32,7 @@ test('fail-closed on unknown routes and broken SEO metadata',()=>{
  const source=read('hypotecni-kalkulacka.html');
  assert.throws(()=>renderPrototypePage(source,{source:'superdavka-kalkulacka.html',type:'external-js'}),/Unapproved/);
  assert.throws(()=>renderPrototypePage(source.replace(/<main\b/i,'<section'),POC_ROUTES[1]),/Missing main/);
+ assert.throws(()=>renderPrototypePage(source.replace('href="/"','href="relative-tool.html"'),POC_ROUTES[1]),/Relative URL needs route adapter/);
  assert.throws(()=>renderPrototypePage(source.replace(/<link\b(?=[^>]*rel="canonical")[^>]*>/i,''),POC_ROUTES[1]),/Missing canonical/);
 });
 test('lightweight accessible prototype integration is included in Cloudflare build',()=>{

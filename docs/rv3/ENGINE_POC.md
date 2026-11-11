@@ -22,3 +22,6 @@ Sdílený V3 header, menu a footer vznikají ve statickém HTML. Nevyžadují no
 5. Teprve poté plánovat bezpečnou migraci produkčních URL v dávkách 5–10.
 
 Měřené PageSpeed ani browser PASS nejsou zatím doložené. Bez schválení uživatele neprovádět merge do main.
+
+## Important correction — in-page fragment navigation
+The first PoC inserted a global `<base href="/">`. Because the pages live under `/rv3/poc/`, this would send `#kalkulacka` or `#catalog-search` to the website root instead of the current page. **Fixed in the next build:** no `<base>` is used; every opt-in source must already use root-absolute or scheme URLs for assets/navigation. Unknown relative URLs make the generator fail rather than creating silently broken links. Automated tests validate every fragment target.
