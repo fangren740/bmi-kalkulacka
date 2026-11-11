@@ -1,6 +1,10 @@
 /* Numerické regresní vektory z produkčního jádra 2026 (main 2041e3ea). Bez externích dependencies. */
-'use strict';const assert=require('node:assert/strict');
-require('../salary-engine.js');const engine=globalThis.RV3Salary;
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {runInNewContext} from 'node:vm';
+const context={};
+runInNewContext(readFileSync(new URL('../salary-engine.js',import.meta.url),'utf8'),context);
+const engine=context.RV3Salary;
 const original={mode:'basic',grossBase:45000,bonus:0,otherDeductions:0,taxDeclaration:true,disabilityDiscount:0,ztpDiscount:false,pensionerDiscount:false,healthMinimum:false,applySocialCap:true,yearSocialBase:0,children:{first:false,second:false,thirdPlus:0}};
 const vectors=[
 ['standard 45k',{}, {netSalary:35600,socialEmployee:3195,healthEmployee:2025,taxAfterDiscounts:4180,totalCost:60210}],
