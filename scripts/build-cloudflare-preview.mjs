@@ -5,7 +5,7 @@ import {fileURLToPath} from 'node:url';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const output=path.join(root,'dist');
-const excludeDirs=new Set(['.git','.github','node_modules','dist','audits','reviews','design-concepts','scripts','cloudflare','.vscode']);
+const excludeDirs=new Set(['.git','.github','node_modules','dist','audits','reviews','design-concepts','scripts','cloudflare','docs','.vscode']);
 const excludeFiles=new Set(['CNAME','.nojekyll','wrangler.jsonc','wrangler.json','wrangler.toml','package.json','package-lock.json','robots.txt','_headers','_redirects']);
 const extensions=new Set(['.html','.css','.js','.mjs','.json','.xml','.svg','.txt','.webmanifest','.png','.jpg','.jpeg','.gif','.webp','.avif','.ico','.woff','.woff2','.ttf','.otf','.pdf','.wasm','.webm','.mp4','.map','.csv','.zip','.eot','.otc']);
 let copied=0;let html=0;const skipped=[];
