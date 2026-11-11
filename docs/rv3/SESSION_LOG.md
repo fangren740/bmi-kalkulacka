@@ -17,3 +17,9 @@ Zapisovat pouze to, co bylo **skutečně provedeno / ověřeno**. Věta o pláno
 
 ## Standard jedné další položky
 `YYYY-MM-DD HH:mm CET | Issue | commit/branch/PR | provedeno | skutečné testy | preview | rizika | next | schválení`.
+
+## 2026-11-11 19:xx CET — #60 večerní evidence
+- Přímé GitHub čtení: main SHA `2041e3ea`, clean-slate 81 commitů před main v době kontroly; PR #58 otevřený draft; existuje také engine draft PR #65.
+- Commit `4d7406f`: přidán `docs/rv3/ARCHETYPES_60.md`; doloženo 5 archetypů a 5 z 40 unclassified; zbývajících 35 UNKNOWN. Žádná numerika/produkce změněna.
+- Testy: statická inspekce HTML/skriptů; browser 390/1440, GSC, live HTTP noindex a Cloudflare build tohoto dokumentačního SHA **neověřeny**.
+- Next: 35 URL klasifikace + PR #65 browser QA; schválení architektury A teprve poté.
