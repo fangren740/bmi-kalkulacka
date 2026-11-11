@@ -1,5 +1,4 @@
-/* RychléVýpočty V3 clean-slate UI. Never alters numeric methodology.
-   Usability layers only: intent routing, search, salary comparison and salary form. */
+/* RV3 UI. Numeric methodology lives in salary-engine.js. */
 (()=>{'use strict';
 const byId=id=>document.getElementById(id);
 const cz=new Intl.NumberFormat('cs-CZ',{maximumFractionDigits:0});
@@ -28,7 +27,7 @@ const CATALOG=[
  ['Náklady na bydlení','Měsíční výdaje za bydlení','/mesicni-naklady-na-bydleni-kalkulacka.html']
 ];
 
-// Intent-oriented Czech typeahead. Entirely local: no personal queries leave the browser.
+// Local Czech search.
 const ALIASES={
   '/kalkulacka-priplatku-za-smeny.html':'priplatek priplatky vikend vikendove noc nocni nocni smena smeny svatek svatky prescas vyplata kolik dostanu za vikend noc vikendovy priplatek',
   '/cista-mzda-kalkulacka.html':'cista hruba mzda vyplata vypocet dane odvody plat penez na ucet',
@@ -49,8 +48,7 @@ const ALIASES={
 };
 const STOPWORDS=new Set(['kolik','co','jak','kde','mi','me','mam','muzu','muze','jsem','je','to','ten','ta','se','si','za','do','na','o','v','ve','z','ze','po','pro','by','dostanu','spocitam','spocitat','kalkulacka','kalkulacku']);
 function searchStem(s){return s.replace(/(oveho|ove|ove|ovou|ech|ich|ami|emi|ova|ove|ovy|eho|eho|ka|ky|ek|ku|ce|ci|u|e|y|a)$/,'')}
-/* Lazy-load the real tool inventory only on search interaction.
-   Initial render stays instant with handpicked popular tools. */
+/* Load catalog only on search. */
 let discoveredTools=null;
 function initSearch(){
  const input=byId('tool-search'),out=byId('tool-results');if(!input||!out)return;
