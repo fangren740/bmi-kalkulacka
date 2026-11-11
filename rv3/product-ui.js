@@ -104,19 +104,68 @@ function initOffer(){
  const before=byId('offer-before'),after=byId('offer-after');
  if(!before||!after)return;
  const delta=byId('offer-difference'),year=byId('offer-year'),hint=byId('offer-help');
+ const oldNet=byId('offer-net-before'),newNet=byId('offer-net-after');
+ const oldBar=byId('offer-bar-before'),newBar=byId('offer-bar-after');
+ const copy=byId('offer-copy'),copyStatus=byId('offer-copy-status');
+ const presets=Array.from(document.querySelectorAll('[data-offer-increase]'));
+ let lastValid=null;
  function render(){
   const a=parse(before.value),b=parse(after.value);
-  const valid=engine&&[a,b].every(n=>Number.isFinite(n)&&n>0&&n<=1e8);
+  const valid=!!engine&&[a,b].every(n=>Number.isFinite(n)&&n>0&&n<=1e8);
   before.setAttribute('aria-invalid',String(!Number.isFinite(a)||a<=0||a>1e8));
   after.setAttribute('aria-invalid',String(!Number.isFinite(b)||b<=0||b>1e8));
-  if(!valid){delta.textContent='—';year.textContent='—';hint.textContent='Zadejte obě kladné hrubé mzdy.';hint.classList.add('compare-invalid');return}
-  const change=engine.standardScenario(b,true,false).netSalary-engine.standardScenario(a,true,false).netSalary;
+  if(copyStatus){copyStatus.hidden=true;copyStatus.textContent=''}
+  if(copy)copy.disabled=!valid;
+  for(const btn of presets)btn.setAttribute('aria-pressed',String(valid&&Math.round(b-a)===Number(btn.dataset.offerIncrease)));
+  if(!valid){
+   lastValid=null;delta.textContent='—';year.textContent='—';
+   hint.textContent='Zadejte dvě kladné hrubé mzdy.';hint.classList.add('compare-invalid');
+   if(oldNet)oldNet.textContent='—';if(newNet)newNet.textContent='—';
+   if(oldBar)oldBar.style.width='0%';if(newBar)newBar.style.width='0%';
+   return;
+  }
+  const current=engine.standardScenario(a,true,false).netSalary;
+  const proposed=engine.standardScenario(b,true,false).netSalary;
+  const change=proposed-current;
+  lastValid={current,proposed,change,from:a,to:b};
   delta.textContent=signed(change);
   year.textContent=signed(change*12);
-  hint.textContent='HPP · podepsané prohlášení · bez dětí';
+  if(oldNet)oldNet.textContent=money(current);
+  if(newNet)newNet.textContent=money(proposed);
+  const maximum=Math.max(current,proposed,1);
+  if(oldBar)oldBar.style.width=(Math.max(0,current)/maximum*100).toFixed(2)+'%';
+  if(newBar)newBar.style.width=(Math.max(0,proposed)/maximum*100).toFixed(2)+'%';
+  hint.textContent='Model HPP za celý měsíc · podepsané prohlášení · bez dětí';
   hint.classList.remove('compare-invalid');
  }
- before.addEventListener('input',render);after.addEventListener('input',render);render();
+ before.addEventListener('input',render);
+ after.addEventListener('input',render);
+ for(const preset of presets)preset.addEventListener('click',()=>{
+  const base=parse(before.value),increase=Number(preset.dataset.offerIncrease);
+  if(!Number.isFinite(base)||base<=0||base+increase>1e8)return;
+  after.value=String(base+increase);
+  render();
+ });
+ if(copy)copy.addEventListener('click',()=>{
+  if(!lastValid||!copyStatus)return;
+  if(typeof navigator==='undefined'||!navigator.clipboard?.writeText){
+   copyStatus.textContent='Kopírování v tomto prohlížeči není dostupné.';
+   copyStatus.hidden=false;return;
+  }
+  const text='Porovnání čisté mzdy 2026 (HPP, prohlášení, bez dětí)\\n'
+    +'Dnes: '+money(lastValid.from)+' hrubého → '+money(lastValid.current)+' čistého\\n'
+    +'Nabídka: '+money(lastValid.to)+' hrubého → '+money(lastValid.proposed)+' čistého\\n'
+    +'Rozdíl: '+signed(lastValid.change)+' měsíčně / '+signed(lastValid.change*12)+' za 12 měsíců.\\n'
+    +'Orientační model: rychlevypocty.cz/cista-mzda-kalkulacka.html';
+  navigator.clipboard.writeText(text).then(()=>{
+   copyStatus.textContent='Porovnání zkopírováno do schránky.';
+   copyStatus.hidden=false;
+  }).catch(()=>{
+   copyStatus.textContent='Kopírování se nepodařilo. Zkuste označit výsledek ručně.';
+   copyStatus.hidden=false;
+  });
+ });
+ render();
 }
 
 function initSalary(){
