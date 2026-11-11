@@ -141,3 +141,12 @@ test('no remote JS, no query logging, keyboard and mobile accessibility built in
  assert.ok(build.includes("renderCatalogV2(tools,taxonomy)"));
  assert.ok(build.includes("'katalog-v2.html'"));
 });
+
+test('generic Czech questions receive a clarification hint, not a false no-match',()=>{
+ const ui=read('rv3/catalog-v2-ui.mjs');
+ assert.ok(ui.includes('normalizeCzech(value)'), 'use shared Czech normalization');
+ assert.ok(ui.includes('isGenericQuery(input.value)'), 'detect intent-free queries');
+ assert.ok(ui.includes('Upřesněte, co chcete spočítat'), 'give a helpful refinement prompt');
+ assert.ok(ui.includes('Upřesněte dotaz'), 'accessible live status must distinguish generic questions');
+ assert.ok(ui.includes('Pro tento dotaz nemáme shodu'), 'keep the genuine no-result state');
+});
