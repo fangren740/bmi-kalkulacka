@@ -27,3 +27,8 @@
 
 ## Vzorová první zpráva nového chatu (copy/paste)
 > Pokračuj na RychléVýpočty.cz V3. Otevři GitHub repo fangren740/bmi-kalkulacka, issue #59 a RV3_START_HERE.md na větvi rv3/clean-slate. Projdi CONTROL_CENTER, HANDOFF, ROUTE REGISTRY, issue #60–64. Ověř aktuální main/PR #58/Cloudflare. Pracuj na dalším konkrétním realizačním kroku podle roadmapy bez změn produkce. Vrať mi krátký report s náhledem, skutečnými testy a aktualizuj GitHub handoff dokumenty.
+
+## Večerní předání 11. 11. 2026
+- Nová důkazová analýza [ARCHETYPES_60.md](ARCHETYPES_60.md), commit `4d7406f`: 5 rozdílných architektur, migrační stop conditions a 5/40 doložených nekatalogových URL. Zbývajících 35 je stále UNKNOWN, neoznačovat hotovo.
+- Draft [PR #65](https://github.com/fangren740/bmi-kalkulacka/pull/65) existuje souběžně s #58 a má vlastní engine PoC. Nedělat konkurenční implementaci. Cloudflare build uváděný v PR ≠ browser PASS.
+- Následující krok: dokončit klasifikaci 35 a testovat PR #65 v browseru; žádný merge do main.
