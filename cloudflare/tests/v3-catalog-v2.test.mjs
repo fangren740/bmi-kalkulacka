@@ -78,6 +78,9 @@ test('Czech search prefers relevant tools, supports diacritics and normal questi
  }
  assert.deepEqual(rankTools(index,'xyzqplmzzx'),[]);
  assert.deepEqual(rankTools(index,'a'),[]);
+ for(const query of ['kolik','jak','na','jak mi','co mam','kolik mi']) {
+  assert.deepEqual(rankTools(index,query),[],'stopword-only search should not show arbitrary tools: '+query);
+ }
 });
 
 
