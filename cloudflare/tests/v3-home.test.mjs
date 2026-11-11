@@ -74,3 +74,37 @@ test('new salary form uses same engine, allows scenarios and validates user inpu
  assert.equal(es.get('s-valid-result').hidden,true);
  assert.equal(es.get('s-error').hidden,false);
 });
+
+
+test('Czech question search resolves meaningful intent to existing, preserved tools',()=>{
+  const es=new Map();
+  const elem=tag=>({tag,children:[],textContent:'',href:'',hidden:false,events:{},dataset:{},
+     addEventListener(name,fn){this.events[name]=fn},
+     append(...nodes){this.children.push(...nodes)},
+     replaceChildren(){this.children=[]},
+     setAttribute(){},contains(){return false},
+     querySelector(){return this.children.find(x=>x.tag==='a')||null},
+     click(){}
+  });
+  const input=elem('input');input.value='';
+  const output=elem('div');es.set('tool-search',input);es.set('tool-results',output);
+  const document={
+    getElementById:id=>es.get(id)||null,
+    querySelector(){return null},
+    querySelectorAll(){return []},
+    addEventListener(){},
+    createElement:tag=>elem(tag)
+  };
+  runInNewContext(load('rv3/product-ui.js'),{window:{},document});
+  for(const [query,want] of [
+    ['příplatek za víkend','/kalkulacka-priplatku-za-smeny.html'],
+    ['čistá mzda','/cista-mzda-kalkulacka.html'],
+    ['nemocné dítě','/ocr-kalkulacka.html'],
+    ['hypotéka','/hypotecni-kalkulacka.html']
+  ]){
+    input.value=query;
+    input.events.input();
+    assert.equal(output.hidden,false,query+' should show results');
+    assert.equal(output.children[0]?.href,want,query+' first choice');
+  }
+});
