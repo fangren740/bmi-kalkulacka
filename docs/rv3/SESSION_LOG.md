@@ -18,27 +18,8 @@ Zapisovat pouze to, co bylo **skutečně provedeno / ověřeno**. Věta o pláno
 ## Standard jedné další položky
 `YYYY-MM-DD HH:mm CET | Issue | commit/branch/PR | provedeno | skutečné testy | preview | rizika | next | schválení`.
 
-## 2026-11-11 — implementován samostatný engine PoC (PR #65)
-- **PR:** https://github.com/fangren740/bmi-kalkulacka/pull/65 (`rv3/engine-poc` → `rv3/clean-slate`), **DRAFT / NEMERGEOVAT**.
-- **Změna:** statický sdílený shell pro tři technické archetypy; source files `rv3/engine/renderer.mjs`, `scripts/build-v3-engine-poc.mjs`, `rv3/poc-theme.css`, `cloudflare/tests/v3-engine-poc.test.mjs`.
-- **Výsledky Cloudflare build-u pro implementační commit `ad6ea655`: SUCCESS.** Tři stránkové proofy generované na `/rv3/poc/kalkulacky.html`, `/rv3/poc/hypotecni-kalkulacka.html`, `/rv3/poc/dpp-dpc-kalkulacka.html`.
-- **QA rozsah:** integrita source main HTML, JS a canonical PASS v Node build testech; skutečné 390/1440, konzole, interaktivita kalkulaček, veřejné HTTP hlavičky a Lighthouse **NOT VERIFIED**.
-- **Důležité:** skrytý/inert starý header/footer je přechodný compatibility shim pro legacy JS, ne konečná produkční architektura.
-- **Další rozhodnutí:** nejprve reálný browser E2E + odstranit shim bezpečným adapterem; následně předat vlastníkovi architektonické schválení A. Bez souhlasu žádné další masové migrace.
-- **Současný master pro automatizaci:** issue #59 a #61 nyní obsahují odkaz na PR #65; jestli se mezitím pohnula `rv3/clean-slate`, nezačínat bez ověření aktuálního HEAD.
-
-## 2026-11-11 — Studio katalog z nového enginu (PR #65, další round)
-- **Vytvořeno:** `rv3/engine/catalog.mjs`, `rv3/catalog-studio.css`, `rv3/catalog-studio.js`, `cloudflare/tests/v3-catalog-studio.test.mjs`. `scripts/build-v3-engine-poc.mjs` generuje nový `/rv3/poc/studio-katalog.html` z `rv-tool-index.js` společně se třemi legacy-adapter PoC.
-- **Funkce:** 135 skutečných URL, devět kategorií, statický obsah a odkazy bez JS, místní hledání bez síťového požadavku, klávesové Ctrl/⌘+K, přístupné filtry a empty state. Vlastní původní logo a společný V3 shell.
-- **Výkon / bezpečnost:** přibližně 121,5 kB zdrojového HTML (před HTTP kompresí), ~8,7 kB CSS, ~2 kB JS; escape uživatelsky zobrazovaných metadat, fail-closed při změně pořadí zdrojového indexu a neexistující URL. Není to Lighthouse skóre.
-- **Oprava enginu:** odstraněno chybné `<base href="/">`, které přesměrovávalo `#kalkulacka` mimo vloženou stránku; testy nyní chrání fragmenty a relativní odkazy.
-- **Cloudflare:** build pro produktový commit `da5b0dd6277e5f7bd15bf5f734ec0101fafa7ee3` = **SUCCESS**. [Build detail](https://dash.cloudflare.com/69c821d02b55b2645d0f1059623d1dde/workers/services/view/rychlevypocty-v3-preview/production/previews/rv3-engine-poc/builds/3a90f60d-825e-4e21-b147-b7ee06bd0a31).
-- **Není ověřeno:** skutečný browser 390/1440, runtime výpočtů hypotéky/DPP, PageSpeed/Lighthouse, veřejné HTTP noindex. Nepřevádět na produkci bez skutečných testů a schválení.
-- **Následuje:** browser QA a odstranění legacy shim, potom migrační strategie #62 pro skutečnou root stránku `kalkulacky.html`. Source-of-truth zůstává issue #59, #61, #62 a tento HANDOFF; vždy před prací ověřit nejnovější branch HEAD.
-
-## 2026-11-11 — katalog přepracovaný OD ZÁKLADŮ po uživatelské kritice
-- **Uživatel zamítl Studio V1:** 135 karet a 9 filtrů působilo nepřehledně, nechtěl kosmetický redesign.
-- **Výzkum:** NN/g information scent, Baymard navigace/hledání, Omni Calculator, české Peníze.cz, Netguru 2026; [zdůvodnění](CATALOG_RETHINK_2026.md).
-- **Implementace:** samostatná V2 alternativa `/rv3/poc/katalog-v2.html` v [draft PR #65](https://github.com/fangren740/bmi-kalkulacka/pull/65): první screen jedna otázka + lokální hledání + šest přímých scénářů, následně 8 sbalených oblastí a maximálně pět doporučených nástrojů po rozbalení. V1 ponechán pro porovnání.
-- **Build:** `4d3b8d02` Cloudflare SUCCESS, numerické kalkulační moduly a public `main` nezměněny. Source link integrity 135/135 a vyhledávací relevance testovány; PDF / browser / PageSpeed nezávislé testy NEDOLOŽENY.
-- **Další krok:** porovnat V1/V2 na 390 a 1440 px, reálná uživatelská cesta k výpočtům, ověřit odkaz na branch preview, opravit chyby a předložit uživateli k rozhodnutí B. Žádné produkční nasazení.
+## 2026-11-11 19:xx CET — #60 večerní evidence
+- Přímé GitHub čtení: main SHA `2041e3ea`, clean-slate 81 commitů před main v době kontroly; PR #58 otevřený draft; existuje také engine draft PR #65.
+- Commit `4d7406f`: přidán `docs/rv3/ARCHETYPES_60.md`; doloženo 5 archetypů a 5 z 40 unclassified; zbývajících 35 UNKNOWN. Žádná numerika/produkce změněna.
+- Testy: statická inspekce HTML/skriptů; browser 390/1440, GSC, live HTTP noindex a Cloudflare build tohoto dokumentačního SHA **neověřeny**.
+- Next: 35 URL klasifikace + PR #65 browser QA; schválení architektury A teprve poté.

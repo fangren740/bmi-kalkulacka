@@ -18,7 +18,7 @@ Portál má být nejlepší české místo pro praktická rozhodnutí pomocí v�
 | Vizuální směr V3 | **PILOT PREVIEW** na homepage, mzdy-a-prace, čistá mzda | [PR #58](https://github.com/fangren740/bmi-kalkulacka/pull/58); čeká na kompletní integrační schválení |
 | Cloudflare preview bez změny prod | **FUNGUJE** | build pro commit `50893e2` PASS; novější commity ověřit live |
 | V3 route registry | **207 URL ZAPSÁNO** | `route-registry.json`; technické klasifikace zbývají |
-| Nový sdílený V3 build engine | **IMPLEMENTED POC, QA PENDING** na izolované větvi | [draft PR #65](https://github.com/fangren740/bmi-kalkulacka/pull/65), build ad6ea655 SUCCESS; neschváleno, neprodukční |
+| Nový sdílený V3 build engine | **DESIGN PROPOSAL**, NENÍ IMPLEMENTOVÁNO | [#61](https://github.com/fangren740/bmi-kalkulacka/issues/61) |
 | 135 nových šablon nástrojů | **NENÍ HOTOVO** | migrovat postupně; nejprve typologie a adaptéry |
 | Katalog a všechny huby | **NENÍ HOTOVO** | [#62](https://github.com/fangren740/bmi-kalkulacka/issues/62) |
 | 390px/1440px browser screenshoty, Lighthouse, live HTTP headers | **NEOVĚŘENO** | před schválením releasu skutečně změřit |
@@ -47,11 +47,8 @@ Portál má být nejlepší české místo pro praktická rozhodnutí pomocí v�
 ## Pro příští chat
 Načti `RV3_START_HERE.md`, `docs/rv3/HANDOFF.md` a tento dokument. **Ověř HEAD**, pak pokračuj bodem #60 a připrav první proof of concept V3 layout enginu podle #61. Na konci práce napiš: větev/SHA, co je PASS/NEOVĚŘENO, konkrétní výsledky, URL preview, další úkol, souhlas požadovaný od vlastníka.
 
-### Paralelní větev pro architektonický PoC
-Build-time V3 engine P1 se vyvíjí na `rv3/engine-poc` (PR #65 proti `rv3/clean-slate`), aby večerní automatizace mohla bezpečně pracovat na původní pilotní větvi bez konfliktu. Viz `docs/rv3/ENGINE_POC.md`. Následující uživatelovo schválení A až po screenshotovém a funkčním browser testu; nezaměňovat s hotovým enginem pro 207 URL.
-
-### 2026-11-11 — P2 katalogový PoC navazuje na engine
-**PILOT PREVIEW BUILT**: [draft PR #65](https://github.com/fangren740/bmi-kalkulacka/pull/65) vytváří samostatnou generovanou `/rv3/poc/studio-katalog.html` s 135 odkazy v 9 skupinách. Cloudflare pro `da5b0dd` PASS, ale skutečné browser/390/1440/Lighthouse/HTTP **NEOVĚŘENO**. Původní `kalkulacky.html` zůstává beze změny. Následuje #61 integrace a #62 přechod reálného katalogu až po schválení.
-
-### 2026-11-11 — katalog V1 zamítnut, V2 od základů v draft PR #65
-Po kritice 135 karet/9 filtrů byl zvolen **nový rozhodovací koncept**, ne grafický retuš. [Celý design brief](CATALOG_RETHINK_2026.md). V2 build = Cloudflare SUCCESS `4d3b8d02`, vygenerováno 135/135 odkazů, 6 přímo dostupných situací, 8 sbalených oblastí, české vyhledávání. **USER APPROVAL A/B A BROWSER QA PENDING.** Nová preview adresa `https://rv3-engine-poc-rychlevypocty-v3-preview.maattinek.workers.dev/rv3/poc/katalog-v2.html`; původní V1 `https://rv3-engine-poc-rychlevypocty-v3-preview.maattinek.workers.dev/rv3/poc/studio-katalog.html`; netýká se `main`.
+## 2026-11-11 večerní round #60
+- **Doloženo 5 technických archetypů** (katalog / externí směny / externí hypotéka / inline DPP-DPČ / legislativní superdávka) a rizika v [ARCHETYPES_60.md](ARCHETYPES_60.md), commit `4d7406f`.
+- Z původních 40 unclassified **5 individuálně prohlédnuto**: 2 legacy landing/redirect, 1 standalone kalkulačka, 2 guide; **35 stále neověřeno**. Registr záměrně zatím nepřeznačen, aby nedošlo k falešné klasifikaci.
+- Paralelní [draft PR #65](https://github.com/fangren740/bmi-kalkulacka/pull/65) již obsahuje izolovaný engine PoC a katalog; neduplikovat. Build PASS dle textu PR, nezávislé browser QA/HTTP preview stále UNKNOWN.
+- **Další:** ověřit zbývajících 35 URL a browser QA PR #65; žádný merge/produkce.
