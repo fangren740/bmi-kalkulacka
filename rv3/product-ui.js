@@ -1,4 +1,4 @@
-/* RV3 UI. Numeric methodology lives in salary-engine.js. */
+
 (()=>{'use strict';
 const byId=id=>document.getElementById(id);
 const cz=new Intl.NumberFormat('cs-CZ',{maximumFractionDigits:0});
@@ -27,7 +27,7 @@ const CATALOG=[
  ['Náklady na bydlení','Měsíční výdaje za bydlení','/mesicni-naklady-na-bydleni-kalkulacka.html']
 ];
 
-// Local Czech search.
+
 const ALIASES={
   '/kalkulacka-priplatku-za-smeny.html':'priplatek priplatky vikend vikendove noc nocni nocni smena smeny svatek svatky prescas vyplata kolik dostanu za vikend noc vikendovy priplatek',
   '/cista-mzda-kalkulacka.html':'cista hruba mzda vyplata vypocet dane odvody plat penez na ucet',
@@ -48,7 +48,7 @@ const ALIASES={
 };
 const STOPWORDS=new Set(['kolik','co','jak','kde','mi','me','mam','muzu','muze','jsem','je','to','ten','ta','se','si','za','do','na','o','v','ve','z','ze','po','pro','by','dostanu','spocitam','spocitat','kalkulacka','kalkulacku']);
 function searchStem(s){return s.replace(/(oveho|ove|ove|ovou|ech|ich|ami|emi|ova|ove|ovy|eho|eho|ka|ky|ek|ku|ce|ci|u|e|y|a)$/,'')}
-/* Load catalog only on search. */
+
 let discoveredTools=null;
 function initSearch(){
  const input=byId('tool-search'),out=byId('tool-results');if(!input||!out)return;
@@ -92,7 +92,7 @@ function initSearch(){
    .then(items=>{if(Array.isArray(items)&&items.length>=100){
      discoveredTools=items.filter(item=>Array.isArray(item)&&item.length>=3&&/^\/[a-z0-9-]+\.html$/.test(item[2]));
      if(input.value.trim().length>=2)render();
-   }}).catch(()=>{/* Curated, locally available fallback keeps search usable. */});
+   }}).catch(()=>{});
  }
  input.addEventListener('focus',requestIndex);
  input.addEventListener('input',()=>{render();requestIndex()});
