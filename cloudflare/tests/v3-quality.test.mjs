@@ -113,3 +113,11 @@ test('bottom-of-page rhythm: no duplicate motivational green sections',()=>{
  assert.ok(catalog>=0&&trust>catalog,'trust section must follow the catalog');
  assert.equal((home.match(/Nedáváme vám/g)||[]).length,1,'unique trust message');
 });
+
+test('mobile safe contracts for search and large calculated numbers',()=>{
+ const css=read('rv3/foundation.css');
+ assert.ok(css.includes('.first-screen{overflow:visible;z-index:1}'),'overlay must not be clipped by hero');
+ assert.ok(css.includes('.hero-search .finder-results{max-height:')&&css.includes('overflow-y:auto'),'search overlay must fit viewport');
+ assert.ok(css.includes('.answer-number{white-space:normal;overflow-wrap:anywhere}'),'offer result must wrap safely');
+ assert.ok(css.includes('.studio-calc-workspace .calc-result-main strong{white-space:normal;overflow-wrap:anywhere}'),'salary result must wrap safely');
+});

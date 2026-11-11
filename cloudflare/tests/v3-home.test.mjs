@@ -135,6 +135,8 @@ test('Studio scenario presets and net salary bars use original salary engine',()
  assert.equal(compact(es.get('offer-difference').textContent),'+7340Kč');
  es.get('offer-copy').events.click();
  assert.ok(copied.includes('33')&&copied.includes('40'),'copied summary must include both net amounts');
+ assert.ok(copied.includes(String.fromCharCode(10)),'copy must contain real line breaks');
+ assert.ok(!copied.includes(String.fromCharCode(92,110)),'copy must not contain visible backslash-n');
  es.get('offer-before').value='';es.get('offer-before').events.input();
  assert.equal(es.get('offer-net-before').textContent,'—');
  assert.equal(es.get('offer-bar-after').style.width,'0%');

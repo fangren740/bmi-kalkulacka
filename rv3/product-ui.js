@@ -186,10 +186,10 @@ function initOffer(){
    copyStatus.textContent='Kopírování v tomto prohlížeči není dostupné.';
    copyStatus.hidden=false;return;
   }
-  const text='Porovnání čisté mzdy 2026 (HPP, prohlášení, bez dětí)\\n'
-    +'Dnes: '+money(lastValid.from)+' hrubého → '+money(lastValid.current)+' čistého\\n'
-    +'Nabídka: '+money(lastValid.to)+' hrubého → '+money(lastValid.proposed)+' čistého\\n'
-    +'Rozdíl: '+signed(lastValid.change)+' měsíčně / '+signed(lastValid.change*12)+' za 12 měsíců.\\n'
+  const text='Porovnání čisté mzdy 2026 (HPP, prohlášení, bez dětí)\n'
+    +'Dnes: '+money(lastValid.from)+' hrubého → '+money(lastValid.current)+' čistého\n'
+    +'Nabídka: '+money(lastValid.to)+' hrubého → '+money(lastValid.proposed)+' čistého\n'
+    +'Rozdíl: '+signed(lastValid.change)+' měsíčně / '+signed(lastValid.change*12)+' za 12 měsíců.\n'
     +'Orientační model: rychlevypocty.cz/cista-mzda-kalkulacka.html';
   navigator.clipboard.writeText(text).then(()=>{
    copyStatus.textContent='Porovnání zkopírováno do schránky.';
