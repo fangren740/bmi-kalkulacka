@@ -16,7 +16,7 @@ async function walk(input,relative=''){
     const rel=path.join(relative,ent.name);
     if(ent.isDirectory()){
       if(excludeDirs.has(ent.name)||ent.name.startsWith('.')
-       || (relative==='rv3' && ent.name==='tests'))continue;
+       || (relative==='rv3' && (ent.name==='tests'||ent.name==='engine')))continue;
       await walk(path.join(input,ent.name),rel);
       continue;
     }
@@ -34,6 +34,11 @@ async function walk(input,relative=''){
 await rm(output,{recursive:true,force:true});
 await mkdir(output,{recursive:true});
 await walk(root);
+// Build three isolated static-shell demos; NEVER rewrite original root routes.
+const {buildPrototype}=await import('./build-v3-engine-poc.mjs');
+const proof=await buildPrototype({root,output});
+copied+=proof.length+1;html+=proof.length;
+
 
 /* Generate the V3 search catalog from the actual existing, verified public tool index.
    No new URLs are invented and no request contains user-entered search text. */

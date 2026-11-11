@@ -34,3 +34,10 @@ Každé rozhodnutí má stav a rozsah. **Návrh není schválený release.**
 2. Ověřit, zda GSC potvrzuje prioritu migračních vln; chybějící data = UNKNOWN.
 3. Výběr produkčního release mechanismu pro statické vygenerované HTML — samostatné schválení.
 4. Jak měřit 390/1440 browser QA bez instalací na PC uživatele.
+
+## ADR-006 — rozhodovací katalog V2 nahrazuje neúspěšný 135-card V1
+- **Status:** IMPLEMENTED PREVIEW / USER REVIEW PENDING, 2026-11-11.
+- **Problém:** dlouhý 135-card seznam s 9 filtry se nedal dobře skenovat a nevedl rychle k výsledku.
+- **Volba:** jedna otázka, jedno lokální hledání, šest konkrétních rychlých cest a osm sbalených kategorií. Všechny URL zachovány ve statickém HTML; V1 zůstává izolovaně porovnatelné.
+- **Důkaz:** [CATALOG_RETHINK_2026.md](CATALOG_RETHINK_2026.md) a Node + Cloudflare testy v draft PR #65. Žádné browser screenshoty zatím.
+- **Rozhodnutí vlastníka:** před schválením architektury vyžaduje přímé prohlédnutí a následné E2E/390/1440. Nic do produkce bez souhlasu.
