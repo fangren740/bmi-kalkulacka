@@ -15,9 +15,10 @@ export function getCanonical(h){
  if(!m)throw Error('Missing canonical: fail closed');
  return m[1];
 }
-function header(current){
- const links=POC_ROUTES.map(r=>'<a href="'+previewPath(r)+'"'+(r.source===current.source?' aria-current="page"':'')+'>'+escape(r.label)+'</a>').join('');
- const mobile=POC_ROUTES.map(r=>'<a href="'+previewPath(r)+'">'+escape(r.label)+'</a>').join('');
+export function header(current){
+ const routes=[{source:'studio-katalog.html',type:'studio',anchor:'#rv3c-search',label:'Nový katalog V3'},...POC_ROUTES];
+ const links=routes.map(r=>'<a href="'+previewPath(r)+'"'+(r.source===current.source?' aria-current="page"':'')+'>'+escape(r.label)+'</a>').join('');
+ const mobile=routes.map(r=>'<a href="'+previewPath(r)+'">'+escape(r.label)+'</a>').join('');
  return '<header class="rv3e-header"><div class="rv3e-signature" aria-hidden="true"></div>'+
  '<div class="rv3e-shell rv3e-header-row"><a href="/" class="rv3e-logo" aria-label="RychléVýpočty.cz – úvod">'+
  '<img src="/logo-rv-v32.svg" width="220" height="36" alt="RychléVýpočty.cz"></a>'+
@@ -27,7 +28,7 @@ function header(current){
  ' RV3 ENGINE / TESTOVACÍ VERZE <span class="rv3e-preview-text">Původní obsah a skripty zachovány</span>'+
  '<a href="'+escape(current.anchor)+'">Přejít k nástroji ↗</a></div></div></header>';
 }
-function footer(){
+export function footer(){
  return '<footer class="rv3e-footer"><div class="rv3e-shell">'+
  '<div class="rv3e-footer-top"><div><span class="rv3e-eyebrow">R/V · ENGINE PROTOTYPE</span>'+
  '<h2>Jedna identita.<br><em>Různé výpočty.</em></h2>'+
