@@ -45,7 +45,7 @@ export function renderCatalogV2(tools,taxonomy){
    (extra.length?'<details class="rv3d-more-tools"><summary>Všechny ostatní nástroje v této oblasti <span>'+extra.length+'</span></summary>'+
     '<ul class="rv3d-more-list">'+extra.map(url=>renderToolLink(url,group,false)).join('')+'</ul></details>':'')+
    '</div></details>';
- }).join('');
+ });
  const quick=taxonomy.quickRoutes.map((entry,i)=>{
    return '<li><a href="'+esc(entry.url)+'"><span class="rv3d-quick-ordinal">'+String(i+1).padStart(2,'0')+'</span>'+
     '<span class="rv3d-quick-copy"><strong>'+esc(entry.question)+'</strong><small>'+esc(entry.label)+'</small></span>'+
@@ -95,7 +95,8 @@ export function renderCatalogV2(tools,taxonomy){
   '<div class="rv3d-domains-head"><div><span class="rv3d-kicker">NEBO VYBERTE OBLAST</span>'+
   '<h2 id="rv3d-domains-title">Všechno má <em>své místo.</em></h2></div>'+
   '<p>Otevřete jen téma, které právě řešíte. Celý katalog nemusíte procházet.</p></div>'+
-  '<div class="rv3d-domain-grid">'+domainMarkup+'</div>'+
+  '<div class="rv3d-domain-grid"><div class="rv3d-domain-column">'+domainMarkup.slice(0,4).join('')+'</div>'+ 
+   '<div class="rv3d-domain-column">'+domainMarkup.slice(4).join('')+'</div></div>'+
   '<p class="rv3d-count-note">Celkem 135 existujících kalkulaček v 8 přehledných oblastech. Odkazy fungují i bez vyhledávání.</p>'+
   '</div></section>'+
   '<section class="rv3d-method"><div class="rv3d-wrap"><div><strong>Vědět kolik. A také proč.</strong>'+
