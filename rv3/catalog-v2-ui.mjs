@@ -18,6 +18,12 @@ if(input&&panel&&state&&results&&more&&clear&&noResults){
  const categoryNames=new Map(Array.from(document.querySelectorAll('[data-v3-category]')).map(node=>
    [node.dataset.v3Category,node.querySelector('.rv3d-domain-identity strong')?.textContent||'']));
  let matches=[],limit=6;
+ // A generic question is not a failed calculator search; guide the visitor to add intent.
+ const genericWords=new Set(['jak','co','kolik','mi','me','se','si','mam','chci','potrebuji','spocitat','v','ve','z','ze','na','do','a','o','i','je','jsou','bude','by','pro','podle','kalkulacka','vypocet','kdy','aby','ted']);
+ const isGenericQuery=value=>{
+  const words=String(value).normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').toLocaleLowerCase('cs').match(/[a-z0-9]+/g)||[];
+  return words.length>0&&words.every(word=>genericWords.has(word));
+ };
  const create=(tag,className,text)=>{
   const node=document.createElement(tag);
   if(className)node.className=className;
@@ -45,7 +51,13 @@ if(input&&panel&&state&&results&&more&&clear&&noResults){
   more.hidden=matches.length<=limit;
   if(!more.hidden)more.textContent='Zobrazit dalších '+Math.min(6,matches.length-limit)+' výsledků';
   noResults.hidden=matches.length!==0;
-  state.textContent=matches.length?matches.length+' odpovídajících kalkulaček':'Žádná shoda';
+  const generic=matches.length===0&&isGenericQuery(input.value);
+  if(!matches.length){
+   noResults.textContent=generic
+    ?'Upřesněte, co chcete spočítat — například čistou mzdu, hypotéku nebo dovolenou.'
+    :'Pro tento dotaz nemáme shodu. Zkuste třeba „mzda“, „bydlení“ nebo „procenta“.';
+  }
+  state.textContent=matches.length?matches.length+' odpovídajících kalkulaček':generic?'Upřesněte dotaz':'Žádná shoda';
  }
  function update(){
   const value=input.value.trim();
