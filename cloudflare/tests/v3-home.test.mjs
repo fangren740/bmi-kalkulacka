@@ -108,3 +108,35 @@ test('Czech question search resolves meaningful intent to existing, preserved to
     assert.equal(output.children[0]?.href,want,query+' first choice');
   }
 });
+
+
+test('Studio scenario presets and net salary bars use original salary engine',()=>{
+ const window={};runInNewContext(load('rv3/salary-engine.js'),{window});
+ const {elem,es,doc}=fakeDom();
+ for(const id of ['offer-before','offer-after','offer-difference','offer-year','offer-help',
+  'offer-net-before','offer-net-after','offer-bar-before','offer-bar-after',
+  'offer-copy','offer-copy-status'])elem(id);
+ const preset=elem('preset');preset.dataset={offerIncrease:'10000'};
+ doc.querySelectorAll=selector=>selector==='[data-offer-increase]'?[preset]:[];
+ es.get('offer-before').value='42000';es.get('offer-after').value='52000';
+ let copied='';
+ const navigator={clipboard:{writeText:async value=>{copied=value}}};
+ runInNewContext(load('rv3/product-ui.js'),{window,document:doc,navigator});
+ const compact=v=>v.replace(/[\s\u00a0\u202f]/g,'');
+ assert.equal(compact(es.get('offer-net-before').textContent),'33398Kč');
+ assert.equal(compact(es.get('offer-net-after').textContent),'40738Kč');
+ assert.equal(es.get('offer-bar-after').style.width,'100.00%');
+ assert.ok(parseFloat(es.get('offer-bar-before').style.width)>80);
+ assert.equal(preset.attributes['aria-pressed'],'true');
+ es.get('offer-after').value='67000';es.get('offer-after').events.input();
+ assert.equal(preset.attributes['aria-pressed'],'false');
+ preset.events.click();
+ assert.equal(es.get('offer-after').value,'52000');
+ assert.equal(compact(es.get('offer-difference').textContent),'+7340Kč');
+ es.get('offer-copy').events.click();
+ assert.ok(copied.includes('33')&&copied.includes('40'),'copied summary must include both net amounts');
+ es.get('offer-before').value='';es.get('offer-before').events.input();
+ assert.equal(es.get('offer-net-before').textContent,'—');
+ assert.equal(es.get('offer-bar-after').style.width,'0%');
+ assert.equal(es.get('offer-copy').disabled,true);
+});
