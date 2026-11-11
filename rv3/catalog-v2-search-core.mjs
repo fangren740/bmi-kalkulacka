@@ -27,7 +27,10 @@ export function rankTools(entries,query){
  if(phrase.length<2)return [];
  const raw=phrase.split(' ').filter(Boolean);
  const tokens=raw.filter(t=>!ignored.has(t));
- const useful=tokens.length?tokens:raw;
+ // An all-stopword query ("kolik", "jak", "na") has no user intent.
+ // Do not suggest arbitrary tools merely because their descriptions contain it.
+ if(!tokens.length)return [];
+ const useful=tokens;
  const prepared=entries.map((item,index)=>({
   item,index,name:normalizeCzech(item.title),desc:normalizeCzech(item.description||''),
   hay:normalizeCzech(item.search||''),alias:normalizeCzech(item.alias||'')
