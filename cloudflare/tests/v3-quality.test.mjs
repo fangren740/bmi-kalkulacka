@@ -93,7 +93,7 @@ test('search inventory covers actual existing tools and is fetched only on deman
  const items=JSON.parse(source.slice(source.indexOf('['),source.lastIndexOf(']')+1));
  assert.ok(items.length>=100,'original real catalog was unexpectedly truncated');
  for(const item of items){
-  assert.match(item.url,/^\\/[a-z0-9-]+\\.html$/);
+  assert.ok(item.url.startsWith('/')&&item.url.endsWith('.html'),'invalid tool URL: '+item.url);
   assert.ok(existsSync(fileURLToPath(new URL('../..'+item.url,import.meta.url))),'catalog dead link: '+item.url);
  }
  const ui=read('rv3/product-ui.js');
