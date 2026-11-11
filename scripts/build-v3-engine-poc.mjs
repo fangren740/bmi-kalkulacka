@@ -18,7 +18,8 @@ export async function buildPrototype({root,output}){
  const indexSource=await readFile(path.join(root,'rv-tool-index.js'),'utf8');
  const tools=JSON.parse(indexSource.slice(indexSource.indexOf('['),indexSource.lastIndexOf(']')+1));
  for(const tool of tools){
-  if(!/^\\/[a-z0-9-]+\\.html$/.test(tool?.url))throw Error('Unexpected indexed tool route');
+  if(typeof tool?.url!=='string'||!tool.url.startsWith('/')||!tool.url.endsWith('.html')||tool.url.includes('..'))
+   throw Error('Unexpected indexed tool route');
   await stat(path.join(output,tool.url.slice(1))).catch(()=>{
    throw Error('Catalog tool missing from preview: '+tool.url);
   });
