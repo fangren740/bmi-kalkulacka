@@ -40,3 +40,6 @@ Do produkce nepřenášet preview konfiguraci s `noindex`. Nejprve otestovat vš
 - Worker Previews aktivovány v dashboardu; na hlavní větvi Workeru `rv3/cloudflare-preview` se spouští pouze izolovaný preview projekt.
 - Další commit má `[skip ci]`, aby nespustil stávající GitHub Actions. Cloudflare Git build se aktivuje samostatným Git webhookem.
 - Stav skutečného buildu a HTTP odpovědí je potřeba ověřit z Cloudflare Deployments, nikoli odvodit z commitu.
+
+## Spuštění pouze přes cloudové služby
+Na pracovním PC není potřeba instalovat ani spouštět žádný program. Cloudflare Workers Builds přijímá změny přímo přes GitHub. `skip-checks: true` v commit traileru může přeskočit GitHub Actions, aniž by se měnil produkční web. Úspěch Cloudflare je však vždy nutné ověřit samostatně v GitHub status checku a Cloudflare Deployments.
