@@ -2,6 +2,7 @@ import {readFile,writeFile,mkdir,stat} from 'node:fs/promises';
 import path from 'node:path';
 import {POC_ROUTES,renderPrototypePage} from '../rv3/engine/renderer.mjs';
 import {renderStudioCatalog} from '../rv3/engine/catalog.mjs';
+import {renderCatalogV2} from '../rv3/engine/catalog-v2.mjs';
 export async function buildPrototype({root,output}){
  const folder=path.join(output,'rv3','poc');
  await mkdir(folder,{recursive:true});
@@ -27,6 +28,12 @@ export async function buildPrototype({root,output}){
  const studio=renderStudioCatalog(tools);
  await writeFile(path.join(folder,'studio-katalog.html'),studio.html);
  reports.push(studio.report);
+ // Alternative V3 information architecture, independent of previous 135-card Studio proposal.
+ const taxonomy=JSON.parse(await readFile(path.join(root,'rv3/engine/catalog-v2.taxonomy.json'),'utf8'));
+ const v2=renderCatalogV2(tools,taxonomy);
+ await writeFile(path.join(folder,'katalog-v2.html'),v2.html);
+ await stat(path.join(folder,'katalog-v2.html'));
+ reports.push(v2.report);
  await writeFile(path.join(folder,'manifest.json'),
    JSON.stringify({kind:'rv3-static-shell-poc',previewOnly:true,generatedRoutes:reports},null,2)+'\n');
  return reports;
