@@ -13,6 +13,7 @@ test('Studio directory is static-first and includes all 135 validated local dest
  assert.equal(report.groups.length,9);
  assert.equal(report.groups.reduce((sum,g)=>sum+g.count,0),135);
  assert.equal((html.match(/data-tool-card/g)||[]).length,135);
+ assert.ok(Buffer.byteLength(html,'utf8')<125000,'catalog HTML budget exceeded');
  assert.equal((html.match(/class="rv3c-group"/g)||[]).length,9);
  assert.ok(html.includes('id="rv3c-search"'));
  assert.ok(html.includes('role="status" aria-live="polite"'));

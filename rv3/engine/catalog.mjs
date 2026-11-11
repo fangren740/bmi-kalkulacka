@@ -48,7 +48,7 @@ export function renderStudioCatalog(items){
    escape(g.name)+' <small>'+grouped.get(g.id).length+'</small></button>').join('');
  const sections=GROUPS.map(g=>{
   const cards=grouped.get(g.id).map((r,i)=>{
-   const search=[r.title,r.desc,r.type,r.keywords].filter(Boolean).join(' ').slice(0,550);
+   const search=[r.title,r.desc,r.type,r.keywords].filter(Boolean).join(' ').slice(0,320);
    return '<article class="rv3c-card" data-tool-card data-category="'+g.id+
      '" data-search="'+escape(search)+'"><a href="'+r.url+'"><div class="rv3c-card-top">'+
      '<span class="rv3c-card-tag">'+escape(r.type)+'</span><span class="rv3c-card-link" aria-hidden="true">↗</span></div>'+
@@ -75,7 +75,7 @@ export function renderStudioCatalog(items){
   '<p>Nemusíte znát vzorec. Začněte tím, co právě řešíte. V katalogu jsou skutečné kalkulačky, nikoli sliby budoucích funkcí.</p>'+
   '<a href="#rv3c-directory" class="rv3c-jump">Prozkoumat nástroje <b aria-hidden="true">↘</b></a></div>'+
   '<div class="rv3c-hero-aside" aria-label="Informace o katalogu"><span>R/V · NÁSTROJE</span>'+
-  '<div class="rv3c-metric">135<small>funkčních cest</small></div>'+
+  '<div class="rv3c-metric">135<small>ověřených odkazů</small></div>'+
   '<div class="rv3c-seal"><span>9 tematických oblastí</span><span>Výsledek ve vašem prohlížeči</span></div>'+
   '<p>Každý odkaz vede na existující stránku. Rozhraní katalogu vzniká při sestavení, filtrování probíhá lokálně.</p></div></div></section>'+
   '<section class="rv3c-search-section" id="rv3c-directory"><div class="rv3e-shell">'+

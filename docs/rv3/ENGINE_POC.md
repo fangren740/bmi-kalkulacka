@@ -25,3 +25,8 @@ Měřené PageSpeed ani browser PASS nejsou zatím doložené. Bez schválení u
 
 ## Important correction — in-page fragment navigation
 The first PoC inserted a global `<base href="/">`. Because the pages live under `/rv3/poc/`, this would send `#kalkulacka` or `#catalog-search` to the website root instead of the current page. **Fixed in the next build:** no `<base>` is used; every opt-in source must already use root-absolute or scheme URLs for assets/navigation. Unknown relative URLs make the generator fail rather than creating silently broken links. Automated tests validate every fragment target.
+
+## 2026-11-11 — první plně generovaná katalogová stránka
+Nově `/rv3/poc/studio-katalog.html`: **135 skutečně existujících URL** přehledně v 9 tematických skupinách. Kompletní odkazy jsou staticky v HTML (fungují i bez JS), klientský JavaScript (~2 kB) jen lokálně filtruje kategorie a české dotazy; nezaznamenává vyhledávání ani neposílá dotazy na server. Originální V3 grafika, responsive 390/1440 orientovaná CSS a klávesové hledání Ctrl/⌘+K.
+
+Build generuje strukturu z `rv-tool-index.js`; každou cestu před sestavením ověřuje, detekuje duplicity a nebezpečný HTML vstup escapuje. Dočasné rozdělení kategorií závisí na známém pořadí indexu a je chráněno sentinel testy. Index změněný bez revize způsobí hard-fail, ne tiché pomíchání kategorií. **Katalog je vizuální PoC, ne schválená produkční migrace**. Výkon: HTML ~121,5 kB v UTF-8 před HTTP kompresí, CSS ~8,7 kB a JS ~2 kB. Není to Lighthouse/CrUX hodnota.
