@@ -56,7 +56,7 @@ function initSearch(){
  const input=byId('tool-search'),out=byId('tool-results');if(!input||!out)return;
  function render(){
   const q=normal(input.value);out.replaceChildren();
-  if(q.length<2){out.hidden=true;return}
+  if(q.length<2){out.hidden=true;input.setAttribute('aria-expanded','false');return}
   let terms=q.split(/[^a-z0-9]+/).filter(Boolean).filter(t=>!STOPWORDS.has(t));
   if(!terms.length)terms=q.split(/[^a-z0-9]+/).filter(Boolean);
   const tools=discoveredTools
@@ -83,6 +83,7 @@ function initSearch(){
    const icon=document.createElement('span');icon.textContent='↗';icon.setAttribute('aria-hidden','true');a.append(text,icon);out.append(a);
   }
   out.hidden=false;
+  input.setAttribute('aria-expanded','true');
  }
  let requested=false;
  function requestIndex(){
@@ -98,10 +99,27 @@ function initSearch(){
  input.addEventListener('focus',requestIndex);
  input.addEventListener('input',()=>{render();requestIndex()});
  input.addEventListener('keydown',e=>{
-  if(e.key==='Escape')out.hidden=true;
+  if(e.key==='Escape'){out.hidden=true;input.setAttribute('aria-expanded','false');}
   if(e.key==='Enter'){
    const a=out.querySelector('a[href]');if(a){e.preventDefault();a.click()}
   }
+ });
+ input.addEventListener('keydown',e=>{
+   if(e.key==='ArrowDown'&&!out.hidden){
+     const first=out.querySelector('a[href]');if(first){e.preventDefault();first.focus()}
+   }
+ });
+ out.addEventListener('keydown',e=>{
+   if(e.key==='Escape'){
+     e.preventDefault();out.hidden=true;input.setAttribute('aria-expanded','false');input.focus();return;
+   }
+   if(e.key==='ArrowDown'||e.key==='ArrowUp'){
+     const links=Array.from(out.querySelectorAll('a[href]'));
+     const index=links.indexOf(document.activeElement);
+     if(e.key==='ArrowUp'&&index<=0){e.preventDefault();input.focus();return}
+     const next=links[index+(e.key==='ArrowDown'?1:-1)];
+     if(next){e.preventDefault();next.focus()}
+   }
  });
  document.querySelectorAll('[data-search]').forEach(b=>b.addEventListener('click',()=>{input.value=b.dataset.search;render();input.focus()}));
  document.addEventListener('click',e=>{if(!input.contains(e.target)&&!out.contains(e.target)&&!e.target.closest('[data-search]'))out.hidden=true});
