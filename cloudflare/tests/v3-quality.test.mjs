@@ -130,3 +130,11 @@ test('2026 salary educational section retains source depth and honest traceabili
  assert.ok((h.match(/<details><summary>/g)||[]).length>=5);
  assert.ok(Buffer.byteLength(read('rv3/salary-guide.css'),'utf8')<4000);
 });
+
+test('shared footer back-to-top link returns to page top, not main content',()=>{
+ for(const [path] of pages){
+  const html=read(path);
+  assert.ok(html.includes('<body id="top">'),path+' needs top anchor');
+  assert.ok(html.includes('class="rv3-footer-top" href="#top"'),path+' back to top destination');
+ }
+});
