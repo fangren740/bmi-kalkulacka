@@ -1,29 +1,27 @@
-# RychléVýpočty V3 — pilot (10. 11. 2026)
-Status: **izolovaná vývojová větev; není schváleno pro merge/deploy**.
+# RychléVýpočty V3 — CLEAN SLATE pilot
+Status: **nový návrh, bez schválení a bez produkčního nasazení** (11. 11. 2026)
 
-## Ověřený základ
-- Výchozí produkční `main`: `2041e3eaefe15ac066ba1bf3b0bcd57d34125fb7`.
-- Tři existující URL se mění pouze v této větvi: `index.html`, `mzdy-a-prace.html`, `cista-mzda-kalkulacka.html`.
-- Ostatní kalkulačky, zvlášť `kalkulacka-priplatku-za-smeny.html`, jsou read-only.
-- Původní salary engine: `cista-mzda-vnext.js` z ověřeného `main`; výpočetní funkce a konfigurace v `rv3/salary-engine.js` jsou převzaty beze změny vzorců. Původní soubor zůstává.
-- Nedotýkáme se DNS, sitemap.xml, robots.txt, Analytics/Consent ani dalších HTML.
-- Pozor na otevřený samostatný PR pro čistou mzdu (#74); bez nekontrolovaného přebírání neintegrovaných změn.
+## Proč znovu od základu
+Dosavadní `rv3/pilot` měl dvě designové iterace, ale zachoval stejné chování: marketingový hero, kalkulačka mzdy, mřížka generických kategorií. To nebyl radikální produktový restart. Nová větev `rv3/clean-slate` byla vytvořena izolovaně od předchozího pilotu **kvůli zachování cloudové preview infrastruktury a původního numerického jádra**, ale **všechny tři HTML stránky, jejich UI JS a CSS jsou napsány nově bez starých layout komponent**. Staré `rv3/site.css`, `rv3/site.js` a `rv3/salary-ui.js` jsou odstraněny pouze na této vývojové větvi.
 
-## Architektura / strategie
-- Statické HTML + lokální CSS systém `rv3/site.css` + malý JS; Cloudflare Worker preview. V3 zachovává původní logo `logo-rv-v32.svg`, paletu navy/modrá/zelená a favicon, ale zavádí vlastní interaktivní rozhodovací plochu místo generické hero šablony.
-- `rv3/salary-engine.js` je čistý numerický výpočet bez DOM; `rv3/salary-ui.js` jen mapování formuláře, validace a renderování. Homepage používá stejné jádro.
-- Mobile-first, minimální závislosti, běží na GitHub Pages. Bez build frameworku, externích fontů či povinných cookies pro výpočet.
-- Původní URL a self-canonical pro mzdy/práci a čistou mzdu zůstávají. V produkčním kandidátovi je index,follow; **review dokument má noindex,nofollow a je oddělený**.
-- Navigace po pracovních situacích; katalog a nepilotní stránky nadále odkazují na funkční současný web.
-- Výsledek před detailní metodikou; pokročilá nastavení volitelná, s invalid-state guardem a čitelným rozpisem.
+## Co víme ze zdroje pravdy
+- Převzatá schválená evidence z `fangren740/rychlenastroje:quality/e-accurate-tool-discovery/RV3_HANDOFF_2026-11-10.md`: 65/75 GSC kliknutí příplatková kalkulačka za období 1. 8.–7. 11. 2026. Mzdy/práce mají prokazatelný organický tah.
+- Ochrana všech existujících `.html` adres, canonical, logo, původních nástrojů, zejména příplatků; žádné hromadné slučování ani přepis 199 URL.
+- Výpočetní jádro `rv3/salary-engine.js` beze změny algoritmu ze `cista-mzda-vnext.js` produkčního main; numerické referenční scénáře chráněny testy.
 
-## QA bez GitHub Actions
-- Zlaté numerické scénáře: `rv3/tests/salary-regression.test.js`. Spuštění nezávisle na Actions příkazem `node rv3/tests/salary-regression.test.js`; uživatel nic neinstaluje.
-- Náhledy nyní zajišťují Cloudflare Workers Static Assets s automatickými PR preview na 390 / 1440 px; samostatný zastaralý HTML reviewer byl odstraněn.
-- Browser E2E/Lighthouse/a11y a finální zákonné přehodnocení sazeb před merge jsou **povinné otevřené kroky**, nikoli implicitní PASS při vytvoření HTML.
-- Stávající produkční funkčnost směn chránit numerickými regresními testy před případnou budoucí migrací.
+## Nová informační architektura
+1. **Homepage = otázka → vhodný nástroj.** Vyhledávání konkrétní potřeby; srozumitelný přepínač výplata/práce/bydlení/finance; ukázka reálného rozhodování formou porovnání dvou nabídek práce (rozdíl čisté mzdy měsíčně a za 12 měsíců), nikoli další kopie čisté mzdy.
+2. **Mzdy a práce = situace → správný výpočet.** Výplata / směny / volno / změna zaměstnání, relevantní odkazy, prominentní a nijak nezměněné příplatky.
+3. **Čistá mzda = nástroj → výsledek → vysvětlení.** Jen tři základní vstupy (hrubá mzda, děti, prohlášení), okamžitě velká čistá mzda s rozpisem. Bonusy/slevy/výjimky volitelné. Výpočtové jádro a UI izolované.
 
-## Schvalování
-1. Otevřít živé Cloudflare preview `https://rv3-pilot-rychlevypocty-v3-preview.maattinek.workers.dev/`, projít 390/1440 px a reálné mzdové scénáře.
-2. Opravit uživatelské připomínky v `rv3/pilot`.
-3. Teprve po samostatném schválení + browser QA zvážit merge tří URL. Žádné plošné změny dalších cca 196 URL.
+## Vizuální koncept
+- Originální `logo-rv-v32.svg`, navy `#071a33`, modrá `#2397e3`, zelená `#52d657` a původní favicony.
+- Redakční čitelnost, typografická hierarchie, kreslený „numerický panel“ s daty a lehký otázkový rozcestník. Žádný marketplace karet, stejné plakátové komponenty jako RychléNástroje ani všeobecné stock ilustrace.
+- Sdílený lokální stylesheet `rv3/foundation.css`, malý JS `rv3/product-ui.js`, bez externích fontů, bez frameworku nebo serverového sběru mzdových dat.
+- Mobile-first breakpointy 460/760/1010; responzivní zobrazení není zatím náhrada vizuálního browser testu.
+
+## Integrovaná QA, co se nesmí zaměnit
+- Cloudflare Worker preview přes stejnou izolovanou Git integraci, `html_handling: "none"`, `X-Robots-Tag: noindex`, žádná vlastní doména, žádný GitHub Actions build.
+- `cloudflare/tests/v3-home.test.mjs`: zachované canonical/brand, funkční porovnání nabídek i invalid stav, scénáře salary form.
+- `rv3/tests/salary-regression.test.js`: referenční hodnoty 2026. Build PASS = pouze build/test PASS; samostatně ověřit 390/1440 browser UX, dostupnost konkrétních kritických URL, skutečné HTTP hlavičky a přístupnost. Teprve potom produktové schválení.
+- **Neprovádět merge, DNS ani prod deploy bez výslovného schválení.**
