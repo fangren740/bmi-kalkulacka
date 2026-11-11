@@ -25,7 +25,7 @@ export function renderCatalogV2(tools,taxonomy){
  if(taxonomy.quickRoutes?.length!==6)throw Error('Six editorial quick paths required');
  for(const route of taxonomy.quickRoutes)if(!byPath.has(route.url))throw Error('Quick route not in verified catalog: '+route.url);
  const renderToolLink=(url,group,lead)=>{
-  const t=byPath.get(url),search=[t.title,t.type,t.desc,t.keywords,taxonomy.aliases?.[url]||''].filter(Boolean).join(' ').slice(0,480);
+  const t=byPath.get(url),search=[t.title,taxonomy.aliases?.[url]||'',group.title,t.type,t.desc,t.keywords].filter(Boolean).join(' ').slice(0,260);
   return '<li><a class="rv3d-tool-link '+(lead?'rv3d-tool-featured':'rv3d-tool-compact')+
    '" href="'+esc(url)+'" data-v3-tool data-category="'+esc(group.id)+'" data-title="'+esc(t.title)+'"'+
    ' data-description="'+esc(t.desc||'')+'" data-search="'+esc(search)+'">'+
