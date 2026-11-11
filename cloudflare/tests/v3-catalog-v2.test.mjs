@@ -69,6 +69,13 @@ test('Czech search prefers relevant tools, supports diacritics and normal questi
    const found=rankTools(index,query).slice(0,5).map(x=>x.href);
    assert.ok(found.includes(target),query+' did not suggest expected '+target+'; got '+found.join(', '));
  }
+ for(const [q,expected] of [
+  ['čistá mzda','/cista-mzda-kalkulacka.html'],
+  ['hypotéka','/hypotecni-kalkulacka.html'],
+  ['dovolená','/kalkulacka-dovolene.html']
+ ]){
+  assert.equal(rankTools(index,q)[0]?.href,expected,'the direct calculator should be #1 for '+q);
+ }
  assert.deepEqual(rankTools(index,'xyzqplmzzx'),[]);
  assert.deepEqual(rankTools(index,'a'),[]);
 });
