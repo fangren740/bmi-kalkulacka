@@ -68,11 +68,12 @@ test('fast static asset budget, preview SEO isolation, no remote fonts or depend
  assert.ok(css.includes('.rv3-site-footer')&&css.includes('.shift-timebar'));
  assert.ok(!css.includes('.disc-disc'),'retired meaningless decorative disc survived CSS reduction');
  for(const [p] of pages){
-   const h=read(p);
-   assert.ok(!/<script\\b[^>]*\\bsrc="https?:\\/\\//.test(h),p+' loads remote JS');
-   for(const tag of h.match(/<link\\b[^>]*>/g)||[]){
-     if(/rel="stylesheet"/.test(tag))assert.ok(!/href="https?:\\/\\//.test(tag),p+' loads remote CSS');
-   }
+  const h=read(p);
+  const scriptTags=h.split('<script').slice(1).map(tag=>tag.split('>')[0]);
+  const styleTags=h.split('<link').slice(1).map(tag=>tag.split('>')[0]).filter(tag=>tag.includes('rel="stylesheet"'));
+  for(const tag of [...scriptTags,...styleTags]){
+    assert.ok(!tag.includes('src="http')&&!tag.includes('href="http'),p+' loads external runtime resource');
+  }
  }
  const worker=read('cloudflare/preview-worker.mjs');
  assert.ok(worker.includes("h.set('X-Robots-Tag','noindex, nofollow, noarchive')"),'preview noindex missing');
