@@ -35,3 +35,10 @@ Zapisovat pouze to, co bylo **skutečně provedeno / ověřeno**. Věta o pláno
 - **Cloudflare:** build pro produktový commit `da5b0dd6277e5f7bd15bf5f734ec0101fafa7ee3` = **SUCCESS**. [Build detail](https://dash.cloudflare.com/69c821d02b55b2645d0f1059623d1dde/workers/services/view/rychlevypocty-v3-preview/production/previews/rv3-engine-poc/builds/3a90f60d-825e-4e21-b147-b7ee06bd0a31).
 - **Není ověřeno:** skutečný browser 390/1440, runtime výpočtů hypotéky/DPP, PageSpeed/Lighthouse, veřejné HTTP noindex. Nepřevádět na produkci bez skutečných testů a schválení.
 - **Následuje:** browser QA a odstranění legacy shim, potom migrační strategie #62 pro skutečnou root stránku `kalkulacky.html`. Source-of-truth zůstává issue #59, #61, #62 a tento HANDOFF; vždy před prací ověřit nejnovější branch HEAD.
+
+## 2026-11-11 — katalog přepracovaný OD ZÁKLADŮ po uživatelské kritice
+- **Uživatel zamítl Studio V1:** 135 karet a 9 filtrů působilo nepřehledně, nechtěl kosmetický redesign.
+- **Výzkum:** NN/g information scent, Baymard navigace/hledání, Omni Calculator, české Peníze.cz, Netguru 2026; [zdůvodnění](CATALOG_RETHINK_2026.md).
+- **Implementace:** samostatná V2 alternativa `/rv3/poc/katalog-v2.html` v [draft PR #65](https://github.com/fangren740/bmi-kalkulacka/pull/65): první screen jedna otázka + lokální hledání + šest přímých scénářů, následně 8 sbalených oblastí a maximálně pět doporučených nástrojů po rozbalení. V1 ponechán pro porovnání.
+- **Build:** `4d3b8d02` Cloudflare SUCCESS, numerické kalkulační moduly a public `main` nezměněny. Source link integrity 135/135 a vyhledávací relevance testovány; PDF / browser / PageSpeed nezávislé testy NEDOLOŽENY.
+- **Další krok:** porovnat V1/V2 na 390 a 1440 px, reálná uživatelská cesta k výpočtům, ověřit odkaz na branch preview, opravit chyby a předložit uživateli k rozhodnutí B. Žádné produkční nasazení.

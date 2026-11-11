@@ -27,3 +27,6 @@
 
 **Krátký startovací prompt pro další chat:**
 > Pokračuj RychléVýpočty V3 podle issue #59 a souboru RV3_START_HERE.md v repo fangren740/bmi-kalkulacka, branch rv3/clean-slate. Ověř aktuální HEAD, PR #58, CONTROL_CENTER a HANDOFF; vyber další realizační krok a pracuj v bezpečném preview. Nesahej na produkci; po dokončení aktualizuj GitHub předávací dokumenty a dej mi stručný výstup s náhledem.
+
+## Aktualita: katalog V2 po uživatelské kritice (11. 11. 2026)
+Před dalším vývojem katalogu otevři [CATALOG_RETHINK_2026.md](docs/rv3/CATALOG_RETHINK_2026.md). **Původní Studio V1 zamítnuté**: 135 karet/9 filtrů bylo nepřehledných. Nový `/rv3/poc/katalog-v2.html` (draft PR #65) je rozhodovací rozcestník se 6 přímými cestami a 8 rozbalovacími oblastmi; Cloudflare build prošel, ale chybí uživatelské vizuální schválení a nezávislý browser QA. Nevracet se k 135-card řešení bez jasného důkazu. `main` nedotčeno.

@@ -52,3 +52,6 @@ Build-time V3 engine P1 se vyvíjí na `rv3/engine-poc` (PR #65 proti `rv3/clean
 
 ### 2026-11-11 — P2 katalogový PoC navazuje na engine
 **PILOT PREVIEW BUILT**: [draft PR #65](https://github.com/fangren740/bmi-kalkulacka/pull/65) vytváří samostatnou generovanou `/rv3/poc/studio-katalog.html` s 135 odkazy v 9 skupinách. Cloudflare pro `da5b0dd` PASS, ale skutečné browser/390/1440/Lighthouse/HTTP **NEOVĚŘENO**. Původní `kalkulacky.html` zůstává beze změny. Následuje #61 integrace a #62 přechod reálného katalogu až po schválení.
+
+### 2026-11-11 — katalog V1 zamítnut, V2 od základů v draft PR #65
+Po kritice 135 karet/9 filtrů byl zvolen **nový rozhodovací koncept**, ne grafický retuš. [Celý design brief](CATALOG_RETHINK_2026.md). V2 build = Cloudflare SUCCESS `4d3b8d02`, vygenerováno 135/135 odkazů, 6 přímo dostupných situací, 8 sbalených oblastí, české vyhledávání. **USER APPROVAL A/B A BROWSER QA PENDING.** Nová preview adresa `https://rv3-engine-poc-rychlevypocty-v3-preview.maattinek.workers.dev/rv3/poc/katalog-v2.html`; původní V1 `https://rv3-engine-poc-rychlevypocty-v3-preview.maattinek.workers.dev/rv3/poc/studio-katalog.html`; netýká se `main`.
