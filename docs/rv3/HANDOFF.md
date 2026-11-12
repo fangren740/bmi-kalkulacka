@@ -1,3 +1,5 @@
+> **NOVÝ DŮLEŽITÝ HANDOFF 12. 11. 2026:** [MASTERPLAN po jedné stránce](PAGE_BY_PAGE_MASTERPLAN_2026-11-12.md), [207 URL tracker](PAGE_TRACKER_2026-11-12.json) a [page-studio briefs](pages/index.md) jsou závazné. Nespouštět hromadné přebarvování; priorita homepage jako unikátní produkt, o projektu, metodika, katalog/huby, jednotlivé kalkulačky. PR #67 na `rv3/sitewide-wave1-20261112` obsahuje bezpečné W1 hub experimenty a první **homepage preview iteraci** v `/rv3/wave1/index.html`; build HEAD ověřit. Produkce bez změny. Dev rounds naplánované 17/18/19 CET a jeden report 20 CET; zapisovat skutečné změny do trackeru, ne tvrdit, že mezi zprávami probíhala práce bez automatizace.
+
 # RV3 HANDOFF — předání mezi chaty
 
 **Aktivní projekt:** RychléVýpočty V3. **Ověřeno při založení:** 11. 11. 2026. Tento soubor se aktualizuje na konci každého dokončeného pracovního roundu.
