@@ -66,7 +66,7 @@ export function renderCatalogV2(tools,taxonomy){
    '</div></details>';
  });
  const quick=taxonomy.quickRoutes.map((entry,i)=>{
-   return '<li><a href="'+esc(entry.url)+'"><span class="rv3d-quick-icon">'+glyph(quickGlyph[i])+'</span><span class="rv3d-quick-ordinal">'+String(i+1).padStart(2,'0')+'</span>'+
+   return '<li><a href="'+esc(entry.url)+'"><span class="rv3d-quick-ordinal">'+String(i+1).padStart(2,'0')+'</span><span class="rv3d-quick-icon">'+glyph(quickGlyph[i])+'</span>'+
     '<span class="rv3d-quick-copy"><strong>'+esc(entry.question)+'</strong><small>'+esc(entry.label)+'</small></span>'+
     '<span class="rv3d-quick-arrow" aria-hidden="true">↗</span></a></li>';
  }).join('');
