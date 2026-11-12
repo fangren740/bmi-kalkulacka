@@ -1,3 +1,5 @@
+> **NOVĚ NAHRAZENO 12. 11. 2026:** závazný plán je [PAGE_BY_PAGE_MASTERPLAN_2026-11-12.md](PAGE_BY_PAGE_MASTERPLAN_2026-11-12.md). Původní text níže zachován jako historická verze; jeho pravidla o hromadných migračních dávkách již NEPLATÍ. Každá URL dostane individuální brief, design a QA. Homepage + trust stránky patří mezi první priority.
+
 # RV3 — sitewide execution plan / jediný realizační směr
 **12. 11. 2026 · stav: zahájena realizace v izolované větvi `rv3/sitewide-wave1-20261112`**
 
