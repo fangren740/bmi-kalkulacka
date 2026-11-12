@@ -65,6 +65,8 @@ if(input&&panel&&state&&results&&more&&clear&&noResults){
   input.value='';matches=[];close();input.focus();
  }
  input.addEventListener('input',update);
+ const submit=document.getElementById('rv3d-search-submit');
+ if(submit)submit.addEventListener('click',()=>{input.focus();update();if(matches.length===1)results.querySelector('a')?.focus()});
  more.addEventListener('click',()=>{limit+=6;paint()});
  clear.addEventListener('click',reset);
  document.querySelectorAll('[data-v3-query]').forEach(button=>{
