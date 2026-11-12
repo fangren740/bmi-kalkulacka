@@ -32,3 +32,12 @@
 - Nová důkazová analýza [ARCHETYPES_60.md](ARCHETYPES_60.md), commit `4d7406f`: 5 rozdílných architektur, migrační stop conditions a 5/40 doložených nekatalogových URL. Zbývajících 35 je stále UNKNOWN, neoznačovat hotovo.
 - Draft [PR #65](https://github.com/fangren740/bmi-kalkulacka/pull/65) existuje souběžně s #58 a má vlastní engine PoC. Nedělat konkurenční implementaci. Cloudflare build uváděný v PR ≠ browser PASS.
 - Následující krok: dokončit klasifikaci 35 a testovat PR #65 v browseru; žádný merge do main.
+
+## 12. 11. 2026 — celý web V3, nová realizační vlna
+- Uživatel schválil **vizuální směr katalogu** a požaduje důslednou přestavbu všech 207 HTML podle něj, nikoli mechanickou kopii 135 karet. Žádná autorizace produkčního merge.
+- **Jediný aktuální plán:** [SITEWIDE_EXECUTION_PLAN_2026-11-12.md](SITEWIDE_EXECUTION_PLAN_2026-11-12.md). Mapa W0–W7, rizika, G1/G2/G3 QA, produkční lock.
+- **Základ reference:** [PR #66](https://github.com/fangren740/bmi-kalkulacka/pull/66), branch `rv3/integration-qa-20261112`, katalog s 135 odkazy a původním logem.
+- **Rozpracovaná W1:** [draft PR #67](https://github.com/fangren740/bmi-kalkulacka/pull/67), branch `rv3/sitewide-wave1-20261112` — shared foundation, adapters a první dvě verze v `/rv3/wave1/finance-a-hypoteky.html`, `/rv3/wave1/osvc-a-freelancing.html`.
+- Zachovávané `<main>`, skripty, canonical/title. Skrytý legacy header/footer = **pouze kompatibilitní PoC**, nikoliv produkční řešení.
+- První W1 testovací HEAD `6534c5b` Cloudflare **FAIL** (testový regex), opraveno v `b8194a3` s build **SUCCESS**. Browser screenshot 390/1440, live HTTP a PageSpeed **NEOVĚŘENO**.
+- **Pokračování:** potvrdit Cloudflare deploy přesného HEAD PR #67, prohlédnout obě preview a zrevidovat kompatibilitu hidden shell, poté rozšířit na cílové šablony a browser QA. Produkce `main` při zahájení stále `2041e3ea`.
