@@ -41,3 +41,8 @@ Samostatná preview URL **`/rv3/wave1/index.html`**. První bezpečný build pre
 - [ ] Skutečné browser screenshoty a Lighthouse
 - [ ] Vizuální a věcné schválení vlastníkem
 - [ ] Produkční release s výslovným souhlasem
+
+## 12. 11. 2026 18:00 — druhé zdrojové kolo: ověřený UX rozpor
+- Živý zdroj `/index.html` obsahuje `span.search-keystroke` s textem **HLEDAT ↗** uvnitř vyhledávacího pole, nikoliv skutečné tlačítko. Jde o vizuální affordanci, která může uživateli slibovat klikací akci, ale element není focusovatelný ani aktivovatelný. **SOURCE REVIEW PASS**, nikoliv browser FAIL: reálné chování vyhledávání v prohlížeči zatím nebylo ověřeno.
+- V samostatném homepage návrhu změnit affordanci na pravdivý popisek nebo skutečný `<button type="button">` s ověřenou funkcí, klávesnicí a chybovými stavy. Bez změny source root či výpočtového JS. Neprovádět naslepo, protože `product-ui.js` řídí dynamické výsledky a musí být prověřen celý focus flow.
+- Důkaz: GitHub `index.html` na větvi `rv3/sitewide-wave1-20261112`, současné `rv3/product-ui.js` a homepage brief. Cloudflare build, viewporty 390/1440, Lighthouse a číselná E2E **NEOVĚŘENO**; poslední HEAD před tímto kolem `e8bd97d`. Tento blok je věcný audit a evidence, **nikoliv vydávaný za hotovou implementaci**.
