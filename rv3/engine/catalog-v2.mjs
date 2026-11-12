@@ -55,7 +55,7 @@ export function renderCatalogV2(tools,taxonomy){
  const domainMarkup=taxonomy.groups.map((group,i)=>{
   const chosen=new Set(group.featured),extra=group.routes.filter(url=>!chosen.has(url));
   return '<details class="rv3d-domain" data-v3-category="'+esc(group.id)+'">'+
-   '<summary><span class="rv3d-domain-illustration">'+glyph(iconPath[group.id]||iconPath.rychle)+'</span>'+
+   '<summary><span class="rv3d-domain-illustration"><img class="rv3d-category-art" src="/rv3/assets/category-'+esc(group.id)+'.svg" width="118" height="94" alt="" loading="lazy" decoding="async"></span>'+
    '<span class="rv3d-domain-identity"><strong>'+esc(group.title)+'</strong><small>'+esc(group.intro)+'</small></span>'+
    '<span class="rv3d-domain-count">'+group.routes.length+' nástrojů</span>'+
    '<span class="rv3d-domain-toggle" aria-hidden="true">+</span></summary>'+
@@ -88,6 +88,7 @@ export function renderCatalogV2(tools,taxonomy){
   '<span class="rv3d-kicker"><span class="rv3d-kicker-line" aria-hidden="true"></span> PRŮVODCE VÝPOČTY</span>'+
   '<h1>Co dnes potřebujete <em>spočítat?</em></h1>'+
   '<p class="rv3d-hero-description">Řekněte nám, co řešíte. Nabídneme odpovídající kalkulačku — bez procházení dlouhých seznamů.</p>'+
+  '<div class="rv3d-hero-art" aria-hidden="true"><img src="/rv3/assets/hero-desk.svg" width="560" height="420" alt="" decoding="async"></div>'+
   '<div class="rv3d-find"><label for="rv3d-search">Hledat kalkulačku nebo otázku</label>'+
   '<div class="rv3d-find-input"><span class="rv3d-find-icon" aria-hidden="true">⌕</span>'+
   '<input id="rv3d-search" type="search" autocomplete="off" spellcheck="false" placeholder="Co potřebujete spočítat?" '+
