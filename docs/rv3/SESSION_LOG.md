@@ -46,3 +46,8 @@ Zapisovat pouze to, co bylo **skutečně provedeno / ověřeno**. Věta o pláno
 - Commit `538fd67`: evidence v 207-route trackeru. Source title a canonical přečteny, nikoli ověřeny GSC.
 - **PASS:** GitHub API write/read zdrojů a úspěšné commity; statická inspekce homepage source/adapter/test. **NEOVĚŘENO:** skutečný Cloudflare build přesného HEAD, Node testy, live preview URL, 390/1440 browser/keyboard test, Lighthouse/PSI, číselné regrese, GSC. Tyto kroky nesmějí být vykázány jako PASS jen z existence test souboru.
 - **Next:** spustit skutečný build a 390/1440 browser test, opravit zjištěné vady; teprve po tom pokračovat na `/o-nas.html`. Schválení a release nejsou autorizovány.
+
+## 2026-11-12 18:00 CET — homepage source UX audit
+- Live read: main/index.html, PR #66/#67, masterplan, 207-route tracker, branch homepage source, product-ui.js, homepage brief, prior log. Previous PR #67 HEAD `e8bd97d`; no code implementation repeated.
+- Identified search affordance defect candidate: visible `HLEDAT ↗` is a non-interactive span, not a button. Source inspection PASS; actual browser impact NOT VERIFIED. Added precise remediation contract to homepage brief and tracker. No calculator code, SEO, logo, main, DNS or production changed.
+- Cloudflare build for this documentation-only HEAD, 390/1440 browser QA, Lighthouse, numerics: NOT VERIFIED. Next round: inspect search JS and implement preview-only accessible interaction with automated checks; verify actual Cloudflare build before claiming PASS.
