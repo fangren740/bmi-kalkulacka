@@ -34,6 +34,8 @@ test('Homepage stays user-friendly without additional heavy libraries or hidden 
  assert.ok(css.includes('.rv3w-home .rv3-footer-brand>a{background:transparent'));
  assert.ok(css.includes('max-width:580px'));
  assert.ok(css.includes('prefers-reduced-motion'));
+ assert.ok(css.includes('.rv3w-home .hero-search .search-keystroke{display:none}'),'Preview must not display a fake search CTA');
+ assert.match(source,/<span class="search-keystroke">HLEDAT ↗<\/span>/,'Root source affordance remains unchanged');
  assert.ok(!css.includes('@import'));
  assert.ok(!css.includes('url("http'));
  const builder=read('scripts/build-v3-engine-poc.mjs');
