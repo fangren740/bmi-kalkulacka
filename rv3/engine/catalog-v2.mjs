@@ -77,6 +77,7 @@ export function renderCatalogV2(tools,taxonomy){
   '<title>Katalog kalkulaček V3 | Najděte správný výpočet – RychléVýpočty.cz [NÁHLED]</title>'+
   '<meta name="description" content="Najděte správnou kalkulačku podle své situace. Přehledný rozcestník, šest rychlých cest a všech 135 nástrojů po oblastech.">'+
   '<link rel="stylesheet" href="/rv3/catalog-v2.css">'+
+  '<link rel="stylesheet" href="/rv3/catalog-v3-theme.css">'+
   '<script type="module" src="/rv3/catalog-v2-ui.mjs"></script>'+
   '</head><body class="rv3d-page">'+
   '<a class="rv3d-skip" href="#main">Přeskočit na obsah</a>'+
