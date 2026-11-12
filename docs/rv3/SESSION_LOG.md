@@ -23,3 +23,11 @@ Zapisovat pouze to, co bylo **skutečně provedeno / ověřeno**. Věta o pláno
 - Commit `4d7406f`: přidán `docs/rv3/ARCHETYPES_60.md`; doloženo 5 archetypů a 5 z 40 unclassified; zbývajících 35 UNKNOWN. Žádná numerika/produkce změněna.
 - Testy: statická inspekce HTML/skriptů; browser 390/1440, GSC, live HTTP noindex a Cloudflare build tohoto dokumentačního SHA **neověřeny**.
 - Next: 35 URL klasifikace + PR #65 browser QA; schválení architektury A teprve poté.
+
+## 2026-11-12 15:xx CET — sitewide W1 zahájena
+- Zadání: přestavět celý portál podle prémiové ilustrované V3; žádný merge ani změna produkce.
+- Auditované podklady: aktuální `main 2041e3e`, PR #66, `route-registry.json` (207/135/72, 35 UNKNOWN), #59–#63, P1 renderer.
+- Dokumentovaný design+rollout plán `docs/rv3/SITEWIDE_EXECUTION_PLAN_2026-11-12.md`.
+- Draft PR #67: dvě opt-in hub URL, sdílený scoped foundation + hub skin, adapter přes existing P1 helpers. Originální SVG logo se nemění, skripty a main jsou nedotčené.
+- Cloudflare first failing attempt `6534c5b` / test regex, subsequent `b8194a3` build SUCCESS.
+- Nelze tvrdit browser PASS či Lighthouse. Next: reálné preview deploy HEAD a browser QA; bez nasazení produkce.
