@@ -1,5 +1,5 @@
 /* Progressive enhancement of an otherwise browseable HTML directory. No network calls. */
-import {normalizeCzech,rankTools} from './catalog-v2-search-core.mjs';
+import {isGenericQuery,rankTools} from './catalog-v2-search-core.mjs';
 const input=document.getElementById('rv3d-search');
 const panel=document.getElementById('rv3d-search-results');
 const state=document.getElementById('rv3d-search-state');
@@ -19,11 +19,6 @@ if(input&&panel&&state&&results&&more&&clear&&noResults){
    [node.dataset.v3Category,node.querySelector('.rv3d-domain-identity strong')?.textContent||'']));
  let matches=[],limit=6;
  // A generic question is not a failed calculator search; guide the visitor to add intent.
- const genericWords=new Set(['jak','co','kolik','mi','me','se','si','mam','chci','potrebuji','spocitat','v','ve','z','ze','na','do','a','o','i','je','jsou','bude','by','pro','podle','kalkulacka','vypocet','kdy','aby','ted']);
- const isGenericQuery=value=>{
-  const words=normalizeCzech(value).split(' ').filter(Boolean);
-  return words.length>0&&words.every(word=>genericWords.has(word));
- };
  const create=(tag,className,text)=>{
   const node=document.createElement(tag);
   if(className)node.className=className;
