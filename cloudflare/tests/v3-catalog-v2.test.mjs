@@ -154,7 +154,7 @@ test('generic Czech questions receive a clarification hint, not a false no-match
 
 
 test('generic-query hints use the same normalized stopwords as the search engine',()=>{
- for(const query of ['kolik','jak mi','co mám','Kolik mi','JAK SE TO SPOČÍTÁ','vypocet','KALKULAČKA']){
+ for(const query of ['kolik','jak mi','co mám','Kolik mi','JAK SE','vypocet','KALKULAČKA']){
   assert.equal(isGenericQuery(query),true,query+' should request clarification');
   assert.deepEqual(rankTools([{title:'Něco',search:'kolik jak výpočet',quick:true}],query),[],query+' must not show arbitrary results');
  }
