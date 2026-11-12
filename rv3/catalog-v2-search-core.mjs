@@ -22,6 +22,10 @@ function oneTypo(a,b){
  }
  return true;
 }
+export function isGenericQuery(value){
+ const tokens=normalizeCzech(value).split(' ').filter(Boolean);
+ return tokens.length>0&&tokens.every(token=>ignored.has(token));
+}
 export function rankTools(entries,query){
  const phrase=normalizeCzech(query);
  if(phrase.length<2)return [];
