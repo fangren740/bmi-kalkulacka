@@ -51,3 +51,10 @@ Zapisovat pouze to, co bylo **skutečně provedeno / ověřeno**. Věta o pláno
 - Live read: main/index.html, PR #66/#67, masterplan, 207-route tracker, branch homepage source, product-ui.js, homepage brief, prior log. Previous PR #67 HEAD `e8bd97d`; no code implementation repeated.
 - Identified search affordance defect candidate: visible `HLEDAT ↗` is a non-interactive span, not a button. Source inspection PASS; actual browser impact NOT VERIFIED. Added precise remediation contract to homepage brief and tracker. No calculator code, SEO, logo, main, DNS or production changed.
 - Cloudflare build for this documentation-only HEAD, 390/1440 browser QA, Lighthouse, numerics: NOT VERIFIED. Next round: inspect search JS and implement preview-only accessible interaction with automated checks; verify actual Cloudflare build before claiming PASS.
+
+## 2026-11-12 19:00 CET — homepage isolated preview search affordance
+- Live GitHub reads: `main/index.html`, draft PR #66/#67, branch homepage source, `rv3/product-ui.js`, page masterplan, tracker, page brief and prior session log. No mass migration, no production modification.
+- Confirmed `HLEDAT ↗` is a noninteractive `<span>` in source; `product-ui.js` implements input/Enter/ArrowDown search navigation. Chosen conservative preview-only correction: hide fake CTA using `.rv3w-home .hero-search .search-keystroke{display:none}`; source root markup and calculator JS remain untouched. Commit `45d1c8f`.
+- Added static regression guard for CSS correction and source preservation in `cloudflare/tests/v3-sitewide-home.test.mjs`, commit `36387f7`. Tracker updated commit `c4fb203`.
+- PASS: GitHub source review and successful commits. NOT VERIFIED: execution of Node tests, Cloudflare build/deploy exact HEAD, live preview URL, browser 390/1440 keyboard/focus, Lighthouse, numerics, GSC. No evidence for browser PASS; no production merge/release/DNS.
+- Next: run actual Node suite and Cloudflare build, test search with pointer/keyboard at 390 and 1440; only then mark preview QA. Avoid changing root HTML or calculation logic without regression evidence.
