@@ -15,9 +15,9 @@ test('Wave 1: finance and OSVC keep original main, scripts, canonical and title 
   assert.equal(extractMain(html),extractMain(source),'main changed '+route.source);
   assert.deepEqual(scriptsOf(html),scriptsOf(source),'scripts changed '+route.source);
   assert.equal(getCanonical(html),getCanonical(source),'canonical changed '+route.source);
-  assert.equal((html.match(/<h1\\b/gi)||[]).length,(source.match(/<h1\\b/gi)||[]).length);
+  assert.equal(html.toLowerCase().split('<h1').length,source.toLowerCase().split('<h1').length);
   assert.ok(html.includes('<meta name="robots" content="noindex,nofollow,noarchive">'));
-  assert.equal((html.match(/<meta\\b(?=[^>]*\\bname=["']robots["'])[^>]*>/gi)||[]).length,1);
+  assert.equal(html.split('name="robots"').length-1,1);
   assert.ok(html.includes('href="/rv3/sitewide/foundation.css"'));
   assert.ok(html.includes('href="/rv3/sitewide/hub-wave1.css"'));
   assert.ok(html.includes('class="rv3w-legacy" hidden inert aria-hidden="true"'));
