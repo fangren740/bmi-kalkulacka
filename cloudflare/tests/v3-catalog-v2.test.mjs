@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync,existsSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import {renderCatalogV2} from '../../rv3/engine/catalog-v2.mjs';
-import {normalizeCzech,rankTools} from '../../rv3/catalog-v2-search-core.mjs';
+import {normalizeCzech,isGenericQuery,rankTools} from '../../rv3/catalog-v2-search-core.mjs';
 const read=p=>readFileSync(new URL('../../'+p,import.meta.url),'utf8');
 const source=read('rv-tool-index.js');
 const tools=JSON.parse(source.slice(source.indexOf('['),source.lastIndexOf(']')+1));
@@ -144,9 +144,21 @@ test('no remote JS, no query logging, keyboard and mobile accessibility built in
 
 test('generic Czech questions receive a clarification hint, not a false no-match',()=>{
  const ui=read('rv3/catalog-v2-ui.mjs');
- assert.ok(ui.includes('normalizeCzech(value)'), 'use shared Czech normalization');
+ assert.ok(ui.includes("import {isGenericQuery,rankTools}"), 'generic-query logic must be shared with ranking');
+ assert.ok(!ui.includes('const genericWords=new Set'), 'do not duplicate stopword dictionaries');
  assert.ok(ui.includes('isGenericQuery(input.value)'), 'detect intent-free queries');
  assert.ok(ui.includes('Upřesněte, co chcete spočítat'), 'give a helpful refinement prompt');
  assert.ok(ui.includes('Upřesněte dotaz'), 'accessible live status must distinguish generic questions');
  assert.ok(ui.includes('Pro tento dotaz nemáme shodu'), 'keep the genuine no-result state');
+});
+
+
+test('generic-query hints use the same normalized stopwords as the search engine',()=>{
+ for(const query of ['kolik','jak mi','co mám','Kolik mi','JAK SE TO SPOČÍTÁ','vypocet','KALKULAČKA']){
+  assert.equal(isGenericQuery(query),true,query+' should request clarification');
+  assert.deepEqual(rankTools([{title:'Něco',search:'kolik jak výpočet',quick:true}],query),[],query+' must not show arbitrary results');
+ }
+ for(const query of ['','   ','hypotéka','kolik dostanu na účet','podpora na pracáku']){
+  assert.equal(isGenericQuery(query),false,query+' should not be treated as generic');
+ }
 });
