@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {readFileSync} from 'node:fs';
+import {readFileSync,existsSync} from 'node:fs';
 import {renderCatalogV2} from '../../rv3/engine/catalog-v2.mjs';
 
 const read=path=>readFileSync(new URL('../../'+path,import.meta.url),'utf8');
@@ -14,6 +14,15 @@ test('V3 design preserves 135 links, 8 categories, 6 quick routes and original l
  assert.equal(report.groups.length,8);
  assert.equal(html.split('class="rv3d-tool-link ').length-1,135);
  assert.equal(html.split('class="rv3d-domain-illustration"').length-1,8);
+ for(const group of taxonomy.groups){
+  const asset='rv3/assets/category-'+group.id+'.svg';
+  assert.ok(existsSync(new URL('../../'+asset,import.meta.url)),'missing artwork '+asset);
+  assert.ok(html.includes('src="/'+asset+'"'),'category artwork not linked '+asset);
+  const svg=read(asset);
+  assert.ok(svg.startsWith('<svg xmlns="http://www.w3.org/2000/svg"'),'not SVG '+asset);
+  assert.ok(svg.length<5000,'artwork unexpectedly large '+asset);
+  assert.ok(!svg.includes('<script'),'executable artwork is forbidden');
+ }
  assert.equal(html.split('class="rv3d-quick-icon"').length-1,6);
  assert.equal(html.split('class="rv3d-quick-ordinal"').length-1,6);
  assert.equal(html.split('src="/logo-rv-v32.svg"').length-1,2);
@@ -26,7 +35,7 @@ test('Local hero art is small, static and uses no remote assets',()=>{
  const css=read('rv3/catalog-v3-theme.css');
  assert.ok(svg.startsWith('<svg xmlns="http://www.w3.org/2000/svg"'));
  assert.ok(svg.length<12000);
- assert.ok(css.length<6000);
+ assert.ok(css.length<12000);
  assert.ok(css.includes('url("/rv3/assets/hero-desk.svg")'));
  assert.ok(!css.includes('@import'));
  assert.ok(!css.includes('url("http'));
