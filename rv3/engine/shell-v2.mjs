@@ -23,7 +23,7 @@ export function renderFooterV2(){
  '<p>Vyberte nástroj, zadejte údaje a podívejte se nejen na výsledek, ale i na jeho vysvětlení.</p></div>'+
  '<a class="rv3d-footer-method" href="/jak-pocitame.html">Jak ověřujeme výpočty <span aria-hidden="true">↗</span></a></div>'+
  '<div class="rv3d-footer-links"><a href="/" class="rv3d-footer-brand">'+
- '<img src="/logo-rv-v32.svg" width="205" height="34" alt="RychléVýpočty.cz"></a>'+
+ '<span class="rv3d-footer-wordmark">Rychlé<span>Výpočty</span><small>.cz</small></span></a>'+
  '<nav aria-label="Informace o webu"><a href="/o-nas.html">O projektu</a>'+
  '<a href="/redakcni-zasady.html">Redakční zásady</a>'+
  '<a href="/kontakt.html">Kontakt</a>'+
