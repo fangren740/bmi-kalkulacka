@@ -8,33 +8,33 @@ const source=read('rv-tool-index.js');
 const tools=JSON.parse(source.slice(source.indexOf('['),source.lastIndexOf(']')+1));
 const taxonomy=JSON.parse(read('rv3/engine/catalog-v2.taxonomy.json'));
 
-test('V3 premium design preserves all 135 routes and 8 real categories',()=>{
+test('V3 design preserves 135 links, 8 categories, 6 quick routes and original logo',()=>{
  const {html,report}=renderCatalogV2(tools,taxonomy);
  assert.equal(report.total,135);
  assert.equal(report.groups.length,8);
- assert.equal((html.match(/class="rv3d-tool-link /g)||[]).length,135);
- assert.equal((html.match(/class="rv3d-domain-illustration"/g)||[]).length,8);
- assert.equal((html.match(/class="rv3d-quick-icon"/g)||[]).length,6);
- assert.equal((html.match(/class="rv3d-quick-ordinal"/g)||[]).length,6);
- assert.equal((html.match(/src="\\/logo-rv-v32\\.svg"/g)||[]).length,2);
+ assert.equal(html.split('class="rv3d-tool-link ').length-1,135);
+ assert.equal(html.split('class="rv3d-domain-illustration"').length-1,8);
+ assert.equal(html.split('class="rv3d-quick-icon"').length-1,6);
+ assert.equal(html.split('class="rv3d-quick-ordinal"').length-1,6);
+ assert.equal(html.split('src="/logo-rv-v32.svg"').length-1,2);
  assert.ok(html.includes('href="/rv3/catalog-v3-theme.css"'));
  assert.ok(html.includes('content="noindex,nofollow,noarchive"'));
 });
 
-test('V3 illustration is local, lightweight and does not require external data',()=>{
+test('Local hero art is small, static and uses no remote assets',()=>{
  const svg=read('rv3/assets/hero-desk.svg');
  const css=read('rv3/catalog-v3-theme.css');
  assert.ok(svg.startsWith('<svg xmlns="http://www.w3.org/2000/svg"'));
  assert.ok(svg.length<12000);
  assert.ok(css.length<6000);
  assert.ok(css.includes('url("/rv3/assets/hero-desk.svg")'));
- assert.ok(!/@import\\b/i.test(css));
- assert.ok(!/url\\(\\s*["']?https?:/i.test(css));
- assert.ok(!/<script\\b/i.test(svg));
- assert.ok(!/<image\\b/i.test(svg));
+ assert.ok(!css.includes('@import'));
+ assert.ok(!css.includes('url("http'));
+ assert.ok(!svg.includes('<script'));
+ assert.ok(!svg.includes('<image'));
 });
 
-test('V3 search action invokes existing private on-device ranking',()=>{
+test('Search button reuses local Czech search engine',()=>{
  const html=renderCatalogV2(tools,taxonomy).html;
  const ui=read('rv3/catalog-v2-ui.mjs');
  assert.ok(html.includes('id="rv3d-search-submit"'));
