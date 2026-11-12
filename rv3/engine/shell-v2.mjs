@@ -6,8 +6,8 @@ const topLinks=[
  ['/finance-a-hypoteky.html','Finance a bydlení'],
  ['/jak-pocitame.html','Jak počítáme']
 ];
-export function renderHeaderV2({catalogHref='/kalkulacky.html'}={}){
- const links=topLinks.map(([href,text],i)=>'<a href="'+(i===0?catalogHref:href)+'"'+(i===0?' aria-current="page"':'')+'>'+h(text)+'</a>').join('');
+export function renderHeaderV2({catalogHref='/kalkulacky.html',active='/kalkulacky.html'}={}){
+ const links=topLinks.map(([href,text],i)=>'<a href="'+(i===0?catalogHref:href)+'"'+(active===href?' aria-current="page"':'')+'>'+h(text)+'</a>').join('');
  return '<header class="rv3d-header"><div class="rv3d-wrap rv3d-header-inner">'+
  '<a class="rv3d-brand" href="/" aria-label="RychléVýpočty.cz — úvod">'+
  '<img src="/logo-rv-v32.svg" alt="RychléVýpočty.cz" width="220" height="36"></a>'+
