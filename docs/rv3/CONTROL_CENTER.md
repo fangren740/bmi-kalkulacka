@@ -1,3 +1,5 @@
+> **AKTUÁLNÍ ŘÍDÍCÍ PRAVIDLO 12. 11. 2026:** [PAGE-BY-PAGE MASTERPLAN](PAGE_BY_PAGE_MASTERPLAN_2026-11-12.md) **nahrazuje** staré masové migrační vlny. 207 URL mají [individuální tracker](PAGE_TRACKER_2026-11-12.json); první page briefs [Homepage](pages/index.md), [O projektu](pages/o-nas.md), [Jak počítáme](pages/jak-pocitame.md). Katalogový PR #66 je vizuální reference. PR #67 je izolovaný technický experiment (2 huby) + homepage preview, nikoli schválená kvalita webu. Nesmí se vydávat build PASS za screenshot/PSI PASS. Produkční main LOCKED.
+
 # RV3 CONTROL CENTER — živý stav projektu
 
 **Revize:** 2026-11-11 (výchozí architektonická etapa). Toto je verzovaný řídicí přehled; PR/CI/Cloudflare HEAD je nutné vždy ověřit live. Trvalý tracker: [issue #59](https://github.com/fangren740/bmi-kalkulacka/issues/59).
@@ -55,3 +57,9 @@ Načti `RV3_START_HERE.md`, `docs/rv3/HANDOFF.md` a tento dokument. **Ověř HEA
 
 ### Autonomní noční kola 11.–12. 11. 2026
 Uživatel autorizoval izolovaný noční vývoj a testování, nikoliv merge produkce. Devět samostatných plánovaných roundů 21:15–05:15, shrnutí 05:50. Pravdivé výstupy a pracovní postup v [OVERNIGHT_PLAN_2026-11-12.md](OVERNIGHT_PLAN_2026-11-12.md) a [NIGHT_RUN_LOG_2026-11-12.md](NIGHT_RUN_LOG_2026-11-12.md). Katalog V2 čeká na vizuální schválení; `main` nedotčeno.
+
+## 2026-11-12 — rozhodnutí: sitewide V3, W1 zahájena
+- Uživatel ocenil nový ilustrovaný katalog a požádal o **kompletní sjednocení 207 HTML stránek** ve stejném kvalitativním duchu.
+- **Nová platná strategie:** [SITEWIDE_EXECUTION_PLAN_2026-11-12.md](SITEWIDE_EXECUTION_PLAN_2026-11-12.md) — W0–W7 bez big-bang migrace, huby → tři archetypy nástrojů → další typy → SEO/release. 135 tools / 207 HTML / 35 UNKNOWN zůstávají důsledně oddělené.
+- **[PR #67](https://github.com/fangren740/bmi-kalkulacka/pull/67)** (draft, base `rv3/integration-qa-20261112`): first wave Finance+OSVČ generovaná pod `/rv3/wave1/`, společná identita, adapter zachovává main/scripts/title/canonical a noindex preview. Původní root URL se v tomto PR nemění.
+- Automatické testy + build **PASS na `b8194a3`**, skutečné browser QA **NEOVĚŘENO**. Původní PR #66 je zachovaný jako reference. **Nedotýkat se `main` bez schválení.**

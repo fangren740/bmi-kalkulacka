@@ -1,3 +1,5 @@
+> **AKTUÁLNÍ PRIORITA 12. 11. 2026:** [PAGE-BY-PAGE MASTERPLAN](docs/rv3/PAGE_BY_PAGE_MASTERPLAN_2026-11-12.md) + [207 URL tracker](docs/rv3/PAGE_TRACKER_2026-11-12.json) mají přednost před starými hromadnými roadmapami. Homepage a důvěryhodnost o projektu/metodika/redakční zásady/kontakt jsou povinné prémiové stránky, **každá zvlášť**. [Page briefs](docs/rv3/pages/index.md) jsou rozpracované. Aktivní draft PR #67 pro první sitewide technický experiment, produkční main LOCKED.
+
 # RV3 START HERE — RychléVýpočty.cz (aktivní projekt)
 
 > **Čtěte tento soubor na větvi `rv3/clean-slate` při každém novém chatu.** Historické soubory V7/V8 nejsou živý stav V3. Aktualizováno 11. 11. 2026.

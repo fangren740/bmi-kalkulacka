@@ -1,3 +1,5 @@
+> **AKTUÁLNÍ SMĚR 12. 11.:** tento roadmap snapshot je historický. Pro skutečnou práci používat [PAGE_BY_PAGE_MASTERPLAN_2026-11-12.md](PAGE_BY_PAGE_MASTERPLAN_2026-11-12.md) a [207-page tracker](PAGE_TRACKER_2026-11-12.json). Dávky 5–10 URL jsou pouze možné logistické release skupiny, **ne společný automatický redesign**. Homepage, katalog, situace, návody a o projektu/metodika/trust první. Každá kalkulačka samostatné UX a testy.
+
 # RV3 Roadmap — krátkodobý, střednědobý, dlouhodobý plán
 
 **Základní strategie:** jeden deterministický V3 UI systém, postupná migrace 207 HTML URL bez přepisování správných výpočtů. Všechna data/obsah/SEO se chrání. Nejde o harmonogram slibující přesná data bez znalosti kapacity; kroky určují pořadí a akceptaci.

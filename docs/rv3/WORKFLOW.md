@@ -1,3 +1,5 @@
+> **NOVÁ PRAVIDLA OD 12. 11.:** [PAGE_BY_PAGE_MASTERPLAN_2026-11-12.md](PAGE_BY_PAGE_MASTERPLAN_2026-11-12.md) má přednost. Jeden quality round = jedna produktová URL, její skutečná výchozí stránka, vlastní design, implementace, skutečné QA, GitHub evidence. 5–10 URL/PR není kvalitativní norma. Automatizace bez explicitní schedule neexistuje; pro tento večer je vytvořená samostatná série dev roundů a report.
+
 # RV3 Execution Playbook — řízení krátkých quality roundů
 
 ## Jak vypadá jeden round (žádná nekonečná auditní smyčka)

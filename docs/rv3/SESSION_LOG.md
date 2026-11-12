@@ -23,3 +23,38 @@ Zapisovat pouze to, co bylo **skutečně provedeno / ověřeno**. Věta o pláno
 - Commit `4d7406f`: přidán `docs/rv3/ARCHETYPES_60.md`; doloženo 5 archetypů a 5 z 40 unclassified; zbývajících 35 UNKNOWN. Žádná numerika/produkce změněna.
 - Testy: statická inspekce HTML/skriptů; browser 390/1440, GSC, live HTTP noindex a Cloudflare build tohoto dokumentačního SHA **neověřeny**.
 - Next: 35 URL klasifikace + PR #65 browser QA; schválení architektury A teprve poté.
+
+## 2026-11-12 15:xx CET — sitewide W1 zahájena
+- Zadání: přestavět celý portál podle prémiové ilustrované V3; žádný merge ani změna produkce.
+- Auditované podklady: aktuální `main 2041e3e`, PR #66, `route-registry.json` (207/135/72, 35 UNKNOWN), #59–#63, P1 renderer.
+- Dokumentovaný design+rollout plán `docs/rv3/SITEWIDE_EXECUTION_PLAN_2026-11-12.md`.
+- Draft PR #67: dvě opt-in hub URL, sdílený scoped foundation + hub skin, adapter přes existing P1 helpers. Originální SVG logo se nemění, skripty a main jsou nedotčené.
+- Cloudflare first failing attempt `6534c5b` / test regex, subsequent `b8194a3` build SUCCESS.
+- Nelze tvrdit browser PASS či Lighthouse. Next: reálné preview deploy HEAD a browser QA; bez nasazení produkce.
+
+## 12. 11. 2026 — reorientace sitewide V3 na každou stránku zvlášť
+- Uživatel požaduje plnohodnotný individuální redesign každé URL, především homepage, 22 hubů, o projektu/metodiky/redakčních/trust stránek, a až potom jednotlivé kalkulačky. Metrika úspěchu = výborný konkrétní produkt, ne počet „přebarvených URL“.
+- Vytvořen nový master [PAGE_BY_PAGE_MASTERPLAN_2026-11-12.md](PAGE_BY_PAGE_MASTERPLAN_2026-11-12.md) a [tracker všech 207 HTML URL](PAGE_TRACKER_2026-11-12.json) s pravdivými stavy.
+- Source audit `index.html`, `o-nas.html`, `jak-pocitame.html`, `redakcni-zasady.html`, `kontakt.html`, `navody.html`, `situace.html`, `kalkulacky.html`, `ochrana-osobnich-udaju.html`, `reklama-a-spoluprace.html` ze současné vývojové větve; ověřeny titulky, H1 a role.
+- Specifické briefs `pages/index.md`, `pages/o-nas.md`, `pages/jak-pocitame.md`; homepage preview adapter+stylesheet+test pro `/rv3/wave1/index.html`, původní výpočetní JS, main, URL, canonical netknuté.
+- Drobné rozpory vyžadující faktický audit: privacy uvádí „Google Analytics nyní není aktivní“, současný kód a CMP je třeba nezávisle ověřit před novou verzí. Browser/PSI zatím NEOVĚŘENO.
+- Automatizace vývojových kol 17/18/19 CET a jednorázový souhrn 20 CET skutečně vytvořeny. Nepředstírat, že scheduled task před spuštěním něco udělal.
+
+## 2026-11-12 17:00 CET — samostatné homepage kolo
+- Živě znovu načteny `main/index.html`, `rv3/sitewide-wave1-20261112/index.html`, PR #66/#67, masterplan, tracker, homepage brief, homepage adapter, CSS, test a session log. PR #66/#67 zůstávají draft. Žádný merge/release.
+- **Jedna URL:** `/index.html` (izolovaný `/rv3/wave1/index.html` adapter). Commit `3809dc4`: pouze `rv3/sitewide/homepage.css` — keyboard focus pro vyhledávací nápovědy, scénáře, CTA, panel a bezpečnější mobilní zalamování. Žádné změny výpočtů, HTML hlavního obsahu, původního SVG loga, canonical, title ani skriptů.
+- Commit `538fd67`: evidence v 207-route trackeru. Source title a canonical přečteny, nikoli ověřeny GSC.
+- **PASS:** GitHub API write/read zdrojů a úspěšné commity; statická inspekce homepage source/adapter/test. **NEOVĚŘENO:** skutečný Cloudflare build přesného HEAD, Node testy, live preview URL, 390/1440 browser/keyboard test, Lighthouse/PSI, číselné regrese, GSC. Tyto kroky nesmějí být vykázány jako PASS jen z existence test souboru.
+- **Next:** spustit skutečný build a 390/1440 browser test, opravit zjištěné vady; teprve po tom pokračovat na `/o-nas.html`. Schválení a release nejsou autorizovány.
+
+## 2026-11-12 18:00 CET — homepage source UX audit
+- Live read: main/index.html, PR #66/#67, masterplan, 207-route tracker, branch homepage source, product-ui.js, homepage brief, prior log. Previous PR #67 HEAD `e8bd97d`; no code implementation repeated.
+- Identified search affordance defect candidate: visible `HLEDAT ↗` is a non-interactive span, not a button. Source inspection PASS; actual browser impact NOT VERIFIED. Added precise remediation contract to homepage brief and tracker. No calculator code, SEO, logo, main, DNS or production changed.
+- Cloudflare build for this documentation-only HEAD, 390/1440 browser QA, Lighthouse, numerics: NOT VERIFIED. Next round: inspect search JS and implement preview-only accessible interaction with automated checks; verify actual Cloudflare build before claiming PASS.
+
+## 2026-11-12 19:00 CET — homepage isolated preview search affordance
+- Live GitHub reads: `main/index.html`, draft PR #66/#67, branch homepage source, `rv3/product-ui.js`, page masterplan, tracker, page brief and prior session log. No mass migration, no production modification.
+- Confirmed `HLEDAT ↗` is a noninteractive `<span>` in source; `product-ui.js` implements input/Enter/ArrowDown search navigation. Chosen conservative preview-only correction: hide fake CTA using `.rv3w-home .hero-search .search-keystroke{display:none}`; source root markup and calculator JS remain untouched. Commit `45d1c8f`.
+- Added static regression guard for CSS correction and source preservation in `cloudflare/tests/v3-sitewide-home.test.mjs`, commit `36387f7`. Tracker updated commit `c4fb203`.
+- PASS: GitHub source review and successful commits. NOT VERIFIED: execution of Node tests, Cloudflare build/deploy exact HEAD, live preview URL, browser 390/1440 keyboard/focus, Lighthouse, numerics, GSC. No evidence for browser PASS; no production merge/release/DNS.
+- Next: run actual Node suite and Cloudflare build, test search with pointer/keyboard at 390 and 1440; only then mark preview QA. Avoid changing root HTML or calculation logic without regression evidence.
