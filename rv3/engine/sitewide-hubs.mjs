@@ -38,7 +38,7 @@ export function renderHubWave1(source,route){
  if(oldHeader.length!==1||oldFooter.length!==1)throw Error('Ambiguous header/footer');
  let html=source;
  html=replaceExactlyOne(html,/<header\b[^>]*>[\s\S]*?<\/header>/i,
-   renderHeaderV2({catalogHref:'/rv3/poc/katalog-v2.html'})+
+   renderHeaderV2({catalogHref:'/rv3/poc/katalog-v2.html',active:'/'+route.source})+
    '<div class="rv3w-legacy" hidden inert aria-hidden="true">'+oldHeader[0]+'</div>','header');
  html=replaceExactlyOne(html,/<footer\b[^>]*>[\s\S]*?<\/footer>/i,
    renderFooterV2()+'<div class="rv3w-legacy" hidden inert aria-hidden="true">'+oldFooter[0]+'</div>','footer');
