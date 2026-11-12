@@ -4,6 +4,7 @@ import {POC_ROUTES,renderPrototypePage} from '../rv3/engine/renderer.mjs';
 import {renderStudioCatalog} from '../rv3/engine/catalog.mjs';
 import {renderCatalogV2} from '../rv3/engine/catalog-v2.mjs';
 import {HUB_WAVE1_ROUTES,renderHubWave1} from '../rv3/engine/sitewide-hubs.mjs';
+import {renderHomepageStudio} from '../rv3/engine/sitewide-home.mjs';
 export async function buildPrototype({root,output}){
  const folder=path.join(output,'rv3','poc');
  await mkdir(folder,{recursive:true});
@@ -48,6 +49,13 @@ export async function buildPrototype({root,output}){
   hubReports.push(manifest);
   reports.push(manifest);
  }
+ // Homepage is a distinct editorial product, not a copy of the hub skin.
+ const homepageSource=await readFile(path.join(root,'index.html'),'utf8');
+ const homepage=renderHomepageStudio(homepageSource);
+ await writeFile(path.join(hubFolder,'index.html'),homepage.html);
+ await stat(path.join(hubFolder,'index.html'));
+ hubReports.push(homepage.manifest);
+ reports.push(homepage.manifest);
  await writeFile(path.join(hubFolder,'manifest.json'),
    JSON.stringify({kind:'rv3-hub-wave1',previewOnly:true,generated:hubReports},null,2)+'\n');
  await writeFile(path.join(folder,'manifest.json'),
