@@ -18,12 +18,10 @@ export function renderHeaderV2({catalogHref='/kalkulacky.html'}={}){
 }
 export function renderFooterV2(){
  return '<footer class="rv3d-footer"><div class="rv3d-wrap">'+
- '<div class="rv3d-footer-intro"><div><span class="rv3d-footer-eyebrow">RYCHLÉVÝPOČTY.CZ / METODIKA NA PRVNÍM MÍSTĚ</span>'+
- '<h2>Správný výpočet.<br><em>Lepší rozhodnutí.</em></h2>'+
- '<p>Vyberte nástroj, zadejte údaje a podívejte se nejen na výsledek, ale i na jeho vysvětlení.</p></div>'+
- '<a class="rv3d-footer-method" href="/jak-pocitame.html">Jak ověřujeme výpočty <span aria-hidden="true">↗</span></a></div>'+
- '<div class="rv3d-footer-links"><a href="/" class="rv3d-footer-brand">'+
- '<span class="rv3d-footer-wordmark">Rychlé<span>Výpočty</span><small>.cz</small></span></a>'+
+ '<div class="rv3d-footer-core">'+
+ '<a href="/" class="rv3d-footer-brand" aria-label="RychléVýpočty.cz — úvod">'+
+ '<img src="/logo-rv-v32.svg" width="205" height="34" alt="RychléVýpočty.cz"></a>'+
+ '<p>Správný výpočet. Lepší rozhodnutí.</p>'+
  '<nav aria-label="Informace o webu"><a href="/o-nas.html">O projektu</a>'+
  '<a href="/redakcni-zasady.html">Redakční zásady</a>'+
  '<a href="/kontakt.html">Kontakt</a>'+
