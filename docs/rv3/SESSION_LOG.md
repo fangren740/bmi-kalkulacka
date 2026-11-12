@@ -31,3 +31,11 @@ Zapisovat pouze to, co bylo **skutečně provedeno / ověřeno**. Věta o pláno
 - Draft PR #67: dvě opt-in hub URL, sdílený scoped foundation + hub skin, adapter přes existing P1 helpers. Originální SVG logo se nemění, skripty a main jsou nedotčené.
 - Cloudflare first failing attempt `6534c5b` / test regex, subsequent `b8194a3` build SUCCESS.
 - Nelze tvrdit browser PASS či Lighthouse. Next: reálné preview deploy HEAD a browser QA; bez nasazení produkce.
+
+## 12. 11. 2026 — reorientace sitewide V3 na každou stránku zvlášť
+- Uživatel požaduje plnohodnotný individuální redesign každé URL, především homepage, 22 hubů, o projektu/metodiky/redakčních/trust stránek, a až potom jednotlivé kalkulačky. Metrika úspěchu = výborný konkrétní produkt, ne počet „přebarvených URL“.
+- Vytvořen nový master [PAGE_BY_PAGE_MASTERPLAN_2026-11-12.md](PAGE_BY_PAGE_MASTERPLAN_2026-11-12.md) a [tracker všech 207 HTML URL](PAGE_TRACKER_2026-11-12.json) s pravdivými stavy.
+- Source audit `index.html`, `o-nas.html`, `jak-pocitame.html`, `redakcni-zasady.html`, `kontakt.html`, `navody.html`, `situace.html`, `kalkulacky.html`, `ochrana-osobnich-udaju.html`, `reklama-a-spoluprace.html` ze současné vývojové větve; ověřeny titulky, H1 a role.
+- Specifické briefs `pages/index.md`, `pages/o-nas.md`, `pages/jak-pocitame.md`; homepage preview adapter+stylesheet+test pro `/rv3/wave1/index.html`, původní výpočetní JS, main, URL, canonical netknuté.
+- Drobné rozpory vyžadující faktický audit: privacy uvádí „Google Analytics nyní není aktivní“, současný kód a CMP je třeba nezávisle ověřit před novou verzí. Browser/PSI zatím NEOVĚŘENO.
+- Automatizace vývojových kol 17/18/19 CET a jednorázový souhrn 20 CET skutečně vytvořeny. Nepředstírat, že scheduled task před spuštěním něco udělal.
