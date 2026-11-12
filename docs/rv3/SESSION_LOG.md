@@ -39,3 +39,10 @@ Zapisovat pouze to, co bylo **skutečně provedeno / ověřeno**. Věta o pláno
 - Specifické briefs `pages/index.md`, `pages/o-nas.md`, `pages/jak-pocitame.md`; homepage preview adapter+stylesheet+test pro `/rv3/wave1/index.html`, původní výpočetní JS, main, URL, canonical netknuté.
 - Drobné rozpory vyžadující faktický audit: privacy uvádí „Google Analytics nyní není aktivní“, současný kód a CMP je třeba nezávisle ověřit před novou verzí. Browser/PSI zatím NEOVĚŘENO.
 - Automatizace vývojových kol 17/18/19 CET a jednorázový souhrn 20 CET skutečně vytvořeny. Nepředstírat, že scheduled task před spuštěním něco udělal.
+
+## 2026-11-12 17:00 CET — samostatné homepage kolo
+- Živě znovu načteny `main/index.html`, `rv3/sitewide-wave1-20261112/index.html`, PR #66/#67, masterplan, tracker, homepage brief, homepage adapter, CSS, test a session log. PR #66/#67 zůstávají draft. Žádný merge/release.
+- **Jedna URL:** `/index.html` (izolovaný `/rv3/wave1/index.html` adapter). Commit `3809dc4`: pouze `rv3/sitewide/homepage.css` — keyboard focus pro vyhledávací nápovědy, scénáře, CTA, panel a bezpečnější mobilní zalamování. Žádné změny výpočtů, HTML hlavního obsahu, původního SVG loga, canonical, title ani skriptů.
+- Commit `538fd67`: evidence v 207-route trackeru. Source title a canonical přečteny, nikoli ověřeny GSC.
+- **PASS:** GitHub API write/read zdrojů a úspěšné commity; statická inspekce homepage source/adapter/test. **NEOVĚŘENO:** skutečný Cloudflare build přesného HEAD, Node testy, live preview URL, 390/1440 browser/keyboard test, Lighthouse/PSI, číselné regrese, GSC. Tyto kroky nesmějí být vykázány jako PASS jen z existence test souboru.
+- **Next:** spustit skutečný build a 390/1440 browser test, opravit zjištěné vady; teprve po tom pokračovat na `/o-nas.html`. Schválení a release nejsou autorizovány.
