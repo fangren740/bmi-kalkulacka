@@ -117,7 +117,7 @@ test('privacy: unresolved operational assertions are not silently rewritten or f
  assert.ok(html.includes('Web nemá uživatelské účty, přihlášení, newsletter ani kontaktní formulář.'));
  assert.ok(html.includes('Google Analytics nyní není aktivní'));
  assert.ok(html.includes('Hosting prostřednictvím GitHub Pages'));
- assert.ok(html.includes('věcný audit probíhá'));
+ assert.ok(html.includes('Testovací návrh – obsah vyžaduje ověření'));
  assert.ok(html.includes('Zásady jsou převzaty beze změn'));
  assert.doesNotMatch(html,/audit úspěšně dokončen|100% GDPR|garantujeme bezpečnost|certifikovaný GDPR|bez jakéhokoli rizika/i);
 });
