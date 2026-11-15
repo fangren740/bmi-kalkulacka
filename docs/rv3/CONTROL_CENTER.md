@@ -1,3 +1,5 @@
+> **Browser Run RV3:** [provozní návod a rozsah](BROWSER_QA.md) · [draft PR #69](https://github.com/fangren740/bmi-kalkulacka/pull/69). Výsledky přesného preview buildu sleduje [QA plán #64](https://github.com/fangren740/bmi-kalkulacka/issues/64).
+
 > **AKTUÁLNÍ ŘÍDÍCÍ PRAVIDLO 12. 11. 2026:** [PAGE-BY-PAGE MASTERPLAN](PAGE_BY_PAGE_MASTERPLAN_2026-11-12.md) **nahrazuje** staré masové migrační vlny. 207 URL mají [individuální tracker](PAGE_TRACKER_2026-11-12.json); první page briefs [Homepage](pages/index.md), [O projektu](pages/o-nas.md), [Jak počítáme](pages/jak-pocitame.md). Katalogový PR #66 je vizuální reference. PR #67 je izolovaný technický experiment (2 huby) + homepage preview, nikoli schválená kvalita webu. Nesmí se vydávat build PASS za screenshot/PSI PASS. Produkční main LOCKED.
 
 # RV3 CONTROL CENTER — živý stav projektu

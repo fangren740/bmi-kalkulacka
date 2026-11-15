@@ -58,3 +58,7 @@ Zapisovat pouze to, co bylo **skutečně provedeno / ověřeno**. Věta o pláno
 - Added static regression guard for CSS correction and source preservation in `cloudflare/tests/v3-sitewide-home.test.mjs`, commit `36387f7`. Tracker updated commit `c4fb203`.
 - PASS: GitHub source review and successful commits. NOT VERIFIED: execution of Node tests, Cloudflare build/deploy exact HEAD, live preview URL, browser 390/1440 keyboard/focus, Lighthouse, numerics, GSC. No evidence for browser PASS; no production merge/release/DNS.
 - Next: run actual Node suite and Cloudflare build, test search with pointer/keyboard at 390 and 1440; only then mark preview QA. Avoid changing root HTML or calculation logic without regression evidence.
+
+## 2026-11-15 — Browser Run pro RV3 preview
+- [Draft PR #69](https://github.com/fangren740/bmi-kalkulacka/pull/69) přidává smoke scénáře pro homepage, katalog a dva huby na 390/1440. Lokální Node test politika/hook 5/5.
+- Skutečný běh a odkazy na důkazy eviduje [#64](https://github.com/fangren740/bmi-kalkulacka/issues/64). Kompatibilitu s původním GitHub Pages řeší samostatná release fáze.

@@ -77,7 +77,10 @@ export async function runPreviewQa({
     }
     const passed = response.ok && summarize(report, plan);
     log("RV3 QA overall = " + (passed ? "PASS" : "FAIL") + " · " + plan.commitSha);
-    if (!response.ok) error("RV3 QA API HTTP " + response.status);
+    if (!response.ok) {
+      const reason = typeof report.error === "string" ? report.error.replace(/[\r\n]/g, " ").slice(0, 220) : "";
+      error("RV3 QA API HTTP " + response.status + (reason ? " · " + reason : ""));
+    }
     return passed ? 0 : 1;
   } catch {
     error("RV3 QA NOT VERIFIED: preview upload, immutable URL, or Browser Run response failed");
