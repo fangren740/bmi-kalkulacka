@@ -47,5 +47,11 @@ Toto srovnání je založeno na konkrétním GitHub HTML/CSS. Vizuální dojem j
 ## Stav
 
 - **Katalog V3 = zdroj pravdy.**
-- **O projektu PR #70 = vizuálně ZAMÍTNUTO / NEPŘIPRAVENO K SCHVÁLENÍ**; nový směr se musí navrhnout podle existujícího katalogového visual benchmarku, ne další izolovanou rukou.
+- **O projektu PR #70 — dvě předchozí varianty ZAMÍTNUTY.** Aktuální třetí iterace se staví přímo na `catalog-v2.css`, `catalog-v3-theme.css`, katalogovém shellu a nové ilustraci `rv3/assets/about-story.svg` v jednotném výtvarném směru. **Ani tato iterace ještě není vlastníkem vizuálně schválená.** Viz [individuální design brief](pages/o-nas.md).
 - Zdrojový design není přenos pouhou barvou a logem. Všechny další stránky jsou stejně důležité jako katalog, ale mají vlastní produktový příběh.
+
+## Poučení z realizace (15. 11. 2026)
+
+**Nestačí se vlastnímu katalogu přiblížit barvami.** Na další stránky je technicky nutné skutečně připojit nebo důsledně využít stejné CSS tokeny/typografii, stejný header/footer, a u každé ilustrace dodržet úroveň kresby lokálních SVG z katalogu. PR #70 ve třetí iteraci tyto vazby používá přímo. Příležitostné nové efekty nesmějí překrýt primární úkol návštěvníka.
+
+Stav dodávky je **Cloudflare build/deploy PASS pro kódový SHA `2542fc4`**; skutečný screenshot mobile/desktop a hodnocení majitelem stále čekají. V případě dalšího odmítnutí je nutno opravit konkrétní grafické komponenty místo přejmenování CSS.
