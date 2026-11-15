@@ -7,6 +7,7 @@ import {HUB_WAVE1_ROUTES,renderHubWave1} from '../rv3/engine/sitewide-hubs.mjs';
 import {renderHomepageStudio} from '../rv3/engine/sitewide-home.mjs';
 import {renderAboutStudio} from '../rv3/engine/studio-about.mjs';
 import {renderMethodologyStudio} from '../rv3/engine/studio-methodology.mjs';
+import {renderEditorialStudio} from '../rv3/engine/studio-editorial.mjs';
 export async function buildPrototype({root,output}){
  const folder=path.join(output,'rv3','poc');
  await mkdir(folder,{recursive:true});
@@ -68,6 +69,14 @@ export async function buildPrototype({root,output}){
  await writeFile(methodTarget,method.html);
  await stat(methodTarget);
  reports.push(method.manifest);
+ // Individual editorial ethics product: source-verified, own composition, no public route edits.
+ const editorialSource=await readFile(path.join(root,'redakcni-zasady.html'),'utf8');
+ const editorialTemplate=await readFile(path.join(root,'rv3/engine/editorial.template.html'),'utf8');
+ const editorial=renderEditorialStudio(editorialSource,editorialTemplate);
+ const editorialTarget=path.join(trustFolder,'redakcni-zasady.html');
+ await writeFile(editorialTarget,editorial.html);
+ await stat(editorialTarget);
+ reports.push(editorial.manifest);
  // Homepage is a distinct editorial product, not a copy of the hub skin.
  const homepageSource=await readFile(path.join(root,'index.html'),'utf8');
  const homepage=renderHomepageStudio(homepageSource);
