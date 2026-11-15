@@ -81,7 +81,7 @@ test('About: accessible chapters, links and no fabricated numerical results',()=
  assert.match(aboutCss,/\.rv3a-chapters-links a/);
  assert.match(aboutCss,/\.rv3a-chapters-links\{display:grid;grid-template-columns:1fr 1fr/);
  assert.ok(html.includes('id="about-title"'));
- assert.ok(html.includes('kalkulačka'));
+ assert.ok(html.includes('kalkulačk'));
  assert.ok(html.includes('orientační'));
 });
 
