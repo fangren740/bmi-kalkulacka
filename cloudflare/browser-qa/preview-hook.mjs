@@ -30,6 +30,17 @@ export function summarize(report, plan) {
     }));
 }
 
+
+// A Browser Run capacity limit is NOT a test PASS. It may only defer browser QA
+// after a verified git SHA and successful Wrangler preview upload. This lets
+// owners inspect a design preview without masking actual application test FAILs.
+export function quotaDeferred(status, report) {
+  if (!report || report.status === "PASS" || typeof report.error !== "string") return false;
+  const reason = report.error.trim();
+  return (status === 429 && reason === "Rate limit") ||
+    (status === 502 && /\b429\b/.test(reason) && /\b(browser|quota|limit)\b/i.test(reason));
+}
+
 async function uploadPreview(env) {
   const commit = execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8", env }).trim();
   if (commit !== env.WORKERS_CI_COMMIT_SHA) throw Error("Build SHA differs from checkout");
@@ -95,13 +106,21 @@ export async function runPreviewQa({
       log("RV3 QA evidence (7 days): " + QA_ORIGIN + "/proof/" + report.evidenceId);
     }
     const passed = response.ok && summarize(report, plan);
+    const deferredQuota = quotaDeferred(response.status, report);
     const baselinePass = (report.results ?? []).filter(row => row.route !== "visual" && row.status === "PASS").length;
     log("RV3 QA baseline = " + baselinePass + "/8");
     if (visualPath) log("RV3 visual review: " + visualPath + " · design approval pending");
-    log("RV3 QA overall = " + (passed ? "PASS" : "FAIL") + " · " + plan.commitSha);
+    log("RV3 QA overall = " + (deferredQuota ? "DEFERRED_QUOTA — NOT VERIFIED" : passed ? "PASS" : "FAIL") + " · " + plan.commitSha);
     if (!response.ok) {
       const reason = typeof report.error === "string" ? report.error.replace(/[\r\n]/g, " ").slice(0, 220) : "";
       error("RV3 QA API HTTP " + response.status + (reason ? " · " + reason : ""));
+    }
+    if (deferredQuota) {
+      // Exit 0 means *preview upload succeeded*, NEVER that QA passed.
+      // Browser evidence remains mandatory before design approval/merge.
+      error("RV3 QA DEFERRED_QUOTA — browser checks NOT VERIFIED; immutable preview " + origin +
+        " is available for manual review. Rerun the 8+2 suite after quota reset.");
+      return 0;
     }
     return passed ? 0 : 1;
   } catch {
