@@ -29,7 +29,7 @@ test('About: a genuinely new composition without legacy trust-page DOM',()=>{
 
 test('About: genuinely uses catalog CSS, original logo and bespoke art',()=>{
  const {html,manifest}=build();
- assert.deepEqual(manifest.css,['/rv3/catalog-v2.css','/rv3/catalog-v3-theme.css','/rv3/sitewide/about.css']);
+ assert.deepEqual(manifest.css,['/rv3/catalog-v2.css','/rv3/catalog-v3-theme.css','/rv3/sitewide/about.css','/rv3/sitewide/about-icons.css']);
  for(const css of manifest.css) assert.ok(html.includes('href="'+css+'"'),css);
  assert.match(html,/class="rv3d-page rv3a-page"/);
  assert.match(html,/\/logo-rv-v32\.svg/);
@@ -142,4 +142,28 @@ test('About: editorial sections remain accessible and responsive',()=>{
  assert.match(html,/aria-labelledby="open-title"/);
  assert.match(aboutCss,/\.rv3a-openness-grid\{display:grid;grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
  assert.match(aboutCss,/\.rv3a-openness-grid\{grid-template-columns:1fr/);
+});
+
+test('About: authentic catalogue-style pictograms are linked, semantic and no-JS',()=>{
+ const {html,manifest}=build();
+ const sprite=from('rv3/assets/about-icons.svg');
+ const polish=from('rv3/sitewide/about-icons.css');
+ assert.equal(manifest.css.at(-1),'/rv3/sitewide/about-icons.css');
+ assert.match(html,/href="\/rv3\/sitewide\/about-icons\.css"/);
+ assert.match(sprite,/<svg\b/);
+ for(const name of ['entry','sources','audit','exact','model','estimate','privacy','independent','calculator','method','feedback','check','context']){
+   assert.ok(sprite.includes('id="'+name+'"'),'Missing local SVG symbol '+name);
+   assert.ok(html.includes("about-icons.svg#"+name),'Not used on actual page '+name);
+ }
+ assert.equal((html.match(/class="rv3a-step-icon"/g)||[]).length,3);
+ assert.equal((html.match(/class="rv3a-line-icon"/g)||[]).length,3);
+ assert.equal((html.match(/class="rv3a-open-art"/g)||[]).length,2);
+ assert.equal((html.match(/class="rv3a-next-art"/g)||[]).length,3);
+ assert.match(html,/aria-hidden="true" focusable="false"/);
+ assert.equal((html.match(/<script\b/gi)||[]).length,1,'Pictograms must not add JS');
+ assert.match(polish,/@media\(max-width:620px\)/);
+ assert.match(polish,/@media\(prefers-reduced-motion:reduce\)/);
+ assert.match(polish,/\.rv3a-page \.rv3a-next-grid a strong/);
+ assert.ok(Buffer.byteLength(sprite,'utf8')<9000,'Vector asset should remain lightweight');
+ assert.ok(Buffer.byteLength(polish,'utf8')<9000,'New CSS should remain lightweight');
 });
