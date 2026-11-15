@@ -8,6 +8,25 @@ function json(data, status = 200) {
   return Response.json(data, { status, headers: { "cache-control": "no-store", "x-robots-tag": "noindex, nofollow" } });
 }
 
+async function verifyManifest(browser, plan) {
+  const url = plan.origin + "/rv3-preview-manifest.json";
+  const context = await browser.newContext({ serviceWorkers: "block" });
+  try {
+    // Use the same Browser Run network as the page checks. Cross-Worker fetch can
+    // resolve an immutable Preview differently within Cloudflare's Worker network.
+    await context.route("**/*", route => route.request().url() === url
+      ? route.continue() : route.abort());
+    const page = await context.newPage();
+    const response = await page.goto(url, { waitUntil: "domcontentloaded", timeout: 12000 });
+    if (response?.status() !== 200 || page.url() !== url || response.request().redirectedFrom() ||
+        !/\bnoindex\b/i.test(await response.headerValue("x-robots-tag") || "")) return false;
+    const manifest = await response.json();
+    return manifest?.kind === "cloudflare-preview-only" && manifest.commitSha === plan.commitSha;
+  } finally {
+    await context.close();
+  }
+}
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -41,15 +60,10 @@ export default {
 
     let browser;
     try {
-      const response = await fetch(plan.origin + "/rv3-preview-manifest.json", {
-        redirect: "manual", signal: AbortSignal.timeout(8000),
-      });
-      const manifest = response.ok ? await response.json() : null;
-      if (manifest?.kind !== "cloudflare-preview-only" || manifest.commitSha !== plan.commitSha ||
-          !response.headers.get("x-robots-tag")?.includes("noindex")) {
-        return json({ status: "FAIL", error: "Preview manifest does not match the build SHA" }, 409);
-      }
       browser = await launch(env.QA_BROWSER, { guardrails: { allowedDomains: [new URL(plan.origin).hostname] } });
+      if (!await verifyManifest(browser, plan)) {
+        return json({ status: "FAIL", error: "Browser could not verify preview identity and noindex" }, 409);
+      }
       const results = [];
       for (const route of ROUTES) {
         for (const viewport of VIEWPORTS) results.push(await checkViewport(browser, plan.origin, route, viewport));
