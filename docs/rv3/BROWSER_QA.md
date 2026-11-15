@@ -24,3 +24,7 @@ if [ -f cloudflare/browser-qa/preview-hook.mjs ]; then node cloudflare/browser-q
 Na větvích bez hooku běží původní preview. Příkaz pro větev `rv3/cloudflare-preview`, GitHub Pages a DNS zůstávají oddělené. Pro návrat k původnímu chování změň jen Preview command na `npx wrangler preview`.
 
 Výsledek a odkaz na důkaz jsou v logu buildu. Důkazy jsou pod náhodným odkazem po sedm dní v samostatné KV. Poslední ověřený běh je v [řídicím centru #59](https://github.com/fangren740/bmi-kalkulacka/issues/59) a [QA plánu #64](https://github.com/fangren740/bmi-kalkulacka/issues/64).
+
+## První ověření nasazení
+
+[První automatický build](https://dash.cloudflare.com/69c821d02b55b2645d0f1059623d1dde/workers/services/view/rychlevypocty-v3-preview/production/previews/rv3-browser-run-qa/builds/3482e9e3-1111-4d15-bba9-da5270162d5a) vytvořil neměnný náhled a správně skončil FAIL, protože Workers odmítly hodnotu redirect `error`. Oprava používá `manual` a přijímá pouze 2xx odpověď správného manifestu, takže se přesměrování stále nesledují. Při změně kódu QA Workeru ověř jeho samostatný deploy před opakováním preview buildu.
