@@ -66,7 +66,7 @@ ${renderHeaderV2({catalogHref:'/rv3/poc/katalog-v2.html'})}
         <div class="rv3a-hero-copy">
           <span class="rv3d-kicker"><span class="rv3d-kicker-line" aria-hidden="true"></span> O PROJEKTU</span>
           <h1 id="about-title">Nejde jen o číslo.<br><em>Jde o to mu rozumět.</em></h1>
-          <p class="rv3a-lead">RychléVýpočty pomáhají proměnit každodenní otázky v konkrétní odpovědi. Vyberete téma, zadáte potřebné údaje a uvidíte nejen výsledek, ale také souvislosti a předpoklady výpočtu.</p>
+          <p class="rv3a-lead">RychléVýpočty.cz jsou nezávislý český projekt online kalkulaček. Pomáhají zjistit, jak se mění výsledek při různém zadání, a ukazují, z jakých pravidel, údajů a předpokladů výpočet vychází.</p>
           <div class="rv3a-hero-actions">
             <a class="rv3a-btn rv3a-btn-primary" href="/rv3/poc/katalog-v2.html">Prozkoumat kalkulačky <span aria-hidden="true">↗</span></a>
             <a class="rv3a-btn rv3a-btn-text" href="#nase-principy">Jak web funguje <span aria-hidden="true">↓</span></a>
@@ -92,33 +92,33 @@ ${renderHeaderV2({catalogHref:'/rv3/poc/katalog-v2.html'})}
   </nav>
   <section class="rv3a-intro" id="proc-vznikl" aria-labelledby="why-title">
     <div class="rv3d-wrap rv3a-intro-grid">
-      <div><span class="rv3a-eyebrow">01 / MYŠLENKA PROJEKTU</span><h2 id="why-title">Číslo samo o sobě <em>nestačí.</em></h2></div>
+      <div><span class="rv3a-eyebrow">01 / MYŠLENKA PROJEKTU</span><h2 id="why-title">Od otázky k <em>rozhodnutí.</em></h2></div>
       <div class="rv3a-intro-copy">
-        <p class="rv3a-intro-lead">Kolik dostanu čistého? Co udělá splátka s rozpočtem? Jak se změní výsledek při jiném zadání?</p>
-        <p>Podobné otázky si klademe každý den. Smyslem RychlýchVýpočtů je zjednodušit cestu k odpovědi — ukázat výsledek, jeho předpoklady a případně i to, co je potřeba ověřit jinde.</p>
+        <p class="rv3a-intro-lead">Kolik mi zůstane z výplaty? Co udělá s měsíční splátkou jiná úroková sazba? Kdy se vyplatí porovnat dvě varianty?</p>
+        <p>Právě pro podobné situace projekt vznikl. U mzdy hrají roli vstupní údaje a platná pravidla, u hypotéky například výše úvěru, sazba a doba splácení. Kalkulačka má usnadnit porovnání — ne skrýt podstatné podmínky za jedno působivé číslo.</p>
         <a class="rv3a-link" href="/rv3/poc/katalog-v2.html">Najít kalkulačku k vlastní otázce <span aria-hidden="true">↗</span></a>
       </div>
     </div>
   </section>
   <section class="rv3a-process" id="nase-principy" aria-labelledby="process-title">
     <div class="rv3d-wrap">
-      <div class="rv3a-heading-row"><div><span class="rv3a-eyebrow">02 / OD MYŠLENKY K VÝPOČTU</span><h2 id="process-title">Tři věci, na kterých <em>záleží.</em></h2></div>
-        <p>Nejen rychlost. Také jasné zadání, správná pravidla a vysvětlení, co výsledek znamená.</p>
+      <div class="rv3a-heading-row"><div><span class="rv3a-eyebrow">02 / CO MŮŽETE OVĚŘIT</span><h2 id="process-title">Nejen vzorec. <em>Také podklady.</em></h2></div>
+        <p>V metodice popisujeme, odkud bereme pravidla, jak kontrolujeme hraniční vstupy a kde zveřejňujeme modelová data ke stažení.</p>
       </div>
       <div class="rv3a-process-grid">
-        <article class="rv3a-step"><span class="rv3a-step-top"><span class="rv3a-step-icon" aria-hidden="true">01</span><span class="rv3a-step-arrow" aria-hidden="true">↗</span></span><h3>Vědět, co počítáme</h3><p>Nejprve je potřeba vymezit otázku, smysluplné vstupy a očekávaný výsledek.</p></article>
-        <article class="rv3a-step"><span class="rv3a-step-top"><span class="rv3a-step-icon" aria-hidden="true">02</span><span class="rv3a-step-arrow" aria-hidden="true">↗</span></span><h3>Opřít se o pravidla</h3><p>U měnících se témat uvádět období, sazby, použité předpoklady a podstatné výjimky.</p></article>
-        <article class="rv3a-step"><span class="rv3a-step-top"><span class="rv3a-step-icon" aria-hidden="true">03</span><span class="rv3a-step-arrow" aria-hidden="true">↗</span></span><h3>Říct, co to znamená</h3><p>Odlišit přesné výpočty od modelových a orientačních. Nenechat uživatele jen s číslem.</p></article>
+        <article class="rv3a-step"><span class="rv3a-step-top"><span class="rv3a-step-icon" aria-hidden="true">01</span><span class="rv3a-step-arrow" aria-hidden="true">↗</span></span><h3>Správné zadání</h3><p>Každá otázka potřebuje jasně popsané vstupy, jednotky a způsob zaokrouhlení. Bez nich nemusí ani správný vzorec dát užitečnou odpověď.</p></article>
+        <article class="rv3a-step"><span class="rv3a-step-top"><span class="rv3a-step-icon" aria-hidden="true">02</span><span class="rv3a-step-arrow" aria-hidden="true">↗</span></span><h3>Dohledatelné zdroje</h3><p>U daní, mezd a dávek dáváme přednost zákonům, úřadům a zveřejněným metodikám. Důležité je i období, pro které se sazba nebo limit používá.</p></article>
+        <article class="rv3a-step"><span class="rv3a-step-top"><span class="rv3a-step-icon" aria-hidden="true">03</span><span class="rv3a-step-arrow" aria-hidden="true">↗</span></span><h3>Kontrolní příklady</h3><p>Výpočty porovnáváme s ručním přepočtem nebo nezávislou referencí a zkoušíme krajní hodnoty. U vybraných témat nabízíme také modelová data a CSV.</p></article>
       </div>
-      <div class="rv3a-process-bottom"><span>Podrobnější popis zdrojů, postupu a omezení.</span><a class="rv3a-link" href="/jak-pocitame.html">Jak počítáme <span aria-hidden="true">↗</span></a></div>
+      <div class="rv3a-process-bottom"><span>Podklady k vlastní kontrole:</span><div class="rv3a-proof-links"><a class="rv3a-link" href="/jak-pocitame.html">Metodika výpočtů <span aria-hidden="true">↗</span></a><a class="rv3a-link" href="/data-a-benchmarky.html">Data a benchmarky <span aria-hidden="true">↗</span></a></div></div>
     </div>
   </section>
   <section class="rv3a-clarity" aria-labelledby="clarity-title">
     <div class="rv3d-wrap rv3a-clarity-grid">
       <div class="rv3a-clarity-copy"><span class="rv3a-eyebrow">03 / FÉROVĚ K VÝSLEDKŮM</span>
         <h2 id="clarity-title">Vědět, kde končí <em>jistota.</em></h2>
-        <p>U jednoduché matematiky můžeme spočítat přesné číslo. U složitějších finančních, daňových nebo pracovních situací záleží na předpokladech a aktuálních pravidlech.</p>
-        <p>Proto rozlišujeme přesný, modelový a orientační výsledek. Kalkulačka pomůže získat přehled, ale nenahrazuje odborné posouzení ani rozhodnutí příslušné instituce.</p>
+        <p>Převod jednotek může dát jednoznačný výsledek. U daní, dávek nebo financování bydlení je ale nutné znát platné období a okolnosti konkrétní situace.</p>
+        <p>Rozlišujeme proto přesné, modelové a orientační výpočty. U rozhodnutí s významným dopadem si výsledek ověřte podle uvedených zdrojů a případně také u odborníka či příslušné instituce.</p>
         <a class="rv3a-link" href="/redakcni-zasady.html">Naše redakční zásady <span aria-hidden="true">↗</span></a>
       </div>
       <div class="rv3a-clarity-panel">
@@ -134,8 +134,8 @@ ${renderHeaderV2({catalogHref:'/rv3/poc/katalog-v2.html'})}
     <div class="rv3d-wrap rv3a-author-grid">
       <div class="rv3a-author-copy"><span class="rv3a-eyebrow">04 / KDO ZA PROJEKTEM STOJÍ</span>
         <h2 id="author-title">Za projektem stojí <em>konkrétní člověk.</em></h2>
-        <p>RychléVýpočty.cz provozuje <strong>${escape(OWNER)}</strong> jako fyzická osoba bez přiděleného IČO. Jde o nezávislý projekt, za jehož témata, obsah a podobu odpovídá provozovatel.</p>
-        <p>Našli jste chybu, nejasný výsledek nebo vám chybí určité téma? Dejte vědět přímo provozovateli — konkrétní připomínky pomáhají nástroje zlepšovat.</p>
+        <p>RychléVýpočty.cz provozuje <strong>${escape(OWNER)}</strong> jako fyzická osoba bez přiděleného IČO. Za výběr témat, zveřejněný obsah a podobu webu odpovídá provozovatel — ne anonymní redakce.</p>
+        <p>Při tvorbě využíváme také AI a automatizaci, například pro rešerši, návrhy a testovací příklady. Výstupy těchto nástrojů slouží jako pracovní podklad; odpovědnost za publikování zůstává provozovateli. <a class="rv3a-inline-link" href="/redakcni-zasady.html">Jak vzniká a opravuje se obsah <span aria-hidden="true">↗</span></a></p><p>Najdete-li chybu, pošlete prosím odkaz na stránku, zadané hodnoty a očekávaný výsledek. Podnět můžeme ověřit a podle zjištění opravit výpočet nebo vysvětlení.</p>
       </div>
       <div class="rv3a-contact"><span class="rv3a-contact-head">KONTAKT NA PROVOZOVATELE</span>
         <strong>${escape(OWNER)}</strong><span>Nezávislý projekt RychléVýpočty.cz</span>
@@ -145,12 +145,31 @@ ${renderHeaderV2({catalogHref:'/rv3/poc/katalog-v2.html'})}
       </div>
     </div>
   </section>
+  <section class="rv3a-openness" aria-labelledby="open-title">
+    <div class="rv3d-wrap">
+      <div class="rv3a-openness-head"><div><span class="rv3a-eyebrow">05 / OTEVŘENĚ O PROVOZU</span><h2 id="open-title">Důvěra stojí i na <em>transparentnosti.</em></h2></div><p>Nemusíte hledat v právních textech naslepo. Tady jsou dvě věci, které je dobré vědět před použitím kalkulačky.</p></div>
+      <div class="rv3a-openness-grid">
+        <article class="rv3a-openness-item">
+          <span class="rv3a-openness-index">01 / VAŠE ÚDAJE</span>
+          <h3>Co zůstává v prohlížeči</h3>
+          <p>Běžné výpočty probíhají přímo ve vašem prohlížeči. Některé funkce mohou ukládat místní nastavení nebo vložit hodnoty do sdíleného odkazu. Před sdílením URL proto zkontrolujte její obsah.</p>
+          <a class="rv3a-link" href="/ochrana-osobnich-udaju.html">Jak chráníme soukromí <span aria-hidden="true">↗</span></a>
+        </article>
+        <article class="rv3a-openness-item">
+          <span class="rv3a-openness-index">02 / NEZÁVISLOST</span>
+          <h3>Reklama nesmí měnit výsledek</h3>
+          <p>Jak je web financován a jak by se označovala případná reklama nebo affiliate spolupráce, popisujeme samostatně. Obchodní vztah nemá ovlivňovat vzorce, výsledky ani jejich vysvětlení.</p>
+          <a class="rv3a-link" href="/reklama-a-spoluprace.html">Reklama a spolupráce <span aria-hidden="true">↗</span></a>
+        </article>
+      </div>
+    </div>
+  </section>
   <section class="rv3a-next" aria-labelledby="next-title">
     <div class="rv3d-wrap">
       <div class="rv3a-next-lead"><span class="rv3a-eyebrow">KAM DÁL</span><h2 id="next-title">Z otázky k <em>výsledku.</em></h2><p>Vyberte si cestu podle toho, co právě potřebujete.</p></div>
       <div class="rv3a-next-grid">
         <a href="/rv3/poc/katalog-v2.html"><span>01 / PROZKOUMAT</span><strong>Všechny kalkulačky</strong><small>Najděte správný nástroj podle své situace.</small><span aria-hidden="true">↗</span></a>
-        <a href="/jak-pocitame.html"><span>02 / POROZUMĚT</span><strong>Jak počítáme</strong><small>Metodika, předpoklady a omezení výsledků.</small><span aria-hidden="true">↗</span></a>
+        <a href="/jak-pocitame.html"><span>02 / OVĚŘIT</span><strong>Metodika a zdroje</strong><small>Jak vzniká výsledek a jaké jsou jeho limity.</small><span aria-hidden="true">↗</span></a>
         <a href="/kontakt.html"><span>03 / OZVAT SE</span><strong>Zpětná vazba</strong><small>Chyba, námět nebo otázka k projektu.</small><span aria-hidden="true">↗</span></a>
       </div>
     </div>
