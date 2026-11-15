@@ -9,6 +9,7 @@ import {renderAboutStudio} from '../rv3/engine/studio-about.mjs';
 import {renderMethodologyStudio} from '../rv3/engine/studio-methodology.mjs';
 import {renderEditorialStudio} from '../rv3/engine/studio-editorial.mjs';
 import {renderContactStudio} from '../rv3/engine/studio-contact.mjs';
+import {renderPrivacyStudio} from '../rv3/engine/studio-privacy.mjs';
 export async function buildPrototype({root,output}){
  const folder=path.join(output,'rv3','poc');
  await mkdir(folder,{recursive:true});
@@ -86,6 +87,15 @@ export async function buildPrototype({root,output}){
  await writeFile(contactTarget,contact.html);
  await stat(contactTarget);
  reports.push(contact.manifest);
+ // Privacy is a legally sensitive reading room. Copy all seven source sections
+ // verbatim and fail closed on the reviewed source Git blob fingerprint.
+ const privacySource=await readFile(path.join(root,'ochrana-osobnich-udaju.html'),'utf8');
+ const privacyTemplate=await readFile(path.join(root,'rv3/engine/privacy.template.html'),'utf8');
+ const privacy=renderPrivacyStudio(privacySource,privacyTemplate);
+ const privacyTarget=path.join(trustFolder,'ochrana-osobnich-udaju.html');
+ await writeFile(privacyTarget,privacy.html);
+ await stat(privacyTarget);
+ reports.push(privacy.manifest);
  // Homepage is a distinct editorial product, not a copy of the hub skin.
  const homepageSource=await readFile(path.join(root,'index.html'),'utf8');
  const homepage=renderHomepageStudio(homepageSource);
