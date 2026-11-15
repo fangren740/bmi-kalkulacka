@@ -70,6 +70,14 @@ if((await readFile(path.join(output,'index.html'),'utf8')).length<1000)throw Err
 await writeFile(path.join(output,'robots.txt'),'User-agent: *\nDisallow: /\n');
 await writeFile(path.join(output,'_headers'),'/*\n  X-Robots-Tag: noindex, nofollow, noarchive\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n');
 await writeFile(path.join(output,'404.html'),'<!doctype html><html lang="cs"><meta charset="utf-8"><meta name="robots" content="noindex"><meta name="viewport" content="width=device-width,initial-scale=1"><title>404 – Stránka nenalezena</title><body><main style="font:1.1rem system-ui;max-width:38rem;margin:10vh auto;padding:2rem"><h1>Stránka nenalezena</h1><p>Požadovaná stránka neexistuje.</p><a href="/">Zpět na úvod</a></main></body></html>');
-const manifest={kind:'cloudflare-preview-only',sourceRef:process.env.CF_PAGES_BRANCH||process.env.CF_BRANCH||process.env.GITHUB_SHA||'git-branch',files:copied,html,createdAt:new Date().toISOString(),previewOnly:true};
+// Apply the HTML directive to the copied V3 homepage, leaving the source untouched.
+const previewHome = path.join(output, 'index.html');
+const homeHtml = await readFile(previewHome, 'utf8');
+const homeRobots = /<meta\b(?=[^>]*\bname=["']robots["'])[^>]*>/gi;
+if ([...homeHtml.matchAll(homeRobots)].length !== 1) throw Error('Unexpected homepage robots directives');
+await writeFile(previewHome, homeHtml.replace(homeRobots,
+  '<meta name="robots" content="noindex,nofollow,noarchive">'));
+
+const manifest={commitSha:process.env.WORKERS_CI_COMMIT_SHA||null,kind:'cloudflare-preview-only',sourceRef:process.env.CF_PAGES_BRANCH||process.env.CF_BRANCH||process.env.GITHUB_SHA||'git-branch',files:copied,html,createdAt:new Date().toISOString(),previewOnly:true};
 await writeFile(path.join(output,'rv3-preview-manifest.json'),JSON.stringify(manifest,null,2)+'\n');
 console.log('Preview build ready:',html,'HTML files,',copied,'assets. No source URLs changed. Skipped:',skipped.length);
