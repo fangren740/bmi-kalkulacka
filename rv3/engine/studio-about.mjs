@@ -13,6 +13,8 @@ const OWNER='Martin Šilinger';
 const EMAIL='rychlevypocty@seznam.cz';
 const escape=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 
+const glyph=name=>'<svg class="rv3a-glyph" viewBox="0 0 40 40" aria-hidden="true" focusable="false"><use href="/rv3/assets/about-icons.svg#'+name+'"></use></svg>';
+
 export function renderAboutStudio(source){
   if(typeof source!=='string'||!/^<!doctype html>/i.test(source))throw Error('Invalid source');
   if(getCanonical(source)!==CANONICAL)throw Error('Canonical identity changed');
@@ -55,6 +57,7 @@ export function renderAboutStudio(source){
 <link rel="stylesheet" href="/rv3/catalog-v2.css">
 <link rel="stylesheet" href="/rv3/catalog-v3-theme.css">
 <link rel="stylesheet" href="/rv3/sitewide/about.css">
+<link rel="stylesheet" href="/rv3/sitewide/about-icons.css">
 </head><body class="rv3d-page rv3a-page">
 <a class="rv3d-skip" href="#main">Přeskočit na obsah</a>
 ${renderHeaderV2({catalogHref:'/rv3/poc/katalog-v2.html'})}
@@ -71,7 +74,7 @@ ${renderHeaderV2({catalogHref:'/rv3/poc/katalog-v2.html'})}
             <a class="rv3a-btn rv3a-btn-primary" href="/rv3/poc/katalog-v2.html">Prozkoumat kalkulačky <span aria-hidden="true">↗</span></a>
             <a class="rv3a-btn rv3a-btn-text" href="#nase-principy">Jak web funguje <span aria-hidden="true">↓</span></a>
           </div>
-          <div class="rv3a-keyline"><span>Praktické české kalkulačky</span><span>Vysvětlení a předpoklady</span><span>Bez registrace</span></div>
+          <div class="rv3a-keyline"><span>${glyph('calculator')} Praktické české kalkulačky</span><span>${glyph('context')} Vysvětlení a předpoklady</span><span>${glyph('check')} Bez registrace</span></div>
         </div>
         <div class="rv3a-hero-art">
           <img src="/rv3/assets/about-story.svg" alt="Ilustrovaný zápisník s otázkami, podklady a kalkulačkou" width="580" height="470" decoding="async" fetchpriority="high">
@@ -106,9 +109,9 @@ ${renderHeaderV2({catalogHref:'/rv3/poc/katalog-v2.html'})}
         <p>V metodice popisujeme, odkud bereme pravidla, jak kontrolujeme hraniční vstupy a kde zveřejňujeme modelová data ke stažení.</p>
       </div>
       <div class="rv3a-process-grid">
-        <article class="rv3a-step"><span class="rv3a-step-top"><span class="rv3a-step-icon" aria-hidden="true">01</span><span class="rv3a-step-arrow" aria-hidden="true">↗</span></span><h3>Správné zadání</h3><p>Každá otázka potřebuje jasně popsané vstupy, jednotky a způsob zaokrouhlení. Bez nich nemusí ani správný vzorec dát užitečnou odpověď.</p></article>
-        <article class="rv3a-step"><span class="rv3a-step-top"><span class="rv3a-step-icon" aria-hidden="true">02</span><span class="rv3a-step-arrow" aria-hidden="true">↗</span></span><h3>Dohledatelné zdroje</h3><p>U daní, mezd a dávek dáváme přednost zákonům, úřadům a zveřejněným metodikám. Důležité je i období, pro které se sazba nebo limit používá.</p></article>
-        <article class="rv3a-step"><span class="rv3a-step-top"><span class="rv3a-step-icon" aria-hidden="true">03</span><span class="rv3a-step-arrow" aria-hidden="true">↗</span></span><h3>Kontrolní příklady</h3><p>Výpočty porovnáváme s ručním přepočtem nebo nezávislou referencí a zkoušíme krajní hodnoty. U vybraných témat nabízíme také modelová data a CSV.</p></article>
+        <article class="rv3a-step"><span class="rv3a-step-top"><span class="rv3a-step-icon" aria-hidden="true">${glyph('entry')}</span><span class="rv3a-step-number" aria-hidden="true">01</span><span class="rv3a-step-arrow" aria-hidden="true">↗</span></span><h3>Správné zadání</h3><p>Každá otázka potřebuje jasně popsané vstupy, jednotky a způsob zaokrouhlení. Bez nich nemusí ani správný vzorec dát užitečnou odpověď.</p></article>
+        <article class="rv3a-step"><span class="rv3a-step-top"><span class="rv3a-step-icon" aria-hidden="true">${glyph('sources')}</span><span class="rv3a-step-number" aria-hidden="true">02</span><span class="rv3a-step-arrow" aria-hidden="true">↗</span></span><h3>Dohledatelné zdroje</h3><p>U daní, mezd a dávek dáváme přednost zákonům, úřadům a zveřejněným metodikám. Důležité je i období, pro které se sazba nebo limit používá.</p></article>
+        <article class="rv3a-step"><span class="rv3a-step-top"><span class="rv3a-step-icon" aria-hidden="true">${glyph('audit')}</span><span class="rv3a-step-number" aria-hidden="true">03</span><span class="rv3a-step-arrow" aria-hidden="true">↗</span></span><h3>Kontrolní příklady</h3><p>Výpočty porovnáváme s ručním přepočtem nebo nezávislou referencí a zkoušíme krajní hodnoty. U vybraných témat nabízíme také modelová data a CSV.</p></article>
       </div>
       <div class="rv3a-process-bottom"><span>Podklady k vlastní kontrole:</span><div class="rv3a-proof-links"><a class="rv3a-link" href="/jak-pocitame.html">Metodika výpočtů <span aria-hidden="true">↗</span></a><a class="rv3a-link" href="/data-a-benchmarky.html">Data a benchmarky <span aria-hidden="true">↗</span></a></div></div>
     </div>
@@ -123,9 +126,9 @@ ${renderHeaderV2({catalogHref:'/rv3/poc/katalog-v2.html'})}
       </div>
       <div class="rv3a-clarity-panel">
         <span class="rv3a-panel-eyebrow">JAK ČÍST VÝSLEDKY</span>
-        <div class="rv3a-result-line"><span class="rv3a-line-icon" aria-hidden="true">=</span><div><strong>Přesný výsledek</strong><small>Vychází z jednoznačného zadání a pravidel.</small></div></div>
-        <div class="rv3a-result-line"><span class="rv3a-line-icon" aria-hidden="true">≈</span><div><strong>Modelový výpočet</strong><small>Závisí na zvolených předpokladech.</small></div></div>
-        <div class="rv3a-result-line"><span class="rv3a-line-icon" aria-hidden="true">?</span><div><strong>Orientační odhad</strong><small>Pomáhá se zorientovat, není konečným rozhodnutím.</small></div></div>
+        <div class="rv3a-result-line"><span class="rv3a-line-icon" aria-hidden="true">${glyph('exact')}</span><div><strong>Přesný výsledek</strong><small>Vychází z jednoznačného zadání a pravidel.</small></div></div>
+        <div class="rv3a-result-line"><span class="rv3a-line-icon" aria-hidden="true">${glyph('model')}</span><div><strong>Modelový výpočet</strong><small>Závisí na zvolených předpokladech.</small></div></div>
+        <div class="rv3a-result-line"><span class="rv3a-line-icon" aria-hidden="true">${glyph('estimate')}</span><div><strong>Orientační odhad</strong><small>Pomáhá se zorientovat, není konečným rozhodnutím.</small></div></div>
         <div class="rv3a-panel-foot"><span aria-hidden="true">ⓘ</span> Vždy záleží na konkrétním nástroji a jeho metodice.</div>
       </div>
     </div>
@@ -137,7 +140,7 @@ ${renderHeaderV2({catalogHref:'/rv3/poc/katalog-v2.html'})}
         <p>RychléVýpočty.cz provozuje <strong>${escape(OWNER)}</strong> jako fyzická osoba bez přiděleného IČO. Za výběr témat, zveřejněný obsah a podobu webu odpovídá provozovatel — ne anonymní redakce.</p>
         <p>Při tvorbě využíváme také AI a automatizaci, například pro rešerši, návrhy a testovací příklady. Výstupy těchto nástrojů slouží jako pracovní podklad; odpovědnost za publikování zůstává provozovateli. <a class="rv3a-inline-link" href="/redakcni-zasady.html">Jak vzniká a opravuje se obsah <span aria-hidden="true">↗</span></a></p><p>Najdete-li chybu, pošlete prosím odkaz na stránku, zadané hodnoty a očekávaný výsledek. Podnět můžeme ověřit a podle zjištění opravit výpočet nebo vysvětlení.</p>
       </div>
-      <div class="rv3a-contact"><span class="rv3a-contact-head">KONTAKT NA PROVOZOVATELE</span>
+      <div class="rv3a-contact"><span class="rv3a-contact-head">${glyph('feedback')} KONTAKT NA PROVOZOVATELE</span>
         <strong>${escape(OWNER)}</strong><span>Nezávislý projekt RychléVýpočty.cz</span>
         <a class="rv3a-contact-email" href="mailto:${EMAIL}">${EMAIL}</a>
         <a class="rv3a-btn rv3a-btn-primary" href="/kontakt.html">Kontaktovat projekt <span aria-hidden="true">↗</span></a>
@@ -150,13 +153,13 @@ ${renderHeaderV2({catalogHref:'/rv3/poc/katalog-v2.html'})}
       <div class="rv3a-openness-head"><div><span class="rv3a-eyebrow">05 / OTEVŘENĚ O PROVOZU</span><h2 id="open-title">Důvěra stojí i na <em>transparentnosti.</em></h2></div><p>Nemusíte hledat v právních textech naslepo. Tady jsou dvě věci, které je dobré vědět před použitím kalkulačky.</p></div>
       <div class="rv3a-openness-grid">
         <article class="rv3a-openness-item">
-          <span class="rv3a-openness-index">01 / VAŠE ÚDAJE</span>
+          <span class="rv3a-openness-index">01 / VAŠE ÚDAJE</span><span class="rv3a-open-art" aria-hidden="true">${glyph('privacy')}</span>
           <h3>Co zůstává v prohlížeči</h3>
           <p>Běžné výpočty probíhají přímo ve vašem prohlížeči. Některé funkce mohou ukládat místní nastavení nebo vložit hodnoty do sdíleného odkazu. Před sdílením URL proto zkontrolujte její obsah.</p>
           <a class="rv3a-link" href="/ochrana-osobnich-udaju.html">Jak chráníme soukromí <span aria-hidden="true">↗</span></a>
         </article>
         <article class="rv3a-openness-item">
-          <span class="rv3a-openness-index">02 / NEZÁVISLOST</span>
+          <span class="rv3a-openness-index">02 / NEZÁVISLOST</span><span class="rv3a-open-art" aria-hidden="true">${glyph('independent')}</span>
           <h3>Reklama nesmí měnit výsledek</h3>
           <p>Jak je web financován a jak by se označovala případná reklama nebo affiliate spolupráce, popisujeme samostatně. Obchodní vztah nemá ovlivňovat vzorce, výsledky ani jejich vysvětlení.</p>
           <a class="rv3a-link" href="/reklama-a-spoluprace.html">Reklama a spolupráce <span aria-hidden="true">↗</span></a>
@@ -168,9 +171,9 @@ ${renderHeaderV2({catalogHref:'/rv3/poc/katalog-v2.html'})}
     <div class="rv3d-wrap">
       <div class="rv3a-next-lead"><span class="rv3a-eyebrow">KAM DÁL</span><h2 id="next-title">Z otázky k <em>výsledku.</em></h2><p>Vyberte si cestu podle toho, co právě potřebujete.</p></div>
       <div class="rv3a-next-grid">
-        <a href="/rv3/poc/katalog-v2.html"><span>01 / PROZKOUMAT</span><strong>Všechny kalkulačky</strong><small>Najděte správný nástroj podle své situace.</small><span aria-hidden="true">↗</span></a>
-        <a href="/jak-pocitame.html"><span>02 / OVĚŘIT</span><strong>Metodika a zdroje</strong><small>Jak vzniká výsledek a jaké jsou jeho limity.</small><span aria-hidden="true">↗</span></a>
-        <a href="/kontakt.html"><span>03 / OZVAT SE</span><strong>Zpětná vazba</strong><small>Chyba, námět nebo otázka k projektu.</small><span aria-hidden="true">↗</span></a>
+        <a href="/rv3/poc/katalog-v2.html"><span>01 / PROZKOUMAT</span><span class="rv3a-next-art" aria-hidden="true">${glyph('calculator')}</span><strong>Všechny kalkulačky</strong><small>Najděte správný nástroj podle své situace.</small><span aria-hidden="true">↗</span></a>
+        <a href="/jak-pocitame.html"><span>02 / OVĚŘIT</span><span class="rv3a-next-art" aria-hidden="true">${glyph('method')}</span><strong>Metodika a zdroje</strong><small>Jak vzniká výsledek a jaké jsou jeho limity.</small><span aria-hidden="true">↗</span></a>
+        <a href="/kontakt.html"><span>03 / OZVAT SE</span><span class="rv3a-next-art" aria-hidden="true">${glyph('feedback')}</span><strong>Zpětná vazba</strong><small>Chyba, námět nebo otázka k projektu.</small><span aria-hidden="true">↗</span></a>
       </div>
     </div>
   </section>
@@ -184,7 +187,7 @@ ${renderFooterV2()}
     source:SOURCE,preview:'/rv3/studio/o-nas.html',kind:'catalog-aligned-bespoke-about',
     canonical:CANONICAL,title:TITLE,previewOnly:true,
     sourceSha256:createHash('sha256').update(source).digest('hex'),
-    art:'/rv3/assets/about-story.svg',css:['/rv3/catalog-v2.css','/rv3/catalog-v3-theme.css','/rv3/sitewide/about.css'],
+    art:'/rv3/assets/about-story.svg',css:['/rv3/catalog-v2.css','/rv3/catalog-v3-theme.css','/rv3/sitewide/about.css','/rv3/sitewide/about-icons.css'],
     designStatus:'VISUAL_REVIEW_PENDING',browserQa:'NOT_VERIFIED'
   }};
 }
