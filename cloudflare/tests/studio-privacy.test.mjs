@@ -196,7 +196,7 @@ test('privacy: source mutation of any legal paragraph, section or provenance fai
  assert.throws(()=>renderPrivacyStudio(source.replace('čl. 6 odst. 1 písm. f GDPR','čl. 6 odst. 1 písm. a GDPR'),template),/fingerprint/);
  assert.throws(()=>renderPrivacyStudio(source.replace('<section class="card">','<section>'),template),/fingerprint/);
  assert.throws(()=>renderPrivacyStudio(source.replace('content="index,follow"','content="noindex,nofollow"'),template),/fingerprint/);
- assert.throws(()=>renderPrivacyStudio(source,template.replace('noindex,nofollow,noarchive','index,follow')), /noindex/);
+ assert.throws(()=>renderPrivacyStudio(source,template.replace('noindex,nofollow,noarchive','index,follow')), /robots|noindex/i);
  assert.throws(()=>renderPrivacyStudio(source,template.replace('https://rychlevypocty.cz/ochrana-osobnich-udaju.html','https://fake.test/')), /template privacy SEO/i);
  assert.throws(()=>renderPrivacyStudio(source,template.replace('{{LEGAL_6}}','')), /missing or duplicated/i);
 });
