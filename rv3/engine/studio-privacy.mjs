@@ -106,7 +106,6 @@ export function renderPrivacyStudio(source,template){
   sourceLegalContentUnmodified:true,
   art:'/rv3/assets/privacy-flow.svg',
   css:['/rv3/catalog-v2.css','/rv3/catalog-v3-theme.css','/rv3/sitewide/privacy.css'],
-  enhancement:'/rv3/sitewide/privacy-inspect.js',
   legalReviewStatus:'BLOCKED_PENDING_TRACKING_CONTACT_AND_HOSTING_VERIFICATION',
   designStatus:'VISUAL_REVIEW_PENDING',
   browserQa:'NOT_VERIFIED'

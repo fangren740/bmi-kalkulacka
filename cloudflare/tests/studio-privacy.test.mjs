@@ -3,7 +3,6 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 import {renderPrivacyStudio,PRIVACY_TOPICS} from '../../rv3/engine/studio-privacy.mjs';
-import {inspectSharedUrl,mountUrlInspector} from '../../rv3/sitewide/privacy-inspect.js';
 import {extractMain,getCanonical} from '../../rv3/engine/renderer.mjs';
 
 const from=path=>readFileSync(new URL('../../'+path,import.meta.url),'utf8');
@@ -47,7 +46,7 @@ test('privacy: source SEO identity/structured data locked; preview noindex only'
  assert.match(html,/<meta name="description" content="Informace o zpracování osobních údajů na RychléVýpočty.cz/);
  assert.equal((html.match(/<main\b/gi)||[]).length,1);
  assert.equal((html.match(/<h1\b/gi)||[]).length,1);
- assert.equal((html.match(/<script\b/gi)||[]).length,2,'Only original schema + local URL inspector');
+ assert.equal((html.match(/<script\b/gi)||[]).length,1,'Only original legal structured data, no unnecessary enhancer');
  const schema=source.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/i)?.[1];
  assert.ok(schema&&html.includes(schema),'Original PrivacyPolicy graph changed');
  for(const mark of ['{{JSONLD}}','{{HEADER}}','{{FOOTER}}','{{LEGAL_0}}','{{LEGAL_6}}'])
@@ -77,7 +76,9 @@ test('privacy: catalog brand with its own artwork, local icons and responsive re
   assert.ok(icons.includes('id="'+topic.glyph+'"'),'Icon undefined: '+topic.glyph);
   assert.ok(html.includes('about-icons.svg#'+topic.glyph),'Icon unused: '+topic.glyph);
  }
- assert.equal((html.match(/class="rv3p-map-cell"/g)||[]).length,3);
+ assert.equal((html.match(/class="rv3p-chapter"/g)||[]).length,7);
+ assert.ok(html.includes('href="#plne-zneni"'));
+ assert.ok(!html.includes('data-url-inspector'));
  assert.ok(Buffer.byteLength(artwork,'utf8')<9500);
  assert.ok(Buffer.byteLength(css,'utf8')<19000);
  for(const legacy of ['rv-trust-v7.css','trust-nav','hero-panel'])
@@ -116,79 +117,28 @@ test('privacy: unresolved operational assertions are not silently rewritten or f
  assert.ok(html.includes('Web nemá uživatelské účty, přihlášení, newsletter ani kontaktní formulář.'));
  assert.ok(html.includes('Google Analytics nyní není aktivní'));
  assert.ok(html.includes('Hosting prostřednictvím GitHub Pages'));
- assert.ok(html.includes('Cloudflare'));
  assert.ok(html.includes('věcný audit probíhá'));
- assert.ok(html.includes('Původní tvrzení zatím neměníme'));
+ assert.ok(html.includes('Zásady jsou převzaty beze změn'));
  assert.doesNotMatch(html,/audit úspěšně dokončen|100% GDPR|garantujeme bezpečnost|certifikovaný GDPR|bez jakéhokoli rizika/i);
 });
 
-test('privacy: local URL inspection detects query keys and fragment without returning actual contents',()=>{
- const cases=[
-  ['https://rychlevypocty.cz/kalkulacka.html',0,false],
-  ['https://rychlevypocty.cz/a?value=30&year=2026',2,false],
-  ['/kalkulacka.html?vyplata=55000#vysledek',1,true],
-  ['https://rychlevypocty.cz/a#stav',0,true],
-  ['/kalkulacka.html?name=Eva%20Novakova',1,false]
- ];
- for(const [url,parameters,fragment] of cases){
-  const output=inspectSharedUrl(url);
-  assert.equal(output.parameters,parameters);
-  assert.equal(output.fragment,fragment);
-  assert.equal(output.hasEmbeddedState,parameters>0||fragment);
-  assert.ok(!output.message.includes('55000')&&!output.message.includes('Eva'),'Must not echo values');
-  assert.ok(Object.isFrozen(output));
- }
- assert.match(inspectSharedUrl('https://rychlevypocty.cz/').message,/neznamená/);
- assert.match(inspectSharedUrl('/x?a=1').message,/Před sdílením/);
-});
-
-test('privacy: invalid, unsafe schemes and excessive URL input are rejected',()=>{
- for(const url of [
-  '',' ','example.test/?x=1','ftp://example.test/x',
-  'javascript:alert(1)','data:text/html,<b>hello</b>',
-  '//example.test/path','https://','x'.repeat(2049),null,4
- ])assert.throws(()=>inspectSharedUrl(url),TypeError,'Expected rejection for '+String(url).slice(0,30));
- assert.equal(mountUrlInspector(null),false);
-});
-
-test('privacy: input is evaluated only after a user action and clearing does not persist or transmit',()=>{
- const listeners={};
- const input={value:'https://rychlevypocty.cz/x?name=secret',handlers:{},focused:false,
-  addEventListener(event,fn){this.handlers[event]=fn},focus(){this.focused=true}};
- const check={addEventListener(event,fn){listeners['check:'+event]=fn}};
- const clear={addEventListener(event,fn){listeners['clear:'+event]=fn}};
- const result={textContent:'Vložte odkaz',dataset:{}};
- const fields={'[data-url-value]':input,'[data-url-check]':check,'[data-url-clear]':clear,'[data-url-result]':result};
- const root={querySelector:query=>fields[query]};
- assert.equal(mountUrlInspector(root),true);
- assert.equal(result.textContent,'Vložte odkaz','Must not auto-analyze potentially private URL');
- listeners['check:click']();
- assert.equal(result.dataset.state,'review');
- assert.doesNotMatch(result.textContent,/secret/,'Never reflect user-provided values');
- input.value='https://rychlevypocty.cz/';
- let prevented=false;
- input.handlers.keydown({key:'Enter',preventDefault(){prevented=true}});
- assert.equal(prevented,true);
- assert.equal(result.dataset.state,'neutral');
- listeners['clear:click']();
- assert.equal(input.value,'');
- assert.equal(input.focused,true);
- assert.match(result.textContent,/vymazána/);
- assert.equal(result.dataset.state,'neutral');
-});
-
-test('privacy: inspector is a non-submitting, dependency-free text helper',()=>{
+test('privacy: editorial review removes filler, keeps direct navigation and no extra data entry',()=>{
  const {html}=output();
- const js=from('rv3/sitewide/privacy-inspect.js');
- assert.match(html,/data-url-inspector/);
- assert.match(html,/type="button" data-url-check/);
- assert.match(html,/type="button" data-url-clear/);
- assert.match(html,/autocomplete="off" autocapitalize="off" spellcheck="false"/);
- assert.match(html,/aria-live="polite" data-url-result/);
- assert.ok(!html.includes('<form')&&!html.includes('data-url-submit'));
- assert.doesNotMatch(js,/\bfetch\s*\(|XMLHttpRequest|sendBeacon|localStorage|sessionStorage|indexedDB|console\.log|window\.location/);
- assert.ok(Buffer.byteLength(js,'utf8')<5000);
- assert.ok(html.includes('Nerozpoznává konkrétní osobní údaje'));
+ assert.match(html,/<h1 id="privacy-title">Ochrana <em>osobních údajů\.<\/em><\/h1>/);
+ assert.ok(html.includes('href="#plne-zneni"'));
+ assert.ok(html.includes('href="#prava"'));
+ assert.ok(html.includes('aria-label="Obsah zásad ochrany osobních údajů"'));
+ assert.equal((html.match(/class="rv3p-chapter"/g)||[]).length,7);
+ assert.ok(!html.includes('data-url-inspector'));
+ assert.ok(!html.includes('rv3p-share'));
+ assert.ok(!html.includes('rv3p-map'));
+ assert.ok(!html.includes('rv3p-next'));
+ assert.ok(!html.includes('privacy-inspect.js'));
+ assert.ok(!html.includes('href="#prehled"'));
+ assert.ok(!html.includes('<form'));
+ assert.ok(!html.includes('<input'));
+ assert.ok(css.length<11000,'No unused styles from removed marketing sections');
+ assert.ok(template.length<8500,'Preview template should remain concise');
 });
 
 test('privacy: source mutation of any legal paragraph, section or provenance fails closed',()=>{
@@ -210,6 +160,5 @@ test('privacy: no unreviewed release — all stage gates are exposed',()=>{
  assert.ok(html.includes('Technický provoz'));
  assert.ok(html.includes('Přístup, oprava, výmaz'));
  assert.ok(html.includes('SOUKROMÍ A DŮVĚRA'));
- assert.ok(html.includes('PRŮVODCE SOUKROMÍM'));
- assert.ok(html.includes('Před zveřejněním je nutné ověřit stav analytiky'));
+ assert.ok(html.includes('Před zveřejněním ověřujeme analytiku'));
 });
