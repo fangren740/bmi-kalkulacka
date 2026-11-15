@@ -1,7 +1,8 @@
 import { spawn, execFileSync } from "node:child_process";
+import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
-import { isCommitSha, isPass, PROOF_ID, QA_ORIGIN, ROUTES, validOrigin, VIEWPORTS } from "./src/policy.mjs";
+import { isCommitSha, isPass, PROOF_ID, QA_ORIGIN, isVisualPath, reviewRoutes, validOrigin, VIEWPORTS } from "./src/policy.mjs";
 
 export function deployedOrigin(output) {
   const lines = String(output).replace(/\x1b\[[0-9;]*m/g, "").split(/\r?\n/);
@@ -15,15 +16,17 @@ export function allowedBuild(env) {
 }
 
 export function summarize(report, plan) {
+  const routes = reviewRoutes(plan.visualPath);
   const rows = Array.isArray(report?.results) ? report.results : [];
   return report?.status === "PASS" && report.testedUrl === plan.origin && report.commitSha === plan.commitSha &&
     typeof report.evidenceId === "string" && PROOF_ID.test(report.evidenceId) &&
-    rows.length === ROUTES.length * VIEWPORTS.length &&
-    ROUTES.every(route => VIEWPORTS.every(viewport => {
+    rows.length === routes.length * VIEWPORTS.length &&
+    routes.every(route => VIEWPORTS.every(viewport => {
       const matches = rows.filter(row => row?.route === route.id && row.viewport === viewport.label);
       const row = matches[0];
       return matches.length === 1 && row.path === route.path && row.width === viewport.width &&
-        row.height === viewport.height && row.status === "PASS" && isPass(row, route);
+        row.height === viewport.height && row.status === "PASS" && isPass(row, route) &&
+        (!route.fullPage || (row.fullPage === true && row.captureHeight >= viewport.height));
     }));
 }
 
@@ -45,8 +48,22 @@ async function uploadPreview(env) {
   });
 }
 
+export async function loadVisualPath() {
+  const raw = await readFile(new URL("visual-review.json", import.meta.url), "utf8").catch(error => {
+    if (error.code === "ENOENT") return null;
+    throw error;
+  });
+  if (raw === null) return undefined;
+  const config = JSON.parse(raw);
+  if (!isVisualPath(config?.path) || Object.keys(config).length !== 1) {
+    throw Error("visual-review.json must specify one RV3 HTML path");
+  }
+  return config.path;
+}
+
 export async function runPreviewQa({
   env = process.env, upload = uploadPreview, http = fetch, log = console.log, error = console.error,
+  readVisual = loadVisualPath,
 } = {}) {
   if (!allowedBuild(env)) {
     error("RV3 QA blocked: expected an eligible Workers Builds preview and encrypted QA_AUTO_TOKEN");
@@ -54,9 +71,11 @@ export async function runPreviewQa({
   }
   const { QA_AUTO_TOKEN, ...uploadEnv } = env;
   try {
+    const visualPath = await readVisual();
+    if (visualPath !== undefined && !isVisualPath(visualPath)) throw Error("Invalid visual review route");
     const origin = deployedOrigin(await upload(uploadEnv));
     if (!origin) throw Error("No unique RV3 deployment URL in Wrangler output");
-    const plan = { origin, commitSha: env.WORKERS_CI_COMMIT_SHA };
+    const plan = { origin, commitSha: env.WORKERS_CI_COMMIT_SHA, visualPath };
     log("RV3 QA preview " + origin + " · " + plan.commitSha);
     const response = await http(QA_ORIGIN + "/run", {
       method: "POST", redirect: "error", signal: AbortSignal.timeout(150000),
@@ -64,7 +83,7 @@ export async function runPreviewQa({
       body: JSON.stringify(plan),
     });
     const report = await response.json();
-    for (const route of ROUTES) {
+    for (const route of reviewRoutes(visualPath)) {
       for (const viewport of VIEWPORTS) {
         const row = (report.results ?? []).find(item => item.route === route.id && item.viewport === viewport.label);
         const failed = Object.entries(row?.checks ?? {}).filter(([, passed]) => passed === false).map(([name]) => name);
@@ -76,6 +95,9 @@ export async function runPreviewQa({
       log("RV3 QA evidence (7 days): " + QA_ORIGIN + "/proof/" + report.evidenceId);
     }
     const passed = response.ok && summarize(report, plan);
+    const baselinePass = (report.results ?? []).filter(row => row.route !== "visual" && row.status === "PASS").length;
+    log("RV3 QA baseline = " + baselinePass + "/8");
+    if (visualPath) log("RV3 visual review: " + visualPath + " · design approval pending");
     log("RV3 QA overall = " + (passed ? "PASS" : "FAIL") + " · " + plan.commitSha);
     if (!response.ok) {
       const reason = typeof report.error === "string" ? report.error.replace(/[\r\n]/g, " ").slice(0, 220) : "";
