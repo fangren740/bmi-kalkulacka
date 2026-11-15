@@ -3,7 +3,7 @@
    The old page is read only to validate identity, contact and SEO provenance.
    Never replaces /o-nas.html in production. */
 import {createHash} from 'node:crypto';
-import {getCanonical} from './renderer.mjs';
+import {getCanonical,extractMain} from './renderer.mjs';
 import {renderHeaderV2,renderFooterV2} from './shell-v2.mjs';
 
 const sourceRoute='o-nas.html';
@@ -21,11 +21,12 @@ export function renderAboutStudio(source){
   if(!source.includes('<title>'+originalTitle+'</title>')||
      !source.includes('content="'+description+'"'))throw Error('SEO identity mismatch');
   if(!source.includes('<meta name="robots" content="index,follow">'))throw Error('Source robots mismatch');
-  if(!source.includes('>'+name+'</span>')||
-     !source.includes('bez přiděleného IČO')||
-     !source.includes('mailto:'+email))throw Error('Missing verified operator facts');
-  if(!source.includes('https://www.facebook.com/rychlevypocty')||
-     !source.includes('https://www.instagram.com/rychlevypocty/'))throw Error('Missing verified social links');
+  const main=extractMain(source);
+  if(!main||!main.includes('>'+name+'</span>')||
+     !main.includes('bez přiděleného IČO')||
+     !main.includes('mailto:'+email))throw Error('Missing verified operator facts in visible page');
+  if(!main.includes('href="https://www.facebook.com/rychlevypocty"')||
+     !main.includes('href="https://www.instagram.com/rychlevypocty/"'))throw Error('Missing verified visible social links');
   const structuredData=source.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/i)?.[1];
   if(!structuredData)throw Error('Source structured data missing');
   const graph=JSON.parse(structuredData);
