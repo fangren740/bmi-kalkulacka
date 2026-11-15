@@ -8,6 +8,7 @@ import {renderHomepageStudio} from '../rv3/engine/sitewide-home.mjs';
 import {renderAboutStudio} from '../rv3/engine/studio-about.mjs';
 import {renderMethodologyStudio} from '../rv3/engine/studio-methodology.mjs';
 import {renderEditorialStudio} from '../rv3/engine/studio-editorial.mjs';
+import {renderContactStudio} from '../rv3/engine/studio-contact.mjs';
 export async function buildPrototype({root,output}){
  const folder=path.join(output,'rv3','poc');
  await mkdir(folder,{recursive:true});
@@ -77,6 +78,14 @@ export async function buildPrototype({root,output}){
  await writeFile(editorialTarget,editorial.html);
  await stat(editorialTarget);
  reports.push(editorial.manifest);
+ // A source-verified, privacy-preserving contact hub; leave root /kontakt.html untouched.
+ const contactSource=await readFile(path.join(root,'kontakt.html'),'utf8');
+ const contactTemplate=await readFile(path.join(root,'rv3/engine/contact.template.html'),'utf8');
+ const contact=renderContactStudio(contactSource,contactTemplate);
+ const contactTarget=path.join(trustFolder,'kontakt.html');
+ await writeFile(contactTarget,contact.html);
+ await stat(contactTarget);
+ reports.push(contact.manifest);
  // Homepage is a distinct editorial product, not a copy of the hub skin.
  const homepageSource=await readFile(path.join(root,'index.html'),'utf8');
  const homepage=renderHomepageStudio(homepageSource);
