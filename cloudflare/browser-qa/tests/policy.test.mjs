@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { allowedBuild, deployedOrigin, loadVisualPath, runPreviewQa, summarize } from "../preview-hook.mjs";
+import { allowedBuild, deployedOrigin, loadVisualPath, quotaDeferred, runPreviewQa, summarize } from "../preview-hook.mjs";
 import { BASE_CHECKS, isAllowedBrowserRequest, isVisualPath, reviewRoutes, ROUTES, VIEWPORTS } from "../src/policy.mjs";
 
 const origin = "https://a01234bc-rychlevypocty-v3-preview.maattinek.workers.dev";
@@ -100,4 +100,47 @@ test("missing and malformed proof targets do not query storage", async () => {
   const noRead = { get() { throw Error("Unexpected KV read"); } };
   assert.equal(await renderScreenshot(noRead, report.evidenceId, "other", "mobile.jpg"), null);
   assert.equal(await renderScreenshot(noRead, report.evidenceId, "visual", "bad.png"), null);
+});
+
+test("only a specific QA Browser Run quota is eligible for deferred preview",()=>{
+ assert.equal(quotaDeferred(429,{error:"Rate limit"}),true);
+ assert.equal(quotaDeferred(502,{status:"FAIL",error:"Browser launch failed: 429 quota exceeded"}),true);
+ assert.equal(quotaDeferred(502,{status:"FAIL",error:"Cloudflare browser 429 daily limit"}),true);
+ for(const [status,error] of [
+  [409,"Browser could not verify preview identity and noindex"],
+  [401,"Unauthorized"],[503,"QA binding missing"],
+  [502,"Unrelated page error"],[502,"Browser crashed"],[429,"Unauthorized"],
+  [200,"429 browser quota"],[500,"429 browser quota"],
+ ]){
+  assert.equal(quotaDeferred(status,{status:"FAIL",error}),false,
+    "Unexpected deferral: "+status+" "+error);
+ }
+ assert.equal(quotaDeferred(502,{status:"PASS",error:"Browser launch failed: 429 quota exceeded"}),false);
+ assert.equal(quotaDeferred(502,{}),false);
+});
+
+test("quota temporarily defers only browser QA, never upload or real QA failures",async()=>{
+ const output=[];
+ const upload=async()=> "Unique Deployment URL: "+origin;
+ const options={env,readVisual:async()=>undefined,upload,
+  log:value=>output.push(value),error:value=>output.push(value)};
+ assert.equal(await runPreviewQa({...options,http:async()=>Response.json({error:"Rate limit"},{status:429})}),0);
+ assert.ok(output.some(line=>line.includes("DEFERRED_QUOTA — NOT VERIFIED")));
+ assert.ok(output.some(line=>line.includes("browser checks NOT VERIFIED")));
+ assert.ok(!output.some(line=>line.includes("overall = PASS")));
+ output.length=0;
+ assert.equal(await runPreviewQa({...options,http:async()=>Response.json({
+   status:"FAIL",error:"Browser launch failed: 429 quota exceeded"
+ },{status:502})}),0);
+ assert.ok(output.some(line=>line.includes("DEFERRED_QUOTA")));
+ output.length=0;
+ assert.equal(await runPreviewQa({...options,http:async()=>Response.json({
+   status:"FAIL",error:"Browser could not verify preview identity and noindex"
+ },{status:409})}),1);
+ assert.ok(output.some(line=>line.includes("overall = FAIL")));
+ output.length=0;
+ assert.equal(await runPreviewQa({...options,http:async()=>Response.json({
+   status:"FAIL",error:"Browser crashed"
+ },{status:502})}),1);
+ assert.ok(output.some(line=>line.includes("overall = FAIL")));
 });
