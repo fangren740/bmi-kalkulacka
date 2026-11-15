@@ -75,7 +75,7 @@ test('cookies customer-first: brand-aligned but no padding content, real local a
  assert.ok(html.includes('src="/rv3/assets/storage-drawer.svg"'));
  assert.deepEqual(manifest.css,['/rv3/catalog-v2.css','/rv3/catalog-v3-theme.css','/rv3/sitewide/cookies.css']);
  assert.match(art,/<title\b/);assert.match(art,/<desc\b/);
- assert.ok(art.includes('9 POLOŽEK'));
+ assert.ok(art.includes('NASTAVENÍ'));
  assert.match(css,/font-family:Georgia/);
  assert.match(css,/@media\(max-width:620px\)/);
  assert.match(css,/:focus-visible/);
