@@ -10,6 +10,7 @@ import {renderMethodologyStudio} from '../rv3/engine/studio-methodology.mjs';
 import {renderEditorialStudio} from '../rv3/engine/studio-editorial.mjs';
 import {renderContactStudio} from '../rv3/engine/studio-contact.mjs';
 import {renderPrivacyStudio} from '../rv3/engine/studio-privacy.mjs';
+import {renderCookiesStudio} from '../rv3/engine/studio-cookies.mjs';
 export async function buildPrototype({root,output}){
  const folder=path.join(output,'rv3','poc');
  await mkdir(folder,{recursive:true});
@@ -96,6 +97,15 @@ export async function buildPrototype({root,output}){
  await writeFile(privacyTarget,privacy.html);
  await stat(privacyTarget);
  reports.push(privacy.manifest);
+ // Cookies: exact source reference for nine storage keys, readable on all screens.
+ // Preview-only; public cookies.html and local-storage behavior remain untouched.
+ const cookiesSource=await readFile(path.join(root,'cookies.html'),'utf8');
+ const cookiesTemplate=await readFile(path.join(root,'rv3/engine/cookies.template.html'),'utf8');
+ const cookies=renderCookiesStudio(cookiesSource,cookiesTemplate);
+ const cookiesTarget=path.join(trustFolder,'cookies.html');
+ await writeFile(cookiesTarget,cookies.html);
+ await stat(cookiesTarget);
+ reports.push(cookies.manifest);
  // Homepage is a distinct editorial product, not a copy of the hub skin.
  const homepageSource=await readFile(path.join(root,'index.html'),'utf8');
  const homepage=renderHomepageStudio(homepageSource);
