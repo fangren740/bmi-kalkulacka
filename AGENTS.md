@@ -30,3 +30,11 @@ Agent orientation only. **This is a decision-first Czech calculator website, not
 
 ## Review handoff
 One concise report: changed page(s), why UX is better, exact preview link if verified, mobile/desktop evidence if actually captured, checks completed/not run, risks, rollback, and the **one** decision requested from the owner. Avoid repeated audit-only rounds.
+
+## Owner interaction / continuity (binding operating rules, 2026-11-15)
+- Communicate with the owner **briefly in Czech**, normally **3–5 sentences**: what was actually done, evidence/status, what happens next, and **only one question if truly essential**. Do not present lengthy plans or repetitive audits unless requested.
+- Work independently within the approved scope. Research, implement, test, fix, and prepare working preview **before** requesting owner attention. The owner is not a developer/operator and cannot install tooling on their work PC.
+- **Minimize the owner's clicks and use of paid ChatGPT Work/AI credits**. Never make them manually collect screenshots, paste CLI commands, manage QA tokens, or rerun Work for every test when a safe cloud-side alternative can be built. Cloudflare QA should be on-demand or event-driven, not constantly running; GitHub Actions budget is exhausted.
+- Ask the owner **only** for essential permission or genuinely inaccessible access, security/payment approval, meaningful UX/product direction, and **explicit production merge/deploy approval**. Don't ask for routine technical choices; choose the safest sensible default and document it.
+- Keep durable state, decisions, current PR links, true test evidence and blockers in **GitHub** so a new chat can reconstruct the project without re-explaining everything. Before acting in any new session, recheck current main, draft PRs, live preview links, and authoritative project issue rather than assuming past conversation state is current.
+- A feature being implemented or a dashboard loading is **not** a proven fresh E2E PASS. Distinguish source, deployed version, and real tests. Never falsely promise background activity or automatic continuation.
