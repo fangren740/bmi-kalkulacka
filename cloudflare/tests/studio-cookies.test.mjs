@@ -53,6 +53,9 @@ test('cookies: exact canonical/source schema retained and preview robots blocked
 test('cookies: all nine storage keys and their 54 six-field descriptions preserved',()=>{
  const {html,manifest}=result();
  assert.equal(manifest.storageKeys,9);
+ assert.ok(html.includes('U plánovače dovolené a směnového kalendáře se popis ukládání neshoduje'));
+ assert.ok(html.indexOf('Kontrola aktuálnosti seznamu')<html.indexOf('<h2>Co se ukládá, kdy a jak se údaje odstraní</h2>'));
+
  assert.equal(STORAGE_KEYS.length,9);
  for(const key of STORAGE_KEYS){
   assert.ok(html.includes('data-label="Klíč">'+key+'</td>'),'Missing original key '+key);
