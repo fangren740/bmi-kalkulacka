@@ -11,6 +11,7 @@ import {renderEditorialStudio} from '../rv3/engine/studio-editorial.mjs';
 import {renderContactStudio} from '../rv3/engine/studio-contact.mjs';
 import {renderPrivacyStudio} from '../rv3/engine/studio-privacy.mjs';
 import {renderCookiesStudio} from '../rv3/engine/studio-cookies.mjs';
+import {renderAdvertisingStudio} from '../rv3/engine/studio-advertising.mjs';
 export async function buildPrototype({root,output}){
  const folder=path.join(output,'rv3','poc');
  await mkdir(folder,{recursive:true});
@@ -106,6 +107,14 @@ export async function buildPrototype({root,output}){
  await writeFile(cookiesTarget,cookies.html);
  await stat(cookiesTarget);
  reports.push(cookies.manifest);
+ // Advertising: customer-first explanation, original two source sections preserved.
+ const advertisingSource=await readFile(path.join(root,'reklama-a-spoluprace.html'),'utf8');
+ const advertisingTemplate=await readFile(path.join(root,'rv3/engine/advertising.template.html'),'utf8');
+ const advertising=renderAdvertisingStudio(advertisingSource,advertisingTemplate);
+ const advertisingTarget=path.join(trustFolder,'reklama-a-spoluprace.html');
+ await writeFile(advertisingTarget,advertising.html);
+ await stat(advertisingTarget);
+ reports.push(advertising.manifest);
  // Homepage is a distinct editorial product, not a copy of the hub skin.
  const homepageSource=await readFile(path.join(root,'index.html'),'utf8');
  const homepage=renderHomepageStudio(homepageSource);
