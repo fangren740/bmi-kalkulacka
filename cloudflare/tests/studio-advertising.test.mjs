@@ -25,7 +25,7 @@ test('advertising: SEO unchanged, noindex preview and unverified claims labeled'
  assert.match(html,/Stav připravujeme k ověření/);
  assert.equal(manifest.contentReview,'BLOCKED_PENDING_ADS_AFFILIATE_AND_CONSENT_VERIFICATION');
  assert.equal(manifest.browserQa,'NOT_VERIFIED');
- assert.ok(html.indexOf('Stav připravujeme k ověření')>html.indexOf('Reklama ani placené spolupráce nejsou aktivní'));
+ assert.ok(html.indexOf('Stav připravujeme k ověření')<html.indexOf('Reklama ani placené spolupráce nejsou aktivní'));
  assert.equal((html.match(/<script\b/g)||[]).length,1);
  for(const link of ['/rv3/studio/redakcni-zasady.html','/rv3/studio/kontakt.html'])
   assert.ok(html.includes('href="'+link+'"'));
