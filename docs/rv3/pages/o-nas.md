@@ -50,3 +50,13 @@ Uživatel má rychle zjistit, že jde o samostatný projekt konkrétního provoz
 - **Cloudflare build a deploy aktuálního SHA:** vždy zkontrolovat přes bot komentář PR, ne automaticky považovat změnu kódu za live
 - **Browser QA nové stránky:** skutečné screenshoty 390×844 a 1440×900, horizontální overflow, console, viditelnost CTA, keyboard, HTTP/HTML noindex, kontakt/social a finální vizuální kontrola — zatím nedoloženo
 - **Vlastník:** nejdříve **vidí a schválí design**. Stav `VISUAL_REVIEW_PENDING`. Nezaměnit za schválení produkčního nasazení.
+
+## Stage checklist
+- [x] Přečtený současný HTML/SEO a ověřené skutečné údaje
+- [x] Individuální produktový brief + odlišení od zamítnuté varianty
+- [x] Design + implementace zcela nového HTML a vlastního CSS na izolovaném preview
+- [x] Test source identity / canonical / linků / starého DOM v Node test suite; Cloudflare potvrzení pro kódový SHA `a1579e4`
+- [ ] Skutečný browser QA nové stránky 390 × 844 + 1440 × 900 se screenshoty, klávesnice a overflow
+- [ ] PageSpeed / Lighthouse na konkrétním preview
+- [ ] Vizuální a obsahové schválení vlastníkem
+- [ ] Produkční release s konkrétním výslovným souhlasem
