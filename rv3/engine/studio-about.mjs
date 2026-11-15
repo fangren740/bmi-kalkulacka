@@ -66,12 +66,12 @@ ${renderHeaderV2({catalogHref:'/rv3/poc/katalog-v2.html'})}
         <div class="rv3a-hero-copy">
           <span class="rv3d-kicker"><span class="rv3d-kicker-line" aria-hidden="true"></span> O PROJEKTU</span>
           <h1 id="about-title">Nejde jen o číslo.<br><em>Jde o to mu rozumět.</em></h1>
-          <p class="rv3a-lead">RychléVýpočty vznikly pro chvíle, kdy potřebujete z čísel udělat srozumitelný další krok. Bez zbytečných formulářů, bez hledání odpovědi mezi desítkami možností.</p>
+          <p class="rv3a-lead">RychléVýpočty pomáhají proměnit každodenní otázky v konkrétní odpovědi. Vyberete téma, zadáte potřebné údaje a uvidíte nejen výsledek, ale také souvislosti a předpoklady výpočtu.</p>
           <div class="rv3a-hero-actions">
             <a class="rv3a-btn rv3a-btn-primary" href="/rv3/poc/katalog-v2.html">Prozkoumat kalkulačky <span aria-hidden="true">↗</span></a>
             <a class="rv3a-btn rv3a-btn-text" href="#nase-principy">Jak web funguje <span aria-hidden="true">↓</span></a>
           </div>
-          <div class="rv3a-keyline"><span>Pro každodenní otázky</span><span>Jasná metodika</span><span>Bez registrace</span></div>
+          <div class="rv3a-keyline"><span>Praktické české kalkulačky</span><span>Vysvětlení a předpoklady</span><span>Bez registrace</span></div>
         </div>
         <div class="rv3a-hero-art">
           <img src="/rv3/assets/about-story.svg" alt="Ilustrovaný zápisník s otázkami, podklady a kalkulačkou" width="580" height="470" decoding="async" fetchpriority="high">
@@ -80,13 +80,23 @@ ${renderHeaderV2({catalogHref:'/rv3/poc/katalog-v2.html'})}
       </div>
     </div>
   </section>
+  <nav class="rv3a-chapters" aria-label="Obsah stránky O projektu">
+    <div class="rv3d-wrap rv3a-chapters-inner">
+      <span class="rv3a-chapters-caption">RYCHLÁ ORIENTACE <span aria-hidden="true">/</span></span>
+      <div class="rv3a-chapters-links">
+        <a href="#proc-vznikl"><span aria-hidden="true">01</span> Proč jsme vznikli</a>
+        <a href="#nase-principy"><span aria-hidden="true">02</span> Jak pracujeme</a>
+        <a href="#kdo-web-provozuje"><span aria-hidden="true">03</span> Kdo za webem stojí</a>
+      </div>
+    </div>
+  </nav>
   <section class="rv3a-intro" id="proc-vznikl" aria-labelledby="why-title">
     <div class="rv3d-wrap rv3a-intro-grid">
       <div><span class="rv3a-eyebrow">01 / MYŠLENKA PROJEKTU</span><h2 id="why-title">Číslo samo o sobě <em>nestačí.</em></h2></div>
       <div class="rv3a-intro-copy">
         <p class="rv3a-intro-lead">Kolik dostanu čistého? Co udělá splátka s rozpočtem? Jak se změní výsledek při jiném zadání?</p>
         <p>Podobné otázky si klademe každý den. Smyslem RychlýchVýpočtů je zjednodušit cestu k odpovědi — ukázat výsledek, jeho předpoklady a případně i to, co je potřeba ověřit jinde.</p>
-        <a class="rv3a-link" href="/situace.html">Prohlédnout životní situace <span aria-hidden="true">↗</span></a>
+        <a class="rv3a-link" href="/rv3/poc/katalog-v2.html">Najít kalkulačku k vlastní otázce <span aria-hidden="true">↗</span></a>
       </div>
     </div>
   </section>
@@ -122,10 +132,10 @@ ${renderHeaderV2({catalogHref:'/rv3/poc/katalog-v2.html'})}
   </section>
   <section class="rv3a-author" id="kdo-web-provozuje" aria-labelledby="author-title">
     <div class="rv3d-wrap rv3a-author-grid">
-      <div class="rv3a-author-copy"><span class="rv3a-eyebrow">04 / LIDÉ ZA WEBEM</span>
+      <div class="rv3a-author-copy"><span class="rv3a-eyebrow">04 / KDO ZA PROJEKTEM STOJÍ</span>
         <h2 id="author-title">Za projektem stojí <em>konkrétní člověk.</em></h2>
         <p>RychléVýpočty.cz provozuje <strong>${escape(OWNER)}</strong> jako fyzická osoba bez přiděleného IČO. Jde o nezávislý projekt, za jehož témata, obsah a podobu odpovídá provozovatel.</p>
-        <p>Našli jste chybu, nejasnost nebo vám chybí určitá kalkulačka? Napište nám. Zpětná vazba pomáhá web zlepšovat.</p>
+        <p>Našli jste chybu, nejasný výsledek nebo vám chybí určité téma? Dejte vědět přímo provozovateli — konkrétní připomínky pomáhají nástroje zlepšovat.</p>
       </div>
       <div class="rv3a-contact"><span class="rv3a-contact-head">KONTAKT NA PROVOZOVATELE</span>
         <strong>${escape(OWNER)}</strong><span>Nezávislý projekt RychléVýpočty.cz</span>
