@@ -13,8 +13,10 @@ async function follow(page, link, origin, path) {
   const responsePromise = page.waitForResponse(response =>
     response.url() === expected && response.request().isNavigationRequest(), { timeout: 6000 });
   const [response] = await Promise.all([responsePromise, link.click()]);
-  await page.waitForURL(expected, { waitUntil: "domcontentloaded", timeout: 6000 });
-  return response.status() === 200 && page.url() === expected;
+  // Some tools populate their default inputs in the query via history.replaceState.
+  const atDestination = url => url.origin === origin && url.pathname === path;
+  await page.waitForURL(atDestination, { waitUntil: "domcontentloaded", timeout: 6000 });
+  return response.status() === 200 && !response.request().redirectedFrom() && atDestination(new URL(page.url()));
 }
 
 async function anchor(page, link, anchorId) {
