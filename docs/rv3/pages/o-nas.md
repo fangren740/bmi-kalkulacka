@@ -45,7 +45,36 @@ Majitel zamítl první pokus jako přebarvenou legacy stránku a druhý jako sam
 - [x] Nový obsahový strom, přímé katalogové styly, unikátní SVG ve stejné kresbě
 - [x] Source regressions v `cloudflare/tests/studio-about.test.mjs`
 - [x] Cloudflare Build + Deployment SUCCESS pro kódový commit `2542fc4` (viz Cloudflare bot v PR)
-- [ ] Reálné browser QA O projektu: 390×844, 1440×900, vizuální screenshoty, interakce/klávesnice, no overflow a konzole
+- [x] Reálné browser QA původní obsahové verze O projektu: 390×844 a 1440×900, snímky a navigace v PR #71 na SHA `d6a09d1` — **před aktuálním obsahovým kolem**
+- [ ] Ověřit 8+2 browser QA, snímky a vizuální review **po aktuálních obsahových změnách**
 - [ ] Lighthouse/PageSpeed na nové stránce
 - [ ] **Vizuální schválení vlastníkem** (aktuálně `VISUAL_REVIEW_PENDING`)
 - [ ] Produkční release jen s konkrétním výslovným souhlasem
+
+## Obsahové kolo — důvěryhodnost, důkazy, konkrétnost (15. 11. 2026)
+
+**Záměr:** Stránka O projektu má být čtivým vstupem do obsahu webu, nikoliv opakovaným sloganem. Cílem je konkrétní vysvětlení užitku a důvěryhodnosti s dohledatelnými podklady. Je to redakční úprava již zvoleného a technicky ověřovaného designu; ne další grafický restart.
+
+### Zásadní úpravy textu
+- Hero pojmenovává nezávislý projekt online kalkulaček a princip práce se vstupními údaji; neopakuje jen „číslo a souvislosti“.
+- „Proč vznikl“ se opírá o srozumitelné otázky čisté mzdy a hypotéky. **Žádný neověřený osobní příběh zakladatele.**
+- Postup tvorby ukazuje konkrétní smysl jednotek, zaokrouhlování, původních zdrojů, období platnosti, hraničních příkladů a modelových datasetů.
+- Přibyl přímý důkazový odkaz na `/data-a-benchmarky.html`, kde existuje skutečná knihovna scénářů a CSV. Odkaz není tvrzení, že všechny kalkulačky jsou 100% ověřené.
+- Odpovědný provozovatel a praktický, nikoliv marketingový popis použití AI/automa­tizace jako pracovního podkladu.
+- Dvě stručné transparentní informace: soukromí běžných výpočtů **s důležitou výjimkou pro sdílené URL** a zásada nezávislosti výpočtů na případných reklamách.
+- Návod k nahlášení chyby obsahuje URL, vstupní hodnoty a očekávaný výsledek, bez nepravdivé garance reakční lhůty.
+
+### Evidenční zdroje (zdroj pravdy v tomto repu)
+- `jak-pocitame.html` — původní podklady, období a hraniční příklady, CSV u vybraných výpočtů
+- `data-a-benchmarky.html` — reálně existující přístupná knihovna datasetů (počet datasetů je proměnlivý, proto jej na About neuvádět)
+- `redakcni-zasady.html` — transparentní zapojení AI, odpovědnost autora a postup oprav
+- `ochrana-osobnich-udaju.html` — běžný výpočet v prohlížeči, localStorage a výjimka pro URL se stavem
+- `reklama-a-spoluprace.html` — politika označování obchodního obsahu a oddělení obchodních vztahů od vzorců
+- `kontakt.html` — skutečná adresa a návod, co poslat při zjištěné chybě
+- `o-nas.html` — právní identita provozovatele a zachování canonical/title/JSON-LD
+
+### Důležité release podmínky
+- Source regresní testy v `cloudflare/tests/studio-about.test.mjs` byly rozšířeny tak, aby ověřily skutečné cílové stránky, přímé odkazy, transparentní tvrzení a responzivní layout.
+- **Nová content verze = VISUAL_REVIEW_PENDING.** Zelený build a minulé screenshoty nepokrývají nově změněnou délku textů, která může ovlivnit rozvržení. Bez nového reálného Browser Run ji neoznačovat jako finální.
+- Před produkčním schválením ověřit aktuální faktický stav financování a ochrany dat, opravit preview-only odkazy do katalogu a zaktualizovat `dateModified` v JSON-LD podle skutečného data změny veřejné stránky.
+- `main`, DNS a GitHub Pages zůstávají bez změny.
