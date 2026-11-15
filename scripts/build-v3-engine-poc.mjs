@@ -6,6 +6,7 @@ import {renderCatalogV2} from '../rv3/engine/catalog-v2.mjs';
 import {HUB_WAVE1_ROUTES,renderHubWave1} from '../rv3/engine/sitewide-hubs.mjs';
 import {renderHomepageStudio} from '../rv3/engine/sitewide-home.mjs';
 import {renderAboutStudio} from '../rv3/engine/studio-about.mjs';
+import {renderMethodologyStudio} from '../rv3/engine/studio-methodology.mjs';
 export async function buildPrototype({root,output}){
  const folder=path.join(output,'rv3','poc');
  await mkdir(folder,{recursive:true});
@@ -59,6 +60,14 @@ export async function buildPrototype({root,output}){
  await writeFile(aboutTarget,about.html);
  await stat(aboutTarget);
  reports.push(about.manifest);
+ // The next standalone trust product: explain & demonstrate the calculation method.
+ const methodSource=await readFile(path.join(root,'jak-pocitame.html'),'utf8');
+ const methodTemplate=await readFile(path.join(root,'rv3/engine/methodology.template.html'),'utf8');
+ const method=renderMethodologyStudio(methodSource,methodTemplate);
+ const methodTarget=path.join(trustFolder,'jak-pocitame.html');
+ await writeFile(methodTarget,method.html);
+ await stat(methodTarget);
+ reports.push(method.manifest);
  // Homepage is a distinct editorial product, not a copy of the hub skin.
  const homepageSource=await readFile(path.join(root,'index.html'),'utf8');
  const homepage=renderHomepageStudio(homepageSource);
