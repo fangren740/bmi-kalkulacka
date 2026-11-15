@@ -5,6 +5,7 @@ import {renderStudioCatalog} from '../rv3/engine/catalog.mjs';
 import {renderCatalogV2} from '../rv3/engine/catalog-v2.mjs';
 import {HUB_WAVE1_ROUTES,renderHubWave1} from '../rv3/engine/sitewide-hubs.mjs';
 import {renderHomepageStudio} from '../rv3/engine/sitewide-home.mjs';
+import {renderAboutStudio} from '../rv3/engine/studio-about.mjs';
 export async function buildPrototype({root,output}){
  const folder=path.join(output,'rv3','poc');
  await mkdir(folder,{recursive:true});
@@ -49,6 +50,15 @@ export async function buildPrototype({root,output}){
   hubReports.push(manifest);
   reports.push(manifest);
  }
+ // Unique editorial/trust page — no changes to the existing public source route.
+ const trustFolder=path.join(output,'rv3','studio');
+ await mkdir(trustFolder,{recursive:true});
+ const aboutSource=await readFile(path.join(root,'o-nas.html'),'utf8');
+ const about=renderAboutStudio(aboutSource);
+ const aboutTarget=path.join(trustFolder,'o-nas.html');
+ await writeFile(aboutTarget,about.html);
+ await stat(aboutTarget);
+ reports.push(about.manifest);
  // Homepage is a distinct editorial product, not a copy of the hub skin.
  const homepageSource=await readFile(path.join(root,'index.html'),'utf8');
  const homepage=renderHomepageStudio(homepageSource);
