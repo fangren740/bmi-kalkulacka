@@ -71,10 +71,15 @@ test('About: accessible chapters, links and no fabricated numerical results',()=
  for(const anchor of ['main','proc-vznikl','nase-principy','kdo-web-provozuje']){
   assert.ok(html.includes('id="'+anchor+'"'),'Missing anchor '+anchor);
  }
- for(const href of ['/rv3/poc/katalog-v2.html','/situace.html','/jak-pocitame.html','/redakcni-zasady.html','/kontakt.html']){
+ for(const href of ['/rv3/poc/katalog-v2.html','/jak-pocitame.html','/redakcni-zasady.html','/kontakt.html']){
   assert.ok(html.includes('href="'+href+'"'),'Missing link '+href);
  }
  assert.ok(html.includes('aria-label="Drobečková navigace"'));
+ assert.ok(html.includes('aria-label="Obsah stránky O projektu"'));
+ for (const hash of ['#proc-vznikl','#nase-principy','#kdo-web-provozuje'])
+   assert.ok(html.includes('href="'+hash+'"'), 'Missing quick jump '+hash);
+ assert.match(aboutCss,/\.rv3a-chapters-links a/);
+ assert.match(aboutCss,/\.rv3a-chapters-links\{display:grid;grid-template-columns:1fr 1fr/);
  assert.ok(html.includes('id="about-title"'));
  assert.ok(html.includes('kalkulačka'));
  assert.ok(html.includes('orientační'));
