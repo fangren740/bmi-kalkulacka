@@ -1,62 +1,51 @@
-# O projektu — RV3 page-studio / úplný redesign od nuly
+# RV3 / O projektu — individuální design podle nové vizuální rodiny katalogu
 
-**Výchozí URL:** `/o-nas.html` · **produkce:** nedotčena · **draft PR:** [#70](https://github.com/fangren740/bmi-kalkulacka/pull/70)
+**Cíl URL:** `/o-nas.html` · **náhled:** `/rv3/studio/o-nas.html` · **implementace:** [draft PR #70](https://github.com/fangren740/bmi-kalkulacka/pull/70) · **produkce:** ZAMČENÁ
 
-## Verdikt majitele ze dne 15. 11. 2026
+## Vstupní návrhové rozhodnutí
 
-První verze PR #70 byla **zamítnuta**, protože pouze kosmeticky přetvořila starou stránku: starý hero, levé menu, obsahové karty a stejná lineární struktura. Tato iterace je **nahrazena úplně jiným markupem**. Z předešlé stránky se nevkládá ani jediná část `<main>`; její obsah je pouze podklad pro ověření faktů a SEO metadat.
+Majitel zamítl první pokus jako přebarvenou legacy stránku a druhý jako samostatně vypadající web, který **neodpovídá novému katalogu**. Proto není „zcela od nuly“ dostatečné kritérium: nový návrh musí působit jako **stejná prémiová vizuální rodina jako katalog V3**, a přitom mít vlastní strukturu podle záměru čtenáře.
 
-## Produktový brief
+**Závazná reference:** [DESIGN_NORTH_STAR_CATALOG_V3.md](../DESIGN_NORTH_STAR_CATALOG_V3.md). Odkazuje přímo na [katalogový PR #66](https://github.com/fangren740/bmi-kalkulacka/pull/66), `rv3/catalog-v2.css`, `rv3/catalog-v3-theme.css`, `rv3/engine/shell-v2.mjs`, SVG ilustrace a skutečný browser QA sesterských stránek.
 
-**Jedna primární otázka návštěvníka:** *Kdo za RychléVýpočty.cz stojí, proč web vznikl a mohu jeho výsledkům rozumně věřit?*
+## Co přicházející návštěvník opravdu řeší
 
-Uživatel má rychle zjistit, že jde o samostatný projekt konkrétního provozovatele; pochopit důvod existence, princip správného použití výsledků i transparentní omezení; dostat se ke kalkulačkám, metodice a možnosti nahlásit chybu.
+„Kdo za RychléVýpočty.cz stojí, proč tento projekt existuje, odkud se berou čísla a jaké mají limity?“ Po stránce má umět s důvěrou začít používat odpovídající kalkulačku nebo nahlásit nejasnost. Žádné vymyšlené týmy, odborná oprávnění, recenze či korporátní záštita.
 
-**Vizuální směr:** současná identita V3 katalogu, originální logo a zelená/navy paleta, ale stránka má vlastní redakční architekturu. Žádné překreslení starých trust karet a sidebaru. Místo katalogového gridu příběh podpořený originálním CSS diagramem „Otázka → vstupy → výsledek“ (výslovně ne skutečný výpočet), velkými nadpisy, rytmem světlých a tmavých bloků a čitelným autorským panelem.
+## Třetí iterace — návrh současné větve
 
-## Struktura stránky
+1. **Světelná katalogová hero scéna** a původní logo. Nadpis s totožnou **zelenou serifovou kurzivou** jako katalog, short copy, primární zelené CTA a jemná „proof“ řádka.
+2. **Nová vlastní lokální ilustrace** `rv3/assets/about-story.svg`: ručně komponovaný detailní zápisník, ověřovací listy, kalkulačka a pero; stejný materiálový a barevný art direction jako katalogové `hero-desk.svg` a `category-*.svg`. Nevkládá vymyšlené finanční výsledky.
+3. **Proč web vznikl:** otázky ze života a konkrétní užitek; bez generického nabubřelého úvodu.
+4. **Tři principy:** významově dotažené kompaktní karty v katalogové rodině. Explicitní cesta zadání → podklady → vysvětlení.
+5. **Upřímnost výsledků:** čitelný světlý panel pro přesný / modelový / orientační výpočet, bez dramatického obřího tmavého pruhu.
+6. **Skutečný provozovatel:** přímý kontakt a ověřená fakta ze zdroje, v lidsky použitelné světlé kartu, bez vymyšlené fotografie.
+7. **Tři konkrétní další cesty:** katalog, metodika, kontakt. Kratší než předchozí stránky, mobilní pořadí navržené zvlášť.
 
-1. **Editorial hero:** *Čísla jsou začátek. Rozhodnutí je cíl.* — primární CTA do V3 katalogu, sekundární CTA do příběhu; napravo vlastní postupový diagram, žádná vymyšlená výpočetní čísla
-2. **Proč projekt existuje:** lidské otázky (mzda, práce, hypotéka) a konkrétní přínos
-3. **Jak přemýšlíme:** 3 návazné kroky — zadání, pravidla, vysvětlení; odkaz na skutečnou metodiku
-4. **Omezení výsledků:** přesný / modelový / orientační výpočet, důsledně bez falešné odborné garance
-5. **Provozovatel:** skutečné jméno, ověřená právní forma podle stávajícího zdroje, skutečný přímý kontakt; bez vymyšleného portrétu, společnosti či týmu
-6. **Další krok:** kalkulačky, metodika a kontakt; existující FB/IG odkazy
+## Technický kontrakt
 
-## Srovnání se zamítnutou verzí
+- **Z katalogu přímo načítá** `/rv3/catalog-v2.css` a `/rv3/catalog-v3-theme.css`, nikoliv jejich nápodobu; navíc pouze `/rv3/sitewide/about.css` pro specifický účel této jedné stránky.
+- Hlavička/patička jsou doslova sdílené funkce `renderHeaderV2` / `renderFooterV2`; používají originální `logo-rv-v32.svg`.
+- Nezpracovává původní HTML jako layout. Ze `/o-nas.html` validuje skutečnou identitu, původní title/description/canonical, viditelné FB/IG odkazy, email a JSON-LD; nemění root stránku ani ostatní kalkulace.
+- HTML obsahuje jednu hlavní oblast, jediný H1, původní canonical a noindex na izolovaném preview. Žádné nové sledovací skripty, externí fonty, framework nebo falešný formulář.
+- U tlačítek do katalogu se během preview používá `/rv3/poc/katalog-v2.html`; při budoucím explicitně schváleném produkčním nasazení vyžaduje přesměrování na `/kalkulacky.html`.
 
-| | Zamítnutá verze | Nová verze |
-|---|---|---|
-| HTML | kopie původní stránky | **nově sestavené od nuly** |
-| Navigace obsahu | původní boční trust menu | samostatná redakční sekvence a cesty dál |
-| Vizuální komunikace | starý hero + čtyři karty | vlastní velký hero, vysvětlující diagram, editorial bloky |
-| Důvěryhodnost | staré faktové boxy | samostatná transparentní kapitola s reálným provozovatelem |
-| Ovládání na mobilu | pouze reskin původní struktury | nové samostatné grid/stack layouty a accessible navigace |
-| Zdroj | původní `<main>` | zdrojová fakta pouze striktně validována, nikdy nekopírována jako HTML |
+## Vizuální měřítko
 
-## Technické a SEO hranice
+**O projektu** a **katalog V3** musí obstát vedle sebe jako dvě stránky stejného produktu. Kvalita ilustrací a písma musí být stejná nebo vyšší než u katalogu, i když informační struktura a UX jsou jiné. Source testy ani build SUCCESS samy o sobě nejsou schválení designu.
 
-- `rv3/engine/studio-about.mjs` — nová SSR HTML stránka, používá jen shared V3 header/footer a ověřuje produkční fakta
-- `rv3/sitewide/about.css` — izolovaný originální CSS systém; žádná závislost na `rv-trust-v7.css`
-- `cloudflare/tests/studio-about.test.mjs` — ochrana faktů, českých textů, strukturální nezávislosti, SEO a mobile layoutu
-- HTML output pouze `/rv3/studio/o-nas.html`, produkční `/o-nas.html` beze změn
-- Canonical `https://rychlevypocty.cz/o-nas.html`, původní title/meta description a JSON-LD zachovány ze zdroje, preview noindex
-- Bez klientského JS, cookies, tracking změn, externích fontů, formulářů nebo externích obrazových zdrojů
-- Interní linky v preview na katalog V3, metodiku, situace a kontakt; před případným produkčním převodem se musí preview odkaz na katalog přepnout na veřejný katalog
-
-## Evidence a acceptance criteria
-
-- Cílené simulované kontroly nad aktuálním GitHub kódem: kompilace rendereru, zcela nový main, doložené faktické údaje, správné odkazy, jeden H1/main, 4 fail-closed testy, SEO/noindex a responzivní CSS
-- **Cloudflare build a deploy aktuálního SHA:** vždy zkontrolovat přes bot komentář PR, ne automaticky považovat změnu kódu za live
-- **Browser QA nové stránky:** skutečné screenshoty 390×844 a 1440×900, horizontální overflow, console, viditelnost CTA, keyboard, HTTP/HTML noindex, kontakt/social a finální vizuální kontrola — zatím nedoloženo
-- **Vlastník:** nejdříve **vidí a schválí design**. Stav `VISUAL_REVIEW_PENDING`. Nezaměnit za schválení produkčního nasazení.
+- Referenční katalog: `/rv3/poc/katalog-v2.html`
+- Nové O projektu: `/rv3/studio/o-nas.html`
+- Do uživatelského review přiložit **reálné** mobilní 390×844 a desktop 1440×900 screenshoty (nenahrazovat renderovaným AI mockupem). Pokud nejsou k dispozici, přiznat NEOVĚŘENO.
 
 ## Stage checklist
-- [x] Přečtený současný HTML/SEO a ověřené skutečné údaje
-- [x] Individuální produktový brief + odlišení od zamítnuté varianty
-- [x] Design + implementace zcela nového HTML a vlastního CSS na izolovaném preview
-- [x] Test source identity / canonical / linků / starého DOM v Node test suite; Cloudflare potvrzení pro kódový SHA `a1579e4`
-- [ ] Skutečný browser QA nové stránky 390 × 844 + 1440 × 900 se screenshoty, klávesnice a overflow
-- [ ] PageSpeed / Lighthouse na konkrétním preview
-- [ ] Vizuální a obsahové schválení vlastníkem
-- [ ] Produkční release s konkrétním výslovným souhlasem
+
+- [x] Baseline z originálního HTML; ověřené URL, canonical, identita a metoda
+- [x] Explicitní srovnání s referencí katalogu a dvěma zamítnutými verzemi
+- [x] Nový obsahový strom, přímé katalogové styly, unikátní SVG ve stejné kresbě
+- [x] Source regressions v `cloudflare/tests/studio-about.test.mjs`
+- [x] Cloudflare Build + Deployment SUCCESS pro kódový commit `2542fc4` (viz Cloudflare bot v PR)
+- [ ] Reálné browser QA O projektu: 390×844, 1440×900, vizuální screenshoty, interakce/klávesnice, no overflow a konzole
+- [ ] Lighthouse/PageSpeed na nové stránce
+- [ ] **Vizuální schválení vlastníkem** (aktuálně `VISUAL_REVIEW_PENDING`)
+- [ ] Produkční release jen s konkrétním výslovným souhlasem
