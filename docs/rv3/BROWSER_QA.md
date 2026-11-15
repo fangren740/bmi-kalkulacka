@@ -13,7 +13,7 @@ Na každé stránce 390 × 844 a 1440 × 900, HTTP 200 bez přesměrování, vid
 
 ## Zapojení
 
-Samostatný QA Worker staví z QA větve a kořene `cloudflare/browser-qa`. Používá Browser Run, limiter a KV z vlastní konfigurace. `QA_AUTO_TOKEN` je identický, náhodný 64znakový hex secret v runtime QA Workeru a v oddělených **Previews Base → Builds** secrets V3. Hook jej nepředává Wrangleru. Worker neumožňuje vlastní URL, produkci, aliasy ani volné QA scénáře.
+Samostatný QA Worker staví z QA větve a kořene `cloudflare/browser-qa`. Používá Browser Run, limiter a KV z vlastní konfigurace. `QA_AUTO_TOKEN` je identický, náhodný 64znakový hex secret v runtime QA Workeru a v oddělených **Previews Base → Builds** secrets V3. U již existujícího Preview použij stejný příkaz a encrypted secret i v nastavení buildu dané Preview větve, protože její nastavení přetrvává při změně Previews Base. Hook token nepředává Wrangleru. Worker neumožňuje vlastní URL, produkci, aliasy ani volné QA scénáře.
 
 Preview command z kořene repozitáře:
 

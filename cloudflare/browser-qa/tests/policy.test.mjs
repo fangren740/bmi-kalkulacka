@@ -65,3 +65,11 @@ test("runs one upload and one authenticated Browser Run, and preserves failure",
   assert.ok(!log.join("\n").includes(token));
   assert.equal(await runPreviewQa({ ...options, http: async () => Response.json({ status: "FAIL" }, { status: 409 }) }), 1);
 });
+
+test("wrong, missing and manual secrets cannot authorize automatic QA", async () => {
+  const { qaCredential } = await import("../src/auth.mjs");
+  assert.equal(qaCredential("Bearer " + token, env), "automatic");
+  assert.equal(qaCredential("Bearer " + "d".repeat(64), env), null);
+  assert.equal(qaCredential(null, env), null);
+  assert.equal(qaCredential("Bearer " + token, { QA_TOKEN: token }), "manual");
+});
