@@ -41,7 +41,7 @@ Soubor \`redakcni-zasady.html\`:
 \`rv3/sitewide/editorial-report.js\` implementuje **user-triggered mailto composer**:
 - 4 skutečné typy podnětů, názvem/odkazem na stránku a popisem.
 - Předvyplní jen mailto subject/body na \`rychlevypocty@seznam.cz\`; user odeslání ve svém klientovi sám potvrdí.
-- Neprovádí fetch, ukládání, backend ani automatické odeslání. Bez JavaScriptu má návštěvník přímý mailto odkaz.
+- Neprovádí fetch, ukládání, backend ani automatické odeslání. Formulář má přímo v HTML action=mailto:, method=post a enctype=text/plain: bez JS nepřejde na GET s obsahem v URL stránky. Navíc je přítomen přímý mailto odkaz.
 - Nevyžaduje citlivé osobní údaje. Text výslovně doporučuje je neuvádět.
 - Testy zahrnují odmítnutí chybějícího a příliš dlouhého zadání, žádný mailto před stiskem tlačítka, kódování parametrů i fallback.
 

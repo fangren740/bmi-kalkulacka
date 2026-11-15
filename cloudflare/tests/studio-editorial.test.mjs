@@ -127,6 +127,7 @@ test('editorial: mailto report is encoded, user-owned and not a network submissi
  assert.match(html,/Nevkládejte citlivé osobní údaje/);
  assert.match(html,/href="mailto:rychlevypocty@seznam.cz/);
  assert.match(html,/type="submit"/);
+ assert.match(html,/data-editorial-report action="mailto:rychlevypocty@seznam.cz" method="post" enctype="text\/plain"/);
  assert.match(html,/data-editorial-status/);
 });
 
