@@ -24,12 +24,12 @@ export function renderAboutStudio(source){
   if(typeof source!=='string'||!/^<!doctype html>/i.test(source))throw Error('Invalid source');
   if(getCanonical(source)!==canonical)throw Error('Canonical mismatch');
   if(!/<meta name="robots" content="index,follow">/.test(source))throw Error('Unexpected source robots');
-  if(!source.includes('mailto:rychlevypocty@seznam.cz')||
-     !source.includes('Martin Šilinger')||
-     !source.includes('bez přiděleného IČO'))throw Error('Missing factual provenance or contact');
-  if(/<base\b/i.test(source))throw Error('Unexpected base URL');
   const originalMain=extractMain(source);
   if(!originalMain)throw Error('Main missing');
+  if(!originalMain.includes('mailto:rychlevypocty@seznam.cz')||
+     !originalMain.includes('Martin Šilinger')||
+     !originalMain.includes('bez přiděleného IČO'))throw Error('Missing factual provenance or contact');
+  if(/<base\b/i.test(source))throw Error('Unexpected base URL');
   const originalScripts=JSON.stringify(scriptsOf(source));
   const title=source.match(/<title>([^<]+)<\/title>/)?.[1];
   if(title!=='O projektu | RychléVýpočty.cz')throw Error('Unexpected page title');
