@@ -42,7 +42,7 @@ export default {
     let browser;
     try {
       const response = await fetch(plan.origin + "/rv3-preview-manifest.json", {
-        redirect: "error", signal: AbortSignal.timeout(8000),
+        redirect: "manual", signal: AbortSignal.timeout(8000),
       });
       const manifest = response.ok ? await response.json() : null;
       if (manifest?.kind !== "cloudflare-preview-only" || manifest.commitSha !== plan.commitSha ||
