@@ -145,6 +145,7 @@ export async function checkViewport(browser, origin, route, viewport) {
   const url = origin + route.path;
   const checks = {};
   const errors = [];
+  const issues = [];
   let screenshotBase64 = null;
   let context;
   let captureHeight;
@@ -191,7 +192,7 @@ export async function checkViewport(browser, origin, route, viewport) {
       screenshotBase64 = await takeScreenshot(page, true);
     }
     if (route.id === "visual") {
-      await reviewPage(page, checks, errors);
+      await reviewPage(page, checks, issues);
     } else {
       const navigate = await interact(page, route, checks);
       if (!route.fullPage) screenshotBase64 = await takeScreenshot(page);
@@ -210,7 +211,7 @@ export async function checkViewport(browser, origin, route, viewport) {
   checks.screenshot = Boolean(screenshotBase64);
   checks.consoleAndPageErrors ??= errors.length === 0;
   const result = {
-    route: route.id, path: route.path, viewport: label, width, height, checks, errors, error, screenshotBase64,
+    route: route.id, path: route.path, viewport: label, width, height, checks, errors: [...errors, ...issues], error, screenshotBase64,
     fullPage: route.fullPage === true, captureHeight, profile,
   };
   return { ...result, status: !error && isPass(result, route) ? "PASS" : "FAIL" };

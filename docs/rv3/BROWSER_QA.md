@@ -40,3 +40,7 @@ Výsledek a odkaz na důkaz jsou v logu buildu. Důkazy jsou pod náhodným odka
 5. Snímky pořizujeme před interakcemi, s načtenými fonty a obrázky. Limit na snímek je 12 000 px výšky a 1,5 MB JPEG. Cloudflare odkaz funguje sedm dní.
 
 Aktuální QA Worker sleduje `rv3/visual-review-qa` pro nasazení této rozšířené verze. Zůstává kompatibilní s původním hookem. Nové větve založené na této změně dědí nastavení Previews Base. Pokud má existující Preview vlastní příkaz, nastav jej podle postupu výše.
+
+### První srovnání O projektu
+
+Živá původní revize PR #70 na 390 × 844 a 1440 × 900 měla funkční tři kotvy a proklik do katalogu. Základní navigace šla ovládat klávesnicí. Konzole byla bez zaznamenaných chyb a dokument nepřetékal. Katalog i About sdílejí původní hlavičku, logo, tmavé nadpisy a shodnou zelenou kurzívu. About používá vlastní zápisník a volnější rytmus odstavců; katalog těsnější karty a ilustrace kategorií. Mobilní verze převádí obsah i karty do čitelného toku. Jasný konec gradientu CTA měl vůči bílému textu 3,11 : 1. Nový gradient má v nejsvětlejším bodě 5,23 : 1.

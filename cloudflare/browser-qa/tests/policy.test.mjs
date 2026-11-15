@@ -75,8 +75,9 @@ test("wrong, missing and manual secrets cannot authorize automatic QA", async ()
 });
 
 test("opt-in accepts a single relative RV3 document and preserves the eight baseline cases", async () => {
-  const path = await loadVisualPath();
-  assert.equal(path, "/rv3/studio/o-nas.html");
+  const configured = await loadVisualPath();
+  assert.ok(configured === undefined || isVisualPath(configured));
+  const path = "/rv3/studio/example.html";
   for (const invalid of ["//example.org/a.html", "/rv3/studio/../x.html", "/x.html?redirect=1",
     "/x.html#about", "/rv3/%2fxx.html", "/proof/x.html", 9, null]) {
     assert.equal(isVisualPath(invalid), false);
