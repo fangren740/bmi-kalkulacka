@@ -112,7 +112,7 @@ test('About: verifiable methods, transparent operation and valid sources',()=>{
  const funding=from('reklama-a-spoluprace.html');
  const datasets=from('data-a-benchmarky.html');
  for(const url of ['/data-a-benchmarky.html','/jak-pocitame.html','/redakcni-zasady.html',
-                   '/ochrana-osobnich-udaju.html','/reklama-a-spoluprace.html']){
+                   '/ochrana-osobnich-udaju.html']){
    assert.ok(html.includes('href="'+url+'"'),'Missing linked source '+url);
  }
  assert.match(html,/Podklady k vlastní kontrole/);
@@ -128,20 +128,19 @@ test('About: verifiable methods, transparent operation and valid sources',()=>{
  assert.match(html,/odpovědnost za publikování zůstává provozovateli/);
  assert.match(privacy,/Běžné výpočty probíhají přímo v prohlížeči/);
  assert.match(privacy,/sdílené URL/);
- assert.match(html,/Před sdílením URL/);
+ assert.ok(html.includes('href="/ochrana-osobnich-udaju.html"'));
  assert.match(funding,/Případný obchodní obsah jasně označíme/);
- assert.match(html,/Obchodní vztah nemá ovlivňovat vzorce/);
+ assert.ok(!html.includes('rv3a-openness-item'));
  assert.doesNotMatch(html,/100% přesn|vždy správn|garantujeme výsledek|žádné údaje se nikdy neposílají/i);
 });
 
-test('About: editorial sections remain accessible and responsive',()=>{
+test('About: customer-first page does not duplicate cookie and ad disclosures',()=>{
  const {html}=build();
- assert.equal((html.match(/<section class="rv3a-openness"/g)||[]).length,1);
- assert.equal((html.match(/class="rv3a-openness-item"/g)||[]).length,2);
- assert.match(html,/id="open-title"/);
- assert.match(html,/aria-labelledby="open-title"/);
- assert.match(aboutCss,/\.rv3a-openness-grid\{display:grid;grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
- assert.match(aboutCss,/\.rv3a-openness-grid\{grid-template-columns:1fr/);
+ assert.ok(!html.includes('rv3a-openness'));
+ assert.ok(!html.includes('Před sdílením URL'));
+ assert.ok(html.includes('href="/ochrana-osobnich-udaju.html"'));
+ assert.ok(html.includes('href="/rv3/studio/kontakt.html"'));
+ assert.ok(html.includes('kdo-web-provozuje'));
 });
 
 test('About: authentic catalogue-style pictograms are linked, semantic and no-JS',()=>{
@@ -151,13 +150,13 @@ test('About: authentic catalogue-style pictograms are linked, semantic and no-JS
  assert.equal(manifest.css.at(-1),'/rv3/sitewide/about-icons.css');
  assert.match(html,/href="\/rv3\/sitewide\/about-icons\.css"/);
  assert.match(sprite,/<svg\b/);
- for(const name of ['entry','sources','audit','exact','model','estimate','privacy','independent','calculator','method','feedback','check','context']){
+ for(const name of ['entry','sources','audit','exact','model','estimate','calculator','method','feedback','check','context']){
    assert.ok(sprite.includes('id="'+name+'"'),'Missing local SVG symbol '+name);
    assert.ok(html.includes("about-icons.svg#"+name),'Not used on actual page '+name);
  }
  assert.equal((html.match(/class="rv3a-step-icon"/g)||[]).length,3);
  assert.equal((html.match(/class="rv3a-line-icon"/g)||[]).length,3);
- assert.equal((html.match(/class="rv3a-open-art"/g)||[]).length,2);
+ assert.equal((html.match(/class="rv3a-open-art"/g)||[]).length,0);
  assert.equal((html.match(/class="rv3a-next-art"/g)||[]).length,3);
  assert.match(html,/aria-hidden="true" focusable="false"/);
  assert.equal((html.match(/<script\b/gi)||[]).length,1,'Pictograms must not add JS');

@@ -4,6 +4,18 @@
 
 Majitel výslovně potvrdil, že nové stránky mají být minimálně na úrovni individuálního redesignu **O projektu** a ideálně ho překonat. Nejde jen o společnou barvu.
 
+## Závazný dodatek zákaznické relevance (15. 11. 2026)
+
+**Smyslem stránky je odpovědět návštěvníkovi, nikoli vykazovat množství práce na designu, SEO nebo právních textech.** Před prvním řádkem copy musí být jasné: kdo ji čte, co potřebuje rozhodnout a co na této stránce skutečně potřebuje vědět.
+
+- **Žádná minimální délka textu:** historické „2 800 slov“ není cíl. Jednou vysvětlená věc se neopakuje v několika blokách, pokud nepřináší nový kontext.
+- **Interní inventáře** (localStorage keys, SHA, CI, deployment, podrobné auditní nálezy) patří do GitHubu; veřejnost potřebuje účel, dopad a ovládání. Při právní povinnosti konkrétní údaj ovšem zůstává snadno dostupný.
+- **Jedna funkce má jedno místo.** Hlášení chyb na Kontakt, kompletní metodika na Jak počítáme, právní informace na Soukromí/Cookies, představení na O projektu.
+- **Zákonná transparentnost je důležitější než krátkost.** GDPR/ePrivacy a české povinnosti ověřovat z aktuální reálné implementace, žádná „certifikace“ z CI. Neověřený provozní údaj blokuje nasazení.
+- Vizuálně příjemné **neznamená více sekcí**: ilustrace, karta i CTA musí návštěvníkovi pomáhat.
+
+Komplexní zpětná revize a release brány: `docs/rv3/CUSTOMER_FIRST_LEGAL_EDITORIAL_AUDIT_2026-11-15.md`.
+
 ## Nevyjednatelné zásady
 
 1. **Nejdříve role URL a skutečný zdroj.** Přímé přečtení stávajícího HTML/JS/SEO (a při potřebě dalších důkazů i navazujících datasetů). Výpočetní výsledky a právní údaje se nikdy nevymýšlejí. Původní HTML není návrhová šablona.

@@ -1,6 +1,6 @@
-/* RV3 cookies & browser storage: source-locked, content-first rendering.
- * Verbatim explanatory and technical table content; no new storage or UI gimmicks.
- * Analytics claims are NOT recertified by this renderer.
+/* RV3 customer-first cookies page. Source inventory is validated for internal audit,
+ * but implementation keys and outdated technical tables are not shown to visitors.
+ * Legal text requires a separate, evidence-based final review before release.
  */
 import {createHash} from 'node:crypto';
 import {extractMain,getCanonical} from './renderer.mjs';
@@ -11,6 +11,7 @@ const SOURCE_GIT_BLOB='68e9ba2b0db21a80dfdb5a7dc3443e17394eb56f';
 const TITLE='Cookies a lokální úložiště | RychléVýpočty.cz';
 const DESCRIPTION='Přehled lokálního ukládání a URL parametrů používaných na RychléVýpočty.cz, včetně přesných spouštěčů a možností odstranění.';
 const CANONICAL='https://rychlevypocty.cz/cookies.html';
+const PREVIEW_DESCRIPTION='Jak na RychléVýpočty.cz fungují cookies a uložená nastavení, co si prohlížeč pamatuje a jak údaje odstranit.';
 export const COOKIES_SECTIONS=Object.freeze([
  {id:'rozdily',title:'Cookies, localStorage a URL',glyph:'context',heading:'Jaký je rozdíl mezi cookies, localStorage a URL'},
  {id:'mereni',title:'Analytika a reklama',glyph:'audit',heading:'Tyto technologie nyní nejsou aktivní'},
@@ -57,27 +58,34 @@ export function renderCookiesStudio(source,template){
   throw Error('Cookies structured data changed');
  if(typeof template!=='string'||!/^<!doctype html>/i.test(template)||
    getCanonical(template)!==CANONICAL||!template.includes('<title>'+TITLE+'</title>')||
-   !template.includes('<meta name="description" content="'+DESCRIPTION+'">')||
+   !template.includes('<meta name="description" content="'+PREVIEW_DESCRIPTION+'">')||
    !template.includes('<meta name="robots" content="noindex,nofollow,noarchive">'))
   throw Error('Cookies preview identity/robots invalid');
- for(const tag of ['{{JSONLD}}','{{HEADER}}','{{FOOTER}}',...COOKIES_SECTIONS.map((_,i)=>'{{CONTENT_'+i+'}}')])
+ for(const tag of ['{{JSONLD}}','{{HEADER}}','{{FOOTER}}'])
   if(template.split(tag).length!==2)throw Error('Cookies preview placeholder invalid: '+tag);
  let html=template
   .replace('{{JSONLD}}',json)
   .replace('{{HEADER}}',renderHeaderV2({catalogHref:'/rv3/poc/katalog-v2.html',active:'/cookies.html'})
    .replaceAll('href="/jak-pocitame.html"','href="/rv3/studio/jak-pocitame.html"'))
   .replace('{{FOOTER}}',renderFooterV2());
- cards.forEach((value,i)=>{html=html.replace('{{CONTENT_'+i+'}}',value)});
  if((html.match(/<main\b/gi)||[]).length!==1||(html.match(/<h1\b/gi)||[]).length!==1)
   throw Error('Cookies landmarks invalid');
- cards.forEach((value,i)=>{if(html.split(value).length!==2)throw Error('Cookies source section not preserved: '+i)});
+ // Legal and factual claims are never regenerated from an unverified old table.
+ // Before public release, the actual cookie/analytics inventory must be audited.
+ if(html.includes('rv_catalog_favorites_v1')||html.includes('rv-vacation-planner-v1')||
+    html.includes('data-table')||html.includes('{{CONTENT_'))
+  throw Error('Internal cookie inventory leaked into customer-facing page');
+ if(!html.includes('Toto je neprodukční návrh.')||
+    !html.includes('Netechnické cookies a podobné technologie'))
+  throw Error('Cookies legal-release information incomplete');
  if(html.includes('rv-trust-v7.css')||html.includes('trust-nav')||html.includes('hero-panel'))
   throw Error('Cookies legacy layout leaked');
  return {html,manifest:{
   kind:'bespoke-cookies-reference',source:SOURCE,preview:'/rv3/studio/cookies.html',
   title:TITLE,canonical:CANONICAL,previewOnly:true,
   sourceSha256:createHash('sha256').update(source).digest('hex'),
-  sourceBodyVerbatim:true,sections:cards.length,storageKeys:rows.length,
+  sourceInventoryReviewed:false,sourceInventoryShaPinned:true,
+  technicalKeysExposed:0,sections:cards.length,storageKeys:rows.length,
   art:'/rv3/assets/storage-drawer.svg',
   css:['/rv3/catalog-v2.css','/rv3/catalog-v3-theme.css','/rv3/sitewide/cookies.css'],
   factualReviewStatus:'BLOCKED_PENDING_ANALYTICS_CMP_AND_STORAGE_CODE_VERIFICATION',

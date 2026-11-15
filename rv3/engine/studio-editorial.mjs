@@ -54,7 +54,6 @@ export function renderEditorialStudio(source,template){
    sourceSha256:createHash('sha256').update(source).digest('hex'),
    art:'/rv3/assets/editorial-desk.svg',
    css:['/rv3/catalog-v2.css','/rv3/catalog-v3-theme.css','/rv3/sitewide/editorial.css'],
-   enhancement:'/rv3/sitewide/editorial-report.js',
    designStatus:'VISUAL_REVIEW_PENDING',browserQa:'NOT_VERIFIED'
  }};
 }

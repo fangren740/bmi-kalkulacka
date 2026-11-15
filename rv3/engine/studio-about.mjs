@@ -98,7 +98,7 @@ ${renderHeaderV2({catalogHref:'/rv3/poc/katalog-v2.html'})}
       <div><span class="rv3a-eyebrow">01 / MYŠLENKA PROJEKTU</span><h2 id="why-title">Od otázky k <em>rozhodnutí.</em></h2></div>
       <div class="rv3a-intro-copy">
         <p class="rv3a-intro-lead">Kolik mi zůstane z výplaty? Co udělá s měsíční splátkou jiná úroková sazba? Kdy se vyplatí porovnat dvě varianty?</p>
-        <p>Právě pro podobné situace projekt vznikl. U mzdy hrají roli vstupní údaje a platná pravidla, u hypotéky například výše úvěru, sazba a doba splácení. Kalkulačka má usnadnit porovnání — ne skrýt podstatné podmínky za jedno působivé číslo.</p>
+        <p>Chceme, abyste si mohli rychle vyzkoušet různé možnosti a pochopili, co výsledek ovlivňuje.</p>
         <a class="rv3a-link" href="/rv3/poc/katalog-v2.html">Najít kalkulačku k vlastní otázce <span aria-hidden="true">↗</span></a>
       </div>
     </div>
@@ -137,33 +137,14 @@ ${renderHeaderV2({catalogHref:'/rv3/poc/katalog-v2.html'})}
     <div class="rv3d-wrap rv3a-author-grid">
       <div class="rv3a-author-copy"><span class="rv3a-eyebrow">04 / KDO ZA PROJEKTEM STOJÍ</span>
         <h2 id="author-title">Za projektem stojí <em>konkrétní člověk.</em></h2>
-        <p>RychléVýpočty.cz provozuje <strong>${escape(OWNER)}</strong> jako fyzická osoba bez přiděleného IČO. Za výběr témat, zveřejněný obsah a podobu webu odpovídá provozovatel — ne anonymní redakce.</p>
-        <p>Při tvorbě využíváme také AI a automatizaci, například pro rešerši, návrhy a testovací příklady. Výstupy těchto nástrojů slouží jako pracovní podklad; odpovědnost za publikování zůstává provozovateli. <a class="rv3a-inline-link" href="/redakcni-zasady.html">Jak vzniká a opravuje se obsah <span aria-hidden="true">↗</span></a></p><p>Najdete-li chybu, pošlete prosím odkaz na stránku, zadané hodnoty a očekávaný výsledek. Podnět můžeme ověřit a podle zjištění opravit výpočet nebo vysvětlení.</p>
+        <p>Projekt provozuje <strong>${escape(OWNER)}</strong> jako fyzická osoba bez přiděleného IČO. Odpovídá za zveřejněné informace i fungování kalkulaček.</p>
+        <p>Při tvorbě využíváme také AI a automatizaci, například pro rešerši, návrhy a testovací příklady. Výstupy těchto nástrojů slouží jako pracovní podklad; odpovědnost za publikování zůstává provozovateli. <a class="rv3a-inline-link" href="/redakcni-zasady.html">Jak vzniká a opravuje se obsah <span aria-hidden="true">↗</span></a></p><p>Našli jste chybu? <a class="rv3a-inline-link" href="/rv3/studio/kontakt.html">Napište nám <span aria-hidden="true">↗</span></a>.</p>
       </div>
       <div class="rv3a-contact"><span class="rv3a-contact-head">${glyph('feedback')} KONTAKT NA PROVOZOVATELE</span>
         <strong>${escape(OWNER)}</strong><span>Nezávislý projekt RychléVýpočty.cz</span>
         <a class="rv3a-contact-email" href="mailto:${EMAIL}">${EMAIL}</a>
         <a class="rv3a-btn rv3a-btn-primary" href="/kontakt.html">Kontaktovat projekt <span aria-hidden="true">↗</span></a>
         <div class="rv3a-contact-social"><a href="https://www.facebook.com/rychlevypocty" rel="me noopener noreferrer">Facebook ↗</a><a href="https://www.instagram.com/rychlevypocty/" rel="me noopener noreferrer">Instagram ↗</a></div>
-      </div>
-    </div>
-  </section>
-  <section class="rv3a-openness" aria-labelledby="open-title">
-    <div class="rv3d-wrap">
-      <div class="rv3a-openness-head"><div><span class="rv3a-eyebrow">05 / OTEVŘENĚ O PROVOZU</span><h2 id="open-title">Důvěra stojí i na <em>transparentnosti.</em></h2></div><p>Nemusíte hledat v právních textech naslepo. Tady jsou dvě věci, které je dobré vědět před použitím kalkulačky.</p></div>
-      <div class="rv3a-openness-grid">
-        <article class="rv3a-openness-item">
-          <span class="rv3a-openness-index">01 / VAŠE ÚDAJE</span><span class="rv3a-open-art" aria-hidden="true">${glyph('privacy')}</span>
-          <h3>Co zůstává v prohlížeči</h3>
-          <p>Běžné výpočty probíhají přímo ve vašem prohlížeči. Některé funkce mohou ukládat místní nastavení nebo vložit hodnoty do sdíleného odkazu. Před sdílením URL proto zkontrolujte její obsah.</p>
-          <a class="rv3a-link" href="/ochrana-osobnich-udaju.html">Jak chráníme soukromí <span aria-hidden="true">↗</span></a>
-        </article>
-        <article class="rv3a-openness-item">
-          <span class="rv3a-openness-index">02 / NEZÁVISLOST</span><span class="rv3a-open-art" aria-hidden="true">${glyph('independent')}</span>
-          <h3>Reklama nesmí měnit výsledek</h3>
-          <p>Jak je web financován a jak by se označovala případná reklama nebo affiliate spolupráce, popisujeme samostatně. Obchodní vztah nemá ovlivňovat vzorce, výsledky ani jejich vysvětlení.</p>
-          <a class="rv3a-link" href="/reklama-a-spoluprace.html">Reklama a spolupráce <span aria-hidden="true">↗</span></a>
-        </article>
       </div>
     </div>
   </section>

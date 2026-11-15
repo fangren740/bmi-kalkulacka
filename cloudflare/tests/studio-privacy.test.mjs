@@ -43,7 +43,7 @@ test('privacy: source SEO identity/structured data locked; preview noindex only'
  assert.equal(manifest.title,'Ochrana osobních údajů | RychléVýpočty.cz');
  assert.match(manifest.sourceSha256,/^[a-f0-9]{64}$/);
  assert.match(html,/<meta name="robots" content="noindex,nofollow,noarchive">/);
- assert.match(html,/<meta name="description" content="Informace o zpracování osobních údajů na RychléVýpočty.cz/);
+ assert.match(html,/<meta name="description" content="Srozumitelně o tom, jak RychléVýpočty.cz/);
  assert.equal((html.match(/<main\b/gi)||[]).length,1);
  assert.equal((html.match(/<h1\b/gi)||[]).length,1);
  assert.equal((html.match(/<script\b/gi)||[]).length,1,'Only original legal structured data, no unnecessary enhancer');
@@ -117,8 +117,8 @@ test('privacy: unresolved operational assertions are not silently rewritten or f
  assert.ok(html.includes('Web nemá uživatelské účty, přihlášení, newsletter ani kontaktní formulář.'));
  assert.ok(html.includes('Google Analytics nyní není aktivní'));
  assert.ok(html.includes('Hosting prostřednictvím GitHub Pages'));
- assert.ok(html.includes('Testovací návrh – obsah vyžaduje ověření'));
- assert.ok(html.includes('Zásady jsou převzaty beze změn'));
+ assert.ok(html.includes('Pracovní náhled zásad'));
+ assert.ok(html.includes('Před veřejným vydáním ověřujeme'));
  assert.doesNotMatch(html,/audit úspěšně dokončen|100% GDPR|garantujeme bezpečnost|certifikovaný GDPR|bez jakéhokoli rizika/i);
 });
 
@@ -160,5 +160,5 @@ test('privacy: no unreviewed release — all stage gates are exposed',()=>{
  assert.ok(html.includes('Technický provoz'));
  assert.ok(html.includes('Přístup, oprava, výmaz'));
  assert.ok(html.includes('SOUKROMÍ A DŮVĚRA'));
- assert.ok(html.includes('Před zveřejněním ověřujeme analytiku'));
+ assert.ok(html.includes('Před veřejným vydáním ověřujeme'));
 });

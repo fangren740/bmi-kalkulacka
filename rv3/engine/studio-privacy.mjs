@@ -11,6 +11,7 @@ const CANONICAL='https://rychlevypocty.cz/ochrana-osobnich-udaju.html';
 // Any source change requires an explicit content review and fingerprint update.
 const REVIEWED_SOURCE_GIT_BLOB='74c09875753ba7eac387ec10b871b5fd04ffe845';
 const TITLE='Ochrana osobních údajů | RychléVýpočty.cz';
+const PREVIEW_DESCRIPTION='Srozumitelně o tom, jak RychléVýpočty.cz zpracovávají osobní údaje, kdo je správcem a jaká máte práva.';
 const DESCRIPTION='Informace o zpracování osobních údajů na RychléVýpočty.cz při e-mailovém kontaktu, hostingu GitHub Pages a volitelných lokálních funkcích.';
 export const PRIVACY_TOPICS=Object.freeze([
  {id:'spravce',title:'Kdo odpovídá za údaje',glyph:'independent',sourceTitle:'Kdo je správcem osobních údajů'},
@@ -72,7 +73,7 @@ export function renderPrivacyStudio(source,template){
  if(typeof template!=='string'||!/^<!doctype html>/i.test(template))
   throw Error('Invalid privacy template');
  if(getCanonical(template)!==CANONICAL||!template.includes('<title>'+TITLE+'</title>')||
-    !template.includes('<meta name="description" content="'+DESCRIPTION+'">'))
+    !template.includes('<meta name="description" content="'+PREVIEW_DESCRIPTION+'">'))
   throw Error('Template privacy SEO changed');
  if(!template.includes('<meta name="robots" content="noindex,nofollow,noarchive">'))
   throw Error('Preview privacy robots missing');
