@@ -67,7 +67,7 @@ test('O projektu: fails closed when source identity/SEO/social cannot be verifie
  assert.throws(()=>renderAboutStudio(source.replace('https://rychlevypocty.cz/o-nas.html','https://example.org/o-nas.html')),/canonical/i);
  assert.throws(()=>renderAboutStudio(source.replace('bez přiděleného IČO','registrovaná s.r.o.')),/operator/i);
  assert.throws(()=>renderAboutStudio(source.replace('content="index,follow"','content="noindex,nofollow"')),/robots/i);
- assert.throws(()=>renderAboutStudio(source.replace('https://www.facebook.com/rychlevypocty','https://example.org')),/social/i);
+ assert.throws(()=>renderAboutStudio(source.replace('href="https://www.facebook.com/rychlevypocty"','href="https://example.org"')),/social/i);
 });
 
 test('O projektu: bespoke mobile-first styles / no old trust stylesheet',()=>{
