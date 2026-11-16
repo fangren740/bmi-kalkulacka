@@ -43,3 +43,19 @@ export function isAllowedBrowserRequest(url, origin, navigation, route) {
 export function isPass(result, route) {
   return [...BASE_CHECKS, ...route.checks].every(key => result.checks?.[key] === true);
 }
+
+// One explicitly selected static HTML page per PR, on the verified RV3 host only.
+export function isVisualPath(path) {
+  return typeof path === "string" && path.length <= 100 &&
+    /^\/(?:rv3\/(?:studio|poc|wave[1-9][0-9]*)\/)?[a-z0-9]+(?:-[a-z0-9]+)*\.html$/.test(path);
+}
+
+export function reviewRoutes(path) {
+  if (path === undefined) return ROUTES;
+  const baseline = ROUTES.map(route => route.id === "catalog" ? { ...route, fullPage: true } : route);
+  return [...baseline, {
+    id: "visual", path, fullPage: true,
+    checks: ["accessibleStructure", "anchors", "keyboardNavigation", "internalLinks"],
+    destinations: [],
+  }];
+}

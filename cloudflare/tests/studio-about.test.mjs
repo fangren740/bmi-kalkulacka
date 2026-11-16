@@ -102,3 +102,44 @@ test('About: responsive behavior and reduced motion are explicit, styles bounded
  assert.ok(Buffer.byteLength(aboutCss,'utf8')<18000);
  assert.ok(Buffer.byteLength(svg,'utf8')<12000);
 });
+
+
+test('About: verifiable methods, transparent operation and valid sources',()=>{
+ const {html}=build();
+ const method=from('jak-pocitame.html');
+ const editorial=from('redakcni-zasady.html');
+ const privacy=from('ochrana-osobnich-udaju.html');
+ const funding=from('reklama-a-spoluprace.html');
+ const datasets=from('data-a-benchmarky.html');
+ for(const url of ['/data-a-benchmarky.html','/jak-pocitame.html','/redakcni-zasady.html',
+                   '/ochrana-osobnich-udaju.html','/reklama-a-spoluprace.html']){
+   assert.ok(html.includes('href="'+url+'"'),'Missing linked source '+url);
+ }
+ assert.match(html,/Podklady k vlastní kontrole/);
+ assert.match(html,/Kontrolní příklady/);
+ assert.match(method,/hraničních příkladech/);
+ assert.match(method,/ručním výpočtem nebo nezávislou referencí/);
+ assert.match(method,/Benchmarky zveřejňujeme i jako CSV/);
+ assert.match(datasets,/Stáhnout CSV/);
+ assert.match(html,/modelová data a CSV/);
+ assert.match(editorial,/Jak používáme AI a automatizaci/);
+ assert.match(editorial,/Finální odpovědnost/);
+ assert.match(html,/AI a automatizaci/);
+ assert.match(html,/odpovědnost za publikování zůstává provozovateli/);
+ assert.match(privacy,/Běžné výpočty probíhají přímo v prohlížeči/);
+ assert.match(privacy,/sdílené URL/);
+ assert.match(html,/Před sdílením URL/);
+ assert.match(funding,/Případný obchodní obsah jasně označíme/);
+ assert.match(html,/Obchodní vztah nemá ovlivňovat vzorce/);
+ assert.doesNotMatch(html,/100% přesn|vždy správn|garantujeme výsledek|žádné údaje se nikdy neposílají/i);
+});
+
+test('About: editorial sections remain accessible and responsive',()=>{
+ const {html}=build();
+ assert.equal((html.match(/<section class="rv3a-openness"/g)||[]).length,1);
+ assert.equal((html.match(/class="rv3a-openness-item"/g)||[]).length,2);
+ assert.match(html,/id="open-title"/);
+ assert.match(html,/aria-labelledby="open-title"/);
+ assert.match(aboutCss,/\.rv3a-openness-grid\{display:grid;grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
+ assert.match(aboutCss,/\.rv3a-openness-grid\{grid-template-columns:1fr/);
+});

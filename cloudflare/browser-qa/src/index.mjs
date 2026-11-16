@@ -1,7 +1,7 @@
 import { launch } from "@cloudflare/playwright";
 import { qaCredential } from "./auth.mjs";
-import { renderEvidence, saveEvidence } from "./evidence.mjs";
-import { isCommitSha, PROOF_ID, ROUTES, validOrigin, VIEWPORTS } from "./policy.mjs";
+import { renderEvidence, renderScreenshot, saveEvidence } from "./evidence.mjs";
+import { isCommitSha, PROOF_ID, isVisualPath, reviewRoutes, validOrigin, VIEWPORTS } from "./policy.mjs";
 import { checkViewport, safeError } from "./viewport.mjs";
 
 function json(data, status = 200) {
@@ -31,9 +31,10 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     if (request.method === "GET" && url.pathname.startsWith("/proof/")) {
-      const id = url.pathname.slice("/proof/".length);
+      const [, , id, route, file, extra] = url.pathname.split("/");
       if (PROOF_ID.test(id) && !url.search) {
-        const proof = await renderEvidence(env.QA_EVIDENCE, id);
+        const proof = route === undefined ? await renderEvidence(env.QA_EVIDENCE, id)
+          : extra === undefined ? await renderScreenshot(env.QA_EVIDENCE, id, route, file) : null;
         if (proof) return proof;
       }
     }
@@ -52,7 +53,8 @@ export default {
     } catch {
       return json({ error: "Invalid JSON" }, 400);
     }
-    if (!validOrigin(plan?.origin) || !isCommitSha(plan?.commitSha)) {
+    if (!validOrigin(plan?.origin) || !isCommitSha(plan?.commitSha) ||
+        (plan.visualPath !== undefined && !isVisualPath(plan.visualPath))) {
       return json({ error: "Expected an immutable RV3 deployment URL and build SHA" }, 400);
     }
     if (!env.QA_BROWSER || !env.QA_RUN_LIMIT || !env.QA_EVIDENCE) return json({ error: "QA binding missing" }, 503);
@@ -65,13 +67,14 @@ export default {
         return json({ status: "FAIL", error: "Browser could not verify preview identity and noindex" }, 409);
       }
       const results = [];
-      for (const route of ROUTES) {
+      for (const route of reviewRoutes(plan.visualPath)) {
         for (const viewport of VIEWPORTS) results.push(await checkViewport(browser, plan.origin, route, viewport));
       }
       const report = {
         status: results.every(item => item.status === "PASS") ? "PASS" : "FAIL",
         timestamp: new Date().toISOString(),
         testedUrl: plan.origin,
+        visualPath: plan.visualPath,
         results,
       };
       const evidenceId = await saveEvidence(env.QA_EVIDENCE, report, plan.commitSha);

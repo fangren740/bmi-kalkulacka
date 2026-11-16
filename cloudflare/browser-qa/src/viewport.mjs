@@ -1,5 +1,5 @@
 import { Buffer } from "node:buffer";
-import { isAllowedBrowserRequest, isPass } from "./policy.mjs";
+import { isAllowedBrowserRequest, isPass, isVisualPath } from "./policy.mjs";
 
 const noindex = value => /(?:^|[\s,])noindex(?:$|[\s,])/i.test(value || "");
 const number = text => Number(text.replace(/[^0-9,.-]/g, "").replace(",", "."));
@@ -22,6 +22,73 @@ async function follow(page, link, origin, path) {
 async function anchor(page, link, anchorId) {
   await link.click();
   return new URL(page.url()).hash === "#" + anchorId && await page.locator("#" + anchorId).isVisible();
+}
+
+async function reviewPage(page, checks, errors) {
+  const inventory = await page.evaluate(() => {
+    const links = [...document.querySelectorAll("main a[href], header nav a[href], footer nav a[href]")];
+    const fragments = [...new Set(links.map(link => link.getAttribute("href"))
+      .filter(href => /^#[a-z][a-z0-9-]*$/i.test(href)).map(href => href.slice(1)))];
+    return {
+      fragments,
+      missing: fragments.filter(id => !document.getElementById(id)),
+      paths: [...new Set(links.filter(link => link.origin === location.origin && link.pathname !== location.pathname)
+        .map(link => link.pathname))],
+      structure: !!document.documentElement.lang && document.querySelectorAll("main").length === 1 &&
+        document.querySelectorAll("main h1").length === 1 &&
+        !document.querySelector("main img:not([alt])") &&
+        links.every(link => link.textContent.trim() || link.getAttribute("aria-label")?.trim() ||
+          link.querySelector('img[alt]:not([alt=""])')),
+    };
+  });
+  checks.accessibleStructure = inventory.structure;
+  checks.anchors = inventory.missing.length === 0;
+  if (inventory.missing.length) errors.push("Missing anchors: " + inventory.missing.join(", "));
+
+  const menu = page.locator("header details summary").first();
+  if (await menu.isVisible()) {
+    await menu.press("Enter");
+    checks.keyboardNavigation = await menu.evaluate(node => node.parentElement.open &&
+      Boolean(node.parentElement.querySelector("nav a[href]")));
+    await menu.press("Enter");
+  } else {
+    checks.keyboardNavigation = await page.locator("header nav:visible a[href]").count() > 0;
+  }
+  for (const id of inventory.fragments.slice(0, 3)) {
+    const link = page.locator(`main a[href="#${id}"]:visible`).first();
+    if (!await link.count()) continue;
+    await link.press("Enter");
+    checks.keyboardNavigation &&= new URL(page.url()).hash === "#" + id;
+  }
+
+  // Same-host document HEAD checks only. Never follow redirects or probe external websites.
+  const paths = inventory.paths.filter(path => path === "/" || isVisualPath(path)).slice(0, 20);
+  const unreachable = await page.evaluate(async paths => {
+    const result = await Promise.all(paths.map(async path => {
+      try {
+        const response = await fetch(path, { method: "HEAD", redirect: "manual", signal: AbortSignal.timeout(3000) });
+        return response.ok ? null : path + " (" + response.status + ")";
+      } catch { return path + " (unavailable)"; }
+    }));
+    return result.filter(Boolean);
+  }, paths);
+  checks.internalLinks = unreachable.length === 0;
+  if (unreachable.length) errors.push("Internal links: " + unreachable.join(", "));
+}
+
+async function profilePage(page) {
+  return await page.evaluate(() => {
+    const h1 = document.querySelector("main h1");
+    const accent = h1?.querySelector("em");
+    const css = h1 && getComputedStyle(h1);
+    return {
+      font: css?.fontFamily.split(",")[0],
+      size: css?.fontSize,
+      color: css?.color,
+      accent: accent ? getComputedStyle(accent).color : null,
+      mainIllustrations: document.querySelectorAll("main img").length,
+    };
+  });
 }
 
 async function interact(page, route, checks) {
@@ -78,8 +145,11 @@ export async function checkViewport(browser, origin, route, viewport) {
   const url = origin + route.path;
   const checks = {};
   const errors = [];
+  const issues = [];
   let screenshotBase64 = null;
   let context;
+  let captureHeight;
+  let profile;
   let page;
   let error;
   try {
@@ -111,14 +181,28 @@ export async function checkViewport(browser, origin, route, viewport) {
     checks.horizontalOverflow = layout.overflow === 0;
     checks.previewMetaNoindex = layout.robots.length === 1 && noindex(layout.robots[0]);
     checks.previewHeaderNoindex = noindex(await response.headerValue("x-robots-tag"));
-    const navigate = await interact(page, route, checks);
-    screenshotBase64 = await takeScreenshot(page);
-    // The loaded destination proves the link works. Console evidence covers the four tested pages.
-    checks.consoleAndPageErrors = errors.length === 0;
-    if (navigate) checks.navigation = await navigate(origin);
+    if (route.fullPage) {
+      await page.evaluate(() => {
+        for (const image of document.querySelectorAll('img[loading="lazy"]')) image.loading = "eager";
+      });
+      await page.waitForFunction(() => [...document.images].every(img => img.complete), null, { timeout: 5000 });
+      captureHeight = await page.evaluate(() => document.documentElement.scrollHeight);
+      if (captureHeight > 12000) throw Error("Page exceeds the 12,000 px full-page capture limit");
+      profile = await profilePage(page);
+      screenshotBase64 = await takeScreenshot(page, true);
+    }
+    if (route.id === "visual") {
+      await reviewPage(page, checks, issues);
+    } else {
+      const navigate = await interact(page, route, checks);
+      if (!route.fullPage) screenshotBase64 = await takeScreenshot(page);
+      // Console evidence covers the tested page; the destination confirms navigation.
+      checks.consoleAndPageErrors = errors.length === 0;
+      if (navigate) checks.navigation = await navigate(origin);
+    }
   } catch (reason) {
     error = safeError(reason);
-    if (!screenshotBase64 && page?.url().startsWith(url)) {
+    if (!route.fullPage && !screenshotBase64 && page?.url().startsWith(url)) {
       screenshotBase64 = await takeScreenshot(page).catch(() => null);
     }
   } finally {
@@ -126,10 +210,15 @@ export async function checkViewport(browser, origin, route, viewport) {
   }
   checks.screenshot = Boolean(screenshotBase64);
   checks.consoleAndPageErrors ??= errors.length === 0;
-  const result = { route: route.id, path: route.path, viewport: label, width, height, checks, errors, error, screenshotBase64 };
+  const result = {
+    route: route.id, path: route.path, viewport: label, width, height, checks, errors: [...errors, ...issues], error, screenshotBase64,
+    fullPage: route.fullPage === true, captureHeight, profile,
+  };
   return { ...result, status: !error && isPass(result, route) ? "PASS" : "FAIL" };
 }
 
-async function takeScreenshot(page) {
-  return Buffer.from(await page.screenshot({ type: "jpeg", quality: 65, timeout: 5000 })).toString("base64");
+async function takeScreenshot(page, fullPage = false) {
+  const bytes = await page.screenshot({ fullPage, type: "jpeg", quality: 65, timeout: 8000 });
+  if (bytes.length > 1_500_000) throw Error("Screenshot exceeds the 1.5 MB evidence limit");
+  return Buffer.from(bytes).toString("base64");
 }

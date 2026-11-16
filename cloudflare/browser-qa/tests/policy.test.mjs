@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { allowedBuild, deployedOrigin, runPreviewQa, summarize } from "../preview-hook.mjs";
-import { BASE_CHECKS, isAllowedBrowserRequest, ROUTES, VIEWPORTS } from "../src/policy.mjs";
+import { allowedBuild, deployedOrigin, loadVisualPath, runPreviewQa, summarize } from "../preview-hook.mjs";
+import { BASE_CHECKS, isAllowedBrowserRequest, isVisualPath, reviewRoutes, ROUTES, VIEWPORTS } from "../src/policy.mjs";
 
 const origin = "https://a01234bc-rychlevypocty-v3-preview.maattinek.workers.dev";
 const token = "e".repeat(64);
@@ -45,7 +45,7 @@ test("runs one upload and one authenticated Browser Run, and preserves failure",
   let uploads = 0;
   let runs = 0;
   const log = [];
-  const options = { env, log: value => log.push(value), error: value => log.push(value),
+  const options = { env, readVisual: async () => undefined, log: value => log.push(value), error: value => log.push(value),
     upload: async uploadEnv => {
       uploads++;
       assert.equal(uploadEnv.QA_AUTO_TOKEN, undefined);
@@ -72,4 +72,32 @@ test("wrong, missing and manual secrets cannot authorize automatic QA", async ()
   assert.equal(qaCredential("Bearer " + "d".repeat(64), env), null);
   assert.equal(qaCredential(null, env), null);
   assert.equal(qaCredential("Bearer " + token, { QA_TOKEN: token }), "manual");
+});
+
+test("opt-in accepts a single relative RV3 document and preserves the eight baseline cases", async () => {
+  const configured = await loadVisualPath();
+  assert.ok(configured === undefined || isVisualPath(configured));
+  const path = "/rv3/studio/example.html";
+  for (const invalid of ["//example.org/a.html", "/rv3/studio/../x.html", "/x.html?redirect=1",
+    "/x.html#about", "/rv3/%2fxx.html", "/proof/x.html", 9, null]) {
+    assert.equal(isVisualPath(invalid), false);
+  }
+  assert.equal(reviewRoutes().length * VIEWPORTS.length, 8);
+  const selected = { ...plan, visualPath: path };
+  assert.equal(summarize(report, selected), false);
+  const reviewResults = reviewRoutes(path).flatMap(route => VIEWPORTS.map(({label, width, height}) => ({
+    route: route.id, viewport: label, path: route.path, width, height, status: "PASS",
+    fullPage: route.fullPage === true, captureHeight: 2000,
+    checks: Object.fromEntries([...BASE_CHECKS, ...route.checks].map(name => [name, true])),
+  })));
+  assert.ok(summarize({ ...report, results: reviewResults }, selected));
+  assert.equal(summarize({ ...report, results: reviewResults.map(row =>
+    row.route === "catalog" ? { ...row, fullPage: false } : row) }, selected), false);
+});
+
+test("missing and malformed proof targets do not query storage", async () => {
+  const { renderScreenshot } = await import("../src/evidence.mjs");
+  const noRead = { get() { throw Error("Unexpected KV read"); } };
+  assert.equal(await renderScreenshot(noRead, report.evidenceId, "other", "mobile.jpg"), null);
+  assert.equal(await renderScreenshot(noRead, report.evidenceId, "visual", "bad.png"), null);
 });

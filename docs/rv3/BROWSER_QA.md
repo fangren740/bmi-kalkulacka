@@ -30,3 +30,17 @@ Výsledek a odkaz na důkaz jsou v logu buildu. Důkazy jsou pod náhodným odka
 [První automatický build](https://dash.cloudflare.com/69c821d02b55b2645d0f1059623d1dde/workers/services/view/rychlevypocty-v3-preview/production/previews/rv3-browser-run-qa/builds/3482e9e3-1111-4d15-bba9-da5270162d5a) vytvořil neměnný náhled a správně skončil FAIL, protože Workers odmítly hodnotu redirect `error`. Přímý Worker-to-Worker fetch následně nedostal manifest konkrétní Preview URL, i když veřejná URL správné SHA vracela. Kontrola manifestu se proto provádí na začátku stejné Browser Run session. Přijímá HTTP 200 bez přesměrování, HTTP noindex a přesnou shodu SHA. Při změně kódu QA Workeru ověř jeho samostatný deploy před opakováním preview buildu.
 
 [První kompletní Browser Run](https://dash.cloudflare.com/69c821d02b55b2645d0f1059623d1dde/workers/services/view/rychlevypocty-v3-preview/production/previews/rv3-browser-run-qa/builds/6157def1-57cc-4085-9d22-99722f280076) našel mobilní přetečení homepage a desktopové pokročilé volby financí bez dostupného ovládacího prvku. Opravy jsou omezené na styly V3. U katalogového prokliku test počítá s tím, že cílová kalkulačka po HTTP 200 nastavuje výchozí parametry v query přes History API. Stále vyžaduje stejné preview, původní cílovou cestu a úspěšnou síťovou odpověď bez přesměrování.
+
+## Vizuální kontrola stránky v PR
+
+1. V neprodukční větvi RV3 nastav v `cloudflare/browser-qa/visual-review.json` jedinou cestu, například `{"path":"/rv3/studio/o-nas.html"}`. Cesta je relativní HTML v kořeni nebo ve V3 Studio, PoC či Wave. Větev bez souboru jede v původním režimu 8 kontrol.
+2. Po pushi obsahuje Cloudflare log 8 původních výsledků a 2 výsledky vybrané stránky. Stejný Worker zachytí na každém viewportu celou vybranou stránku i referenční katalog ze stejného immutable preview. Úložiště důkazů a token se používají stávající.
+3. Report zobrazuje dvojice snímků s přímými odkazy a zaznamenává font, velikost a barvu H1, akcent a počet obrázků. Barevná nebo typografická odlišnost je kontext pro posouzení. Majitel schvaluje design i při zeleném technickém výsledku.
+4. Technický smoke test u vybrané stránky kontroluje základní strukturu, texty odkazů, alternativní text obrázků, kotvy, základní navigaci klávesnicí a až 20 cílových interních HTML cest. Externí weby a doručení e-mailu se neověřují. Nejde o úplný audit WCAG.
+5. Snímky pořizujeme před interakcemi, s načtenými fonty a obrázky. Limit na snímek je 12 000 px výšky a 1,5 MB JPEG. Cloudflare odkaz funguje sedm dní.
+
+Aktuální QA Worker sleduje `rv3/visual-review-qa` pro nasazení této rozšířené verze. Zůstává kompatibilní s původním hookem. Nové větve založené na této změně dědí nastavení Previews Base. Pokud má existující Preview vlastní příkaz, nastav jej podle postupu výše.
+
+### První srovnání O projektu
+
+Živá původní revize PR #70 na 390 × 844 a 1440 × 900 měla funkční tři kotvy a proklik do katalogu. Základní navigace šla ovládat klávesnicí. Konzole byla bez zaznamenaných chyb a dokument nepřetékal. Katalog i About sdílejí původní hlavičku, logo, tmavé nadpisy a shodnou zelenou kurzívu. About používá vlastní zápisník a volnější rytmus odstavců; katalog těsnější karty a ilustrace kategorií. Mobilní verze převádí obsah i karty do čitelného toku. Jasný konec gradientu CTA měl vůči bílému textu 3,11 : 1. Nový gradient má v nejsvětlejším bodě 5,23 : 1.
