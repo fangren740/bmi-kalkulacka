@@ -14,6 +14,7 @@ import {renderCookiesStudio} from '../rv3/engine/studio-cookies.mjs';
 import {renderAdvertisingStudio} from '../rv3/engine/studio-advertising.mjs';
 import {renderTermsStudio} from '../rv3/engine/studio-terms.mjs';
 import {renderSituationsStudio,parseSituations} from '../rv3/engine/studio-situations.mjs';
+import {renderGuidesStudio,parseGuides} from '../rv3/engine/studio-guides.mjs';
 export async function buildPrototype({root,output}){
  const folder=path.join(output,'rv3','poc');
  await mkdir(folder,{recursive:true});
@@ -141,6 +142,25 @@ export async function buildPrototype({root,output}){
  situations.manifest.linksVerifiedInBuild=true;
  situations.manifest.uniqueLinksVerified=situationTargets.length;
  reports.push(situations.manifest);
+ // Editorial Guides: preserve all 34 authentic guide destinations and their related links.
+ const guidesSource=await readFile(path.join(root,'navody.html'),'utf8');
+ const guidesTemplate=await readFile(path.join(root,'rv3/engine/guides.template.html'),'utf8');
+ const guides=renderGuidesStudio(guidesSource,guidesTemplate);
+ const guideData=parseGuides(guidesSource);
+ const guideTargets=[...new Set([
+  ...guideData.groups.flatMap(g=>[g.hub,...g.guides.map(x=>x.url),...g.calculators.map(x=>x.url)]),
+  ...guideData.extras.flatMap(x=>[x.url,x.calculator])
+ ])];
+ for(const url of guideTargets){
+  await stat(path.join(output,url.slice(1))).catch(()=>{
+   throw Error('Guide destination missing in preview: '+url);
+  });
+ }
+ const guidesTarget=path.join(trustFolder,'navody.html');
+ await writeFile(guidesTarget,guides.html);
+ await stat(guidesTarget);
+ guides.manifest.uniqueLinkedDestinationsVerified=guideTargets.length;
+ reports.push(guides.manifest);
  // Homepage is a distinct editorial product, not a copy of the hub skin.
  const homepageSource=await readFile(path.join(root,'index.html'),'utf8');
  const homepage=renderHomepageStudio(homepageSource);
