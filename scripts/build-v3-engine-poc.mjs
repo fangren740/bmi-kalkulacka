@@ -12,6 +12,7 @@ import {renderContactStudio} from '../rv3/engine/studio-contact.mjs';
 import {renderPrivacyStudio} from '../rv3/engine/studio-privacy.mjs';
 import {renderCookiesStudio} from '../rv3/engine/studio-cookies.mjs';
 import {renderAdvertisingStudio} from '../rv3/engine/studio-advertising.mjs';
+import {renderTermsStudio} from '../rv3/engine/studio-terms.mjs';
 export async function buildPrototype({root,output}){
  const folder=path.join(output,'rv3','poc');
  await mkdir(folder,{recursive:true});
@@ -115,6 +116,14 @@ export async function buildPrototype({root,output}){
  await writeFile(advertisingTarget,advertising.html);
  await stat(advertisingTarget);
  reports.push(advertising.manifest);
+ // Bespoke terms page: all eight original legal chapters preserved exactly.
+ const termsSource=await readFile(path.join(root,'podminky-pouziti.html'),'utf8');
+ const termsTemplate=await readFile(path.join(root,'rv3/engine/terms.template.html'),'utf8');
+ const terms=renderTermsStudio(termsSource,termsTemplate);
+ const termsTarget=path.join(trustFolder,'podminky-pouziti.html');
+ await writeFile(termsTarget,terms.html);
+ await stat(termsTarget);
+ reports.push(terms.manifest);
  // Homepage is a distinct editorial product, not a copy of the hub skin.
  const homepageSource=await readFile(path.join(root,'index.html'),'utf8');
  const homepage=renderHomepageStudio(homepageSource);
