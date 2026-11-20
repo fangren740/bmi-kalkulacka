@@ -41,7 +41,7 @@ export function parseGuides(source){
   const calculators=[...strip[1].matchAll(/<a href="([^"]+)">([^<]+)<\/a>/g)].map(x=>({url:x[1],title:plain(x[2])}));
   const guides=[{url:featured[2],title:plain(featured[3]),description:plain(featured[4]),keywords:plain(featured[1]),featured:true},
    ...rows.map(x=>({url:x[2],title:plain(x[3]),description:plain(x[4]),keywords:plain(x[1]),featured:false}))];
-  if(guides.some(x=>!goodUrl(x.url))||calculators.some(x=>!goodUrl(x.url))||!guides.length||calculators.length<2)
+  if(guides.some(x=>!goodUrl(x.url))||calculators.some(x=>!goodUrl(x.url))||!guides.length||calculators.length<1)
    throw Error('Guide source URL problem in '+id);
   return {id,title:plain(heading[1]),description:plain(heading[2]),hub:hub[1],guides,calculators};
  });
