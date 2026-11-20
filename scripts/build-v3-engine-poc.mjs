@@ -13,6 +13,7 @@ import {renderPrivacyStudio} from '../rv3/engine/studio-privacy.mjs';
 import {renderCookiesStudio} from '../rv3/engine/studio-cookies.mjs';
 import {renderAdvertisingStudio} from '../rv3/engine/studio-advertising.mjs';
 import {renderTermsStudio} from '../rv3/engine/studio-terms.mjs';
+import {renderSituationsStudio,parseSituations} from '../rv3/engine/studio-situations.mjs';
 export async function buildPrototype({root,output}){
  const folder=path.join(output,'rv3','poc');
  await mkdir(folder,{recursive:true});
@@ -124,6 +125,22 @@ export async function buildPrototype({root,output}){
  await writeFile(termsTarget,terms.html);
  await stat(termsTarget);
  reports.push(terms.manifest);
+ // Decision-first Situations: verify all 56 source-derived destinations exist.
+ const situationsSource=await readFile(path.join(root,'situace.html'),'utf8');
+ const situationsTemplate=await readFile(path.join(root,'rv3/engine/situations.template.html'),'utf8');
+ const situations=renderSituationsStudio(situationsSource,situationsTemplate);
+ const situationTargets=[...new Set(parseSituations(situationsSource).flatMap(x=>x.links.map(l=>l.url)))];
+ for(const url of situationTargets){
+  await stat(path.join(output,url.slice(1))).catch(()=>{
+   throw Error('Situation destination missing from preview: '+url);
+  });
+ }
+ const situationsTarget=path.join(trustFolder,'situace.html');
+ await writeFile(situationsTarget,situations.html);
+ await stat(situationsTarget);
+ situations.manifest.linksVerifiedInBuild=true;
+ situations.manifest.uniqueLinksVerified=situationTargets.length;
+ reports.push(situations.manifest);
  // Homepage is a distinct editorial product, not a copy of the hub skin.
  const homepageSource=await readFile(path.join(root,'index.html'),'utf8');
  const homepage=renderHomepageStudio(homepageSource);
