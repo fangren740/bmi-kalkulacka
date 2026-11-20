@@ -117,8 +117,9 @@ test('privacy: unresolved operational assertions are not silently rewritten or f
  assert.ok(html.includes('Web nemá uživatelské účty, přihlášení, newsletter ani kontaktní formulář.'));
  assert.ok(html.includes('Google Analytics nyní není aktivní'));
  assert.ok(html.includes('Hosting prostřednictvím GitHub Pages'));
- assert.ok(html.includes('Testovací návrh – obsah vyžaduje ověření'));
- assert.ok(html.includes('Zásady jsou převzaty beze změn'));
+ assert.ok(!html.includes('Testovací návrh – obsah vyžaduje ověření'));
+ assert.ok(!html.includes('Zásady jsou převzaty beze změn'));
+ assert.equal(manifest.legalReviewStatus,'BLOCKED_PENDING_TRACKING_CONTACT_AND_HOSTING_VERIFICATION');
  assert.doesNotMatch(html,/audit úspěšně dokončen|100% GDPR|garantujeme bezpečnost|certifikovaný GDPR|bez jakéhokoli rizika/i);
 });
 
@@ -160,5 +161,6 @@ test('privacy: no unreviewed release — all stage gates are exposed',()=>{
  assert.ok(html.includes('Technický provoz'));
  assert.ok(html.includes('Přístup, oprava, výmaz'));
  assert.ok(html.includes('SOUKROMÍ A DŮVĚRA'));
- assert.ok(html.includes('Před zveřejněním ověřujeme analytiku'));
+ assert.ok(!html.includes('Před zveřejněním ověřujeme analytiku'));
+ assert.ok(!html.includes('rv3p-review-note'));
 });

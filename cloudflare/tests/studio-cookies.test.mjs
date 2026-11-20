@@ -53,8 +53,10 @@ test('cookies: exact canonical/source schema retained and preview robots blocked
 test('cookies: all nine storage keys and their 54 six-field descriptions preserved',()=>{
  const {html,manifest}=result();
  assert.equal(manifest.storageKeys,9);
- assert.ok(html.includes('U plánovače dovolené a směnového kalendáře se popis ukládání neshoduje'));
- assert.ok(html.indexOf('Kontrola aktuálnosti seznamu')<html.indexOf('<h2>Co se ukládá, kdy a jak se údaje odstraní</h2>'));
+ assert.ok(html.includes('U plánovače dovolené a směnového kalendáře nemusí údaje v tabulce odpovídat'));
+ assert.ok(html.indexOf('Upřesnění k některým položkám')<html.indexOf('<h2>Co se ukládá, kdy a jak se údaje odstraní</h2>'));
+ assert.ok(!html.includes('Před veřejným vydáním'));
+ assert.ok(!html.includes('Tabulka níže přebírá původní veřejnou dokumentaci'));
 
  assert.equal(STORAGE_KEYS.length,9);
  for(const key of STORAGE_KEYS){
@@ -91,8 +93,8 @@ test('cookies: original editorial assertions remain visible but are explicitly p
  assert.equal(manifest.designStatus,'VISUAL_REVIEW_PENDING');
  assert.equal(manifest.browserQa,'NOT_VERIFIED');
  assert.ok(html.includes('Google Analytics, Google AdSense ani jiné reklamní nebo analytické technologie'));
- assert.ok(html.includes('Stav analytiky, reklamy a správy souhlasu musí před vydáním V3 potvrdit'));
- assert.ok(html.indexOf('Stav analytiky, reklamy a správy souhlasu') <
+ assert.ok(html.includes('Údaje v této části se mohou lišit od aktuálního nastavení webu'));
+ assert.ok(html.indexOf('Údaje v této části se mohou lišit') <
            html.indexOf('<h2>Tyto technologie nyní nejsou aktivní</h2>'),
   'Warning must come BEFORE unverified legacy claim');
  assert.doesNotMatch(html,/audit dokončen|v souladu s GDPR|garantujeme bezpečnost|žádné riziko|vždy přesné/i);
